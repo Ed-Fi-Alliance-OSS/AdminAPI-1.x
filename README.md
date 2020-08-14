@@ -1,13 +1,31 @@
 # Ed-Fi-ODS-AdminApp
 
-The Ed-Fi ODS/API Admin App is a web-based administrative interface for the Ed-Fi ODS/API. The Admin App is available as a standalone application, and is also available for deployments on Azure.
+The Ed-Fi ODS/API Admin App is a web-based administrative interface for the
+Ed-Fi ODS/API. The Admin App is available as a standalone application, and is
+also available for deployments on Azure.
 
 For more information, see:
 
-* For a detailed description see [ODS/API Admin App](https://techdocs.ed-fi.org/pages/viewpage.action?pageId=53773581) in Tech Docs.
-* [How to Submit an Issue](https://techdocs.ed-fi.org/display/ETKB/How+To%3A+Submit+an+Issue)
-* [How Submit a Feature Request](https://techdocs.ed-fi.org/display/ETKB/How+To%3A+Submit+a+Feature+Request)
-* Review on-going development work at [Tracker](https://tracker.ed-fi.org/issues/?filter=14106)
+* For a detailed description see [ODS/API Admin
+  App](https://techdocs.ed-fi.org/pages/viewpage.action?pageId=53773581) in Tech
+  Docs.
+* [How to Submit an
+  Issue](https://techdocs.ed-fi.org/display/ETKB/How+To%3A+Submit+an+Issue)
+* [How Submit a Feature
+  Request](https://techdocs.ed-fi.org/display/ETKB/How+To%3A+Submit+a+Feature+Request)
+* Review on-going development work at
+  [Tracker](https://tracker.ed-fi.org/issues/?filter=14106)
+
+## Install Instructions
+
+See [Tech Docs: Admin
+App](https://techdocs.ed-fi.org/display/EDFITOOLS/Admin+App) for general
+information on installation of the Ed-Fi ODS Admin App for Suite 3.
+
+## Developer Documentation
+
+* [Admin App Developer Instructions](docs/developer.md)
+* [Cloud ODS Debugging](docs/cloudods-debugging.md)
 
 ## Contributing
 
@@ -17,8 +35,9 @@ Guidelines](https://techdocs.ed-fi.org/display/ETKB/Code+Contribution+Guidelines
 for detailed information on how to contribute source code.
 
 Looking for an easy way to get started? Search for tickets with label
-"up-for-grabs" in [Tracker](https://tracker.ed-fi.org/issues/?filter=14106); these are nice-to-have but low priority tickets that should not
-require in-depth knowledge of the code base and architecture.
+"up-for-grabs" in [Tracker](https://tracker.ed-fi.org/issues/?filter=14106);
+these are nice-to-have but low priority tickets that should not require in-depth
+knowledge of the code base and architecture.
 
 ## Legal Information
 

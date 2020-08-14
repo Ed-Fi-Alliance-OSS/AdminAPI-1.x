@@ -12,7 +12,7 @@ object AdminAppProject : Project({
 
     params {
         param("build.feature.freeDiskSpace", "2gb")
-        param("git.branch.default", "development-v3")
+        param("git.branch.default", "main")
         param("git.branch.specification", """
             +:refs/heads/(*)
             +:refs/(pull/*)/merge

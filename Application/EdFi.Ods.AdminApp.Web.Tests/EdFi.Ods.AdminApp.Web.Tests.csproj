@@ -65,8 +65,8 @@
     <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="EdFi.Common, Version=3.4.0.98, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdFi.Common.3.4.0\lib\net48\EdFi.Common.dll</HintPath>
+    <Reference Include="EdFi.Common, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdFi.Common.5.0.0\lib\net48\EdFi.Common.dll</HintPath>
     </Reference>
     <Reference Include="EdFi.LoadTools, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Suite3.LoadTools.5.0.0\lib\net48\EdFi.LoadTools.dll</HintPath>

@@ -1,8 +1,8 @@
 # Ed-Fi-ODS-AdminApp
 
-The Ed-Fi ODS/API Admin App is a web-based administrative interface for the
-Ed-Fi ODS/API. The Admin App is available as a standalone application, and is
-also available for deployments on Azure.
+The Ed-Fi ODS/API Admin App for Suite 3 is a web-based administrative interface
+for the Ed-Fi ODS/API. The Admin App is available as a standalone application
+for installation on-premises or in the cloud.
 
 For more information, see:
 

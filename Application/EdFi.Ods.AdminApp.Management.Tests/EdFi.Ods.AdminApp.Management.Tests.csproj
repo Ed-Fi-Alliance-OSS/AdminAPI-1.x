@@ -79,8 +79,8 @@
     <Reference Include="EdFi.Ods.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Ods.Common.5.0.0\lib\net48\EdFi.Ods.Common.dll</HintPath>
     </Reference>
-    <Reference Include="EdFi.Security.DataAccess, Version=3.4.0.1012, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdFi.Security.DataAccess.3.4.0\lib\net48\EdFi.Security.DataAccess.dll</HintPath>
+    <Reference Include="EdFi.Security.DataAccess, Version=5.0.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdFi.Suite3.Security.DataAccess.5.0.0\lib\net48\EdFi.Security.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>

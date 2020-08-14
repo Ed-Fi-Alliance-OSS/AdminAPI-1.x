@@ -81,8 +81,8 @@
     <Reference Include="EdFi.Common, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Common.5.0.0\lib\net48\EdFi.Common.dll</HintPath>
     </Reference>
-    <Reference Include="EdFi.LoadTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdFi.LoadTools.3.4.0-pre83\lib\net48\EdFi.LoadTools.dll</HintPath>
+    <Reference Include="EdFi.LoadTools, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdFi.Suite3.LoadTools.5.0.0\lib\net48\EdFi.LoadTools.dll</HintPath>
     </Reference>
     <Reference Include="EdFi.Ods.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Ods.Common.5.0.0\lib\net48\EdFi.Ods.Common.dll</HintPath>

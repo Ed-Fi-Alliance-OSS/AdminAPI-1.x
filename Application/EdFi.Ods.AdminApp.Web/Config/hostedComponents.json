@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Swagger",
+    "Environment": "Staging",
+    "Url": "http://localhost:56641",
+    "Version": "1.0"
+  },
+  {
+    "Name": "Api",
+    "Environment": "Production",
+    "Url": "http://localhost:56641",
+    "Version": "1.0"
+  },
+  {
+    "Name": "AdminApp",
+    "Environment": "Production",
+    "Url": "http://localhost:44330/",
+    "Version": "1.0"
+  }
+]

@@ -1,0 +1,6 @@
+# Ultimately it would be better to handle 3rd party scripts in a completely different
+# manner. For now, they are in the same directory as custom scripts. We don't need
+# to lint those 3rd parties. Simplest approach: ignore all js files, and then
+# negate that rule for custom js files.
+Scripts/*.js
+!Scripts/site*.js

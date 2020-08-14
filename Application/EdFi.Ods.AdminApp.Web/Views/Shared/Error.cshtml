@@ -1,0 +1,28 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@model HandleErrorInfo
+@{
+    ViewBag.Title = "Error";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Error!</h1>
+        <h4>There was an error processing your request. Please user your browser's back button and try again.</h4>
+        <br />
+        @if (!string.IsNullOrWhiteSpace(Model.Exception.Message))
+        {
+            <h2>Details:</h2>
+            <blockquote>
+                <p>@Model.Exception.Message</p>
+            </blockquote>
+        }
+
+        <a href="javascript:history.go(-1);">Back</a>
+    </div>
+</div>

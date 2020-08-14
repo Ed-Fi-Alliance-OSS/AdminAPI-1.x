@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>EdFi.Suite3.Installer.AdminApp</id>
+    <version>1.0.0</version>
+    <title>AdminApp Installer Scripts</title>
+    <authors>Ed-Fi Alliance</authors>
+    <projectUrl>https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp</projectUrl>
+    <copyright>Copyright © 2020, Ed-Fi Alliance, LLC and contributors.</copyright>
+    <summary>Application installer modules for the Ed-Fi Admin App application</summary>
+    <description>Application installer modules for the Ed-Fi Admin App application</description>
+  </metadata>
+  <files>
+    <file src="Install-EdFiOdsAdminApp.psm1" />
+    <file src="Ed-Fi-ODS/**" />
+    <file src="Ed-Fi-ODS-Implementation/**" />
+  </files>
+</package>

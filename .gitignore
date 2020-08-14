@@ -1,0 +1,81 @@
+# Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
+[Bb]in
+csx/
+rcf/
+[Oo]bj
+
+#User-specific files
+*.suo
+*.csproj.user
+*.ccproj.user
+*.sln.DotSettings.user
+*.pubxml.user
+*.dbmdl
+
+#Visual Studio files
+.vs/
+
+#Developer-only settings should not get checked in
+DeveloperSettings/
+
+#NCrunch
+_NCrunch*
+*.ncrunchsolution.user
+*.ncrunchproject
+*.ncrunchsolution
+
+#Vim backup files
+*~
+
+#MS Office Backup Files
+~*
+
+#Resharper files
+_ReSharper.*
+*.resharper
+*.resharper.user
+
+#Others
+*.cache
+*.orig
+*.original
+*.log
+
+#Packages
+packages/
+/*.dll
+/*.pdb
+/*.XML
+*.nupkg
+
+#nDevConfig
+.workspaceInitialized
+nDevConfig/
+
+credentials-*.xml
+
+#lib directory
+libs/
+libs.codegen/
+
+#Generated code
+*.generated.cs
+*.generated.txt
+*.generated.sql
+*.hbm.xml
+**/Metadata/types/*.json
+**/Metadata/resources/*.json
+**/Metadata/descriptors/*.json
+Application/EdFi.Ods.AdminApp.Web/AzureActiveDirectory.config
+
+#Overrides
+!/Application/EdFi.Ods.Deployment.Azure/Tools/*.dll
+!/Application/EdFi.Ods.Deployment.Azure/Tools/*.exe
+
+#EdFi.Installer.AdminApp Files
+EdFi.Suite3.Installer.AdminApp/downloads
+EdFi.Suite3.Installer.AdminApp/Ed-Fi-Common
+EdFi.Suite3.Installer.AdminApp/Ed-Fi-ODS
+EdFi.Suite3.Installer.AdminApp/Ed-Fi-ODS-Implementation
+EdFi.Suite3.Suite3.Ods.AdminApp/WebRoot/post-install-readme.txt
+

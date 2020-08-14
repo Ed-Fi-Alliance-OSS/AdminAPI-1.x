@@ -128,13 +128,13 @@ http://www.castleproject.org/
 * Castle.Facilities.AspNet.SystemWeb
 * Castle.Windsor
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Dapper
 
 https://github.com/StackExchange/Dapper
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## DbUp
 
@@ -169,7 +169,7 @@ The following license applies to these packages:
 
 https://github.com/dotnet/ef6
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## EntityFramework6.Npgsql
 
@@ -201,7 +201,7 @@ https://github.com/FluentValidation/FluentValidation
 * FluentValidation.ValidatorAttribute
 * FluentValidation
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Flurl
 
@@ -242,7 +242,7 @@ The following license applies to these packages:
     License
     ========
 
-    Copyright © 2013-2020 Sergey Odinokov.
+    Copyright ï¿½ 2013-2020 Sergey Odinokov.
 
     Hangfire software is an open-source software that is multi-licensed under the
     terms of the licenses listed in this file. Recipients may choose the terms under
@@ -279,7 +279,7 @@ The following license applies to these packages:
 
 https://github.com/frankhommers/Hangfire.PostgreSql
 
-    Copyright © 2014-2020 Frank Hommers http://hmm.rs/Hangfire.PostgreSql and others
+    Copyright ï¿½ 2014-2020 Frank Hommers http://hmm.rs/Hangfire.PostgreSql and others
     (Burhan Irmikci (barhun), Zachary Sims(zsims), kgamecarter, Stafford Williams
     (staff0rd), briangweber, Viktor Svyatokha (ahydrax), Christopher Dresel
     (Dresel), Vytautas Kasparavicius (vytautask), Vincent Vrijburg, David Roth
@@ -487,7 +487,7 @@ https://github.com/HtmlTags/htmltags
 
 http://jqueryvalidation.org/
 
-    Copyright (c) 2016 Jörn Zaefferer
+    Copyright (c) 2016 Jï¿½rn Zaefferer
 
     Permission is hereby granted, free of charge, to any person obtaining a copy of
     this software and associated documentation files (the "Software"), to deal in
@@ -600,7 +600,7 @@ https://github.com/lodash/lodash
 
 http://logging.apache.org/log4net/
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Microsoft.ApplicationInsights.Agent.Intercept
 
@@ -722,7 +722,7 @@ The following license applies to these packages:
 
 https://github.com/aspnet/Microsoft.AspNet.TelemetryCorrelation/
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Microsoft ASP.NET Web Stack
 
@@ -884,7 +884,7 @@ The following license applies to these packages:
 
 https://github.com/owin-contrib/owin-hosting
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Polly
 
@@ -984,7 +984,7 @@ http://quickgraph.codeplex.com/license
 
 https://github.com/jbogard/Respawn
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Respond
 
@@ -1017,7 +1017,7 @@ https://github.com/scottjehl/Respond
 
 https://github.com/restsharp/RestSharp
 
-See the [Apache License, Version 2.0](License) file in this application.
+See the [Apache License, Version 2.0](LICENSE) file in this application.
 
 ## Shouldly
 
@@ -1282,10 +1282,10 @@ The license below applies to all of these packages:
     the software named above, which includes the media on which you received it, if
     any. The terms also apply to any Microsoft
 
-    · updates,
-    · supplements,
-    · Internet-based services, and
-    · support services
+    ï¿½ updates,
+    ï¿½ supplements,
+    ï¿½ Internet-based services, and
+    ï¿½ support services
 
     for this software, unless other terms accompany those items. If so, those terms apply.
 
@@ -1304,34 +1304,34 @@ The license below applies to all of these packages:
 
     2. ADDITIONAL LICENSING REQUIREMENTS AND/OR USE RIGHTS.
       a. DISTRIBUTABLE CODE.  The software is comprised of Distributable Code.
-         “Distributable Code” is code that you are permitted to distribute in
+         ï¿½Distributable Codeï¿½ is code that you are permitted to distribute in
          programs you develop if you comply with the terms below.
         i. Right to Use and Distribute.
-            · You may copy and distribute the object code form of the software.
-            · Third Party Distribution. You may permit distributors of your programs
+            ï¿½ You may copy and distribute the object code form of the software.
+            ï¿½ Third Party Distribution. You may permit distributors of your programs
               to copy and distribute the Distributable Code as part of those programs.
         ii. Distribution Requirements. For any Distributable Code you distribute,
             you must
-            · add significant primary functionality to it in your programs;
-            · require distributors and external end users to agree to terms that
+            ï¿½ add significant primary functionality to it in your programs;
+            ï¿½ require distributors and external end users to agree to terms that
               protect it at least as much as this agreement;
-            · display your valid copyright notice on your programs; and
-            · indemnify, defend, and hold harmless Microsoft from any claims,
-              including attorneys’ fees, related to the distribution or use of your
+            ï¿½ display your valid copyright notice on your programs; and
+            ï¿½ indemnify, defend, and hold harmless Microsoft from any claims,
+              including attorneysï¿½ fees, related to the distribution or use of your
               programs.
         iii. Distribution Restrictions. You may not
-            · alter any copyright, trademark or patent notice in the Distributable
+            ï¿½ alter any copyright, trademark or patent notice in the Distributable
               Code;
-            · use Microsoft’s trademarks in your programs’ names or in a way that
+            ï¿½ use Microsoftï¿½s trademarks in your programsï¿½ names or in a way that
               suggests your programs come from or are endorsed by Microsoft;
-            · include Distributable Code in malicious, deceptive or unlawful
+            ï¿½ include Distributable Code in malicious, deceptive or unlawful
               programs; or
-            · modify or distribute the source code of any Distributable Code so
+            ï¿½ modify or distribute the source code of any Distributable Code so
               that any part of it becomes subject to an Excluded License. An
               Excluded License is one that requires, as a condition of use,
               modification or distribution, that
-                · the code be disclosed or distributed in source code form; or
-                · others have the right to modify it.
+                ï¿½ the code be disclosed or distributed in source code form; or
+                ï¿½ others have the right to modify it.
 
     3. SCOPE OF LICENSE. The software is licensed, not sold. This agreement only
        gives you some rights to use the software. Microsoft reserves all other
@@ -1340,14 +1340,14 @@ The license below applies to all of these packages:
        doing so, you must comply with any technical limitations in the software that
        only allow you to use it in certain ways. You may not
 
-        · work around any technical limitations in the software;
-        · reverse engineer, decompile or disassemble the software, except and only
+        ï¿½ work around any technical limitations in the software;
+        ï¿½ reverse engineer, decompile or disassemble the software, except and only
           to the extent that applicable law expressly permits, despite this
           limitation;
-        · publish the software for others to copy;
-        · rent, lease or lend the software;
-        · transfer the software or this agreement to any third party; or
-        · use the software for commercial software hosting services.
+        ï¿½ publish the software for others to copy;
+        ï¿½ rent, lease or lend the software;
+        ï¿½ transfer the software or this agreement to any third party; or
+        ï¿½ use the software for commercial software hosting services.
 
     4. BACKUP COPY. You may make one backup copy of the software. You may use it
        only to reinstall the software.
@@ -1362,7 +1362,7 @@ The license below applies to all of these packages:
       restrictions on destinations, end users and end use. For additional
       information, see www.microsoft.com/exporting.
 
-    7. SUPPORT SERVICES. Because this software is “as is,” we may not provide
+    7. SUPPORT SERVICES. Because this software is ï¿½as is,ï¿½ we may not provide
       support services for it.
 
     8. ENTIRE AGREEMENT. This agreement, and the terms for supplements, updates,
@@ -1387,7 +1387,7 @@ The license below applies to all of these packages:
         does not change your rights under the laws of your country if the laws of
         your country do not permit it to do so.
 
-    11. DISCLAIMER OF WARRANTY. THE SOFTWARE IS LICENSED “AS-IS.” YOU BEAR THE RISK
+    11. DISCLAIMER OF WARRANTY. THE SOFTWARE IS LICENSED ï¿½AS-IS.ï¿½ YOU BEAR THE RISK
         OF USING IT. MICROSOFT GIVES NO EXPRESS WARRANTIES, GUARANTEES OR
         CONDITIONS. YOU MAY HAVE ADDITIONAL CONSUMER RIGHTS OR STATUTORY GUARANTEES
         UNDER YOUR LOCAL LAWS WHICH THIS AGREEMENT CANNOT CHANGE. TO THE EXTENT
@@ -1402,9 +1402,9 @@ The license below applies to all of these packages:
         CANNOT RECOVER ANY OTHER DAMAGES, INCLUDING CONSEQUENTIAL, LOST PROFITS,
         SPECIAL, INDIRECT OR INCIDENTAL DAMAGES. This limitation applies to
 
-        · anything related to the software, services, content (including code)
+        ï¿½ anything related to the software, services, content (including code)
           on third party Internet sites, or third party programs; and
-        · claims for breach of contract, breach of warranty, guarantee or
+        ï¿½ claims for breach of contract, breach of warranty, guarantee or
           condition, strict liability, negligence, or other tort to the extent
           permitted by applicable law.
 
@@ -1416,37 +1416,37 @@ The license below applies to all of these packages:
     Please note: As this software is distributed in Quebec, Canada, some of the
     clauses in this agreement are provided below in French.
 
-    Remarque : Ce logiciel étant distribué au Québec, Canada, certaines des clauses
-    dans ce contrat sont fournies ci-dessous en français.
+    Remarque : Ce logiciel ï¿½tant distribuï¿½ au Quï¿½bec, Canada, certaines des clauses
+    dans ce contrat sont fournies ci-dessous en franï¿½ais.
 
-    EXONÉRATION DE GARANTIE. Le logiciel visé par une licence est offert « tel quel
-    ». Toute utilisation de ce logiciel est à votre seule risque et péril. Microsoft
-    n’accorde aucune autre garantie expresse. Vous pouvez bénéficier de droits
+    EXONï¿½RATION DE GARANTIE. Le logiciel visï¿½ par une licence est offert ï¿½ tel quel
+    ï¿½. Toute utilisation de ce logiciel est ï¿½ votre seule risque et pï¿½ril. Microsoft
+    nï¿½accorde aucune autre garantie expresse. Vous pouvez bï¿½nï¿½ficier de droits
     additionnels en vertu du droit local sur la protection des consommateurs, que ce
     contrat ne peut modifier. La ou elles sont permises par le droit locale, les
-    garanties implicites de qualité marchande, d’adéquation à un usage particulier
-    et d’absence de contrefaçon sont exclues. LIMITATION DES DOMMAGES-INTÉRÊTS ET
-    EXCLUSION DE RESPONSABILITÉ POUR LES DOMMAGES. Vous pouvez obtenir de Microsoft
-    et de ses fournisseurs une indemnisation en cas de dommages directs uniquement à
-    hauteur de 5,00 $ US. Vous ne pouvez prétendre à aucune indemnisation pour les
-    autres dommages, y compris les dommages spéciaux, indirects ou accessoires et
-    pertes de bénéfices. Cette limitation concerne :
+    garanties implicites de qualitï¿½ marchande, dï¿½adï¿½quation ï¿½ un usage particulier
+    et dï¿½absence de contrefaï¿½on sont exclues. LIMITATION DES DOMMAGES-INTï¿½Rï¿½TS ET
+    EXCLUSION DE RESPONSABILITï¿½ POUR LES DOMMAGES. Vous pouvez obtenir de Microsoft
+    et de ses fournisseurs une indemnisation en cas de dommages directs uniquement ï¿½
+    hauteur de 5,00 $ US. Vous ne pouvez prï¿½tendre ï¿½ aucune indemnisation pour les
+    autres dommages, y compris les dommages spï¿½ciaux, indirects ou accessoires et
+    pertes de bï¿½nï¿½fices. Cette limitation concerne :
 
-            · tout ce qui est relié au logiciel, aux services ou au contenu (y
+            ï¿½ tout ce qui est reliï¿½ au logiciel, aux services ou au contenu (y
     compris le code) figurant sur des sites Internet tiers ou dans des programmes
     tiers ; et
 
-            · les réclamations au titre de violation de contrat ou de garantie, ou
-    au titre de responsabilité stricte, de négligence ou d’une autre faute dans la
-    limite autorisée par la loi en vigueur.
+            ï¿½ les rï¿½clamations au titre de violation de contrat ou de garantie, ou
+    au titre de responsabilitï¿½ stricte, de nï¿½gligence ou dï¿½une autre faute dans la
+    limite autorisï¿½e par la loi en vigueur.
 
-    Elle s’applique également, même si Microsoft connaissait ou devrait connaître
-    l’éventualité d’un tel dommage. Si votre pays n’autorise pas l’exclusion ou la
-    limitation de responsabilité pour les dommages indirects, accessoires ou de
-    quelque nature que ce soit, il se peut que la limitation ou l’exclusion
-    ci-dessus ne s’appliquera pas à votre égard.
+    Elle sï¿½applique ï¿½galement, mï¿½me si Microsoft connaissait ou devrait connaï¿½tre
+    lï¿½ï¿½ventualitï¿½ dï¿½un tel dommage. Si votre pays nï¿½autorise pas lï¿½exclusion ou la
+    limitation de responsabilitï¿½ pour les dommages indirects, accessoires ou de
+    quelque nature que ce soit, il se peut que la limitation ou lï¿½exclusion
+    ci-dessus ne sï¿½appliquera pas ï¿½ votre ï¿½gard.
 
-    EFFET JURIDIQUE. Le présent contrat décrit certains droits juridiques. Vous
-    pourriez avoir d’autres droits prévus par les lois de votre pays. Le présent
-    contrat ne modifie pas les droits que vous confèrent les lois de votre pays si
+    EFFET JURIDIQUE. Le prï¿½sent contrat dï¿½crit certains droits juridiques. Vous
+    pourriez avoir dï¿½autres droits prï¿½vus par les lois de votre pays. Le prï¿½sent
+    contrat ne modifie pas les droits que vous confï¿½rent les lois de votre pays si
     celles-ci ne le permettent pas.

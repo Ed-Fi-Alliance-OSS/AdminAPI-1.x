@@ -12,7 +12,7 @@ version: `2019.2.2`):
     github.username = <username>
     github.accessToken.protected (password type) = <access token>
     github.accessToken = %github.accessToken.protected%
-    git.branch.default = development-v3
+    git.branch.default = main
     git.branch.specification = +:refs/heads/(*)
                                +:(refs/pull/*/head)
     ```

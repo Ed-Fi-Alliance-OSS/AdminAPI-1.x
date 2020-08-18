@@ -70,9 +70,9 @@ param(
     [string]
     $BuildCounter = "1",
 
-    # .NET project build configuration, defaults to "Debug". Options are: Debug, Release.
+    # .NET project build configuration, defaults to "Debug". Options are: Debug, Release, OnPremisesRelease.
     [string]
-    [ValidateSet("Debug", "Release")]
+    [ValidateSet("Debug", "Release", "OnPremisesRelease")]
     $BuildConfiguration = "Debug",
 
     # Optional location of msbuild.exe. If not provided, the script attempts to
@@ -100,10 +100,12 @@ param(
 $solution = "Application\Ed-Fi-ODS-Tools.sln"
 
 if ("Release" -eq $BuildConfiguration) {
+    $configuration = "Release"
+    $testConfiguration = "Release"
+} elseif ("OnPremisesRelease" -eq $BuildConfiguration) {
     $configuration = "OnPremisesRelease"
     $testConfiguration = "Release"
-}
-else {
+} else {
     $configuration = "OnPremises"
     $testConfiguration = "Debug"
 }

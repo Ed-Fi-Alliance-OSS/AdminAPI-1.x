@@ -42,7 +42,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
 
             var application = _usersContext.Applications.SingleOrDefault(x => x.ApplicationName == applicationName);
 
-            var apiClient = _usersContext.Clients.SingleOrDefault(x => x.Name == applicationName);
+            var apiClient = _usersContext.Clients.SingleOrDefault(x => x.Application.ApplicationId == application.ApplicationId);
 
             if (apiClient != null)
             {
@@ -63,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                 {
                     var applicationEducationOrganization =
                         _usersContext.ApplicationEducationOrganizations.SingleOrDefault(x =>
-                            x.EducationOrganizationId == odsToken);
+                            x.Application.ApplicationId == application.ApplicationId);
                     if (applicationEducationOrganization != null)
                         _usersContext.ApplicationEducationOrganizations.Remove(applicationEducationOrganization);
                 }

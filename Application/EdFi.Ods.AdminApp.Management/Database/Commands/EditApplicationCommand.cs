@@ -54,7 +54,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             }
 
             application.ApplicationEducationOrganizations.Clear();
-            model.EducationOrganizationIds.ToList().ForEach(id => application.CreateEducationOrganizationAssociation(id));
+            model.EducationOrganizationIds.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
 
             if (application.Profiles == null)
             {

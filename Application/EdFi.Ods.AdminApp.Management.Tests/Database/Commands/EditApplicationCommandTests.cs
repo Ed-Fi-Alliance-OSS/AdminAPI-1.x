@@ -80,8 +80,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             _application.ApiClients.Add(_apiClient);
             _application.Profiles.Add(_profile);
-            _application.CreateEducationOrganizationAssociation(12345);
-            _application.CreateEducationOrganizationAssociation(67890);
+            _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(12345));
+            _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(67890));
 
             Save(_vendor, _otherVendor, _user, _otherUser, _profile, _otherProfile, _application);
         }

@@ -714,147 +714,147 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Schema\3.2.0-b\Ed-Fi-Core.xsd">
+    <Content Include="Schema\3.2.0-b\Ed-Fi-Core.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-AssessmentMetadata.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-AssessmentMetadata.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-Descriptors.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-Descriptors.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-EducationOrganization.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-EducationOrganization.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-EducationOrgCalendar.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-EducationOrgCalendar.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-Finance.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-Finance.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-MasterSchedule.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-MasterSchedule.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-Parent.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-Parent.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-PostSecondaryEvent.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-PostSecondaryEvent.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StaffAssociation.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StaffAssociation.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-Standards.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-Standards.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-Student.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-Student.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentAssessment.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentAssessment.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentAttendance.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentAttendance.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentCohort.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentCohort.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentDiscipline.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentDiscipline.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentEnrollment.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentEnrollment.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentGrade.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentGrade.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentGradebook.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentGradebook.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentIntervention.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentIntervention.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentProgram.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentProgram.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\Interchange-StudentTranscript.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\Interchange-StudentTranscript.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-b\SchemaAnnotation.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-b\SchemaAnnotation.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Ed-Fi-Core.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Ed-Fi-Core.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-AssessmentMetadata.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-AssessmentMetadata.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-Descriptors.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-Descriptors.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-EducationOrganization.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-EducationOrganization.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-EducationOrgCalendar.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-EducationOrgCalendar.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-Finance.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-Finance.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-MasterSchedule.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-MasterSchedule.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-Parent.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-Parent.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-PostSecondaryEvent.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-PostSecondaryEvent.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StaffAssociation.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StaffAssociation.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-Standards.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-Standards.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-Student.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-Student.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentAssessment.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentAssessment.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentAttendance.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentAttendance.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentCohort.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentCohort.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentDiscipline.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentDiscipline.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentEnrollment.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentEnrollment.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentGrade.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentGrade.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentGradebook.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentGradebook.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentIntervention.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentIntervention.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentProgram.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentProgram.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-StudentTranscript.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-StudentTranscript.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\Interchange-Survey.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\Interchange-Survey.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schema\3.2.0-c\SchemaAnnotation.xsd">
+    </Content>
+    <Content Include="Schema\3.2.0-c\SchemaAnnotation.xsd">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />

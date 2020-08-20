@@ -147,7 +147,17 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
         private static FileImportConfiguration GetFileImportConfig(BulkUploadJobContext bulkUploadJobContext, string workingFolderPath)
         {
-            return new FileImportConfiguration(bulkUploadJobContext.DataDirectoryFullPath, workingFolderPath, bulkUploadJobContext.SchoolYear, apiBaseUrl: bulkUploadJobContext.ApiBaseUrl, clientKey: bulkUploadJobContext.ClientKey, clientSecret: bulkUploadJobContext.ClientSecret, oauthUrl: bulkUploadJobContext.OauthUrl, metadataUrl: bulkUploadJobContext.MetadataUrl, dependenciesUrl: bulkUploadJobContext.DependenciesUrl, schemaPath: bulkUploadJobContext.SchemaPath);
+            return new FileImportConfiguration(
+                bulkUploadJobContext.DataDirectoryFullPath,
+                workingFolderPath,
+                bulkUploadJobContext.SchoolYear,
+                apiBaseUrl: bulkUploadJobContext.ApiBaseUrl,
+                clientKey: bulkUploadJobContext.ClientKey,
+                clientSecret: bulkUploadJobContext.ClientSecret,
+                oauthUrl: bulkUploadJobContext.OauthUrl,
+                metadataUrl: bulkUploadJobContext.MetadataUrl,
+                dependenciesUrl: bulkUploadJobContext.DependenciesUrl,
+                schemaPath: bulkUploadJobContext.SchemaPath);
         }
 
         public void CleanUp(BulkUploadJobContext jobContext)

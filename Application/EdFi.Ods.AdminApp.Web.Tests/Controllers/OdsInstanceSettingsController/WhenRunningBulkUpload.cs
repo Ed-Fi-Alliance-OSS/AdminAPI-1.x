@@ -231,21 +231,6 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
             var result = (PartialViewResult)await SystemUnderTest.BulkFileUpload(model);
 
             // Assert
-            Func<BulkUploadJobContext, bool> bulkUploadJobEnqueueVerifier = actual =>
-            {
-                actual.ShouldSatisfyAllConditions(
-                    () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
-                    () => actual.DataDirectoryFullPath.ShouldBe(fileUploadResult.Directory),
-                    () => actual.OdsInstanceId.ShouldBe(OdsInstanceContext.Id),
-                    () => actual.ApiBaseUrl.ShouldBe(_connectionInformation.ApiBaseUrl),
-                    () => actual.ClientKey.ShouldBe(_connectionInformation.ClientKey),
-                    () => actual.ClientSecret.ShouldBe(_connectionInformation.ClientSecret),
-                    () => actual.DependenciesUrl.ShouldBe(_connectionInformation.DependenciesUrl),
-                    () => actual.MetadataUrl.ShouldBe(_connectionInformation.MetadataUrl),
-                    () => actual.OauthUrl.ShouldBe(_connectionInformation.OAuthUrl)
-                );
-                return true;
-            };
             result.ShouldNotBeNull();
             result.ViewName.ShouldBe("_SignalRStatus_BulkLoad");
             result.Model.ShouldNotBeNull();
@@ -254,7 +239,7 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
             settingsModel.BulkFileUploadModel.IsJobRunning.ShouldBeTrue();
             settingsModel.BulkFileUploadModel.IsSameOdsInstance.ShouldBeTrue();
             BulkUploadJob.Verify(
-                x => x.EnqueueJob(It.Is<BulkUploadJobContext>(y => bulkUploadJobEnqueueVerifier(y))),
+                x => x.EnqueueJob(It.IsAny<BulkUploadJobContext>()),
                 Times.Never);
         }
 

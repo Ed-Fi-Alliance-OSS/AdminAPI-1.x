@@ -371,6 +371,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var schemaBasePath = HostingEnvironment.MapPath(ConfigurationManager.AppSettings["XsdFolder"]);
             var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
+            var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
+
+            const int IdealSimultaneousRequests = 20;
+            const int PessimisticSimultaneousRequests = 1;
+
+            var maxSimultaneousRequests = odsApiVersion.StartsWith("3.")
+                ? PessimisticSimultaneousRequests
+                : IdealSimultaneousRequests;
 
             var jobContext = new BulkUploadJobContext
             {
@@ -385,7 +393,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 ClientKey = config.BulkUploadCredential?.ApiKey ?? string.Empty,
                 ClientSecret = config.BulkUploadCredential?.ApiSecret ?? string.Empty,
                 SchemaPath = $"{schemaBasePath}\\{standardVersion}",
-                MaxSimultaneousRequests = 20
+                MaxSimultaneousRequests = maxSimultaneousRequests
             };
 
             if (!_bulkUploadJob.IsJobRunning())

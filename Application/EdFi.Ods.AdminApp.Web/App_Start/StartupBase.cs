@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -16,6 +16,7 @@ using Castle.Windsor;
 using EdFi.Admin.LearningStandards.Core.Configuration;
 using EdFi.Admin.LearningStandards.Core.Services;
 using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
+using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.App_Start;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IoC;
@@ -32,6 +33,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
 using log4net;
 
 namespace EdFi.Ods.AdminApp.Web
@@ -76,7 +78,8 @@ namespace EdFi.Ods.AdminApp.Web
 
         private void ConfigureLearningStandards()
         {
-            var config = new EdFiOdsApiClientConfiguration();
+            var config = new EdFiOdsApiClientConfiguration(
+                maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());
 
             var serviceCollection = new ServiceCollection();
 
@@ -88,6 +91,27 @@ namespace EdFi.Ods.AdminApp.Web
             );
 
             Container.Register(Component.For<ILearningStandardsCorePluginConnector>().Instance(pluginConnector));
+        }
+
+        private static int GetLearningStandardsMaxSimultaneousRequests()
+        {
+            const int IdealSimultaneousRequests = 4;
+            const int PessimisticSimultaneousRequests = 1;
+
+            try
+            {
+                var odsApiVersion = new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl);
+
+                return odsApiVersion.StartsWith("3.") ? PessimisticSimultaneousRequests : IdealSimultaneousRequests;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(
+                    "Failed to infer ODS / API version to determine Learning Standards " +
+                    $"MaxSimultaneousRequests. Assuming a max of {PessimisticSimultaneousRequests}.", e);
+
+                return PessimisticSimultaneousRequests;
+            }
         }
 
         private static void InitializeContainer(IWindsorContainer container)

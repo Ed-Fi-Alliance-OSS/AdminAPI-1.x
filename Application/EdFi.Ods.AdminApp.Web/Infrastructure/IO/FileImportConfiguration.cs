@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
         public FileImportConfiguration(string dataDirectoryFullPath,
             string workingFolderPath, int? schoolYear = null, string apiBaseUrl = null, string clientKey = null,
             string clientSecret = null, string oauthUrl = null, string metadataUrl = null,
-            string dependenciesUrl = null, string schemaPath = null)
+            string dependenciesUrl = null, string schemaPath = null, int maxSimultaneousRequests = 20)
         {
             Require(apiBaseUrl);
             Require(clientKey);
@@ -21,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             Require(metadataUrl);
             Require(dependenciesUrl);
 
-            SetConfiguration(dataDirectoryFullPath, workingFolderPath, apiBaseUrl, clientKey, clientSecret, oauthUrl, metadataUrl, dependenciesUrl, schoolYear, schemaPath);
+            SetConfiguration(dataDirectoryFullPath, workingFolderPath, apiBaseUrl, clientKey, clientSecret, oauthUrl, metadataUrl, dependenciesUrl, schoolYear, schemaPath, maxSimultaneousRequests);
         }
 
         private void Require(string connectionInformationArgument)
@@ -32,7 +32,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             }
         }
 
-        private void SetConfiguration(string dataDirectoryFullPath, string workingFolderPath, string apiBaseUrl, string clientKey, string clientSecret, string oauthUrl, string metadataUrl, string dependenciesUrl, int? schoolYear, string schemaPath)
+        private void SetConfiguration(string dataDirectoryFullPath, string workingFolderPath, string apiBaseUrl, string clientKey, string clientSecret, string oauthUrl, string metadataUrl, string dependenciesUrl, int? schoolYear, string schemaPath,
+            int maxSimultaneousRequests)
         {
             DataFolder = dataDirectoryFullPath;
             WorkingFolder = workingFolderPath;
@@ -45,9 +46,9 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             InterchangeOrderFolder = schemaPath;
             Retries = 3;
             SchoolYear = schoolYear;
-            ConnectionLimit = 20;
-            TaskCapacity = 20;
-            MaxSimultaneousRequests = 20;
+            ConnectionLimit = maxSimultaneousRequests;
+            TaskCapacity = maxSimultaneousRequests;
+            MaxSimultaneousRequests = maxSimultaneousRequests;
             DependenciesUrl = dependenciesUrl;
         }
     }

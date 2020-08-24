@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -83,6 +83,19 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Infrastructure.IO
             new FileImportConfiguration(string.Empty, expected, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
                 .WorkingFolder
                 .ShouldBe(expected);
+        }
+
+        [Test]
+        public void GivenMaxSimultaneousRequestsConstructorArg_ThenAllThrottlingPropertiesShouldTakeThatValue()
+        {
+            const int expected = 13;
+
+            var configuration = new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl,
+                maxSimultaneousRequests: expected);
+
+            configuration.TaskCapacity.ShouldBe(expected);
+            configuration.ConnectionLimit.ShouldBe(expected);
+            configuration.MaxSimultaneousRequests.ShouldBe(expected);
         }
 
         [Test]

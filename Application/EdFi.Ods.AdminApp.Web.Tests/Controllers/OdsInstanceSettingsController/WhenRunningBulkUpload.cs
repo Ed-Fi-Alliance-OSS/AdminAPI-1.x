@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -178,10 +178,13 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
         }
 
         [Test]
-        public async Task When_Perform_Post_Request_To_BulkFileUpload_With_Valid_File_Job_Should_Enqueued()
+        public async Task When_Perform_Post_Request_To_BulkFileUpload_With_Valid_File_Job_Should_Be_Enqueued()
         {
+            const string odsApiVersion = "5.0.0";
             const string edfiStandardVersion = "3.2.0-c";
-            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion(It.IsAny<string>())).Returns(edfiStandardVersion);
+            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
+            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
+
             var schemaBasePath = HostingEnvironment.MapPath(ConfigurationManager.AppSettings["XsdFolder"]);
             var schemaPath = $"{schemaBasePath}\\{edfiStandardVersion}";
 
@@ -205,7 +208,8 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
                     () => actual.DependenciesUrl.ShouldBe(_connectionInformation.DependenciesUrl),
                     () => actual.MetadataUrl.ShouldBe(_connectionInformation.MetadataUrl),
                     () => actual.OauthUrl.ShouldBe(_connectionInformation.OAuthUrl),
-                    () => actual.SchemaPath.ShouldBe(schemaPath)
+                    () => actual.SchemaPath.ShouldBe(schemaPath),
+                    () => actual.MaxSimultaneousRequests.ShouldBe(20)
                 );
                 return true;
             };
@@ -221,8 +225,45 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
         }
 
         [Test]
+        public async Task When_Perform_Post_Request_To_BulkFileUpload_Against_ODS3_Job_Should_Be_Enqueued_With_Pessimistic_Throttling()
+        {
+            const string odsApiVersion = "3.4.0";
+            const string edfiStandardVersion = "3.2.0-b";
+            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
+            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
+
+            var model = SetupBulkUpload(out var fileUploadResult);
+
+            BulkUploadJob.Setup(x => x.IsJobRunning()).Returns(false);
+            BulkUploadJob.Setup(x => x.IsSameOdsInstance(OdsInstanceContext.Id, typeof(BulkUploadJobContext))).Returns(true);
+
+            var result = (PartialViewResult)await SystemUnderTest.BulkFileUpload(model);
+
+            // Assert
+            Func<BulkUploadJobContext, bool> bulkUploadJobEnqueueVerifier = actual =>
+            {
+                actual.MaxSimultaneousRequests.ShouldBe(1);
+                return true;
+            };
+            result.ShouldNotBeNull();
+            result.ViewName.ShouldBe("_SignalRStatus_BulkLoad");
+            result.Model.ShouldNotBeNull();
+            var settingsModel = (OdsInstanceSettingsModel)result.Model;
+            settingsModel.BulkFileUploadModel.ShouldNotBeNull();
+            settingsModel.BulkFileUploadModel.IsSameOdsInstance.ShouldBeTrue();
+            BulkUploadJob.Verify(
+                x => x.EnqueueJob(It.Is<BulkUploadJobContext>(y => bulkUploadJobEnqueueVerifier(y))),
+                Times.Once);
+        }
+
+        [Test]
         public async Task When_Job_Is_Already_Running_New_Job_Should_Not_Be_Enqueued()
         {
+            const string odsApiVersion = "3.4.0";
+            const string edfiStandardVersion = "3.2.0-b";
+            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
+            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
+
             var model = SetupBulkUpload(out var fileUploadResult);
 
             BulkUploadJob.Setup(x => x.IsJobRunning()).Returns(true);
@@ -231,21 +272,6 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
             var result = (PartialViewResult)await SystemUnderTest.BulkFileUpload(model);
 
             // Assert
-            Func<BulkUploadJobContext, bool> bulkUploadJobEnqueueVerifier = actual =>
-            {
-                actual.ShouldSatisfyAllConditions(
-                    () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
-                    () => actual.DataDirectoryFullPath.ShouldBe(fileUploadResult.Directory),
-                    () => actual.OdsInstanceId.ShouldBe(OdsInstanceContext.Id),
-                    () => actual.ApiBaseUrl.ShouldBe(_connectionInformation.ApiBaseUrl),
-                    () => actual.ClientKey.ShouldBe(_connectionInformation.ClientKey),
-                    () => actual.ClientSecret.ShouldBe(_connectionInformation.ClientSecret),
-                    () => actual.DependenciesUrl.ShouldBe(_connectionInformation.DependenciesUrl),
-                    () => actual.MetadataUrl.ShouldBe(_connectionInformation.MetadataUrl),
-                    () => actual.OauthUrl.ShouldBe(_connectionInformation.OAuthUrl)
-                );
-                return true;
-            };
             result.ShouldNotBeNull();
             result.ViewName.ShouldBe("_SignalRStatus_BulkLoad");
             result.Model.ShouldNotBeNull();
@@ -254,7 +280,7 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
             settingsModel.BulkFileUploadModel.IsJobRunning.ShouldBeTrue();
             settingsModel.BulkFileUploadModel.IsSameOdsInstance.ShouldBeTrue();
             BulkUploadJob.Verify(
-                x => x.EnqueueJob(It.Is<BulkUploadJobContext>(y => bulkUploadJobEnqueueVerifier(y))),
+                x => x.EnqueueJob(It.IsAny<BulkUploadJobContext>()),
                 Times.Never);
         }
 

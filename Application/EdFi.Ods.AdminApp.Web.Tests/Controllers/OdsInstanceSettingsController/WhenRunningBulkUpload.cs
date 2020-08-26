@@ -328,13 +328,10 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
             // Arrange
             const string expectedKey = "key";
             const string expectedSecret = "secret";
-            var model = new OdsInstanceSettingsModel
+            var model = new SaveBulkUploadCredentialsModel
             {
-                BulkFileUploadModel = new BulkFileUploadModel
-                {
-                    ApiKey = expectedKey,
-                    ApiSecret = expectedSecret
-                }
+                ApiKey = expectedKey,
+                ApiSecret = expectedSecret
             };
           
             OdsSecretConfigurationProvider.Setup(x => x.GetSecretConfiguration(It.IsAny<int>()))

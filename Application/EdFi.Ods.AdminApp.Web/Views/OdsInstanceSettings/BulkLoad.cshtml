@@ -19,16 +19,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 <div class="tab-content">
     @if (!Model.BulkFileUploadModel.CredentialsSaved)
     {
-        using (Html.BeginForm("SaveBulkLoadCredentials", "OdsInstanceSettings", FormMethod.Post, new { enctype = "multipart/form-data", id = "save-credentials-form" }))
-        {
-            @Html.ValidationBlock()
-            @Html.InputBlock(m => m.BulkFileUploadModel.ApiKey)
-            @Html.InputBlock(m => m.BulkFileUploadModel.ApiSecret)
-            <div class="col-xs-4"></div>
-            <div class="col-xs-6">
-                @Html.SaveButton("Save credentials").Id("bulk-load-button")
-            </div>
-        }
+        @Html.Partial("_SaveBulkUploadCredentialsForm", Model.BulkFileUploadModel)
     }
     else
     {

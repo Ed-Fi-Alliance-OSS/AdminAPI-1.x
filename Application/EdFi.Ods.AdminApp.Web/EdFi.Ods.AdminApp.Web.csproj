@@ -1083,6 +1083,7 @@
     <Content Include="Views\User\_DeleteUserModal.cshtml" />
     <Content Include="Views\Shared\_SignalRStatus.cshtml" />
     <Content Include="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
+    <Content Include="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <None Include="Web.base.config" />
     <Content Include="Views\OdsInstances\RegisterOdsInstance.cshtml" />
     <Content Include="Views\OdsInstances\Index.cshtml" />

@@ -348,6 +348,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertionExtensions.cs" />
+    <Compile Include="Database\Commands\BulkUploadValidationTests.cs" />
     <Compile Include="Database\Models\RolePermissionTests.cs" />
     <Compile Include="Instance\GetOdsInstanceRegistrationsByUserIdQueryTests.cs" />
     <Compile Include="Instance\DeregisterOdsInstanceCommandTests.cs" />

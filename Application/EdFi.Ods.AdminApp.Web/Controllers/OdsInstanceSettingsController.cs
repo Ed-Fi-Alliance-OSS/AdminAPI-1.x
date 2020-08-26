@@ -408,12 +408,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SaveBulkLoadCredentials(OdsInstanceSettingsModel model)
+        public async Task<ActionResult> SaveBulkLoadCredentials(SaveBulkUploadCredentialsModel model)
         {
             var config = await _odsSecretConfigurationProvider.GetSecretConfiguration(_instanceContext.Id);
             if (config == null) return JsonError(_missingOdsSecretConfig);
-            config.BulkUploadCredential = new BulkUploadCredential { ApiKey = model.BulkFileUploadModel.ApiKey,
-                ApiSecret = model.BulkFileUploadModel.ApiSecret };
+            config.BulkUploadCredential = new BulkUploadCredential { ApiKey = model.ApiKey,
+                ApiSecret = model.ApiSecret };
             await _odsSecretConfigurationProvider.SetSecretConfiguration(config, _instanceContext.Id);
             return JsonSuccess("Credentials successfully saved");
         }

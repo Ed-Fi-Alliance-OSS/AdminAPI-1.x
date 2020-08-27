@@ -12,9 +12,18 @@ To run manually from source code, instead of from an expanded NuGet package,
 run the prep-installer-package.ps1 script first. Think of it as a "restore-packages"
 step before compiling in C#.
 #>
+function Set-TlsVersion {
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
+}
 
 $env:PathResolverRepositoryOverride = "Ed-Fi-Ods;Ed-Fi-ODS-Implementation;"
 Import-Module -Force -Scope Global "$PSScriptRoot/Ed-Fi-ODS-Implementation/logistics/scripts/modules/path-resolver.psm1"
+
+Import-Module -Force $folders.modules.invoke("Environment/Prerequisites.psm1") -Scope Global
+Set-TlsVersion
+Install-DotNetCore "C:\temp\tools"
+
 Import-Module -Force $folders.modules.invoke("packaging/nuget-helper.psm1")
 Import-Module -Force $folders.modules.invoke("tasks/TaskHelper.psm1")
 Import-Module -Force $folders.modules.invoke("tools/ToolsHelper.psm1")
@@ -132,11 +141,11 @@ function Install-EdFiOdsAdminApp {
 
         # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
         [string]
-        $ToolsPath = "$PSScriptRoot/tools",
+        $ToolsPath = "C:\temp\tools",
 
         # Path for storing downloaded packages
         [string]
-        $DownloadPath = "$PSScriptRoot/downloads",
+        $DownloadPath = "C:\temp\downloads",
 
         # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
         [string]
@@ -282,7 +291,6 @@ function Install-EdFiOdsAdminApp {
 
     $elapsed = Use-StopWatch {
         $result += Initialize-Configuration -Config $config
-        $result += Set-TlsVersion
         $result += Get-AdminAppPackage -Config $Config
         $result += Get-DbDeploy -Config $Config
         $result += Invoke-TransformWebConfigOnPremRelease -Config $Config
@@ -412,11 +420,6 @@ function Initialize-Configuration {
             $Config.engine = $Config.OdsDbConnectionInfo.Engine
         }
     }
-}
-
-function Set-TlsVersion {
-
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
 }
 
 function Get-DbDeploy {

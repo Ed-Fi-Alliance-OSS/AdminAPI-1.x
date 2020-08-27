@@ -11,6 +11,7 @@
     <description>Application installer modules for the Ed-Fi Admin App application</description>
   </metadata>
   <files>
+    <file src="global.json" />
     <file src="Install-EdFiOdsAdminApp.psm1" />
     <file src="Ed-Fi-ODS/**" />
     <file src="Ed-Fi-ODS-Implementation/**" />

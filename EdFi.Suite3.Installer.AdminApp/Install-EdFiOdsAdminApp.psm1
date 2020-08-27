@@ -141,11 +141,11 @@ function Install-EdFiOdsAdminApp {
 
         # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
         [string]
-        $ToolsPath = "$PSScriptRoot/tools",
+        $ToolsPath = "C:\temp\tools",
 
         # Path for storing downloaded packages
         [string]
-        $DownloadPath = "$PSScriptRoot/downloads",
+        $DownloadPath = "C:\temp\downloads",
 
         # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
         [string]

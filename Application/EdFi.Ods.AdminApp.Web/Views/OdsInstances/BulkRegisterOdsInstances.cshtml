@@ -27,6 +27,8 @@ See the LICENSE and NOTICES files in the project root for more information.
             @Html.SaveButton("Register Instances").AddClasses("no-ajax", "bulk-register").Attr("disabled",true)
         </div>
     </div>
+    <br/><br/>
+    <div id="result" class="alert alert-info" hidden></div>
 }
 
 <script type="text/javascript">
@@ -34,6 +36,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         if ($(this).length > 0) {
             $(".bulk-register").attr('disabled', false);
         }
+        $('#result').hide();
     });
     $('#bulk-instances-registration-form').submit(function (e) {
         e.preventDefault();
@@ -42,16 +45,11 @@ See the LICENSE and NOTICES files in the project root for more information.
             .html('Registering Instances... <span class="padding-left"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>');
         $(".bulk-register").attr('disabled', true);
         var successHandler = function (data) {
-            if (data.successMessage) {
-                SetSuccessMessage(data.successMessage);
-            }
-            if (data.errorMessage) {
-                SetErrorMessage(data.errorMessage);
-            }
-            ShowToasterMessage();
-            ClearToasterMessage();
+            $(".bulk-register").html('Register Instances');
+            $(".bulk-register").attr('disabled', false);
             form[0].reset();
-            $('#ods-instance-settings-back-button').trigger('click');
+            $('#result').text(data.successMessage);
+            $('#result').show();
         };
         var errorAdditionalBehavior = function () {
             $(".bulk-register").html('Register Instances');

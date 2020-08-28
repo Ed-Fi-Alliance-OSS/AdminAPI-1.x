@@ -23,5 +23,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
                 application.Vendor.IsSystemReservedVendor()
             );
         }
+
+        public static int MaximumApplicationNameLength = 50;
     }
 }

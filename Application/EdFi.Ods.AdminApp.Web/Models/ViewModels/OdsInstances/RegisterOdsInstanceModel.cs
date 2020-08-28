@@ -9,8 +9,10 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using FluentValidation;
+using FluentValidation.Validators;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
@@ -56,6 +58,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             RuleFor(m => m.NumericSuffix).NotEmpty().WithMessage(requiredNumericSuffixMessage);
 
             RuleFor(m => m.NumericSuffix)
+                .Must(BeWithinApplicationNameMaxLength)
+                .When(x => x.NumericSuffix != null);
+
+            RuleFor(m => m.NumericSuffix)
                 .Must(x=> x <= maxValue && x >= minValue)
                 .When(x => x.NumericSuffix != null)
                 .WithMessage(inRangeMessage);
@@ -87,6 +93,22 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         {
             var newInstanceDatabaseName = InferInstanceDatabaseName(newInstanceNumericSuffix);
             return !_database.OdsInstanceRegistrations.Any(x => x.Name == newInstanceDatabaseName);
+        }
+
+        private static bool BeWithinApplicationNameMaxLength(RegisterOdsInstanceModel model, int? newInstanceNumericSuffix, PropertyValidatorContext context)
+        {
+            var newInstanceDatabaseName = InferInstanceDatabaseName(newInstanceNumericSuffix);
+            var extraCharactersInPrefix = newInstanceDatabaseName.GetAdminApplicationName().Length - ApplicationExtensions.MaximumApplicationNameLength;
+            if (extraCharactersInPrefix <= 0)
+            {
+                return true;
+            }
+
+            context.Rule.MessageBuilder = c
+                => $"The resulting database name {newInstanceDatabaseName} would be too long for Admin App to set up necessary Application records." +
+                   $" Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by {extraCharactersInPrefix} characters.";
+
+            return  false;
         }
 
         private static string InferInstanceDatabaseName(int? newInstanceNumericSuffix)

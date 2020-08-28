@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using FluentValidation;
+using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
@@ -25,6 +26,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
     {
+        private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
 
         public BulkRegisterOdsInstancesModelValidator(AdminAppDbContext database
             , ICloudOdsAdminAppSettingsApiModeProvider apiModeProvider
@@ -46,7 +48,15 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
                                 foreach (var record in model.DataRecords())
                                 {
-                                    context.AddFailures(validator.Validate(record));
+                                    var results = validator.Validate(record);
+                                    if (!results.IsValid)
+                                    {
+                                        foreach (var failure in results.Errors)
+                                        {
+                                            _logger.Error($"Property: {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                                        }
+                                    }
+                                    context.AddFailures(results);
                                 }
                             });
                 });

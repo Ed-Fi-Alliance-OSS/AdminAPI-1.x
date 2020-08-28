@@ -15,7 +15,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
     public class BulkRegisterOdsInstancesCommand
     {
         private readonly RegisterOdsInstanceCommand _registerOdsInstanceCommand;
-        private readonly ILog _logger = LogManager.GetLogger(typeof(BulkRegisterOdsInstancesCommand));
+        private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
 
         public BulkRegisterOdsInstancesCommand(RegisterOdsInstanceCommand registerOdsInstanceCommand)
         {

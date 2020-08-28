@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.Helpers;
+using FluentValidation.Validators;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 {
@@ -54,6 +55,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
                 .NotEmpty();
 
             RuleFor(m => m.ApplicationName)
+                .Must(BeWithinApplicationNameMaxLength)
+                .When(x => x.ApplicationName != null);
+
+            RuleFor(m => m.ApplicationName)
                 .Must(name => !ApplicationExtensions.IsSystemReservedApplicationName(name))
                 .WithMessage(p => $"'{p.ApplicationName}' is a reserved name and may not be used. Please choose another name.");
 
@@ -67,6 +72,22 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 
             RuleFor(m => m.Environment).NotNull();
             RuleFor(m => m.VendorId).NotEmpty();
+        }
+
+        private bool BeWithinApplicationNameMaxLength(AddApplicationModel model, string applicationName, PropertyValidatorContext context)
+        {
+            var persistedName = CloudOdsApplicationName.GetPersistedName(applicationName, CloudOdsEnvironment.Production);
+            var extraCharactersInName = persistedName.Length - ApplicationExtensions.MaximumApplicationNameLength;
+            if (extraCharactersInName <= 0)
+            {
+                return true;
+            }
+
+            context.Rule.MessageBuilder = c
+                => $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records." +
+                   $" Consider shortening the name by {extraCharactersInName} characters.";
+
+            return false;
         }
     }
 }

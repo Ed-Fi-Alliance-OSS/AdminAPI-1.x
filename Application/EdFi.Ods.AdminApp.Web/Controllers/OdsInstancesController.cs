@@ -101,10 +101,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var bulkRegisterOdsInstancesResults = results.ToList();
             var successCount = bulkRegisterOdsInstancesResults.Count(x => x.Success);
             var failCount = bulkRegisterOdsInstancesResults.Count(x => !x.Success);
-
-            return failCount > 0
-                ? JsonError($"Failed instance registrations: {failCount}. Please refer log file for further details.")
-                : JsonSuccess($"Successful instance registrations: {successCount}. Please refer log file for further details.");
+            return JsonSuccess(
+                $"Successful instance registrations: {successCount}. Failed instance registrations: {failCount}. Please refer log file for further details.");
         }
 
         public ActionResult ActivateOdsInstance(string instanceId)

@@ -25,9 +25,15 @@ See the LICENSE and NOTICES files in the project root for more information.
         <div id="ods-instances" class="navigational-index">
             @if (Model.UserContext.Has(Permission.AccessGlobalSettings))
             {
-                <div align="right">
-                    @Html.ActionLink("Register A New Instance", "RegisterOdsInstance", null, new { @class = "btn btn-primary cta" })
+                <div class="row">
+                    <div align="right" class="col-md-8">
+                        @Html.ActionLink("Register A New Instance", "RegisterOdsInstance", null, new { @class = "btn btn-primary cta" })
+                    </div>
+                    <div align="right" class="col-md-4">
+                        @Html.ActionLink("Bulk Register New Instances", "BulkRegisterOdsInstances", null, new { @class = "btn btn-primary cta" })
+                    </div>
                 </div>
+                <br/><br/>
             }
             @if (Model.OdsInstances.Any())
             {

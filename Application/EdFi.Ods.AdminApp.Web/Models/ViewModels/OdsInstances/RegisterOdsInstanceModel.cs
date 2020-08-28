@@ -56,17 +56,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 minValue = 1900;
             }
 
-            var stringToReplace = "()";
-
-            var alreadyExists =
-                $"An instance for this {beUniqueValidationMsg}{stringToReplace} already exists.";
-
-            var couldNotConnect =
-                $"Could not connect to an ODS instance database for this {beUniqueValidationMsg}{stringToReplace}.";
-
-            var alreadyExistsDescription =
-                $"An instance with this description{stringToReplace} already exists.";
-
             RuleFor(m => m.NumericSuffix).NotEmpty().WithMessage(requiredNumericSuffixMessage);
 
             RuleFor(m => m.NumericSuffix)
@@ -82,17 +71,13 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Must(BeAUniqueInstanceName)
                 .When(x => x.NumericSuffix != null)
                 .WithMessage(
-                    x => validationMessageWithDetails
-                        ? alreadyExists.Replace(stringToReplace, $"({x.NumericSuffix})")
-                        : alreadyExists.Replace(stringToReplace, string.Empty));
+                    x => $"An instance for this {beUniqueValidationMsg}{(validationMessageWithDetails ? $"({x.NumericSuffix})":"")} already exists.");
 
             RuleFor(m => m.NumericSuffix)
                 .Must(BeValidOdsInstanceDatabase)
                 .When(x => x.NumericSuffix != null)
                 .WithMessage(
-                    x => validationMessageWithDetails
-                        ? couldNotConnect.Replace(stringToReplace, $"({x.NumericSuffix})")
-                        : couldNotConnect.Replace(stringToReplace, string.Empty));
+                    x => $"Could not connect to an ODS instance database for this {beUniqueValidationMsg}{(validationMessageWithDetails ? $"({x.NumericSuffix})":"")}.");
 
             RuleFor(m => m.Description).NotEmpty();
 
@@ -100,11 +85,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Must(BeAUniqueInstanceDescription)
                 .When(x => x.Description != null)
                 .WithMessage(
-                    x => validationMessageWithDetails
-                        ? alreadyExistsDescription.Replace(
-                            stringToReplace,
-                            $"({beUniqueValidationMsg}: {x.NumericSuffix}, Description: {x.Description})")
-                        : alreadyExistsDescription.Replace(stringToReplace, string.Empty));
+                    x => $"An instance with this description{(validationMessageWithDetails ? $"({beUniqueValidationMsg}:{x.NumericSuffix}, Description: {x.Description})":"")} already exists.");
         }
 
         private static bool BeValidOdsInstanceDatabase(int? newInstanceNumericSuffix)

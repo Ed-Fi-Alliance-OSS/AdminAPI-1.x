@@ -35,10 +35,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
     {
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
-
-        private const int MaximumAllowedLimitOfRecords = 100;
-
-        private bool MaximumLimitRuleFailed { get; set; }
+       
         private bool UniquenessRuleFailed { get; set; }
 
         public BulkRegisterOdsInstancesModelValidator(AdminAppDbContext database
@@ -50,16 +47,11 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .NotEmpty();
 
             RuleFor(m => m.OdsInstancesFile)
-                .Must(HaveLessThanMaximumAllowedRecords)
-                .When(m => m.OdsInstancesFile != null)
-                .WithMessage($"You entered more than the maximum limit of instances allowed in the upload file. Maximum {MaximumAllowedLimitOfRecords} instance records are allowed.");
-
-            RuleFor(m => m.OdsInstancesFile)
                 .Must(HaveUniqueRecords)
                 .When(m => m.OdsInstancesFile != null);
 
             When(
-                m => m.OdsInstancesFile != null && !MaximumLimitRuleFailed && !UniquenessRuleFailed, () =>
+                m => m.OdsInstancesFile != null && !UniquenessRuleFailed, () =>
                 {
                     RuleFor(x => x.OdsInstancesFile)
                         .SafeCustom(
@@ -115,16 +107,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             UniquenessRuleFailed = true;
 
             context.Rule.MessageBuilder = c => errorMessage;
-
-            return false;
-        }
-
-        private bool HaveLessThanMaximumAllowedRecords(BulkRegisterOdsInstancesModel model, HttpPostedFileBase file)
-        {
-            if (model.GetInstanceRecords().Count <= MaximumAllowedLimitOfRecords)
-                return true;
-
-            MaximumLimitRuleFailed = true;
 
             return false;
         }

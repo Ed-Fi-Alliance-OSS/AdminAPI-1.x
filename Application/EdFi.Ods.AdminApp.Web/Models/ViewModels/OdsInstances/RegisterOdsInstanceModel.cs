@@ -92,7 +92,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         private static bool BeAUniqueInstanceName(int? newInstanceNumericSuffix)
         {
             var newInstanceDatabaseName = InferInstanceDatabaseName(newInstanceNumericSuffix);
-            return !_database.OdsInstanceRegistrations.Any(x => x.Name == newInstanceDatabaseName);
+            return newInstanceDatabaseName != "" && !_database.OdsInstanceRegistrations.Any(x => x.Name == newInstanceDatabaseName);
         }
 
         private static bool BeWithinApplicationNameMaxLength(RegisterOdsInstanceModel model, int? newInstanceNumericSuffix, PropertyValidatorContext context)

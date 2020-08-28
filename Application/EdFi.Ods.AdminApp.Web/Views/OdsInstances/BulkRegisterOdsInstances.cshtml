@@ -17,19 +17,24 @@ See the LICENSE and NOTICES files in the project root for more information.
     @Html.AntiForgeryToken()
     <div id="bulk-instances-registration-validation-summary" class="validationSummary alert alert-danger" hidden></div>
     <div class="row">
-        <div class="col-md-8">
-            @Html.FileInputBlock(x => x.OdsInstancesFile).Attr("accept", ".csv")
+        <div class="col-md-12">
+            @Html.FileInputBlock(x => x.OdsInstancesFile).Attr("accept", ".csv").AddClasses("input-file")
         </div>
     </div>
     <div class="row">
-        <div class="padding-top-5 text-center col-md-10">
+        <div class="padding-top-5 text-center col-md-11">
             @Html.Button("Back").Attr("type", "button").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances")).Id("ods-instance-settings-back-button")
-            @Html.SaveButton("Register Instances").AddClasses("no-ajax", "bulk-register")
+            @Html.SaveButton("Register Instances").AddClasses("no-ajax", "bulk-register").Attr("disabled",true)
         </div>
     </div>
 }
 
 <script type="text/javascript">
+    $(".input-file").change(function() {
+        if ($(this).length > 0) {
+            $(".bulk-register").attr('disabled', false);
+        }
+    });
     $('#bulk-instances-registration-form').submit(function (e) {
         e.preventDefault();
         var form = $(this);

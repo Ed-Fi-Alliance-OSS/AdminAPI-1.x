@@ -65,5 +65,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         public static string Sample(string prefix)
             => prefix + "-" + Guid.NewGuid();
+
+        public static string Sample(string prefix, int length)
+        {
+            var sampleString = prefix + "-";
+
+            while (sampleString.Length < length)
+            {
+                sampleString += Guid.NewGuid();
+            }
+
+            return sampleString.Substring(0, length);
+        }
     }
 }

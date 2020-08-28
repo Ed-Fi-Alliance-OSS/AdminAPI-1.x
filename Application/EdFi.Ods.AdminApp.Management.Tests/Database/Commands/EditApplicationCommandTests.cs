@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -155,6 +157,28 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
             persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
+        }
+
+        [Test]
+        public void ShouldNotEditIfNameNotWithinApplicationNameMaxLength()
+        {
+            SetupTestEntities();
+
+            var newApplicationName = Sample("New Application", 50);
+
+            var editApplication = new EditApplicationModel
+            {
+                ApplicationId = _application.ApplicationId,
+                ApplicationName = newApplicationName,
+                ClaimSetName = "DifferentFakeClaimSet",
+                EducationOrganizationIds = new List<int> { 23456, 78901 },
+                Environment = CloudOdsEnvironment.Production,
+                ProfileId = _otherProfile.ProfileId,
+                VendorId = _otherVendor.VendorId
+            };
+
+            new EditApplicationModelValidator()
+                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 11 characters.");
         }
 
         private class TestEditApplicationModel : IEditApplicationModel

@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -45,6 +47,40 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             Assert.Throws<InvalidOperationException>(() => command.Execute(newApplication));
+        }
+
+        [Test]
+        public void ShouldNotAddIfNameNotWithinApplicationNameMaxLength()
+        {
+            var vendor = new Vendor
+            {
+                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+                VendorName = "Integration Tests"
+            };
+
+            var user = new Admin.DataAccess.Models.User
+            {
+                Email = "nobody@nowhere.com",
+                FullName = "Integration Tests",
+                Vendor = vendor
+            };
+
+            Save(vendor, user);
+
+            var applicationName = Sample("Test Application", 50);
+
+            var newApplication = new AddApplicationModel
+            {
+                Environment = CloudOdsEnvironment.Production,
+                ApplicationName = applicationName,
+                ClaimSetName = "FakeClaimSet",
+                ProfileId = null,
+                VendorId = vendor.VendorId,
+                EducationOrganizationIds = new List<int> { 12345, 67890 }
+            };
+
+            new AddApplicationModelValidator()
+                .ShouldNotValidate(newApplication, $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 11 characters.");
         }
 
         [Test]

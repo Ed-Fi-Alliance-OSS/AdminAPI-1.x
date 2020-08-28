@@ -78,12 +78,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             }
         }
 
-        private static SqlConnection GetDatabaseConnection(string instanceName)
+        private static SqlConnection GetDatabaseConnection(string instanceName, string prefix = "")
         {
             var connectionString = ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"].ConnectionString;
 
+            var databaseName = instanceName;
+
+            if (prefix.Length > 0)
+            {
+                databaseName = prefix + instanceName;
+            }
+
             var sqlConnectionBuilder =
-                new SqlConnectionStringBuilder(connectionString) {InitialCatalog = instanceName};
+                new SqlConnectionStringBuilder(connectionString) {InitialCatalog = databaseName };
 
             var connection = new SqlConnection(sqlConnectionBuilder.ConnectionString);
             return connection;
@@ -326,6 +333,35 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
                     .ShouldNotValidate(newInstance, "An instance with this description already exists.");
+            }
+        }
+
+        [Test]
+        public void ShouldNotRegisterInstanceIfOdsInstanceNameNotWithinApplicationNameMaxLength()
+        {
+            ResetOdsInstanceRegistrations();
+
+            var instanceName = "Test_Ods_7878787";
+            var prefix = Sample("TestPrefix_", 50);
+
+            using (var connection1 = GetDatabaseConnection(instanceName, prefix))
+            using (var connection2 = GetDatabaseConnection(instanceName, prefix))
+            {
+                _connectionProvider
+                    .SetupSequence(x => x.CreateNewConnection(7878787, ApiMode.DistrictSpecific))
+                    .Returns(connection1)
+                    .Returns(connection2);
+        
+                _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
+        
+                var newInstance = new RegisterOdsInstanceModel
+                {
+                    NumericSuffix = 7878787,
+                    Description = Sample("Description")
+                };
+        
+                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    .ShouldNotValidate(newInstance, $"The resulting database name {connection1.Database} would be too long for Admin App to set up necessary Application records. Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by 33 characters.");
             }
         }
 

@@ -352,6 +352,7 @@
     <Compile Include="Database\Models\RolePermissionTests.cs" />
     <Compile Include="Instance\GetOdsInstanceRegistrationsByUserIdQueryTests.cs" />
     <Compile Include="Instance\DeregisterOdsInstanceCommandTests.cs" />
+    <Compile Include="Instance\BulkRegisterOdsInstancesRecordTests.cs" />
     <Compile Include="Instance\RegisterOdsInstanceCommandTests.cs" />
     <Compile Include="Instance\GetOdsInstanceRegistrationsQueryTests.cs" />
     <Compile Include="Instance\InstanceTestSetup.cs" />

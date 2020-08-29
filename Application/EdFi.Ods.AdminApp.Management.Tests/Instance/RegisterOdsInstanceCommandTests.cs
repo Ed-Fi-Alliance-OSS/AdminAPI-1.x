@@ -48,7 +48,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
             var instanceName = "TestInstance_23456";
-            const string Description = "Test Description";
+            const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 
             using (var connection = GetDatabaseConnection(instanceName))
@@ -61,7 +61,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 var newInstance = new RegisterOdsInstanceModel
                 {
                     NumericSuffix = 23456,
-                    Description = Description
+                    Description = description
                 };
                 var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
              
@@ -247,18 +247,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         [Test]
         public void ShouldNotRegisterInstanceIfOdsInstanceIdentifierAssociatedDbDoesNotExistsOnDistrictSpecificMode()
         {
-            const int OdsInstanceNumericSuffix = 8787877;
-            const string InstanceName = "Test_Ods_8787877";
+            const int odsInstanceNumericSuffix = 8787877;
+            const string instanceName = "Test_Ods_8787877";
 
             var mockDatabaseValidationService = new Mock<IDatabaseValidationService>();
-            mockDatabaseValidationService.Setup(x => x.IsValidDatabase(OdsInstanceNumericSuffix, ApiMode.DistrictSpecific))
+            mockDatabaseValidationService.Setup(x => x.IsValidDatabase(odsInstanceNumericSuffix, ApiMode.DistrictSpecific))
                 .Returns(false);
 
-            using (var connection1 = GetDatabaseConnection(InstanceName))
-            using (var connection2 = GetDatabaseConnection(InstanceName))
+            using (var connection1 = GetDatabaseConnection(instanceName))
+            using (var connection2 = GetDatabaseConnection(instanceName))
             {
                 _connectionProvider.SetupSequence(
-                        x => x.CreateNewConnection(OdsInstanceNumericSuffix, ApiMode.DistrictSpecific))
+                        x => x.CreateNewConnection(odsInstanceNumericSuffix, ApiMode.DistrictSpecific))
                     .Returns(connection1)
                     .Returns(connection2);
 
@@ -266,7 +266,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 var newInstance = new RegisterOdsInstanceModel
                 {
-                    NumericSuffix = OdsInstanceNumericSuffix,
+                    NumericSuffix = odsInstanceNumericSuffix,
                     Description = Sample("Description")
                 };
 
@@ -279,25 +279,25 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         [Test]
         public void ShouldNotRegisterInstanceIfOdsInstanceIdentifierAssociatedDbDoesNotExistsOnYearSpecificMode()
         {
-            const int OdsInstanceNumericSuffix = 2020;
-            const string InstanceName = "Test_Ods_2020";
+            const int odsInstanceNumericSuffix = 2020;
+            const string instanceName = "Test_Ods_2020";
 
             var mockDatabaseValidationService = new Mock<IDatabaseValidationService>();
-            mockDatabaseValidationService.Setup(x => x.IsValidDatabase(OdsInstanceNumericSuffix, ApiMode.YearSpecific))
+            mockDatabaseValidationService.Setup(x => x.IsValidDatabase(odsInstanceNumericSuffix, ApiMode.YearSpecific))
                 .Returns(false);
 
-            using (var connection1 = GetDatabaseConnection(InstanceName))
-            using (var connection2 = GetDatabaseConnection(InstanceName))
+            using (var connection1 = GetDatabaseConnection(instanceName))
+            using (var connection2 = GetDatabaseConnection(instanceName))
             {
                 _connectionProvider.SetupSequence(
-                        x => x.CreateNewConnection(OdsInstanceNumericSuffix, ApiMode.YearSpecific))
+                        x => x.CreateNewConnection(odsInstanceNumericSuffix, ApiMode.YearSpecific))
                     .Returns(connection1)
                     .Returns(connection2);
 
                 _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.YearSpecific);
                 var newInstance = new RegisterOdsInstanceModel
                 {
-                    NumericSuffix = OdsInstanceNumericSuffix,
+                    NumericSuffix = odsInstanceNumericSuffix,
                     Description = Sample("Description")
                 };
 
@@ -305,6 +305,97 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     .ShouldNotValidate(newInstance,
                         "Could not connect to an ODS instance database for this school year.");
             }
+        }
+
+        [Test]
+        public void ShouldReturnValidationMessageWithYear()
+        {
+            const int odsInstanceNumericSuffix = 2020;
+            const string instanceName = "Test_Ods_2020";
+
+            var mockDatabaseValidationService = new Mock<IDatabaseValidationService>();
+            mockDatabaseValidationService.Setup(x => x.IsValidDatabase(odsInstanceNumericSuffix, ApiMode.YearSpecific))
+                .Returns(false);
+
+            using (var connection1 = GetDatabaseConnection(instanceName))
+                using (var connection2 = GetDatabaseConnection(instanceName))
+                {
+                    _connectionProvider.SetupSequence(
+                            x => x.CreateNewConnection(odsInstanceNumericSuffix, ApiMode.YearSpecific))
+                        .Returns(connection1)
+                        .Returns(connection2);
+
+                    _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.YearSpecific);
+                    var newInstance = new RegisterOdsInstanceModel
+                    {
+                        NumericSuffix = odsInstanceNumericSuffix,
+                        Description = Sample("Description")
+                    };
+
+                    new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object,true)
+                        .ShouldNotValidate(newInstance,
+                            $"Could not connect to an ODS instance database for this school year({odsInstanceNumericSuffix}).");
+                }
+        }
+
+        [Test]
+        public void ShouldReturnValidationMessageWithDistrictId()
+        {
+            var instanceName = "Test_Ods_8787877";
+            ResetOdsInstanceRegistrations();
+            SetupOdsInstanceRegistration(instanceName);
+
+            using (var connection1 = GetDatabaseConnection(instanceName))
+                using (var connection2 = GetDatabaseConnection(instanceName))
+                {
+                    _connectionProvider
+                        .SetupSequence(x => x.CreateNewConnection(8787877, ApiMode.DistrictSpecific))
+                        .Returns(connection1)
+                        .Returns(connection2);
+
+                    var newInstance = new RegisterOdsInstanceModel
+                    {
+                        NumericSuffix = 8787877,
+                        Description = Sample("Description")
+                    };
+
+                    new RegisterOdsInstanceModelValidator(
+                            SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
+                            _connectionProvider.Object, true)
+                        .ShouldNotValidate(
+                            newInstance,
+                            "An instance for this Education Organization / District Id(8787877) already exists.");
+                }
+        }
+
+        [Test]
+        public void ShouldReturnValidationMessageWithDistrictIdAndDescription()
+        {
+            var districtId = "8787877";
+            var instanceName = $"Test_Ods_8787877";
+            ResetOdsInstanceRegistrations();
+            var createdInstance = SetupOdsInstanceRegistration(instanceName);
+
+            using (var connection1 = GetDatabaseConnection(districtId))
+                using (var connection2 = GetDatabaseConnection(districtId))
+                {
+                    _connectionProvider
+                        .SetupSequence(x => x.CreateNewConnection(It.IsAny<int>(), ApiMode.DistrictSpecific))
+                        .Returns(connection1)
+                        .Returns(connection2);
+
+                    var newInstance = new RegisterOdsInstanceModel
+                    {
+                        NumericSuffix = 8787878,
+                        Description = createdInstance.Description
+                    };
+
+                    new RegisterOdsInstanceModelValidator(
+                            SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
+                            _connectionProvider.Object, true)
+                        .ShouldNotValidate(newInstance,
+                            $"An instance with this description(Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
+                }
         }
 
         [Test]

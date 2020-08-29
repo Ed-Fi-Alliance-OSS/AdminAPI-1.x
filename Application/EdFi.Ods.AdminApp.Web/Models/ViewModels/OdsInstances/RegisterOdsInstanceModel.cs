@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Must(BeAUniqueInstanceDescription)
                 .When(x => x.Description != null)
                 .WithMessage(
-                    x => $"An instance with this description{(validationMessageWithDetails ? $"({beUniqueValidationMsg}:{x.NumericSuffix}, Description: {x.Description})":"")} already exists.");
+                    x => $"An instance with this description{(validationMessageWithDetails ? $"({beUniqueValidationMsg}: {x.NumericSuffix}, Description: {x.Description})":"")} already exists.");
         }
 
         private static bool BeValidOdsInstanceDatabase(int? newInstanceNumericSuffix)

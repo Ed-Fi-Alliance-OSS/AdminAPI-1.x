@@ -45,6 +45,9 @@ See the LICENSE and NOTICES files in the project root for more information.
         @Html.Button("Back").Attr("type", "button").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances")).Id("ods-instance-settings-back-button")
         @Html.SaveButton("Save").AddClasses("no-ajax", "Save-button")
     </div>
+    <div align="right">
+        @Html.ActionLink("Register Many Instances in Bulk", "BulkRegisterOdsInstances", null, new { @class = "btn btn-primary cta" })
+    </div>
 }
 <script type="text/javascript">
     $('#register-instance-form').submit(function (e) {

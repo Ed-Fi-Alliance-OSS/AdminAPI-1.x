@@ -14,9 +14,11 @@ using EdFi.Ods.AdminApp.Web.ActionFilters;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using Microsoft.AspNet.Identity;
+using System.Linq;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -29,13 +31,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
         private readonly AdminAppUserContext _userContext;
         private readonly IMapper _mapper;
+        private readonly BulkRegisterOdsInstancesCommand _bulkRegisterOdsInstancesCommand;
 
         public OdsInstancesController(IMapper mapper
             , RegisterOdsInstanceCommand registerOdsInstanceCommand
             , DeregisterOdsInstanceCommand deregisterOdsInstanceCommand
             , IGetOdsInstanceRegistrationsByUserIdQuery getOdsInstanceRegistrationsByUserIdQuery
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
-            , AdminAppUserContext userContext)
+            , AdminAppUserContext userContext
+            , BulkRegisterOdsInstancesCommand bulkRegisterOdsInstancesCommand)
         {
             _mapper = mapper;
             _registerOdsInstanceCommand = registerOdsInstanceCommand;
@@ -43,6 +47,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getOdsInstanceRegistrationsByUserIdQuery = getOdsInstanceRegistrationsByUserIdQuery;
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
             _userContext = userContext;
+            _bulkRegisterOdsInstancesCommand = bulkRegisterOdsInstancesCommand;
         }
 
         public ViewResult Index()
@@ -74,6 +79,30 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId, CloudOdsAdminAppClaimSetConfiguration.Default);
 
             return RedirectToAction("Index", "OdsInstances");
+        }
+
+        [PermissionRequired(Permission.AccessGlobalSettings)]
+        public ViewResult BulkRegisterOdsInstances()
+        {
+            return View(new BulkRegisterOdsInstancesModel());
+        }
+
+        [HttpPost]
+        [PermissionRequired(Permission.AccessGlobalSettings)]
+        public async Task<ActionResult> BulkRegisterOdsInstances(BulkRegisterOdsInstancesModel model)
+        {
+            var currentUserId = User.Identity.GetUserId();
+
+            var results = await _bulkRegisterOdsInstancesCommand.Execute(
+                model.OdsInstancesFile.DataRecords(),
+                CloudOdsAdminAppSettings.Instance.Mode, currentUserId,
+                CloudOdsAdminAppClaimSetConfiguration.Default);
+
+            var bulkRegisterOdsInstancesResults = results.ToList();
+            var successCount = bulkRegisterOdsInstancesResults.Count(x => x.Success);
+            var failCount = bulkRegisterOdsInstancesResults.Count(x => !x.Success);
+            return JsonSuccess(
+                $"Successful instance registrations: {successCount}. Failed instance registrations: {failCount}. Please refer log file for further details.");
         }
 
         public ActionResult ActivateOdsInstance(string instanceId)

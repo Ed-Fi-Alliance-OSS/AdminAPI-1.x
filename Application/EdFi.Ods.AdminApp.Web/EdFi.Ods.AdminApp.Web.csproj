@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props')" />
@@ -68,6 +68,9 @@
     </Reference>
     <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.15.0.5\lib\net47\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.30\lib\net461\Dapper.dll</HintPath>
@@ -175,7 +178,7 @@
       <HintPath>..\packages\Microsoft.Azure.ActiveDirectory.GraphClient.2.1.1\lib\portable-net4+sl5+win+wpa+wp8\Microsoft.Azure.ActiveDirectory.GraphClient.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -554,6 +557,7 @@
     <Compile Include="Helpers\AutoMapperExtensions.cs" />
     <Compile Include="Helpers\ExpressionHelpers.cs" />
     <Compile Include="Helpers\HtmlTagExtensions.cs" />
+    <Compile Include="Helpers\InputFileExtensions.cs" />
     <Compile Include="Helpers\OdsApiFacadeExtensions.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\ResponseHelpers.cs" />
@@ -615,6 +619,7 @@
     <Compile Include="Display\DisplayService\AzureTabDisplayService.cs" />
     <Compile Include="Models\ViewModels\Global\UserIndexModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\DeregisterOdsInstanceModel.cs" />
+    <Compile Include="Models\ViewModels\OdsInstances\BulkRegisterOdsInstancesModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\RegisterOdsInstanceModel.cs" />
     <Compile Include="Models\ViewModels\User\EditOdsInstanceRegistrationForUserModel.cs" />
     <Compile Include="Models\ViewModels\User\DeleteUserModel.cs" />
@@ -1084,6 +1089,7 @@
     <Content Include="Views\Shared\_SignalRStatus.cshtml" />
     <Content Include="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
     <Content Include="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
+    <Content Include="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
     <None Include="Web.base.config" />
     <Content Include="Views\OdsInstances\RegisterOdsInstance.cshtml" />
     <Content Include="Views\OdsInstances\Index.cshtml" />

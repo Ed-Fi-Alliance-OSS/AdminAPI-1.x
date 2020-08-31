@@ -48,7 +48,7 @@ Deploy Admin App for use with a "District Specific" ODS API
     $p = @{
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        OdsApiUrl = "http://example-web-api.com/WebApi"
+        OdsApiUrl = "http://web-api.example.com/WebApi"
         PackageVersion = '2.0.0'
         AdminAppFeatures = $adminAppFeatures
     }

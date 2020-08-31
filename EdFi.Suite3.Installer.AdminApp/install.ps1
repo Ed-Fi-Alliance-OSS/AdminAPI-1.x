@@ -54,11 +54,16 @@ Deploy Admin App for use with a "District Specific" ODS API
     }
 #>
 
+$adminAppFeatures = @{
+    ApiMode = "sharedInstance"
+}
+
 $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
     OdsApiUrl = ""
     PackageVersion = '2.0.0-pre0040'
+    AdminAppFeatures = $adminAppFeatures
 }
 
 if ([string]::IsNullOrWhiteSpace($p.OdsApiUrl)) {

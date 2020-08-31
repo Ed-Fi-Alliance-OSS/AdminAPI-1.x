@@ -57,8 +57,13 @@ Deploy Admin App for use with a "District Specific" ODS API
 $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
-    OdsApiUrl = "http://example-web-api.com/WebApi"
+    OdsApiUrl = ""
     PackageVersion = '2.0.0-pre0040'
 }
 
-Install-EdFiOdsAdminApp @p
+if ([string]::IsNullOrWhiteSpace($p.OdsApiUrl)) {
+    Write-Error "ODS API URL has not been configured. Edit install.ps1 to pass in a valid url for the ODS API."
+}
+else {
+    Install-EdFiOdsAdminApp @p
+}

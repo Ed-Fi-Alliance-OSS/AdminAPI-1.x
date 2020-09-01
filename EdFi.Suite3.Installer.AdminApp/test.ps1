@@ -11,7 +11,7 @@ Param(
 
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
-$PackageVersion = '2.0.0-pre0037'
+$PackageVersion = '2.0.0'
 
 function Invoke-InstallSqlServer {
 

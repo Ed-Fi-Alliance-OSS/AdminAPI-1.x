@@ -3,6 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
+import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
 <#
 Review and edit the following connection information for your database server
@@ -62,7 +63,7 @@ $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
     OdsApiUrl = ""
-    PackageVersion = '2.0.0-pre0042'
+    PackageVersion = '2.0.0'
     AdminAppFeatures = $adminAppFeatures
 }
 

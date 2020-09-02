@@ -519,7 +519,6 @@
     <Compile Include="App_Start\AwsStartup.cs" />
     <Compile Include="App_Start\ModelBinderConfig.cs" />
     <Compile Include="App_Start\AzureStartup.cs" />
-    <Compile Include="Controllers\ConfigurationController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\BulkUploadController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
@@ -1080,7 +1079,6 @@
     <Content Include="Views\Identity\ChangePassword.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\ClaimSets\_AuthStrategiesModal.cshtml" />
-    <Content Include="Views\Configuration\Edit.cshtml" />
     <Content Include="Views\Shared\_SettingsGlobalHeader.cshtml" />
     <Content Include="Views\User\AddUser.cshtml" />
     <Content Include="Views\GlobalSettings\Users.cshtml" />

@@ -5,6 +5,8 @@ The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
+@using EdFi.Ods.AdminApp.Management
+@using EdFi.Ods.AdminApp.Management.Database.Models
 @using EdFi.Ods.AdminApp.Web.Helpers
 @using EdFi.Ods.AdminApp.Web.Infrastructure
 <!DOCTYPE html>
@@ -50,16 +52,28 @@ See the LICENSE and NOTICES files in the project root for more information.
         <div class="row">
             @if (HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                <div class="col-md-1 col-md-offset-9 nav-links">
-                    <a href="@Url.Action("Index", "Home")" class="text-nowrap">
-                        <span class="fa fa-home"></span><strong>Home</strong>
-                    </a>
-                </div>
-                <div class="col-md-2 nav-links">
-                    <a href="@Url.Action("Edit", "Configuration")" class="text-nowrap">
-                        <span class="fa fa-gears"></span><strong>Configuration</strong>
-                    </a>
-                </div>
+                if (DependencyResolver.Current.GetService<AdminAppUserContext>().Has(Permission.AccessGlobalSettings))
+                 {
+                     <div class="col-md-1 col-md-offset-9 nav-links">
+                         <a href="@Url.Action("Index", "Home")" class="text-nowrap">
+                             <span class="fa fa-home"></span><strong>Home</strong>
+                         </a>
+                     </div>
+
+                     <div class="col-md-2 nav-links">
+                         <a href="@Url.Action("Edit", "Configuration")" class="text-nowrap">
+                             <span class="fa fa-gears"></span><strong>Configuration</strong>
+                         </a>
+                     </div>
+                }
+                else
+                {
+                    <div class="col-md-1 col-md-offset-11 nav-links">
+                        <a href="@Url.Action("Index", "Home")" class="text-nowrap">
+                            <span class="fa fa-home"></span><strong>Home</strong>
+                        </a>
+                    </div>
+                }
             }
         </div>
         <section>

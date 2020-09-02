@@ -12,6 +12,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     [BypassSetupRequiredFilter]
     [BypassInstanceContextFilter]
+    [PermissionRequired(Permission.AccessGlobalSettings)]
     public class ConfigurationController : ControllerBase
     {
         private readonly EditConfiguration.QueryHandler _editConfigurationQuery;
@@ -31,7 +32,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        [PermissionRequired(Permission.AccessGlobalSettings)]
         public ActionResult Edit(EditConfiguration.Command command)
         {
             _editConfigurationCommand.Execute(command);

@@ -5,6 +5,7 @@
 
 using System.Web.Mvc;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
+using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -30,6 +31,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [PermissionRequired(Permission.AccessGlobalSettings)]
         public ActionResult Edit(EditConfiguration.Command command)
         {
             _editConfigurationCommand.Execute(command);

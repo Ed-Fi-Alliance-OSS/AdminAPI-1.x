@@ -28,14 +28,14 @@ object Deploy : BuildType ({
         root(DslContext.settingsRoot)
     }
 
-    steps {        
+    steps {
         powerShell {
             name = "Lookup Package Name and Version"
             formatStderrAsError = true
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = file {
                 path = """eng\teamcity-get-package-version.ps1"""
-            }            
+            }
         }
         step {
             name = "Publish Package to Octopus"
@@ -60,7 +60,8 @@ object Deploy : BuildType ({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
         }
     }
-  triggers {
+
+    triggers {
         finishBuildTrigger {
             buildType = "${BuildBranch.id}"
         }

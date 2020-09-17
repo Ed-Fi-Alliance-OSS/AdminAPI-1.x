@@ -17,7 +17,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 {
     //See App.config - requires the User named in the "IntegrationTests" connection string to be
     //in the sysadmin role on the database server
-    [Explicit]
+    [Ignore("These tests are intended to be marked [Explicit], but a " +
+            "VS2019 Test Explorer bug prevents that attribute from " +
+            "functioning as intended. To run these tests, temporarily" +
+            "comment out this [Ignore(...)] attribute.")]
     [TestFixture]
     public class SqlServerCloudOdsDatabaseSecurityConfiguratorTester
     {

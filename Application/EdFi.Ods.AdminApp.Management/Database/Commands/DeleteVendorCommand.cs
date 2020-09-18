@@ -26,14 +26,14 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             if (vendor == null)
                 return;
 
-            foreach (var user in vendor.Users.ToList())
-            {
-                _context.Users.Remove(user);
-            }
-
             foreach (var application in vendor.Applications.ToList())
             {
                 _deleteApplicationCommand.Execute(application.ApplicationId);
+            }
+
+            foreach (var user in vendor.Users.ToList())
+            {
+                _context.Users.Remove(user);
             }
 
             _context.Vendors.Remove(vendor);

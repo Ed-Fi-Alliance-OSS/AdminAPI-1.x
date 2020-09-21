@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using EdFi.Ods.AdminApp.Web.Core.Models;
+using EdFi.Ods.AdminApp.Web.Models;
 
-namespace EdFi.Ods.AdminApp.Web.Core.Controllers
+namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class HomeController : Controller
     {

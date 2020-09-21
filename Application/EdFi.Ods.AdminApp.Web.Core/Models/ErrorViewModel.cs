@@ -1,4 +1,4 @@
-namespace EdFi.Ods.AdminApp.Web.Core.Models
+namespace EdFi.Ods.AdminApp.Web.Models
 {
     public class ErrorViewModel
     {

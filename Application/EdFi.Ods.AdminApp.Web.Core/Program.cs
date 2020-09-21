@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace EdFi.Ods.AdminApp.Web.Core
+namespace EdFi.Ods.AdminApp.Web
 {
     public class Program
     {

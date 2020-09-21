@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -8,6 +8,41 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- As the legacy .NET Framework web application is being ported to .NET Core,
+         it helps to have both variants of the web app share code files. As files
+         become cross-compilable, we uncomment their inclusion here. Ultimately,
+         these files will be moved from the legacy project to this project, at
+         which point these explicit inclusions will become redundant. -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/**/*.cs" LinkBase="_Installers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/**/*.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/**/*.cs" LinkBase="App_Start" /> -->
+    <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Config/**/*.json" LinkBase="Config" /> -->
+    <Content Include="../EdFi.Ods.AdminApp.Web/Content/**/*.*" LinkBase="Content" />
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/**/*.cs" LinkBase="Controllers" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config" LinkBase="DeveloperSettings" Condition="'$(Configuration)' == 'Debug'" /> -->
+    <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
+    <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff2" LinkBase="fonts" />
+    <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff" LinkBase="fonts" />
+    <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.ttf" LinkBase="fonts" />
+    <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/**/*.cs" LinkBase="Display" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/**/*.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/**/*.cs" LinkBase="Hubs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/**/*.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/**/*.cs" LinkBase="Models" /> -->
+    <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
+    <Content Include="../EdFi.Ods.AdminApp.Web/Scripts/**/*.*" LinkBase="Scripts" />
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
+    <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/**/*.cshtml" LinkBase="Views" /> -->
+
   </ItemGroup>
 
 </Project>

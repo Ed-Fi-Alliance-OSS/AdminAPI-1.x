@@ -1,5 +1,3 @@
-using System;
-
 namespace EdFi.Ods.AdminApp.Web.Core.Models
 {
     public class ErrorViewModel

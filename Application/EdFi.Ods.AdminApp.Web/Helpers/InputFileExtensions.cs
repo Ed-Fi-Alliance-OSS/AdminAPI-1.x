@@ -18,11 +18,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
         public static IList<RegisterOdsInstanceModel> DataRecords(this HttpPostedFileBase inputFile)
         {
             List<RegisterOdsInstanceModel> records;
-            var streamCopy = new MemoryStream();
-            inputFile.InputStream.CopyTo(streamCopy);
-            inputFile.InputStream.Position = streamCopy.Position = 0;
-
-            using (var stream = streamCopy)
+            using (var stream = GetMemoryStream(inputFile))
                 using (var streamReader = new StreamReader(stream))
                     using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
                     {
@@ -30,10 +26,46 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
                             (header, index) => header.ToLower();
 
                         records = csv.GetRecords<RegisterOdsInstanceModel>().ToList();
-
                     }
 
             return records;
+        }
+
+        private static MemoryStream GetMemoryStream(HttpPostedFileBase inputFile)
+        {
+            var streamCopy = new MemoryStream();
+            inputFile.InputStream.CopyTo(streamCopy);
+            inputFile.InputStream.Position = streamCopy.Position = 0;
+            return streamCopy;
+        }
+
+        public static string[] MissingHeaders(this HttpPostedFileBase inputFile)
+        {
+            string[] missingHeaders = null;
+            using (var stream = GetMemoryStream(inputFile))
+                using (var streamReader = new StreamReader(stream))
+                    using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+                    {
+                        csv.Configuration.PrepareHeaderForMatch =
+                            (header, index) => header.ToLower();
+
+                        csv.Configuration.HasHeaderRecord = true;
+
+                        csv.Configuration.HeaderValidated =
+                            (isValid, headerNames, headerNameIndex, context) =>
+                            {
+                                if (!isValid)
+                                {
+                                    missingHeaders = headerNames;
+                                }
+                            };
+
+                        csv.Read();
+                        csv.ReadHeader();
+                        csv.ValidateHeader<RegisterOdsInstanceModel>();
+                    }
+
+            return missingHeaders;
         }
     }
 }

@@ -39,9 +39,9 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return streamCopy;
         }
 
-        public static string[] MissingHeaders(this HttpPostedFileBase inputFile)
+        public static IList<string> MissingHeaders(this HttpPostedFileBase inputFile)
         {
-            string[] missingHeaders = null;
+            var missingHeaders = new List<string>();
             using (var stream = GetMemoryStream(inputFile))
                 using (var streamReader = new StreamReader(stream))
                     using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
@@ -56,7 +56,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
                             {
                                 if (!isValid)
                                 {
-                                    missingHeaders = headerNames;
+                                    missingHeaders.AddRange(headerNames.ToList());
                                 }
                             };
 

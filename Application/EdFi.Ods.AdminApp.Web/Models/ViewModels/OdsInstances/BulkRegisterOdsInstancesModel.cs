@@ -24,12 +24,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         [Accept(".csv")]
         [Display(Name = "Instances Data File")]
         public HttpPostedFileBase OdsInstancesFile { get; set; }
-
-        public List<RegisterOdsInstanceModel> GetInstanceRecords()
-        {
-            return (List<RegisterOdsInstanceModel>) OdsInstancesFile.DataRecords();
-        }
-      
     }
 
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
@@ -37,6 +31,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
        
         private bool UniquenessRuleFailed { get; set; }
+
+        private bool ValidHeadersRuleFailed { get; set; }
 
         public BulkRegisterOdsInstancesModelValidator(AdminAppDbContext database
             , ICloudOdsAdminAppSettingsApiModeProvider apiModeProvider
@@ -46,12 +42,19 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             RuleFor(m => m.OdsInstancesFile)
                 .NotEmpty();
 
+            RuleFor(m => m.OdsInstancesFile.FileName).NotNull().Must(x => x.ToLower().EndsWith(".csv"))
+                .WithMessage("Please select a file with .csv format.");
+
             RuleFor(m => m.OdsInstancesFile)
-                .Must(HaveUniqueRecords)
+                .Must(HaveValidHeaders)
                 .When(m => m.OdsInstancesFile != null);
 
+            RuleFor(m => m.OdsInstancesFile)
+                .Must(HaveUniqueRecords)
+                .When(m => m.OdsInstancesFile != null && !ValidHeadersRuleFailed);
+
             When(
-                m => m.OdsInstancesFile != null && !UniquenessRuleFailed, () =>
+                m => m.OdsInstancesFile != null && !UniquenessRuleFailed && !ValidHeadersRuleFailed,  () =>
                 {
                     RuleFor(x => x.OdsInstancesFile)
                         .SafeCustom(
@@ -85,9 +88,27 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Where(g => g.Count() > 1).Select(x => x.Key).ToList();
         }
 
+        private bool HaveValidHeaders(BulkRegisterOdsInstancesModel model, HttpPostedFileBase file,
+            PropertyValidatorContext context)
+        {
+            var missingHeaders = file.MissingHeaders();
+
+            if (missingHeaders == null || !file.MissingHeaders().Any())
+            {
+                return true;
+            }
+
+            ValidHeadersRuleFailed = true;
+            context.Rule.MessageBuilder =
+                c => $"Missing Headers: {string.Join(",", file.MissingHeaders())}";
+
+            return false;
+
+        }
+
         private bool HaveUniqueRecords(BulkRegisterOdsInstancesModel model, HttpPostedFileBase file, PropertyValidatorContext context)
         {
-            GetDuplicates(model.GetInstanceRecords(), out var duplicateNumericSuffixes, out var duplicateDescriptions);
+            GetDuplicates(model.OdsInstancesFile.DataRecords().ToList(), out var duplicateNumericSuffixes, out var duplicateDescriptions);
 
             var errorMessage = "";
 

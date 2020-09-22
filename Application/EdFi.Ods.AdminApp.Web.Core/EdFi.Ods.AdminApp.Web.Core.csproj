@@ -56,4 +56,9 @@
     <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" /> -->
     <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" /> -->
   <!-- </ItemGroup> -->
+
+  <ItemGroup>
+    <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
+  </ItemGroup>
+
 </Project>

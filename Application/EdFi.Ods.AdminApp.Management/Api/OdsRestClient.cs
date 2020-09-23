@@ -167,8 +167,17 @@ namespace EdFi.Ods.AdminApp.Management.Api
             HandleErrorResponse(response);
             var swaggerDocument = JsonConvert.DeserializeObject<JObject>(response.Content);
             var descriptorsList = swaggerDocument["definitions"].ToObject<Dictionary<string, JObject>>();
-            return descriptorsList.Keys.Where(x => x.StartsWith("edFi"))
-                .Select(x => x.Substring(x.IndexOf('_')).ToPascalCase(CultureInfo.InvariantCulture)).ToList();
+
+            return descriptorsList.Keys.Where(x => x.StartsWith("edFi_"))
+                .Select(x => CapitalizeFirstLetter(x.Substring("edFi_".Length))).ToList();
+
+            string CapitalizeFirstLetter(string descriptorName)
+            {
+                if (descriptorName.Length > 0)
+                    return char.ToUpper(descriptorName[0]) + descriptorName.Substring(1);
+
+                return descriptorName;
+            }
         }
 
         public OdsApiResult DeleteResource(string elementPath, string id, bool refreshToken = false)

@@ -46,14 +46,13 @@ See the LICENSE and NOTICES files in the project root for more information.
         $(".bulk-register").attr('disabled', true);
         var successHandler = function (data) {
             $(".bulk-register").html('Register Instances');
-            $(".bulk-register").attr('disabled', false);
+            $('#bulk-instances-registration-validation-summary').attr('hidden', true);
             form[0].reset();
             $('#result').text(data.successMessage);
             $('#result').show();
         };
         var errorAdditionalBehavior = function () {
             $(".bulk-register").html('Register Instances');
-            $(".bulk-register").attr('disabled', false);
         };
         var ajaxRequestData = {
             form: $(this),

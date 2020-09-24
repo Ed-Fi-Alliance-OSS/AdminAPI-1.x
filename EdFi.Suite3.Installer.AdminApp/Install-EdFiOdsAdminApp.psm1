@@ -566,7 +566,8 @@ function Invoke-TransformWebConfigConnectionStrings {
             AdminDbConnectionInfo = $Config.AdminDbConnectionInfo
             OdsDbConnectionInfo = $Config.OdsDbConnectionInfo
             SecurityDbConnectionInfo = $Config.SecurityDbConnectionInfo
-			OdsConnectionName = "EdFi_Ods_Production"
+            OdsConnectionName = "EdFi_Ods_Production"
+            SspiUsername = $Config.WebApplicationName
         }
         Set-DatabaseConnections @parameters
     }

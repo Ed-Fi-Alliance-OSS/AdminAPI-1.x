@@ -179,25 +179,33 @@ function InitializeModalLoaders() {
         $button.addClass("loading-modal");
 
         var url = $(this).data("url");
-        $("#dynamic-modal-container").load(url, function () {
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                if (!data.authentication_required) {
+                    $("#dynamic-modal-container").html(data);
 
-            ReinitializeForModal();
+                    ReinitializeForModal();
 
-            var dynamicModal = $("#dynamic-modal-container").find("div.modal");
-            if (!dynamicModal)
-                return;
+                    var dynamicModal = $("#dynamic-modal-container").find("div.modal");
+                    if (!dynamicModal)
+                        return;
 
-            dynamicModal.on('hidden.bs.modal', function(e) {
-                $('#dynamic-modal-container').empty();
-            });
+                    dynamicModal.on('hidden.bs.modal',
+                        function (e) {
+                            $('#dynamic-modal-container').empty();
+                        });
 
-            $button.removeClass("loading-modal");
-            $("body").css("cursor", "auto");
+                    $button.removeClass("loading-modal");
+                    $("body").css("cursor", "auto");
 
-            dynamicModal.modal({
-                backdrop: 'static',
-                keyboard: false
-            });
+                    dynamicModal.modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }
+            }
         });
     });
 }

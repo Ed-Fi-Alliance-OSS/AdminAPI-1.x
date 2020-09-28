@@ -17,7 +17,7 @@ using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 {
-    public class ClaimSetFileImportModel: IClaimSetFileImportModel
+    public class ClaimSetFileImportModel
     {
         [DisplayName("Import File")]
         [Accept(".json")]

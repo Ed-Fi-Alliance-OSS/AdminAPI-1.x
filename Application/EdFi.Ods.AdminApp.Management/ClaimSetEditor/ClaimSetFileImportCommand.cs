@@ -5,7 +5,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
@@ -23,10 +22,9 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             _getResourceClaimsQuery = getResourceClaimsQuery;
         }
 
-        public void Execute(IClaimSetFileImportModel model)
+        public void Execute(SharingModel model)
         {
-            var sharingModel = SharingModel.Deserialize(model.ImportFile);
-            var sharingClaimSets = sharingModel.Template.ClaimSets;
+            var sharingClaimSets = model.Template.ClaimSets;
             var allResources = GetDbResources();
             foreach (var claimSet in sharingClaimSets)
             {
@@ -78,11 +76,6 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
             return allResources;
         }
-    }
-
-    public interface IClaimSetFileImportModel
-    {
-        HttpPostedFileBase ImportFile { get; }
     }
 
     public class AddClaimSetModel: IAddClaimSetModel

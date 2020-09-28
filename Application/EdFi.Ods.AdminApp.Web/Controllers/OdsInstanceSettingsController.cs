@@ -16,6 +16,7 @@ using System.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
 #endif
 using AutoMapper;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
@@ -55,6 +56,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly InstanceContext _instanceContext;
         private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
         private readonly IInferOdsApiVersion _inferOdsApiVersion;
+        private readonly IUsersContext _usersContext;
 
         public OdsInstanceSettingsController(IMapper mapper
             , IGetVendorsQuery getVendorsQuery
@@ -73,7 +75,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IBulkUploadJob bulkUploadJob
             , InstanceContext instanceContext
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
-            , IInferOdsApiVersion inferOdsApiVersion)
+            , IInferOdsApiVersion inferOdsApiVersion
+            , IUsersContext usersContext)
         {
             _getVendorsQuery = getVendorsQuery;
             _mapper = mapper;
@@ -93,6 +96,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
             _inferOdsApiVersion = inferOdsApiVersion;
+            _usersContext = usersContext;
         }
 
         public async Task<ActionResult> Applications()
@@ -399,6 +403,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 SchemaPath = $"{schemaBasePath}\\{standardVersion}",
                 MaxSimultaneousRequests = maxSimultaneousRequests
             };
+            var contextValidator = new BulkUploadJobContextValidator(_usersContext);
+            var validationResult = contextValidator.Validate(jobContext);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
+                throw new Exception(errorMessage);
+            }
 
             if (!_bulkUploadJob.IsJobRunning())
             {

@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using log4net;
 
@@ -53,10 +52,6 @@ namespace EdFi.Ods.AdminApp.Management.Instances
 
             return results;
         }
-    }
-    public interface IBulkRegisterOdsInstancesModel
-    {
-        HttpPostedFileBase OdsInstancesFile { get; }
     }
 
     public class BulkRegisterOdsInstancesResult

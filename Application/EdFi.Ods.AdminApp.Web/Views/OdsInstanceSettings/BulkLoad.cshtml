@@ -38,6 +38,12 @@ See the LICENSE and NOTICES files in the project root for more information.
         }
         using (Html.BeginForm("BulkFileUpload", "OdsInstanceSettings", FormMethod.Post, new { enctype = "multipart/form-data", id = "bulk-upload-form" }))
         {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="validation-Summary" align="left" class="alert alert-danger" hidden></div>
+                </div>
+            </div>
+
             <div class="row padding-bottom-10">
                 <div class="col-lg-6">
                     <label>Select File Type:</label>
@@ -155,6 +161,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         $('#upload-button-spinner').show();
         $('#upload-bulk-files-button').prop("disabled", true);
         $('.upload-error').hide();
+        var validationBlock = $('#validation-Summary');
 
         $.ajax({
             url: $form.attr("action"),
@@ -168,11 +175,12 @@ See the LICENSE and NOTICES files in the project root for more information.
                 $('#upload-button-spinner').hide();
                 $('#upload-bulk-files-button').prop("disabled", false);
             },
-            error: function () {
+            error: function (data) {
                 edfiODS.signalR.showError("Error uploading bulk data.  Please try again later");
                 $('#upload-button-spinner').hide();
                 $('#upload-bulk-files-button').prop("disabled", false);
-                $('#upload-file-error').show();
+                validationBlock.attr("hidden", false);
+                validationBlock.text(getErrorString(data));
             },
             cache: false,
             contentType: false,

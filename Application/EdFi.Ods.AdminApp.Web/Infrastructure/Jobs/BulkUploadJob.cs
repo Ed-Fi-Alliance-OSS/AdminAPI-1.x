@@ -3,13 +3,17 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using Hangfire;
 using EdFi.LoadTools.BulkLoadClient;
 using EdFi.Ods.AdminApp.Management.Instances;
+using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -62,5 +66,32 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         public string SchemaPath { get; set; }
         public int MaxSimultaneousRequests { get; set; }
     }
+
+    public class BulkUploadJobContextValidator : AbstractValidator<BulkUploadJobContext>
+    {
+        private readonly IUsersContext _usersContext;
+
+        public BulkUploadJobContextValidator(IUsersContext usersContext)
+        {
+            _usersContext = usersContext;
+
+            RuleFor(m => m.ClientKey)
+                .Must(BeAssociatedApplicationExists)
+                .When(m => !string.IsNullOrEmpty(m.ClientKey))
+                .WithMessage("Provided Api Key is not associated with any application. Please reset the credentials.");
+        }
+
+        private bool BeAssociatedApplicationExists(BulkUploadJobContext model, string apiKey)
+        {
+            var apiClient = _usersContext.Clients
+                .Include(x => x.Application)
+                .SingleOrDefault(x => x.Key == apiKey);
+
+            var associatedApplication = apiClient?.Application;
+
+            return associatedApplication != null;
+        }
+    }
+
 }
 

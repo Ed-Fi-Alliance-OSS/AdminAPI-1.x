@@ -74,9 +74,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 
         public BulkFileUploadModelValidator(IUsersContext usersContext)
         {
-            _usersContext = usersContext;
-
-            RuleFor(m => m.ApiKey).NotEmpty();           
+            _usersContext = usersContext;            
 
             RuleFor(m => m.ApiKey)
                 .Must(BeAssociatedApplicationExists)

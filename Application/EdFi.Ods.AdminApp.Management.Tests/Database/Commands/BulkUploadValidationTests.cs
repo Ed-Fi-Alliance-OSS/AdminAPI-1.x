@@ -125,25 +125,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 "'Api Key' must not be empty.",
                 "'Api Secret' must not be empty."
             });
-        }
-
-        [Test]
-        public void ShouldNotAllowEmptyBulkLoadApiKey()
-        {
-            var bulkFileUpLoadModel = new BulkFileUploadModel
-            {
-                ApiKey = ""
-            };
-
-            var validator = new BulkFileUploadModelValidator(TestContext);
-            var validationResults = validator.Validate(bulkFileUpLoadModel);
-
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
-            {
-                "'Api Key' must not be empty."
-            });
-        }
+        }       
 
         [Test]
         public void ShouldNotAllowBulkLoadApiKeyWhichNotAssociatedWithValidApplication()

@@ -64,6 +64,7 @@
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
     <PackageReference Include="FluentValidation" Version="9.2.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+    <PackageReference Include="log4net" Version="2.0.11" />
   </ItemGroup>
 
 </Project>

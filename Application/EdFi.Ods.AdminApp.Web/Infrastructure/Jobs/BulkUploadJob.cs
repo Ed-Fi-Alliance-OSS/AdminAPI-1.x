@@ -3,17 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using Hangfire;
 using EdFi.LoadTools.BulkLoadClient;
 using EdFi.Ods.AdminApp.Management.Instances;
-using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -66,6 +62,5 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         public string SchemaPath { get; set; }
         public int MaxSimultaneousRequests { get; set; }
     }
-
 }
 

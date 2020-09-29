@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
@@ -124,6 +125,67 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 "'Api Key' must not be empty.",
                 "'Api Secret' must not be empty."
             });
+        }
+
+        [Test]
+        public void ShouldNotAllowEmptyBulkLoadApiKey()
+        {
+            var bulkFileUpLoadModel = new BulkFileUploadModel
+            {
+                ApiKey = ""
+            };
+
+            var validator = new BulkFileUploadModelValidator(TestContext);
+            var validationResults = validator.Validate(bulkFileUpLoadModel);
+
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+            {
+                "'Api Key' must not be empty."
+            });
+        }
+
+        [Test]
+        public void ShouldNotAllowBulkLoadApiKeyWhichNotAssociatedWithValidApplication()
+        {    
+            var bulkFileUpLoadModel = new BulkFileUploadModel
+            {
+                ApiKey = $"RandomKey-{Guid.NewGuid()}"
+            };
+
+            var validator = new BulkFileUploadModelValidator(TestContext);
+            var validationResults = validator.Validate(bulkFileUpLoadModel);
+
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+            {
+                "Provided Api Key is not associated with any application. Please reset the credentials."
+            });
+        }
+
+        [Test]
+        public void ShouldAllowBulkLoadApiKeyAssociatedWithValidApplication()
+        {
+            var odsInstance1 = new OdsInstance
+            {
+                Name = "Test Instance 1",
+                InstanceType = "Ods",
+                IsExtended = false,
+                Status = "OK",
+                Version = "1.0.0"
+            };
+
+            var apiClientForInstance1 = SetupApplicationForInstance(odsInstance1);
+
+            var bulkFileUpLoadModel = new BulkFileUploadModel
+            {
+                ApiKey = apiClientForInstance1.Key
+            };
+
+            var validator = new BulkFileUploadModelValidator(TestContext);
+            var validationResults = validator.Validate(bulkFileUpLoadModel);
+
+            validationResults.IsValid.ShouldBe(true);          
         }
 
         private ApiClient SetupApplicationForInstance(OdsInstance instance)

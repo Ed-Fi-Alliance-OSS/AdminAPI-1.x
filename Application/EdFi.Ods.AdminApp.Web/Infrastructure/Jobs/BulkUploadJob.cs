@@ -67,31 +67,5 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         public int MaxSimultaneousRequests { get; set; }
     }
 
-    public class BulkUploadJobContextValidator : AbstractValidator<BulkUploadJobContext>
-    {
-        private readonly IUsersContext _usersContext;
-
-        public BulkUploadJobContextValidator(IUsersContext usersContext)
-        {
-            _usersContext = usersContext;
-
-            RuleFor(m => m.ClientKey)
-                .Must(BeAssociatedApplicationExists)
-                .When(m => !string.IsNullOrEmpty(m.ClientKey))
-                .WithMessage("Provided Api Key is not associated with any application. Please reset the credentials.");
-        }
-
-        private bool BeAssociatedApplicationExists(BulkUploadJobContext model, string apiKey)
-        {
-            var apiClient = _usersContext.Clients
-                .Include(x => x.Application)
-                .SingleOrDefault(x => x.Key == apiKey);
-
-            var associatedApplication = apiClient?.Application;
-
-            return associatedApplication != null;
-        }
-    }
-
 }
 

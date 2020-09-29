@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Services;
 using System.Runtime.Caching;
 using System.Data.Entity;
-using System.Web.Helpers;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApp.Management
 {
@@ -81,7 +81,7 @@ namespace EdFi.Ods.AdminApp.Management
                     return null;
                 }
 
-                return Json.Decode<OdsSqlConfiguration>(
+                return JsonConvert.DeserializeObject<OdsSqlConfiguration>(
                     _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
                         ? unencryptedValue
                         : rawValue);
@@ -100,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management
                     return null;
                 }
 
-                return Json.Decode<OdsSecretConfiguration>(
+                return JsonConvert.DeserializeObject<OdsSecretConfiguration>(
                     _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
                         ? unencryptedValue
                         : rawValue);
@@ -109,7 +109,7 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task WriteSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId)
         {
-            var stringValue = Json.Encode(configuration);
+            var stringValue = JsonConvert.SerializeObject(configuration);
             var encryptedValue = _stringEncryptorService.Encrypt(stringValue);
 
             using (var database = new AdminAppDbContext())
@@ -129,7 +129,7 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task WriteSqlConfiguration(OdsSqlConfiguration configuration)
         {
-            var stringValue = Json.Encode(configuration);
+            var stringValue = JsonConvert.SerializeObject(configuration);
             var encryptedValue = _stringEncryptorService.Encrypt(stringValue);
             using (var database = new AdminAppDbContext())
             {

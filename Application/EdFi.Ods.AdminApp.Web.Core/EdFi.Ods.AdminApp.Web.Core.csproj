@@ -17,45 +17,45 @@
          these files will be moved from the legacy project to this project, at
          which point these explicit inclusions will become redundant. -->
 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/**/*.cs" LinkBase="_Installers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/**/*.cs" LinkBase="ActionFilters" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/**/*.cs" LinkBase="App_Start" />
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/**/*.cs" LinkBase="_Installers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/**/*.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/**/*.cs" LinkBase="App_Start" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Config/**/*.json" LinkBase="Config" />
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Config/**/*.json" LinkBase="Config" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/Content/**/*.*" LinkBase="Content" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/**/*.cs" LinkBase="Controllers" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config" LinkBase="DeveloperSettings" Condition="'$(Configuration)' == 'Debug'" />
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/**/*.cs" LinkBase="Controllers" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config" LinkBase="DeveloperSettings" Condition="'$(Configuration)' == 'Debug'" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff2" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.ttf" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/**/*.cs" LinkBase="Display" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/**/*.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/**/*.cs" LinkBase="Hubs" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/**/*.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/**/*.cs" LinkBase="Models" />
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/**/*.cs" LinkBase="Display" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/**/*.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/**/*.cs" LinkBase="Hubs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/**/*.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/**/*.cs" LinkBase="Models" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
     <Content Include="../EdFi.Ods.AdminApp.Web/Scripts/**/*.*" LinkBase="Scripts" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" />
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="../EdFi.Ods.AdminApp.Web/Views/**/*.cshtml" LinkBase="Views" />
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/**/*.cshtml" LinkBase="Views" /> -->
 
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup> -->
     <!-- These project references can be uncommented once each one is upgrade to support .NET Core.
          These can be temporarily uncommented even before then, though doing so introduces compatibility
          warnings about referncing .NET Framework projects and would not be trusted in production.
     -->
 
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Aws\EdFi.Ods.AdminApp.Management.Aws.csproj" />
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" />
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" />
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
-  </ItemGroup>
+    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Aws\EdFi.Ods.AdminApp.Management.Aws.csproj" /> -->
+    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" /> -->
+    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" /> -->
+    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" /> -->
+  <!-- </ItemGroup> -->
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />

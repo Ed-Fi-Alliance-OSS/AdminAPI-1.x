@@ -57,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             return false;
         }
 
-        private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole<>> userRoles)
+        private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole> userRoles)
         {
             IEnumerable<Permission> permissions = new Permission[] {};
             permissions = userRoles.Aggregate(permissions, (current, userRole) => current.Union(RolePermission.GetPermissions(userRole.RoleId)));

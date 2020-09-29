@@ -377,6 +377,20 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 throw new InvalidOperationException("ODS secret configuration can not be null.");
             }
 
+            if (model.BulkFileUploadModel != null)
+            {
+                var modelValidator = new BulkFileUploadModelValidator(_usersContext);
+                model.BulkFileUploadModel.ApiKey = config.BulkUploadCredential?.ApiKey;
+
+                var validationResult = modelValidator.Validate(model.BulkFileUploadModel);
+
+                if (!validationResult.IsValid)
+                {
+                    var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
+                    throw new Exception(errorMessage);
+                }
+            }
+
             var schemaBasePath = HostingEnvironment.MapPath(ConfigurationManager.AppSettings["XsdFolder"]);
             var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
             var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
@@ -403,14 +417,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 SchemaPath = $"{schemaBasePath}\\{standardVersion}",
                 MaxSimultaneousRequests = maxSimultaneousRequests
             };
-            var contextValidator = new BulkUploadJobContextValidator(_usersContext);
-            var validationResult = contextValidator.Validate(jobContext);
-
-            if (!validationResult.IsValid)
-            {
-                var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
-                throw new Exception(errorMessage);
-            }
 
             if (!_bulkUploadJob.IsJobRunning())
             {

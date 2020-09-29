@@ -9,7 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using CsvHelper;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
 {
@@ -67,5 +70,32 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
             return missingHeaders;
         }
+
+        public static string SerializeFromSharingModel(SharingModel model)
+        {
+            return JsonConvert.SerializeObject(model, UsingIndentedCamelCase());
+        }
+
+        public static SharingModel DeserializeToSharingModel(this HttpPostedFileBase json)
+        {
+            using (var stream = GetMemoryStream(json))
+                using (var streamReader = new StreamReader(stream))
+                    using (JsonReader jsonReader = new JsonTextReader(streamReader))
+                    {
+                        return JsonSerializer
+                            .Create(UsingIndentedCamelCase())
+                            .Deserialize<SharingModel>(jsonReader);
+                    }
+        }
+
+        private static JsonSerializerSettings UsingIndentedCamelCase()
+        {
+            return new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Formatting = Formatting.Indented
+            };
+        }
+
     }
 }

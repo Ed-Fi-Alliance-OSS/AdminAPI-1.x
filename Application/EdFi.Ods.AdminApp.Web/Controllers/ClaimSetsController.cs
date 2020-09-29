@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Newtonsoft.Json;
 using AddClaimSetModel = EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.AddClaimSetModel;
@@ -268,7 +269,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult FileImport(ClaimSetFileImportModel claimSetFileImportModel)
         {
-            _claimSetFileImportCommand.Execute(claimSetFileImportModel);
+            var sharingModel = claimSetFileImportModel.ImportFile.DeserializeToSharingModel();
+            _claimSetFileImportCommand.Execute(sharingModel);
             return RedirectToAction("ClaimSets", "GlobalSettings");
         }
 
@@ -280,7 +282,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var exportClaimSetModel = new ExportClaimSetPreviewModel
             {
                 DownLoadFileTitle = $"{exports.Title}({currentDate})",
-                ExportPreviewString = exports.Serialize()
+                ExportPreviewString = InputFileExtensions.SerializeFromSharingModel(exports)
             };
             return PartialView("_ExportClaimSetPreview", exportClaimSetModel);
         }

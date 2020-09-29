@@ -9,7 +9,6 @@ using System.Linq;
 using System.Web;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
-using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -19,7 +18,7 @@ using FluentValidation.Validators;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
-    public class BulkRegisterOdsInstancesModel : IBulkRegisterOdsInstancesModel
+    public class BulkRegisterOdsInstancesModel
     {
         [Accept(".csv")]
         [Display(Name = "Instances Data File")]

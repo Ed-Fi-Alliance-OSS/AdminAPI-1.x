@@ -11,6 +11,7 @@ using System.Web;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -73,6 +74,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             }";
 
             var importModel = GetImportModel(testJSON);
+            var importSharingModel = importModel.ImportFile.DeserializeToSharingModel();
 
             var getResourceByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper());
             var addClaimSetCommand = new AddClaimSetCommand(TestContext);
@@ -80,7 +82,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var editResourceOnClaimSetCommand = new EditResourceOnClaimSetCommand(TestContext);
 
             var command = new ClaimSetFileImportCommand(addClaimSetCommand, editResourceOnClaimSetCommand, getResourceClaimsQuery);
-            command.Execute(importModel);
+            command.Execute(importSharingModel);
 
             var testClaimSet = TestContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset");
             testClaimSet.ShouldNotBeNull();

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
@@ -17,7 +18,7 @@ using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 {
-    public class ClaimSetFileImportModel: IClaimSetFileImportModel
+    public class ClaimSetFileImportModel
     {
         [DisplayName("Import File")]
         [Accept(".json")]
@@ -35,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
                         .SafeCustom((model, context) =>
                         {
                             var validator = new SharingModelValidator(securityContext, context.PropertyName);
-                            var sharingModel = SharingModel.Deserialize(model);
+                            var sharingModel = model.DeserializeToSharingModel();
                             context.AddFailures(validator.Validate(sharingModel));
                         });
                 });

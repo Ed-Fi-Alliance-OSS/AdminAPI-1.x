@@ -67,4 +67,32 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
             return odsInstanceNameForGivenKey != null && odsInstanceNameForGivenKey == _instanceContext.Name;
         }
     }
+
+    public class BulkFileUploadModelValidator : AbstractValidator<BulkFileUploadModel>
+    {
+        private readonly IUsersContext _usersContext;
+
+        public BulkFileUploadModelValidator(IUsersContext usersContext)
+        {
+            _usersContext = usersContext;
+
+            RuleFor(m => m.ApiKey).NotEmpty();           
+
+            RuleFor(m => m.ApiKey)
+                .Must(BeAssociatedApplicationExists)
+                .When(m => !string.IsNullOrEmpty(m.ApiKey))
+                .WithMessage("Provided Api Key is not associated with any application. Please reset the credentials.");
+        }
+
+        private bool BeAssociatedApplicationExists(BulkFileUploadModel model, string apiKey)
+        {
+            var apiClient = _usersContext.Clients
+                .Include(x => x.Application)
+                .SingleOrDefault(x => x.Key == apiKey);
+
+            var associatedApplication = apiClient?.Application;
+
+            return associatedApplication != null;
+        }
+    }
 }

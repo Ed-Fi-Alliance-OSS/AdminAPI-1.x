@@ -59,6 +59,7 @@
 
   <ItemGroup>
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
   </ItemGroup>
 
 </Project>

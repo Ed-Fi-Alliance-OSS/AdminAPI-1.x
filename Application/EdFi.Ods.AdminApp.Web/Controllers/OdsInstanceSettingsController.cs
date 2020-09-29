@@ -16,7 +16,6 @@ using System.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
 #endif
 using AutoMapper;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
@@ -30,6 +29,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
+using FluentValidation;
 using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -55,8 +55,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IBulkUploadJob _bulkUploadJob;
         private readonly InstanceContext _instanceContext;
         private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
-        private readonly IInferOdsApiVersion _inferOdsApiVersion;
-        private readonly IUsersContext _usersContext;
+        private readonly IInferOdsApiVersion _inferOdsApiVersion;   
+        private readonly IValidator<BulkFileUploadModel> _bulkLoadValidator;
 
         public OdsInstanceSettingsController(IMapper mapper
             , IGetVendorsQuery getVendorsQuery
@@ -75,8 +75,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IBulkUploadJob bulkUploadJob
             , InstanceContext instanceContext
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
-            , IInferOdsApiVersion inferOdsApiVersion
-            , IUsersContext usersContext)
+            , IInferOdsApiVersion inferOdsApiVersion          
+            , IValidator<BulkFileUploadModel> bulkLoadValidator)
         {
             _getVendorsQuery = getVendorsQuery;
             _mapper = mapper;
@@ -96,7 +96,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
             _inferOdsApiVersion = inferOdsApiVersion;
-            _usersContext = usersContext;
+            _bulkLoadValidator = bulkLoadValidator;           
         }
 
         public async Task<ActionResult> Applications()
@@ -378,12 +378,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             }
 
             if (model.BulkFileUploadModel != null)
-            {
-                var modelValidator = new BulkFileUploadModelValidator(_usersContext);
+            {               
                 model.BulkFileUploadModel.ApiKey = config.BulkUploadCredential?.ApiKey;
-
-                var validationResult = modelValidator.Validate(model.BulkFileUploadModel);
-
+                var validationResult = _bulkLoadValidator.Validate(model.BulkFileUploadModel);
                 if (!validationResult.IsValid)
                 {
                     var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -7,7 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+#if NET48
 using System.Web.Mvc;
+#else
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
@@ -52,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             return false;
         }
 
-        private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole> userRoles)
+        private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole<>> userRoles)
         {
             IEnumerable<Permission> permissions = new Permission[] {};
             permissions = userRoles.Aggregate(permissions, (current, userRole) => current.Union(RolePermission.GetPermissions(userRole.RoleId)));

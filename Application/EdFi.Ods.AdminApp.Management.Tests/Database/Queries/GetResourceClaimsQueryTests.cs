@@ -12,6 +12,7 @@ using NUnit.Framework;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
+using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -68,7 +69,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             {
                 var query = new GetResourceClaimsQuery(securityContext);
 
-                var results = query.GetSelectListForResourceClaims();
+                var allResourceClaims = query.Execute().ToList();
+
+                var results = GetSelectListForResourceClaims(allResourceClaims);
 
                 // Removing "Please select a value" SelectListItem from the results
                 results.RemoveAt(0);

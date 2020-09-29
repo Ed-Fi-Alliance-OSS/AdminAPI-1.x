@@ -14,6 +14,10 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using Moq;
 using NUnit.Framework;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels;
+using FluentValidation;
+using FluentValidation.Results;
+using System.Collections.Generic;
 
 namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
 {
@@ -45,6 +49,11 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
             InstanceContext = new InstanceContext {Id = OdsInstanceId, Name = "TestOdsInstance", Description = "TestOdsInstance Description" };
             ApiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             InferOdsApiVersion = new Mock<IInferOdsApiVersion>();
+            var failures = new List<ValidationFailure>();
+            var validationResult = new ValidationResult(failures);
+            var bulkFileUploadValidator = new Mock<IValidator<BulkFileUploadModel>>();            
+            bulkFileUploadValidator.Setup(x => x.Validate(It.IsAny<BulkFileUploadModel>())).
+                Returns(validationResult);        
 
             SystemUnderTest = new Web.Controllers.OdsInstanceSettingsController(
                 Mapper.Object,
@@ -64,7 +73,8 @@ namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
                 BulkUploadJob.Object,
                 InstanceContext,
                 ApiModeProvider.Object,
-                InferOdsApiVersion.Object
+                InferOdsApiVersion.Object,
+                bulkFileUploadValidator.Object            
             );
 
             AdditionalSetup();

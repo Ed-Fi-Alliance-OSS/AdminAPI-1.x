@@ -10,7 +10,11 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Hosting;
+#if NET48
 using System.Web.Mvc;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;

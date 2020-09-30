@@ -7,7 +7,13 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+#if NET48
 using System.Web.Mvc;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+#endif
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Identity;

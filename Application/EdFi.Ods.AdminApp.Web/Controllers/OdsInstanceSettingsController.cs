@@ -29,6 +29,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
+using FluentValidation;
 using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -54,7 +55,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IBulkUploadJob _bulkUploadJob;
         private readonly InstanceContext _instanceContext;
         private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
-        private readonly IInferOdsApiVersion _inferOdsApiVersion;
+        private readonly IInferOdsApiVersion _inferOdsApiVersion;   
+        private readonly IValidator<BulkFileUploadModel> _bulkLoadValidator;
 
         public OdsInstanceSettingsController(IMapper mapper
             , IGetVendorsQuery getVendorsQuery
@@ -73,7 +75,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IBulkUploadJob bulkUploadJob
             , InstanceContext instanceContext
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
-            , IInferOdsApiVersion inferOdsApiVersion)
+            , IInferOdsApiVersion inferOdsApiVersion          
+            , IValidator<BulkFileUploadModel> bulkLoadValidator)
         {
             _getVendorsQuery = getVendorsQuery;
             _mapper = mapper;
@@ -93,6 +96,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
             _inferOdsApiVersion = inferOdsApiVersion;
+            _bulkLoadValidator = bulkLoadValidator;           
         }
 
         public async Task<ActionResult> Applications()
@@ -371,6 +375,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             if (config == null)
             {
                 throw new InvalidOperationException("ODS secret configuration can not be null.");
+            }
+
+            if (model.BulkFileUploadModel != null)
+            {               
+                model.BulkFileUploadModel.ApiKey = config.BulkUploadCredential?.ApiKey;
+                var validationResult = await _bulkLoadValidator.ValidateAsync(model.BulkFileUploadModel);
+                if (!validationResult.IsValid)
+                {
+                    var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
+                    throw new Exception(errorMessage);
+                }
             }
 
             var schemaBasePath = HostingEnvironment.MapPath(ConfigurationManager.AppSettings["XsdFolder"]);

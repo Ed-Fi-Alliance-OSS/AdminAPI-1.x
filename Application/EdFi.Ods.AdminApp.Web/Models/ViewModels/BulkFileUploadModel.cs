@@ -77,12 +77,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
             _usersContext = usersContext;            
 
             RuleFor(m => m.ApiKey)
-                .Must(BeAssociatedApplicationExists)
+                .Must(BeAssociatedWithValidApplication)
                 .When(m => !string.IsNullOrEmpty(m.ApiKey))
                 .WithMessage("Provided Api Key is not associated with any application. Please reset the credentials.");
         }
 
-        private bool BeAssociatedApplicationExists(BulkFileUploadModel model, string apiKey)
+        private bool BeAssociatedWithValidApplication(BulkFileUploadModel model, string apiKey)
         {
             var apiClient = _usersContext.Clients
                 .Include(x => x.Application)

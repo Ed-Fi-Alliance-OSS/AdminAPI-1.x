@@ -380,7 +380,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             if (model.BulkFileUploadModel != null)
             {               
                 model.BulkFileUploadModel.ApiKey = config.BulkUploadCredential?.ApiKey;
-                var validationResult = _bulkLoadValidator.Validate(model.BulkFileUploadModel);
+                var validationResult = await _bulkLoadValidator.ValidateAsync(model.BulkFileUploadModel);
                 if (!validationResult.IsValid)
                 {
                     var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));

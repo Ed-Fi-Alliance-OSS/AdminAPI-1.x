@@ -84,7 +84,7 @@ namespace EdFi.Ods.AdminApp.Management
                 return JsonConvert.DeserializeObject<OdsSqlConfiguration>(
                     _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
                         ? unencryptedValue
-                        : rawValue);
+                        : rawValue, GetSerializerSettings());
             }
         }
 
@@ -103,13 +103,13 @@ namespace EdFi.Ods.AdminApp.Management
                 return JsonConvert.DeserializeObject<OdsSecretConfiguration>(
                     _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
                         ? unencryptedValue
-                        : rawValue);
+                        : rawValue, GetSerializerSettings());
             }
         }
 
         private async Task WriteSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId)
         {
-            var stringValue = JsonConvert.SerializeObject(configuration);
+            var stringValue = JsonConvert.SerializeObject(configuration, GetSerializerSettings());
             var encryptedValue = _stringEncryptorService.Encrypt(stringValue);
 
             using (var database = new AdminAppDbContext())
@@ -129,7 +129,7 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task WriteSqlConfiguration(OdsSqlConfiguration configuration)
         {
-            var stringValue = JsonConvert.SerializeObject(configuration);
+            var stringValue = JsonConvert.SerializeObject(configuration, GetSerializerSettings());
             var encryptedValue = _stringEncryptorService.Encrypt(stringValue);
             using (var database = new AdminAppDbContext())
             {
@@ -142,6 +142,14 @@ namespace EdFi.Ods.AdminApp.Management
 
                 await database.SaveChangesAsync();
             }
+        }
+
+        private JsonSerializerSettings GetSerializerSettings()
+        {
+            return new JsonSerializerSettings
+            {
+                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+            };
         }
     }
 }

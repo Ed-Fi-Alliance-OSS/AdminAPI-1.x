@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="5.1.1" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Dapper" Version="2.0.30" />
     <PackageReference Include="dbup-core" Version="4.2.0" />
     <PackageReference Include="dbup-postgresql" Version="4.2.0" />

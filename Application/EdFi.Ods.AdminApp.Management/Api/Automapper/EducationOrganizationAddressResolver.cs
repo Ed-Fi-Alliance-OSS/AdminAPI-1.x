@@ -44,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
             var addressList = originalList?.ToList() ?? new List<EdFiEducationOrganizationAddress>();
             originalList?.Clear();
 
-            var address = Resolve(source)[0];
+            var address = Resolve(source, null)[0];
 
             if (addressList.Any())
             {
@@ -58,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
             return addressList;
         }
 
-        public static List<EdFiEducationOrganizationAddress> Resolve(EducationOrganization source)
+        public static List<EdFiEducationOrganizationAddress> Resolve(EducationOrganization source, ResolutionContext context)
         {
             var address = new EdFiEducationOrganizationAddress(
                 "uri://ed-fi.org/AddressTypeDescriptor#" + AddressType.Physical,

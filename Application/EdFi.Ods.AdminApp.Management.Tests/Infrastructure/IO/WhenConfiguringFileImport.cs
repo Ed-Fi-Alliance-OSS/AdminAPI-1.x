@@ -10,7 +10,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Web.Tests.Infrastructure.IO
+namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.IO
 {
     [TestFixture]
     public class WhenConfiguringFileImport

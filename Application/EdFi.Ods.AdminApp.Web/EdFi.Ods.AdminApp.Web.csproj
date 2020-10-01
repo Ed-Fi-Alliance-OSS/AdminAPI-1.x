@@ -114,8 +114,8 @@
     <Reference Include="Hangfire.Core, Version=1.7.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.7.14\lib\net46\Hangfire.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Hangfire.PostgreSql, Version=1.6.4.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hangfire.PostgreSql.1.6.4.1\lib\net451\Hangfire.PostgreSql.dll</HintPath>
+    <Reference Include="Hangfire.PostgreSql, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.PostgreSql.1.7.1\lib\netstandard2.0\Hangfire.PostgreSql.dll</HintPath>
     </Reference>
     <Reference Include="Hangfire.SqlServer, Version=1.7.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.SqlServer.1.7.14\lib\net45\Hangfire.SqlServer.dll</HintPath>

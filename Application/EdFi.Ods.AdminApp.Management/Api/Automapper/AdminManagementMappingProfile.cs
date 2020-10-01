@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LocalEducationAgency = EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency;
 using School = EdFi.Ods.AdminApp.Management.Api.Models.School;
+using EdFi.Ods.AdminApp.Management.Api.DomainModels;
 
 namespace EdFi.Ods.AdminApp.Management.Api.Automapper
 {
@@ -15,7 +16,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
     {
         public AdminManagementMappingProfile()
         {
-            CreateMap<DomainModels.EdFiSchool, School>()
+            CreateMap<EdFiSchool, School>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.NameOfInstitution))
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
@@ -28,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForMember(dst => dst.GradeLevels, opt => opt.MapFrom(src => src.GradeLevels != null  ? src.GradeLevels.Select(g => g.GradeLevelDescriptor) : new List<string>()))
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.Ignore()); //this value is currently stored in web.config
 
-            CreateMap<DomainModels.EdFiLocalEducationAgency, LocalEducationAgency>()
+            CreateMap<EdFiLocalEducationAgency, LocalEducationAgency>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.LocalEducationAgencyId, opt => opt.MapFrom(src => src.LocalEducationAgencyId))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.NameOfInstitution))
@@ -42,34 +43,35 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.Ignore()) //this value is currently stored in web.config
                 .ForMember(dst => dst.StateOrganizationId, opt => opt.MapFrom(src => src.StateEducationAgencyReference != null ? src.StateEducationAgencyReference.StateEducationAgencyId : 0));
 
-            CreateMap<School, DomainModels.EdFiSchool>()
+        
+            CreateMap<School, EdFiSchool>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.SchoolId, opt => opt.MapFrom(src => src.EducationOrganizationId))
                 .ForMember(dst => dst.NameOfInstitution, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dst => dst.Addresses, opt => opt.ResolveUsing<SchoolAddressResolver>())
+                .ForMember(dst => dst.Addresses, opt => opt.MapFrom<SchoolAddressResolver>())
                 .ForMember(dst => dst.EducationOrganizationCategories,
-                    opt => opt.ResolveUsing<SchoolCategoryResolver>())
-                .ForMember(dst => dst.GradeLevels, opt => opt.ResolveUsing<SchoolGradeLevelResolver>())
+                    opt => opt.MapFrom<SchoolCategoryResolver>())
+                .ForMember(dst => dst.GradeLevels, opt => opt.MapFrom<SchoolGradeLevelResolver>())
                 .ForMember(dst => dst.LocalEducationAgencyReference,
-                    opt => opt.ResolveUsing<LocalEducationAgencyReferenceResolver>())
+                    opt => opt.MapFrom<LocalEducationAgencyReferenceResolver>())
                 .ForCtorParam("id", opt => opt.MapFrom(src => src.Id))
                 .ForCtorParam("schoolId", opt => opt.MapFrom(src => src.EducationOrganizationId))
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name))
-                .ForCtorParam("addresses", opt => opt.ResolveUsing(EducationOrganizationAddressResolver.Resolve))
-                .ForCtorParam("educationOrganizationCategories", opt => opt.ResolveUsing(EducationOrganizationCategoryResolver.Resolve))
-                .ForCtorParam("gradeLevels", opt => opt.ResolveUsing(SchoolGradeLevelResolver.Resolve));
+                .ForCtorParam("addresses", opt => opt.MapFrom(EducationOrganizationAddressResolver.Resolve))
+                .ForCtorParam("educationOrganizationCategories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
+                .ForCtorParam("gradeLevels", opt => opt.MapFrom(SchoolGradeLevelResolver.Resolve));
 
-            CreateMap<LocalEducationAgency, DomainModels.EdFiLocalEducationAgency>()
+            CreateMap<LocalEducationAgency, EdFiLocalEducationAgency>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.LocalEducationAgencyId, opt => opt.MapFrom(src =>src.LocalEducationAgencyId))
                 .ForMember(dst => dst.NameOfInstitution, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.LocalEducationAgencyCategoryDescriptor, opt => opt.MapFrom(src => src.LocalEducationAgencyCategoryType))
-                .ForMember(dst => dst.Addresses, opt => opt.ResolveUsing<LocalEducationAgencyAddressResolver>())
-                .ForMember(dst => dst.StateEducationAgencyReference, opt => opt.ResolveUsing<StateEducationAgencyReferenceResolver>())
-                .ForMember(dst => dst.Categories, opt => opt.ResolveUsing<LocalEducationAgencyCategoryResolver>())
+                .ForMember(dst => dst.Addresses, opt => opt.MapFrom<LocalEducationAgencyAddressResolver>())
+                .ForMember(dst => dst.StateEducationAgencyReference, opt => opt.MapFrom<StateEducationAgencyReferenceResolver>())
+                .ForMember(dst => dst.Categories, opt => opt.MapFrom<LocalEducationAgencyCategoryResolver>())
                 .ForCtorParam("id", opt => opt.MapFrom(src => src.Id))
-                .ForCtorParam("addresses", opt => opt.ResolveUsing(EducationOrganizationAddressResolver.Resolve))
-                .ForCtorParam("categories", opt => opt.ResolveUsing(EducationOrganizationCategoryResolver.Resolve))
+                .ForCtorParam("addresses", opt => opt.MapFrom(EducationOrganizationAddressResolver.Resolve))
+                .ForCtorParam("categories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
                 .ForCtorParam("localEducationAgencyId", opt => opt.MapFrom(src => src.LocalEducationAgencyId))
                 .ForCtorParam("localEducationAgencyCategoryDescriptor", opt => opt.MapFrom(src => src.LocalEducationAgencyCategoryType))
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name));

@@ -21,24 +21,14 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 CREATE TABLE "adminapp_HangFire".counter (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     key varchar NOT NULL,
     value bigint NOT NULL,
     expireat timestamp without time zone
 );
 
-CREATE SEQUENCE "adminapp_HangFire".counter_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".counter_id_seq OWNED BY "adminapp_HangFire".counter.id;
-
 CREATE TABLE "adminapp_HangFire".hash (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     key varchar NOT NULL,
     field varchar NOT NULL,
     value varchar,
@@ -46,18 +36,8 @@ CREATE TABLE "adminapp_HangFire".hash (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-CREATE SEQUENCE "adminapp_HangFire".hash_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".hash_id_seq OWNED BY "adminapp_HangFire".hash.id;
-
 CREATE TABLE "adminapp_HangFire".job (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     stateid bigint,
     statename varchar,
     invocationdata varchar NOT NULL,
@@ -67,69 +47,29 @@ CREATE TABLE "adminapp_HangFire".job (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-CREATE SEQUENCE "adminapp_HangFire".job_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".job_id_seq OWNED BY "adminapp_HangFire".job.id;
-
 CREATE TABLE "adminapp_HangFire".jobparameter (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     jobid bigint NOT NULL,
     name varchar NOT NULL,
     value varchar,
     updatecount int DEFAULT 0 NOT NULL
 );
 
-CREATE SEQUENCE "adminapp_HangFire".jobparameter_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".jobparameter_id_seq OWNED BY "adminapp_HangFire".jobparameter.id;
-
 CREATE TABLE "adminapp_HangFire".jobqueue (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     jobid bigint NOT NULL,
     queue varchar NOT NULL,
     fetchedat timestamp without time zone,
     updatecount int DEFAULT 0 NOT NULL
 );
 
-CREATE SEQUENCE "adminapp_HangFire".jobqueue_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".jobqueue_id_seq OWNED BY "adminapp_HangFire".jobqueue.id;
-
 CREATE TABLE "adminapp_HangFire".list (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     key varchar NOT NULL,
     value varchar,
     expireat timestamp without time zone,
     updatecount int DEFAULT 0 NOT NULL
 );
-
-CREATE SEQUENCE "adminapp_HangFire".list_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".list_id_seq OWNED BY "adminapp_HangFire".list.id;
 
 CREATE TABLE "adminapp_HangFire".lock (
     resource varchar NOT NULL,
@@ -149,7 +89,7 @@ CREATE TABLE "adminapp_HangFire".server (
 );
 
 CREATE TABLE "adminapp_HangFire".set (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     key varchar NOT NULL,
     score double precision NOT NULL,
     value varchar NOT NULL,
@@ -157,18 +97,8 @@ CREATE TABLE "adminapp_HangFire".set (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-CREATE SEQUENCE "adminapp_HangFire".set_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".set_id_seq OWNED BY "adminapp_HangFire".set.id;
-
 CREATE TABLE "adminapp_HangFire".state (
-    id bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     jobid bigint NOT NULL,
     name varchar NOT NULL,
     reason varchar,
@@ -176,32 +106,6 @@ CREATE TABLE "adminapp_HangFire".state (
     data varchar,
     updatecount int DEFAULT 0 NOT NULL
 );
-
-CREATE SEQUENCE "adminapp_HangFire".state_id_seq
-    AS int
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE "adminapp_HangFire".state_id_seq OWNED BY "adminapp_HangFire".state.id;
-
-ALTER TABLE ONLY "adminapp_HangFire".counter ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".counter_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".hash ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".hash_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".job ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".job_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".jobparameter ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".jobparameter_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".jobqueue ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".jobqueue_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".list ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".list_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".set ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".set_id_seq'::regclass);
-
-ALTER TABLE ONLY "adminapp_HangFire".state ALTER COLUMN id SET DEFAULT nextval('"adminapp_HangFire".state_id_seq'::regclass);
 
 ALTER TABLE ONLY "adminapp_HangFire".counter
     ADD CONSTRAINT counter_pkey PRIMARY KEY (id);

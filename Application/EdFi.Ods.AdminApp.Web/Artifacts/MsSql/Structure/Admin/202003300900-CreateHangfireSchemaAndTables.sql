@@ -21,11 +21,6 @@ CREATE TABLE [adminapp_HangFire].[Counter](
 	[ExpireAt] [datetime] NULL
 ) ON [PRIMARY]
 GO
-CREATE CLUSTERED INDEX [CX_HangFire_Counter] ON [adminapp_HangFire].[Counter]
-(
-	[Key] ASC
-)
-GO
 CREATE TABLE [adminapp_HangFire].[Hash](
 	[Key] [nvarchar](100) NOT NULL,
 	[Field] [nvarchar](100) NOT NULL,
@@ -177,6 +172,11 @@ CREATE NONCLUSTERED INDEX [IX_HangFire_Set_Score] ON [adminapp_HangFire].[Set]
 (
 	[Key] ASC,
 	[Score] ASC
+)
+GO
+CREATE CLUSTERED INDEX [CX_HangFire_Counter] ON [adminapp_HangFire].[Counter]
+(
+	[Key] ASC
 )
 GO
 ALTER TABLE [adminapp_HangFire].[JobParameter]  WITH CHECK ADD  CONSTRAINT [FK_HangFire_JobParameter_Job] FOREIGN KEY([JobId])

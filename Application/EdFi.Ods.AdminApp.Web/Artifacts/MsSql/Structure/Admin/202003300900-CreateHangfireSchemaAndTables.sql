@@ -3,10 +3,8 @@
 -- The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 -- See the LICENSE and NOTICES files in the project root for more information.
 
-/****** Object:  Schema [adminapp_HangFire]    Script Date: 10/2/2020 9:08:02 AM ******/
 CREATE SCHEMA [adminapp_HangFire]
 GO
-/****** Object:  Table [adminapp_HangFire].[AggregatedCounter]    Script Date: 10/2/2020 9:08:02 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,7 +19,6 @@ CREATE TABLE [adminapp_HangFire].[AggregatedCounter](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[Counter]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -34,13 +31,11 @@ CREATE TABLE [adminapp_HangFire].[Counter](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [CX_HangFire_Counter]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE CLUSTERED INDEX [CX_HangFire_Counter] ON [adminapp_HangFire].[Counter]
 (
 	[Key] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[Hash]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -57,7 +52,6 @@ CREATE TABLE [adminapp_HangFire].[Hash](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[Job]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -76,7 +70,6 @@ CREATE TABLE [adminapp_HangFire].[Job](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[JobParameter]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -92,7 +85,6 @@ CREATE TABLE [adminapp_HangFire].[JobParameter](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[JobQueue]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -109,7 +101,6 @@ CREATE TABLE [adminapp_HangFire].[JobQueue](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[List]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -126,7 +117,6 @@ CREATE TABLE [adminapp_HangFire].[List](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[Schema]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -139,7 +129,6 @@ CREATE TABLE [adminapp_HangFire].[Schema](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[Server]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -154,7 +143,6 @@ CREATE TABLE [adminapp_HangFire].[Server](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[Set]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -171,7 +159,6 @@ CREATE TABLE [adminapp_HangFire].[Set](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [adminapp_HangFire].[State]    Script Date: 10/2/2020 9:08:03 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -190,7 +177,6 @@ CREATE TABLE [adminapp_HangFire].[State](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Index [IX_HangFire_AggregatedCounter_ExpireAt]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_AggregatedCounter_ExpireAt] ON [adminapp_HangFire].[AggregatedCounter]
 (
 	[ExpireAt] ASC
@@ -198,7 +184,6 @@ CREATE NONCLUSTERED INDEX [IX_HangFire_AggregatedCounter_ExpireAt] ON [adminapp_
 WHERE ([ExpireAt] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_HangFire_Hash_ExpireAt]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_Hash_ExpireAt] ON [adminapp_HangFire].[Hash]
 (
 	[ExpireAt] ASC
@@ -208,7 +193,6 @@ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_HangFire_Job_ExpireAt]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_Job_ExpireAt] ON [adminapp_HangFire].[Job]
 (
 	[ExpireAt] ASC
@@ -219,7 +203,6 @@ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_HangFire_Job_StateName]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_Job_StateName] ON [adminapp_HangFire].[Job]
 (
 	[StateName] ASC
@@ -227,7 +210,6 @@ CREATE NONCLUSTERED INDEX [IX_HangFire_Job_StateName] ON [adminapp_HangFire].[Jo
 WHERE ([StateName] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_HangFire_List_ExpireAt]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_List_ExpireAt] ON [adminapp_HangFire].[List]
 (
 	[ExpireAt] ASC
@@ -235,13 +217,11 @@ CREATE NONCLUSTERED INDEX [IX_HangFire_List_ExpireAt] ON [adminapp_HangFire].[Li
 WHERE ([ExpireAt] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_HangFire_Server_LastHeartbeat]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_Server_LastHeartbeat] ON [adminapp_HangFire].[Server]
 (
 	[LastHeartbeat] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_HangFire_Set_ExpireAt]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_Set_ExpireAt] ON [adminapp_HangFire].[Set]
 (
 	[ExpireAt] ASC
@@ -251,7 +231,6 @@ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_HangFire_Set_Score]    Script Date: 10/2/2020 9:08:03 AM ******/
 CREATE NONCLUSTERED INDEX [IX_HangFire_Set_Score] ON [adminapp_HangFire].[Set]
 (
 	[Key] ASC,

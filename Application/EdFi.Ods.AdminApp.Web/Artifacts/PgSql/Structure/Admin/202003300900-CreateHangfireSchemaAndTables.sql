@@ -16,8 +16,6 @@ SET row_security = off;
 
 CREATE SCHEMA "adminapp_HangFire";
 
-ALTER SCHEMA "adminapp_HangFire" OWNER TO saagar14;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -29,8 +27,6 @@ CREATE TABLE "adminapp_HangFire".counter (
     expireat timestamp without time zone
 );
 
-ALTER TABLE "adminapp_HangFire".counter OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".counter_id_seq
     AS int
     START WITH 1
@@ -38,8 +34,6 @@ CREATE SEQUENCE "adminapp_HangFire".counter_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE "adminapp_HangFire".counter_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".counter_id_seq OWNED BY "adminapp_HangFire".counter.id;
 
@@ -52,8 +46,6 @@ CREATE TABLE "adminapp_HangFire".hash (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".hash OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".hash_id_seq
     AS int
     START WITH 1
@@ -61,9 +53,6 @@ CREATE SEQUENCE "adminapp_HangFire".hash_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE "adminapp_HangFire".hash_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".hash_id_seq OWNED BY "adminapp_HangFire".hash.id;
 
@@ -78,8 +67,6 @@ CREATE TABLE "adminapp_HangFire".job (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".job OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".job_id_seq
     AS int
     START WITH 1
@@ -87,8 +74,6 @@ CREATE SEQUENCE "adminapp_HangFire".job_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE "adminapp_HangFire".job_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".job_id_seq OWNED BY "adminapp_HangFire".job.id;
 
@@ -100,8 +85,6 @@ CREATE TABLE "adminapp_HangFire".jobparameter (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".jobparameter OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".jobparameter_id_seq
     AS int
     START WITH 1
@@ -109,8 +92,6 @@ CREATE SEQUENCE "adminapp_HangFire".jobparameter_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE "adminapp_HangFire".jobparameter_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".jobparameter_id_seq OWNED BY "adminapp_HangFire".jobparameter.id;
 
@@ -122,8 +103,6 @@ CREATE TABLE "adminapp_HangFire".jobqueue (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".jobqueue OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".jobqueue_id_seq
     AS int
     START WITH 1
@@ -131,8 +110,6 @@ CREATE SEQUENCE "adminapp_HangFire".jobqueue_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE "adminapp_HangFire".jobqueue_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".jobqueue_id_seq OWNED BY "adminapp_HangFire".jobqueue.id;
 
@@ -144,8 +121,6 @@ CREATE TABLE "adminapp_HangFire".list (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".list OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".list_id_seq
     AS int
     START WITH 1
@@ -153,8 +128,6 @@ CREATE SEQUENCE "adminapp_HangFire".list_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE "adminapp_HangFire".list_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".list_id_seq OWNED BY "adminapp_HangFire".list.id;
 
@@ -164,13 +137,9 @@ CREATE TABLE "adminapp_HangFire".lock (
     acquired timestamp without time zone
 );
 
-ALTER TABLE "adminapp_HangFire".lock OWNER TO saagar14;
-
 CREATE TABLE "adminapp_HangFire".schema (
     version int NOT NULL
 );
-
-ALTER TABLE "adminapp_HangFire".schema OWNER TO saagar14;
 
 CREATE TABLE "adminapp_HangFire".server (
     id varchar NOT NULL,
@@ -178,8 +147,6 @@ CREATE TABLE "adminapp_HangFire".server (
     lastheartbeat timestamp without time zone NOT NULL,
     updatecount int DEFAULT 0 NOT NULL
 );
-
-ALTER TABLE "adminapp_HangFire".server OWNER TO saagar14;
 
 CREATE TABLE "adminapp_HangFire".set (
     id bigint NOT NULL,
@@ -190,8 +157,6 @@ CREATE TABLE "adminapp_HangFire".set (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".set OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".set_id_seq
     AS int
     START WITH 1
@@ -199,8 +164,6 @@ CREATE SEQUENCE "adminapp_HangFire".set_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE "adminapp_HangFire".set_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".set_id_seq OWNED BY "adminapp_HangFire".set.id;
 
@@ -214,8 +177,6 @@ CREATE TABLE "adminapp_HangFire".state (
     updatecount int DEFAULT 0 NOT NULL
 );
 
-ALTER TABLE "adminapp_HangFire".state OWNER TO saagar14;
-
 CREATE SEQUENCE "adminapp_HangFire".state_id_seq
     AS int
     START WITH 1
@@ -223,9 +184,6 @@ CREATE SEQUENCE "adminapp_HangFire".state_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE "adminapp_HangFire".state_id_seq OWNER TO saagar14;
 
 ALTER SEQUENCE "adminapp_HangFire".state_id_seq OWNED BY "adminapp_HangFire".state.id;
 

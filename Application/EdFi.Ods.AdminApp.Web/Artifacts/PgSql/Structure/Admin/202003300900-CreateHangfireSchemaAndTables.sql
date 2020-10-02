@@ -146,19 +146,19 @@ ALTER TABLE ONLY "adminapp_HangFire".set
 ALTER TABLE ONLY "adminapp_HangFire".state
     ADD CONSTRAINT state_pkey PRIMARY KEY (id);
 
-CREATE INDEX ix_hangfire_counter_expireat ON "adminapp_HangFire".counter USING btree (expireat);
+CREATE INDEX ix_hangfire_counter_expireat ON "adminapp_HangFire".counter(expireat);
 
-CREATE INDEX ix_hangfire_counter_key ON "adminapp_HangFire".counter USING btree (key);
+CREATE INDEX ix_hangfire_counter_key ON "adminapp_HangFire".counter(key);
 
-CREATE INDEX ix_hangfire_job_statename ON "adminapp_HangFire".job USING btree (statename);
+CREATE INDEX ix_hangfire_job_statename ON "adminapp_HangFire".job(statename);
 
-CREATE INDEX ix_hangfire_jobparameter_jobidandname ON "adminapp_HangFire".jobparameter USING btree (jobid, name);
+CREATE INDEX ix_hangfire_jobparameter_jobidandname ON "adminapp_HangFire".jobparameter(jobid, name);
 
-CREATE INDEX ix_hangfire_jobqueue_jobidandqueue ON "adminapp_HangFire".jobqueue USING btree (jobid, queue);
+CREATE INDEX ix_hangfire_jobqueue_jobidandqueue ON "adminapp_HangFire".jobqueue(jobid, queue);
 
-CREATE INDEX ix_hangfire_jobqueue_queueandfetchedat ON "adminapp_HangFire".jobqueue USING btree (queue, fetchedat);
+CREATE INDEX ix_hangfire_jobqueue_queueandfetchedat ON "adminapp_HangFire".jobqueue(queue, fetchedat);
 
-CREATE INDEX ix_hangfire_state_jobid ON "adminapp_HangFire".state USING btree (jobid);
+CREATE INDEX ix_hangfire_state_jobid ON "adminapp_HangFire".state(jobid);
 
 ALTER TABLE ONLY "adminapp_HangFire".jobparameter
     ADD CONSTRAINT jobparameter_jobid_fkey FOREIGN KEY (jobid) REFERENCES "adminapp_HangFire".job(id) ON UPDATE CASCADE ON DELETE CASCADE;

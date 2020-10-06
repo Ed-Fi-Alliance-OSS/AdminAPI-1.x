@@ -26,6 +26,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
                 _logger.Error(filterContext.Exception);
                 filterContext.ExceptionHandled = true;
                 filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
                 if (filterContext.Controller is ReportsController && filterContext.Exception is SqlException)
                     filterContext.HttpContext.Response.Write("An error occurred trying to access the SQL views for reports.");
                 else

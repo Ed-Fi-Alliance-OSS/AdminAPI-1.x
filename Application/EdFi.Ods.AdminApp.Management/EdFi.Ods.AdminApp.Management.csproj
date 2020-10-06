@@ -33,6 +33,6 @@
 
   <ItemGroup>
     <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Security" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
   </ItemGroup>
 </Project>

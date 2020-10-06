@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
-using System.Web.Helpers;
+using Newtonsoft.Json;
 using System.Web.Hosting;
 
 namespace EdFi.Ods.AdminApp.Management
@@ -30,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management
             using (var sr = File.OpenText(filePath))
             {
                 var componentsString = await sr.ReadToEndAsync();
-                var odsComponents = Json.Decode<List<OdsComponent>>(componentsString);
+                var odsComponents = JsonConvert.DeserializeObject<List<OdsComponent>>(componentsString);
 
                 return odsComponents;
             }

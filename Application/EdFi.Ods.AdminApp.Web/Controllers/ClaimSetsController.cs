@@ -20,6 +20,7 @@ using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Newtonsoft.Json;
+using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
 using AddClaimSetModel = EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.AddClaimSetModel;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -165,13 +166,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult EditClaimSet(int claimSetId)
         {
             var existingClaimSet = _getClaimSetByIdQuery.Execute(claimSetId);
+            var allResourceClaims = _getResourceClaimsQuery.Execute().ToList();
             var model = new EditClaimSetModel
             {
                 ClaimSetName = existingClaimSet.Name,
                 ClaimSetId = claimSetId,
                 Applications = _getApplicationsByClaimSetIdQuery.Execute(claimSetId),
                 ResourceClaims = _getResourcesByClaimSetIdQuery.AllResources(claimSetId),
-                AllResourceClaims = _getResourceClaimsQuery.GetSelectListForResourceClaims()
+                AllResourceClaims = GetSelectListForResourceClaims(allResourceClaims)
             };
   
             return PartialView("_EditClaimSet", model);

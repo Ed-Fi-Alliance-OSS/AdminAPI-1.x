@@ -9,6 +9,7 @@ using System.Linq;
 using LocalEducationAgency = EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency;
 using School = EdFi.Ods.AdminApp.Management.Api.Models.School;
 using EdFi.Ods.AdminApp.Management.Api.DomainModels;
+using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Management.Api.Automapper
 {
@@ -57,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForCtorParam("id", opt => opt.MapFrom(src => src.Id))
                 .ForCtorParam("schoolId", opt => opt.MapFrom(src => src.EducationOrganizationId))
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name))
-                .ForCtorParam("addresses", opt => opt.MapFrom(EducationOrganizationAddressResolver.Resolve))
+                .ForCtorParam("addresses", opt => opt.MapFrom(AddressResolver))
                 .ForCtorParam("educationOrganizationCategories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
                 .ForCtorParam("gradeLevels", opt => opt.MapFrom(SchoolGradeLevelResolver.Resolve));
 
@@ -70,11 +71,15 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForMember(dst => dst.StateEducationAgencyReference, opt => opt.MapFrom<StateEducationAgencyReferenceResolver>())
                 .ForMember(dst => dst.Categories, opt => opt.MapFrom<LocalEducationAgencyCategoryResolver>())
                 .ForCtorParam("id", opt => opt.MapFrom(src => src.Id))
-                .ForCtorParam("addresses", opt => opt.MapFrom(EducationOrganizationAddressResolver.Resolve))
+                .ForCtorParam("addresses", opt => opt.MapFrom(AddressResolver))
                 .ForCtorParam("categories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
                 .ForCtorParam("localEducationAgencyId", opt => opt.MapFrom(src => src.LocalEducationAgencyId))
                 .ForCtorParam("localEducationAgencyCategoryDescriptor", opt => opt.MapFrom(src => src.LocalEducationAgencyCategoryType))
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name));
+
+            List<EdFiEducationOrganizationAddress> AddressResolver(EducationOrganization source,
+                ResolutionContext context)
+                => EducationOrganizationAddressResolver.Resolve(source);
         }
     }
 }

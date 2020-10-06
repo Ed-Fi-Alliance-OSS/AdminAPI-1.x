@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Configuration;
+using EdFi.Ods.AdminApp.Management;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
@@ -21,6 +23,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
         private static void Start(bool enableSchemaMigration)
         {
             var schemaName = "adminapp_hangfire";
+            var connectionString = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString;
 
             if (DatabaseProviderHelper.PgSqlProvider)
             {
@@ -29,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
                     SchemaName = schemaName
                 };
 
-                GlobalConfiguration.Configuration.UsePostgreSqlStorage("EdFi_Admin", options);
+                GlobalConfiguration.Configuration.UsePostgreSqlStorage(connectionString, options);
             }
             else
             {

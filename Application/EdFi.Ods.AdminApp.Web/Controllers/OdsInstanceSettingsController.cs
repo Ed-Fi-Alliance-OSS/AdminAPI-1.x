@@ -385,6 +385,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
                     Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                    Response.TrySkipIisCustomErrors = true;
                     return Json(new {Result = new {Errors = new[] {new {ErrorMessage = errorMessage}}}});
                 }
             }

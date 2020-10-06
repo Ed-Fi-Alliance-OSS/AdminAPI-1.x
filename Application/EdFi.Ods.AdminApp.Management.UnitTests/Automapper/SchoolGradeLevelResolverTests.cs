@@ -27,11 +27,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                 // Arrange
                 var school = new School
                 {
-                    GradeLevels = new List<string> {Kinder, "FirstGrade", "SecondGrade"}
+                    GradeLevels = new List<string> { Kinder, "FirstGrade", "SecondGrade"}
                 };
 
-                var edfiSchool = new EdFiSchool(
-                    "id", "TestSchool", 1234, new List<EdFiEducationOrganizationAddress>(),
+                var edfiSchool = new EdFiSchool("id", "TestSchool", 1234, new List<EdFiEducationOrganizationAddress>(),
                     new List<EdFiEducationOrganizationCategory>(), new List<EdFiSchoolGradeLevel>());
 
                 var mapperConfiguration = new MapperConfiguration(

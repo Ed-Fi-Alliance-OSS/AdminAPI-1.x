@@ -79,8 +79,8 @@
     <Reference Include="EdFi.Admin.DataAccess, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Suite3.Admin.DataAccess.5.0.0\lib\net48\EdFi.Admin.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="EdFi.Common, Version=5.1.0.12, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdFi.Common.5.1.0-pre0017\lib\net48\EdFi.Common.dll</HintPath>
+    <Reference Include="EdFi.Common, Version=5.1.0.13, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdFi.Suite3.Common.5.1.0-pre0013\lib\net48\EdFi.Common.dll</HintPath>
     </Reference>
     <Reference Include="EdFi.LoadTools, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Suite3.LoadTools.5.0.0\lib\net48\EdFi.LoadTools.dll</HintPath>

@@ -75,8 +75,8 @@
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.30\lib\net461\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="EdFi.Admin.DataAccess, Version=5.0.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdFi.Suite3.Admin.DataAccess.5.0.0\lib\net48\EdFi.Admin.DataAccess.dll</HintPath>
+    <Reference Include="EdFi.Admin.DataAccess, Version=5.1.0.17, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdFi.Suite3.Admin.DataAccess.5.1.0-pre0017\lib\net48\EdFi.Admin.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="EdFi.Admin.LearningStandards.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdFi.Admin.LearningStandards.Core.1.1.0\lib\netstandard2.0\EdFi.Admin.LearningStandards.Core.dll</HintPath>
@@ -99,8 +99,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework6.Npgsql, Version=3.2.1.1, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework6.Npgsql.3.2.1.1\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+    <Reference Include="EntityFramework6.Npgsql, Version=6.4.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.6.4.1\lib\net461\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.8.6.3\lib\net45\FluentValidation.dll</HintPath>

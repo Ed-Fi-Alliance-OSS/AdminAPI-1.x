@@ -33,12 +33,14 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                 new List<EdFiEducationOrganizationCategory>(), 1234, 
                 nameOfInstitution: Name, localEducationAgencyCategoryDescriptor: Category);
 
-            Mapper.Initialize(cfg =>
+            var mapperConfiguration = new MapperConfiguration(cfg =>
                 cfg.CreateMap<LocalEducationAgency, EdFiLocalEducationAgency>()
-                    .ForMember(dst => dst.StateEducationAgencyReference, opt => opt.ResolveUsing<StateEducationAgencyReferenceResolver>()));
+                    .ForMember(dst => dst.StateEducationAgencyReference,
+                        opt => opt.MapFrom<StateEducationAgencyReferenceResolver>()));
+            var mapper = mapperConfiguration.CreateMapper();
 
             // Act
-            var result = Mapper.Map(lea, edfiLea);
+            var result = mapper.Map(lea, edfiLea);
 
             // Assert
             result.ShouldNotBeNull();
@@ -54,12 +56,14 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                 new List<EdFiEducationOrganizationCategory>(), 1234, stateEducationAgencyReference: new EdFiStateEducationAgencyReference(StateEducationAgencyId),
                 nameOfInstitution: Name, localEducationAgencyCategoryDescriptor: Category);
 
-            Mapper.Initialize(cfg =>
+            var mapperConfiguration = new MapperConfiguration(cfg =>
                 cfg.CreateMap<LocalEducationAgency, EdFiLocalEducationAgency>()
-                    .ForMember(dst => dst.StateEducationAgencyReference, opt => opt.ResolveUsing<StateEducationAgencyReferenceResolver>()));
+                    .ForMember(dst => dst.StateEducationAgencyReference,
+                        opt => opt.MapFrom<StateEducationAgencyReferenceResolver>()));
+            var mapper = mapperConfiguration.CreateMapper();
 
             // Act
-            var result = Mapper.Map(new LocalEducationAgency(), edfiLea);
+            var result = mapper.Map(new LocalEducationAgency(), edfiLea);
 
             // Assert
             result.ShouldNotBeNull();

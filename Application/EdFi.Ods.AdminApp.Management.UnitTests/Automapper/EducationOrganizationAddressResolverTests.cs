@@ -36,12 +36,13 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
             var edfiSchool = new EdFiSchool("id", "TestSchool", 1234, new List<EdFiEducationOrganizationAddress>(),
                 new List<EdFiEducationOrganizationCategory>(), new List<EdFiSchoolGradeLevel>());
 
-            Mapper.Initialize(cfg =>
+            var mapperConfiguration = new MapperConfiguration(cfg =>
                 cfg.CreateMap<School, EdFiSchool>()
-                    .ForMember(dst => dst.Addresses, opt => opt.ResolveUsing<SchoolAddressResolver>()));
+                    .ForMember(dst => dst.Addresses, opt => opt.MapFrom<SchoolAddressResolver>()));
+            var mapper = mapperConfiguration.CreateMapper();
 
             // Act
-            var result = Mapper.Map(school, edfiSchool);
+            var result = mapper.Map(school, edfiSchool);
 
             // Assert
             result.ShouldNotBeNull();
@@ -69,12 +70,13 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                 new List<EdFiEducationOrganizationCategory>(), 1234, localEducationAgencyCategoryDescriptor: "leaCategory",
                 nameOfInstitution: "TestLea");
 
-            Mapper.Initialize(cfg =>
+            var mapperConfiguration = new MapperConfiguration(cfg =>
                 cfg.CreateMap<LocalEducationAgency, EdFiLocalEducationAgency>()
-                    .ForMember(dst => dst.Addresses, opt => opt.ResolveUsing<LocalEducationAgencyAddressResolver>()));
+                    .ForMember(dst => dst.Addresses, opt => opt.MapFrom<LocalEducationAgencyAddressResolver>()));
+            var mapper = mapperConfiguration.CreateMapper();
 
             // Act
-            var result = Mapper.Map(lea, edfiLea);
+            var result = mapper.Map(lea, edfiLea);
 
             // Assert
             result.ShouldNotBeNull();

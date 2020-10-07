@@ -44,12 +44,12 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
             };
         }
 
-        public static List<EdFiEducationOrganizationCategory> Resolve(LocalEducationAgency source)
+        public static List<EdFiEducationOrganizationCategory> Resolve(LocalEducationAgency source, ResolutionContext context)
         {
             return GetNewEducationCategory(source.EducationOrganizationCategory);
         }
 
-        public static List<EdFiEducationOrganizationCategory> Resolve(School source)
+        public static List<EdFiEducationOrganizationCategory> Resolve(School source, ResolutionContext context)
         {
             return GetNewEducationCategory(source.EducationOrganizationCategory);
         }

@@ -37,12 +37,16 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                 var edfiSchool = new EdFiSchool("id", "TestSchool", 1234, new List<EdFiEducationOrganizationAddress>(),
                     new List<EdFiEducationOrganizationCategory>(), new List<EdFiSchoolGradeLevel>());
 
-                Mapper.Initialize(cfg =>
-                    cfg.CreateMap<School, EdFiSchool>()
-                        .ForMember(dst => dst.EducationOrganizationCategories, opt => opt.ResolveUsing<SchoolCategoryResolver>()));
+                var mapperConfiguration = new MapperConfiguration(
+                    cfg =>
+                        cfg.CreateMap<School, EdFiSchool>()
+                            .ForMember(
+                                dst => dst.EducationOrganizationCategories,
+                                opt => opt.MapFrom<SchoolCategoryResolver>()));
+                var mapper = mapperConfiguration.CreateMapper();
 
                 // Act
-                var result = Mapper.Map(school, edfiSchool);
+                var result = mapper.Map(school, edfiSchool);
 
                 // Assert
                 result.ShouldNotBeNull();

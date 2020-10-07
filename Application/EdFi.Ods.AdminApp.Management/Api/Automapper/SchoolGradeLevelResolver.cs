@@ -19,7 +19,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
             return source.GradeLevels?.Select(x => new EdFiSchoolGradeLevel(x)).ToList();
         }
 
-        public static List<EdFiSchoolGradeLevel> Resolve(School source)
+        public static List<EdFiSchoolGradeLevel> Resolve(School source, ResolutionContext context)
         {
             return source.GradeLevels?.Select(x => new EdFiSchoolGradeLevel(x)).ToList();
         }

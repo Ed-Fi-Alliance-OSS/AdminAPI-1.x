@@ -51,10 +51,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 .ImplementedBy<RestartOnPremAppServicesCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetCloudOdsHostedComponentsQuery>()
-                .ImplementedBy<LocalFileBasedGetCloudOdsHostedComponentsQuery>()
-                .LifestyleTransient());
-
             container.Register(Component.For<IFirstTimeSetupService>()
                 .ImplementedBy<OnPremFirstTimeSetupService>()
                 .LifestyleTransient());

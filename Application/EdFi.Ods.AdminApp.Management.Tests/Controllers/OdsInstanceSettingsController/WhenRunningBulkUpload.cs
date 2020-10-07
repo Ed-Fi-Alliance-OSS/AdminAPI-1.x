@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
@@ -22,7 +21,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Web.Tests.Controllers.OdsInstanceSettingsController
+namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsController
 {
     [TestFixture]
     public class WhenRunningBulkUpload : OdsInstanceSettingsControllerFixture

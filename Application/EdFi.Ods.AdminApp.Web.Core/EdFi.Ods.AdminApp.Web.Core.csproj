@@ -59,6 +59,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Castle.Windsor" Version="5.0.1" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />

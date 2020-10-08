@@ -62,6 +62,7 @@
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Castle.Windsor" Version="5.0.1" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
+    <PackageReference Include="EdFi.Suite3.LoadTools" Version="5.1.0-pre0014" />
     <PackageReference Include="FluentValidation" Version="9.2.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
     <PackageReference Include="Hangfire" Version="1.7.14" />

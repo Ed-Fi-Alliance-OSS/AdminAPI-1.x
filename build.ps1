@@ -229,12 +229,16 @@ function RunTests {
     $testAssemblies | ForEach-Object {
         Write-Host "Executing: $($script:nunitExe) $($_.name)"
 
-        $outFile = "$($_.name).xml"
-        if ($OdsVersion) {
-            $outFile = "$($_.name)_ODS_$OdsVersion.xml"
-        }
+        if ($_.FullName.Contains("netcoreapp")) {
+            Invoke-Execute { dotnet test $_.FullName }
+        } else {
+            $outFile = "$($_.name).xml"
+            if ($OdsVersion) {
+                $outFile = "$($_.name)_ODS_$OdsVersion.xml"
+            }
 
-        Invoke-Execute { &$script:nunitExe $_ --result $outFile}
+            Invoke-Execute { &$script:nunitExe $_ --result $outFile}
+        }
     }
 }
 

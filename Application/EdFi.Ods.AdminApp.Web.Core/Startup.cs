@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Reflection;
+using EdFi.Ods.AdminApp.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,8 @@ namespace EdFi.Ods.AdminApp.Web
                     {
                         opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                     });
+
+            services.AddScoped<IApplicationInterface, ApplicationClass>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

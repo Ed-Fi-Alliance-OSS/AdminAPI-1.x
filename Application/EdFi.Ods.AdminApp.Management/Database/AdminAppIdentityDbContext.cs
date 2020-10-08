@@ -1,0 +1,60 @@
+// SPDX-License-Identifier: Apache-2.0
+// Licensed to the Ed-Fi Alliance under one or more agreements.
+// The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+// See the LICENSE and NOTICES files in the project root for more information.
+#if !NET48
+using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Database.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+namespace EdFi.Ods.AdminApp.Management.Database
+{
+    public class AdminAppIdentityDbContext : IdentityDbContext<AdminAppUser>
+    {
+        public AdminAppIdentityDbContext(DbContextOptions<AdminAppIdentityDbContext> options)
+            : base(options)
+        {
+        }
+
+        private AdminAppIdentityDbContext()
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.HasDefaultSchema("adminapp");
+
+            modelBuilder.Entity<UserOdsInstanceRegistration>()
+                .HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId });
+
+            modelBuilder.ApplyDatabaseServerSpecificConventions();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            // Ideally, this should instead be handled in Startup.cs during AA-1120, and all
+            // usages of this DbContext should be resolved via the IoC container with no zero-argument
+            // constructor option available. So long as we have "net48" targets, this keeps our usages
+            // consistent.
+
+            var connectionString = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString;
+
+            if (DatabaseProviderHelper.PgSqlProvider)
+                optionsBuilder.UseNpgsql(connectionString);
+            else
+                optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        public DbSet<UserOdsInstanceRegistration> UserOdsInstanceRegistrations { get; set; }
+
+        public static AdminAppIdentityDbContext Create()
+        {
+            return new AdminAppIdentityDbContext();
+        }
+    }
+}
+#endif

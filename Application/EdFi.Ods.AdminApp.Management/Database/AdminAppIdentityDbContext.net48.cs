@@ -5,12 +5,7 @@
 
 using System.Data.Entity;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-#if NET48
 using Microsoft.AspNet.Identity.EntityFramework;
-#else
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {

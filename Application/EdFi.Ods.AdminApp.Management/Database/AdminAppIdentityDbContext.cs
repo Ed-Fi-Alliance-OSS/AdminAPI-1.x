@@ -40,7 +40,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
             modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaims");
             modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityUserRole>().ToTable("UserRoles");
-            modelBuilder.Entity<UserOdsInstanceRegistration>().HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId }).ToTable("UserOdsInstanceRegistrations");
+            modelBuilder.Entity<UserOdsInstanceRegistration>().ToTable("UserOdsInstanceRegistrations").HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId });
 
             modelBuilder.ApplyDatabaseServerSpecificConventions();
         }

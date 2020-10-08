@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <Configurations>Debug;Release;OnPremises;OnPremNpgsql</Configurations>
     <Copyright>Copyright © 2016 Ed-Fi Alliance</Copyright>
   </PropertyGroup>

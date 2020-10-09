@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.Common.Configuration;
 
 namespace EdFi.Ods.AdminApp.Management.Database
@@ -25,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
         private static string GetProviderName()
         {
             var connectionStringProviderByName = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (ConnectionStringSettings connectionStringSettings in ConfigurationManager.ConnectionStrings)
+            foreach (ConnectionStringSettings connectionStringSettings in ConfigurationHelper.GetConnectionStringCollection())
             {
                 connectionStringProviderByName.Add(connectionStringSettings.Name, connectionStringSettings.ProviderName);
             }

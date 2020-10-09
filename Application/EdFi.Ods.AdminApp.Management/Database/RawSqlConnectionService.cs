@@ -6,6 +6,7 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
@@ -28,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
         private string GetConnectionStringFromConfigFile(string databaseName)
         {
-            return ConfigurationManager.ConnectionStrings[databaseName]?.ConnectionString;
+            return ConfigurationHelper.GetConnectionStringByName(databaseName);
         }
 
         private SqlConnection GetDatabaseConnection(string connectionString)

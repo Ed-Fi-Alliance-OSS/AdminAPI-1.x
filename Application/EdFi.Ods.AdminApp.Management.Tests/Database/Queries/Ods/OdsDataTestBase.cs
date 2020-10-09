@@ -8,7 +8,6 @@ using EdFi.Ods.AdminApp.Management.Database.Ods;
 using NUnit.Framework;
 using Respawn;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;

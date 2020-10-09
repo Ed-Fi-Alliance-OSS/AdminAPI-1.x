@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Configuration;
 using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests

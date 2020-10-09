@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Configuration;
 using System.IO;
 using System.Threading;
 using EdFi.Ods.AdminApp.Management.Helpers;

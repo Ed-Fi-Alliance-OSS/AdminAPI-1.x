@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Helpers;

@@ -5,6 +5,7 @@
 
 using System;
 using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
@@ -17,7 +18,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         }
 
         public static EducationOrganizationTypes Instance = _instance.Value;
-        public string LocalEducationAgency => ConfigurationManager.AppSettings["LocalEducationAgencyTypeValue"];
-        public string SchoolType => ConfigurationManager.AppSettings["SchoolTypeValue"];
+        public string LocalEducationAgency => ConfigurationHelper.GetAppSettings().LocalEducationAgencyTypeValue;
+        public string SchoolType => ConfigurationHelper.GetAppSettings().SchoolTypeValue;
     }
 }

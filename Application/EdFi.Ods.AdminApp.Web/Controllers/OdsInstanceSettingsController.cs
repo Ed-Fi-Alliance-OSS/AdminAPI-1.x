@@ -19,6 +19,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
@@ -390,7 +391,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 }
             }
 
-            var schemaBasePath = HostingEnvironment.MapPath(ConfigurationManager.AppSettings["XsdFolder"]);
+            var schemaBasePath = HostingEnvironment.MapPath(ConfigurationHelper.GetAppSettings().XsdFolder);
             var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
             var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
 

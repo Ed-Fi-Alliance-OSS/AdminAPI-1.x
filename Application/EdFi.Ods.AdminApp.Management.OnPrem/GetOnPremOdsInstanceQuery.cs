@@ -5,6 +5,7 @@
 
 using System.Configuration;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.OnPrem
 {
@@ -15,7 +16,7 @@ namespace EdFi.Ods.AdminApp.Management.OnPrem
             return Task.FromResult(new CloudOdsInstance
             {
                 FriendlyName = instanceName,
-                Version = ConfigurationManager.AppSettings["AwsCurrentVersion"] //leaving "AWS" reference for config file compatibility with AWS distribution
+                Version = ConfigurationHelper.GetAppSettings().AwsCurrentVersion //leaving "AWS" reference for config file compatibility with AWS distribution
             });
         }
     }

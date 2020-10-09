@@ -5,6 +5,7 @@
 
 using System.Configuration;
 using Castle.Windsor;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -16,7 +17,8 @@ namespace EdFi.Ods.AdminApp.Web
 {
     public class AzureStartup : StartupBase
     {
-        private readonly string _applicationInsightsInstrumentationKey = ConfigurationManager.AppSettings["ApplicationInsightsInstrumentationKey"];
+        private readonly string _applicationInsightsInstrumentationKey =
+            ConfigurationHelper.GetAppSettings().ApplicationInsightsInstrumentationKey;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AzureStartup));
 
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)

@@ -7,6 +7,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Threading;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 
@@ -27,7 +28,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
         {
             try
             {
-                var globalBulkUploadFolder = ConfigurationManager.AppSettings["BulkUploadHashCache"];
+                var globalBulkUploadFolder = ConfigurationHelper.GetAppSettings().BulkUploadHashCache;
                 var instanceBulkUploadFolder = $"{globalBulkUploadFolder}\\{bulkUploadJobContext.OdsInstanceId}";
 
                 var workingFolderPath =

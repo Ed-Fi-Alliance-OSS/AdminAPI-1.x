@@ -5,23 +5,25 @@
 
 using System;
 using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
     public class CloudOdsAdminAppSettingsForAzure
     {
         private static readonly Lazy<CloudOdsAdminAppSettingsForAzure> _instance = new Lazy<CloudOdsAdminAppSettingsForAzure>(() => new CloudOdsAdminAppSettingsForAzure());
+        private readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
 
         protected CloudOdsAdminAppSettingsForAzure()
         {
         }
 
         public static CloudOdsAdminAppSettingsForAzure Instance => _instance.Value;
-        
-        public string AzureActiveDirectoryInstance => ConfigurationManager.AppSettings["ida:AADInstance"];
-        public string AzureActiveDirectoryClientId => ConfigurationManager.AppSettings["ida:ClientId"];
-        public string AzureActiveDirectoryClientSecret => ConfigurationManager.AppSettings["ida:ClientSecret"];
-        public string AzureActiveDirectoryTenantId => ConfigurationManager.AppSettings["ida:TenantId"];
-        public string AzureActiveDirectorySubscriptionId => ConfigurationManager.AppSettings["ida:SubscriptionId"];
+
+        public string AzureActiveDirectoryInstance => _appSettings.IdaAADInstance;
+        public string AzureActiveDirectoryClientId => _appSettings.IdaClientId;
+        public string AzureActiveDirectoryClientSecret => _appSettings.IdaClientSecret;
+        public string AzureActiveDirectoryTenantId => _appSettings.IdaTenantId;
+        public string AzureActiveDirectorySubscriptionId => _appSettings.IdaSubscriptionId;
     }
 }

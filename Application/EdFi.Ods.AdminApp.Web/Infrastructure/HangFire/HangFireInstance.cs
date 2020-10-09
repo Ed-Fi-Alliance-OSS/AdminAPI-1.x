@@ -10,6 +10,7 @@ using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 using Hangfire.Storage;
 using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
 {
@@ -23,7 +24,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
         private static void Start(bool enableSchemaMigration)
         {
             var schemaName = "adminapp_hangfire";
-            var connectionString = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString;
+            var connectionString = ConfigurationHelper.GetConnectionStrings().Admin;
 
             if (DatabaseProviderHelper.PgSqlProvider)
             {

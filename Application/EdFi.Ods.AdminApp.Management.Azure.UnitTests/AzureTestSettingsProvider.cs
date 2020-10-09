@@ -5,6 +5,7 @@
 
 using System;
 using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
 {
@@ -13,7 +14,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         public static string GetTestConfigVariable(string variableName, string defaultValue = null)
         {
             return Environment.GetEnvironmentVariable(variableName) ??
-                   ConfigurationManager.AppSettings[variableName] ??
                    defaultValue;
         }
         
@@ -23,7 +23,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         {
             Edition = "release",
             FriendlyName = "Cloud ODS Integration Tests",
-            SystemId = $"/subscriptions/{GetTestConfigVariable("ida:SubscriptionId")}/resourceGroups/{ResourceGroupName}",
+            SystemId = $"/subscriptions/{ConfigurationHelper.GetAppSettings().IdaSubscriptionId}/resourceGroups/{ResourceGroupName}",
             SystemName = ResourceGroupName,
             Version = "0.0.1"
         };

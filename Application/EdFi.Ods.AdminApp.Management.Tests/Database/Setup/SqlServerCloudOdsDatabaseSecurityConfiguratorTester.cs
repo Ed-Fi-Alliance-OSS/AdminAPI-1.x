@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Setup;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -82,9 +83,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             }
         };
 
-       
-        
-        private readonly string _masterConnectionString = ConfigurationManager.ConnectionStrings["IntegrationTests"].ConnectionString;
+
+
+        private readonly string _masterConnectionString =
+            ConfigurationHelper.GetConnectionStrings().IntegrationTests;
 
         private SqlConnectionStringBuilder MasterSqlConnectionStringBuilder => new SqlConnectionStringBuilder(_masterConnectionString);
 

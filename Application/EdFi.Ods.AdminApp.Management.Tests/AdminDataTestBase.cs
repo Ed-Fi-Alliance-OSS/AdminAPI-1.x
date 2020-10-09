@@ -5,6 +5,7 @@
 
 using System.Configuration;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using NUnit.Framework;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
@@ -12,6 +13,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class AdminDataTestBase : DataTestBase<SqlServerUsersContext>
     {
-        protected override string ConnectionString => ConfigurationManager.ConnectionStrings["EdFi_Admin"].ConnectionString;
+        protected override string ConnectionString => ConfigurationHelper.GetConnectionStrings().Admin;
     }
 }

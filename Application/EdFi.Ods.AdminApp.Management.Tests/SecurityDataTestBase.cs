@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
@@ -20,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class SecurityDataTestBase : DataTestBase<SqlServerSecurityContext>
     {
-        protected override string ConnectionString => ConfigurationManager.ConnectionStrings["EdFi_Security"].ConnectionString;
+        protected override string ConnectionString => ConfigurationHelper.GetConnectionStrings().Security;
 
         // This bool controls whether or not to run SecurityContext initialization
         // method. Setting this flag to true will cause seed data to be

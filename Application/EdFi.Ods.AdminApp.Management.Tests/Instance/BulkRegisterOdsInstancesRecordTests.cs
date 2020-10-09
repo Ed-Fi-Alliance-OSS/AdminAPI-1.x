@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -36,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
         private static SqlConnection GetDatabaseConnection(string instanceName)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"].ConnectionString;
+            var connectionString = ConfigurationHelper.GetConnectionStrings().OdsEmpty;
 
             var sqlConnectionBuilder =
                 new SqlConnectionStringBuilder(connectionString) {InitialCatalog = instanceName};

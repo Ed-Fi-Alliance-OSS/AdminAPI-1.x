@@ -1,43 +1,52 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-
-using System.Data.Entity;
+#if !NET48
+using System.Configuration;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
     public class AdminAppIdentityDbContext : IdentityDbContext<AdminAppUser>
     {
-        static AdminAppIdentityDbContext()
+        public AdminAppIdentityDbContext(DbContextOptions<AdminAppIdentityDbContext> options)
+            : base(options)
         {
-            // We pass in null here because we want to suppress the overly-aggressive initializer provided by EF.
-            // Instead, we trust that the EdFi_Admin database was created/populated through some other means, like DbUp.
-            System.Data.Entity.Database.SetInitializer<AdminAppIdentityDbContext>(null);
         }
 
-        //Rather than construct AdminAppIdentityDbContext directly, most ASP.NET Identity user
-        //management activities should take place through the ApplicationUserManager abstraction.
         private AdminAppIdentityDbContext()
-            : base(CloudOdsDatabaseNames.Admin, throwIfV1Schema: false)
         {
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("adminapp");
 
-            modelBuilder.Entity<AdminAppUser>().ToTable("Users");
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
-            modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaims");
-            modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityUserRole>().ToTable("UserRoles");
-            modelBuilder.Entity<UserOdsInstanceRegistration>().HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId }).ToTable("UserOdsInstanceRegistrations");
+            modelBuilder.Entity<UserOdsInstanceRegistration>()
+                .HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId });
 
             modelBuilder.ApplyDatabaseServerSpecificConventions();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            // Ideally, this should instead be handled in Startup.cs during AA-1120, and all
+            // usages of this DbContext should be resolved via the IoC container with no zero-argument
+            // constructor option available. So long as we have "net48" targets, this keeps our usages
+            // consistent.
+
+            var connectionString = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString;
+
+            if (DatabaseProviderHelper.PgSqlProvider)
+                optionsBuilder.UseNpgsql(connectionString);
+            else
+                optionsBuilder.UseSqlServer(connectionString);
         }
 
         public DbSet<UserOdsInstanceRegistration> UserOdsInstanceRegistrations { get; set; }
@@ -48,3 +57,4 @@ namespace EdFi.Ods.AdminApp.Management.Database
         }
     }
 }
+#endif

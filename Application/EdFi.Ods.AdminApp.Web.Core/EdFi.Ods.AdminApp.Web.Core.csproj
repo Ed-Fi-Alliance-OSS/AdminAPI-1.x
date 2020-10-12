@@ -45,17 +45,17 @@
 
   </ItemGroup>
 
-  <!-- <ItemGroup> -->
-    <!-- These project references can be uncommented once each one is upgrade to support .NET Core.
-         These can be temporarily uncommented even before then, though doing so introduces compatibility
-         warnings about referncing .NET Framework projects and would not be trusted in production.
-    -->
+  <ItemGroup>
+      <!-- These project references can be uncommented once each one is upgrade to support .NET Core.
+           These can be temporarily uncommented even before then, though doing so introduces compatibility
+           warnings about referncing .NET Framework projects and would not be trusted in production.
+      -->
 
     <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Aws\EdFi.Ods.AdminApp.Management.Aws.csproj" /> -->
     <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" /> -->
-    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" /> -->
-    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" /> -->
-  <!-- </ItemGroup> -->
+    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" />
+    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />

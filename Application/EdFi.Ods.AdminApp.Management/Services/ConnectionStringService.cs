@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 
 namespace EdFi.Ods.AdminApp.Management.Services
@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApp.Management.Services
     {
         public string GetConnectionString(string odsInstanceName, ApiMode apiMode)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.ProductionOds].ConnectionString;
+            var connectionString = ConfigurationHelper.GetConnectionStrings().ProductionOds;
             if (apiMode.SupportsMultipleInstances)
             {
                 connectionString = GetModifiedConnectionString(connectionString, odsInstanceName);

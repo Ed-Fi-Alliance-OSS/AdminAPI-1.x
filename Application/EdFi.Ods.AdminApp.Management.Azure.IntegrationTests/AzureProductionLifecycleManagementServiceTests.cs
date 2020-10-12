@@ -4,12 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Setup;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -46,7 +46,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 
         private OdsSqlConfiguration GetSqlConfiguration()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["AzureSql"].ConnectionString;
+            var connectionString = ConfigurationHelper.GetConnectionStrings().AzureSql;
             var csb = new SqlConnectionStringBuilder(connectionString);
 
             return new OdsSqlConfiguration

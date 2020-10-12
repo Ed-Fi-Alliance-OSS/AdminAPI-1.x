@@ -3,8 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Configuration;
 using Castle.Windsor;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -16,7 +16,8 @@ namespace EdFi.Ods.AdminApp.Web
 {
     public class AzureStartup : StartupBase
     {
-        private readonly string _applicationInsightsInstrumentationKey = ConfigurationManager.AppSettings["ApplicationInsightsInstrumentationKey"];
+        private readonly string _applicationInsightsInstrumentationKey =
+            ConfigurationHelper.GetAppSettings().ApplicationInsightsInstrumentationKey;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AzureStartup));
 
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)

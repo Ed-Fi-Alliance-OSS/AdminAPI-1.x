@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using EdFi.Ods.AdminApp.Management.Api;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
@@ -309,12 +310,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
 
             private static void UpdateConfiguration()
             {
-                ConfigurationManager.AppSettings.Set("apiStartup:type", "DistrictSpecific");
+                ConfigurationHelper.SetApiMode("DistrictSpecific");
             }
 
             private static void ResetConfiguration()
             {
-                ConfigurationManager.AppSettings.Set("apiStartup:type", "sandbox");
+                ConfigurationHelper.SetApiMode("sandbox");
             }
         }
     }

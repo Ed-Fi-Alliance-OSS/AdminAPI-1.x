@@ -3,9 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Configuration;
 using System.Text;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
@@ -13,7 +12,7 @@ namespace EdFi.Ods.AdminApp.Management.Services
     {
         public byte[] GetEntropy()
         {
-            var optionalEntropyValue = ConfigurationManager.AppSettings["OptionalEntropy"];
+            var optionalEntropyValue = ConfigurationHelper.GetAppSettings().OptionalEntropy;
             var entropy = string.IsNullOrEmpty(optionalEntropyValue)
                 ? null
                 : Encoding.ASCII.GetBytes(optionalEntropyValue);

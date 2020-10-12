@@ -4,11 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Web.Hosting;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management
 {
@@ -21,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management
 
         public async Task<IEnumerable<OdsComponent>> Execute(CloudOdsInstance instance)
         {
-            var fileName = ConfigurationManager.AppSettings["HostedComponentsFile"];
+            var fileName = ConfigurationHelper.GetAppSettings().HostedComponentsFile;
             var filePath = HostingEnvironment.MapPath(fileName);
 
             if (filePath == null)

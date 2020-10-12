@@ -8,11 +8,11 @@ using EdFi.Ods.AdminApp.Management.Database.Ods;
 using NUnit.Framework;
 using Respawn;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using Moq;
 
@@ -550,7 +550,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
 
     public class TestOdsConnectionProvider : IDatabaseConnectionProvider
     {
-        public static string ConnectionString => ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"].ConnectionString;
+        public static string ConnectionString => ConfigurationHelper.GetConnectionStrings().OdsEmpty;
 
         public IDbConnection CreateNewConnection(int odsInstanceNumericSuffix, ApiMode apiMode)
         {

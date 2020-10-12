@@ -3,8 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Configuration;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.Aws
 {
@@ -15,7 +15,7 @@ namespace EdFi.Ods.AdminApp.Management.Aws
             return Task.FromResult(new CloudOdsInstance
             {
                 FriendlyName = instanceName,
-                Version = ConfigurationManager.AppSettings["AwsCurrentVersion"]
+                Version = ConfigurationHelper.GetAppSettings().AwsCurrentVersion
             });
         }
     }

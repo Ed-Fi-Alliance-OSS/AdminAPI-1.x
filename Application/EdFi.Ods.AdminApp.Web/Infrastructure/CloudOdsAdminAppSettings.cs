@@ -5,6 +5,7 @@
 
 using System;
 using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.Common.Extensions;
 
@@ -14,31 +15,32 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
     {
         private static readonly Lazy<CloudOdsAdminAppSettings> _instance =
             new Lazy<CloudOdsAdminAppSettings>(() => new CloudOdsAdminAppSettings());
+        private readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
 
         protected CloudOdsAdminAppSettings() { }
 
         public static CloudOdsAdminAppSettings Instance => _instance.Value;
 
-        public string OdsInstanceName => ConfigurationManager.AppSettings["DefaultOdsInstance"];
+        public string OdsInstanceName => _appSettings.DefaultOdsInstance;
 
-        public string ProductionApiUrl => ConfigurationManager.AppSettings["ProductionApiUrl"];
+        public string ProductionApiUrl => _appSettings.ProductionApiUrl;
 
-        public string SwaggerUrl => ConfigurationManager.AppSettings["SwaggerUrl"];
+        public string SwaggerUrl => _appSettings.SwaggerUrl;
 
         public bool SystemManagedSqlServer
-            => ConfigurationManager.AppSettings["SystemManagedSqlServer"] == null ||
+            => _appSettings.SystemManagedSqlServer == null ||
                bool.TrueString.Equals(
-                   ConfigurationManager.AppSettings["SystemManagedSqlServer"],
+                   _appSettings.SystemManagedSqlServer,
                    StringComparison.InvariantCultureIgnoreCase);
 
         public bool DbSetupEnabled => bool.TrueString.Equals(
-            ConfigurationManager.AppSettings["DbSetupEnabled"], StringComparison.InvariantCultureIgnoreCase);
+            _appSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
 
         public int SecurityMetadataCacheTimeoutMinutes
         {
             get
             {
-                var timeOut = @ConfigurationManager.AppSettings["SecurityMetadataCacheTimeoutMinutes"];
+                var timeOut = _appSettings.SecurityMetadataCacheTimeoutMinutes;
                 return int.Parse(timeOut ?? "0");
             }
         }
@@ -47,7 +49,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         {
             get
             {
-                var mode = ConfigurationManager.AppSettings["apiStartup:type"];
+                var mode = _appSettings.ApiStartupType;
                 ApiMode startupMode;
 
                 if (string.IsNullOrWhiteSpace(mode))

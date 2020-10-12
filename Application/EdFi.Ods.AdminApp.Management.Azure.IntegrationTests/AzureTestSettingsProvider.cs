@@ -4,25 +4,26 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Configuration;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 {
     public static class AzureTestSettingsProvider
     {
+        private static readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
+
         public static string GetTestConfigVariable(string variableName, string defaultValue = null)
         {
             return Environment.GetEnvironmentVariable(variableName) ??
-                   ConfigurationManager.AppSettings[variableName] ??
                    defaultValue;
         }
 
         public static AzureActiveDirectoryClientInfo DefaultAzureActiveDirectoryClientInfo => new AzureActiveDirectoryClientInfo
         {
-            ClientId = GetTestConfigVariable("ida:ClientId"),
-            ClientSecret = GetTestConfigVariable("ida:ClientSecret"),
-            TenantId = GetTestConfigVariable("ida:TenantId"),
-            SubscriptionId = GetTestConfigVariable("ida:SubscriptionId"),
+            ClientId = _appSettings.IdaClientId,
+            ClientSecret = _appSettings.IdaClientSecret,
+            TenantId = _appSettings.IdaTenantId,
+            SubscriptionId = _appSettings.IdaSubscriptionId
         };
 
         public static string ResourceGroupName => GetTestConfigVariable("resourceGroupName", "cloud_ods_integration_tests");
@@ -31,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
         {
             Edition = "release",
             FriendlyName = "Cloud ODS Integration Tests",
-            SystemId = $"/subscriptions/{GetTestConfigVariable("ida:SubscriptionId")}/resourceGroups/{ResourceGroupName}",
+            SystemId = $"/subscriptions/{_appSettings.IdaSubscriptionId}/resourceGroups/{ResourceGroupName}",
             SystemName = ResourceGroupName,
             Version = "0.0.1"
         };

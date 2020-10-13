@@ -696,7 +696,6 @@
     <Compile Include="Models\ViewModels\Global\EditVendorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Start\StartupBase.cs" />
-    <Compile Include="_Installers\AwsInstaller.cs" />
     <Compile Include="_Installers\AzureInstaller.cs" />
     <Compile Include="_Installers\CommonConfigurationInstaller.cs" />
     <Compile Include="_Installers\OnPremInstaller.cs" />

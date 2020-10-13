@@ -17,7 +17,6 @@
          these files will be moved from the legacy project to this project, at
          which point these explicit inclusions will become redundant. -->
 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/AwsInstaller.cs" LinkBase="_Installers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/AzureInstaller.cs" LinkBase="_Installers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/CommonConfigurationInstaller.cs" LinkBase="_Installers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/OnPremInstaller.cs" LinkBase="_Installers" /> -->

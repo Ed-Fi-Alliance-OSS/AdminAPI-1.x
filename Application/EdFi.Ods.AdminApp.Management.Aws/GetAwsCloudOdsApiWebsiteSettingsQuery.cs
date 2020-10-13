@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApp.Management.Settings;
 
 namespace EdFi.Ods.AdminApp.Management.Aws
 {
+    [System.Obsolete("Review usages.")]
     public class GetAwsCloudOdsApiWebsiteSettingsQuery : IGetCloudOdsApiWebsiteSettingsQuery
     {
         public Task<CloudOdsApiWebsiteSettings> Execute(CloudOdsApiOperationContext context)

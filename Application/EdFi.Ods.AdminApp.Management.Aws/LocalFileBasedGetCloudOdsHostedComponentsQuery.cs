@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Management
 {
+    [System.Obsolete("Review usages.")]
     public class LocalFileBasedGetCloudOdsHostedComponentsQuery : IGetCloudOdsHostedComponentsQuery
     {
         public Task<IEnumerable<CloudOdsWebsite>> Execute(ICloudOdsOperationContext context)

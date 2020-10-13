@@ -191,7 +191,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Text = x.Name,
                 Value = x.Id.ToString()
             }), "Value", "Text"));
-            return Json(selectList, JsonRequestBehavior.AllowGet);
+            return Json(selectList
+                #if NET48
+                , JsonRequestBehavior.AllowGet
+                #endif
+                );
         }
 
         [HttpPost]

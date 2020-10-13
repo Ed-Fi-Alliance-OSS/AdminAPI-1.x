@@ -17,32 +17,314 @@
          these files will be moved from the legacy project to this project, at
          which point these explicit inclusions will become redundant. -->
 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/**/*.cs" LinkBase="_Installers" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/**/*.cs" LinkBase="ActionFilters" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/**/*.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/AzureInstaller.cs" LinkBase="_Installers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/CommonConfigurationInstaller.cs" LinkBase="_Installers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/OnPremInstaller.cs" LinkBase="_Installers" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/AuthorizationFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/DoNotCacheAjaxRequestsFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/HandleAjaxErrorAttribute.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/InstanceContextFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PasswordChangeRequiredFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/RequreSecureConnectionFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/UserContextFilter.cs" LinkBase="ActionFilters" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/ValidateAntiForgeryTokenOnPostActionsFilter.cs" LinkBase="ActionFilters" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationUserManager.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/AzureStartup.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/BundleConfig.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/FilterConfig.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/LearningStandardLogProvider.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ModelBinderConfig.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/OnPremStartup.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/RouteConfig.cs" LinkBase="App_Start" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/StartupBase.cs" LinkBase="App_Start" /> -->
+
     <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Config/**/*.json" LinkBase="Config" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/Content/**/*.*" LinkBase="Content" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/**/*.cs" LinkBase="Controllers" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ClaimSetsController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ControllerBase.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/DescriptorsController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/EducationOrganizationsController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ErrorController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/GlobalSettingsController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/IdentityController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UpdateController.cs" LinkBase="Controllers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" /> -->
+
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config" LinkBase="DeveloperSettings" Condition="'$(Configuration)' == 'Debug'" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff2" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.ttf" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/**/*.cs" LinkBase="Display" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/**/*.cs" LinkBase="Helpers" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/**/*.cs" LinkBase="Hubs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/**/*.cs" LinkBase="Infrastructure" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/**/*.cs" LinkBase="Models" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureTabDisplayService.cs" LinkBase="Display/DisplayService" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremTabDisplayService.cs" LinkBase="Display/DisplayService" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/BaseHomeScreenDisplayService.cs" LinkBase="Display/HomeScreen" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/HomeScreenDisplay.cs" LinkBase="Display/HomeScreen" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/HomeScreenEnumeration.cs" LinkBase="Display/HomeScreen" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/IHomeScreen.cs" LinkBase="Display/HomeScreen" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/IHomeScreenDisplayService.cs" LinkBase="Display/HomeScreen" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/RadioButton/IRadioButton.cs" LinkBase="Display/RadioButton" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/RadioButton/RadioButtonDisplay.cs" LinkBase="Display/RadioButton" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/BaseTabDisplayService.cs" LinkBase="Display/TabEnumeration" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/GlobalSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabDisplayService.cs" LinkBase="Display/TabEnumeration" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabEnumeration.cs" LinkBase="Display/TabEnumeration" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/OdsInstanceSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/TabDisplay.cs" LinkBase="Display/TabEnumeration" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AdminModelExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ApplicationExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AutoMapperExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsIdentityExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsPrincipalExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ExpressionHelpers.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlHelperExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlTagExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/OdsApiFacadeExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ReflectionExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ResponseHelpers.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/RouteHelpers.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/StringExtensions.cs" LinkBase="Helpers" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/VendorExtensions.cs" LinkBase="Helpers" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/BulkUploadHub.cs" LinkBase="Hubs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/EdfiOdsHub.cs" LinkBase="Hubs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionLearningStandardsHub.cs" LinkBase="Hubs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionSetupHub.cs" LinkBase="Hubs" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AcceptAttribute.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/AdminWebMappingProfile.cs" LinkBase="Infrastructure/AutoMapper" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/EducationOrganizationNameResolver.cs" LinkBase="Infrastructure/AutoMapper" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapperBootstrapper.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CachedItems.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppClaimSetConfiguration.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettings.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettingsForAzure.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsApiConnectionInformationProvider.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAzureActiveDirectoryClientInfo.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsUpdateService.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/EducationOrganizationTypes.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/InMemoryCache.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/BulkImportService.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportConfiguration.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportService.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/IFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileHelpers.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileType.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/LocalFileSystemFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IoC/CastleWindsorControllerFactory.cs" LinkBase="Infrastructure/IoC" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IoC/CastleWindsorFluentValidatorFactory.cs" LinkBase="Infrastructure/IoC" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IoC/WindsorDependencyResolver.cs" LinkBase="Infrastructure/IoC" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/BulkUploadJob.cs" LinkBase="Infrastructure/Jobs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/IWorkflowJob.cs" LinkBase="Infrastructure/Jobs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/LearningStandardsJob.cs" LinkBase="Infrastructure/Jobs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/ProductionSetupJob.cs" LinkBase="Infrastructure/Jobs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/WorkflowJob.cs" LinkBase="Infrastructure/Jobs" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/CompositeModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/EnumerationModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/EnumerationPropertyBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/FilteredPropertyBinderBase.cs" LinkBase="Infrastructure/ModelBinding" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/IFilteredModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/IFilteredPropertyBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Property.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ResourceClaimSelectListBuilder.cs" LinkBase="Infrastructure" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/DefaultDisplayLabelBuilder.cs" LinkBase="Infrastructure/Tags" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlConventionLibrary.cs" LinkBase="Infrastructure/Tags" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlTagConventions.cs" LinkBase="Infrastructure/Tags" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ValidationExtensions.cs" LinkBase="Infrastructure" /> -->
+
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/AddApplicationModel.cs" LinkBase="Models/ViewModels/Application" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/ApplicationKeyModel.cs" LinkBase="Models/ViewModels/Application" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/DeleteApplicationModel.cs" LinkBase="Models/ViewModels/Application" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/EditApplicationModel.cs" LinkBase="Models/ViewModels/Application" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/RegenerateSecretModel.cs" LinkBase="Models/ViewModels/Application" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ApplicationModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/BulkFileUploadModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/AddClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/AuthStrategyEditorModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetDetailsModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetFileExportModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetFileImportModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetResourcesModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/CopyClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/DeleteClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/DeleteClaimSetResourceModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/EditClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/EditClaimSetResourceModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ExportClaimSetPreviewModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/OverrideDefaultAuthorizationStrategyModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ResetToDefaultAuthStrategyModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorCategoriesModel.cs" LinkBase="Models/ViewModels/Descriptors" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorModel.cs" LinkBase="Models/ViewModels/Descriptors" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/DeleteEducationOrganizationModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EditLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EditSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationViewModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/AddVendorModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/AdvancedSettingsModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/ClaimSetEditorModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/DeleteVendorModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/EditVendorModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/GlobalSettingsModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/UserIndexModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/VendorsListModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Home/IndexModel.cs" LinkBase="Models/ViewModels/Home" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/ChangePasswordViewModel.cs" LinkBase="Models/ViewModels/Identity" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/ForgotPasswordViewModel.cs" LinkBase="Models/ViewModels/Identity" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/LoginViewModel.cs" LinkBase="Models/ViewModels/Identity" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/RegisterViewModel.cs" LinkBase="Models/ViewModels/Identity" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/ResetPasswordViewModel.cs" LinkBase="Models/ViewModels/Identity" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/LearningStandardsModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/LogSettingsModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/BulkRegisterOdsInstancesModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/DeregisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/IndexModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/RegisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSetupCompletedModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ProfileModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/ReportsModel.cs" LinkBase="Models/ViewModels/Reports" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/SelectDistrictModel.cs" LinkBase="Models/ViewModels/Reports" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/AddUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/DeleteUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditOdsInstanceRegistrationForUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditUserRoleModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorApplicationsModel.cs" LinkBase="Models/ViewModels" /> -->
+    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorOverviewModel.cs" LinkBase="Models/ViewModels" /> -->
+
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
     <Content Include="../EdFi.Ods.AdminApp.Web/Scripts/**/*.*" LinkBase="Scripts" />
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/**/*.cshtml" LinkBase="Views" /> -->
 
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/_ViewStart.cshtml" LinkBase="Views" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Account/SignOutCallback.cshtml" LinkBase="Views/Account" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_AddApplicationModal.cshtml" LinkBase="Views/Application" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_ApplicationKeyAndSecretContent.cshtml" LinkBase="Views/Application" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_ApplicationKeyAndSecretModal.cshtml" LinkBase="Views/Application" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_EditApplicationModal.cshtml" LinkBase="Views/Application" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_AddClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_AuthStrategiesModal.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ClaimSetDetails.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_CopyClaimSetModal.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_DeleteClaimSetModal.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_DeleteClaimSetResourceModal.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_EditClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ExportClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ExportClaimSetPreview.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ImportExportClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ResourceEditor.cshtml" LinkBase="Views/ClaimSets" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Descriptors/_Descriptor.cshtml" LinkBase="Views/Descriptors" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Descriptors/_DescriptorCategories.cshtml" LinkBase="Views/Descriptors" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_AddLocalEducationAgencyModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_AddSchoolModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_DeleteOrganizationModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_EditLocalEducationAgencyModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_EditSchoolModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_EducationOrganizations.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_MissingData.cshtml" LinkBase="Views/EducationOrganizations" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Error/MultiInstanceError.cshtml" LinkBase="Views/Error" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Error/NotYetImplemented.cshtml" LinkBase="Views/Error" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_AddVendorModal.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_EditVendorForm.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_EditVendorModal.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_SecurityHelpfulHints.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_VendorsTable.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/AdvancedSettings.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/ClaimSets.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/Users.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/Vendors.cshtml" LinkBase="Views/GlobalSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Home/Index.cshtml" LinkBase="Views/Home" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ChangePassword.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ConfirmEmail.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ForgotPassword.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ForgotPasswordConfirmation.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/Login.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/Register.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ResetPassword.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ResetPasswordConfirmation.cshtml" LinkBase="Views/Identity" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/_DeregisterOdsInstanceModal.cshtml" LinkBase="Views/OdsInstances" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/BulkRegisterOdsInstances.cshtml" LinkBase="Views/OdsInstances" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/Index.cshtml" LinkBase="Views/OdsInstances" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/RegisterOdsInstance.cshtml" LinkBase="Views/OdsInstances" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/_SaveBulkUploadCredentialsForm.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/BulkLoad.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Descriptors.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EducationOrganizations.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EnrollmentByEthnicity.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EnrollmentByGender.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EnrollmentByRace.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Index.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/LearningStandards.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Logging.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/SchoolsBySchoolType.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/SelectDistrict.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Setup.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/SetupComplete.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/StudentsByAttribute.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/StudentsByProgram.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/TotalEnrollment.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_EnrollmentByEthnicity.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_EnrollmentByGender.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_EnrollmentByRace.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_SchoolsBySchoolType.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_SelectDistrict.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_StudentsByAttribute.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_StudentsByProgram.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_TotalEnrollment.cshtml" LinkBase="Views/Reports" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Setup/FirstTimeSetup.cshtml" LinkBase="Views/Setup" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Setup/PostUpdateSetup.cshtml" LinkBase="Views/Setup" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Applications.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_ApplicationsByVendor.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_ApplicationsTable.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_BulkUploadForm.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_DeleteVendorApplicationModal.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_DeleteVendorModal.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Layout.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_LoginPartial.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_LogSettings.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_ProductionStagingReadOnlyNotice.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_RegenerateApplicationSecretModal.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Settings_Global.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Settings_Production.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SettingsGlobalHeader.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SignalRStatus.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SignalRStatus_BulkLoad.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SignalRStatus_LS.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/Error.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/Lockout.cshtml" LinkBase="Views/Shared" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Update/Index.cshtml" LinkBase="Views/Update" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_DeleteUserModal.cshtml" LinkBase="Views/User" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_EditUserModal.cshtml" LinkBase="Views/User" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_EditUserRoleModal.cshtml" LinkBase="Views/User" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/AddUser.cshtml" LinkBase="Views/User" /> -->
+    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/EditOdsInstanceRegistrationsForUser.cshtml" LinkBase="Views/User" /> -->
   </ItemGroup>
 
   <ItemGroup>
@@ -51,7 +333,6 @@
            warnings about referncing .NET Framework projects and would not be trusted in production.
       -->
 
-    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Aws\EdFi.Ods.AdminApp.Management.Aws.csproj" /> -->
     <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" /> -->
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
@@ -62,6 +343,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Castle.Windsor" Version="5.0.1" />
+    <PackageReference Include="CsvHelper" Version="15.0.6" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
     <PackageReference Include="EdFi.Suite3.LoadTools" Version="5.1.0-pre0014" />
     <PackageReference Include="FluentValidation" Version="9.2.2" />

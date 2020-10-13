@@ -546,7 +546,6 @@
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Display\DisplayService\AwsHomeScreenDisplayService.cs" />
     <Compile Include="Display\DisplayService\AzureHomeScreenDisplayService.cs" />
     <Compile Include="Display\DisplayService\OnPremHomeScreenDisplayService.cs" />
     <Compile Include="Display\DisplayService\OnPremTabDisplayService.cs" />
@@ -629,7 +628,6 @@
     <Compile Include="Infrastructure\Tags\OdsAdminHtmlTagConventions.cs" />
     <Compile Include="Infrastructure\Tags\OdsAdminHtmlConventionLibrary.cs" />
     <Compile Include="Infrastructure\ValidationExtensions.cs" />
-    <Compile Include="Display\DisplayService\AwsTabDisplayService.cs" />
     <Compile Include="Display\DisplayService\AzureTabDisplayService.cs" />
     <Compile Include="Infrastructure\ResourceClaimSelectListBuilder.cs" />
     <Compile Include="Models\ViewModels\Global\UserIndexModel.cs" />

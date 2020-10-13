@@ -72,8 +72,6 @@
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.ttf" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AwsHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AwsTabDisplayService.cs" LinkBase="Display/DisplayService" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureTabDisplayService.cs" LinkBase="Display/DisplayService" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" /> -->

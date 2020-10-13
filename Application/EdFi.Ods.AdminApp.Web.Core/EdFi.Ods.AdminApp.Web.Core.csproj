@@ -36,7 +36,6 @@
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationUserManager.cs" LinkBase="App_Start" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/AwsStartup.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/AzureStartup.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/BundleConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/FilterConfig.cs" LinkBase="App_Start" /> -->

@@ -1131,10 +1131,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Aws\EdFi.Ods.AdminApp.Management.Aws.csproj">
-      <Project>{3445a692-0457-4969-b8a8-206106badcac}</Project>
-      <Name>EdFi.Ods.AdminApp.Management.Aws</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj">
       <Project>{a1951107-be72-4745-8c9e-6ec1f741384d}</Project>
       <Name>EdFi.Ods.AdminApp.Management.Azure</Name>

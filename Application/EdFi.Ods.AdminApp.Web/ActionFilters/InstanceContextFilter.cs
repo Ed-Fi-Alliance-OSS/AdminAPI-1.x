@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 #if NET48
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 #else
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,6 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Helpers;
-using Microsoft.AspNet.Identity;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.ActionFilters

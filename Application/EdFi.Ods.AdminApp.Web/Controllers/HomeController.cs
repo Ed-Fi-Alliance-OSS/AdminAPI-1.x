@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 #else
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 #endif
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.ActionFilters;

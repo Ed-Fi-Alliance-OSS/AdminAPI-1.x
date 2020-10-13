@@ -5,8 +5,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+#if NET48
 using System.Web.Mvc;
+#else
+using Microsoft.AspNetCore.Mvc.Rendering;
+#endif
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {

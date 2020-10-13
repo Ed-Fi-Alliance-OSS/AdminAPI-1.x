@@ -19,6 +19,8 @@ using FluentValidation.Results;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsController
 {
@@ -54,7 +56,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             var bulkFileUploadValidator = new Mock<IValidator<BulkFileUploadModel>>();            
             bulkFileUploadValidator.Setup(x
                     => x.ValidateAsync(It.IsAny<BulkFileUploadModel>(), CancellationToken.None)).
-                Returns(Task.FromResult(validationResult));        
+                Returns(Task.FromResult(validationResult));
+            AppSettings = new Mock<IOptions<AppSettings>>();
+            AppSettings.Setup(x => x.Value).Returns(ConfigurationHelper.GetAppSettings());
 
             SystemUnderTest = new Web.Controllers.OdsInstanceSettingsController(
                 Mapper.Object,
@@ -75,7 +79,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 InstanceContext,
                 ApiModeProvider.Object,
                 InferOdsApiVersion.Object,
-                bulkFileUploadValidator.Object            
+                bulkFileUploadValidator.Object,
+                AppSettings.Object
             );
 
             AdditionalSetup();
@@ -101,5 +106,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         protected Web.Controllers.OdsInstanceSettingsController SystemUnderTest;
         protected int OdsInstanceId = 1234;
         protected Mock<IInferOdsApiVersion> InferOdsApiVersion;
+        protected Mock<IOptions<AppSettings>> AppSettings;
     }
 }

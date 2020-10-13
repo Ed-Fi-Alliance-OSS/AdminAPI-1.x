@@ -585,6 +585,7 @@
     <Compile Include="Infrastructure\AutoMapper\AdminWebMappingProfile.cs" />
     <Compile Include="Infrastructure\AutoMapperBootstrapper.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Infrastructure\Net48Options.cs" />
     <Compile Include="Infrastructure\CachedItems.cs" />
     <Compile Include="Infrastructure\CloudOdsAdminAppClaimSetConfiguration.cs" />
     <Compile Include="Infrastructure\CloudOdsAdminAppSettings.cs" />

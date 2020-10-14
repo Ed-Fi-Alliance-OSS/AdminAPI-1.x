@@ -4,9 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
@@ -34,8 +37,34 @@ namespace EdFi.Ods.AdminApp.Web._Installers
     // Suppressing this ReSharper warning because these methods are called by Castle Windsor through
     // the [Preregister] attribute, and  thus appear to the compiler to never be used.
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public abstract class CommonConfigurationInstaller : RegistrationMethodsInstallerBase
+    public abstract class CommonConfigurationInstaller : IWindsorInstaller
     {
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            var registrationMethods =
+                (from m in GetType()
+                    .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                 let parameters = m.GetParameters()
+                 where m.Name.StartsWith("Register")
+                       && parameters.Length == 1
+                       && parameters[0]
+                          .ParameterType == typeof(IWindsorContainer)
+                 let preregister = m.GetCustomAttributes(typeof(PreregisterAttribute), true)
+                                    .Any()
+                 select new
+                 {
+                     MethodInfo = m,
+                     Preregister = preregister
+                 })
+               .ToList();
+
+            foreach (var registrationMethod in registrationMethods.Where(x => x.Preregister).OrderBy(x => x.MethodInfo.Name))
+                registrationMethod.MethodInfo.Invoke(this, new object[] {container});
+
+            foreach (var registrationMethod in registrationMethods.Where(x => !x.Preregister).OrderBy(x => x.MethodInfo.Name))
+                registrationMethod.MethodInfo.Invoke(this, new object[] {container});
+        }
+
         [Preregister]
         protected virtual void RegisterQueries(IWindsorContainer container)
         {

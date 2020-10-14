@@ -62,20 +62,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         }
 
         [Preregister]
-        private static void RegisterQueries(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<IGetVendorByIdQuery>()
-                    .ImplementedBy<GetVendorByIdQuery>()
-                    .LifestyleTransient());
-
-            container.Register(
-                Component.For<IGetVendorsQuery>()
-                    .ImplementedBy<GetVendorsQuery>()
-                    .LifestyleTransient());
-        }
-
-        [Preregister]
         private static void RegisterFileUploadHandler(IWindsorContainer container)
         {
             container.Register(
@@ -91,6 +77,20 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 Component.For<IMapper>()
                     .Instance(AutoMapperBootstrapper.CreateMapper())
                     .LifestyleSingleton());
+        }
+
+        [Preregister]
+        private static void RegisterQueries(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<IGetVendorByIdQuery>()
+                    .ImplementedBy<GetVendorByIdQuery>()
+                    .LifestyleTransient());
+
+            container.Register(
+                Component.For<IGetVendorsQuery>()
+                    .ImplementedBy<GetVendorsQuery>()
+                    .LifestyleTransient());
         }
 
         [Preregister]

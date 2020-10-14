@@ -25,7 +25,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _appSettings.XsdFolder = ConfigurationManager.AppSettings["XsdFolder"];
             _appSettings.DefaultOdsInstance = ConfigurationManager.AppSettings["DefaultOdsInstance"];
             _appSettings.ProductionApiUrl = ConfigurationManager.AppSettings["ProductionApiUrl"];
-            _appSettings.SwaggerUrl = ConfigurationManager.AppSettings["SwaggerUrl"];
             _appSettings.SystemManagedSqlServer = ConfigurationManager.AppSettings["SystemManagedSqlServer"];
             _appSettings.DbSetupEnabled = ConfigurationManager.AppSettings["DbSetupEnabled"];
             _appSettings.SecurityMetadataCacheTimeoutMinutes =
@@ -84,7 +83,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string XsdFolder { get; set; }
         public string DefaultOdsInstance { get; set; }
         public string ProductionApiUrl { get; set; }
-        public string SwaggerUrl { get; set; }
         public string SystemManagedSqlServer { get; set; }
         public string DbSetupEnabled { get; set; }
         public string SecurityMetadataCacheTimeoutMinutes { get; set; }

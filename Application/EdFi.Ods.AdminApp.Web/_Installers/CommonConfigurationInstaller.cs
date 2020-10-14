@@ -95,26 +95,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .BasedOn<IController>()
                     .LifestyleTransient());
 
-            services.Register(
-                Component.For<ProductionSetupHub>()
-                    .ImplementedBy<ProductionSetupHub>()
-                    .LifestyleTransient());
-
-            services.Register(
-                Component.For<BulkUploadHub>()
-                    .ImplementedBy<BulkUploadHub>()
-                    .LifestyleTransient());
-
-            services.Register(
-                Component.For<ProductionLearningStandardsHub>()
-                    .ImplementedBy<ProductionLearningStandardsHub>()
-                    .LifestyleTransient());
-
-            services.Register(
-                Component.For<BulkImportService>()
-                    .ImplementedBy<BulkImportService>()
-                    .LifestyleTransient());
-
+            services.AddTransient<ProductionSetupHub>();
+            services.AddTransient<BulkUploadHub>();
+            services.AddTransient<ProductionLearningStandardsHub>();
+            services.AddTransient<BulkImportService>();
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
             services.Register(
@@ -167,7 +151,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .Pick()
                     .WithServiceAllInterfaces()
                     .LifestyleTransient());
-
 
             services.Register(
                 Component.For<CloudOdsUpdateService>()

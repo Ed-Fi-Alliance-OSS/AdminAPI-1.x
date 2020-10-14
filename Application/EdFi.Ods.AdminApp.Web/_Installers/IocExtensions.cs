@@ -2,7 +2,9 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+
 #if NET48
+using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
@@ -17,6 +19,23 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.Register(
                 Component.For<TService>()
                     .ImplementedBy<TImplementation>()
+                    .LifestyleTransient());
+        }
+
+        public static void AddTransient<TService>(this IWindsorContainer services)
+            where TService : class
+        {
+            services.Register(
+                Component.For<TService>()
+                    .ImplementedBy<TService>()
+                    .LifestyleTransient());
+        }
+
+        public static void AddTransient(this IWindsorContainer services, Type serviceType)
+        {
+            services.Register(
+                Component.For(serviceType)
+                    .ImplementedBy(serviceType)
                     .LifestyleTransient());
         }
     }

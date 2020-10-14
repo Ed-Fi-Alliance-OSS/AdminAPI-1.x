@@ -41,22 +41,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 .ImplementedBy<GetAzureCloudOdsApiWebsiteSettingsQuery>()
                 .LifestyleTransient());
 
-            services.Register(Component.For<AzureDatabaseManagementService>()
-                .ImplementedBy<AzureDatabaseManagementService>()
-                .LifestyleTransient());
+            services.AddTransient<AzureDatabaseManagementService>();
 
             services.Register(Component.For<ICloudOdsDatabaseSecurityConfigurator, SqlServerCloudOdsDatabaseSecurityConfigurator>()
                 .ImplementedBy<SqlServerCloudOdsDatabaseSecurityConfigurator>()
                 .LifestyleTransient());
 
-            services.Register(Component.For<AzureDatabaseLifecycleManagementService>()
-                .ImplementedBy<AzureDatabaseLifecycleManagementService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<GetAzureCloudOdsHostedInstanceQuery>()
-                .ImplementedBy<GetAzureCloudOdsHostedInstanceQuery>()
-                .LifestyleTransient());
-
+            services.AddTransient<AzureDatabaseLifecycleManagementService>();
+            services.AddTransient<GetAzureCloudOdsHostedInstanceQuery>();
             services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteAzureOdsPostUpdateSetupCommand>();
             services.AddTransient<IRestartAppServicesCommand, RestartAzureAppServicesCommand>();
             services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateAzureCloudOdsApiWebsiteSettingsCommand>();

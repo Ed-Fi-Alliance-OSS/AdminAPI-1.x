@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.OnPrem;
@@ -21,61 +20,21 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             InstallEnterpriseSpecificServices(services);
         }
 
-        private void InstallEnterpriseSpecificServices(IWindsorContainer services)
+        private static void InstallEnterpriseSpecificServices(IWindsorContainer services)
         {
-            services.Register(Component.For<IGetCloudOdsInstanceQuery>()
-                .ImplementedBy<GetOnPremOdsInstanceQuery>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery>()
-                .ImplementedBy<GetOnPremOdsApiWebsiteSettingsQuery>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
-                .ImplementedBy<UpdateOnPremOdsApiWebsiteSettingsCommand>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
-                .ImplementedBy<OnPremProductionLifecycleManagementService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
-                .ImplementedBy<GetOnPremProductionApiProvisionWarningQuery>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
-                .ImplementedBy<CompleteOnPremOdsPostUpdateSetupCommand>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IRestartAppServicesCommand>()
-                .ImplementedBy<RestartOnPremAppServicesCommand>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IFirstTimeSetupService>()
-                .ImplementedBy<OnPremFirstTimeSetupService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
-                .ImplementedBy<OnPremOdsDatabaseSqlServerSecurityConfiguration>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICloudOdsDatabaseNameProvider>()
-                .ImplementedBy<OnPremOdsDatabaseNameProvider>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ITabDisplayService>()
-                .ImplementedBy<OnPremTabDisplayService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IHomeScreenDisplayService>()
-                .ImplementedBy<OnPremHomeScreenDisplayService>()
-                .LifestyleTransient());
-
-            services.Register(
-                Component.For<ICompleteOdsFirstTimeSetupCommand>()
-                    .ImplementedBy<CompleteOnPremFirstTimeSetupCommand>()
-                    .LifestyleTransient());
-
+            services.AddTransient<IGetCloudOdsInstanceQuery, GetOnPremOdsInstanceQuery>();
+            services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetOnPremOdsApiWebsiteSettingsQuery>();
+            services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateOnPremOdsApiWebsiteSettingsCommand>();
+            services.AddTransient<ICloudOdsProductionLifecycleManagementService, OnPremProductionLifecycleManagementService>();
+            services.AddTransient<IGetProductionApiProvisioningWarningsQuery, GetOnPremProductionApiProvisionWarningQuery>();
+            services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteOnPremOdsPostUpdateSetupCommand>();
+            services.AddTransient<IRestartAppServicesCommand, RestartOnPremAppServicesCommand>();
+            services.AddTransient<IFirstTimeSetupService, OnPremFirstTimeSetupService>();
+            services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration,OnPremOdsDatabaseSqlServerSecurityConfiguration>();
+            services.AddTransient<ICloudOdsDatabaseNameProvider, OnPremOdsDatabaseNameProvider>();
+            services.AddTransient<ITabDisplayService, OnPremTabDisplayService>();
+            services.AddTransient<IHomeScreenDisplayService, OnPremHomeScreenDisplayService>();
+            services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteOnPremFirstTimeSetupCommand>();
         }
     }
 }

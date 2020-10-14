@@ -31,10 +31,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
     {
         public void Install(IWindsorContainer services, IConfigurationStore store)
         {
-            services.Register(
-                Component.For<IFileUploadHandler>()
-                    .ImplementedBy<LocalFileSystemFileUploadHandler>()
-                    .LifestyleTransient());
+            services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
             services.Register(
                 Component.For<IMapper>()
@@ -79,10 +76,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<AdminAppUserContext>()
                     .LifestylePerWebRequest());
 
-            services.Register(
-                Component.For<ICloudOdsAdminAppSettingsApiModeProvider>()
-                    .ImplementedBy<CloudOdsAdminAppSettingsApiModeProvider>()
-                    .LifestyleTransient());
+            services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
 
             services.Register(
                 Component.For<IOptions<AppSettings>>()
@@ -94,10 +88,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<CachedItems>()
                     .LifestyleSingleton());
 
-            services.Register(
-                Component.For<IOdsApiConnectionInformationProvider>()
-                    .ImplementedBy<CloudOdsApiConnectionInformationProvider>()
-                    .LifestyleTransient());
+            services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
 
             services.Register(
                 Classes.FromThisAssembly()
@@ -124,10 +115,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<BulkImportService>()
                     .LifestyleTransient());
 
-            services.Register(
-                Component.For<IBackgroundJobClient>()
-                    .ImplementedBy<BackgroundJobClient>()
-                    .LifestyleTransient());
+            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
             services.Register(
                 Component.For<IProductionSetupJob, WorkflowJob<int, ProductionSetupHub>>()

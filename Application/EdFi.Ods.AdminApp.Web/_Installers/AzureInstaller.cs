@@ -57,58 +57,19 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 .ImplementedBy<GetAzureCloudOdsHostedInstanceQuery>()
                 .LifestyleTransient());
 
-            services.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
-                .ImplementedBy<CompleteAzureOdsPostUpdateSetupCommand>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IRestartAppServicesCommand>()
-                .ImplementedBy<RestartAzureAppServicesCommand>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
-                .ImplementedBy<UpdateAzureCloudOdsApiWebsiteSettingsCommand>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IGetLatestPublishedOdsVersionQuery>()
-                .ImplementedBy<GetLatestPublishedOdsVersionQuery>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
-                .ImplementedBy<GetAzureProductionApiProvisioningWarningsQuery>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
-                .ImplementedBy<AzureProductionLifecycleManagementService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IGetCloudOdsInstanceQuery>()
-                .ImplementedBy<GetAzureCloudOdsInstanceQuery>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
-                .ImplementedBy<AzureCloudOdsDatabaseSqlServerSecurityConfiguration>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IFirstTimeSetupService>()
-                .ImplementedBy<AzureFirstTimeSetupService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ICloudOdsDatabaseNameProvider>()
-                .ImplementedBy<AzureCloudOdsDatabaseNameProvider>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<ITabDisplayService>()
-                .ImplementedBy<AzureTabDisplayService>()
-                .LifestyleTransient());
-
-            services.Register(Component.For<IHomeScreenDisplayService>()
-                .ImplementedBy<AzureHomeScreenDisplayService>()
-                .LifestyleTransient());
-
-            services.Register(
-                Component.For<ICompleteOdsFirstTimeSetupCommand>()
-                    .ImplementedBy<CompleteOdsFirstTimeSetupCommand>()
-                    .LifestyleTransient());
+            services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteAzureOdsPostUpdateSetupCommand>();
+            services.AddTransient<IRestartAppServicesCommand, RestartAzureAppServicesCommand>();
+            services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateAzureCloudOdsApiWebsiteSettingsCommand>();
+            services.AddTransient<IGetLatestPublishedOdsVersionQuery, GetLatestPublishedOdsVersionQuery>();
+            services.AddTransient<IGetProductionApiProvisioningWarningsQuery, GetAzureProductionApiProvisioningWarningsQuery>();
+            services.AddTransient<ICloudOdsProductionLifecycleManagementService, AzureProductionLifecycleManagementService>();
+            services.AddTransient<IGetCloudOdsInstanceQuery, GetAzureCloudOdsInstanceQuery>();
+            services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration, AzureCloudOdsDatabaseSqlServerSecurityConfiguration>();
+            services.AddTransient<IFirstTimeSetupService, AzureFirstTimeSetupService>();
+            services.AddTransient<ICloudOdsDatabaseNameProvider, AzureCloudOdsDatabaseNameProvider>();
+            services.AddTransient<ITabDisplayService, AzureTabDisplayService>();
+            services.AddTransient<IHomeScreenDisplayService, AzureHomeScreenDisplayService>();
+            services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteOdsFirstTimeSetupCommand>();
         }
     }
 }

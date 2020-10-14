@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Web.Mvc;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
@@ -21,7 +20,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.Common.Configuration;
-using EdFi.Ods.Common.InversionOfControl;
 using EdFi.Ods.Common.Security;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
@@ -31,9 +29,6 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace EdFi.Ods.AdminApp.Web._Installers
 {
-    // Suppressing this ReSharper warning because these methods are called by Castle Windsor through
-    // the [Preregister] attribute, and  thus appear to the compiler to never be used.
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public abstract class CommonConfigurationInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)

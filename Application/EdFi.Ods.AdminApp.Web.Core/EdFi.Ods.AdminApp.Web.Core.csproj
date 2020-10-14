@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -76,9 +76,9 @@
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureTabDisplayService.cs" LinkBase="Display/DisplayService" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureTabDisplayService.cs" LinkBase="Display/DisplayService" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremTabDisplayService.cs" LinkBase="Display/DisplayService" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremTabDisplayService.cs" LinkBase="Display/DisplayService" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/BaseHomeScreenDisplayService.cs" LinkBase="Display/HomeScreen" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/HomeScreenDisplay.cs" LinkBase="Display/HomeScreen" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/HomeScreenEnumeration.cs" LinkBase="Display/HomeScreen" />
@@ -86,11 +86,11 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/IHomeScreenDisplayService.cs" LinkBase="Display/HomeScreen" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/RadioButton/IRadioButton.cs" LinkBase="Display/RadioButton" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/RadioButton/RadioButtonDisplay.cs" LinkBase="Display/RadioButton" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/BaseTabDisplayService.cs" LinkBase="Display/TabEnumeration" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/GlobalSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabDisplayService.cs" LinkBase="Display/TabEnumeration" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/BaseTabDisplayService.cs" LinkBase="Display/TabEnumeration" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/GlobalSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabDisplayService.cs" LinkBase="Display/TabEnumeration" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabEnumeration.cs" LinkBase="Display/TabEnumeration" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/OdsInstanceSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/OdsInstanceSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/TabDisplay.cs" LinkBase="Display/TabEnumeration" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AdminModelExtensions.cs" LinkBase="Helpers" />
@@ -191,7 +191,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/ClaimSetEditorModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/DeleteVendorModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/EditVendorModel.cs" LinkBase="Models/ViewModels/Global" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/GlobalSettingsModel.cs" LinkBase="Models/ViewModels/Global" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/GlobalSettingsModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/UserIndexModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/VendorsListModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Home/IndexModel.cs" LinkBase="Models/ViewModels/Home" />
@@ -211,11 +211,11 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ProfileModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/ReportsModel.cs" LinkBase="Models/ViewModels/Reports" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/SelectDistrictModel.cs" LinkBase="Models/ViewModels/Reports" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/AddUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/AddUserModel.cs" LinkBase="Models/ViewModels/User" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/DeleteUserModel.cs" LinkBase="Models/ViewModels/User" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditOdsInstanceRegistrationForUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditUserModel.cs" LinkBase="Models/ViewModels/User" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditUserRoleModel.cs" LinkBase="Models/ViewModels/User" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditOdsInstanceRegistrationForUserModel.cs" LinkBase="Models/ViewModels/User" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditUserModel.cs" LinkBase="Models/ViewModels/User" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/EditUserRoleModel.cs" LinkBase="Models/ViewModels/User" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorApplicationsModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorOverviewModel.cs" LinkBase="Models/ViewModels" />
 

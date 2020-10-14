@@ -29,19 +29,19 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public abstract class CommonConfigurationInstaller : IWindsorInstaller
     {
-        public void Install(IWindsorContainer container, IConfigurationStore store)
+        public void Install(IWindsorContainer services, IConfigurationStore store)
         {
-            container.Register(
+            services.Register(
                 Component.For<IFileUploadHandler>()
                     .ImplementedBy<LocalFileSystemFileUploadHandler>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<IMapper>()
                     .Instance(AutoMapperBootstrapper.CreateMapper())
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component.For<IApiConfigurationProvider>().ImplementedBy<ApiConfigurationProvider>(),
 
                 Component.For<IConfigValueProvider>().ImplementedBy<AppConfigValueProvider>().IsFallback(),
@@ -51,141 +51,142 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 Component.For<IConfigConnectionStringsProvider>().ImplementedBy<AppConfigConnectionStringsProvider>()
                     .IsFallback());
 
-            container.Register(
+            services.Register(
                 Component.For<ISecurityContextFactory>()
                     .ImplementedBy<SecurityContextFactory>(),
                 Component.For<ISecurityContext>()
                     .UsingFactoryMethod(k => k.Resolve<ISecurityContextFactory>().CreateContext())
                     .LifestylePerWebRequest());
 
-            container.Register(
+            services.Register(
                 Component.For<IUsersContextFactory>()
                     .ImplementedBy<UsersContextFactory>(),
                 Component.For<IUsersContext>()
                     .UsingFactoryMethod(k => k.Resolve<IUsersContextFactory>().CreateContext())
                     .LifestylePerWebRequest());
 
-            container.Register(
+            services.Register(
                 Component.For<TokenCache>()
                     .Instance(TokenCache.DefaultShared));
 
-            container.Register(
+            services.Register(
                 Component.For<AdminAppDbContext>()
                     .ImplementedBy<AdminAppDbContext>()
                     .LifestylePerWebRequest());
 
-            container.Register(
+            services.Register(
                 Component.For<AdminAppUserContext>()
                     .ImplementedBy<AdminAppUserContext>()
                     .LifestylePerWebRequest());
 
-            container.Register(
+            services.Register(
                 Component.For<ICloudOdsAdminAppSettingsApiModeProvider>()
                     .ImplementedBy<CloudOdsAdminAppSettingsApiModeProvider>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<IOptions<AppSettings>>()
                     .Instance(new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()))
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component.For<ICachedItems>()
                     .ImplementedBy<CachedItems>()
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component.For<IOdsApiConnectionInformationProvider>()
                     .ImplementedBy<CloudOdsApiConnectionInformationProvider>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Classes.FromThisAssembly()
                     .BasedOn<IController>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<ProductionSetupHub>()
                     .ImplementedBy<ProductionSetupHub>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<BulkUploadHub>()
                     .ImplementedBy<BulkUploadHub>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<ProductionLearningStandardsHub>()
                     .ImplementedBy<ProductionLearningStandardsHub>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<BulkImportService>()
                     .ImplementedBy<BulkImportService>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<IBackgroundJobClient>()
                     .ImplementedBy<BackgroundJobClient>()
                     .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<IProductionSetupJob, WorkflowJob<int, ProductionSetupHub>>()
                     .ImplementedBy<ProductionSetupJob>()
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component.For<IBulkUploadJob, WorkflowJob<BulkUploadJobContext, BulkUploadHub>>()
                     .ImplementedBy<BulkUploadJob>()
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component
                     .For<IProductionLearningStandardsJob, LearningStandardsJob<ProductionLearningStandardsHub>,
                         WorkflowJob<LearningStandardsJobContext, ProductionLearningStandardsHub>>()
                     .ImplementedBy<ProductionLearningStandardsJob>()
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component.For<ISecureHasher>()
                     .ImplementedBy<Pbkdf2HmacSha1SecureHasher>());
 
-            container.Register(
+            services.Register(
                 Component.For<IPackedHashConverter>()
                     .ImplementedBy<PackedHashConverter>());
 
-            container.Register(
+            services.Register(
                 Component.For<ISecurePackedHashProvider>()
                     .ImplementedBy<SecurePackedHashProvider>());
 
-            container.Register(
+            services.Register(
                 Component.For<IHashConfigurationProvider>()
                     .ImplementedBy<DefaultHashConfigurationProvider>());
 
-            InstallHostingSpecificClasses(container);
+            InstallHostingSpecificClasses(services);
 
-            container.Register(
+            services.Register(
                 Component.For<IOdsSecretConfigurationProvider>()
                     .ImplementedBy<OdsSecretConfigurationProvider>()
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Component.For<InstanceContext>()
                     .ImplementedBy<InstanceContext>()
                     .LifestylePerWebRequest());
 
-            container.Register(
+             services.Register(
                 Classes.FromAssemblyContaining<IMarkerForEdFiOdsAdminAppManagement>()
                     .Pick()
                     .WithServiceAllInterfaces()
                     .LifestyleTransient());
 
-            container.Register(
+
+            services.Register(
                 Component.For<CloudOdsUpdateService>()
                     .ImplementedBy<CloudOdsUpdateService>()
                     .LifestyleSingleton());
 
-            container.Register(
+            services.Register(
                 Classes.FromThisAssembly()
                     .BasedOn(typeof(IValidator<>))
                     .WithService
@@ -193,6 +194,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected abstract void InstallHostingSpecificClasses(IWindsorContainer container);
+        protected abstract void InstallHostingSpecificClasses(IWindsorContainer services);
     }
 }

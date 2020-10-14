@@ -16,62 +16,62 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public class OnPremInstaller : CommonConfigurationInstaller
     {
-        protected override void InstallHostingSpecificClasses(IWindsorContainer container)
+        protected override void InstallHostingSpecificClasses(IWindsorContainer services)
         {
-            InstallEnterpriseSpecificServices(container);
+            InstallEnterpriseSpecificServices(services);
         }
 
-        private void InstallEnterpriseSpecificServices(IWindsorContainer container)
+        private void InstallEnterpriseSpecificServices(IWindsorContainer services)
         {
-            container.Register(Component.For<IGetCloudOdsInstanceQuery>()
+            services.Register(Component.For<IGetCloudOdsInstanceQuery>()
                 .ImplementedBy<GetOnPremOdsInstanceQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery>()
+            services.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery>()
                 .ImplementedBy<GetOnPremOdsApiWebsiteSettingsQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
+            services.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
                 .ImplementedBy<UpdateOnPremOdsApiWebsiteSettingsCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
+            services.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
                 .ImplementedBy<OnPremProductionLifecycleManagementService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
+            services.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
                 .ImplementedBy<GetOnPremProductionApiProvisionWarningQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
+            services.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
                 .ImplementedBy<CompleteOnPremOdsPostUpdateSetupCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IRestartAppServicesCommand>()
+            services.Register(Component.For<IRestartAppServicesCommand>()
                 .ImplementedBy<RestartOnPremAppServicesCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IFirstTimeSetupService>()
+            services.Register(Component.For<IFirstTimeSetupService>()
                 .ImplementedBy<OnPremFirstTimeSetupService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
+            services.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
                 .ImplementedBy<OnPremOdsDatabaseSqlServerSecurityConfiguration>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsDatabaseNameProvider>()
+            services.Register(Component.For<ICloudOdsDatabaseNameProvider>()
                 .ImplementedBy<OnPremOdsDatabaseNameProvider>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ITabDisplayService>()
+            services.Register(Component.For<ITabDisplayService>()
                 .ImplementedBy<OnPremTabDisplayService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IHomeScreenDisplayService>()
+            services.Register(Component.For<IHomeScreenDisplayService>()
                 .ImplementedBy<OnPremHomeScreenDisplayService>()
                 .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<ICompleteOdsFirstTimeSetupCommand>()
                     .ImplementedBy<CompleteOnPremFirstTimeSetupCommand>()
                     .LifestyleTransient());

@@ -18,94 +18,94 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public class AzureInstaller : CommonConfigurationInstaller
     {
-        protected override void InstallHostingSpecificClasses(IWindsorContainer container)
+        protected override void InstallHostingSpecificClasses(IWindsorContainer services)
         {
-            InstallAzureSpecificServices(container);
+            InstallAzureSpecificServices(services);
         }
 
-        private void InstallAzureSpecificServices(IWindsorContainer container)
+        private void InstallAzureSpecificServices(IWindsorContainer services)
         {
-            container.Register(Component.For<AzureActiveDirectoryClientInfo>()
+            services.Register(Component.For<AzureActiveDirectoryClientInfo>()
                 .Instance(CloudOdsAzureActiveDirectoryClientInfo.GetActiveDirectoryClientInfoForUser())
                 .LifestyleSingleton());
 
-            container.Register(Component.For<IGetCloudOdsHostedComponentsQuery, IGetAzureCloudOdsHostedComponentsQuery, GetAzureCloudOdsHostedComponentsQuery>()
+            services.Register(Component.For<IGetCloudOdsHostedComponentsQuery, IGetAzureCloudOdsHostedComponentsQuery, GetAzureCloudOdsHostedComponentsQuery>()
                 .ImplementedBy<GetAzureCloudOdsHostedComponentsQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetAzureCloudOdsWebsitePerformanceLevelQuery, GetAzureCloudOdsWebsitePerformanceLevelQuery>()
+            services.Register(Component.For<IGetAzureCloudOdsWebsitePerformanceLevelQuery, GetAzureCloudOdsWebsitePerformanceLevelQuery>()
                 .ImplementedBy<GetAzureCloudOdsWebsitePerformanceLevelQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery, GetAzureCloudOdsApiWebsiteSettingsQuery>()
+            services.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery, GetAzureCloudOdsApiWebsiteSettingsQuery>()
                 .ImplementedBy<GetAzureCloudOdsApiWebsiteSettingsQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<AzureDatabaseManagementService>()
+            services.Register(Component.For<AzureDatabaseManagementService>()
                 .ImplementedBy<AzureDatabaseManagementService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsDatabaseSecurityConfigurator, SqlServerCloudOdsDatabaseSecurityConfigurator>()
+            services.Register(Component.For<ICloudOdsDatabaseSecurityConfigurator, SqlServerCloudOdsDatabaseSecurityConfigurator>()
                 .ImplementedBy<SqlServerCloudOdsDatabaseSecurityConfigurator>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<AzureDatabaseLifecycleManagementService>()
+            services.Register(Component.For<AzureDatabaseLifecycleManagementService>()
                 .ImplementedBy<AzureDatabaseLifecycleManagementService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<GetAzureCloudOdsHostedInstanceQuery>()
+            services.Register(Component.For<GetAzureCloudOdsHostedInstanceQuery>()
                 .ImplementedBy<GetAzureCloudOdsHostedInstanceQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
+            services.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
                 .ImplementedBy<CompleteAzureOdsPostUpdateSetupCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IRestartAppServicesCommand>()
+            services.Register(Component.For<IRestartAppServicesCommand>()
                 .ImplementedBy<RestartAzureAppServicesCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
+            services.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
                 .ImplementedBy<UpdateAzureCloudOdsApiWebsiteSettingsCommand>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetLatestPublishedOdsVersionQuery>()
+            services.Register(Component.For<IGetLatestPublishedOdsVersionQuery>()
                 .ImplementedBy<GetLatestPublishedOdsVersionQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
+            services.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
                 .ImplementedBy<GetAzureProductionApiProvisioningWarningsQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
+            services.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
                 .ImplementedBy<AzureProductionLifecycleManagementService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IGetCloudOdsInstanceQuery>()
+            services.Register(Component.For<IGetCloudOdsInstanceQuery>()
                 .ImplementedBy<GetAzureCloudOdsInstanceQuery>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
+            services.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
                 .ImplementedBy<AzureCloudOdsDatabaseSqlServerSecurityConfiguration>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IFirstTimeSetupService>()
+            services.Register(Component.For<IFirstTimeSetupService>()
                 .ImplementedBy<AzureFirstTimeSetupService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ICloudOdsDatabaseNameProvider>()
+            services.Register(Component.For<ICloudOdsDatabaseNameProvider>()
                 .ImplementedBy<AzureCloudOdsDatabaseNameProvider>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<ITabDisplayService>()
+            services.Register(Component.For<ITabDisplayService>()
                 .ImplementedBy<AzureTabDisplayService>()
                 .LifestyleTransient());
 
-            container.Register(Component.For<IHomeScreenDisplayService>()
+            services.Register(Component.For<IHomeScreenDisplayService>()
                 .ImplementedBy<AzureHomeScreenDisplayService>()
                 .LifestyleTransient());
 
-            container.Register(
+            services.Register(
                 Component.For<ICompleteOdsFirstTimeSetupCommand>()
                     .ImplementedBy<CompleteOdsFirstTimeSetupCommand>()
                     .LifestyleTransient());

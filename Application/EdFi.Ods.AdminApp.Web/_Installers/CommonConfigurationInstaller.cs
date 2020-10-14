@@ -12,9 +12,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Helpers;
-using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
@@ -42,16 +40,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 Component.For<IMapper>()
                     .Instance(AutoMapperBootstrapper.CreateMapper())
                     .LifestyleSingleton());
-
-            container.Register(
-                Component.For<IGetVendorByIdQuery>()
-                    .ImplementedBy<GetVendorByIdQuery>()
-                    .LifestyleTransient());
-
-            container.Register(
-                Component.For<IGetVendorsQuery>()
-                    .ImplementedBy<GetVendorsQuery>()
-                    .LifestyleTransient());
 
             container.Register(
                 Component.For<IApiConfigurationProvider>().ImplementedBy<ApiConfigurationProvider>(),
@@ -114,11 +102,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             container.Register(
                 Classes.FromThisAssembly()
                     .BasedOn<IController>()
-                    .LifestyleTransient());
-
-            container.Register(
-                Component.For<IEncryptionConfigurationProviderService>()
-                    .ImplementedBy<EncryptionConfigurationProviderService>()
                     .LifestyleTransient());
 
             container.Register(
@@ -187,34 +170,9 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleSingleton());
 
             container.Register(
-                Component.For<IGetOdsSqlConfigurationQuery>()
-                    .ImplementedBy<GetOdsSqlConfigurationQuery>()
-                    .LifestyleTransient());
-
-            container.Register(
-                Component.For<IGetOdsAdminAppApiCredentialsQuery>()
-                    .ImplementedBy<GetOdsAdminAppApiCredentialsQuery>()
-                    .LifestyleTransient());
-
-            container.Register(
                 Component.For<InstanceContext>()
                     .ImplementedBy<InstanceContext>()
                     .LifestylePerWebRequest());
-
-            container.Register(
-                Component.For<IEnableLearningStandardsSetupCommand>()
-                    .ImplementedBy<EnableLearningStandardsSetupCommand>()
-                    .LifestyleTransient());
-
-            container.Register(
-                Component.For<ISetupAcademicBenchmarksConnectService>()
-                    .ImplementedBy<SetupAcademicBenchmarksConnectService>()
-                    .LifestyleTransient());
-
-            container.Register(
-                Component.For<IModifyClaimSetsService>()
-                    .ImplementedBy<ModifyClaimSetsService>()
-                    .LifestyleTransient());
 
             container.Register(
                 Classes.FromAssemblyContaining<IMarkerForEdFiOdsAdminAppManagement>()

@@ -15,8 +15,12 @@ Running Integration Tests
 Many tests in this assembly make direct calls to the Azure Resource Manager API. For these tests to succeed, a few pre-requisites must be satisfied:
 
 1.  Deploy an instance Cloud ODS on Azure (see Readme.md in **Ed-Fi-Ods-Deploy-Azure** repo)
-    1.  The install friendly name should be set to "Cloud ODS Integration Tests" so that the tests will reference the correct resources. If you need to use a different name, ensure that the _resourceGroupName_ setting is appropriately changed in your **DeveloperSettings/AzureActiveDirectory.config** file (see below)
+    1.  The install friendly name should be set to "Cloud ODS Integration Tests" so that the tests will reference the correct resources. 
+    (Sample powershell command for deployment:  .\Deploy-EdFiOds.ps1 -ResourceGroupLocation "South Central US" -Version 5.0.0 -InstallFriendlyName "Cloud ODS Integration Tests" -Edition "release" -DeploySwaggerUI)
+    If you need to use a different name, ensure that the _resourceGroupName_ setting is appropriately changed in your **DeveloperSettings/AzureActiveDirectory.config** file (see below)
+
 2.  Run the from **Ed-Fi-Ods-Deploy-Azure/Application/Published/ScaleDown-EdFiOds.ps1** script to minimize the costs of keeping the instance running. You can even delete the databases if the only purpose is to do local testing – that will get you to $0 per month
+
 3.  SQL server authentication must be enabled when using a local sql server. Ensure a "IntegrationTests" user account has been created and given the sysadmin role
     
     1.  Set the password accordingly in your **Ed-Fi-Ods-AdminApp/EdFi.Ods.AdminApp.Management.Azure.IntegrationTests/app.config**_IntegrationTests_ connection string.

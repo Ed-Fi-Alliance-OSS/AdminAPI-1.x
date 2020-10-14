@@ -129,6 +129,38 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .Instance(TokenCache.DefaultShared));
         }
 
+        private static void RegisterAdminAppDbContext(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<AdminAppDbContext>()
+                    .ImplementedBy<AdminAppDbContext>()
+                    .LifestylePerWebRequest());
+        }
+
+        private static void RegisterAdminAppUserContext(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<AdminAppUserContext>()
+                    .ImplementedBy<AdminAppUserContext>()
+                    .LifestylePerWebRequest());
+        }
+
+        private static void RegisterApiModeProvider(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<ICloudOdsAdminAppSettingsApiModeProvider>()
+                    .ImplementedBy<CloudOdsAdminAppSettingsApiModeProvider>()
+                    .LifestyleTransient());
+        }
+
+        private static void RegisterAppSettings(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<IOptions<AppSettings>>()
+                    .Instance(new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()))
+                    .LifestyleSingleton());
+        }
+
         private static void RegisterCaches(IWindsorContainer container)
         {
             container.Register(
@@ -150,6 +182,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             container.Register(
                 Classes.FromThisAssembly()
                     .BasedOn<IController>()
+                    .LifestyleTransient());
+        }
+
+        private static void RegisterEncryptionConfigurationProviderService(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<IEncryptionConfigurationProviderService>()
+                    .ImplementedBy<EncryptionConfigurationProviderService>()
                     .LifestyleTransient());
         }
 
@@ -198,27 +238,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleSingleton());
         }
 
-        protected abstract void InstallHostingSpecificClasses(IWindsorContainer container);
-
-        private static void InstallSecretHashingSupport(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<ISecureHasher>()
-                    .ImplementedBy<Pbkdf2HmacSha1SecureHasher>());
-
-            container.Register(
-                Component.For<IPackedHashConverter>()
-                    .ImplementedBy<PackedHashConverter>());
-
-            container.Register(
-                Component.For<ISecurePackedHashProvider>()
-                    .ImplementedBy<SecurePackedHashProvider>());
-
-            container.Register(
-                Component.For<IHashConfigurationProvider>()
-                    .ImplementedBy<DefaultHashConfigurationProvider>());
-        }
-
         private void RegisterHostingConfigSpecificClassesAndDependencies(IWindsorContainer container)
         {
             InstallSecretHashingSupport(container);
@@ -237,6 +256,32 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             container.Register(
                 Component.For<IGetOdsAdminAppApiCredentialsQuery>()
                     .ImplementedBy<GetOdsAdminAppApiCredentialsQuery>()
+                    .LifestyleTransient());
+        }
+
+        private static void RegisterInstanceContext(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<InstanceContext>()
+                    .ImplementedBy<InstanceContext>()
+                    .LifestylePerWebRequest());
+        }
+
+        private static void RegisterLearningStandardsSetupCommand(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<IEnableLearningStandardsSetupCommand>()
+                    .ImplementedBy<EnableLearningStandardsSetupCommand>()
+                    .LifestyleTransient());
+
+            container.Register(
+                Component.For<ISetupAcademicBenchmarksConnectService>()
+                    .ImplementedBy<SetupAcademicBenchmarksConnectService>()
+                    .LifestyleTransient());
+
+            container.Register(
+                Component.For<IModifyClaimSetsService>()
+                    .ImplementedBy<ModifyClaimSetsService>()
                     .LifestyleTransient());
         }
 
@@ -267,70 +312,25 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        private static void RegisterEncryptionConfigurationProviderService(IWindsorContainer container)
+        protected abstract void InstallHostingSpecificClasses(IWindsorContainer container);
+
+        private static void InstallSecretHashingSupport(IWindsorContainer container)
         {
             container.Register(
-                Component.For<IEncryptionConfigurationProviderService>()
-                    .ImplementedBy<EncryptionConfigurationProviderService>()
-                    .LifestyleTransient());
-        }
-
-        private static void RegisterLearningStandardsSetupCommand(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<IEnableLearningStandardsSetupCommand>()
-                    .ImplementedBy<EnableLearningStandardsSetupCommand>()
-                    .LifestyleTransient());
+                Component.For<ISecureHasher>()
+                    .ImplementedBy<Pbkdf2HmacSha1SecureHasher>());
 
             container.Register(
-                Component.For<ISetupAcademicBenchmarksConnectService>()
-                    .ImplementedBy<SetupAcademicBenchmarksConnectService>()
-                    .LifestyleTransient());
+                Component.For<IPackedHashConverter>()
+                    .ImplementedBy<PackedHashConverter>());
 
             container.Register(
-                Component.For<IModifyClaimSetsService>()
-                    .ImplementedBy<ModifyClaimSetsService>()
-                    .LifestyleTransient());
-        }
+                Component.For<ISecurePackedHashProvider>()
+                    .ImplementedBy<SecurePackedHashProvider>());
 
-        private static void RegisterAdminAppDbContext(IWindsorContainer container)
-        {
             container.Register(
-                Component.For<AdminAppDbContext>()
-                    .ImplementedBy<AdminAppDbContext>()
-                    .LifestylePerWebRequest());
-        }
-
-        private static void RegisterInstanceContext(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<InstanceContext>()
-                    .ImplementedBy<InstanceContext>()
-                    .LifestylePerWebRequest());
-        }
-
-        private static void RegisterAdminAppUserContext(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<AdminAppUserContext>()
-                    .ImplementedBy<AdminAppUserContext>()
-                    .LifestylePerWebRequest());
-        }
-
-        private static void RegisterApiModeProvider(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<ICloudOdsAdminAppSettingsApiModeProvider>()
-                    .ImplementedBy<CloudOdsAdminAppSettingsApiModeProvider>()
-                    .LifestyleTransient());
-        }
-
-        private static void RegisterAppSettings(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<IOptions<AppSettings>>()
-                    .Instance(new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()))
-                    .LifestyleSingleton());
+                Component.For<IHashConfigurationProvider>()
+                    .ImplementedBy<DefaultHashConfigurationProvider>());
         }
     }
 }

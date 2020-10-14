@@ -31,6 +31,7 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using FluentValidation;
 using log4net;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -57,6 +58,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
         private readonly IInferOdsApiVersion _inferOdsApiVersion;   
         private readonly IValidator<BulkFileUploadModel> _bulkLoadValidator;
+        private readonly AppSettings _appSettings;
 
         public OdsInstanceSettingsController(IMapper mapper
             , IGetVendorsQuery getVendorsQuery
@@ -76,7 +78,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , InstanceContext instanceContext
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
             , IInferOdsApiVersion inferOdsApiVersion          
-            , IValidator<BulkFileUploadModel> bulkLoadValidator)
+            , IValidator<BulkFileUploadModel> bulkLoadValidator
+            , IOptions<AppSettings> appSettingsAccessor)
         {
             _getVendorsQuery = getVendorsQuery;
             _mapper = mapper;
@@ -96,7 +99,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
             _inferOdsApiVersion = inferOdsApiVersion;
-            _bulkLoadValidator = bulkLoadValidator;           
+            _bulkLoadValidator = bulkLoadValidator;
+            _appSettings = appSettingsAccessor.Value;
         }
 
         public async Task<ActionResult> Applications()
@@ -210,7 +214,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> Logging()
         {
             var settings = await _cloudOdsSettingsService.GetSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, CloudOdsEnvironment.Production);
+                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
 
             var model = new OdsInstanceSettingsModel
             {
@@ -390,7 +394,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 }
             }
 
-            var schemaBasePath = HostingEnvironment.MapPath(ConfigurationHelper.GetAppSettings().XsdFolder);
+            var schemaBasePath = HostingEnvironment.MapPath(_appSettings.XsdFolder);
             var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
             var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
 

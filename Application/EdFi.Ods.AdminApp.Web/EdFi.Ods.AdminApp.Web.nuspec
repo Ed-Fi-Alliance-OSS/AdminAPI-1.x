@@ -32,6 +32,5 @@
     <file src="Web.OnPremNpgsql.config" target="" />
     <file src="Web.OnPremYearSpecificRelease.config" target="" />
     <file src="Web.Release.config" target="" />
-    <file src="Config\hostedComponents.json" target="Config\hostedComponents.json" />
   </files>
 </package>

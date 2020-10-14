@@ -25,8 +25,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public string ProductionApiUrl => _appSettings.ProductionApiUrl;
 
-        public string SwaggerUrl => _appSettings.SwaggerUrl;
-
         public bool SystemManagedSqlServer
             => _appSettings.SystemManagedSqlServer == null ||
                bool.TrueString.Equals(

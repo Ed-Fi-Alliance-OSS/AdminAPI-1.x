@@ -19,12 +19,12 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _appSettings = new AppSettings();
             _connectionStrings = new ConnectionStrings();
 
+            _appSettings.AppStartup = ConfigurationManager.AppSettings["owin:appStartup"];
             _appSettings.ApplicationInsightsInstrumentationKey =
                 ConfigurationManager.AppSettings["ApplicationInsightsInstrumentationKey"];
             _appSettings.XsdFolder = ConfigurationManager.AppSettings["XsdFolder"];
             _appSettings.DefaultOdsInstance = ConfigurationManager.AppSettings["DefaultOdsInstance"];
             _appSettings.ProductionApiUrl = ConfigurationManager.AppSettings["ProductionApiUrl"];
-            _appSettings.SwaggerUrl = ConfigurationManager.AppSettings["SwaggerUrl"];
             _appSettings.SystemManagedSqlServer = ConfigurationManager.AppSettings["SystemManagedSqlServer"];
             _appSettings.DbSetupEnabled = ConfigurationManager.AppSettings["DbSetupEnabled"];
             _appSettings.SecurityMetadataCacheTimeoutMinutes =
@@ -40,7 +40,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _appSettings.IdaSubscriptionId = ConfigurationManager.AppSettings["ida:SubscriptionId"];
             _appSettings.AwsCurrentVersion = ConfigurationManager.AppSettings["AwsCurrentVersion"];
             _appSettings.OptionalEntropy = ConfigurationManager.AppSettings["OptionalEntropy"];
-            _appSettings.HostedComponentsFile = ConfigurationManager.AppSettings["HostedComponentsFile"];
 
             _connectionStrings.Admin = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString : "";
             _connectionStrings.Security = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security].ConnectionString : "";
@@ -79,11 +78,11 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
 
     public class AppSettings
     {
+        public string AppStartup { get; set; }
         public string ApplicationInsightsInstrumentationKey { get; set; }
         public string XsdFolder { get; set; }
         public string DefaultOdsInstance { get; set; }
         public string ProductionApiUrl { get; set; }
-        public string SwaggerUrl { get; set; }
         public string SystemManagedSqlServer { get; set; }
         public string DbSetupEnabled { get; set; }
         public string SecurityMetadataCacheTimeoutMinutes { get; set; }
@@ -98,7 +97,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string IdaSubscriptionId { get; set; }
         public string AwsCurrentVersion { get; set; }
         public string OptionalEntropy { get; set; }
-        public string HostedComponentsFile { get; set; }
     }
 
     public class ConnectionStrings

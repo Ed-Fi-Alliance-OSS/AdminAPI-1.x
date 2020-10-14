@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Web;
 #if NET48
 using System.Web.Mvc;
@@ -46,10 +45,5 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             var user = _userManager.FindById(HttpContext.Current.User.Identity.GetUserId());
             return user != null && user.RequirePasswordChange;
         }
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public class BypassPasswordChangeRequiredFilterAttribute : Attribute
-    {
     }
 }

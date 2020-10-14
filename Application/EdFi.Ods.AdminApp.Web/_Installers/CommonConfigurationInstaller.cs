@@ -13,6 +13,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Controllers;
 using EdFi.Ods.AdminApp.Web.Hubs;
@@ -25,6 +26,7 @@ using EdFi.Ods.Common.Security;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using Hangfire;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace EdFi.Ods.AdminApp.Web._Installers
@@ -296,6 +298,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 Component.For<ICloudOdsAdminAppSettingsApiModeProvider>()
                     .ImplementedBy<CloudOdsAdminAppSettingsApiModeProvider>()
                     .LifestyleTransient());
+        }
+
+        protected virtual void RegisterAppSettings(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<IOptions<AppSettings>>()
+                    .Instance(new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()))
+                    .LifestyleSingleton());
         }
     }
 }

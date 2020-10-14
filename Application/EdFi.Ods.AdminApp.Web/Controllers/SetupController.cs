@@ -15,11 +15,13 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using log4net;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -32,16 +34,19 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICompleteOdsPostUpdateSetupCommand _completeOdsPostUpdateSetupCommand;
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly ApplicationConfigurationService _applicationConfigurationService;
+        private readonly AppSettings _appSettings;
 
         public SetupController(ICompleteOdsFirstTimeSetupCommand completeOdsFirstTimeSetupCommand
             , ICompleteOdsPostUpdateSetupCommand completeOdsPostUpdateSetupCommand
             , IOdsApiFacadeFactory odsApiFacadeFactory
-            , ApplicationConfigurationService applicationConfigurationService)
+            , ApplicationConfigurationService applicationConfigurationService
+            , IOptions<AppSettings> appSettingsAccessor)
         {
             _completeOdsFirstTimeSetupCommand = completeOdsFirstTimeSetupCommand;
             _completeOdsPostUpdateSetupCommand = completeOdsPostUpdateSetupCommand;
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _applicationConfigurationService = applicationConfigurationService;
+            _appSettings = appSettingsAccessor.Value;
         }
 
         public ActionResult FirstTimeSetup()
@@ -60,7 +65,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 //setup command gives us the access to run the schema init here.
                 _completeOdsFirstTimeSetupCommand.ExtraDatabaseInitializationAction = HangFireInstance.RemoveAllScheduledJobs;
 
-                await _completeOdsFirstTimeSetupCommand.Execute(CloudOdsAdminAppSettings.Instance.OdsInstanceName, CloudOdsAdminAppClaimSetConfiguration.Default, CloudOdsAdminAppSettings.Instance.Mode);
+                await _completeOdsFirstTimeSetupCommand.Execute(_appSettings.DefaultOdsInstance, CloudOdsAdminAppClaimSetConfiguration.Default, CloudOdsAdminAppSettings.Instance.Mode);
             });
         }
         
@@ -75,7 +80,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _logger.Info("User initiated Post-Update Setup");
             return await RunSetup(async () =>
             {
-                await _completeOdsPostUpdateSetupCommand.Execute(CloudOdsAdminAppSettings.Instance.OdsInstanceName);
+                await _completeOdsPostUpdateSetupCommand.Execute(_appSettings.DefaultOdsInstance);
             });
         }
 

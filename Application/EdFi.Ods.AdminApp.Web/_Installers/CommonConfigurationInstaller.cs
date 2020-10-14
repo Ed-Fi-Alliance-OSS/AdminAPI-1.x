@@ -4,8 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
@@ -40,33 +38,27 @@ namespace EdFi.Ods.AdminApp.Web._Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            var registrationMethods =
-                (from m in GetType()
-                    .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                 let parameters = m.GetParameters()
-                 where m.Name.StartsWith("Register")
-                       && parameters.Length == 1
-                       && parameters[0]
-                          .ParameterType == typeof(IWindsorContainer)
-                 let preregister = m.GetCustomAttributes(typeof(PreregisterAttribute), true)
-                                    .Any()
-                 select new
-                 {
-                     MethodInfo = m,
-                     Preregister = preregister
-                 })
-                .Where(x => !x.Preregister)
-                .Select(x => x.MethodInfo)
-               .ToList();
-
             RegisterFileUploadHandler(container);
             RegisterIMapper(container);
             RegisterQueries(container);
             RegisterSecurityContextAndUserContext(container);
             RegisterTokenCache(container);
 
-            foreach (var registrationMethod in registrationMethods.OrderBy(x => x.Name))
-                registrationMethod.Invoke(this, new object[] {container});
+            RegisterAdminAppDbContext(container);
+            RegisterAdminAppUserContext(container);
+            RegisterApiModeProvider(container);
+            RegisterAppSettings(container);
+            RegisterCaches(container);
+            RegisterConnectionInformationProvider(container);
+            RegisterControllers(container);
+            RegisterEncryptionConfigurationProviderService(container);
+            RegisterHangfireServices(container);
+            RegisterHostingConfigSpecificClassesAndDependencies(container);
+            RegisterInstanceContext(container);
+            RegisterLearningStandardsSetupCommand(container);
+            RegisterMarkerForEdFiOdsAdminAppManagement(container);
+            RegisterUpdateCheckService(container);
+            RegisterValidators(container);
         }
 
         [Preregister]
@@ -137,7 +129,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .Instance(TokenCache.DefaultShared));
         }
 
-        protected virtual void RegisterCaches(IWindsorContainer container)
+        private static void RegisterCaches(IWindsorContainer container)
         {
             container.Register(
                 Component.For<ICachedItems>()
@@ -145,7 +137,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleSingleton());
         }
 
-        protected virtual void RegisterConnectionInformationProvider(IWindsorContainer container)
+        private static void RegisterConnectionInformationProvider(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IOdsApiConnectionInformationProvider>()
@@ -153,7 +145,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterControllers(IWindsorContainer container)
+        private static void RegisterControllers(IWindsorContainer container)
         {
             container.Register(
                 Classes.FromThisAssembly()
@@ -161,7 +153,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterHangfireServices(IWindsorContainer container)
+        private static void RegisterHangfireServices(IWindsorContainer container)
         {
             container.Register(
                 Component.For<ProductionSetupHub>()
@@ -208,7 +200,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
         protected abstract void InstallHostingSpecificClasses(IWindsorContainer container);
 
-        private void InstallSecretHashingSupport(IWindsorContainer container)
+        private static void InstallSecretHashingSupport(IWindsorContainer container)
         {
             container.Register(
                 Component.For<ISecureHasher>()
@@ -227,7 +219,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<DefaultHashConfigurationProvider>());
         }
 
-        protected void RegisterHostingConfigSpecificClassesAndDependencies(IWindsorContainer container)
+        private void RegisterHostingConfigSpecificClassesAndDependencies(IWindsorContainer container)
         {
             InstallSecretHashingSupport(container);
             InstallHostingSpecificClasses(container);
@@ -248,7 +240,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterMarkerForEdFiOdsAdminAppManagement(IWindsorContainer container)
+        private static void RegisterMarkerForEdFiOdsAdminAppManagement(IWindsorContainer container)
         {
             container.Register(
                 Classes.FromAssemblyContaining<IMarkerForEdFiOdsAdminAppManagement>()
@@ -257,7 +249,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterUpdateCheckService(IWindsorContainer container)
+        private static void RegisterUpdateCheckService(IWindsorContainer container)
         {
             container.Register(
                 Component.For<CloudOdsUpdateService>()
@@ -265,7 +257,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleSingleton());
         }
 
-        protected virtual void RegisterValidators(IWindsorContainer container)
+        private static void RegisterValidators(IWindsorContainer container)
         {
             container.Register(
                 Classes.FromThisAssembly()
@@ -275,7 +267,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterEncryptionConfigurationProviderService(IWindsorContainer container)
+        private static void RegisterEncryptionConfigurationProviderService(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IEncryptionConfigurationProviderService>()
@@ -283,7 +275,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterLearningStandardsSetupCommand(IWindsorContainer container)
+        private static void RegisterLearningStandardsSetupCommand(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IEnableLearningStandardsSetupCommand>()
@@ -301,7 +293,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterAdminAppDbContext(IWindsorContainer container)
+        private static void RegisterAdminAppDbContext(IWindsorContainer container)
         {
             container.Register(
                 Component.For<AdminAppDbContext>()
@@ -309,7 +301,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestylePerWebRequest());
         }
 
-        protected void RegisterInstanceContext(IWindsorContainer container)
+        private static void RegisterInstanceContext(IWindsorContainer container)
         {
             container.Register(
                 Component.For<InstanceContext>()
@@ -317,7 +309,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestylePerWebRequest());
         }
 
-        protected void RegisterAdminAppUserContext(IWindsorContainer container)
+        private static void RegisterAdminAppUserContext(IWindsorContainer container)
         {
             container.Register(
                 Component.For<AdminAppUserContext>()
@@ -325,7 +317,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestylePerWebRequest());
         }
 
-        protected virtual void RegisterApiModeProvider(IWindsorContainer container)
+        private static void RegisterApiModeProvider(IWindsorContainer container)
         {
             container.Register(
                 Component.For<ICloudOdsAdminAppSettingsApiModeProvider>()
@@ -333,7 +325,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleTransient());
         }
 
-        protected virtual void RegisterAppSettings(IWindsorContainer container)
+        private static void RegisterAppSettings(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IOptions<AppSettings>>()

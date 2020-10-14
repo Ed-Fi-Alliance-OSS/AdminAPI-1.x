@@ -5,15 +5,6 @@
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
-    public class GlobalSettingsController
-    {
-        public object Vendors() => throw new System.NotImplementedException();
-        public object AdvancedSettings() => throw new System.NotImplementedException();
-        public object LookAndFeel() => throw new System.NotImplementedException();
-        public object ClaimSets() => throw new System.NotImplementedException();
-        public object Users() => throw new System.NotImplementedException();
-    }
-
     public class OdsInstanceSettingsController
     {
         public object Applications() => throw new System.NotImplementedException();

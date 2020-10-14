@@ -65,6 +65,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return ResponseHelpers.JsonResult(model);
         }
 
+        #if NET48
         protected override void OnException(ExceptionContext exceptionContext)
         {
             if (exceptionContext.ExceptionHandled)
@@ -82,6 +83,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 ViewData = new ViewDataDictionary(new HandleErrorInfo(exceptionContext.Exception, controllerName, actionName))
             };
         }
+        #endif
 
         protected void SuccessToastMessage(string message)
         {

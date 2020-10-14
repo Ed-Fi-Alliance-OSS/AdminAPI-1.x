@@ -17,14 +17,15 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Helpers;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -42,6 +43,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ITabDisplayService _tabDisplayService;
         private readonly IGetClaimSetsByApplicationNameQuery _getClaimSetsByApplicationNameQuery;
         private readonly GetAdminAppUsersQuery _getAdminAppUsersQuery;
+        private readonly AppSettings _appSettings;
 
         public GlobalSettingsController(IMapper mapper
             , IGetVendorsQuery getVendorsQuery
@@ -52,7 +54,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , ICloudOdsSettingsService cloudOdsSettingsService
             , ITabDisplayService tabDisplayService
             , IGetClaimSetsByApplicationNameQuery getClaimSetsByApplicationNameQuery
-            , GetAdminAppUsersQuery getAdminAppUsersQuery)
+            , GetAdminAppUsersQuery getAdminAppUsersQuery
+            , IOptions<AppSettings> appSettingsAccessor)
         {
             _mapper = mapper;
             _getVendorsQuery = getVendorsQuery;
@@ -64,6 +67,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _tabDisplayService = tabDisplayService;
             _getClaimSetsByApplicationNameQuery = getClaimSetsByApplicationNameQuery;
             _getAdminAppUsersQuery = getAdminAppUsersQuery;
+            _appSettings = appSettingsAccessor.Value;
         }
 
         public ActionResult Vendors()
@@ -170,7 +174,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> AdvancedSettings()
         {
             var currentSettings = await _cloudOdsSettingsService.GetSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, CloudOdsEnvironment.Production);
+                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
 
             var model = new GlobalSettingsModel
             {
@@ -190,12 +194,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> UpdateAdvancedSettings(GlobalSettingsModel model)
         {
             var instanceSettings = await _cloudOdsSettingsService.GetSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, CloudOdsEnvironment.Production);
+                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
 
             instanceSettings.BearerTokenTimeoutInMinutes = model.AdvancedSettingsModel.BearerTokenTimeoutInMinutes;
 
             await _cloudOdsSettingsService.UpdateSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, CloudOdsEnvironment.Production, instanceSettings);
+                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production, instanceSettings);
 
             return RedirectToActionJson<GlobalSettingsController>(
                 x => x.AdvancedSettings(), "Settings updated successfully");
@@ -205,12 +209,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> UpdateLogSettings(LogSettingsModel model)
         {
             var settings = await _cloudOdsSettingsService.GetSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, model.Environment);
+                _appSettings.DefaultOdsInstance, model.Environment);
 
             settings.LogLevel = model.LogLevel;
 
             await _cloudOdsSettingsService.UpdateSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, model.Environment, settings);
+                _appSettings.DefaultOdsInstance, model.Environment, settings);
 
             return JsonSuccess("Log settings updated successfully");
         }

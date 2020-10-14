@@ -214,7 +214,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> Logging()
         {
             var settings = await _cloudOdsSettingsService.GetSettings(
-                CloudOdsAdminAppSettings.Instance.OdsInstanceName, CloudOdsEnvironment.Production);
+                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
 
             var model = new OdsInstanceSettingsModel
             {

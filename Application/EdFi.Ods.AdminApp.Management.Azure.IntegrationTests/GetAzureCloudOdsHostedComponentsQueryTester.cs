@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
             };
 
             var result = await query.Execute(context);
-            result.Count().ShouldBe(4);
+            result.Count().ShouldBe(3);
             result.Count(w => w.IsProductionApi()).ShouldBe(1);
             result.Count(w => w.IsAdminApp()).ShouldBe(1);
             result.Count(w => w.IsSwaggerWebsite()).ShouldBe(1);
@@ -63,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
             };
 
             var result = await query.Execute(context);
-            result.Count().ShouldBe(2);
+            result.Count().ShouldBe(1);
             result.Count(w => w.IsProductionApi()).ShouldBe(1);
         }
     }

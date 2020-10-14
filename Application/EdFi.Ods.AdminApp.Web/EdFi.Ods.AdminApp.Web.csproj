@@ -515,10 +515,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionFilters\AuthorizationFilter.cs" />
+    <Compile Include="ActionFilters\BypassInstanceContextFilter.cs" />
+    <Compile Include="ActionFilters\BypassPasswordChangeRequiredFilterAttribute.cs" />
+    <Compile Include="ActionFilters\BypassSetupRequiredFilterAttribute.cs" />
     <Compile Include="ActionFilters\DoNotCacheAjaxRequestsFilter.cs" />
     <Compile Include="ActionFilters\HandleAjaxErrorAttribute.cs" />
     <Compile Include="ActionFilters\InstanceContextFilter.cs" />
     <Compile Include="ActionFilters\JsonValidationFilter.cs" />
+    <Compile Include="ActionFilters\PermissionRequiredAttribute.cs" />
     <Compile Include="ActionFilters\PermissionRequiredFilter.cs" />
     <Compile Include="ActionFilters\RequreSecureConnectionFilter.cs" />
     <Compile Include="ActionFilters\PasswordChangeRequiredFilter.cs" />

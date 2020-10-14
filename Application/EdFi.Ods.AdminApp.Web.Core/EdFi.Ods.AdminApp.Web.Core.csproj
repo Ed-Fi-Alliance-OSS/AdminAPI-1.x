@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -22,11 +22,15 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/OnPremInstaller.cs" LinkBase="_Installers" /> -->
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/AuthorizationFilter.cs" LinkBase="ActionFilters" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassInstanceContextFilter.cs" LinkBase="ActionFilters" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassPasswordChangeRequiredFilterAttribute.cs" LinkBase="ActionFilters" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassSetupRequiredFilterAttribute.cs" LinkBase="ActionFilters" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/DoNotCacheAjaxRequestsFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/HandleAjaxErrorAttribute.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/InstanceContextFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PasswordChangeRequiredFilter.cs" LinkBase="ActionFilters" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredAttribute.cs" LinkBase="ActionFilters" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/RequreSecureConnectionFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" /> -->

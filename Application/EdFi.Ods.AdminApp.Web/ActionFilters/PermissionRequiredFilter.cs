@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -50,17 +49,6 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
         private static void Forbidden(AuthorizationContext filterContext)
         {
             filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-    public class PermissionRequiredAttribute : Attribute
-    {
-        public Permission RequiredPermission { get; }
-
-        public PermissionRequiredAttribute(Permission permission)
-        {
-            RequiredPermission = permission;
         }
     }
 }

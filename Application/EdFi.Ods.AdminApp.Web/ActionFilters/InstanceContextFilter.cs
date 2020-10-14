@@ -20,12 +20,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.ActionFilters
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class BypassInstanceContextFilter : Attribute
-    {
-
-    }
-
     public class InstanceContextFilter : AuthorizeAttribute
     {
         public override void OnAuthorization(AuthorizationContext filterContext)

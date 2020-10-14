@@ -18,7 +18,6 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Services;
-using EdFi.Ods.AdminApp.Web.Controllers;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
@@ -56,17 +55,22 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                      MethodInfo = m,
                      Preregister = preregister
                  })
+                .Where(x => !x.Preregister)
+                .Select(x => x.MethodInfo)
                .ToList();
 
-            foreach (var registrationMethod in registrationMethods.Where(x => x.Preregister).OrderBy(x => x.MethodInfo.Name))
-                registrationMethod.MethodInfo.Invoke(this, new object[] {container});
+            RegisterFileUploadHandler(container);
+            RegisterIMapper(container);
+            RegisterQueries(container);
+            RegisterSecurityContextAndUserContext(container);
+            RegisterTokenCache(container);
 
-            foreach (var registrationMethod in registrationMethods.Where(x => !x.Preregister).OrderBy(x => x.MethodInfo.Name))
-                registrationMethod.MethodInfo.Invoke(this, new object[] {container});
+            foreach (var registrationMethod in registrationMethods.OrderBy(x => x.Name))
+                registrationMethod.Invoke(this, new object[] {container});
         }
 
         [Preregister]
-        protected virtual void RegisterQueries(IWindsorContainer container)
+        private static void RegisterQueries(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IGetVendorByIdQuery>()
@@ -80,7 +84,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         }
 
         [Preregister]
-        protected virtual void RegisterFileUploadHandler(IWindsorContainer container)
+        private static void RegisterFileUploadHandler(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IFileUploadHandler>()
@@ -89,7 +93,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         }
 
         [Preregister]
-        protected virtual void RegisterIMapper(IWindsorContainer container)
+        private static void RegisterIMapper(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IMapper>()
@@ -98,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         }
 
         [Preregister]
-        protected virtual void RegisterSecurityContextAndUserContext(IWindsorContainer container)
+        private static void RegisterSecurityContextAndUserContext(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IApiConfigurationProvider>().ImplementedBy<ApiConfigurationProvider>(),
@@ -126,7 +130,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         }
 
         [Preregister]
-        protected virtual void RegisterTokenCache(IWindsorContainer container)
+        private static void RegisterTokenCache(IWindsorContainer container)
         {
             container.Register(
                 Component.For<TokenCache>()

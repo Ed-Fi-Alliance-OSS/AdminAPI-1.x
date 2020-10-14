@@ -1057,7 +1057,6 @@
     <Content Include="Views\OdsInstanceSettings\BulkLoad.cshtml" />
     <Content Include="Views\Shared\_LogSettings.cshtml" />
     <Content Include="Views\OdsInstanceSettings\Logging.cshtml" />
-    <Content Include="Config\hostedComponents.json" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
     <Content Include="Views\OdsInstanceSettings\LearningStandards.cshtml" />
     <Content Include="Views\GlobalSettings\ClaimSets.cshtml" />

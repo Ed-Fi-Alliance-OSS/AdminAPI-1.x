@@ -168,7 +168,22 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<ProductionLearningStandardsJob>()
                     .LifestyleSingleton());
 
-            InstallSecretHashingSupport(container);
+            container.Register(
+                Component.For<ISecureHasher>()
+                    .ImplementedBy<Pbkdf2HmacSha1SecureHasher>());
+
+            container.Register(
+                Component.For<IPackedHashConverter>()
+                    .ImplementedBy<PackedHashConverter>());
+
+            container.Register(
+                Component.For<ISecurePackedHashProvider>()
+                    .ImplementedBy<SecurePackedHashProvider>());
+
+            container.Register(
+                Component.For<IHashConfigurationProvider>()
+                    .ImplementedBy<DefaultHashConfigurationProvider>());
+
             InstallHostingSpecificClasses(container);
 
             container.Register(
@@ -226,24 +241,5 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         }
 
         protected abstract void InstallHostingSpecificClasses(IWindsorContainer container);
-
-        private static void InstallSecretHashingSupport(IWindsorContainer container)
-        {
-            container.Register(
-                Component.For<ISecureHasher>()
-                    .ImplementedBy<Pbkdf2HmacSha1SecureHasher>());
-
-            container.Register(
-                Component.For<IPackedHashConverter>()
-                    .ImplementedBy<PackedHashConverter>());
-
-            container.Register(
-                Component.For<ISecurePackedHashProvider>()
-                    .ImplementedBy<SecurePackedHashProvider>());
-
-            container.Register(
-                Component.For<IHashConfigurationProvider>()
-                    .ImplementedBy<DefaultHashConfigurationProvider>());
-        }
     }
 }

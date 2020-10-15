@@ -528,7 +528,6 @@ EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles Transient
     System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 EdFi.Ods.AdminApp.Management.Database.Setup.SqlServerCloudOdsDatabaseSecurityConfigurator Transient
-    EdFi.Ods.AdminApp.Management.Database.Setup.SqlServerCloudOdsDatabaseSecurityConfigurator
     EdFi.Ods.AdminApp.Management.Database.Setup.ICloudOdsDatabaseSecurityConfigurator
 
 EdFi.Ods.AdminApp.Management.EnableLearningStandardsSetupCommand Transient

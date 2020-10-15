@@ -34,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
             FriendlyName = "Cloud ODS Integration Tests",
             SystemId = $"/subscriptions/{_appSettings.IdaSubscriptionId}/resourceGroups/{ResourceGroupName}",
             SystemName = ResourceGroupName,
-            Version = "0.0.1"
+            Version = "5.0.0"
         };
 
         public static CloudOdsApiOperationContext ProductionApiOperationContext => new CloudOdsApiOperationContext

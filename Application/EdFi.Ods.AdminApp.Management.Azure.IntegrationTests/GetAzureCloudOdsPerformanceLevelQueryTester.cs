@@ -27,6 +27,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
             };
 
             var result = await performanceQuery.Execute(context);
+            // Make sure to run ScaleDown-EdFiOds.ps1(follow point 2 on Readme.md), which will scale down the application tier to Free
             result.Equals(AzureWebsitePerformanceLevel.Free).ShouldBeTrue();
         }
     }

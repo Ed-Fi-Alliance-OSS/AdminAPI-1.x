@@ -64,7 +64,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
 
             var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
 
-            var mockSecurityContext = new Mock<SecurityContext>();
+            var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
 
             var command = new AzureFirstTimeSetupService(mockUsersContext.Object, mockSecurityContext.Object, new TestHashProvider(), new TestHashConfigurationProvider());
@@ -101,7 +101,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
 
             var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
 
-            var mockSecurityContext = new Mock<SecurityContext>();
+            var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
 
             var command = new AzureFirstTimeSetupService(mockUsersContext.Object, mockSecurityContext.Object,new TestHashProvider(),

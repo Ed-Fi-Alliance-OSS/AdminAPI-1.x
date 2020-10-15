@@ -15,7 +15,7 @@ using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management
+namespace EdFi.Ods.AdminApp.Management.Azure
 {
     public class CompleteAzureFirstTimeSetupCommand : ICompleteOdsFirstTimeSetupCommand
     {
@@ -48,7 +48,6 @@ namespace EdFi.Ods.AdminApp.Management
             IAssessmentVendorAdjustment assessmentVendorAdjustment,
             ILearningStandardsSetup learningStandardsSetup)
         {
-            //SHOULD NOT BE HIT IN ON PREM
             _restartAppServicesCommand = restartAppServicesCommand;
             _assessmentVendorAdjustment = assessmentVendorAdjustment;
             _learningStandardsSetup = learningStandardsSetup;

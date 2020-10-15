@@ -304,9 +304,6 @@ EdFi.Ods.AdminApp.Management.CloudOdsWebsite Transient
 EdFi.Ods.AdminApp.Management.CompleteOdsFirstTimeSetupCommand Transient
     EdFi.Ods.AdminApp.Management.ICompleteOdsFirstTimeSetupCommand
 
-EdFi.Ods.AdminApp.Management.CompleteOnPremFirstTimeSetupCommand Transient
-    EdFi.Ods.AdminApp.Management.ICompleteOdsFirstTimeSetupCommand
-
 EdFi.Ods.AdminApp.Management.Configuration.Application.ApplicationConfigurationService Transient
     EdFi.Ods.AdminApp.Management.Configuration.Application.ApplicationConfigurationService
 

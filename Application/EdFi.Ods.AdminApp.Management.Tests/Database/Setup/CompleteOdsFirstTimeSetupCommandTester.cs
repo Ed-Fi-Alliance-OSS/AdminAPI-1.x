@@ -72,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
         
 
-            var command = new CompleteOdsFirstTimeSetupCommand(
+            var command = new CompleteAzureFirstTimeSetupCommand(
                 mockUsersContext.Object,
                 mockSqlConfigurator.Object,
                 mockSecurityContext.Object,
@@ -144,7 +144,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
 
-            var command = new CompleteOdsFirstTimeSetupCommand(
+            var command = new CompleteAzureFirstTimeSetupCommand(
                 mockUsersContext.Object,
                 mockSqlConfigurator.Object,
                 mockSecurityContext.Object,

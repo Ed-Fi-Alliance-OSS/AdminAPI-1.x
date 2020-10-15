@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -17,7 +17,7 @@ using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management
 {
-    public class CompleteOdsFirstTimeSetupCommand : ICompleteOdsFirstTimeSetupCommand
+    public class CompleteAzureFirstTimeSetupCommand : ICompleteOdsFirstTimeSetupCommand
     {
         private readonly IUsersContext _usersContext;
         private readonly ICloudOdsDatabaseSecurityConfigurator _cloudOdsSqlConfigurator;
@@ -34,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Management
 
         public Action ExtraDatabaseInitializationAction { get; set; }
 
-        public CompleteOdsFirstTimeSetupCommand(
+        public CompleteAzureFirstTimeSetupCommand(
             IUsersContext usersContext,
             ICloudOdsDatabaseSecurityConfigurator cloudOdsSqlConfigurator,
             ISecurityContext securityContext,
@@ -48,6 +48,7 @@ namespace EdFi.Ods.AdminApp.Management
             IAssessmentVendorAdjustment assessmentVendorAdjustment,
             ILearningStandardsSetup learningStandardsSetup)
         {
+            //SHOULD NOT BE HIT IN ON PREM
             _restartAppServicesCommand = restartAppServicesCommand;
             _assessmentVendorAdjustment = assessmentVendorAdjustment;
             _learningStandardsSetup = learningStandardsSetup;

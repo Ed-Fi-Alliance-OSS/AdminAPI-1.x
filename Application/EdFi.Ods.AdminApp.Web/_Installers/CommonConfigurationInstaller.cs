@@ -165,7 +165,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     }
                     else if (interfaces.Length == 0)
                     {
-                        services.AddTransient(concreteClass);
+                        if (concreteClass.Name.EndsWith("Command") ||
+                            concreteClass.Name.EndsWith("Query") ||
+                            concreteClass.Name.EndsWith("Service"))
+                            services.AddTransient(concreteClass);
                     }
                 }
             }

@@ -7,12 +7,6 @@ Castle.Proxies.ISecureHasherProxy Undefined
 EdFi.Admin.DataAccess.Contexts.UsersContextFactory Undefined
     EdFi.Admin.DataAccess.Contexts.IUsersContextFactory
 
-EdFi.Ods.AdminApp.Management.ABProxyApiCredential Transient
-    EdFi.Ods.AdminApp.Management.ABProxyApiCredential
-
-EdFi.Ods.AdminApp.Management.AcademicBenchmarkConfig Transient
-    EdFi.Ods.AdminApp.Management.AcademicBenchmarkConfig
-
 EdFi.Ods.AdminApp.Management.AdminAppUserContext Scoped
     EdFi.Ods.AdminApp.Management.AdminAppUserContext
 
@@ -37,62 +31,14 @@ EdFi.Ods.AdminApp.Management.Api.Automapper.SchoolGradeLevelResolver Transient
 EdFi.Ods.AdminApp.Management.Api.Automapper.StateEducationAgencyReferenceResolver Transient
     AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
-EdFi.Ods.AdminApp.Management.Api.Common.ResourcePaths Transient
-    EdFi.Ods.AdminApp.Management.Api.Common.ResourcePaths
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiDescriptor Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiDescriptor
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationAddress Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationAddress
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationCategory Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationCategory
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgencyReference Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgencyReference
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchoolGradeLevel Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchoolGradeLevel
-
-EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference Transient
-    EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference
-
 EdFi.Ods.AdminApp.Management.Api.InferOdsApiVersion Transient
     EdFi.Ods.AdminApp.Management.Api.IInferOdsApiVersion
-
-EdFi.Ods.AdminApp.Management.Api.Models.Descriptor Transient
-    EdFi.Ods.AdminApp.Management.Api.Models.Descriptor
-
-EdFi.Ods.AdminApp.Management.Api.Models.EducationOrganization Transient
-    EdFi.Ods.AdminApp.Management.Api.Models.EducationOrganization
-
-EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency Transient
-    EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency
-
-EdFi.Ods.AdminApp.Management.Api.Models.School Transient
-    EdFi.Ods.AdminApp.Management.Api.Models.School
-
-EdFi.Ods.AdminApp.Management.Api.Models.SelectOptionModel Transient
-    EdFi.Ods.AdminApp.Management.Api.Models.SelectOptionModel
-
-EdFi.Ods.AdminApp.Management.Api.OdsApiConnectionInformation Transient
-    EdFi.Ods.AdminApp.Management.Api.OdsApiConnectionInformation
 
 EdFi.Ods.AdminApp.Management.Api.OdsApiFacade Transient
     EdFi.Ods.AdminApp.Management.Api.IOdsApiFacade
 
 EdFi.Ods.AdminApp.Management.Api.OdsApiFacadeFactory Transient
     EdFi.Ods.AdminApp.Management.Api.IOdsApiFacadeFactory
-
-EdFi.Ods.AdminApp.Management.Api.OdsApiResult Transient
-    EdFi.Ods.AdminApp.Management.Api.OdsApiResult
 
 EdFi.Ods.AdminApp.Management.Api.OdsRestClient Transient
     EdFi.Ods.AdminApp.Management.Api.IOdsRestClient
@@ -103,41 +49,14 @@ EdFi.Ods.AdminApp.Management.Api.OdsRestClientFactory Transient
 EdFi.Ods.AdminApp.Management.Api.TokenRetriever Transient
     EdFi.Ods.AdminApp.Management.Api.ITokenRetriever
 
-EdFi.Ods.AdminApp.Management.ApiClientFactory Transient
-    EdFi.Ods.AdminApp.Management.ApiClientFactory
-
-EdFi.Ods.AdminApp.Management.ApiClientFactory+ApiWithCredentials Transient
-    EdFi.Ods.AdminApp.Management.ApiClientFactory+ApiWithCredentials
-
-EdFi.Ods.AdminApp.Management.ApplicationCreateResult Transient
-    EdFi.Ods.AdminApp.Management.ApplicationCreateResult
-
 EdFi.Ods.AdminApp.Management.AssessmentVendorAdjustment Transient
     EdFi.Ods.AdminApp.Management.IAssessmentVendorAdjustment
-
-EdFi.Ods.AdminApp.Management.AzureCloudOdsInstance Transient
-    EdFi.Ods.AdminApp.Management.AzureCloudOdsInstance
-
-EdFi.Ods.AdminApp.Management.BaseCloudOdsDatabaseNameProvider Transient
-    EdFi.Ods.AdminApp.Management.BaseCloudOdsDatabaseNameProvider
-
-EdFi.Ods.AdminApp.Management.BulkUploadCredential Transient
-    EdFi.Ods.AdminApp.Management.BulkUploadCredential
 
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.AddClaimSetCommand Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.AddClaimSetCommand
 
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.AddClaimSetModel Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.IAddClaimSetModel
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.Application Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.Application
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.AuthorizationStrategy Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.AuthorizationStrategy
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSet Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSet
 
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSetFileExportCommand Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSetFileExportCommand
@@ -178,32 +97,14 @@ EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery T
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetResourcesByClaimSetIdQuery Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.IGetResourcesByClaimSetIdQuery
 
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.JsonObjectManipulation Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.JsonObjectManipulation
-
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.OverrideDefaultAuthorizationStrategyCommand Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.OverrideDefaultAuthorizationStrategyCommand
 
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResetToDefaultAuthStrategyCommand Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResetToDefaultAuthStrategyCommand
 
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResourceClaim Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResourceClaim
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingClaimSet Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingClaimSet
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingModel Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingModel
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingTemplate Transient
-    EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingTemplate
-
 EdFi.Ods.AdminApp.Management.CloudOdsApiOperationContext Transient
     EdFi.Ods.AdminApp.Management.ICloudOdsOperationContext
-
-EdFi.Ods.AdminApp.Management.CloudOdsInstance Transient
-    EdFi.Ods.AdminApp.Management.CloudOdsInstance
 
 EdFi.Ods.AdminApp.Management.CloudOdsOperationContext Transient
     EdFi.Ods.AdminApp.Management.ICloudOdsOperationContext
@@ -211,44 +112,20 @@ EdFi.Ods.AdminApp.Management.CloudOdsOperationContext Transient
 EdFi.Ods.AdminApp.Management.CloudOdsUpdateCheckService Transient
     EdFi.Ods.AdminApp.Management.CloudOdsUpdateCheckService
 
-EdFi.Ods.AdminApp.Management.CloudOdsUpdateInfo Transient
-    EdFi.Ods.AdminApp.Management.CloudOdsUpdateInfo
-
-EdFi.Ods.AdminApp.Management.CloudOdsWebsite Transient
-    EdFi.Ods.AdminApp.Management.CloudOdsWebsite
-
 EdFi.Ods.AdminApp.Management.Configuration.Application.ApplicationConfigurationService Transient
     EdFi.Ods.AdminApp.Management.Configuration.Application.ApplicationConfigurationService
-
-EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration Transient
-    EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration
 
 EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+Command Transient
     EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+Command
 
-EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+CommandHandler Transient
-    EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+CommandHandler
-
-EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+QueryHandler Transient
-    EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+QueryHandler
-
-EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimSet Transient
-    EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimSet
-
 EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimSetConfigurator Transient
     EdFi.Ods.AdminApp.Management.Configuration.Claims.ICloudOdsClaimSetConfigurator
-
-EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsEntityClaim Transient
-    EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsEntityClaim
 
 EdFi.Ods.AdminApp.Management.Database.AdminAppDbContext Scoped
     EdFi.Ods.AdminApp.Management.Database.AdminAppDbContext
 
 EdFi.Ods.AdminApp.Management.Database.Commands.AddApplicationCommand Transient
     EdFi.Ods.AdminApp.Management.Database.Commands.IAddApplicationCommand
-
-EdFi.Ods.AdminApp.Management.Database.Commands.AddApplicationResult Transient
-    EdFi.Ods.AdminApp.Management.Database.Commands.AddApplicationResult
 
 EdFi.Ods.AdminApp.Management.Database.Commands.AddVendorCommand Transient
     EdFi.Ods.AdminApp.Management.Database.Commands.AddVendorCommand
@@ -268,50 +145,17 @@ EdFi.Ods.AdminApp.Management.Database.Commands.EditVendorCommand Transient
 EdFi.Ods.AdminApp.Management.Database.Commands.RegenerateApiClientSecretCommand Transient
     EdFi.Ods.AdminApp.Management.Database.Commands.RegenerateApiClientSecretCommand
 
-EdFi.Ods.AdminApp.Management.Database.Commands.RegenerateApiClientSecretResult Transient
-    EdFi.Ods.AdminApp.Management.Database.Commands.RegenerateApiClientSecretResult
-
-EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowManager Transient
-    EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowManager
-
-EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowStep Transient
-    EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowStep
-
-EdFi.Ods.AdminApp.Management.Database.Models.ApplicationConfiguration Transient
-    EdFi.Ods.AdminApp.Management.Database.Models.ApplicationConfiguration
-
-EdFi.Ods.AdminApp.Management.Database.Models.AzureSqlConfiguration Transient
-    EdFi.Ods.AdminApp.Management.Database.Models.AzureSqlConfiguration
-
-EdFi.Ods.AdminApp.Management.Database.Models.OdsInstanceRegistration Transient
-    EdFi.Ods.AdminApp.Management.Database.Models.OdsInstanceRegistration
-
-EdFi.Ods.AdminApp.Management.Database.Models.RolePermission Transient
-    EdFi.Ods.AdminApp.Management.Database.Models.RolePermission
-
-EdFi.Ods.AdminApp.Management.Database.Models.SecretConfiguration Transient
-    EdFi.Ods.AdminApp.Management.Database.Models.SecretConfiguration
-
-EdFi.Ods.AdminApp.Management.Database.Models.UserOdsInstanceRegistration Transient
-    EdFi.Ods.AdminApp.Management.Database.Models.UserOdsInstanceRegistration
-
 EdFi.Ods.AdminApp.Management.Database.Ods.DatabaseConnectionProvider Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.IDatabaseConnectionProvider
 
 EdFi.Ods.AdminApp.Management.Database.Ods.GetAllLocalEducationAgenciesQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.GetAllLocalEducationAgenciesQuery
 
-EdFi.Ods.AdminApp.Management.Database.Ods.GetAllLocalEducationAgenciesQuery+LocalEducationAgencyModel Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.GetAllLocalEducationAgenciesQuery+LocalEducationAgencyModel
-
 EdFi.Ods.AdminApp.Management.Database.Ods.GetLocalEducationAgencyByIdQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.GetLocalEducationAgencyByIdQuery
 
 EdFi.Ods.AdminApp.Management.Database.Ods.GetSchoolsBySchoolTypeQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.GetSchoolsBySchoolTypeQuery
-
-EdFi.Ods.AdminApp.Management.Database.Ods.Reports.ReportsConfig Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.Reports.ReportsConfig
 
 EdFi.Ods.AdminApp.Management.Database.Ods.Reports.ReportsConfigProvider Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.Reports.IReportsConfigProvider
@@ -322,29 +166,8 @@ EdFi.Ods.AdminApp.Management.Database.Ods.Reports.ReportViewsSetUp Transient
 EdFi.Ods.AdminApp.Management.Database.Ods.Reports.UpgradeEngineFactory Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.Reports.IUpgradeEngineFactory
 
-EdFi.Ods.AdminApp.Management.Database.Ods.SchoolCount Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.SchoolCount
-
-EdFi.Ods.AdminApp.Management.Database.Ods.SchoolTypeReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.SchoolTypeReport
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentDemographicData Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentDemographicData
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentDemographicsReportBase+DemographicRepresentation Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentDemographicsReportBase+DemographicRepresentation
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituation Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituation
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationReport
-
 EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationReportQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationReportQuery
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationRepresentation Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationRepresentation
 
 EdFi.Ods.AdminApp.Management.Database.Ods.StudentEnrollmentByEthnicityQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.StudentEnrollmentByEthnicityQuery
@@ -355,29 +178,11 @@ EdFi.Ods.AdminApp.Management.Database.Ods.StudentEnrollmentByGenderQuery Transie
 EdFi.Ods.AdminApp.Management.Database.Ods.StudentEnrollmentByRaceQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.StudentEnrollmentByRaceQuery
 
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentEthnicityReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentEthnicityReport
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentGenderReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentGenderReport
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentProgramRepresentation Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentProgramRepresentation
-
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentRaceReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentRaceReport
-
 EdFi.Ods.AdminApp.Management.Database.Ods.StudentsByProgramQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.StudentsByProgramQuery
 
-EdFi.Ods.AdminApp.Management.Database.Ods.StudentsByProgramReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.StudentsByProgramReport
-
 EdFi.Ods.AdminApp.Management.Database.Ods.TotalEnrollmentQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Ods.TotalEnrollmentQuery
-
-EdFi.Ods.AdminApp.Management.Database.Ods.TotalEnrollmentReport Transient
-    EdFi.Ods.AdminApp.Management.Database.Ods.TotalEnrollmentReport
 
 EdFi.Ods.AdminApp.Management.Database.Queries.GetApplicationByIdQuery Transient
     EdFi.Ods.AdminApp.Management.Database.Queries.GetApplicationByIdQuery
@@ -409,12 +214,6 @@ EdFi.Ods.AdminApp.Management.Database.Queries.GetVendorsQuery Transient
 EdFi.Ods.AdminApp.Management.Database.RawSqlConnectionService Transient
     EdFi.Ods.AdminApp.Management.Database.IRawSqlConnectionService
 
-EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguration Transient
-    EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguration
-
-EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseUser Transient
-    EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseUser
-
 EdFi.Ods.AdminApp.Management.EnableLearningStandardsSetupCommand Transient
     EdFi.Ods.AdminApp.Management.IEnableLearningStandardsSetupCommand
 
@@ -430,12 +229,6 @@ EdFi.Ods.AdminApp.Management.GetOdsSqlConfigurationQuery Transient
 EdFi.Ods.AdminApp.Management.GetOdsStatusQuery Transient
     EdFi.Ods.AdminApp.Management.IGetOdsStatusQuery
 
-EdFi.Ods.AdminApp.Management.Helpers.AppSettings Transient
-    EdFi.Ods.AdminApp.Management.Helpers.AppSettings
-
-EdFi.Ods.AdminApp.Management.Helpers.ConnectionStrings Transient
-    EdFi.Ods.AdminApp.Management.Helpers.ConnectionStrings
-
 EdFi.Ods.AdminApp.Management.Identity.RegisterCommand Transient
     EdFi.Ods.AdminApp.Management.Identity.RegisterCommand
 
@@ -444,9 +237,6 @@ EdFi.Ods.AdminApp.Management.InstanceContext Scoped
 
 EdFi.Ods.AdminApp.Management.Instances.BulkRegisterOdsInstancesCommand Transient
     EdFi.Ods.AdminApp.Management.Instances.BulkRegisterOdsInstancesCommand
-
-EdFi.Ods.AdminApp.Management.Instances.BulkRegisterOdsInstancesResult Transient
-    EdFi.Ods.AdminApp.Management.Instances.BulkRegisterOdsInstancesResult
 
 EdFi.Ods.AdminApp.Management.Instances.DeregisterOdsInstanceCommand Transient
     EdFi.Ods.AdminApp.Management.Instances.DeregisterOdsInstanceCommand
@@ -463,41 +253,14 @@ EdFi.Ods.AdminApp.Management.LearningStandardsSetup Transient
 EdFi.Ods.AdminApp.Management.ModifyClaimSetsService Transient
     EdFi.Ods.AdminApp.Management.IModifyClaimSetsService
 
-EdFi.Ods.AdminApp.Management.OdsAdminAppApiCredentials Transient
-    EdFi.Ods.AdminApp.Management.OdsAdminAppApiCredentials
-
-EdFi.Ods.AdminApp.Management.OdsApiCredential Transient
-    EdFi.Ods.AdminApp.Management.OdsApiCredential
-
-EdFi.Ods.AdminApp.Management.OdsComponent Transient
-    EdFi.Ods.AdminApp.Management.OdsComponent
-
-EdFi.Ods.AdminApp.Management.OdsFirstTimeSetupConfiguration Transient
-    EdFi.Ods.AdminApp.Management.OdsFirstTimeSetupConfiguration
-
 EdFi.Ods.AdminApp.Management.OdsInstanceServices.DatabaseValidationService Transient
     EdFi.Ods.AdminApp.Management.OdsInstanceServices.IDatabaseValidationService
 
 EdFi.Ods.AdminApp.Management.OdsInstanceServices.OdsInstanceFirstTimeSetupService Transient
     EdFi.Ods.AdminApp.Management.OdsInstanceServices.IOdsInstanceFirstTimeSetupService
 
-EdFi.Ods.AdminApp.Management.OdsPostUpdateSetupConfiguration Transient
-    EdFi.Ods.AdminApp.Management.OdsPostUpdateSetupConfiguration
-
-EdFi.Ods.AdminApp.Management.OdsSecretConfiguration Transient
-    EdFi.Ods.AdminApp.Management.OdsSecretConfiguration
-
 EdFi.Ods.AdminApp.Management.OdsSecretConfigurationProvider Singleton
     EdFi.Ods.AdminApp.Management.IOdsSecretConfigurationProvider
-
-EdFi.Ods.AdminApp.Management.OdsSqlAdminCredential Transient
-    EdFi.Ods.AdminApp.Management.OdsSqlAdminCredential
-
-EdFi.Ods.AdminApp.Management.OdsSqlConfiguration Transient
-    EdFi.Ods.AdminApp.Management.OdsSqlConfiguration
-
-EdFi.Ods.AdminApp.Management.OdsSqlCredential Transient
-    EdFi.Ods.AdminApp.Management.OdsSqlCredential
 
 EdFi.Ods.AdminApp.Management.OnPrem.CompleteOnPremFirstTimeSetupCommand Transient
     EdFi.Ods.AdminApp.Management.ICompleteOdsFirstTimeSetupCommand
@@ -532,12 +295,6 @@ EdFi.Ods.AdminApp.Management.OnPrem.RestartOnPremAppServicesCommand Transient
 EdFi.Ods.AdminApp.Management.OnPrem.UpdateOnPremOdsApiWebsiteSettingsCommand Transient
     EdFi.Ods.AdminApp.Management.IUpdateCloudOdsApiWebsiteSettingsCommand
 
-EdFi.Ods.AdminApp.Management.OperationalContext Transient
-    EdFi.Ods.AdminApp.Management.OperationalContext
-
-EdFi.Ods.AdminApp.Management.ProductionApiProvisioningWarnings Transient
-    EdFi.Ods.AdminApp.Management.ProductionApiProvisioningWarnings
-
 EdFi.Ods.AdminApp.Management.ResetLearningStandards Transient
     EdFi.Ods.AdminApp.Management.IResetLearningStandards
 
@@ -549,9 +306,6 @@ EdFi.Ods.AdminApp.Management.Services.EncryptionConfigurationProviderService Tra
 
 EdFi.Ods.AdminApp.Management.Services.StringEncryptorService Transient
     EdFi.Ods.AdminApp.Management.Services.IStringEncryptorService
-
-EdFi.Ods.AdminApp.Management.Settings.CloudOdsApiWebsiteSettings Transient
-    EdFi.Ods.AdminApp.Management.Settings.CloudOdsApiWebsiteSettings
 
 EdFi.Ods.AdminApp.Management.Settings.CloudOdsSettingsService Transient
     EdFi.Ods.AdminApp.Management.Settings.ICloudOdsSettingsService
@@ -585,24 +339,6 @@ EdFi.Ods.AdminApp.Management.User.GetOdsInstanceRegistrationsByUserIdQuery Trans
 
 EdFi.Ods.AdminApp.Management.User.GetRoleForUserQuery Transient
     EdFi.Ods.AdminApp.Management.User.GetRoleForUserQuery
-
-EdFi.Ods.AdminApp.Management.User.OdsInstanceRegistrationSelection Transient
-    EdFi.Ods.AdminApp.Management.User.OdsInstanceRegistrationSelection
-
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowErrorContext Transient
-    EdFi.Ods.AdminApp.Management.Workflow.WorkflowErrorContext
-
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowManager`2 Transient
-    EdFi.Ods.AdminApp.Management.Workflow.WorkflowManager`2
-
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowResult Transient
-    EdFi.Ods.AdminApp.Management.Workflow.WorkflowResult
-
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowStatus Transient
-    EdFi.Ods.AdminApp.Management.Workflow.WorkflowStatus
-
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowStep`1 Transient
-    EdFi.Ods.AdminApp.Management.Workflow.WorkflowStep`1
 
 EdFi.Ods.AdminApp.Web.Controllers.ApplicationController Transient
     EdFi.Ods.AdminApp.Web.Controllers.ApplicationController

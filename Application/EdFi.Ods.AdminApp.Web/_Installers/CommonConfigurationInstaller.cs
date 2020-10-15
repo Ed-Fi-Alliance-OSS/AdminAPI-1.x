@@ -3,8 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using System.Web.Mvc;
-using AutoMapper;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -135,11 +135,40 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<InstanceContext>()
                     .LifestylePerWebRequest());
 
-             services.Register(
-                Classes.FromAssemblyContaining<IMarkerForEdFiOdsAdminAppManagement>()
-                    .Pick()
-                    .WithServiceAllInterfaces()
-                    .LifestyleTransient());
+            // Emulate the effect of Castle Windsor ".WithServiceAllInterfaces()".
+            foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
+            {
+                if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
+                {
+                    var concreteClass = type;
+
+                    if (concreteClass == typeof(OdsSecretConfigurationProvider))
+                        continue; //Singleton registered above.
+
+                    if (concreteClass == typeof(AdminAppUserContext))
+                        continue; //Scope registered above.
+
+                    if (concreteClass == typeof(AdminAppDbContext))
+                        continue; //Scope registered above.
+
+                    if (concreteClass == typeof(InstanceContext))
+                        continue; //Scope registered above.
+
+                    var interfaces = concreteClass.GetInterfaces().OrderBy(x => x.FullName).ToArray();
+
+                    if (interfaces.Length > 0)
+                    {
+                        services.Register(
+                            Component.For(interfaces)
+                                .ImplementedBy(concreteClass)
+                                .LifestyleTransient());
+                    }
+                    else if (interfaces.Length == 0)
+                    {
+                        services.AddTransient(concreteClass);
+                    }
+                }
+            }
 
             services.AddSingleton<CloudOdsUpdateService>();
 

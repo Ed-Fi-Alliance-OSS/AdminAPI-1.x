@@ -11,6 +11,7 @@ using Castle.Windsor;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
+using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.Hubs;
@@ -135,6 +136,9 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<InstanceContext>()
                     .LifestylePerWebRequest());
 
+            services.AddTransient<ApplicationConfigurationService>();
+            services.AddTransient<CloudOdsUpdateCheckService>();
+
             // Emulate the effect of Castle Windsor ".WithServiceAllInterfaces()".
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
             {
@@ -166,8 +170,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     else if (interfaces.Length == 0)
                     {
                         if (concreteClass.Name.EndsWith("Command") ||
-                            concreteClass.Name.EndsWith("Query") ||
-                            concreteClass.Name.EndsWith("Service"))
+                            concreteClass.Name.EndsWith("Query"))
                             services.AddTransient(concreteClass);
                     }
                 }

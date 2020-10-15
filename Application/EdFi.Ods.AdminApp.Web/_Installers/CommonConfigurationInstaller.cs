@@ -156,10 +156,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
                     var interfaces = concreteClass.GetInterfaces().OrderBy(x => x.FullName).ToArray();
 
-                    if (interfaces.Length > 0)
+                    if (interfaces.Length == 1)
                     {
                         services.Register(
-                            Component.For(interfaces)
+                            Component.For(interfaces.Single())
                                 .ImplementedBy(concreteClass)
                                 .LifestyleTransient());
                     }

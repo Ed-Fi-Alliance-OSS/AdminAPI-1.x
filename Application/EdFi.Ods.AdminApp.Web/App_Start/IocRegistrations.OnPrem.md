@@ -16,10 +16,6 @@ EdFi.Ods.AdminApp.Management.AcademicBenchmarkConfig Transient
 EdFi.Ods.AdminApp.Management.AdminAppUserContext Scoped
     EdFi.Ods.AdminApp.Management.AdminAppUserContext
 
-EdFi.Ods.AdminApp.Management.Api.Automapper.AdminManagementMappingProfile Transient
-    AutoMapper.Configuration.IProfileConfiguration
-    AutoMapper.IProfileExpression
-
 EdFi.Ods.AdminApp.Management.Api.Automapper.LocalEducationAgencyAddressResolver Transient
     AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationAddress, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
 
@@ -40,10 +36,6 @@ EdFi.Ods.AdminApp.Management.Api.Automapper.SchoolGradeLevelResolver Transient
 
 EdFi.Ods.AdminApp.Management.Api.Automapper.StateEducationAgencyReferenceResolver Transient
     AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
-EdFi.Ods.AdminApp.Management.Api.Common.ArgumentValidationException Transient
-    System.Runtime.InteropServices._Exception
-    System.Runtime.Serialization.ISerializable
 
 EdFi.Ods.AdminApp.Management.Api.Common.ResourcePaths Transient
     EdFi.Ods.AdminApp.Management.Api.Common.ResourcePaths
@@ -71,10 +63,6 @@ EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchoolGradeLevel Transient
 
 EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference Transient
     EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference
-
-EdFi.Ods.AdminApp.Management.Api.Enumerations.AddressType Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Api.Enumerations.AddressType, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Api.Enumerations.AddressType, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 EdFi.Ods.AdminApp.Management.Api.InferOdsApiVersion Transient
     EdFi.Ods.AdminApp.Management.Api.IInferOdsApiVersion
@@ -135,10 +123,6 @@ EdFi.Ods.AdminApp.Management.BaseCloudOdsDatabaseNameProvider Transient
 
 EdFi.Ods.AdminApp.Management.BulkUploadCredential Transient
     EdFi.Ods.AdminApp.Management.BulkUploadCredential
-
-EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.AddClaimSetCommand Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.AddClaimSetCommand
@@ -218,27 +202,11 @@ EdFi.Ods.AdminApp.Management.ClaimSetEditor.SharingTemplate Transient
 EdFi.Ods.AdminApp.Management.CloudOdsApiOperationContext Transient
     EdFi.Ods.AdminApp.Management.ICloudOdsOperationContext
 
-EdFi.Ods.AdminApp.Management.CloudOdsDatabases Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.CloudOdsDatabases, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.CloudOdsDatabases, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
-EdFi.Ods.AdminApp.Management.CloudOdsEnvironment Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.CloudOdsEnvironment, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.CloudOdsEnvironment, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
 EdFi.Ods.AdminApp.Management.CloudOdsInstance Transient
     EdFi.Ods.AdminApp.Management.CloudOdsInstance
 
 EdFi.Ods.AdminApp.Management.CloudOdsOperationContext Transient
     EdFi.Ods.AdminApp.Management.ICloudOdsOperationContext
-
-EdFi.Ods.AdminApp.Management.CloudOdsRole Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.CloudOdsRole, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.CloudOdsRole, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
-EdFi.Ods.AdminApp.Management.CloudOdsStatus Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.CloudOdsStatus, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.CloudOdsStatus, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 EdFi.Ods.AdminApp.Management.CloudOdsUpdateCheckService Transient
     EdFi.Ods.AdminApp.Management.CloudOdsUpdateCheckService
@@ -264,14 +232,6 @@ EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+Command
 EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+QueryHandler Transient
     EdFi.Ods.AdminApp.Management.Configuration.Application.EditConfiguration+QueryHandler
 
-EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAction Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAction, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAction, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
-EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAuthorizationStrategy Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAuthorizationStrategy, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAuthorizationStrategy, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
 EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimSet Transient
     EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimSet
 
@@ -283,10 +243,6 @@ EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsEntityClaim Transient
 
 EdFi.Ods.AdminApp.Management.Database.AdminAppDbContext Scoped
     EdFi.Ods.AdminApp.Management.Database.AdminAppDbContext
-
-EdFi.Ods.AdminApp.Management.Database.AdminAppIdentityDbContext Transient
-    System.Data.Entity.Infrastructure.IObjectContextAdapter
-    System.IDisposable
 
 EdFi.Ods.AdminApp.Management.Database.Commands.AddApplicationCommand Transient
     EdFi.Ods.AdminApp.Management.Database.Commands.IAddApplicationCommand
@@ -321,10 +277,6 @@ EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowManager Transient
 EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowStep Transient
     EdFi.Ods.AdminApp.Management.Database.DdlSqlWorkflowStep
 
-EdFi.Ods.AdminApp.Management.Database.Models.AdminAppUser Transient
-    Microsoft.AspNet.Identity.IUser
-    Microsoft.AspNet.Identity.IUser`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
-
 EdFi.Ods.AdminApp.Management.Database.Models.ApplicationConfiguration Transient
     EdFi.Ods.AdminApp.Management.Database.Models.ApplicationConfiguration
 
@@ -333,10 +285,6 @@ EdFi.Ods.AdminApp.Management.Database.Models.AzureSqlConfiguration Transient
 
 EdFi.Ods.AdminApp.Management.Database.Models.OdsInstanceRegistration Transient
     EdFi.Ods.AdminApp.Management.Database.Models.OdsInstanceRegistration
-
-EdFi.Ods.AdminApp.Management.Database.Models.Role Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Database.Models.Role, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Database.Models.Role, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 EdFi.Ods.AdminApp.Management.Database.Models.RolePermission Transient
     EdFi.Ods.AdminApp.Management.Database.Models.RolePermission
@@ -467,11 +415,6 @@ EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguratio
 EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseUser Transient
     EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseUser
 
-EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles Transient
-    EdFi.Ods.AdminApp.Management.Database.Setup.ISqlRole
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
 EdFi.Ods.AdminApp.Management.EnableLearningStandardsSetupCommand Transient
     EdFi.Ods.AdminApp.Management.IEnableLearningStandardsSetupCommand
 
@@ -498,10 +441,6 @@ EdFi.Ods.AdminApp.Management.Identity.RegisterCommand Transient
 
 EdFi.Ods.AdminApp.Management.InstanceContext Scoped
     EdFi.Ods.AdminApp.Management.InstanceContext
-
-EdFi.Ods.AdminApp.Management.Instances.ApiMode Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Instances.ApiMode, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Instances.ApiMode, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 EdFi.Ods.AdminApp.Management.Instances.BulkRegisterOdsInstancesCommand Transient
     EdFi.Ods.AdminApp.Management.Instances.BulkRegisterOdsInstancesCommand
@@ -617,10 +556,6 @@ EdFi.Ods.AdminApp.Management.Settings.CloudOdsApiWebsiteSettings Transient
 EdFi.Ods.AdminApp.Management.Settings.CloudOdsSettingsService Transient
     EdFi.Ods.AdminApp.Management.Settings.ICloudOdsSettingsService
 
-EdFi.Ods.AdminApp.Management.Settings.LogLevel Transient
-    System.IComparable`1[[EdFi.Ods.AdminApp.Management.Settings.LogLevel, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Settings.LogLevel, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
 EdFi.Ods.AdminApp.Management.SetupAcademicBenchmarksConnectService Transient
     EdFi.Ods.AdminApp.Management.ISetupAcademicBenchmarksConnectService
 
@@ -660,19 +595,11 @@ EdFi.Ods.AdminApp.Management.Workflow.WorkflowErrorContext Transient
 EdFi.Ods.AdminApp.Management.Workflow.WorkflowManager`2 Transient
     EdFi.Ods.AdminApp.Management.Workflow.WorkflowManager`2
 
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowManager`2+JobEventHandler Transient
-    System.ICloneable
-    System.Runtime.Serialization.ISerializable
-
 EdFi.Ods.AdminApp.Management.Workflow.WorkflowResult Transient
     EdFi.Ods.AdminApp.Management.Workflow.WorkflowResult
 
 EdFi.Ods.AdminApp.Management.Workflow.WorkflowStatus Transient
     EdFi.Ods.AdminApp.Management.Workflow.WorkflowStatus
-
-EdFi.Ods.AdminApp.Management.Workflow.WorkflowStatusUpdated Transient
-    System.ICloneable
-    System.Runtime.Serialization.ISerializable
 
 EdFi.Ods.AdminApp.Management.Workflow.WorkflowStep`1 Transient
     EdFi.Ods.AdminApp.Management.Workflow.WorkflowStep`1

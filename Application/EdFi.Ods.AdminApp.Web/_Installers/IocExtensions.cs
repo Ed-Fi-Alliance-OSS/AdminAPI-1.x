@@ -66,6 +66,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy(serviceType)
                     .LifestyleTransient());
         }
+
+        public static void AddTransient(this IWindsorContainer services, Type serviceType, Type implementationType)
+        {
+            services.Register(
+                Component.For(serviceType)
+                    .ImplementedBy(implementationType)
+                    .LifestyleTransient());
+        }
     }
 }
 #endif

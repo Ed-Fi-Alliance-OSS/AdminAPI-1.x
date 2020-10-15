@@ -10,27 +10,6 @@ EdFi.Admin.DataAccess.Contexts.UsersContextFactory Undefined
 EdFi.Ods.AdminApp.Management.AdminAppUserContext Scoped
     EdFi.Ods.AdminApp.Management.AdminAppUserContext
 
-EdFi.Ods.AdminApp.Management.Api.Automapper.LocalEducationAgencyAddressResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationAddress, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
-
-EdFi.Ods.AdminApp.Management.Api.Automapper.LocalEducationAgencyCategoryResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationCategory, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
-
-EdFi.Ods.AdminApp.Management.Api.Automapper.LocalEducationAgencyReferenceResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.School, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgencyReference, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
-EdFi.Ods.AdminApp.Management.Api.Automapper.SchoolAddressResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.School, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationAddress, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
-
-EdFi.Ods.AdminApp.Management.Api.Automapper.SchoolCategoryResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.School, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiEducationOrganizationCategory, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
-
-EdFi.Ods.AdminApp.Management.Api.Automapper.SchoolGradeLevelResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.School, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchoolGradeLevel, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
-
-EdFi.Ods.AdminApp.Management.Api.Automapper.StateEducationAgencyReferenceResolver Transient
-    AutoMapper.IValueResolver`3[[EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiStateEducationAgencyReference, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
 EdFi.Ods.AdminApp.Management.Api.InferOdsApiVersion Transient
     EdFi.Ods.AdminApp.Management.Api.IInferOdsApiVersion
 

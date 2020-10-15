@@ -5,6 +5,8 @@
 
 using System.Linq;
 using System.Web.Mvc;
+using AutoMapper;
+using AutoMapper.Internal;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -162,10 +164,12 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
                     if (interfaces.Length == 1)
                     {
-                        services.Register(
-                            Component.For(interfaces.Single())
-                                .ImplementedBy(concreteClass)
-                                .LifestyleTransient());
+                        var serviceType = interfaces.Single();
+
+                        if (serviceType.Name != typeof(IValueResolver<,,>).Name)
+                        {
+                            services.AddTransient(serviceType, concreteClass);
+                        }
                     }
                     else if (interfaces.Length == 0)
                     {

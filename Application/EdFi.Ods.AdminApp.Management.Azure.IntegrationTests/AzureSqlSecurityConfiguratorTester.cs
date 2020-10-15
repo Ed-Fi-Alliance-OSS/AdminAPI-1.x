@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -13,7 +13,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
+namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 {
     //See App.config - requires the User named in the "IntegrationTests" connection string to be
     //in the sysadmin role on the database server
@@ -22,7 +22,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             "functioning as intended. To run these tests, temporarily" +
             "comment out this [Ignore(...)] attribute.")]
     [TestFixture]
-    public class SqlServerCloudOdsDatabaseSecurityConfiguratorTester
+    public class AzureSqlSecurityConfiguratorTester
     {
         private const string DbReader = "db_datareader";
         private const string DbWriter = "db_datawriter";

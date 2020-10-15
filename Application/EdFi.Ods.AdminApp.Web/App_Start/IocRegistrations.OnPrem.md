@@ -461,9 +461,6 @@ EdFi.Ods.AdminApp.Management.Database.Queries.GetVendorsQuery Transient
 EdFi.Ods.AdminApp.Management.Database.RawSqlConnectionService Transient
     EdFi.Ods.AdminApp.Management.Database.IRawSqlConnectionService
 
-EdFi.Ods.AdminApp.Management.Database.Setup.AzureSqlSecurityConfigurator Transient
-    EdFi.Ods.AdminApp.Management.Database.Setup.IAzureSqlSecurityConfigurator
-
 EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguration Transient
     EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguration
 

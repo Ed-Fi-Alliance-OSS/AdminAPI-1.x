@@ -4,8 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using EdFi.Ods.AdminApp.Management.Database.Setup;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Setup
+namespace EdFi.Ods.AdminApp.Management.Azure
 {
     public interface IAzureSqlSecurityConfigurator
     {

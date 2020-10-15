@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.AdminApp.Management.Database.Setup;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Setup
+namespace EdFi.Ods.AdminApp.Management.Azure
 {
     public class AzureSqlSecurityConfigurator : IAzureSqlSecurityConfigurator
     {

@@ -469,7 +469,6 @@
     <Compile Include="Database\Queries\Ods\StudentEconomicSituationReportQueryTests.cs" />
     <Compile Include="Database\Queries\Ods\StudentsByProgramQueryTests.cs" />
     <Compile Include="Database\Setup\FirstTimeSetupTests.cs" />
-    <Compile Include="Database\Setup\SqlServerCloudOdsDatabaseSecurityConfiguratorTester.cs" />
     <Compile Include="FakeOdsSecretConfigurationProvider.cs" />
     <Compile Include="AdminDataTestBase.cs" />
     <Compile Include="Database\Commands\AddApplicationCommandTests.cs" />

@@ -461,6 +461,9 @@ EdFi.Ods.AdminApp.Management.Database.Queries.GetVendorsQuery Transient
 EdFi.Ods.AdminApp.Management.Database.RawSqlConnectionService Transient
     EdFi.Ods.AdminApp.Management.Database.IRawSqlConnectionService
 
+EdFi.Ods.AdminApp.Management.Database.Setup.AzureSqlSecurityConfigurator Transient
+    EdFi.Ods.AdminApp.Management.Database.Setup.IAzureSqlSecurityConfigurator
+
 EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguration Transient
     EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsDatabaseSecurityConfiguration
 
@@ -471,9 +474,6 @@ EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles Transient
     EdFi.Ods.AdminApp.Management.Database.Setup.ISqlRole
     System.IComparable`1[[EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
     System.IEquatable`1[[EdFi.Ods.AdminApp.Management.Database.Setup.CloudOdsSqlServerRoles, EdFi.Ods.AdminApp.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-
-EdFi.Ods.AdminApp.Management.Database.Setup.SqlServerCloudOdsDatabaseSecurityConfigurator Transient
-    EdFi.Ods.AdminApp.Management.Database.Setup.ICloudOdsDatabaseSecurityConfigurator
 
 EdFi.Ods.AdminApp.Management.EnableLearningStandardsSetupCommand Transient
     EdFi.Ods.AdminApp.Management.IEnableLearningStandardsSetupCommand

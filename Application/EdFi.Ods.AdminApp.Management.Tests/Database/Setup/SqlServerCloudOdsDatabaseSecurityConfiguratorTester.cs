@@ -246,7 +246,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockRawSqlConnectionService = new Mock<IRawSqlConnectionService>();
             var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            var _sqlConfigurator = new SqlServerCloudOdsDatabaseSecurityConfigurator(mockRawSqlConnectionService.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var _sqlConfigurator = new AzureSqlSecurityConfigurator(mockRawSqlConnectionService.Object, mockCloudOdsDatabaseNameProvider.Object);
 
             var config = GetOdsSqlConfiguration();
             _sqlConfigurator.CreateServerLogins(config);
@@ -403,7 +403,7 @@ JOIN sys.database_principals dp ON rm.role_principal_id = dp.principal_id";
         {
             var mockRawSqlConnectionService = new Mock<IRawSqlConnectionService>();
             var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            var sqlConfigurator = new SqlServerCloudOdsDatabaseSecurityConfigurator(mockRawSqlConnectionService.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sqlConfigurator = new AzureSqlSecurityConfigurator(mockRawSqlConnectionService.Object, mockCloudOdsDatabaseNameProvider.Object);
 
             var sqlConfig = GetOdsSqlConfiguration();
             var setupSecurityConfiguration = GetSetupConfiguration(sqlConfig);
@@ -452,7 +452,7 @@ JOIN sys.database_principals dp ON rm.role_principal_id = dp.principal_id";
         {
             var mockRawSqlConnectionService = new Mock<IRawSqlConnectionService>();
             var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            var sqlConfigurator = new SqlServerCloudOdsDatabaseSecurityConfigurator(mockRawSqlConnectionService.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sqlConfigurator = new AzureSqlSecurityConfigurator(mockRawSqlConnectionService.Object, mockCloudOdsDatabaseNameProvider.Object);
 
 
             var config = GetOdsSqlConfiguration();

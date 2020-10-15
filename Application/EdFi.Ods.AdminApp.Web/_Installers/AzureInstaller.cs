@@ -40,7 +40,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 .LifestyleTransient());
 
             services.AddTransient<AzureDatabaseManagementService>();
-            services.AddTransient<ICloudOdsDatabaseSecurityConfigurator, SqlServerCloudOdsDatabaseSecurityConfigurator>();
+            services.AddTransient<IAzureSqlSecurityConfigurator, AzureSqlSecurityConfigurator>();
             services.AddTransient<AzureDatabaseLifecycleManagementService>();
             services.AddTransient<GetAzureCloudOdsHostedInstanceQuery>();
             services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteAzureOdsPostUpdateSetupCommand>();

@@ -15,7 +15,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
     public class AzureDatabaseLifecycleManagementService
     {
         private readonly AzureDatabaseManagementService _azureDatabaseManagementService;
-        private readonly ICloudOdsDatabaseSecurityConfigurator _cloudOdsSqlConfigurator;
+        private readonly IAzureSqlSecurityConfigurator _cloudOdsSqlConfigurator;
         private readonly ICloudOdsDatabaseSqlServerSecurityConfiguration _cloudOdsDatabaseSqlServerSecurityConfiguration;
         private DdlSqlWorkflowManager _ddlSqlWorkflowManager = null;
         private readonly IRawSqlConnectionService _rawSqlConnectionService;
@@ -25,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
 
         public AzureDatabaseLifecycleManagementService(
             AzureDatabaseManagementService azureDatabaseManagementService,
-            ICloudOdsDatabaseSecurityConfigurator cloudOdsSqlConfigurator,
+            IAzureSqlSecurityConfigurator cloudOdsSqlConfigurator,
             ICloudOdsDatabaseSqlServerSecurityConfiguration cloudOdsDatabaseSqlServerSecurityConfiguration,
             IRawSqlConnectionService rawSqlConnectionService,
             ICloudOdsDatabaseNameProvider cloudOdsDatabaseNameProvider)

@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
     public class CompleteAzureFirstTimeSetupCommand : ICompleteOdsFirstTimeSetupCommand
     {
         private readonly IUsersContext _usersContext;
-        private readonly ICloudOdsDatabaseSecurityConfigurator _cloudOdsSqlConfigurator;
+        private readonly IAzureSqlSecurityConfigurator _cloudOdsSqlConfigurator;
         private readonly ISecurityContext _securityContext;
         private readonly ICloudOdsClaimSetConfigurator _cloudOdsClaimSetConfigurator;
         private readonly IGetCloudOdsInstanceQuery _getCloudOdsInstanceQuery;
@@ -36,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
 
         public CompleteAzureFirstTimeSetupCommand(
             IUsersContext usersContext,
-            ICloudOdsDatabaseSecurityConfigurator cloudOdsSqlConfigurator,
+            IAzureSqlSecurityConfigurator cloudOdsSqlConfigurator,
             ISecurityContext securityContext,
             ICloudOdsClaimSetConfigurator cloudOdsClaimSetConfigurator,
             IGetCloudOdsInstanceQuery getCloudOdsInstanceQuery,

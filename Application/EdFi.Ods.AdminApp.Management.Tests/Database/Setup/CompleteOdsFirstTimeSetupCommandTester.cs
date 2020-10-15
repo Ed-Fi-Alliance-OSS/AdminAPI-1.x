@@ -165,9 +165,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
         }
 
         #region MockGetters
-        private static Mock<ICloudOdsDatabaseSecurityConfigurator> GetMockDatabaseSecurityConfigurator()
+        private static Mock<IAzureSqlSecurityConfigurator> GetMockDatabaseSecurityConfigurator()
         {
-            var mockSqlConfigurator = new Mock<ICloudOdsDatabaseSecurityConfigurator>();
+            var mockSqlConfigurator = new Mock<IAzureSqlSecurityConfigurator>();
 
             mockSqlConfigurator.Setup(m => m.CreateServerLogins(null)).Callback(() => { });
             mockSqlConfigurator.Setup(m => m.ApplyConfiguration(null, Enumerable.Empty<CloudOdsDatabaseSecurityConfiguration>()))

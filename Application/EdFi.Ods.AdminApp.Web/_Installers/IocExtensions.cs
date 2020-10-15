@@ -12,6 +12,34 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public static class IocExtensions
     {
+        public static void AddSingleton<TService>(this IWindsorContainer services, TService implementationInstance)
+            where TService : class
+        {
+            services.Register(
+                Component.For<TService>()
+                    .Instance(implementationInstance)
+                    .LifestyleSingleton());
+        }
+
+        public static void AddSingleton<TService, TImplementation>(this IWindsorContainer services)
+            where TService : class
+            where TImplementation : class, TService
+        {
+            services.Register(
+                Component.For<TService>()
+                    .ImplementedBy<TImplementation>()
+                    .LifestyleSingleton());
+        }
+
+        public static void AddSingleton<TService>(this IWindsorContainer services)
+            where TService : class
+        {
+            services.Register(
+                Component.For<TService>()
+                    .ImplementedBy<TService>()
+                    .LifestyleSingleton());
+        }
+
         public static void AddTransient<TService, TImplementation>(this IWindsorContainer services)
             where TService : class
             where TImplementation : class, TService

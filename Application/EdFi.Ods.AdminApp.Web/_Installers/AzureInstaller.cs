@@ -25,9 +25,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
         private void InstallAzureSpecificServices(IWindsorContainer services)
         {
-            services.Register(Component.For<AzureActiveDirectoryClientInfo>()
-                .Instance(CloudOdsAzureActiveDirectoryClientInfo.GetActiveDirectoryClientInfoForUser())
-                .LifestyleSingleton());
+            services.AddSingleton(CloudOdsAzureActiveDirectoryClientInfo.GetActiveDirectoryClientInfoForUser());
 
             services.Register(Component.For<IGetCloudOdsHostedComponentsQuery, IGetAzureCloudOdsHostedComponentsQuery, GetAzureCloudOdsHostedComponentsQuery>()
                 .ImplementedBy<GetAzureCloudOdsHostedComponentsQuery>()

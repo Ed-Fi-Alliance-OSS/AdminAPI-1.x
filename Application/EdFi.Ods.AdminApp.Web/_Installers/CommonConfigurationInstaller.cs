@@ -33,10 +33,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
-            services.Register(
-                Component.For<IMapper>()
-                    .Instance(AutoMapperBootstrapper.CreateMapper())
-                    .LifestyleSingleton());
+            services.AddSingleton(AutoMapperBootstrapper.CreateMapper());
 
             services.Register(
                 Component.For<IApiConfigurationProvider>().ImplementedBy<ApiConfigurationProvider>(),
@@ -78,15 +75,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
 
-            services.Register(
-                Component.For<IOptions<AppSettings>>()
-                    .Instance(new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()))
-                    .LifestyleSingleton());
+            services.AddSingleton<IOptions<AppSettings>>(
+                new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()));
 
-            services.Register(
-                Component.For<ICachedItems>()
-                    .ImplementedBy<CachedItems>()
-                    .LifestyleSingleton());
+            services.AddSingleton<ICachedItems, CachedItems>();
 
             services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
 
@@ -136,10 +128,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             InstallHostingSpecificClasses(services);
 
-            services.Register(
-                Component.For<IOdsSecretConfigurationProvider>()
-                    .ImplementedBy<OdsSecretConfigurationProvider>()
-                    .LifestyleSingleton());
+            services.AddSingleton<IOdsSecretConfigurationProvider, OdsSecretConfigurationProvider>();
 
             services.Register(
                 Component.For<InstanceContext>()
@@ -152,10 +141,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .WithServiceAllInterfaces()
                     .LifestyleTransient());
 
-            services.Register(
-                Component.For<CloudOdsUpdateService>()
-                    .ImplementedBy<CloudOdsUpdateService>()
-                    .LifestyleSingleton());
+            services.AddSingleton<CloudOdsUpdateService>();
 
             services.Register(
                 Classes.FromThisAssembly()

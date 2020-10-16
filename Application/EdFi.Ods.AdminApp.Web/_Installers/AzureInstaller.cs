@@ -7,7 +7,6 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Display.DisplayService;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;

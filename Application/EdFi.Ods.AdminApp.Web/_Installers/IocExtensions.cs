@@ -40,6 +40,15 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleSingleton());
         }
 
+        public static void AddScoped<TService>(this IWindsorContainer services)
+            where TService : class
+        {
+            services.Register(
+                Component.For<TService>()
+                    .ImplementedBy<TService>()
+                    .LifestylePerWebRequest());
+        }
+
         public static void AddTransient<TService, TImplementation>(this IWindsorContainer services)
             where TService : class
             where TImplementation : class, TService

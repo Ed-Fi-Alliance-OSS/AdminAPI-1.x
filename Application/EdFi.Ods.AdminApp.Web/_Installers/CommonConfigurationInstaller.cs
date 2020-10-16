@@ -64,15 +64,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 Component.For<TokenCache>()
                     .Instance(TokenCache.DefaultShared));
 
-            services.Register(
-                Component.For<AdminAppDbContext>()
-                    .ImplementedBy<AdminAppDbContext>()
-                    .LifestylePerWebRequest());
-
-            services.Register(
-                Component.For<AdminAppUserContext>()
-                    .ImplementedBy<AdminAppUserContext>()
-                    .LifestylePerWebRequest());
+            services.AddScoped<AdminAppDbContext>();
+            services.AddScoped<AdminAppUserContext>();
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
 
@@ -131,10 +124,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<IOdsSecretConfigurationProvider, OdsSecretConfigurationProvider>();
 
-            services.Register(
-                Component.For<InstanceContext>()
-                    .ImplementedBy<InstanceContext>()
-                    .LifestylePerWebRequest());
+            services.AddScoped<InstanceContext>();
 
             services.AddTransient<ApplicationConfigurationService>();
             services.AddTransient<CloudOdsUpdateCheckService>();

@@ -422,7 +422,6 @@ EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.BulkUploadJob Singleton
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.IBulkUploadJob
 
 EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.ProductionLearningStandardsJob Singleton
-    EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.LearningStandardsJobContext, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Web.Hubs.ProductionLearningStandardsHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.IProductionLearningStandardsJob
 
 EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.ProductionSetupJob Singleton
@@ -565,6 +564,9 @@ Late bound EdFi.Admin.DataAccess.Contexts.IUsersContext Scoped
 
 Late bound EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.BulkUploadJobContext, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Web.Hubs.BulkUploadHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] Singleton
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.BulkUploadJobContext, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Web.Hubs.BulkUploadHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+
+Late bound EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.LearningStandardsJobContext, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Web.Hubs.ProductionLearningStandardsHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] Singleton
+    EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.LearningStandardsJobContext, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Web.Hubs.ProductionLearningStandardsHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 
 Late bound EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[EdFi.Ods.AdminApp.Web.Hubs.ProductionSetupHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] Singleton
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[EdFi.Ods.AdminApp.Web.Hubs.ProductionSetupHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]

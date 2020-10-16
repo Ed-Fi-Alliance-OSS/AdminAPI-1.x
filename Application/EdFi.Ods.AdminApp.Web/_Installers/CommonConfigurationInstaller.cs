@@ -76,12 +76,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<IBulkUploadJob, BulkUploadJob>();
             services.AddSingleton(x => (WorkflowJob<BulkUploadJobContext, BulkUploadHub>)x.GetService<IBulkUploadJob>());//Resolve previously queued job.
 
-            services.Register(
-                Component
-                    .For<IProductionLearningStandardsJob,
-                        WorkflowJob<LearningStandardsJobContext, ProductionLearningStandardsHub>>()
-                    .ImplementedBy<ProductionLearningStandardsJob>()
-                    .LifestyleSingleton());
+            services.AddSingleton<IProductionLearningStandardsJob, ProductionLearningStandardsJob>();
+            services.AddSingleton(x => (WorkflowJob<LearningStandardsJobContext, ProductionLearningStandardsHub>) x.GetService<IProductionLearningStandardsJob>());//Resolve previously queued job.
 
             services.AddSingleton<ISecureHasher, Pbkdf2HmacSha1SecureHasher>();
             services.AddSingleton<IPackedHashConverter, PackedHashConverter>();

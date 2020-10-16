@@ -78,7 +78,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.Register(
                 Component
-                    .For<IProductionLearningStandardsJob, LearningStandardsJob<ProductionLearningStandardsHub>,
+                    .For<IProductionLearningStandardsJob,
                         WorkflowJob<LearningStandardsJobContext, ProductionLearningStandardsHub>>()
                     .ImplementedBy<ProductionLearningStandardsJob>()
                     .LifestyleSingleton());

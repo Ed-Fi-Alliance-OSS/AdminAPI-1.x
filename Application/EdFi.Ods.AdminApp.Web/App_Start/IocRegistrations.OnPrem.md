@@ -401,7 +401,6 @@ EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.BulkUploadJob Singleton
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.IBulkUploadJob
 
 EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.ProductionLearningStandardsJob Singleton
-    EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.LearningStandardsJob`1[[EdFi.Ods.AdminApp.Web.Hubs.ProductionLearningStandardsHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.WorkflowJob`2[[EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.LearningStandardsJobContext, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[EdFi.Ods.AdminApp.Web.Hubs.ProductionLearningStandardsHub, EdFi.Ods.AdminApp.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
     EdFi.Ods.AdminApp.Web.Infrastructure.Jobs.IProductionLearningStandardsJob
 

@@ -70,15 +70,11 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<BulkImportService>();
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
-            services.Register(
-                Component.For<IProductionSetupJob, WorkflowJob<int, ProductionSetupHub>>()
-                    .ImplementedBy<ProductionSetupJob>()
-                    .LifestyleSingleton());
+            services.AddSingleton<IProductionSetupJob, ProductionSetupJob>();
+            services.AddSingleton(x => (WorkflowJob<int, ProductionSetupHub>)x.GetService<IProductionSetupJob>());//Resolve previously queued job.
 
-            services.Register(
-                Component.For<IBulkUploadJob, WorkflowJob<BulkUploadJobContext, BulkUploadHub>>()
-                    .ImplementedBy<BulkUploadJob>()
-                    .LifestyleSingleton());
+            services.AddSingleton<IBulkUploadJob, BulkUploadJob>();
+            services.AddSingleton(x => (WorkflowJob<BulkUploadJobContext, BulkUploadHub>)x.GetService<IBulkUploadJob>());//Resolve previously queued job.
 
             services.Register(
                 Component

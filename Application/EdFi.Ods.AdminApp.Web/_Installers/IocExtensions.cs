@@ -41,6 +41,15 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestyleSingleton());
         }
 
+        public static void AddSingleton<TService>(this IWindsorContainer services, Func<IKernel, TService> implementationFactory)
+            where TService : class
+        {
+            services.Register(
+                Component.For<TService>()
+                    .UsingFactoryMethod(implementationFactory)
+                    .LifestyleSingleton());
+        }
+
         public static void AddScoped<TService>(this IWindsorContainer services)
             where TService : class
         {

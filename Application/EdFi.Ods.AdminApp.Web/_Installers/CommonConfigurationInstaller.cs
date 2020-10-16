@@ -42,16 +42,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<IConfigConnectionStringsProvider, AppConfigConnectionStringsProvider>();
             services.AddSingleton<ISecurityContextFactory, SecurityContextFactory>();
             services.AddSingleton<IUsersContextFactory, UsersContextFactory>();
-
-            services.Register(
-                Component.For<ISecurityContext>()
-                    .UsingFactoryMethod(k => k.Resolve<ISecurityContextFactory>().CreateContext())
-                    .LifestylePerWebRequest());
-
-            services.Register(
-                Component.For<IUsersContext>()
-                    .UsingFactoryMethod(k => k.Resolve<IUsersContextFactory>().CreateContext())
-                    .LifestylePerWebRequest());
+            services.AddScoped(x => x.GetService<ISecurityContextFactory>().CreateContext());
+            services.AddScoped(x => x.GetService<IUsersContextFactory>().CreateContext());
 
             services.AddSingleton(TokenCache.DefaultShared);
 

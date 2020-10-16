@@ -5,6 +5,7 @@
 
 #if NET48
 using System;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
@@ -47,6 +48,20 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 Component.For<TService>()
                     .ImplementedBy<TService>()
                     .LifestylePerWebRequest());
+        }
+
+        public static void AddScoped<TService>(this IWindsorContainer services, Func<IKernel, TService> implementationFactory)
+            where TService : class
+        {
+            services.Register(
+                Component.For<TService>()
+                    .UsingFactoryMethod(implementationFactory)
+                    .LifestylePerWebRequest());
+        }
+
+        public static TService GetService<TService>(this IKernel provider)
+        {
+            return provider.Resolve<TService>();
         }
 
         public static void AddTransient<TService, TImplementation>(this IWindsorContainer services)

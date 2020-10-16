@@ -17,11 +17,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
     {
         protected override void InstallHostingSpecificClasses(IWindsorContainer services)
         {
-            InstallEnterpriseSpecificServices(services);
-        }
-
-        private static void InstallEnterpriseSpecificServices(IWindsorContainer services)
-        {
             services.AddTransient<IGetCloudOdsInstanceQuery, GetOnPremOdsInstanceQuery>();
             services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetOnPremOdsApiWebsiteSettingsQuery>();
             services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateOnPremOdsApiWebsiteSettingsCommand>();

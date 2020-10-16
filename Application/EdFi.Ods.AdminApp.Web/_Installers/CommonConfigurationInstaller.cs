@@ -37,25 +37,38 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton(AutoMapperBootstrapper.CreateMapper());
 
             services.Register(
-                Component.For<IApiConfigurationProvider>().ImplementedBy<ApiConfigurationProvider>(),
+                Component.For<IApiConfigurationProvider>()
+                    .ImplementedBy<ApiConfigurationProvider>());
 
-                Component.For<IConfigValueProvider>().ImplementedBy<AppConfigValueProvider>().IsFallback(),
+            services.Register(
+                Component.For<IConfigValueProvider>()
+                    .ImplementedBy<AppConfigValueProvider>()
+                    .IsFallback());
 
-                Component.For<IDatabaseEngineProvider>().ImplementedBy<DatabaseEngineProvider>().IsFallback(),
+            services.Register(
+                Component.For<IDatabaseEngineProvider>()
+                    .ImplementedBy<DatabaseEngineProvider>()
+                    .IsFallback());
 
-                Component.For<IConfigConnectionStringsProvider>().ImplementedBy<AppConfigConnectionStringsProvider>()
+            services.Register(
+                Component.For<IConfigConnectionStringsProvider>()
+                    .ImplementedBy<AppConfigConnectionStringsProvider>()
                     .IsFallback());
 
             services.Register(
                 Component.For<ISecurityContextFactory>()
-                    .ImplementedBy<SecurityContextFactory>(),
+                    .ImplementedBy<SecurityContextFactory>());
+
+            services.Register(
                 Component.For<ISecurityContext>()
                     .UsingFactoryMethod(k => k.Resolve<ISecurityContextFactory>().CreateContext())
                     .LifestylePerWebRequest());
 
             services.Register(
                 Component.For<IUsersContextFactory>()
-                    .ImplementedBy<UsersContextFactory>(),
+                    .ImplementedBy<UsersContextFactory>());
+
+            services.Register(
                 Component.For<IUsersContext>()
                     .UsingFactoryMethod(k => k.Resolve<IUsersContextFactory>().CreateContext())
                     .LifestylePerWebRequest());

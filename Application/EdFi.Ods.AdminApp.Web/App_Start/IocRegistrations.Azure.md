@@ -140,9 +140,6 @@ EdFi.Ods.AdminApp.Management.ClaimSetEditor.OverrideDefaultAuthorizationStrategy
 EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResetToDefaultAuthStrategyCommand Transient
     EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResetToDefaultAuthStrategyCommand
 
-EdFi.Ods.AdminApp.Management.CloudOdsApiOperationContext Transient
-    EdFi.Ods.AdminApp.Management.ICloudOdsOperationContext
-
 EdFi.Ods.AdminApp.Management.CloudOdsOperationContext Transient
     EdFi.Ods.AdminApp.Management.ICloudOdsOperationContext
 

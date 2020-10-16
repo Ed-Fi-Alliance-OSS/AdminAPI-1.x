@@ -5,8 +5,6 @@
 
 using System.Linq;
 using System.Web.Mvc;
-using AutoMapper;
-using AutoMapper.Internal;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -151,25 +149,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     if (concreteClass == typeof(OdsSecretConfigurationProvider))
                         continue; //Singleton registered above.
 
-                    if (concreteClass == typeof(AdminAppUserContext))
-                        continue; //Scope registered above.
-
-                    if (concreteClass == typeof(AdminAppDbContext))
-                        continue; //Scope registered above.
-
-                    if (concreteClass == typeof(InstanceContext))
-                        continue; //Scope registered above.
-
                     var interfaces = concreteClass.GetInterfaces().OrderBy(x => x.FullName).ToArray();
 
                     if (interfaces.Length == 1)
                     {
                         var serviceType = interfaces.Single();
 
-                        if (serviceType.Name != typeof(IValueResolver<,,>).Name)
-                        {
+                        if (serviceType.FullName == $"{concreteClass.Namespace}.I{concreteClass.Name}")
                             services.AddTransient(serviceType, concreteClass);
-                        }
                     }
                     else if (interfaces.Length == 0)
                     {

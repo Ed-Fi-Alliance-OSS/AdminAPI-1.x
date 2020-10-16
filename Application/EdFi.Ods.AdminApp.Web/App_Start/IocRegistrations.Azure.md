@@ -76,7 +76,6 @@ EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsInstanceQuery Transient
     EdFi.Ods.AdminApp.Management.IGetCloudOdsInstanceQuery
 
 EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsWebsitePerformanceLevelQuery Transient
-    EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsWebsitePerformanceLevelQuery
     EdFi.Ods.AdminApp.Management.Azure.IGetAzureCloudOdsWebsitePerformanceLevelQuery
 
 EdFi.Ods.AdminApp.Management.Azure.GetAzureProductionApiProvisioningWarningsQuery Transient

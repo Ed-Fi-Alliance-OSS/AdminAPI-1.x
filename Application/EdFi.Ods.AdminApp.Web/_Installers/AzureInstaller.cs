@@ -34,10 +34,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 .ImplementedBy<GetAzureCloudOdsWebsitePerformanceLevelQuery>()
                 .LifestyleTransient());
 
-            services.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery, GetAzureCloudOdsApiWebsiteSettingsQuery>()
-                .ImplementedBy<GetAzureCloudOdsApiWebsiteSettingsQuery>()
-                .LifestyleTransient());
-
+            services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetAzureCloudOdsApiWebsiteSettingsQuery>();
             services.AddTransient<AzureDatabaseManagementService>();
             services.AddTransient<IAzureSqlSecurityConfigurator, AzureSqlSecurityConfigurator>();
             services.AddTransient<AzureDatabaseLifecycleManagementService>();

@@ -129,7 +129,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<ApplicationConfigurationService>();
             services.AddTransient<CloudOdsUpdateCheckService>();
 
-            // Emulate the effect of Castle Windsor ".WithServiceAllInterfaces()".
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
             {
                 if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
@@ -139,7 +138,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     if (concreteClass == typeof(OdsSecretConfigurationProvider))
                         continue; //Singleton registered above.
 
-                    var interfaces = concreteClass.GetInterfaces().OrderBy(x => x.FullName).ToArray();
+                    var interfaces = concreteClass.GetInterfaces().ToArray();
 
                     if (interfaces.Length == 1)
                     {

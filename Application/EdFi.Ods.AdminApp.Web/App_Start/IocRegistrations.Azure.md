@@ -62,7 +62,6 @@ EdFi.Ods.AdminApp.Management.Azure.CompleteAzureOdsPostUpdateSetupCommand Transi
     EdFi.Ods.AdminApp.Management.ICompleteOdsPostUpdateSetupCommand
 
 EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsApiWebsiteSettingsQuery Transient
-    EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsApiWebsiteSettingsQuery
     EdFi.Ods.AdminApp.Management.IGetCloudOdsApiWebsiteSettingsQuery
 
 EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsHostedComponentsQuery Transient

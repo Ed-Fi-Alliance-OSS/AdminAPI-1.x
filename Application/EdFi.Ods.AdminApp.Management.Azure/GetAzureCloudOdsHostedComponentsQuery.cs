@@ -11,8 +11,10 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace EdFi.Ods.AdminApp.Management.Azure
 {
-    public interface IGetAzureCloudOdsHostedComponentsQuery : IGetCloudOdsHostedComponentsQuery
+    public interface IGetAzureCloudOdsHostedComponentsQuery
     {
+        Task<IEnumerable<CloudOdsWebsite>> Execute(ICloudOdsOperationContext context);
+        Task<IEnumerable<OdsComponent>> Execute(CloudOdsInstance instance);
         Task<IEnumerable<Site>> ExecuteRaw(ICloudOdsOperationContext context);
     }
 

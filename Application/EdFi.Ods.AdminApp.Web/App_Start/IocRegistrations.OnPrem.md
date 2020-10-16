@@ -4,7 +4,7 @@ AutoMapper.Mapper Singleton
 Castle.Proxies.ISecureHasherProxy Undefined
     EdFi.Ods.Common.Security.ISecureHasher
 
-EdFi.Admin.DataAccess.Contexts.UsersContextFactory Undefined
+EdFi.Admin.DataAccess.Contexts.UsersContextFactory Singleton
     EdFi.Admin.DataAccess.Contexts.IUsersContextFactory
 
 EdFi.Ods.AdminApp.Management.AdminAppUserContext Scoped
@@ -512,31 +512,31 @@ EdFi.Ods.AdminApp.Web.Models.ViewModels.User.EditUserRoleModelValidator Transien
 EdFi.Ods.Common.ChainOfResponsibility.ChainOfResponsibilityLinkInterceptor Undefined
     EdFi.Ods.Common.ChainOfResponsibility.ChainOfResponsibilityLinkInterceptor
 
-EdFi.Ods.Common.Configuration.ApiConfigurationProvider Undefined
+EdFi.Ods.Common.Configuration.ApiConfigurationProvider Singleton
     EdFi.Ods.Common.Configuration.IApiConfigurationProvider
 
-EdFi.Ods.Common.Configuration.AppConfigConnectionStringsProvider Undefined
+EdFi.Ods.Common.Configuration.AppConfigConnectionStringsProvider Singleton
     EdFi.Ods.Common.Configuration.IConfigConnectionStringsProvider
 
-EdFi.Ods.Common.Configuration.AppConfigValueProvider Undefined
+EdFi.Ods.Common.Configuration.AppConfigValueProvider Singleton
     EdFi.Ods.Common.Configuration.IConfigValueProvider
 
-EdFi.Ods.Common.Configuration.DatabaseEngineProvider Undefined
+EdFi.Ods.Common.Configuration.DatabaseEngineProvider Singleton
     EdFi.Ods.Common.Configuration.IDatabaseEngineProvider
 
-EdFi.Ods.Common.Security.DefaultHashConfigurationProvider Undefined
+EdFi.Ods.Common.Security.DefaultHashConfigurationProvider Singleton
     EdFi.Ods.Common.Security.IHashConfigurationProvider
 
-EdFi.Ods.Common.Security.PackedHashConverter Undefined
+EdFi.Ods.Common.Security.PackedHashConverter Singleton
     EdFi.Ods.Common.Security.IPackedHashConverter
 
-EdFi.Ods.Common.Security.Pbkdf2HmacSha1SecureHasher Undefined
+EdFi.Ods.Common.Security.Pbkdf2HmacSha1SecureHasher Singleton
     EdFi.Ods.Common.Security.ISecureHasher
 
-EdFi.Ods.Common.Security.SecurePackedHashProvider Undefined
+EdFi.Ods.Common.Security.SecurePackedHashProvider Singleton
     EdFi.Ods.Common.Security.ISecurePackedHashProvider
 
-EdFi.Security.DataAccess.Contexts.SecurityContextFactory Undefined
+EdFi.Security.DataAccess.Contexts.SecurityContextFactory Singleton
     EdFi.Security.DataAccess.Contexts.ISecurityContextFactory
 
 Hangfire.BackgroundJobClient Transient
@@ -548,6 +548,6 @@ Late bound EdFi.Admin.DataAccess.Contexts.IUsersContext Scoped
 Late bound EdFi.Security.DataAccess.Contexts.ISecurityContext Scoped
     EdFi.Security.DataAccess.Contexts.ISecurityContext
 
-Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache Undefined
+Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache Singleton
     Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache
 

@@ -36,28 +36,12 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton(AutoMapperBootstrapper.CreateMapper());
 
-            services.Register(
-                Component.For<IApiConfigurationProvider>()
-                    .ImplementedBy<ApiConfigurationProvider>());
-
-            services.Register(
-                Component.For<IConfigValueProvider>()
-                    .ImplementedBy<AppConfigValueProvider>()
-                    .IsFallback());
-
-            services.Register(
-                Component.For<IDatabaseEngineProvider>()
-                    .ImplementedBy<DatabaseEngineProvider>()
-                    .IsFallback());
-
-            services.Register(
-                Component.For<IConfigConnectionStringsProvider>()
-                    .ImplementedBy<AppConfigConnectionStringsProvider>()
-                    .IsFallback());
-
-            services.Register(
-                Component.For<ISecurityContextFactory>()
-                    .ImplementedBy<SecurityContextFactory>());
+            services.AddSingleton<IApiConfigurationProvider, ApiConfigurationProvider>();
+            services.AddSingleton<IConfigValueProvider, AppConfigValueProvider>();
+            services.AddSingleton<IDatabaseEngineProvider, DatabaseEngineProvider>();
+            services.AddSingleton<IConfigConnectionStringsProvider, AppConfigConnectionStringsProvider>();
+            services.AddSingleton<ISecurityContextFactory, SecurityContextFactory>();
+            services.AddSingleton<IUsersContextFactory, UsersContextFactory>();
 
             services.Register(
                 Component.For<ISecurityContext>()
@@ -65,17 +49,11 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .LifestylePerWebRequest());
 
             services.Register(
-                Component.For<IUsersContextFactory>()
-                    .ImplementedBy<UsersContextFactory>());
-
-            services.Register(
                 Component.For<IUsersContext>()
                     .UsingFactoryMethod(k => k.Resolve<IUsersContextFactory>().CreateContext())
                     .LifestylePerWebRequest());
 
-            services.Register(
-                Component.For<TokenCache>()
-                    .Instance(TokenCache.DefaultShared));
+            services.AddSingleton(TokenCache.DefaultShared);
 
             services.AddScoped<AdminAppDbContext>();
             services.AddScoped<AdminAppUserContext>();
@@ -117,21 +95,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     .ImplementedBy<ProductionLearningStandardsJob>()
                     .LifestyleSingleton());
 
-            services.Register(
-                Component.For<ISecureHasher>()
-                    .ImplementedBy<Pbkdf2HmacSha1SecureHasher>());
-
-            services.Register(
-                Component.For<IPackedHashConverter>()
-                    .ImplementedBy<PackedHashConverter>());
-
-            services.Register(
-                Component.For<ISecurePackedHashProvider>()
-                    .ImplementedBy<SecurePackedHashProvider>());
-
-            services.Register(
-                Component.For<IHashConfigurationProvider>()
-                    .ImplementedBy<DefaultHashConfigurationProvider>());
+            services.AddSingleton<ISecureHasher, Pbkdf2HmacSha1SecureHasher>();
+            services.AddSingleton<IPackedHashConverter, PackedHashConverter>();
+            services.AddSingleton<ISecurePackedHashProvider, SecurePackedHashProvider>();
+            services.AddSingleton<IHashConfigurationProvider, DefaultHashConfigurationProvider>();
 
             InstallHostingSpecificClasses(services);
 

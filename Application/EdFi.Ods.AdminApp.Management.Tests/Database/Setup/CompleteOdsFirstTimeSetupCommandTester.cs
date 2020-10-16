@@ -52,7 +52,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
             mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
 
-            var mockGetCloudHostedComponentQuery = new Mock<IGetCloudOdsHostedComponentsQuery>();
+            var mockGetCloudHostedComponentQuery = new Mock<IGetAzureCloudOdsHostedComponentsQuery>();
             mockGetCloudHostedComponentQuery.Setup(a => a.Execute(It.IsAny<CloudOdsInstance>()))
                 .ReturnsAsync(GetMockComponents());
 
@@ -124,7 +124,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
             mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
 
-            var mockGetCloudHostedComponentQuery = new Mock<IGetCloudOdsHostedComponentsQuery>();
+            var mockGetCloudHostedComponentQuery = new Mock<IGetAzureCloudOdsHostedComponentsQuery>();
             mockGetCloudHostedComponentQuery.Setup(a => a.Execute(It.IsAny<CloudOdsInstance>()))
                 .ReturnsAsync(GetMockComponents());
 

@@ -24,7 +24,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
         private readonly ISecurityContext _securityContext;
         private readonly ICloudOdsClaimSetConfigurator _cloudOdsClaimSetConfigurator;
         private readonly IGetCloudOdsInstanceQuery _getCloudOdsInstanceQuery;
-        private readonly IGetCloudOdsHostedComponentsQuery _getCloudOdsHostedComponentsQuery;
+        private readonly IGetAzureCloudOdsHostedComponentsQuery _getCloudOdsHostedComponentsQuery;
         private readonly IOdsSecretConfigurationProvider _odsSecretConfigurationProvider;
         private readonly ICloudOdsDatabaseSqlServerSecurityConfiguration _cloudOdsDatabaseSqlServerSecurityConfiguration;
         private readonly IOdsInstanceFirstTimeSetupService _odsInstanceFirstTimeSetupService;
@@ -40,7 +40,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             ISecurityContext securityContext,
             ICloudOdsClaimSetConfigurator cloudOdsClaimSetConfigurator,
             IGetCloudOdsInstanceQuery getCloudOdsInstanceQuery,
-            IGetCloudOdsHostedComponentsQuery getCloudOdsHostedComponentQuery,
+            IGetAzureCloudOdsHostedComponentsQuery getCloudOdsHostedComponentQuery,
             IOdsSecretConfigurationProvider odsSecretConfigurationProvider,
             ICloudOdsDatabaseSqlServerSecurityConfiguration cloudOdsDatabaseSqlServerSecurityConfiguration,
             IOdsInstanceFirstTimeSetupService odsInstanceFirstTimeSetupService,

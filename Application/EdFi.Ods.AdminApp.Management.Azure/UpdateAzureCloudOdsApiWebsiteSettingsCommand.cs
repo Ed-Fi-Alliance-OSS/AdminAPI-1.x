@@ -13,12 +13,12 @@ namespace EdFi.Ods.AdminApp.Management.Azure
     public class UpdateAzureCloudOdsApiWebsiteSettingsCommand : IUpdateCloudOdsApiWebsiteSettingsCommand
     {
         private readonly AzureActiveDirectoryClientInfo _azureActiveDirectoryClientInfo;
-        private readonly GetAzureCloudOdsHostedComponentsQuery _getAzureCloudOdsHostedComponentsQuery;
+        private readonly IGetAzureCloudOdsHostedComponentsQuery _getAzureCloudOdsHostedComponentsQuery;
         private readonly GetAzureCloudOdsApiWebsiteSettingsQuery _getAzureCloudOdsComponentApiWebsiteSettingsQuery;
         private readonly AzureResourceManagerClient _armClient;
         private readonly GetAzureCloudOdsHostedInstanceQuery _getCloudOdsHostedInstanceQuery;
 
-        public UpdateAzureCloudOdsApiWebsiteSettingsCommand(AzureActiveDirectoryClientInfo azureActiveDirectoryClientInfo, GetAzureCloudOdsHostedComponentsQuery getAzureCloudOdsHostedComponentsQuery,
+        public UpdateAzureCloudOdsApiWebsiteSettingsCommand(AzureActiveDirectoryClientInfo azureActiveDirectoryClientInfo, IGetAzureCloudOdsHostedComponentsQuery getAzureCloudOdsHostedComponentsQuery,
             IGetCloudOdsApiWebsiteSettingsQuery getAzureCloudOdsComponentApiWebsiteSettingsQuery, TokenCache tokenCache, GetAzureCloudOdsHostedInstanceQuery getCloudOdsHostedInstanceQuery)
         {
             _azureActiveDirectoryClientInfo = azureActiveDirectoryClientInfo;

@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         {
             services.AddSingleton(CloudOdsAzureActiveDirectoryClientInfo.GetActiveDirectoryClientInfoForUser());
 
-            services.Register(Component.For<IGetCloudOdsHostedComponentsQuery, IGetAzureCloudOdsHostedComponentsQuery, GetAzureCloudOdsHostedComponentsQuery>()
+            services.Register(Component.For<IGetCloudOdsHostedComponentsQuery, IGetAzureCloudOdsHostedComponentsQuery>()
                 .ImplementedBy<GetAzureCloudOdsHostedComponentsQuery>()
                 .LifestyleTransient());
 

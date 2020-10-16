@@ -65,7 +65,6 @@ EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsApiWebsiteSettingsQuery Trans
     EdFi.Ods.AdminApp.Management.IGetCloudOdsApiWebsiteSettingsQuery
 
 EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsHostedComponentsQuery Transient
-    EdFi.Ods.AdminApp.Management.Azure.GetAzureCloudOdsHostedComponentsQuery
     EdFi.Ods.AdminApp.Management.IGetCloudOdsHostedComponentsQuery
     EdFi.Ods.AdminApp.Management.Azure.IGetAzureCloudOdsHostedComponentsQuery
 

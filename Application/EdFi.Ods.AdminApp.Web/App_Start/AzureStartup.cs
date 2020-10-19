@@ -16,8 +16,6 @@ namespace EdFi.Ods.AdminApp.Web
 {
     public class AzureStartup : StartupBase
     {
-        private readonly string _applicationInsightsInstrumentationKey =
-            _appSettings.ApplicationInsightsInstrumentationKey;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AzureStartup));
 
         private static readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
@@ -31,9 +29,11 @@ namespace EdFi.Ods.AdminApp.Web
         {
             log4net.Config.XmlConfigurator.Configure();
 
-            if (_applicationInsightsInstrumentationKey != null)
+            var applicationInsightsInstrumentationKey = _appSettings.ApplicationInsightsInstrumentationKey;
+
+            if (applicationInsightsInstrumentationKey != null)
             {
-                TelemetryConfiguration.Active.InstrumentationKey = _applicationInsightsInstrumentationKey;
+                TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
                 _logger.DebugFormat("Found AppInsights instrumentation key in Web.config -- AppInsights will capture traces");
             }
             else

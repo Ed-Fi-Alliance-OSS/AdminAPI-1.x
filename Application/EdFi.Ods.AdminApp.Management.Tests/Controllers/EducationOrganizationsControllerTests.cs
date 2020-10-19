@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
-using Castle.Components.DictionaryAdapter;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Web.Controllers;
@@ -331,12 +330,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         public void When_Perform_Get_Request_To_EducationOrganizationList_Return_Education_Organization_List()
         {
             // Arrange
-            var schools = new EditableList<School>
+            var schools = new List<School>
             {
                 new School()
             };
 
-            var leas = new EditableList<LocalEducationAgency>
+            var leas = new List<LocalEducationAgency>
             {
                 new LocalEducationAgency()
             };

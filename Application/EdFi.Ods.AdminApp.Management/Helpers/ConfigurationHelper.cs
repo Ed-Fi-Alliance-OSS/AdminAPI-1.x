@@ -20,6 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _connectionStrings = new ConnectionStrings();
 
             _appSettings.AppStartup = ConfigurationManager.AppSettings["owin:appStartup"];
+            _appSettings.DatabaseEngine = ConfigurationManager.AppSettings["DatabaseEngine"];
             _appSettings.ApplicationInsightsInstrumentationKey =
                 ConfigurationManager.AppSettings["ApplicationInsightsInstrumentationKey"];
             _appSettings.XsdFolder = ConfigurationManager.AppSettings["XsdFolder"];
@@ -79,6 +80,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
     public class AppSettings
     {
         public string AppStartup { get; set; }
+        public string DatabaseEngine { get; set; }
         public string ApplicationInsightsInstrumentationKey { get; set; }
         public string XsdFolder { get; set; }
         public string DefaultOdsInstance { get; set; }

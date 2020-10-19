@@ -4,15 +4,21 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Configuration;
 using System.IdentityModel.Claims;
+using System.IO;
 using System.Net;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Castle.Windsor.Diagnostics;
 using EdFi.Admin.LearningStandards.Core.Configuration;
 using EdFi.Admin.LearningStandards.Core.Services;
 using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
@@ -53,6 +59,11 @@ namespace EdFi.Ods.AdminApp.Web
                 InstallConfigurationSpecificInstaller(Container);
                 FinalizeContainer(Container);
 
+                //NOTE: For development purposes only, uncomment this line to get diagnostics
+                //      on all IoC registrations:
+                //
+                // DescribeAllRegistrations();
+
                 ConfigureAspNetIdentityAuthentication(appBuilder);
 
                 ConfigureSignalR(appBuilder);
@@ -69,6 +80,29 @@ namespace EdFi.Ods.AdminApp.Web
                 Logger.Error("Startup Failed", e);
                 throw;
             }            
+        }
+
+        private void DescribeAllRegistrations([CallerFilePath] string pathToThisCodeFile = null)
+        {
+            var host = (IDiagnosticsHost) Container.Kernel.GetSubSystem(SubSystemConstants.DiagnosticsKey);
+            var diagnostics = host.GetDiagnostic<IAllComponentsDiagnostic>().Inspect();
+
+            var log = new StringBuilder();
+
+            foreach (var x in diagnostics.OrderBy(item => item.ComponentModel.ComponentName.ToString()))
+            {
+                log.AppendLine($"{x.ComponentModel.ComponentName} {x.ComponentModel.LifestyleType}");
+
+                foreach (var s in x.ComponentModel.Services)
+                    log.AppendLine($"    {s.FullName}");
+
+                log.AppendLine();
+            }
+
+            File.WriteAllText(
+                Path.Combine(Path.GetDirectoryName(pathToThisCodeFile),
+                    $"IocRegistrations.{ConfigurationManager.AppSettings["owin:appStartup"]}.md"),
+                log.ToString());
         }
 
         private IServiceProvider ServiceProviderFunc(IServiceCollection collection)

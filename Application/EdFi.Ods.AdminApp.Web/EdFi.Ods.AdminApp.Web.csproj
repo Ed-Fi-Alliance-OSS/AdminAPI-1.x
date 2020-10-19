@@ -701,6 +701,7 @@
     <Compile Include="App_Start\StartupBase.cs" />
     <Compile Include="_Installers\AzureInstaller.cs" />
     <Compile Include="_Installers\CommonConfigurationInstaller.cs" />
+    <Compile Include="_Installers\IocExtensions.cs" />
     <Compile Include="_Installers\OnPremInstaller.cs" />
     <Content Include="Artifacts\MsSql\Structure\Admin\202002041102-CreateAdminAppSchema.sql" />
     <Content Include="Artifacts\MsSql\Structure\Admin\202006181124-AddSetUpCompletedStatusColumn.sql" />

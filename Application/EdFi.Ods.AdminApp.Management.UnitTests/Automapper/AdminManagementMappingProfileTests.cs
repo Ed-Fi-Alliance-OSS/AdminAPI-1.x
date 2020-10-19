@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Castle.Components.DictionaryAdapter;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Api.DomainModels;
 using EdFi.Ods.AdminApp.Management.Api.Models;
@@ -55,9 +54,9 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
             private const string LocalEducationAgencyCategoryDescriptor = "NameSpace#Private";
             private const string LocalEducationAgencyCategoryType = "Public";
             private const int StateEducationAgencyId = 999;
-            private EditableList<EdFiEducationOrganizationAddress> _addresses;
-            private EditableList<EdFiSchoolGradeLevel> _gradeLevels;
-            private EditableList<EdFiEducationOrganizationCategory> _edOrgCategories;
+            private List<EdFiEducationOrganizationAddress> _addresses;
+            private List<EdFiSchoolGradeLevel> _gradeLevels;
+            private List<EdFiEducationOrganizationCategory> _edOrgCategories;
             private EdFiLocalEducationAgencyReference _leaReference;
             private EdFiStateEducationAgencyReference _stateEducationAgencyReference;
 
@@ -69,14 +68,14 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                 _mapper = _configuration.CreateMapper();
                 _configuration.AssertConfigurationIsValid();
 
-                _addresses = new EditableList<EdFiEducationOrganizationAddress>
+                _addresses = new List<EdFiEducationOrganizationAddress>
                 {
                     new EdFiEducationOrganizationAddress(AddressTypeDescriptor, stateAbbreviationDescriptor: StateAbbreviationDescriptor,
                          apartmentRoomSuiteNumber: ApartmentRoomSuiteNumber, city:City, postalCode:PostalCode, streetNumberName:StreetNumberName)
                 };
-                _gradeLevels = new EditableList<EdFiSchoolGradeLevel>
+                _gradeLevels = new List<EdFiSchoolGradeLevel>
                     {new EdFiSchoolGradeLevel(GradeLevelDescriptor)};
-                _edOrgCategories = new EditableList<EdFiEducationOrganizationCategory>();
+                _edOrgCategories = new List<EdFiEducationOrganizationCategory>();
                 _leaReference = new EdFiLocalEducationAgencyReference(LeaId);
                 _stateEducationAgencyReference = new EdFiStateEducationAgencyReference(StateEducationAgencyId);
             }

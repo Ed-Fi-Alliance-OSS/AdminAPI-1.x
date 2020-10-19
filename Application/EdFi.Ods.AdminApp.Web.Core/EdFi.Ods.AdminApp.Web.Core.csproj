@@ -17,9 +17,9 @@
          these files will be moved from the legacy project to this project, at
          which point these explicit inclusions will become redundant. -->
 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/AzureInstaller.cs" LinkBase="_Installers" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/CommonConfigurationInstaller.cs" LinkBase="_Installers" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/OnPremInstaller.cs" LinkBase="_Installers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/AzureInstaller.cs" LinkBase="_Installers" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/CommonConfigurationInstaller.cs" LinkBase="_Installers" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/_Installers/OnPremInstaller.cs" LinkBase="_Installers" />
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/AuthorizationFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassInstanceContextFilter.cs" LinkBase="ActionFilters" />
@@ -109,10 +109,10 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/StringExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/VendorExtensions.cs" LinkBase="Helpers" />
 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/BulkUploadHub.cs" LinkBase="Hubs" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/BulkUploadHub.cs" LinkBase="Hubs" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/EdfiOdsHub.cs" LinkBase="Hubs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionLearningStandardsHub.cs" LinkBase="Hubs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionSetupHub.cs" LinkBase="Hubs" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionLearningStandardsHub.cs" LinkBase="Hubs" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionSetupHub.cs" LinkBase="Hubs" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AcceptAttribute.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/AdminWebMappingProfile.cs" LinkBase="Infrastructure/AutoMapper" />
@@ -123,7 +123,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettings.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettingsForAzure.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsApiConnectionInformationProvider.cs" LinkBase="Infrastructure" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAzureActiveDirectoryClientInfo.cs" LinkBase="Infrastructure" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAzureActiveDirectoryClientInfo.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsUpdateService.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/EducationOrganizationTypes.cs" LinkBase="Infrastructure" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" /> -->
@@ -135,14 +135,11 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileHelpers.cs" LinkBase="Infrastructure/IO" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileType.cs" LinkBase="Infrastructure/IO" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/LocalFileSystemFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IoC/CastleWindsorControllerFactory.cs" LinkBase="Infrastructure/IoC" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IoC/CastleWindsorFluentValidatorFactory.cs" LinkBase="Infrastructure/IoC" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IoC/WindsorDependencyResolver.cs" LinkBase="Infrastructure/IoC" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/BulkUploadJob.cs" LinkBase="Infrastructure/Jobs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/IWorkflowJob.cs" LinkBase="Infrastructure/Jobs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/LearningStandardsJob.cs" LinkBase="Infrastructure/Jobs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/ProductionSetupJob.cs" LinkBase="Infrastructure/Jobs" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/WorkflowJob.cs" LinkBase="Infrastructure/Jobs" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/BulkUploadJob.cs" LinkBase="Infrastructure/Jobs" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/IWorkflowJob.cs" LinkBase="Infrastructure/Jobs" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/LearningStandardsJob.cs" LinkBase="Infrastructure/Jobs" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/ProductionSetupJob.cs" LinkBase="Infrastructure/Jobs" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/WorkflowJob.cs" LinkBase="Infrastructure/Jobs" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/CompositeModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/EnumerationModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/EnumerationPropertyBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
@@ -336,7 +333,7 @@
            warnings about referncing .NET Framework projects and would not be trusted in production.
       -->
 
-    <!-- <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" /> -->
+    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
   </ItemGroup>
@@ -344,8 +341,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="Castle.Windsor" Version="5.0.1" />
     <PackageReference Include="CsvHelper" Version="15.0.6" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
     <PackageReference Include="EdFi.Suite3.LoadTools" Version="5.1.0-pre0014" />
@@ -353,7 +348,6 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
     <PackageReference Include="Hangfire" Version="1.7.14" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.7.1" />
-    <PackageReference Include="HangFire.Windsor" Version="2.0.1" />
     <PackageReference Include="HtmlTags" Version="8.0.0" />
     <PackageReference Include="log4net" Version="2.0.11" />
     <PackageReference Include="Npgsql" Version="4.1.5" />

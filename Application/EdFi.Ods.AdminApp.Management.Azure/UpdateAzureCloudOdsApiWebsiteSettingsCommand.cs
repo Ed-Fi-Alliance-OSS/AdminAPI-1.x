@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -13,17 +13,17 @@ namespace EdFi.Ods.AdminApp.Management.Azure
     public class UpdateAzureCloudOdsApiWebsiteSettingsCommand : IUpdateCloudOdsApiWebsiteSettingsCommand
     {
         private readonly AzureActiveDirectoryClientInfo _azureActiveDirectoryClientInfo;
-        private readonly GetAzureCloudOdsHostedComponentsQuery _getAzureCloudOdsHostedComponentsQuery;
+        private readonly IGetAzureCloudOdsHostedComponentsQuery _getAzureCloudOdsHostedComponentsQuery;
         private readonly GetAzureCloudOdsApiWebsiteSettingsQuery _getAzureCloudOdsComponentApiWebsiteSettingsQuery;
         private readonly AzureResourceManagerClient _armClient;
         private readonly GetAzureCloudOdsHostedInstanceQuery _getCloudOdsHostedInstanceQuery;
 
-        public UpdateAzureCloudOdsApiWebsiteSettingsCommand(AzureActiveDirectoryClientInfo azureActiveDirectoryClientInfo, GetAzureCloudOdsHostedComponentsQuery getAzureCloudOdsHostedComponentsQuery, 
-            GetAzureCloudOdsApiWebsiteSettingsQuery getAzureCloudOdsComponentApiWebsiteSettingsQuery, TokenCache tokenCache, GetAzureCloudOdsHostedInstanceQuery getCloudOdsHostedInstanceQuery)
+        public UpdateAzureCloudOdsApiWebsiteSettingsCommand(AzureActiveDirectoryClientInfo azureActiveDirectoryClientInfo, IGetAzureCloudOdsHostedComponentsQuery getAzureCloudOdsHostedComponentsQuery,
+            IGetCloudOdsApiWebsiteSettingsQuery getAzureCloudOdsComponentApiWebsiteSettingsQuery, TokenCache tokenCache, GetAzureCloudOdsHostedInstanceQuery getCloudOdsHostedInstanceQuery)
         {
             _azureActiveDirectoryClientInfo = azureActiveDirectoryClientInfo;
             _getAzureCloudOdsHostedComponentsQuery = getAzureCloudOdsHostedComponentsQuery;
-            _getAzureCloudOdsComponentApiWebsiteSettingsQuery = getAzureCloudOdsComponentApiWebsiteSettingsQuery;
+            _getAzureCloudOdsComponentApiWebsiteSettingsQuery = (GetAzureCloudOdsApiWebsiteSettingsQuery) getAzureCloudOdsComponentApiWebsiteSettingsQuery;
             _armClient = new AzureResourceManagerClient(azureActiveDirectoryClientInfo, tokenCache);
             _getCloudOdsHostedInstanceQuery = getCloudOdsHostedInstanceQuery;
         }

@@ -1,10 +1,14 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using Castle.MicroKernel.Registration;
+#if NET48
 using Castle.Windsor;
+#else
+using Microsoft.Extensions.DependencyInjection;
+#endif
+
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.OnPrem;
 using EdFi.Ods.AdminApp.Management.Services;
@@ -16,70 +20,25 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public class OnPremInstaller : CommonConfigurationInstaller
     {
-        protected override void InstallHostingSpecificClasses(IWindsorContainer container)
+#if NET48
+        protected override void InstallHostingSpecificClasses(IWindsorContainer services)
+#else
+        protected override void InstallHostingSpecificClasses(IServiceCollection services)
+#endif
         {
-            InstallEnterpriseSpecificServices(container);
-        }
-
-        private void InstallEnterpriseSpecificServices(IWindsorContainer container)
-        {
-            container.Register(Component.For<IGetCloudOdsInstanceQuery>()
-                .ImplementedBy<GetOnPremOdsInstanceQuery>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IGetCloudOdsApiWebsiteSettingsQuery>()
-                .ImplementedBy<GetOnPremOdsApiWebsiteSettingsQuery>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IUpdateCloudOdsApiWebsiteSettingsCommand>()
-                .ImplementedBy<UpdateOnPremOdsApiWebsiteSettingsCommand>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<ICloudOdsProductionLifecycleManagementService>()
-                .ImplementedBy<OnPremProductionLifecycleManagementService>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IGetProductionApiProvisioningWarningsQuery>()
-                .ImplementedBy<GetOnPremProductionApiProvisionWarningQuery>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<ICompleteOdsPostUpdateSetupCommand>()
-                .ImplementedBy<CompleteOnPremOdsPostUpdateSetupCommand>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IRestartAppServicesCommand>()
-                .ImplementedBy<RestartOnPremAppServicesCommand>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IFirstTimeSetupService>()
-                .ImplementedBy<OnPremFirstTimeSetupService>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<ICloudOdsDatabaseSqlServerSecurityConfiguration>()
-                .ImplementedBy<OnPremOdsDatabaseSqlServerSecurityConfiguration>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<ICloudOdsDatabaseNameProvider>()
-                .ImplementedBy<OnPremOdsDatabaseNameProvider>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IStringEncryptorService>()
-                .ImplementedBy<StringEncryptorService>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<ITabDisplayService>()
-                .ImplementedBy<OnPremTabDisplayService>()
-                .LifestyleTransient());
-
-            container.Register(Component.For<IHomeScreenDisplayService>()
-                .ImplementedBy<OnPremHomeScreenDisplayService>()
-                .LifestyleTransient());
-
-            container.Register(
-                Component.For<ICompleteOdsFirstTimeSetupCommand>()
-                    .ImplementedBy<CompleteOnPremFirstTimeSetupCommand>()
-                    .LifestyleTransient());
-
+            services.AddTransient<IGetCloudOdsInstanceQuery, GetOnPremOdsInstanceQuery>();
+            services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetOnPremOdsApiWebsiteSettingsQuery>();
+            services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateOnPremOdsApiWebsiteSettingsCommand>();
+            services.AddTransient<ICloudOdsProductionLifecycleManagementService, OnPremProductionLifecycleManagementService>();
+            services.AddTransient<IGetProductionApiProvisioningWarningsQuery, GetOnPremProductionApiProvisionWarningQuery>();
+            services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteOnPremOdsPostUpdateSetupCommand>();
+            services.AddTransient<IRestartAppServicesCommand, RestartOnPremAppServicesCommand>();
+            services.AddTransient<IFirstTimeSetupService, OnPremFirstTimeSetupService>();
+            services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration,OnPremOdsDatabaseSqlServerSecurityConfiguration>();
+            services.AddTransient<ICloudOdsDatabaseNameProvider, OnPremOdsDatabaseNameProvider>();
+            services.AddTransient<ITabDisplayService, OnPremTabDisplayService>();
+            services.AddTransient<IHomeScreenDisplayService, OnPremHomeScreenDisplayService>();
+            services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteOnPremFirstTimeSetupCommand>();
         }
     }
 }

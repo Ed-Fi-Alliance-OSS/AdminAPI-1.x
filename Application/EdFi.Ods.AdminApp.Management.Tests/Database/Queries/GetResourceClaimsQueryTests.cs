@@ -1,11 +1,10 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Core.Internal;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
@@ -45,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
                 results.All(x => x.Update == false).ShouldBe(true);
                 results.All(x => x.Read == false).ShouldBe(true);
                 results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
-                results.All(x => x.Children.IsNullOrEmpty()).ShouldBe(true);
+                results.All(x => x.Children.Count == 0).ShouldBe(true);
             });
         }
 

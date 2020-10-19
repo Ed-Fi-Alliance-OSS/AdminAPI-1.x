@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -51,7 +52,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
             mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
 
-            var mockGetCloudHostedComponentQuery = new Mock<IGetCloudOdsHostedComponentsQuery>();
+            var mockGetCloudHostedComponentQuery = new Mock<IGetAzureCloudOdsHostedComponentsQuery>();
             mockGetCloudHostedComponentQuery.Setup(a => a.Execute(It.IsAny<CloudOdsInstance>()))
                 .ReturnsAsync(GetMockComponents());
 
@@ -72,7 +73,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
         
 
-            var command = new CompleteOdsFirstTimeSetupCommand(
+            var command = new CompleteAzureFirstTimeSetupCommand(
                 mockUsersContext.Object,
                 mockSqlConfigurator.Object,
                 mockSecurityContext.Object,
@@ -123,7 +124,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
             mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
 
-            var mockGetCloudHostedComponentQuery = new Mock<IGetCloudOdsHostedComponentsQuery>();
+            var mockGetCloudHostedComponentQuery = new Mock<IGetAzureCloudOdsHostedComponentsQuery>();
             mockGetCloudHostedComponentQuery.Setup(a => a.Execute(It.IsAny<CloudOdsInstance>()))
                 .ReturnsAsync(GetMockComponents());
 
@@ -144,7 +145,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
 
-            var command = new CompleteOdsFirstTimeSetupCommand(
+            var command = new CompleteAzureFirstTimeSetupCommand(
                 mockUsersContext.Object,
                 mockSqlConfigurator.Object,
                 mockSecurityContext.Object,
@@ -164,9 +165,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
         }
 
         #region MockGetters
-        private static Mock<ICloudOdsDatabaseSecurityConfigurator> GetMockDatabaseSecurityConfigurator()
+        private static Mock<IAzureSqlSecurityConfigurator> GetMockDatabaseSecurityConfigurator()
         {
-            var mockSqlConfigurator = new Mock<ICloudOdsDatabaseSecurityConfigurator>();
+            var mockSqlConfigurator = new Mock<IAzureSqlSecurityConfigurator>();
 
             mockSqlConfigurator.Setup(m => m.CreateServerLogins(null)).Callback(() => { });
             mockSqlConfigurator.Setup(m => m.ApplyConfiguration(null, Enumerable.Empty<CloudOdsDatabaseSecurityConfiguration>()))

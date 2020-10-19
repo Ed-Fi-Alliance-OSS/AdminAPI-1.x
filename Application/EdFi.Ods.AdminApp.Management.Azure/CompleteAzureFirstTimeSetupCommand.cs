@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -15,16 +15,16 @@ using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management
+namespace EdFi.Ods.AdminApp.Management.Azure
 {
-    public class CompleteOdsFirstTimeSetupCommand : ICompleteOdsFirstTimeSetupCommand
+    public class CompleteAzureFirstTimeSetupCommand : ICompleteOdsFirstTimeSetupCommand
     {
         private readonly IUsersContext _usersContext;
-        private readonly ICloudOdsDatabaseSecurityConfigurator _cloudOdsSqlConfigurator;
+        private readonly IAzureSqlSecurityConfigurator _cloudOdsSqlConfigurator;
         private readonly ISecurityContext _securityContext;
         private readonly ICloudOdsClaimSetConfigurator _cloudOdsClaimSetConfigurator;
         private readonly IGetCloudOdsInstanceQuery _getCloudOdsInstanceQuery;
-        private readonly IGetCloudOdsHostedComponentsQuery _getCloudOdsHostedComponentsQuery;
+        private readonly IGetAzureCloudOdsHostedComponentsQuery _getCloudOdsHostedComponentsQuery;
         private readonly IOdsSecretConfigurationProvider _odsSecretConfigurationProvider;
         private readonly ICloudOdsDatabaseSqlServerSecurityConfiguration _cloudOdsDatabaseSqlServerSecurityConfiguration;
         private readonly IOdsInstanceFirstTimeSetupService _odsInstanceFirstTimeSetupService;
@@ -34,13 +34,13 @@ namespace EdFi.Ods.AdminApp.Management
 
         public Action ExtraDatabaseInitializationAction { get; set; }
 
-        public CompleteOdsFirstTimeSetupCommand(
+        public CompleteAzureFirstTimeSetupCommand(
             IUsersContext usersContext,
-            ICloudOdsDatabaseSecurityConfigurator cloudOdsSqlConfigurator,
+            IAzureSqlSecurityConfigurator cloudOdsSqlConfigurator,
             ISecurityContext securityContext,
             ICloudOdsClaimSetConfigurator cloudOdsClaimSetConfigurator,
             IGetCloudOdsInstanceQuery getCloudOdsInstanceQuery,
-            IGetCloudOdsHostedComponentsQuery getCloudOdsHostedComponentQuery,
+            IGetAzureCloudOdsHostedComponentsQuery getCloudOdsHostedComponentQuery,
             IOdsSecretConfigurationProvider odsSecretConfigurationProvider,
             ICloudOdsDatabaseSqlServerSecurityConfiguration cloudOdsDatabaseSqlServerSecurityConfiguration,
             IOdsInstanceFirstTimeSetupService odsInstanceFirstTimeSetupService,

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -17,8 +17,10 @@ namespace EdFi.Ods.AdminApp.Web
     public class AzureStartup : StartupBase
     {
         private readonly string _applicationInsightsInstrumentationKey =
-            ConfigurationHelper.GetAppSettings().ApplicationInsightsInstrumentationKey;
+            _appSettings.ApplicationInsightsInstrumentationKey;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AzureStartup));
+
+        private static readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
 
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)
         {

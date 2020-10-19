@@ -50,9 +50,9 @@ namespace EdFi.Ods.AdminApp.Web
 {
     public abstract class StartupBase : IDisposable
     {
-        protected readonly IWindsorContainer Container = new WindsorContainerEx();
+        private readonly IWindsorContainer Container = new WindsorContainerEx();
         private static ILog Logger;
-        protected static readonly AppSettings AppSettings = ConfigurationHelper.GetAppSettings();
+        private static readonly AppSettings AppSettings = ConfigurationHelper.GetAppSettings();
 
         public virtual void Configuration(IAppBuilder appBuilder)
         {

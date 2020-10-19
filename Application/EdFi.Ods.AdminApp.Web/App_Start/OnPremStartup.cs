@@ -15,12 +15,14 @@ namespace EdFi.Ods.AdminApp.Web
     {
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)
         {
-            container.Install(new OnPremInstaller());
+            if (AppSettings.AppStartup == "OnPrem")
+                container.Install(new OnPremInstaller());
         }
 
         protected override void ConfigureLogging(IAppBuilder app)
         {
-            log4net.Config.XmlConfigurator.Configure();
+            if (AppSettings.AppStartup == "OnPrem")
+                log4net.Config.XmlConfigurator.Configure();
         }
     }
 }

@@ -6,6 +6,7 @@
 using Castle.Windsor;
 using EdFi.Ods.AdminApp.Web._Installers;
 using log4net;
+using log4net.Config;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Owin;
 using Owin;
@@ -19,23 +20,27 @@ namespace EdFi.Ods.AdminApp.Web
 
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)
         {
-            container.Install(new AzureInstaller());
+            if (AppSettings.AppStartup == "Azure")
+                container.Install(new AzureInstaller());
         }
 
         protected override void ConfigureLogging(IAppBuilder app)
         {
-            log4net.Config.XmlConfigurator.Configure();
-
-            var applicationInsightsInstrumentationKey = AppSettings.ApplicationInsightsInstrumentationKey;
-
-            if (applicationInsightsInstrumentationKey != null)
+            if (AppSettings.AppStartup == "Azure")
             {
-                TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
-                _logger.DebugFormat("Found AppInsights instrumentation key in Web.config -- AppInsights will capture traces");
-            }
-            else
-            {
-                _logger.DebugFormat("No instrumentation key found in Web.config -- AppInsights will NOT capture traces");
+                XmlConfigurator.Configure();
+
+                var applicationInsightsInstrumentationKey = AppSettings.ApplicationInsightsInstrumentationKey;
+
+                if (applicationInsightsInstrumentationKey != null)
+                {
+                    TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
+                    _logger.DebugFormat("Found AppInsights instrumentation key in Web.config -- AppInsights will capture traces");
+                }
+                else
+                {
+                    _logger.DebugFormat("No instrumentation key found in Web.config -- AppInsights will NOT capture traces");
+                }
             }
         }
     }

@@ -5,9 +5,13 @@
 
 using System.Linq;
 using System.Web.Mvc;
+#if NET48
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+#else
+using Microsoft.Extensions.DependencyInjection;
+#endif
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
@@ -26,15 +30,25 @@ using Hangfire;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
+
 namespace EdFi.Ods.AdminApp.Web._Installers
 {
-    public abstract class CommonConfigurationInstaller : IWindsorInstaller
+    public abstract class CommonConfigurationInstaller
+#if NET48
+        : IWindsorInstaller
+#endif
     {
+#if NET48
         public void Install(IWindsorContainer services, IConfigurationStore store)
+#else
+        public void Install(IServiceCollection services)
+#endif
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
+#if NET48
             services.AddSingleton(AutoMapperBootstrapper.CreateMapper());
+#endif
 
             services.AddSingleton<IApiConfigurationProvider, ApiConfigurationProvider>();
             services.AddSingleton<IConfigValueProvider, AppConfigValueProvider>();
@@ -52,17 +66,19 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
 
-            services.AddSingleton<IOptions<AppSettings>>(
-                new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()));
-
             services.AddSingleton<ICachedItems, CachedItems>();
 
             services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
+
+#if NET48
+            services.AddSingleton<IOptions<AppSettings>>(
+                new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()));
 
             services.Register(
                 Classes.FromThisAssembly()
                     .BasedOn<IController>()
                     .LifestyleTransient());
+#endif
 
             services.AddTransient<ProductionSetupHub>();
             services.AddTransient<BulkUploadHub>();
@@ -122,14 +138,20 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<CloudOdsUpdateService>();
 
+#if NET48
             services.Register(
                 Classes.FromThisAssembly()
                     .BasedOn(typeof(IValidator<>))
                     .WithService
                     .Base()
                     .LifestyleTransient());
+#endif
         }
 
+#if NET48
         protected abstract void InstallHostingSpecificClasses(IWindsorContainer services);
+#else
+        protected abstract void InstallHostingSpecificClasses(IServiceCollection services);
+#endif
     }
 }

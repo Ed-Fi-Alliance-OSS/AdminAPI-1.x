@@ -43,6 +43,8 @@ using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using log4net;
+using log4net.Config;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -180,7 +182,29 @@ namespace EdFi.Ods.AdminApp.Web
                 container.Install(new AzureInstaller());
         }
 
-        protected abstract void ConfigureLogging(IAppBuilder appBuilder);
+        protected void ConfigureLogging(IAppBuilder app)
+        {
+            if (AppSettings.AppStartup == "OnPrem")
+            {
+                XmlConfigurator.Configure();
+            }
+            else if (AppSettings.AppStartup == "Azure")
+            {
+                XmlConfigurator.Configure();
+
+                var applicationInsightsInstrumentationKey = AppSettings.ApplicationInsightsInstrumentationKey;
+
+                if (applicationInsightsInstrumentationKey != null)
+                {
+                    TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
+                    Logger.DebugFormat("Found AppInsights instrumentation key in Web.config -- AppInsights will capture traces");
+                }
+                else
+                {
+                    Logger.DebugFormat("No instrumentation key found in Web.config -- AppInsights will NOT capture traces");
+                }
+            }
+        }
 
         protected virtual void ConfigureAspNet(IAppBuilder appBuilder)
         {

@@ -4,17 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using Microsoft.Owin;
-using Owin;
 
 [assembly: OwinStartup("OnPrem", typeof(EdFi.Ods.AdminApp.Web.OnPremStartup))]
 namespace EdFi.Ods.AdminApp.Web
 {
     public class OnPremStartup : StartupBase
     {
-        protected override void ConfigureLogging(IAppBuilder app)
-        {
-            if (AppSettings.AppStartup == "OnPrem")
-                log4net.Config.XmlConfigurator.Configure();
-        }
     }
 }

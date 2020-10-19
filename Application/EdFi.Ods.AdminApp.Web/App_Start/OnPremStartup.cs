@@ -6,6 +6,7 @@
 using Castle.Windsor;
 using EdFi.Ods.AdminApp.Web._Installers;
 using Microsoft.Owin;
+using Owin;
 
 [assembly: OwinStartup("OnPrem", typeof(EdFi.Ods.AdminApp.Web.OnPremStartup))]
 namespace EdFi.Ods.AdminApp.Web
@@ -15,6 +16,11 @@ namespace EdFi.Ods.AdminApp.Web
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)
         {
             container.Install(new OnPremInstaller());
+        }
+
+        protected override void ConfigureLogging(IAppBuilder app)
+        {
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }

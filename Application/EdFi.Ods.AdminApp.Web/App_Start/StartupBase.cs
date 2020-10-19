@@ -173,10 +173,7 @@ namespace EdFi.Ods.AdminApp.Web
 
         protected abstract void InstallConfigurationSpecificInstaller(IWindsorContainer container);
 
-        protected virtual void ConfigureLogging(IAppBuilder appBuilder)
-        {
-            log4net.Config.XmlConfigurator.Configure();
-        }
+        protected abstract void ConfigureLogging(IAppBuilder appBuilder);
 
         protected virtual void ConfigureAspNet(IAppBuilder appBuilder)
         {

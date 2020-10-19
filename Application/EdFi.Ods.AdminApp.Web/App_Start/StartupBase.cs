@@ -40,6 +40,7 @@ using Microsoft.Owin.Security.Cookies;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using log4net;
 
@@ -171,7 +172,13 @@ namespace EdFi.Ods.AdminApp.Web
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        protected abstract void InstallConfigurationSpecificInstaller(IWindsorContainer container);
+        private static void InstallConfigurationSpecificInstaller(IWindsorContainer container)
+        {
+            if (AppSettings.AppStartup == "OnPrem")
+                container.Install(new OnPremInstaller());
+            else if (AppSettings.AppStartup == "Azure")
+                container.Install(new AzureInstaller());
+        }
 
         protected abstract void ConfigureLogging(IAppBuilder appBuilder);
 

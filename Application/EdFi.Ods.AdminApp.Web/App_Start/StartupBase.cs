@@ -56,7 +56,7 @@ namespace EdFi.Ods.AdminApp.Web
 
         public virtual void Configuration(IAppBuilder appBuilder)
         {
-            ConfigureLogging(appBuilder);
+            ConfigureLogging();
             Logger = LogManager.GetLogger(typeof(StartupBase));
             try
             {
@@ -182,16 +182,12 @@ namespace EdFi.Ods.AdminApp.Web
                 container.Install(new AzureInstaller());
         }
 
-        protected void ConfigureLogging(IAppBuilder app)
+        protected void ConfigureLogging()
         {
-            if (AppSettings.AppStartup == "OnPrem")
-            {
-                XmlConfigurator.Configure();
-            }
-            else if (AppSettings.AppStartup == "Azure")
-            {
-                XmlConfigurator.Configure();
+            XmlConfigurator.Configure();
 
+            if (AppSettings.AppStartup == "Azure")
+            {
                 var applicationInsightsInstrumentationKey = AppSettings.ApplicationInsightsInstrumentationKey;
 
                 if (applicationInsightsInstrumentationKey != null)

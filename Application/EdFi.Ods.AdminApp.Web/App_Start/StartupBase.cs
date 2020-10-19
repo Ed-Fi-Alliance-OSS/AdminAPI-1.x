@@ -59,7 +59,10 @@ namespace EdFi.Ods.AdminApp.Web
                 InstallConfigurationSpecificInstaller(Container);
                 FinalizeContainer(Container);
 
-                DescribeAllRegistrations();
+                //NOTE: For development purposes only, uncomment this line to get diagnostics
+                //      on all IoC registrations:
+                //
+                // DescribeAllRegistrations();
 
                 ConfigureAspNetIdentityAuthentication(appBuilder);
 

@@ -39,6 +39,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using log4net;
 
@@ -48,6 +49,7 @@ namespace EdFi.Ods.AdminApp.Web
     {
         protected readonly IWindsorContainer Container = new WindsorContainerEx();
         private static ILog Logger;
+        protected static readonly AppSettings AppSettings = ConfigurationHelper.GetAppSettings();
 
         public virtual void Configuration(IAppBuilder appBuilder)
         {

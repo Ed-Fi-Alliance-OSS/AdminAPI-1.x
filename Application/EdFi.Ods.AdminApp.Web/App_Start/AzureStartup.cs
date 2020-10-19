@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using Castle.Windsor;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -18,8 +17,6 @@ namespace EdFi.Ods.AdminApp.Web
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(AzureStartup));
 
-        private static readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
-
         protected override void InstallConfigurationSpecificInstaller(IWindsorContainer container)
         {
             container.Install(new AzureInstaller());
@@ -29,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Web
         {
             log4net.Config.XmlConfigurator.Configure();
 
-            var applicationInsightsInstrumentationKey = _appSettings.ApplicationInsightsInstrumentationKey;
+            var applicationInsightsInstrumentationKey = AppSettings.ApplicationInsightsInstrumentationKey;
 
             if (applicationInsightsInstrumentationKey != null)
             {

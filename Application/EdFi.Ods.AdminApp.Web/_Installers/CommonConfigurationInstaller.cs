@@ -4,13 +4,14 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
-using System.Web.Mvc;
 #if NET48
+using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 #else
 using Microsoft.Extensions.DependencyInjection;
+using EdFi.Ods.Common.Extensions;
 #endif
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
@@ -48,16 +49,39 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
 #if NET48
             services.AddSingleton(AutoMapperBootstrapper.CreateMapper());
-#endif
 
             services.AddSingleton<IApiConfigurationProvider, ApiConfigurationProvider>();
             services.AddSingleton<IConfigValueProvider, AppConfigValueProvider>();
             services.AddSingleton<IDatabaseEngineProvider, DatabaseEngineProvider>();
             services.AddSingleton<IConfigConnectionStringsProvider, AppConfigConnectionStringsProvider>();
+
             services.AddSingleton<ISecurityContextFactory, SecurityContextFactory>();
             services.AddSingleton<IUsersContextFactory, UsersContextFactory>();
             services.AddScoped(x => x.GetService<ISecurityContextFactory>().CreateContext());
             services.AddScoped(x => x.GetService<IUsersContextFactory>().CreateContext());
+#else
+            services.AddScoped<ISecurityContext>(x =>
+            {
+                var appSettings = x.GetService<IOptions<AppSettings>>();
+                var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
+
+                if (appSettings.Value.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
+                    return new SqlServerSecurityContext(connectionStrings.Value.Security);
+
+                return new PostgresSecurityContext(connectionStrings.Value.Security);
+            });
+
+            services.AddScoped<IUsersContext>(x =>
+            {
+                var appSettings = x.GetService<IOptions<AppSettings>>();
+                var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
+
+                if (appSettings.Value.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
+                    return new SqlServerUsersContext(connectionStrings.Value.Admin);
+
+                return new PostgresUsersContext(connectionStrings.Value.Admin);
+            });
+#endif
 
             services.AddSingleton(TokenCache.DefaultShared);
 

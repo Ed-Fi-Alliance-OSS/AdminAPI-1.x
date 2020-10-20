@@ -57,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Web
         public virtual void Configuration(IAppBuilder appBuilder)
         {
             ConfigureLogging();
-            Logger = LogManager.GetLogger(typeof(StartupBase));
+
             try
             {
                 InitializeContainer(Container);
@@ -185,6 +185,7 @@ namespace EdFi.Ods.AdminApp.Web
         protected void ConfigureLogging()
         {
             XmlConfigurator.Configure();
+            Logger = LogManager.GetLogger(typeof(StartupBase));
 
             if (AppSettings.AppStartup == "Azure")
             {

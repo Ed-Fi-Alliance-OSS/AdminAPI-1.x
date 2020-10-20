@@ -129,7 +129,10 @@ namespace EdFi.Ods.AdminApp.Web
                 config
             );
 
-            Container.Register(Component.For<ILearningStandardsCorePluginConnector>().Instance(pluginConnector));
+            Container.Register(
+                Component.For<ILearningStandardsCorePluginConnector>()
+                    .Instance(pluginConnector)
+                    .LifestyleSingleton());
         }
 
         private static int GetLearningStandardsMaxSimultaneousRequests()

@@ -7,7 +7,7 @@ Castle.Proxies.ISecureHasherProxy Undefined
 EdFi.Admin.DataAccess.Contexts.UsersContextFactory Singleton
     EdFi.Admin.DataAccess.Contexts.IUsersContextFactory
 
-EdFi.Admin.LearningStandards.Core.Services.LearningStandardsCorePluginConnector Undefined
+EdFi.Admin.LearningStandards.Core.Services.LearningStandardsCorePluginConnector Singleton
     EdFi.Admin.LearningStandards.Core.Services.Interfaces.ILearningStandardsCorePluginConnector
 
 EdFi.Ods.AdminApp.Management.AdminAppUserContext Scoped

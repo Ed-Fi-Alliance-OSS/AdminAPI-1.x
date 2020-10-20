@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Linq;
 #if NET48
 using System.Web.Mvc;
@@ -10,10 +11,12 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 #else
-using Microsoft.Extensions.DependencyInjection;
 using EdFi.Ods.Common.Extensions;
 #endif
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Admin.LearningStandards.Core.Configuration;
+using EdFi.Admin.LearningStandards.Core.Services;
+using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
@@ -28,6 +31,8 @@ using EdFi.Ods.Common.Security;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using Hangfire;
+using log4net;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
@@ -39,6 +44,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         : IWindsorInstaller
 #endif
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(CommonConfigurationInstaller));
+
 #if NET48
         public void Install(IWindsorContainer services, IConfigurationStore store)
 #else
@@ -177,5 +184,52 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 #else
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);
 #endif
+
+#if NET48
+        public static void ConfigureLearningStandards(IWindsorContainer services)
+#else
+        public static void ConfigureLearningStandards(IServiceCollection services)
+#endif
+        {
+            var config = new EdFiOdsApiClientConfiguration(
+                maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());
+
+            var serviceCollection = new ServiceCollection();
+
+            var pluginConnector = new LearningStandardsCorePluginConnector(
+                serviceCollection,
+                ServiceProviderFunc,
+                new LearningStandardLogProvider(),
+                config
+            );
+
+            services.AddSingleton<ILearningStandardsCorePluginConnector>(pluginConnector);
+        }
+
+        private static int GetLearningStandardsMaxSimultaneousRequests()
+        {
+            const int IdealSimultaneousRequests = 4;
+            const int PessimisticSimultaneousRequests = 1;
+
+            try
+            {
+                var odsApiVersion = new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl);
+
+                return odsApiVersion.StartsWith("3.") ? PessimisticSimultaneousRequests : IdealSimultaneousRequests;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(
+                    "Failed to infer ODS / API version to determine Learning Standards " +
+                    $"MaxSimultaneousRequests. Assuming a max of {PessimisticSimultaneousRequests}.", e);
+
+                return PessimisticSimultaneousRequests;
+            }
+        }
+
+        private static IServiceProvider ServiceProviderFunc(IServiceCollection collection)
+        {
+            return collection.BuildServiceProvider();
+        }
     }
 }

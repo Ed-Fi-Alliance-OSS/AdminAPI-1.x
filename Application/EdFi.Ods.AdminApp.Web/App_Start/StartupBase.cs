@@ -18,10 +18,6 @@ using System.Web.Routing;
 using Castle.MicroKernel;
 using Castle.Windsor;
 using Castle.Windsor.Diagnostics;
-using EdFi.Admin.LearningStandards.Core.Configuration;
-using EdFi.Admin.LearningStandards.Core.Services;
-using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.App_Start;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IoC;
@@ -30,7 +26,6 @@ using EdFi.Ods.Common.InversionOfControl;
 using FluentValidation.Mvc;
 using Hangfire;
 using Hangfire.Windsor;
-using Microsoft.Extensions.DependencyInjection;
 using Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -40,7 +35,6 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
 using log4net;
 using log4net.Config;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -72,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Web
 
                 ConfigureTls();
 
-                ConfigureLearningStandards(Container);
+                CommonConfigurationInstaller.ConfigureLearningStandards(Container);
 
                 //NOTE: For development purposes only, uncomment this line to get diagnostics
                 //      on all IoC registrations:
@@ -107,49 +101,6 @@ namespace EdFi.Ods.AdminApp.Web
                 Path.Combine(Path.GetDirectoryName(pathToThisCodeFile),
                     $"IocRegistrations.{ConfigurationManager.AppSettings["owin:appStartup"]}.md"),
                 log.ToString());
-        }
-
-        private static IServiceProvider ServiceProviderFunc(IServiceCollection collection)
-        {
-            return collection.BuildServiceProvider();
-        }
-
-        private static void ConfigureLearningStandards(IWindsorContainer services)
-        {
-            var config = new EdFiOdsApiClientConfiguration(
-                maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());
-
-            var serviceCollection = new ServiceCollection();
-
-            var pluginConnector = new LearningStandardsCorePluginConnector(
-                serviceCollection,
-                ServiceProviderFunc,
-                new LearningStandardLogProvider(),
-                config
-            );
-
-            services.AddSingleton<ILearningStandardsCorePluginConnector>(pluginConnector);
-        }
-
-        private static int GetLearningStandardsMaxSimultaneousRequests()
-        {
-            const int IdealSimultaneousRequests = 4;
-            const int PessimisticSimultaneousRequests = 1;
-
-            try
-            {
-                var odsApiVersion = new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl);
-
-                return odsApiVersion.StartsWith("3.") ? PessimisticSimultaneousRequests : IdealSimultaneousRequests;
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(
-                    "Failed to infer ODS / API version to determine Learning Standards " +
-                    $"MaxSimultaneousRequests. Assuming a max of {PessimisticSimultaneousRequests}.", e);
-
-                return PessimisticSimultaneousRequests;
-            }
         }
 
         private static void InitializeContainer(IWindsorContainer container)

@@ -64,11 +64,6 @@ namespace EdFi.Ods.AdminApp.Web
                 InstallConfigurationSpecificInstaller(Container);
                 FinalizeContainer(Container);
 
-                //NOTE: For development purposes only, uncomment this line to get diagnostics
-                //      on all IoC registrations:
-                //
-                DescribeAllRegistrations();
-
                 ConfigureAspNetIdentityAuthentication(appBuilder);
 
                 ConfigureSignalR(appBuilder);
@@ -79,6 +74,11 @@ namespace EdFi.Ods.AdminApp.Web
                 ConfigureTls();
 
                 ConfigureLearningStandards();
+
+                //NOTE: For development purposes only, uncomment this line to get diagnostics
+                //      on all IoC registrations:
+                //
+                DescribeAllRegistrations();
             }
             catch (Exception e)
             {

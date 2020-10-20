@@ -1,0 +1,107 @@
+[
+    {
+        "outputFileName": "Content/css/styles/site.bundle.min.css",
+        "inputFiles": [
+            "Content/css/bootstrap.css",
+            "Content/css/bootstrap-multiselect.css",
+            "Content/css/font-awesome.css",
+            "Content/css/Site.css",
+            "Content/css/toastr.min.css"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": false
+        }
+    },
+    {
+        "outputFileName": "Scripts/bundles/bootstrap.bundle.min.js",
+        "inputFiles": [
+            "Scripts/bootstrap.js",
+            "Scripts/bootstrap-multiselect.js",
+            "Scripts/respond.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/jquery.bundle.min.js",
+        "inputFiles": [
+            "Scripts/jquery-2.2.3.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/jquery.validate.bundle.min.js",
+        "inputFiles": [
+            "Scripts/jquery.validate*.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/modernizr.bundle.min.js",
+        "inputFiles": [
+            "Scripts/modernizr-*.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/lodash.bundle.min.js",
+        "inputFiles": [
+            "Scripts/lodash.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/site.bundle.min.js",
+        "inputFiles": [
+            "Scripts/site.js",
+            "Scripts/site-form-handlers.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/claimset.bundle.min.js",
+        "inputFiles": [
+            "Scripts/resource-editor.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "Scripts/bundles/authstrategy.bundle.min.js",
+        "inputFiles": [
+            "Scripts/auth-editor.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": true
+    }
+]

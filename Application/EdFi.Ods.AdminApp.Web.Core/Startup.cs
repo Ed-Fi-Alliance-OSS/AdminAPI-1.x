@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using log4net;
 using log4net.Config;
+using Microsoft.Extensions.FileProviders;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -34,7 +35,7 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
-            services.AddControllersWithViews()
+            services.AddControllersWithViews();
                     .AddFluentValidation(opt =>
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);
@@ -69,7 +70,21 @@ namespace EdFi.Ods.AdminApp.Web
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(env.ContentRootPath, "Content")),
+                    RequestPath = "/Content"
+                });
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(env.ContentRootPath, "Scripts")),
+                    RequestPath = "/Scripts"
+                });
 
             app.UseRouting();
 

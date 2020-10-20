@@ -1,9 +1,11 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 See the LICENSE and NOTICES files in the project root for more information.
 *@
+
+@using Microsoft.AspNetCore.Http
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,11 +13,75 @@ See the LICENSE and NOTICES files in the project root for more information.
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Ed-Fi ODS Admin App for Suite 3</title>
+    <link rel="stylesheet" href="~/Content/css/styles/site.bundle.min.css" />
+    <script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
 </head>
 <body>
-    <div>
-        @RenderBody()
+    <div id="dynamic-modal-container"></div>
+    <script language="javascript">
+        toastr.options.positionClass = "toast-bottom-right";
+    </script>
+    <nav class="navbar navbar-inverse navbar-custom" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand brand" href="@Url.Action("Index", "Home")"> <img src="~/Content/images/logo-edfi@2x.png" width="132" height="70" alt="" /> </a>
+                <span class="topbar_headline"> Ed-Fi ODS Admin App for Suite 3 </span>
+            </div>
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <div class="btn-group">
+                       @* @Html.PartialAsync("_LoginPartial")*@
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    @if (TempData.ContainsKey("ToastMessage"))
+    {
+        @Html.Hidden("toast", Html.Encode(TempData["ToastMessage"]), new { data_type = TempData["ToastType"] })
+    }
+    <div class="container body-content">
+        <div class="row">
+            @*@if (HttpContext..User != null && HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                <div class="col-md-1 col-md-offset-11 nav-links">
+                    <a href="@Url.Action("Index", "Home")" class="text-nowrap">
+                        <span class="fa fa-home"></span><strong>Home</strong>
+                    </a>
+                </div>
+            }*@
+        </div>
+        <section>
+            @RenderBody()
+            <div id="AntiForgeryToken">
+                @Html.AntiForgeryToken()
+            </div>
+            <div class="hidden">
+                <div id="loading-overlay" class="text-center">
+                    <div><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                </div>
+            </div>
+        </section>
     </div>
-@RenderSection("Scripts", required: false)
+
+    <footer class="footer">
+        <div class="container container-footer">
+            <div class="row">
+                <p class="col-md-4"></p>
+                <p class="col-md-4 text-muted small"><a href="@Url.Action("Index", "Home")"><span class="fa fa-home"></span><span>Home</span></a></p>
+                @*<p class="col-md-4 text-right application-version">@Html.ApplicationVersion()</p>*@
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="~/Scripts/clipboard.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bundles/jquery.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bundles/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bundles/jquery.validate.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bundles/modernizr.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bundles/lodash.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bundles/site.bundle.min.js"></script>
+    <script type="text/javascript">
+        GlobalInitialize();
+    </script>
 </body>
 </html>

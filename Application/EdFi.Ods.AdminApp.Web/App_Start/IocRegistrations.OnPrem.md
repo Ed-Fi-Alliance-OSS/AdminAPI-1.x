@@ -16,20 +16,11 @@ EdFi.Ods.AdminApp.Management.AdminAppUserContext Scoped
 EdFi.Ods.AdminApp.Management.Api.InferOdsApiVersion Transient
     EdFi.Ods.AdminApp.Management.Api.IInferOdsApiVersion
 
-EdFi.Ods.AdminApp.Management.Api.OdsApiFacade Transient
-    EdFi.Ods.AdminApp.Management.Api.IOdsApiFacade
-
 EdFi.Ods.AdminApp.Management.Api.OdsApiFacadeFactory Transient
     EdFi.Ods.AdminApp.Management.Api.IOdsApiFacadeFactory
 
-EdFi.Ods.AdminApp.Management.Api.OdsRestClient Transient
-    EdFi.Ods.AdminApp.Management.Api.IOdsRestClient
-
 EdFi.Ods.AdminApp.Management.Api.OdsRestClientFactory Transient
     EdFi.Ods.AdminApp.Management.Api.IOdsRestClientFactory
-
-EdFi.Ods.AdminApp.Management.Api.TokenRetriever Transient
-    EdFi.Ods.AdminApp.Management.Api.ITokenRetriever
 
 EdFi.Ods.AdminApp.Management.AssessmentVendorAdjustment Transient
     EdFi.Ods.AdminApp.Management.IAssessmentVendorAdjustment

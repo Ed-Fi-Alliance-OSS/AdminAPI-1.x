@@ -166,6 +166,15 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     if (concreteClass == typeof(OdsSecretConfigurationProvider))
                         continue; //Singleton registered above.
 
+                    if (concreteClass == typeof(OdsApiFacade))
+                        continue; //IOdsApiFacade is never resolved. Instead, classes inject IOdsApiFacadeFactory.
+
+                    if (concreteClass == typeof(OdsRestClient))
+                        continue; //IOdsRestClient is never resolved. Instead, classes inject IOdsRestClientFactory.
+
+                    if (concreteClass == typeof(TokenRetriever))
+                        continue; //ITokenRetriever is never resolved. Instead, other dependencies construct TokenRetriever directly.
+
                     var interfaces = concreteClass.GetInterfaces().ToArray();
 
                     if (interfaces.Length == 1)

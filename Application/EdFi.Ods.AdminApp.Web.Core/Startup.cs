@@ -5,6 +5,7 @@
 
 using System.Reflection;
 using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using Microsoft.AspNetCore.Builder;
@@ -35,7 +36,9 @@ namespace EdFi.Ods.AdminApp.Web
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);
                     });
-            services.AddAutoMapper(executingAssembly);
+
+            services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
+
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 

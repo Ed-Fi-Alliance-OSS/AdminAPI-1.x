@@ -109,12 +109,12 @@ namespace EdFi.Ods.AdminApp.Web
                 log.ToString());
         }
 
-        private IServiceProvider ServiceProviderFunc(IServiceCollection collection)
+        private static IServiceProvider ServiceProviderFunc(IServiceCollection collection)
         {
             return collection.BuildServiceProvider();
         }
 
-        private void ConfigureLearningStandards(IWindsorContainer services)
+        private static void ConfigureLearningStandards(IWindsorContainer services)
         {
             var config = new EdFiOdsApiClientConfiguration(
                 maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());

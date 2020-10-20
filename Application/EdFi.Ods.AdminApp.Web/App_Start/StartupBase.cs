@@ -16,7 +16,6 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Castle.MicroKernel;
-using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Diagnostics;
 using EdFi.Admin.LearningStandards.Core.Configuration;
@@ -73,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Web
 
                 ConfigureTls();
 
-                ConfigureLearningStandards();
+                ConfigureLearningStandards(Container);
 
                 //NOTE: For development purposes only, uncomment this line to get diagnostics
                 //      on all IoC registrations:
@@ -115,7 +114,7 @@ namespace EdFi.Ods.AdminApp.Web
             return collection.BuildServiceProvider();
         }
 
-        private void ConfigureLearningStandards()
+        private void ConfigureLearningStandards(IWindsorContainer services)
         {
             var config = new EdFiOdsApiClientConfiguration(
                 maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());
@@ -129,10 +128,7 @@ namespace EdFi.Ods.AdminApp.Web
                 config
             );
 
-            Container.Register(
-                Component.For<ILearningStandardsCorePluginConnector>()
-                    .Instance(pluginConnector)
-                    .LifestyleSingleton());
+            services.AddSingleton<ILearningStandardsCorePluginConnector>(pluginConnector);
         }
 
         private static int GetLearningStandardsMaxSimultaneousRequests()

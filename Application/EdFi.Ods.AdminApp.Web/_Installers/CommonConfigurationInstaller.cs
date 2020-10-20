@@ -126,7 +126,24 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<IProductionLearningStandardsJob, ProductionLearningStandardsJob>();
             services.AddSingleton(x => (WorkflowJob<LearningStandardsJobContext, ProductionLearningStandardsHub>) x.GetService<IProductionLearningStandardsJob>());//Resolve previously queued job.
 
+#if NET48
             services.AddSingleton<ISecureHasher, Pbkdf2HmacSha1SecureHasher>();
+#else
+            // The intended type Pbkdf2HmacSha1SecureHasher relies on the NET48-only ODS
+            // ChainOfResponsibilityFacility concept in the currently referenced version
+            // of ODS Platform packages. This appears to the .NET Core IoC container as an
+            // unresolvable circular dependency. Upon upgrading ODS Platform NuGet packages to
+            // a higher, .NET Core-only version, we expect Pbkdf2HmacSha1SecureHasher's constructor
+            // to simplify as it no longer uses ChainOfResponsibilityFacility and will no longer
+            // present as a circular dependency. Until then, we register a stub alternative
+            // to satisfy the IoC container. Upon upgrading packages, this and the stub class
+            // should be removed in favor of registering Pbkdf2HmacSha1SecureHasher like NET48
+            // above.
+            //
+            // Although the type is resolved at runtime, current code paths do not in fact invoke
+            // methods on the type, so this does not pose an immediate risk of defects.
+            services.AddSingleton<ISecureHasher, StubPbkdf2HmacSha1SecureHasher>();
+#endif
             services.AddSingleton<IPackedHashConverter, PackedHashConverter>();
             services.AddSingleton<ISecurePackedHashProvider, SecurePackedHashProvider>();
             services.AddSingleton<IHashConfigurationProvider, DefaultHashConfigurationProvider>();

@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- As the legacy .NET Framework web application is being ported to .NET Core,
          it helps to have both variants of the web app share code files. As files
          become cross-compilable, we uncomment their inclusion here. Ultimately,
@@ -215,6 +211,62 @@
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
     <Content Include="../EdFi.Ods.AdminApp.Web/Scripts/**/*.*" LinkBase="Scripts" />
+    <Compile Remove="Content\less\**" />
+    <Compile Remove="Content\scss\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="Content\less\**" />
+    <Content Remove="Content\scss\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Content\less\**" />
+    <EmbeddedResource Remove="Content\scss\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Content\less\**" />
+    <None Remove="Content\scss\**" />
+    <None Remove="wwwroot\**" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap-theme.min.css" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap-theme.min.css.map" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap.min.css" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap.min.css.map" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\font-awesome.min.css" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\animated.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\bootstrap-multiselect.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\bordered-pulled.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\core.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\fixed-width.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\font-awesome.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\icons.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\larger.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\list.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\mixins.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\path.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\rotated-flipped.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\screen-reader.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\stacked.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\variables.less" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\font-awesome.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_animated.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_bordered-pulled.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_core.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_fixed-width.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_icons.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_larger.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_list.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_mixins.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_path.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_rotated-flipped.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_screen-reader.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_stacked.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_variables.scss" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\bootstrap.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery-2.2.3.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery-2.2.3.min.map" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery.signalR-2.2.1.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery.validate.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\lodash.core.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\lodash.min.js" />
+    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\respond.min.js" />
+    <Content Remove="bundleconfig.json" />
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -325,6 +377,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
       <!-- These project references can be uncommented once each one is upgrade to support .NET Core.
            These can be temporarily uncommented even before then, though doing so introduces compatibility
            warnings about referncing .NET Framework projects and would not be trusted in production.
@@ -338,6 +394,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="CsvHelper" Version="15.0.6" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
     <PackageReference Include="EdFi.Suite3.LoadTools" Version="5.1.0-pre0014" />

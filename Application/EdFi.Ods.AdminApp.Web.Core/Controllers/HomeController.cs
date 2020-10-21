@@ -6,21 +6,13 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Web.Models;
-using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
-
         public IActionResult Index()
         {
-            _logger.Info("TEST INFO LOGGING");
-            _logger.Error("TEST ERROR LOGGING");
-            _logger.Debug("TEST DEBUG LOGGING");
-            _logger.Warn("TEST WARN LOGGING");
-
             return View();
         }
 

@@ -209,7 +209,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorOverviewModel.cs" LinkBase="Models/ViewModels" />
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
-    <Content Remove="bundleconfig.json" />
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -317,10 +316,6 @@
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_EditUserRoleModal.cshtml" LinkBase="Views/User" /> -->
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/AddUser.cshtml" LinkBase="Views/User" /> -->
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/EditOdsInstanceRegistrationsForUser.cshtml" LinkBase="Views/User" /> -->
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bundleconfig.json" />
   </ItemGroup>
 
   <ItemGroup>

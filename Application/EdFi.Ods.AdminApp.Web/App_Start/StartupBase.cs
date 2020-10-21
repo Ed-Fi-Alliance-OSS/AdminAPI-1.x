@@ -9,6 +9,7 @@ using System.IdentityModel.Claims;
 using System.IO;
 using System.Net;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Web.Helpers;
@@ -134,7 +135,12 @@ namespace EdFi.Ods.AdminApp.Web
 
         protected void ConfigureLogging()
         {
-            XmlConfigurator.Configure();
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var configPath = Path.Combine(Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile), ConfigurationHelper.GetAppSettings().Log4NetConfigPath);
+
+            XmlConfigurator.Configure(LogManager.GetRepository(assembly), new FileInfo(configPath));
+
             Logger = LogManager.GetLogger(typeof(StartupBase));
 
             if (AppSettings.AppStartup == "Azure")

@@ -1,24 +1,8 @@
 [
     {
-        "outputFileName": "wwwroot/bundles/site.bundle.min.css",
+        "outputFileName": "wwwroot/bundles/bootstrap-multiselect.min.css",
         "inputFiles": [
-            "wwwroot/Content/css/bootstrap.css",
-            "wwwroot/Content/css/bootstrap-multiselect.css",
-            "wwwroot/Content/css/font-awesome.css",
-            "wwwroot/Content/css/Site.css",
-            "wwwroot/Content/css/toastr.min.css"
-        ],
-        "minify": {
-            "enabled": true,
-            "renameLocals": false
-        }
-    },
-    {
-        "outputFileName": "wwwroot/bundles/bootstrap.bundle.min.js",
-        "inputFiles": [
-            "wwwroot/Scripts/bootstrap.js",
-            "wwwroot/Scripts/bootstrap-multiselect.js",
-            "wwwroot/Scripts/respond.js"
+            "wwwroot/Content/css/bootstrap-multiselect.css"
         ],
         "minify": {
             "enabled": true,
@@ -27,9 +11,9 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/jquery.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/site.min.css",
         "inputFiles": [
-            "wwwroot/Scripts/jquery-2.2.3.js"
+            "wwwroot/Content/css/Site.css"
         ],
         "minify": {
             "enabled": true,
@@ -38,9 +22,9 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/jquery.validate.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/bootstrap-multiselect.min.js",
         "inputFiles": [
-            "wwwroot/Scripts/jquery.validate*.js"
+            "wwwroot/Scripts/bootstrap-multiselect.js"
         ],
         "minify": {
             "enabled": true,
@@ -49,9 +33,9 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/modernizr.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/jquery.validate-vsdoc.min.js",
         "inputFiles": [
-            "wwwroot/Scripts/modernizr-*.js"
+            "wwwroot/Scripts/jquery.validate-vsdoc.js"
         ],
         "minify": {
             "enabled": true,
@@ -60,9 +44,9 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/lodash.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/modernizr.min.js",
         "inputFiles": [
-            "wwwroot/Scripts/lodash.js"
+            "wwwroot/Scripts/modernizr-2.8.3.js"
         ],
         "minify": {
             "enabled": true,
@@ -71,10 +55,11 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/site.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/site.min.js",
         "inputFiles": [
             "wwwroot/Scripts/site.js",
-            "wwwroot/Scripts/site-form-handlers.js"
+            "wwwroot/Scripts/site-form-handlers.js",
+            "wwwroot/Scripts/signalr.js"
         ],
         "minify": {
             "enabled": true,
@@ -83,7 +68,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/claimset.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/claimset.min.js",
         "inputFiles": [
             "wwwroot/Scripts/resource-editor.js"
         ],
@@ -94,7 +79,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/authstrategy.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/authstrategy.min.js",
         "inputFiles": [
             "wwwroot/Scripts/auth-editor.js"
         ],

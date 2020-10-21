@@ -78,6 +78,3 @@ EdFi.Suite3.Installer.AdminApp/Ed-Fi-Common
 EdFi.Suite3.Installer.AdminApp/Ed-Fi-ODS
 EdFi.Suite3.Installer.AdminApp/Ed-Fi-ODS-Implementation
 
-#EdFi.Ods.AdminApp.Web.Core minified css and script files
-Application/EdFi.Ods.AdminApp.Web.Core/Content/css/styles
-Application/EdFi.Ods.AdminApp.Web.Core/Scripts/bundles

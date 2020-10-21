@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- As the legacy .NET Framework web application is being ported to .NET Core,
          it helps to have both variants of the web app share code files. As files
          become cross-compilable, we uncomment their inclusion here. Ultimately,

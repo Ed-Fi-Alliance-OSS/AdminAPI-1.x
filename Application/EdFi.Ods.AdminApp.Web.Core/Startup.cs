@@ -8,6 +8,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
+using EdFi.Ods.AdminApp.Web.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +42,8 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+
+            services.AddSignalR();
 
             var appStartup = Configuration["AppSettings:AppStartup"];
             if (appStartup == "OnPrem")

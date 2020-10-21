@@ -39,12 +39,10 @@
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationUserManager.cs" LinkBase="App_Start" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/AzureStartup.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/BundleConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/FilterConfig.cs" LinkBase="App_Start" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/LearningStandardLogProvider.cs" LinkBase="App_Start" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ModelBinderConfig.cs" LinkBase="App_Start" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/OnPremStartup.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/RouteConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/StartupBase.cs" LinkBase="App_Start" /> -->
 
@@ -117,7 +115,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AcceptAttribute.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/AdminWebMappingProfile.cs" LinkBase="Infrastructure/AutoMapper" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/EducationOrganizationNameResolver.cs" LinkBase="Infrastructure/AutoMapper" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapperBootstrapper.cs" LinkBase="Infrastructure" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CachedItems.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppClaimSetConfiguration.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettings.cs" LinkBase="Infrastructure" />

@@ -8,6 +8,7 @@
 
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
+using EdFi.Ods.Common.Security;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -49,4 +50,15 @@ namespace EdFi.Ods.AdminApp.Web.Hubs
     {
         public void SendOperationStatusUpdate(WorkflowStatus status) => throw new System.NotImplementedException();
     }
+}
+
+public class StubPbkdf2HmacSha1SecureHasher : ISecureHasher
+{
+    public PackedHash ComputeHash(string secret, int hashAlgorithm, int iterations, byte[] salt)
+        => throw new System.NotImplementedException();
+
+    public PackedHash ComputeHash(string secret, int hashAlgorithm, int iterations, int saltSizeInBytes)
+        => throw new System.NotImplementedException();
+
+    public string Algorithm { get => throw new System.NotImplementedException(); }
 }

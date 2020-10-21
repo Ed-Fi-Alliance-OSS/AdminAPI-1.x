@@ -5,7 +5,9 @@
 
 using System.Reflection;
 using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Ods.AdminApp.Web._Installers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,9 +36,18 @@ namespace EdFi.Ods.AdminApp.Web
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);
                     });
-            services.AddAutoMapper(executingAssembly);
+
+            services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
+
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+
+            var appStartup = Configuration["AppSettings:AppStartup"];
+            if (appStartup == "OnPrem")
+                new OnPremInstaller().Install(services);
+            else if (appStartup == "Azure")
+                new AzureInstaller().Install(services);
+            CommonConfigurationInstaller.ConfigureLearningStandards(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

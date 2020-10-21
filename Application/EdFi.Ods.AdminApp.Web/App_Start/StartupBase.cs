@@ -16,13 +16,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Castle.MicroKernel;
-using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Diagnostics;
-using EdFi.Admin.LearningStandards.Core.Configuration;
-using EdFi.Admin.LearningStandards.Core.Services;
-using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.App_Start;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IoC;
@@ -31,7 +26,6 @@ using EdFi.Ods.Common.InversionOfControl;
 using FluentValidation.Mvc;
 using Hangfire;
 using Hangfire.Windsor;
-using Microsoft.Extensions.DependencyInjection;
 using Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -39,30 +33,29 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
+using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Ods.AdminApp.Web._Installers;
 using log4net;
+using log4net.Config;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace EdFi.Ods.AdminApp.Web
 {
     public abstract class StartupBase : IDisposable
     {
-        protected readonly IWindsorContainer Container = new WindsorContainerEx();
+        private readonly IWindsorContainer Container = new WindsorContainerEx();
         private static ILog Logger;
+        private static readonly AppSettings AppSettings = ConfigurationHelper.GetAppSettings();
 
         public virtual void Configuration(IAppBuilder appBuilder)
         {
-            ConfigureLogging(appBuilder);
-            Logger = LogManager.GetLogger(typeof(StartupBase));
+            ConfigureLogging();
+
             try
             {
                 InitializeContainer(Container);
                 InstallConfigurationSpecificInstaller(Container);
                 FinalizeContainer(Container);
-
-                //NOTE: For development purposes only, uncomment this line to get diagnostics
-                //      on all IoC registrations:
-                //
-                // DescribeAllRegistrations();
 
                 ConfigureAspNetIdentityAuthentication(appBuilder);
 
@@ -73,7 +66,12 @@ namespace EdFi.Ods.AdminApp.Web
 
                 ConfigureTls();
 
-                ConfigureLearningStandards();
+                CommonConfigurationInstaller.ConfigureLearningStandards(Container);
+
+                //NOTE: For development purposes only, uncomment this line to get diagnostics
+                //      on all IoC registrations:
+                //
+                //DescribeAllRegistrations();
             }
             catch (Exception e)
             {
@@ -105,49 +103,6 @@ namespace EdFi.Ods.AdminApp.Web
                 log.ToString());
         }
 
-        private IServiceProvider ServiceProviderFunc(IServiceCollection collection)
-        {
-            return collection.BuildServiceProvider();
-        }
-
-        private void ConfigureLearningStandards()
-        {
-            var config = new EdFiOdsApiClientConfiguration(
-                maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());
-
-            var serviceCollection = new ServiceCollection();
-
-            var pluginConnector = new LearningStandardsCorePluginConnector(
-                serviceCollection,
-                ServiceProviderFunc,
-                new LearningStandardLogProvider(),
-                config
-            );
-
-            Container.Register(Component.For<ILearningStandardsCorePluginConnector>().Instance(pluginConnector));
-        }
-
-        private static int GetLearningStandardsMaxSimultaneousRequests()
-        {
-            const int IdealSimultaneousRequests = 4;
-            const int PessimisticSimultaneousRequests = 1;
-
-            try
-            {
-                var odsApiVersion = new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl);
-
-                return odsApiVersion.StartsWith("3.") ? PessimisticSimultaneousRequests : IdealSimultaneousRequests;
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(
-                    "Failed to infer ODS / API version to determine Learning Standards " +
-                    $"MaxSimultaneousRequests. Assuming a max of {PessimisticSimultaneousRequests}.", e);
-
-                return PessimisticSimultaneousRequests;
-            }
-        }
-
         private static void InitializeContainer(IWindsorContainer container)
         {
             container.AddFacility<ChainOfResponsibilityFacility>();
@@ -169,11 +124,33 @@ namespace EdFi.Ods.AdminApp.Web
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        protected abstract void InstallConfigurationSpecificInstaller(IWindsorContainer container);
-
-        protected virtual void ConfigureLogging(IAppBuilder appBuilder)
+        private static void InstallConfigurationSpecificInstaller(IWindsorContainer container)
         {
-            log4net.Config.XmlConfigurator.Configure();
+            if (AppSettings.AppStartup == "OnPrem")
+                container.Install(new OnPremInstaller());
+            else if (AppSettings.AppStartup == "Azure")
+                container.Install(new AzureInstaller());
+        }
+
+        protected void ConfigureLogging()
+        {
+            XmlConfigurator.Configure();
+            Logger = LogManager.GetLogger(typeof(StartupBase));
+
+            if (AppSettings.AppStartup == "Azure")
+            {
+                var applicationInsightsInstrumentationKey = AppSettings.ApplicationInsightsInstrumentationKey;
+
+                if (applicationInsightsInstrumentationKey != null)
+                {
+                    TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
+                    Logger.DebugFormat("Found AppInsights instrumentation key in Web.config -- AppInsights will capture traces");
+                }
+                else
+                {
+                    Logger.DebugFormat("No instrumentation key found in Web.config -- AppInsights will NOT capture traces");
+                }
+            }
         }
 
         protected virtual void ConfigureAspNet(IAppBuilder appBuilder)

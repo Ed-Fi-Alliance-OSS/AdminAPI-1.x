@@ -1,14 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>EdFi.Ods.AdminApp.Web</RootNamespace>
     <Configurations>Debug;Release;OnPremises;OnPremisesRelease;OnPremNpgsql;OnPremYearSpecific;OnPremYearSpecificRelease</Configurations>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
 
   <ItemGroup>
     <!-- As the legacy .NET Framework web application is being ported to .NET Core,
@@ -39,7 +35,6 @@
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationUserManager.cs" LinkBase="App_Start" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/BundleConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/FilterConfig.cs" LinkBase="App_Start" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/LearningStandardLogProvider.cs" LinkBase="App_Start" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ModelBinderConfig.cs" LinkBase="App_Start" /> -->
@@ -47,7 +42,6 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/StartupBase.cs" LinkBase="App_Start" /> -->
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Content/**/*.*" LinkBase="Content" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
@@ -214,7 +208,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorOverviewModel.cs" LinkBase="Models/ViewModels" />
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Scripts/**/*.*" LinkBase="Scripts" />
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -338,6 +331,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="CsvHelper" Version="15.0.6" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.1.0" />
     <PackageReference Include="EdFi.Suite3.LoadTools" Version="5.1.0-pre0014" />

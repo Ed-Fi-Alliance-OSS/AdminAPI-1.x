@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using log4net;
 using log4net.Config;
+using Microsoft.Extensions.FileProviders;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -69,6 +70,7 @@ namespace EdFi.Ods.AdminApp.Web
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

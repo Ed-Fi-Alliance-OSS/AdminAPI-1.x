@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -43,7 +43,6 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/StartupBase.cs" LinkBase="App_Start" /> -->
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Content/**/*.*" LinkBase="Content" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
@@ -210,62 +209,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/VendorOverviewModel.cs" LinkBase="Models/ViewModels" />
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Scripts/**/*.*" LinkBase="Scripts" />
-    <Compile Remove="Content\less\**" />
-    <Compile Remove="Content\scss\**" />
-    <Compile Remove="wwwroot\**" />
-    <Content Remove="Content\less\**" />
-    <Content Remove="Content\scss\**" />
-    <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="Content\less\**" />
-    <EmbeddedResource Remove="Content\scss\**" />
-    <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="Content\less\**" />
-    <None Remove="Content\scss\**" />
-    <None Remove="wwwroot\**" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap-theme.min.css" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap-theme.min.css.map" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap.min.css" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\bootstrap.min.css.map" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\css\font-awesome.min.css" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\animated.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\bootstrap-multiselect.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\bordered-pulled.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\core.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\fixed-width.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\font-awesome.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\icons.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\larger.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\list.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\mixins.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\path.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\rotated-flipped.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\screen-reader.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\stacked.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\less\variables.less" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\font-awesome.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_animated.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_bordered-pulled.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_core.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_fixed-width.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_icons.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_larger.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_list.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_mixins.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_path.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_rotated-flipped.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_screen-reader.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_stacked.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Content\scss\_variables.scss" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\bootstrap.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery-2.2.3.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery-2.2.3.min.map" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery.signalR-2.2.1.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery.validate.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\lodash.core.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\lodash.min.js" />
-    <Content Remove="..\EdFi.Ods.AdminApp.Web\Scripts\respond.min.js" />
     <Content Remove="bundleconfig.json" />
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Service References/AzureAD/ConnectedService.json" LinkBase="Service References" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">

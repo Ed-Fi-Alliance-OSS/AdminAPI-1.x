@@ -1,6 +1,6 @@
 [
     {
-        "outputFileName": "wwwroot/Content/css/styles/site.bundle.min.css",
+        "outputFileName": "wwwroot/bundles/site.bundle.min.css",
         "inputFiles": [
             "wwwroot/Content/css/bootstrap.css",
             "wwwroot/Content/css/bootstrap-multiselect.css",
@@ -14,7 +14,7 @@
         }
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/bootstrap.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/bootstrap.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/bootstrap.js",
             "wwwroot/Scripts/bootstrap-multiselect.js",
@@ -27,7 +27,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/jquery.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/jquery.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/jquery-2.2.3.js"
         ],
@@ -38,7 +38,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/jquery.validate.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/jquery.validate.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/jquery.validate*.js"
         ],
@@ -49,7 +49,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/modernizr.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/modernizr.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/modernizr-*.js"
         ],
@@ -60,7 +60,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/lodash.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/lodash.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/lodash.js"
         ],
@@ -71,7 +71,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/site.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/site.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/site.js",
             "wwwroot/Scripts/site-form-handlers.js"
@@ -83,7 +83,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/claimset.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/claimset.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/resource-editor.js"
         ],
@@ -94,7 +94,7 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/Scripts/bundles/authstrategy.bundle.min.js",
+        "outputFileName": "wwwroot/bundles/authstrategy.bundle.min.js",
         "inputFiles": [
             "wwwroot/Scripts/auth-editor.js"
         ],

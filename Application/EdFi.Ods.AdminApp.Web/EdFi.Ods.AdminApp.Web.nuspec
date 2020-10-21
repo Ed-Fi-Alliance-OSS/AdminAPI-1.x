@@ -15,6 +15,7 @@
     <file src="bin\*.compiled" target="bin" />
     <file src="bin\roslyn\*" target="bin\roslyn" />
     <file src="Content\**" target="Content" />
+    <file src="log4net\**" target="log4net" />
     <file src="fonts\**" target="fonts" />
     <file src="Schema\**" target="Schema" />
     <file src="Scripts\**" target="Scripts" />

@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
@@ -17,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
-using Hangfire.SqlServer;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -51,18 +49,7 @@ namespace EdFi.Ods.AdminApp.Web
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
-                {
-                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    QueuePollInterval = TimeSpan.Zero,
-                    UseRecommendedIsolationLevel = true,
-                    DisableGlobalLocks = true
-                }));
-
-            services.AddHangfireServer();
-
+                .UseRecommendedSerializerSettings());
             var appStartup = Configuration["AppSettings:AppStartup"];
             if (appStartup == "OnPrem")
                 new OnPremInstaller().Install(services);
@@ -72,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IBackgroundJobClient backgroundJobs, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -96,11 +83,7 @@ namespace EdFi.Ods.AdminApp.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHangfireDashboard();
             });
-
-            app.UseHangfireDashboard();
-            backgroundJobs.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
         }
     }
 }

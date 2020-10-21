@@ -33,17 +33,6 @@
         "sourceMap": true
     },
     {
-        "outputFileName": "wwwroot/bundles/jquery.validate-vsdoc.min.js",
-        "inputFiles": [
-            "wwwroot/Scripts/jquery.validate-vsdoc.js"
-        ],
-        "minify": {
-            "enabled": true,
-            "renameLocals": true
-        },
-        "sourceMap": true
-    },
-    {
         "outputFileName": "wwwroot/bundles/modernizr.min.js",
         "inputFiles": [
             "wwwroot/Scripts/modernizr-2.8.3.js"

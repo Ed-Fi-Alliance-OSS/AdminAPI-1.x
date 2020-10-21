@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
+using Hangfire;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -45,6 +46,10 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddSignalR();
 
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings());
             var appStartup = Configuration["AppSettings:AppStartup"];
             if (appStartup == "OnPrem")
                 new OnPremInstaller().Install(services);

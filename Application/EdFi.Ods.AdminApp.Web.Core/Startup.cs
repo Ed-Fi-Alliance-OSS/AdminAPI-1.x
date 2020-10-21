@@ -35,7 +35,7 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
                     .AddFluentValidation(opt =>
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);

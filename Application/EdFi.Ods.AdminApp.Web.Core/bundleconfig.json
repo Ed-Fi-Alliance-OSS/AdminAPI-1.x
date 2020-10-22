@@ -48,7 +48,7 @@
         "inputFiles": [
             "wwwroot/Scripts/site.js",
             "wwwroot/Scripts/site-form-handlers.js",
-            "wwwroot/Scripts/signalr.js"
+            "wwwroot/Scripts/signalr-progress.js"
         ],
         "minify": {
             "enabled": true,

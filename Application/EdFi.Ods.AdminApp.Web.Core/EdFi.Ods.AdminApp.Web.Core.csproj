@@ -213,7 +213,6 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 
-    <Content Remove="Views\_ViewStart.cshtml" />
     <Content Remove="Views\Account\SignOutCallback.cshtml" />
     <Content Remove="Views\Application\_AddApplicationModal.cshtml" />
     <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
@@ -296,7 +295,6 @@
     <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
     <Content Remove="Views\Shared\_DeleteVendorApplicationModal.cshtml" />
     <Content Remove="Views\Shared\_DeleteVendorModal.cshtml" />
-    <Content Remove="Views\Shared\_Layout.cshtml" />
     <Content Remove="Views\Shared\_LoginPartial.cshtml" />
     <Content Remove="Views\Shared\_LogSettings.cshtml" />
     <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
@@ -307,7 +305,6 @@
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />
-    <Content Remove="Views\Shared\Error.cshtml" />
     <Content Remove="Views\Shared\Lockout.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
     <Content Remove="Views\User\_DeleteUserModal.cshtml" />

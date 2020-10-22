@@ -1,0 +1,41 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Management.Database.Ods.StudentEconomicSituationReport
+<div class="padding-bottom-10" align="center">
+    <h2>@Model.LocalEducationAgencyName</h2>
+</div>
+
+<h3>Students By Attribute</h3>
+@if (Model.TotalStudentCount == 0)
+{
+    <em class="padding-top">There is no student data to display</em>
+}
+else
+{
+    <table class="table table-condensed table-left-border">
+        <thead>
+            <tr>
+                <th>Other Student Information</th>
+                <th>Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var economicCategory in Model.GetStudentEconomicSummary())
+            {
+
+                <tr>
+                    <td>@economicCategory.Description</td>
+                    <td>@economicCategory.PercentOfTotal.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a href="@Url.Action("SelectDistrict", "OdsInstanceSettings", new {id = Model.LocalEducationAgencyId})">@Html.Button("Back to Reports")</a>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -213,108 +213,108 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/_ViewStart.cshtml" LinkBase="Views" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Account/SignOutCallback.cshtml" LinkBase="Views/Account" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_AddApplicationModal.cshtml" LinkBase="Views/Application" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_ApplicationKeyAndSecretContent.cshtml" LinkBase="Views/Application" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_ApplicationKeyAndSecretModal.cshtml" LinkBase="Views/Application" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Application/_EditApplicationModal.cshtml" LinkBase="Views/Application" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_AddClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_AuthStrategiesModal.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ClaimSetDetails.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_CopyClaimSetModal.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_DeleteClaimSetModal.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_DeleteClaimSetResourceModal.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_EditClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ExportClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ExportClaimSetPreview.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ImportExportClaimSet.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/ClaimSets/_ResourceEditor.cshtml" LinkBase="Views/ClaimSets" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Descriptors/_Descriptor.cshtml" LinkBase="Views/Descriptors" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Descriptors/_DescriptorCategories.cshtml" LinkBase="Views/Descriptors" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_AddLocalEducationAgencyModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_AddSchoolModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_DeleteOrganizationModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_EditLocalEducationAgencyModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_EditSchoolModal.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_EducationOrganizations.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/EducationOrganizations/_MissingData.cshtml" LinkBase="Views/EducationOrganizations" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Error/MultiInstanceError.cshtml" LinkBase="Views/Error" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Error/NotYetImplemented.cshtml" LinkBase="Views/Error" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_AddVendorModal.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_EditVendorForm.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_EditVendorModal.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_SecurityHelpfulHints.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/_VendorsTable.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/AdvancedSettings.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/ClaimSets.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/Users.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/GlobalSettings/Vendors.cshtml" LinkBase="Views/GlobalSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Home/Index.cshtml" LinkBase="Views/Home" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ChangePassword.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ConfirmEmail.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ForgotPassword.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ForgotPasswordConfirmation.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/Login.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/Register.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ResetPassword.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Identity/ResetPasswordConfirmation.cshtml" LinkBase="Views/Identity" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/_DeregisterOdsInstanceModal.cshtml" LinkBase="Views/OdsInstances" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/BulkRegisterOdsInstances.cshtml" LinkBase="Views/OdsInstances" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/Index.cshtml" LinkBase="Views/OdsInstances" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstances/RegisterOdsInstance.cshtml" LinkBase="Views/OdsInstances" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/_SaveBulkUploadCredentialsForm.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/BulkLoad.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Descriptors.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EducationOrganizations.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EnrollmentByEthnicity.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EnrollmentByGender.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/EnrollmentByRace.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Index.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/LearningStandards.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Logging.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/SchoolsBySchoolType.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/SelectDistrict.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/Setup.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/SetupComplete.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/StudentsByAttribute.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/StudentsByProgram.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/OdsInstanceSettings/TotalEnrollment.cshtml" LinkBase="Views/OdsInstanceSettings" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_EnrollmentByEthnicity.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_EnrollmentByGender.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_EnrollmentByRace.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_SchoolsBySchoolType.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_SelectDistrict.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_StudentsByAttribute.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_StudentsByProgram.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Reports/_TotalEnrollment.cshtml" LinkBase="Views/Reports" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Setup/FirstTimeSetup.cshtml" LinkBase="Views/Setup" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Setup/PostUpdateSetup.cshtml" LinkBase="Views/Setup" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Applications.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_ApplicationsByVendor.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_ApplicationsTable.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_BulkUploadForm.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_DeleteVendorApplicationModal.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_DeleteVendorModal.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Layout.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_LoginPartial.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_LogSettings.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_ProductionStagingReadOnlyNotice.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_RegenerateApplicationSecretModal.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Settings_Global.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_Settings_Production.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SettingsGlobalHeader.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SignalRStatus.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SignalRStatus_BulkLoad.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/_SignalRStatus_LS.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/Error.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Shared/Lockout.cshtml" LinkBase="Views/Shared" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/Update/Index.cshtml" LinkBase="Views/Update" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_DeleteUserModal.cshtml" LinkBase="Views/User" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_EditUserModal.cshtml" LinkBase="Views/User" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/_EditUserRoleModal.cshtml" LinkBase="Views/User" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/AddUser.cshtml" LinkBase="Views/User" /> -->
-    <!-- <Content Include="../EdFi.Ods.AdminApp.Web/Views/User/EditOdsInstanceRegistrationsForUser.cshtml" LinkBase="Views/User" /> -->
+    <Content Remove="Views\_ViewStart.cshtml" />
+    <Content Remove="Views\Account\SignOutCallback.cshtml" />
+    <Content Remove="Views\Application\_AddApplicationModal.cshtml" />
+    <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
+    <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
+    <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
+    <Content Remove="Views\ClaimSets\_AddClaimSet.cshtml" />
+    <Content Remove="Views\ClaimSets\_AuthStrategiesModal.cshtml" />
+    <Content Remove="Views\ClaimSets\_ClaimSetDetails.cshtml" />
+    <Content Remove="Views\ClaimSets\_CopyClaimSetModal.cshtml" />
+    <Content Remove="Views\ClaimSets\_DeleteClaimSetModal.cshtml" />
+    <Content Remove="Views\ClaimSets\_DeleteClaimSetResourceModal.cshtml" />
+    <Content Remove="Views\ClaimSets\_EditClaimSet.cshtml" />
+    <Content Remove="Views\ClaimSets\_ExportClaimSet.cshtml" />
+    <Content Remove="Views\ClaimSets\_ExportClaimSetPreview.cshtml" />
+    <Content Remove="Views\ClaimSets\_ImportExportClaimSet.cshtml" />
+    <Content Remove="Views\ClaimSets\_ResourceEditor.cshtml" />
+    <Content Remove="Views\Descriptors\_Descriptor.cshtml" />
+    <Content Remove="Views\Descriptors\_DescriptorCategories.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_EditLocalEducationAgencyModal.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_EditSchoolModal.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_EducationOrganizations.cshtml" />
+    <Content Remove="Views\EducationOrganizations\_MissingData.cshtml" />
+    <Content Remove="Views\Error\MultiInstanceError.cshtml" />
+    <Content Remove="Views\Error\NotYetImplemented.cshtml" />
+    <Content Remove="Views\GlobalSettings\_AddVendorModal.cshtml" />
+    <Content Remove="Views\GlobalSettings\_EditVendorForm.cshtml" />
+    <Content Remove="Views\GlobalSettings\_EditVendorModal.cshtml" />
+    <Content Remove="Views\GlobalSettings\_SecurityHelpfulHints.cshtml" />
+    <Content Remove="Views\GlobalSettings\_VendorsTable.cshtml" />
+    <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
+    <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
+    <Content Remove="Views\GlobalSettings\Users.cshtml" />
+    <Content Remove="Views\GlobalSettings\Vendors.cshtml" />
+    <Content Remove="Views\Home\Index.cshtml" />
+    <Content Remove="Views\Identity\ChangePassword.cshtml" />
+    <Content Remove="Views\Identity\ConfirmEmail.cshtml" />
+    <Content Remove="Views\Identity\ForgotPassword.cshtml" />
+    <Content Remove="Views\Identity\ForgotPasswordConfirmation.cshtml" />
+    <Content Remove="Views\Identity\Login.cshtml" />
+    <Content Remove="Views\Identity\Register.cshtml" />
+    <Content Remove="Views\Identity\ResetPassword.cshtml" />
+    <Content Remove="Views\Identity\ResetPasswordConfirmation.cshtml" />
+    <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
+    <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
+    <Content Remove="Views\OdsInstances\Index.cshtml" />
+    <Content Remove="Views\OdsInstances\RegisterOdsInstance.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\Descriptors.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\EnrollmentByEthnicity.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\EnrollmentByGender.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\EnrollmentByRace.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\Index.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\LearningStandards.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\SchoolsBySchoolType.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\SelectDistrict.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\StudentsByAttribute.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\StudentsByProgram.cshtml" />
+    <Content Remove="Views\OdsInstanceSettings\TotalEnrollment.cshtml" />
+    <Content Remove="Views\Reports\_EnrollmentByEthnicity.cshtml" />
+    <Content Remove="Views\Reports\_EnrollmentByGender.cshtml" />
+    <Content Remove="Views\Reports\_EnrollmentByRace.cshtml" />
+    <Content Remove="Views\Reports\_SchoolsBySchoolType.cshtml" />
+    <Content Remove="Views\Reports\_SelectDistrict.cshtml" />
+    <Content Remove="Views\Reports\_StudentsByAttribute.cshtml" />
+    <Content Remove="Views\Reports\_StudentsByProgram.cshtml" />
+    <Content Remove="Views\Reports\_TotalEnrollment.cshtml" />
+    <Content Remove="Views\Setup\FirstTimeSetup.cshtml" />
+    <Content Remove="Views\Setup\PostUpdateSetup.cshtml" />
+    <Content Remove="Views\Shared\_Applications.cshtml" />
+    <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
+    <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />
+    <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
+    <Content Remove="Views\Shared\_DeleteVendorApplicationModal.cshtml" />
+    <Content Remove="Views\Shared\_DeleteVendorModal.cshtml" />
+    <Content Remove="Views\Shared\_Layout.cshtml" />
+    <Content Remove="Views\Shared\_LoginPartial.cshtml" />
+    <Content Remove="Views\Shared\_LogSettings.cshtml" />
+    <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
+    <Content Remove="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />
+    <Content Remove="Views\Shared\_Settings_Global.cshtml" />
+    <Content Remove="Views\Shared\_Settings_Production.cshtml" />
+    <Content Remove="Views\Shared\_SettingsGlobalHeader.cshtml" />
+    <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
+    <Content Remove="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
+    <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />
+    <Content Remove="Views\Shared\Error.cshtml" />
+    <Content Remove="Views\Shared\Lockout.cshtml" />
+    <Content Remove="Views\Update\Index.cshtml" />
+    <Content Remove="Views\User\_DeleteUserModal.cshtml" />
+    <Content Remove="Views\User\_EditUserModal.cshtml" />
+    <Content Remove="Views\User\_EditUserRoleModal.cshtml" />
+    <Content Remove="Views\User\AddUser.cshtml" />
+    <Content Remove="Views\User\EditOdsInstanceRegistrationsForUser.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

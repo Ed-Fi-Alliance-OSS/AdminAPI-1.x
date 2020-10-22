@@ -878,6 +878,10 @@
     <Content Include="Schema\3.2.0-c\SchemaAnnotation.xsd">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="log4net\log4net.config" />
+    <Content Include="log4net\log4net.OnPremisesRelease.config" />
+    <Content Include="log4net\log4net.OnPremisesYearSpecificRelease.config" />
+    <Content Include="log4net\log4net.Release.config" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />

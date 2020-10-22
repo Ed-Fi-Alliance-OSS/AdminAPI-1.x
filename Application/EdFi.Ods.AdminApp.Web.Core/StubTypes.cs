@@ -6,6 +6,7 @@
 //This file contains temporary type declarations in service of net48/netcoreapp3.1 cross-compilation.
 //These types are intended to be removed as they are ported in full to .NET Core.
 
+using System;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.Common.Security;
@@ -61,4 +62,14 @@ public class StubPbkdf2HmacSha1SecureHasher : ISecureHasher
         => throw new System.NotImplementedException();
 
     public string Algorithm { get => throw new System.NotImplementedException(); }
+}
+
+public class HandleErrorInfo
+{
+    public HandleErrorInfo(Exception exception)
+    {
+        Exception = exception;
+    }
+
+    public Exception Exception { get; }
 }

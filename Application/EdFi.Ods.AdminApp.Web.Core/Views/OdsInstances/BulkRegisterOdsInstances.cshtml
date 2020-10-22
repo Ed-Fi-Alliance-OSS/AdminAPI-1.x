@@ -1,0 +1,73 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances.BulkRegisterOdsInstancesModel
+@{
+    ViewBag.Title = "Ods Instances | Bulk Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3 class="text-center padding-bottom-10">Bulk Register Ods Instances</h3>
+@using (Html.BeginForm("BulkRegisterOdsInstances", "OdsInstances", FormMethod.Post, new { enctype = "multipart/form-data", id = "bulk-instances-registration-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="bulk-instances-registration-validation-summary" class="validationSummary alert alert-danger" hidden></div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.FileInputBlock(x => x.OdsInstancesFile).Attr("accept", ".csv").AddClasses("input-file")
+        </div>
+    </div>
+    <div class="row">
+        <div class="padding-top-5 text-center col-md-11">
+            @Html.Button("Back").Attr("type", "button").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances")).Id("ods-instance-settings-back-button")
+            @Html.SaveButton("Register Instances").AddClasses("no-ajax", "bulk-register").Attr("disabled",true)
+        </div>
+    </div>
+    <br/><br/>
+    <div id="result" class="alert alert-info" hidden></div>
+}
+
+<script type="text/javascript">
+    $(".input-file").change(function() {
+        if ($(this).length > 0) {
+            $(".bulk-register").attr('disabled', false);
+        }
+        $('#result').hide();
+    });
+    $('#bulk-instances-registration-form').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        $(".bulk-register")
+            .html('Registering Instances... <span class="padding-left"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>');
+        $(".bulk-register").attr('disabled', true);
+        var successHandler = function (data) {
+            $(".bulk-register").html('Register Instances');
+            $('#bulk-instances-registration-validation-summary').attr('hidden', true);
+            form[0].reset();
+            $('#result').text(data.successMessage);
+            $('#result').show();
+        };
+        var errorAdditionalBehavior = function () {
+            $(".bulk-register").html('Register Instances');
+        };
+        var ajaxRequestData = {
+            form: $(this),
+            formData: new FormData(form[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            successHandler: successHandler,
+            errorAdditionalBehavior: errorAdditionalBehavior
+        };
+        submitAjaxForInnerTabs(ajaxRequestData);
+    });
+    $(function () {
+        InitializeSubmitButtons();
+        InitializeBackNavigationalAjaxButtons();
+    });
+</script>
+

@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.IO;
 using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
@@ -16,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using log4net;
+using log4net.Config;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -61,6 +64,8 @@ namespace EdFi.Ods.AdminApp.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            ConfigureLogging();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -72,6 +77,7 @@ namespace EdFi.Ods.AdminApp.Web
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -84,6 +90,15 @@ namespace EdFi.Ods.AdminApp.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void ConfigureLogging()
+        {
+            var assembly = typeof(Program).GetTypeInfo().Assembly;
+
+            var configPath = Path.Combine(Path.GetDirectoryName(assembly.Location) ?? string.Empty, Configuration["AppSettings:Log4NetConfigPath"]);
+
+            XmlConfigurator.Configure(LogManager.GetRepository(assembly), new FileInfo(configPath));
         }
     }
 }

@@ -1,0 +1,37 @@
+﻿body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    background-color: #f8f8f8;
+}
+
+h4 {
+    color: #959595;
+    font-weight: 300 !important;
+}
+
+.headline {
+    margin-bottom: 20px;
+}
+
+.hero-spacer {
+    margin-top: 50px;
+}
+
+.hero-feature {
+    margin-bottom: 30px;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.navbar {
+    background-color: #38B5E6;
+}
+
+.navbar-header, .navbar-brand, .navbar-inverse, .navbar-nav > li > a {
+    color: #FFFFFF !important;
+}
+
+.navbar-inverse {
+    border-bottom: none !important;
+}

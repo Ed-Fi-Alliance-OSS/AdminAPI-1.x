@@ -41,6 +41,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _appSettings.IdaSubscriptionId = ConfigurationManager.AppSettings["ida:SubscriptionId"];
             _appSettings.AwsCurrentVersion = ConfigurationManager.AppSettings["AwsCurrentVersion"];
             _appSettings.OptionalEntropy = ConfigurationManager.AppSettings["OptionalEntropy"];
+            _appSettings.Log4NetConfigPath = ConfigurationManager.AppSettings["log4net.Config"];
 
             _connectionStrings.Admin = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString : "";
             _connectionStrings.Security = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security].ConnectionString : "";
@@ -99,6 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string IdaSubscriptionId { get; set; }
         public string AwsCurrentVersion { get; set; }
         public string OptionalEntropy { get; set; }
+        public string Log4NetConfigPath { get; set; }
     }
 
     public class ConnectionStrings

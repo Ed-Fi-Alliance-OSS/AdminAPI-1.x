@@ -1,0 +1,51 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Infrastructure
+@model EdFi.Ods.AdminApp.Management.CloudOdsUpdateInfo
+
+@{
+    ViewBag.Title = "Updates";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h5>
+            <img src="~/Content/images/updates@2x.png" width="64" height="64" alt=""/>
+            <span class="padding-left">Updates</span>
+        </h5>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        
+        @if (Model.UpdateAvailable)
+        {
+            <h5 class="note">Update Available</h5>
+            <div>Installed Version: @Model.CurrentInstanceVersion</div>
+            <div>Latest Version: @Model.LatestPublishedVersion</div>
+            <br/>
+
+            if (Model.UpdateIsCompatible)
+            {
+                <p><strong>Good news!</strong> There's a newer version of the Ed-Fi ODS available. You can install this update via Windows PowerShell.</p>
+                <p>Please see the release notes for more details.</p>
+            }
+
+            else
+            {
+                <p>There's a newer version of the Ed-Fi ODS available, but it must be installed manually since it is a major version upgrade.</p>
+                <p>Please see the upgrade documentation for more details.</p>
+            }
+        }
+
+        else
+        {
+            <h5>Your system is up to date!</h5>
+        }
+    </div>
+</div>

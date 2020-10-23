@@ -9,15 +9,16 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
+using EdFi.Ods.AdminApp.Web.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using log4net;
 using log4net.Config;
-using Microsoft.Extensions.FileProviders;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -46,6 +47,12 @@ namespace EdFi.Ods.AdminApp.Web
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
+            services.AddSignalR();
+
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings());
             var appStartup = Configuration["AppSettings:AppStartup"];
             if (appStartup == "OnPrem")
                 new OnPremInstaller().Install(services);

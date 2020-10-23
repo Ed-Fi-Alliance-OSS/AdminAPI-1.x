@@ -89,6 +89,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     <script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/Scripts/lodash.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/bundles/site.min.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
     <script type="text/javascript">
         GlobalInitialize();
     </script>

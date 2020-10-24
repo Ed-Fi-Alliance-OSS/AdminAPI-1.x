@@ -431,10 +431,8 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return input.WrapWith(inputContainer);
         }
 
-        public static HtmlTag ActionAjax(this HtmlHelper helper, string actionName, string controllerName, object routeValues, int minHeight, string placeholderText)
+        public static HtmlTag ActionAjax(this HtmlHelper helper, string url, int minHeight, string placeholderText)
         {
-            var url = new UrlHelper(helper.ViewContext.RequestContext).Action(actionName, controllerName, routeValues);
-
             var placeholderTag = new DivTag();
             placeholderTag.Append(new HtmlTag("h6").Text(placeholderText));
             var spinnerTag = new DivTag();
@@ -452,10 +450,8 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return contentLoadingArea;
         }
 
-        public static HtmlTag AjaxPostButton<T>(this HtmlHelper<T> helper, string actionName, string controllerName, string buttonText)
+        public static HtmlTag AjaxPostButton<T>(this HtmlHelper<T> helper, string url, string buttonText)
         {
-            var url = new UrlHelper(helper.ViewContext.RequestContext).Action(actionName, controllerName);
-
             var ajaxPostLink = new HtmlTag("a", tag =>
             {
                 tag.AddClasses("btn", "btn-primary", "cta", "ajax-button");

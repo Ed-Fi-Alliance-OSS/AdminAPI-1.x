@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -25,7 +25,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                     <span class="fa fa-clipboard"></span><span>Production API URL: </span><strong>@Model.ProductionApiUrl</strong>
                 </a>
             </div>
-            @Html.ActionAjax("ApplicationList", "OdsInstanceSettings", new {}, 250, "Warming up Production API....")
+            @Html.ActionAjax(Url.Action("ApplicationList", "OdsInstanceSettings", new { }), 250, "Warming up Production API....")
         }
     </div>
 </div>

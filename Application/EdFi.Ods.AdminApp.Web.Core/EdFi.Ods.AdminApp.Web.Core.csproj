@@ -184,10 +184,8 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/VendorsListModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Home/IndexModel.cs" LinkBase="Models/ViewModels/Home" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/ChangePasswordViewModel.cs" LinkBase="Models/ViewModels/Identity" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/ForgotPasswordViewModel.cs" LinkBase="Models/ViewModels/Identity" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/LoginViewModel.cs" LinkBase="Models/ViewModels/Identity" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/RegisterViewModel.cs" LinkBase="Models/ViewModels/Identity" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/ResetPasswordViewModel.cs" LinkBase="Models/ViewModels/Identity" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/LearningStandardsModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/LogSettingsModel.cs" LinkBase="Models/ViewModels" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/BulkRegisterOdsInstancesModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> -->
@@ -252,13 +250,8 @@
     <Content Remove="Views\GlobalSettings\Vendors.cshtml" />
     <Content Remove="Views\Home\Index.cshtml" />
     <Content Remove="Views\Identity\ChangePassword.cshtml" />
-    <Content Remove="Views\Identity\ConfirmEmail.cshtml" />
-    <Content Remove="Views\Identity\ForgotPassword.cshtml" />
-    <Content Remove="Views\Identity\ForgotPasswordConfirmation.cshtml" />
     <Content Remove="Views\Identity\Login.cshtml" />
     <Content Remove="Views\Identity\Register.cshtml" />
-    <Content Remove="Views\Identity\ResetPassword.cshtml" />
-    <Content Remove="Views\Identity\ResetPasswordConfirmation.cshtml" />
     <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
     <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
     <Content Remove="Views\OdsInstances\Index.cshtml" />

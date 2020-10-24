@@ -33,9 +33,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     public class IdentityController : ControllerBase
     {
         private readonly ApplicationConfigurationService _applicationConfiguration;
-        private ApplicationSignInManager SignInManager => HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
+        private ApplicationSignInManager _signInManager => HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+        private ApplicationUserManager _userManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        private IAuthenticationManager _authenticationManager => HttpContext.GetOwinContext().Authentication;
         private readonly RegisterCommand _registerCommand;
         private readonly EditUserRoleCommand _editUserRoleCommand;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
@@ -68,7 +68,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 return View(model);
             }
 
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -102,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var (adminAppUser, result) = await _registerCommand.Execute(model, UserManager);
+                var (adminAppUser, result) = await _registerCommand.Execute(model, _userManager);
 
                 if (result.Succeeded)
                 {
@@ -111,7 +111,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                         UserId = adminAppUser.Id,
                         RoleId = Role.SuperAdmin.Value.ToString()
                     });
-                    await SignInManager.SignInAsync(adminAppUser, isPersistent: false, rememberBrowser: false);
+                    await _signInManager.SignInAsync(adminAppUser, isPersistent: false, rememberBrowser: false);
 
                     if (ZeroOdsInstanceRegistrations())
                         return RedirectToAction("RegisterOdsInstance", "OdsInstances");
@@ -139,15 +139,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
                     user.RequirePasswordChange = false;
-                    await UserManager.UpdateAsync(user);
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    await _userManager.UpdateAsync(user);
+                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
 
                 TempData["PasswordChanged"] = true;
@@ -164,7 +164,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult LogOut()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            _authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
 

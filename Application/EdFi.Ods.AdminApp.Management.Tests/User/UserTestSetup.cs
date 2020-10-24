@@ -9,7 +9,13 @@ using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+
+#if NET48
 using Microsoft.AspNet.Identity.EntityFramework;
+#else
+using Microsoft.AspNetCore.Identity;
+#endif
+
 
 namespace EdFi.Ods.AdminApp.Management.Tests.User
 {
@@ -118,7 +124,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             }
         }
 
-        public static TResult Query<TResult>(Func<DbContext, TResult> query)
+        public static TResult Query<TResult>(Func<AdminAppIdentityDbContext, TResult> query)
         {
             TResult result;
 

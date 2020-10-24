@@ -17,6 +17,7 @@ using EdFi.Ods.AdminApp.Web.Display.RadioButton;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using HtmlTags.Reflection;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Property = EdFi.Ods.AdminApp.Web.Infrastructure.Property;
@@ -462,7 +463,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return ajaxPostLink;
         }
 
-        public static HtmlString ApplicationVersion(this HtmlHelper helper)
+        public static HtmlString ApplicationVersion(this IHtmlHelper helper)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var informationVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;

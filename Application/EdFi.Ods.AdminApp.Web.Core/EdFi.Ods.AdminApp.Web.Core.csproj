@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -91,7 +91,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsIdentityExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsPrincipalExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ExpressionHelpers.cs" LinkBase="Helpers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlHelperExtensions.cs" LinkBase="Helpers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlTagExtensions.cs" LinkBase="Helpers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileExtensions.cs" LinkBase="Helpers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/OdsApiFacadeExtensions.cs" LinkBase="Helpers" />

@@ -13,12 +13,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web;
-using System.Web.Mvc;
 using EdFi.Ods.AdminApp.Web.Display.RadioButton;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using HtmlTags.Reflection;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Property = EdFi.Ods.AdminApp.Web.Infrastructure.Property;
 using Preconditions = EdFi.Ods.Common.Preconditions;
 
@@ -33,13 +32,13 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return ElementGenerator<T>.For(HtmlConventionLibrary, null, model);
         }
 
-        public static HtmlTag Input<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
+        public static HtmlTag Input<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
         {
             var generator = GetGenerator(helper.ViewData.Model);
             return generator.InputFor(expression);
         }
 
-        public static HtmlTag FileInputBlock<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
+        public static HtmlTag FileInputBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
         {
             var accept = Property.From(expression).GetCustomAttributes<AcceptAttribute>().SingleOrDefault();
 
@@ -54,13 +53,13 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return helper.InputBlock(expression, null, null, action);
         }
 
-        public static HtmlTag Label<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
+        public static HtmlTag Label<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
         {
             var generator = GetGenerator(helper.ViewData.Model);
             return generator.LabelFor(expression);
         }
 
-        public static HtmlTag ToolTip<T>(this HtmlHelper<T> helper, string helpTooltipText)
+        public static HtmlTag ToolTip<T>(this IHtmlHelper<T> helper, string helpTooltipText)
         {
             var helpTooltip = new HtmlTag("span");
             if (!string.IsNullOrEmpty(helpTooltipText))
@@ -88,7 +87,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return wrapper;
         }
 
-        public static HtmlTag NumberOnlyInputBlock<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, string placeholderText = null, string helpTooltipText = null, string customLabelText = null, int maxValue = int.MaxValue, int minValue=0) where T : class
+        public static HtmlTag NumberOnlyInputBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, string placeholderText = null, string helpTooltipText = null, string customLabelText = null, int maxValue = int.MaxValue, int minValue=0) where T : class
         {
             void Action(HtmlTag input)
             {
@@ -101,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return helper.InputBlock(expression, placeholderText, helpTooltipText, Action, customLabelText);
         }
 
-        public static HtmlTag InputBlock<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, string placeholderText = null, string helpTooltipText = null, Action<HtmlTag> inputModifier = null, string customLabelText = null) where T : class
+        public static HtmlTag InputBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, string placeholderText = null, string helpTooltipText = null, Action<HtmlTag> inputModifier = null, string customLabelText = null) where T : class
         {
             Preconditions.ThrowIfNull(helper, nameof(helper));
             Preconditions.ThrowIfNull(expression, nameof(expression));
@@ -131,7 +130,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return FormBlock(label, input, helpTooltip);
         }
 
-        public static HtmlTag SelectList<T, TR>(this HtmlHelper<T> helper, Expression<Func<T, TR>> expression, bool includeBlankOption = false)
+        public static HtmlTag SelectList<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, TR>> expression, bool includeBlankOption = false)
             where T : class
             where TR : Enumeration<TR>
         {
@@ -145,7 +144,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return helper.SelectList(convertedExpression, enumerationValues, i => new SelectListItem { Text = i.DisplayName, Value = i.Value.ToString(), Selected = i == expressionValue}, includeBlankOption);
         }
 
-        public static HtmlTag SelectList<T, TR>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, IEnumerable<TR> options, Func<TR, SelectListItem> selectListItemBuilder, bool includeBlankOption = false) where T : class
+        public static HtmlTag SelectList<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, IEnumerable<TR> options, Func<TR, SelectListItem> selectListItemBuilder, bool includeBlankOption = false) where T : class
         {
             var input = helper.Input(expression).TagName("select").RemoveAttr("value");
 
@@ -179,13 +178,13 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             selectTag.Append(optionTag);
         }
 
-        public static HtmlTag SelectListBlock<T, TR>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, IEnumerable<TR> options, Func<TR, SelectListItem> selectListItemBuilder, string helpTooltipText = null, bool includeBlankOption = false) where T: class
+        public static HtmlTag SelectListBlock<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, IEnumerable<TR> options, Func<TR, SelectListItem> selectListItemBuilder, string helpTooltipText = null, bool includeBlankOption = false) where T: class
         {
             var selectList = SelectList(helper, expression, options, selectListItemBuilder, includeBlankOption);
             return helper.SelectListBlock(expression, selectList, helpTooltipText, includeBlankOption);
         }
 
-        public static HtmlTag SelectListBlock<T, TR>(this HtmlHelper<T> helper, Expression<Func<T, TR>> expression, string helpTooltipText = null, bool includeBlankOption = false) 
+        public static HtmlTag SelectListBlock<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, TR>> expression, string helpTooltipText = null, bool includeBlankOption = false) 
             where T : class
             where TR: Enumeration<TR>
         {
@@ -195,7 +194,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return helper.SelectListBlock(convertedExpression, selectList, helpTooltipText, includeBlankOption);
         }
 
-        public static HtmlTag SelectListBlock<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, HtmlTag selectList, string helpTooltipText = null, bool includeBlankOption = false)
+        public static HtmlTag SelectListBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, HtmlTag selectList, string helpTooltipText = null, bool includeBlankOption = false)
             where T : class
         {
             var label = helper.Label(expression);
@@ -210,7 +209,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return FormBlock(label, input, helpTooltip);
         }
 
-        public static HtmlTag MultiSelectList<T, TR>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression,
+        public static HtmlTag MultiSelectList<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression,
             IEnumerable<TR> options,
             Func<TR, SelectListItem> selectListItemBuilder) where T : class
         {
@@ -220,7 +219,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return input;
         }
 
-        public static HtmlTag MultiSelectListBlock<T, TR>(this HtmlHelper<T> helper,
+        public static HtmlTag MultiSelectListBlock<T, TR>(this IHtmlHelper<T> helper,
             Expression<Func<T, object>> expression,
             IEnumerable<TR> options, 
             Func<TR, SelectListItem> selectListItemBuilder, 
@@ -240,7 +239,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return FormBlock(label, input, helpTooltip);
         }
 
-        public static HtmlTag ModalFormButtons<T>(this HtmlHelper<T> helper, string confirmButtonText = "Save Changes", string updateTargetId = "")
+        public static HtmlTag ModalFormButtons<T>(this IHtmlHelper<T> helper, string confirmButtonText = "Save Changes", string updateTargetId = "")
         {
             var cancelButton = helper.CancelModalButton();
             var saveButton = helper.SaveModalButton(confirmButtonText, updateTargetId);
@@ -248,7 +247,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return cancelButton.After(saveButton);
         }
 
-        public static HtmlTag Button<T>(this HtmlHelper<T> helper, string buttonText)
+        public static HtmlTag Button<T>(this IHtmlHelper<T> helper, string buttonText)
         {
             var button = new HtmlTag("button")
                 .Text(buttonText)
@@ -257,7 +256,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return button;
         }
 
-        public static HtmlTag SaveButton<T>(this HtmlHelper<T> helper, string buttonText = "Save Changes", string updateTargetId = "")
+        public static HtmlTag SaveButton<T>(this IHtmlHelper<T> helper, string buttonText = "Save Changes", string updateTargetId = "")
         {
             var saveButton = helper.Button(buttonText)
                 .Attr("type", "submit");
@@ -270,43 +269,43 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return saveButton;
         }
 
-        public static HtmlTag SaveModalButton<T>(this HtmlHelper<T> helper, string buttonText = "Save Changes", string updateTargetId = "")
+        public static HtmlTag SaveModalButton<T>(this IHtmlHelper<T> helper, string buttonText = "Save Changes", string updateTargetId = "")
         {
             return helper.SaveButton(buttonText, updateTargetId).Data("confirm", "true");
         }
 
-        public static HtmlTag CancelButton<T>(this HtmlHelper<T> helper, string buttonText = "Cancel")
+        public static HtmlTag CancelButton<T>(this IHtmlHelper<T> helper, string buttonText = "Cancel")
         {
             return new HtmlTag("button")
                 .Text(buttonText)
                 .AddClasses("btn", "btn-default");
         }
 
-        public static HtmlTag CancelModalButton<T>(this HtmlHelper<T> helper, string buttonText = "Cancel")
+        public static HtmlTag CancelModalButton<T>(this IHtmlHelper<T> helper, string buttonText = "Cancel")
         {
             return helper.CancelButton(buttonText).Data("dismiss", "modal");
         }
 
-        public static HtmlTag ValidationBlock<T>(this HtmlHelper<T> helper)
+        public static HtmlTag ValidationBlock<T>(this IHtmlHelper<T> helper)
         {
             return new DivTag().AddClasses("validationSummary", "alert", "alert-danger", "hidden");
         }
 
-        public static HtmlTag NavTabs<T>(this HtmlHelper helper, UrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T: Enumeration<T>, ITabEnumeration
+        public static HtmlTag NavTabs<T>(this IHtmlHelper helper, UrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T: Enumeration<T>, ITabEnumeration
         {
             var tabTag = new HtmlTag("ul").AddClasses("nav", "nav-tabs");
             BuildNavEntries(urlHelper, tabs, tabTag, commonRouteValues);
             return tabTag;
         }
 
-        public static HtmlTag NavPills<T>(this HtmlHelper helper, UrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T : Enumeration<T>, ITabEnumeration
+        public static HtmlTag NavPills<T>(this IHtmlHelper helper, UrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T : Enumeration<T>, ITabEnumeration
         {
             var tabTag = new HtmlTag("ul").AddClasses("nav", "nav-pills", "nav-pills-custom");
             BuildNavEntries(urlHelper, tabs, tabTag, commonRouteValues);
             return tabTag;
         }
 
-        private static void BuildNavEntries<T>(UrlHelper urlHelper, List<TabDisplay<T>> tabs, HtmlTag tabTag, object commonRouteValues) where T : Enumeration<T>, ITabEnumeration
+        private static void BuildNavEntries<T>(IUrlHelper urlHelper, List<TabDisplay<T>> tabs, HtmlTag tabTag, object commonRouteValues) where T : Enumeration<T>, ITabEnumeration
         {
             foreach (var tab in tabs.OrderBy(a => a.Tab.Value))
             {
@@ -337,7 +336,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             }
         }
         
-        public static HtmlTag InlineRadioButton<T, TEnumeration>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, TEnumeration option, string helpTooltipText = null, string id = null, bool enabled = true) 
+        public static HtmlTag InlineRadioButton<T, TEnumeration>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, TEnumeration option, string helpTooltipText = null, string id = null, bool enabled = true) 
             where T: class
             where TEnumeration: Enumeration<TEnumeration> 
         {
@@ -384,7 +383,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return input.WrapWith(inputContainer);
         }
 
-        public static HtmlTag InlineCustomRadioButton<T, TEnumeration>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression, RadioButtonDisplay<TEnumeration> option, string id = null)
+        public static HtmlTag InlineCustomRadioButton<T, TEnumeration>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, RadioButtonDisplay<TEnumeration> option, string id = null)
             where T : class 
             where TEnumeration : Enumeration<TEnumeration>, IRadioButton
         {
@@ -431,7 +430,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return input.WrapWith(inputContainer);
         }
 
-        public static HtmlTag ActionAjax(this HtmlHelper helper, string url, int minHeight, string placeholderText)
+        public static HtmlTag ActionAjax(this IHtmlHelper helper, string url, int minHeight, string placeholderText)
         {
             var placeholderTag = new DivTag();
             placeholderTag.Append(new HtmlTag("h6").Text(placeholderText));
@@ -450,7 +449,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return contentLoadingArea;
         }
 
-        public static HtmlTag AjaxPostButton<T>(this HtmlHelper<T> helper, string url, string buttonText)
+        public static HtmlTag AjaxPostButton<T>(this IHtmlHelper<T> helper, string url, string buttonText)
         {
             var ajaxPostLink = new HtmlTag("a", tag =>
             {
@@ -470,7 +469,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return !string.IsNullOrEmpty(informationVersion) ? new HtmlString($"<span>{informationVersion}</span>") : new HtmlString("");
         }
 
-        public static HtmlTag CheckBoxSquare<T>(this HtmlHelper<T> helper, bool expression, string action) where T : class
+        public static HtmlTag CheckBoxSquare<T>(this IHtmlHelper<T> helper, bool expression, string action) where T : class
         {
             var label = new HtmlTag("label");
             var input = new HtmlTag("input").Attr("type", "checkbox").Attr("disabled","disabled").Attr("checked", true).AddClasses("hide", $"{action}-checkbox");

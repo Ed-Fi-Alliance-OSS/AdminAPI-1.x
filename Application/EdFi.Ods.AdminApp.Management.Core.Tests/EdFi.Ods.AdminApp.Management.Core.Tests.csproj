@@ -4,6 +4,14 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <!-- As long as the solution uses ConfigurationManager.*, enable Test Explorer runs to successfully witness config settings. -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+        <None Update="App.config">
+            <Link>testhost.dll.config</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
     <ItemGroup>
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ActionFilters/RequireSecureConnectionFilterTests.cs" LinkBase="ActionFilters" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AssertionExtensions.cs" />

@@ -6,6 +6,7 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Respawn;
 
@@ -45,34 +46,34 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         }
 
         [OneTimeSetUp]
-        public virtual void FixtureSetup()
+        public virtual async Task FixtureSetup()
         {
             TestContext = new T();
             SetupContext = new T();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
             {
-                _checkpoint.Reset(ConnectionString);
+                await _checkpoint.Reset(ConnectionString);
             }
 
             AdditionalFixtureSetup();
         }
 
         [OneTimeTearDown]
-        public void FixtureTearDown()
+        public async Task FixtureTearDown()
         {
-            _checkpoint.Reset(ConnectionString);
+            await _checkpoint.Reset(ConnectionString);
         }
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             TestContext = new T();
             SetupContext = new T();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
             {
-                _checkpoint.Reset(ConnectionString);
+                await _checkpoint.Reset(ConnectionString);
             }
         }
 

@@ -17,6 +17,7 @@ using EdFi.Ods.AdminApp.Web.Display.RadioButton;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using HtmlTags.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Property = EdFi.Ods.AdminApp.Web.Infrastructure.Property;
 using Preconditions = EdFi.Ods.Common.Preconditions;
@@ -291,14 +292,14 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return new DivTag().AddClasses("validationSummary", "alert", "alert-danger", "hidden");
         }
 
-        public static HtmlTag NavTabs<T>(this IHtmlHelper helper, UrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T: Enumeration<T>, ITabEnumeration
+        public static HtmlTag NavTabs<T>(this IHtmlHelper helper, IUrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T: Enumeration<T>, ITabEnumeration
         {
             var tabTag = new HtmlTag("ul").AddClasses("nav", "nav-tabs");
             BuildNavEntries(urlHelper, tabs, tabTag, commonRouteValues);
             return tabTag;
         }
 
-        public static HtmlTag NavPills<T>(this IHtmlHelper helper, UrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T : Enumeration<T>, ITabEnumeration
+        public static HtmlTag NavPills<T>(this IHtmlHelper helper, IUrlHelper urlHelper, List<TabDisplay<T>> tabs, object commonRouteValues = null) where T : Enumeration<T>, ITabEnumeration
         {
             var tabTag = new HtmlTag("ul").AddClasses("nav", "nav-pills", "nav-pills-custom");
             BuildNavEntries(urlHelper, tabs, tabTag, commonRouteValues);

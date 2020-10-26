@@ -4,20 +4,65 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+#if NET48
+using System.Web.Mvc;
+#else
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+#endif
+using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
+using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
-    public class HomeController : Controller
+    [AllowAnonymous, BypassInstanceContextFilter]
+    public class HomeController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly CloudOdsUpdateService _cloudOdsUpdateService;
+        private readonly IHomeScreenDisplayService _homeScreenDisplayService;
+        private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
+
+
+        public HomeController(CloudOdsUpdateService cloudOdsUpdateService, IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
         {
-            return View();
+            _cloudOdsUpdateService = cloudOdsUpdateService;
+            _homeScreenDisplayService = homeScreenDisplayService;
+            _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
+        }
+
+        public async Task<ActionResult> Index(bool setupCompleted = false)
+        {
+        #if NET48
+            if (setupCompleted && ZeroOdsInstanceRegistrations())
+                return RedirectToAction("RegisterOdsInstance", "OdsInstances");
+        #endif
+
+            var updateInfo = await _cloudOdsUpdateService.GetUpdateInfo();
+            var model = new IndexModel
+            {
+                SetupJustCompleted = setupCompleted,
+                UpdateAvailable = updateInfo.UpdateAvailable,
+                HomeScreenDisplays = _homeScreenDisplayService.GetHomeScreenDisplays()
+            };
+
+            return View(model);
         }
 
         public ActionResult Error(string message)
         {
-            return View(new HandleErrorInfo(new Exception(message)));
+            var model = new HandleErrorInfo(new Exception(message));
+            return View(model);
+        }
+
+        private bool ZeroOdsInstanceRegistrations()
+        {
+            return CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances &&
+                   !_getOdsInstanceRegistrationsQuery.Execute().Any();
         }
     }
 }

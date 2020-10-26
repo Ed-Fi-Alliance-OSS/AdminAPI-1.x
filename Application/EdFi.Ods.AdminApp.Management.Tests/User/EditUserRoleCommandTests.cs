@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
@@ -40,17 +41,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 RoleId = Role.SuperAdmin.Value.ToString()
             };
 
-            var command = new EditUserRoleCommand();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var command = new EditUserRoleCommand(identity);
 
-            command.Execute(updateModel);
+                command.Execute(updateModel);
+            }
 
-            var query = new GetRoleForUserQuery();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var query = new GetRoleForUserQuery(identity);
 
-            var editedUserRole = query.Execute(userToBeSuperAdmin.Id);
-            editedUserRole.ShouldBe(Role.SuperAdmin);
+                var editedUserRole = query.Execute(userToBeSuperAdmin.Id);
+                editedUserRole.ShouldBe(Role.SuperAdmin);
             
-            var notEditedUserRole = query.Execute(userToRemainAdmin.Id);
-            notEditedUserRole.ShouldBe(Role.Admin);
+                var notEditedUserRole = query.Execute(userToRemainAdmin.Id);
+                notEditedUserRole.ShouldBe(Role.Admin);
+            }
         }
 
         [Test]
@@ -69,10 +76,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 Email = testUserNotInSystem.Email
             };
 
-            var validator = new EditUserRoleModelValidator(GetMockUserContext(testUserNotInSystem, Role.Admin));
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user you are trying to edit does not exist in the database.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new EditUserRoleModelValidator(GetMockUserContext(testUserNotInSystem, Role.Admin), identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user you are trying to edit does not exist in the database.");
+            }
         }
 
         [Test]
@@ -87,10 +97,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 Email = existingUser.Email
             };
 
-            var validator = new EditUserRoleModelValidator(GetMockUserContext(existingUser, Role.Admin));
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user is not allowed to assign/remove roles as they are logged in as a Super Administrator or have an Administrator role.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new EditUserRoleModelValidator(GetMockUserContext(existingUser, Role.Admin), identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user is not allowed to assign/remove roles as they are logged in as a Super Administrator or have an Administrator role.");
+            }
         }
 
         [Test]
@@ -107,27 +120,34 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 Email = existingUser.Email
             };
 
-            var validator = new EditUserRoleModelValidator(GetMockUserContext(existingUser));
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The role you are trying to assign does not exist in the database.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new EditUserRoleModelValidator(GetMockUserContext(existingUser), identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The role you are trying to assign does not exist in the database.");
+            }
         }
 
         [Test]
         public void ShouldNotEditRoleIfRequiredFieldsEmpty()
         {
             var updateModel = new EditUserRoleModel();
-            var validator = new EditUserRoleModelValidator(GetMockUserContext());
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+
+            using (var identity = AdminAppIdentityDbContext.Create())
             {
-                "'User Id' must not be empty.",
-                "The user you are trying to edit does not exist in the database.",
-                "'Role Id' must not be empty.",
-                "The role you are trying to assign does not exist in the database.",
-                "'Email' must not be empty."
-            }, false);
+                var validator = new EditUserRoleModelValidator(GetMockUserContext(), identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+                {
+                    "'User Id' must not be empty.",
+                    "The user you are trying to edit does not exist in the database.",
+                    "'Role Id' must not be empty.",
+                    "The role you are trying to assign does not exist in the database.",
+                    "'Email' must not be empty."
+                }, false);
+            }
         }
     }
 }

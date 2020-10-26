@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -58,10 +58,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "testPassword"
             };
 
-            var validator = new RegisterViewModelValidator();
-            var validationResults = validator.Validate(newUser);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Email' is not a valid email address.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new RegisterViewModelValidator(identity);
+                var validationResults = validator.Validate(newUser);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Email' is not a valid email address.");
+            }
         }
 
         [Test]
@@ -74,10 +77,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "notTestPassword"
             };
 
-            var validator = new RegisterViewModelValidator();
-            var validationResults = validator.Validate(newUser);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The password and confirmation password do not match.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new RegisterViewModelValidator(identity);
+                var validationResults = validator.Validate(newUser);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The password and confirmation password do not match.");
+            }
         }
 
         [Test]
@@ -85,15 +91,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
         {
             var newUser = new RegisterViewModel();
 
-            var validator = new RegisterViewModelValidator();
-            var validationResults = validator.Validate(newUser);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+            using (var identity = AdminAppIdentityDbContext.Create())
             {
-                "'Email' must not be empty.",
-                "'Password' must not be empty.",
-                "'Confirm Password' must not be empty."
-            }, false);
+                var validator = new RegisterViewModelValidator(identity);
+                var validationResults = validator.Validate(newUser);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+                {
+                    "'Email' must not be empty.",
+                    "'Password' must not be empty.",
+                    "'Confirm Password' must not be empty."
+                }, false);
+            }
         }
 
         [Test, TestCaseSource("TestPasswords")]
@@ -107,10 +116,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = testPassword
             };
 
-            var validator = new RegisterViewModelValidator();
-            var validationResults = validator.Validate(newUser);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldContain($"'Password' must be between 6 and 100 characters. You entered {testPassword.Length} characters.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new RegisterViewModelValidator(identity);
+                var validationResults = validator.Validate(newUser);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldContain($"'Password' must be between 6 and 100 characters. You entered {testPassword.Length} characters.");
+            }
         }
 
         [Test]
@@ -136,10 +148,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "testPassword"
             };
 
-            var validator = new RegisterViewModelValidator();
-            var validationResults = validator.Validate(newUser);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A user with the email already exists in the database");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new RegisterViewModelValidator(identity);
+                var validationResults = validator.Validate(newUser);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A user with the email already exists in the database");
+            }
         }
 
         private static readonly string[] TestPasswords = {

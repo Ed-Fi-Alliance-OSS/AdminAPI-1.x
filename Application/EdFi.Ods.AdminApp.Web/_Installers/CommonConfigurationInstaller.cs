@@ -93,6 +93,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton(TokenCache.DefaultShared);
 
             services.AddScoped<AdminAppDbContext>();
+
+#if NET48
+            //For the .NET Core registration of this type, see Startup.cs.
+            //Note that in NET48 runs, this scoped instance is distinct from
+            //the scoped instance available via the OWIN IoC container.
+            services.AddScoped<AdminAppIdentityDbContext>();
+#endif
+
             services.AddScoped<AdminAppUserContext>();
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();

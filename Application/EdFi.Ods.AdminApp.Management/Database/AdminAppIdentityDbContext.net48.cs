@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
         //Rather than construct AdminAppIdentityDbContext directly, most ASP.NET Identity user
         //management activities should take place through the ApplicationUserManager abstraction.
-        private AdminAppIdentityDbContext()
+        public AdminAppIdentityDbContext()
             : base(CloudOdsDatabaseNames.Admin, throwIfV1Schema: false)
         {
         }

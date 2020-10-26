@@ -3,14 +3,17 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.IO;
 using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +37,17 @@ namespace EdFi.Ods.AdminApp.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
+
+            services.AddDbContext<AdminAppIdentityDbContext>(options =>
+            {
+                var connectionString = Configuration.GetConnectionString("Admin");
+                var databaseEngine = Configuration["AppSettings.DatabaseEngine"];
+
+                if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
+                    options.UseSqlServer(connectionString);
+                else
+                    options.UseNpgsql(connectionString);
+            });
 
             services.AddControllersWithViews()
                     .AddFluentValidation(opt =>

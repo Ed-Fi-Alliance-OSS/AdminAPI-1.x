@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Configurations>Debug;Release;OnPremNpgsql;OnPremises</Configurations>
     </PropertyGroup>
 
     <!-- As long as the solution uses ConfigurationManager.*, enable Test Explorer runs to successfully witness config settings. -->

@@ -247,7 +247,6 @@
     <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
     <Content Remove="Views\GlobalSettings\Users.cshtml" />
     <Content Remove="Views\GlobalSettings\Vendors.cshtml" />
-    <Content Remove="Views\Home\Index.cshtml" />
     <Content Remove="Views\Identity\ChangePassword.cshtml" />
     <Content Remove="Views\Identity\Login.cshtml" />
     <Content Remove="Views\Identity\Register.cshtml" />

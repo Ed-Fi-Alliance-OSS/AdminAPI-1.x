@@ -31,17 +31,6 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
                        .AllowUserRegistration ?? false;
         }
 
-        public bool IsFirstTimeSetUpCompleted()
-        {
-            using (var database = new AdminAppDbContext())
-            {
-                return database
-                           .ApplicationConfigurations
-                           .SingleOrDefault()?
-                           .FirstTimeSetUpCompleted ?? false;
-            }
-        }
-
         public void UpdateFirstTimeSetUpStatus(bool setUpCompleted)
         {
             var config = _database.EnsureSingle<ApplicationConfiguration>();

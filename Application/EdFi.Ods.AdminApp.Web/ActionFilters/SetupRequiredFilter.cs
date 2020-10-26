@@ -8,8 +8,10 @@ using System.Web.Mvc;
 #else
 using Microsoft.AspNetCore.Mvc.Filters;
 #endif
+using System.Linq;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Web.Controllers;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -19,12 +21,10 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     public class SetupRequiredFilter : ActionFilterAttribute
     {
         private readonly IGetOdsStatusQuery _getOdsStatusQuery;
-        private readonly ApplicationConfigurationService _applicationConfigurationService;
 
-        public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery, ApplicationConfigurationService applicationConfigurationService)
+        public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery)
         {
             _getOdsStatusQuery = getOdsStatusQuery;
-            _applicationConfigurationService = applicationConfigurationService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -45,7 +45,15 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private bool GeneralFirstTimeSetUpCompleted()
         {
-            return _applicationConfigurationService.IsFirstTimeSetUpCompleted();
+            using (var database = new AdminAppDbContext())
+            {
+                var generalFirstTimeSetUpCompleted = database
+                                                         .ApplicationConfigurations
+                                                         .SingleOrDefault()?
+                                                         .FirstTimeSetUpCompleted ?? false;
+
+                return generalFirstTimeSetUpCompleted;
+            }
         }
 
         private bool OdsInstanceFirstTimeSetupCompleted()

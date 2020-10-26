@@ -88,7 +88,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             usersContext.Setup(x => x.Vendors).Returns(mockVendors.Object);
             usersContext.Setup(x => x.OdsInstances).Returns(mockOdsInstance.Object);
 
-            var securityContext = new Mock<SecurityContext>();
+            var securityContext = new Mock<ISecurityContext>();
          
             var securePackedHashProvider = new Mock<ISecurePackedHashProvider>();
             var hashConfigProvider = new Mock<IHashConfigurationProvider>();

@@ -11,6 +11,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -505,9 +506,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
         }
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
-            _checkpoint.Reset(TestOdsConnectionProvider.ConnectionString);
+            await _checkpoint.Reset(TestOdsConnectionProvider.ConnectionString);
         }
 
         [OneTimeSetUp]

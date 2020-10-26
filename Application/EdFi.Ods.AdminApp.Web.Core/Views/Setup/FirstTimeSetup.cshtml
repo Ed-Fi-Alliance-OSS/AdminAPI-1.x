@@ -1,0 +1,106 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+
+@{
+    ViewBag.Title = "First Time Setup";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h5>
+                <img src="~/Content/images/settings_2@2x.png" width="28" height="35" alt="">
+                <span class="padding-left">Additional Setup Required</span>
+            </h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10">
+            <p>
+                There are some final setup tasks required before your Ed-Fi ODS instance is fully functional.
+                Please note that this process could take anywhere from a few minutes to up to 30 minutes or more, depending on the availability of the newly-configured resources.
+            </p>
+            <div id="general-error-note" class="text-danger padding-bottom-10 setup-error" style="display: none">
+                <strong>Note:</strong> Additional setup has experienced an error.<br />
+                Please wait a few minutes and click the <strong><em>Try again</em></strong> button to attempt setup again.
+            </div>
+            <div id="transient-error-note" class="text-danger padding-bottom-10 setup-error" style="display: none">
+                <strong>Note:</strong> Waiting for availability of resources.
+            </div>
+            <div id="retry-error-note" class="text-danger padding-bottom-10 setup-error" style="display: none">
+                <strong>Note:</strong> Waiting for setup processes to complete. Will continue re-trying.
+            </div>
+        </div>
+    </div>    
+    <div>
+        <a href="#" class="btn btn-primary" id="finish-setup-link">Continue <span class="padding-left"><i class="fa fa-chevron-circle-right"></i></span></a>
+    </div>
+</div>
+
+<script language="javascript">
+    $('#finish-setup-link').click(function () {
+        $(this).html('Running... <span class="padding-left"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>');
+        $(this).attr('disabled', true);
+
+        $('.setup-error').hide();
+
+        var ajaxSettings = {
+            url: "@Url.Action("CompleteFirstTimeSetup")",
+            method: "POST",
+            dataType: "json",
+            data: appendAntiForgeryToken({}),
+            retries: 10
+        };
+
+        var handleSuccess = function() {
+            $('#finish-setup-link').removeClass('btn-primary btn-danger').addClass('btn-success');
+            $('#finish-setup-link').html('Success <span class="padding-left"><i class="fa fa-check-circle"></i></span>');
+            window.location = '@Url.Action("Index", "Home", new { setupCompleted = true })';
+        };
+
+        var handleFailure = function (data) {
+            if (data.responseJSON && data.responseJSON.isTransientError) {
+                $('#transient-error-note').show();
+              
+                $.ajax(ajaxSettings)
+                    .done(function() {
+                        handleSuccess();
+                    })
+                    .fail(function () {
+                        if (ajaxSettings.retries-- > 0) {
+                            $('#finish-setup-link').removeClass('btn-primary').addClass('btn-danger');
+                            $('.setup-error').hide();
+                            $('#retry-error-note').show();
+                            handleFailure(data);
+                        } else {
+                                $('#finish-setup-link').html('Try again <span class="padding-left"><i class="fa fa-chevron-circle-right"></i></span>');
+                                $('#finish-setup-link').attr('disabled', false);
+                                $('.setup-error').hide();
+                                $('#general-error-note').show();
+                        }
+                    });
+            }
+
+            else {
+                $('#general-error-note').show();
+                $('#finish-setup-link').removeClass('btn-primary').addClass('btn-danger');
+                $('#finish-setup-link').html('Try again <span class="padding-left"><i class="fa fa-chevron-circle-right"></i></span>');
+                $('#finish-setup-link').attr('disabled', false);
+
+                var errorMsg = data.responseJSON && data.responseJSON.message
+                    ? data.responseJSON.message
+                    : 'Setup has experienced an error. Please wait a few minutes and click the <strong><em>Try again</em></strong> button to attempt setup again.';
+                toastr.error("<strong>Error:</strong> " + errorMsg);
+            }
+        };
+
+        $.ajax(ajaxSettings)
+            .done(handleSuccess)
+            .fail(handleFailure);
+    });
+</script>

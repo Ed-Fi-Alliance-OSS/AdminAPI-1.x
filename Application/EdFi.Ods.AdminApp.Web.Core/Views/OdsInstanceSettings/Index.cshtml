@@ -1,0 +1,37 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
+@model OdsInstanceSettingsModel
+
+@{
+    Layout = "~/Views/Shared/_Settings_Production.cshtml";
+    ViewBag.Title = "Ods Instance | Applications";
+}
+
+@Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
+
+<div class="tab-content">
+    <div class="tab-pane active" id="production-applications">
+        @if (!Model.ProductionApiUrl.IsEmpty())
+        {
+            <div class="alert alert-info">
+                <a href="javascript:void(0)" class="copy-to-clipboard" data-clipboard-text="@Model.ProductionApiUrl">
+                    <span class="fa fa-clipboard"></span><span>Production API URL: </span><strong>@Model.ProductionApiUrl</strong>
+                </a>
+            </div>
+            @Html.ActionAjax("ApplicationList", "OdsInstanceSettings", new {}, 250, "Warming up Production API....")
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        InitializeCopyToClipboardLinks();
+    })();
+</script>

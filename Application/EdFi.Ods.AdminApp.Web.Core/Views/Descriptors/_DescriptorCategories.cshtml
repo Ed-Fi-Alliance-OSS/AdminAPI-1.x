@@ -1,0 +1,63 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.Descriptors.DescriptorCategoriesModel
+
+<div class="row margin-bottom">
+    <div class="col-lg-12">
+        <h6>Descriptors</h6>
+    </div>
+</div>
+
+@foreach (var category in Model.DescriptorCategories)
+{
+    <div class="panel-section">
+        <div class="row heading">
+            <div class="col-xs-8">
+                <h7>@category</h7>
+            </div>
+            <div class="col-xs-4 text-right">
+                <span class="custom-divider"> |</span>
+                <a href="javascript:void(0)" class="descriptor-panel-toggle" data-target="#descriptor-@(category)"><span class="fa fa-chevron-down caret-custom panel-toggle"></span></a>
+            </div>
+            <div id="descriptor-@(category)" data-category="@category" class="row content collapse panel-loading">
+                <i class="fa fa-spinner fa-pulse fa-fw"></i>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(".descriptor-panel-toggle").click(function () {
+        var $toggleLink = $(this);
+        var target = $toggleLink.attr("data-target");
+        var $panel = $(target);
+        $panel.collapse("toggle");
+
+        if ($toggleLink.hasClass("initialized")) {
+            return;
+        }
+        $toggleLink.addClass("initialized");
+
+        if ($panel.hasClass("panel-loading")) {
+            var category = $panel.attr("data-category");
+            var url = "@Html.Raw(Url.Action("GetDescriptorsFromCategoryName", "Descriptors", new { }))" + "?category=" + category;
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    $panel.html(data);
+                },
+                error: function() {
+                    $panel.html("<em class='text-danger margin-top'>An error occured loading the descriptors for this category</em>");
+                },
+                complete: function() {
+                    $panel.removeClass("panel-loading");
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,54 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Management.Instances
+@using EdFi.Ods.AdminApp.Web.Helpers
+@using EdFi.Ods.AdminApp.Web.Infrastructure
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations.AddLocalEducationAgencyModel
+
+<div id ="add-lea-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addLEAModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add Local Education Agency</h4>
+            </div>
+        @if (Model.RequiredApiDataExist)
+        {
+            <div class="modal-body center-block text-center">
+                @using (Html.BeginForm("AddLocalEducationAgency", "EducationOrganizations"))
+                {
+                    @Html.ValidationBlock()
+                    if (CloudOdsAdminAppSettings.Instance.Mode == ApiMode.DistrictSpecific)
+                    {
+                        @Html.InputBlock(m => m.LocalEducationAgencyId, inputModifier:x => x.Attr("readonly", "readonly"))
+                    }
+                    else
+                    {
+                        @Html.InputBlock(m => m.LocalEducationAgencyId)
+                    }
+                    @Html.SelectListBlock(m => m.LocalEducationAgencyCategoryType, Model.LocalEducationAgencyCategoryTypeOptions, x => new SelectListItem {Text = x.DisplayText, Value = x.Value})
+                    @Html.InputBlock(m => m.Name)
+                    @Html.InputBlock(m => m.StreetNumberName)
+                    @Html.InputBlock(m => m.ApartmentRoomSuiteNumber)
+                    @Html.InputBlock(m => m.City)
+                    @Html.SelectListBlock(m => m.State, Model.StateOptions, x => new SelectListItem {Text = x.DisplayText, Value = x.Value})
+                    @Html.InputBlock(m => m.ZipCode)
+                }
+            </div>
+            <div class="modal-footer">
+                @Html.CancelModalButton()
+                @Html.SaveButton("Add").AppendSpinner("add-lea-spinner")
+            </div>
+        }
+        else
+        {
+          @Html.Partial("_MissingData")
+        }
+        </div>
+    </div>
+</div>

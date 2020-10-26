@@ -1,0 +1,79 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizationViewModel
+
+<div class="row margin-bottom">
+    <div class="col-lg-6">
+        <h6>Education Organizations</h6>
+    </div>
+
+    @if (!Model.LocalEducationAgencies.Any() || Model.ShouldAllowMultipleDistricts)
+    {
+        <div class="col-lg-6 text-right">
+            <button class="cta" data-toggle="modal" data-target="#add-lea-modal">
+                Add Local Education Agency
+            </button>
+        </div>
+    }
+</div>
+
+@foreach (var localEducationAgency in Model.LocalEducationAgencies)
+{
+    var schools = Model.Schools.Where(x => x.LocalEducationAgencyId == localEducationAgency.EducationOrganizationId).ToList();
+
+    <div class="panel-section">
+        <div class="row heading">
+            <div class="col-lg-6">
+                <h8>@localEducationAgency.Name</h8>
+            </div>
+
+            <div class="col-lg-6 text-right">
+                <a href="javascript:void(0)" class="loads-ajax-modal" data-url="@Url.Action("EditLocalEducationAgencyModal", "EducationOrganizations", new {id = localEducationAgency.Id})"> <span class="fa fa-pencil action-icons"></span></a>
+                @if (!schools.Any())
+                {
+                    <a href="javascript:void(0)" class="delete-lea-link" data-id="@localEducationAgency.Id" data-name="@localEducationAgency.Name"> <span class="fa fa-trash-o action-icons"></span></a>
+                }
+                else
+                {
+                    <a href="javascript:void(0)" data-name="@localEducationAgency.Name"> <span class="fa fa-trash-o action-icons disabled"></span></a>
+                }
+                <span class="custom-divider"> |</span>
+                <a href="javascript:void(0)" data-toggle="collapse" data-target="#lea-@(localEducationAgency.Id)"><span class="fa fa-chevron-up caret-custom panel-toggle"></span></a>
+            </div>
+        </div>
+        <div id="lea-@(localEducationAgency.Id)" class="row content collapse in">
+            @if (!schools.Any())
+            {
+                <div class="col-lg-12">
+                    <em>There are no schools in this category</em>
+                </div>
+            }
+            @foreach (var school in schools)
+            {
+                <div class="col-lg-8">
+                    <h7>@school.Name</h7>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="javascript:void(0)" class="loads-ajax-modal" data-url="@Url.Action("EditSchoolModal", "EducationOrganizations", new {id = school.Id})"> <span class="fa fa-pencil action-icons"></span></a>
+                    <a href="javascript:void(0)" class="delete-school-link" data-id="@school.Id" data-name="@school.Name"> <span class="fa fa-trash-o action-icons"></span></a>
+                </div>
+            }
+            <div class="col-lg-12 text-right padding-bottom-5">
+                <button class="ghost-button btn-sm add-school-button" data-lea-id="@(localEducationAgency.EducationOrganizationId)">
+                    Add School
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@{ Html.RenderPartial("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
+@{ Html.RenderAction("AddLocalEducationAgencyModal", "EducationOrganizations"); }
+@{ Html.RenderAction("AddSchoolModal", "EducationOrganizations"); }
+

@@ -1,0 +1,39 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.User.AddUserModel
+
+@{
+    ViewBag.Title = "Global | Users | Add User";
+}
+
+@Html.Partial("_SettingsGlobalHeader", Model.GlobalSettingsTabEnumerations)
+
+<div class="row">
+    <div class="col-md-offset-2 col-md-8">
+        <h3 style="text-align: center">Add a New User</h3>
+
+        @using (Html.BeginForm("AddUser", "User"))
+        {
+            @Html.AntiForgeryToken()
+            if (!Html.ViewData.ModelState.IsValid)
+            {
+                @Html.ValidationSummary("", new {@class = "alert alert-danger"})
+            }
+            @Html.InputBlock(x => x.Email)
+            @Html.InputBlock(x => x.Password)
+            @Html.InputBlock(x => x.ConfirmPassword)
+            <div class="row form-group">
+                <div class="col-xs-offset-4 col-xs-6">
+                    @Html.ActionLink("Back", "Users", "GlobalSettings", null, new {@class = "btn btn-primary cta"})
+                    @Html.SaveButton("Register a New User").AddClass("no-ajax")
+                </div>
+            </div>
+        }
+    </div>
+</div>

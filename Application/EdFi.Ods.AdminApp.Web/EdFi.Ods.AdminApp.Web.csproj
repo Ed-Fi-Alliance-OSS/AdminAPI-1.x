@@ -672,10 +672,8 @@
     <Compile Include="Models\ViewModels\EducationOrganizations\EditSchoolModel.cs" />
     <Compile Include="Models\ViewModels\EducationOrganizationViewModel.cs" />
     <Compile Include="Models\ViewModels\EducationOrganizations\AddLocalEducationAgencyModel.cs" />
-    <Compile Include="Models\ViewModels\Identity\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\Identity\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\Identity\RegisterViewModel.cs" />
-    <Compile Include="Models\ViewModels\Identity\ResetPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\ClaimSets\AuthStrategyEditorModel.cs" />
     <Compile Include="Models\ViewModels\LogSettingsModel.cs" />
     <Compile Include="Models\ViewModels\Global\AdvancedSettingsModel.cs" />
@@ -1088,13 +1086,8 @@
     <Content Include="Views\ClaimSets\_ImportExportClaimSet.cshtml" />
     <Content Include="Views\ClaimSets\_ExportClaimSet.cshtml" />
     <Content Include="Views\ClaimSets\_ExportClaimSetPreview.cshtml" />
-    <Content Include="Views\Identity\ConfirmEmail.cshtml" />
-    <Content Include="Views\Identity\ForgotPassword.cshtml" />
-    <Content Include="Views\Identity\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Identity\Login.cshtml" />
     <Content Include="Views\Identity\Register.cshtml" />
-    <Content Include="Views\Identity\ResetPassword.cshtml" />
-    <Content Include="Views\Identity\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Identity\ChangePassword.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\ClaimSets\_AuthStrategiesModal.cshtml" />

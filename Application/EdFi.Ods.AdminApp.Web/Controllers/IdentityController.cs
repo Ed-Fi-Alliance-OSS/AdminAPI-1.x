@@ -33,9 +33,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     public class IdentityController : ControllerBase
     {
         private readonly ApplicationConfigurationService _applicationConfiguration;
-        private ApplicationSignInManager SignInManager => HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
+        private ApplicationSignInManager _signInManager => HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+        private ApplicationUserManager _userManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        private IAuthenticationManager _authenticationManager => HttpContext.GetOwinContext().Authentication;
         private readonly RegisterCommand _registerCommand;
         private readonly EditUserRoleCommand _editUserRoleCommand;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
@@ -68,7 +68,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 return View(model);
             }
 
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -102,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var (adminAppUser, result) = await _registerCommand.Execute(model, UserManager);
+                var (adminAppUser, result) = await _registerCommand.Execute(model, _userManager);
 
                 if (result.Succeeded)
                 {
@@ -111,13 +111,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                         UserId = adminAppUser.Id,
                         RoleId = Role.SuperAdmin.Value.ToString()
                     });
-                    await SignInManager.SignInAsync(adminAppUser, isPersistent: false, rememberBrowser: false);
-
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Identity", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await _signInManager.SignInAsync(adminAppUser, isPersistent: false, rememberBrowser: false);
 
                     if (ZeroOdsInstanceRegistrations())
                         return RedirectToAction("RegisterOdsInstance", "OdsInstances");
@@ -145,15 +139,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
                     user.RequirePasswordChange = false;
-                    await UserManager.UpdateAsync(user);
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    await _userManager.UpdateAsync(user);
+                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
 
                 TempData["PasswordChanged"] = true;
@@ -167,111 +161,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
-        #region Disabled 'Forgot Password' Flow
-
-        //The ASP.NET Identity template includes these controller actions and associated views
-        //for the purpose of a "Forgot Password" flow. The user would elect to receive an email
-        //containing a specially-crafted link which would allow them to prove they are the real
-        //owner of that email account and reset their password. The feature, however, relies
-        //on enabling an email service. It was deemed out of scope for Admin App's initial release
-        //of the Identity system, so it is disabled further here with [NonAction] attributes.
-
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
-        {
-            if (userId == null || code == null)
-            {
-                return View("Error");
-            }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
-
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
-                }
-
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Identity", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Identity");
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public ActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public ActionResult ResetPassword(string code)
-        {
-            return code == null ? View("Error") : View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
-            {
-                // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Identity");
-            }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordConfirmation", "Identity");
-            }
-            AddErrors(result);
-            return View();
-        }
-
-        [AllowAnonymous]
-        [NonAction] //This ASP.NET Identity feature is not enabled.
-        public ActionResult ResetPasswordConfirmation()
-        {
-            return View();
-        }
-
-        #endregion
-
         [HttpPost]
         public ActionResult LogOut()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            _authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
 

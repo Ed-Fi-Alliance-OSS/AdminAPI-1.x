@@ -5,6 +5,7 @@ The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
+@using EdFi.Ods.AdminApp.Web.Helpers
 @using Microsoft.AspNetCore.Http
 
 <!DOCTYPE html>
@@ -73,7 +74,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             <div class="row">
                 <p class="col-md-4"></p>
                 <p class="col-md-4 text-muted small"><a href="@Url.Action("Index", "Home")"><span class="fa fa-home"></span><span>Home</span></a></p>
-                @*<p class="col-md-4 text-right application-version">@Html.ApplicationVersion()</p>*@
+                <p class="col-md-4 text-right application-version">@Html.ApplicationVersion()</p>
             </div>
         </div>
     </footer>
@@ -88,6 +89,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     <script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/Scripts/lodash.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/bundles/site.min.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
     <script type="text/javascript">
         GlobalInitialize();
     </script>

@@ -52,8 +52,10 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                     x.HomeScreen == HomeScreenEnumeration.Settings).IsEnabled = false;
             }
 
+            #if NET48
             if (!_userContext.Has(Permission.AccessGlobalSettings))
                 homeScreenDisplayList.RemoveAll(x => x.HomeScreen == HomeScreenEnumeration.Global);
+            #endif
 
             return homeScreenDisplayList;
         }

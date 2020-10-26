@@ -41,7 +41,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
 
-            var mockSecurityContext = new Mock<SecurityContext>();
+            var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
 
             var mockSqlConfigurator = GetMockDatabaseSecurityConfigurator();
@@ -113,7 +113,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
 
-            var mockSecurityContext = new Mock<SecurityContext>();
+            var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
 
             var mockSqlConfigurator = GetMockDatabaseSecurityConfigurator();

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
@@ -51,9 +52,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             SetupUserWithOdsInstanceRegistrations(testUser1.Id, testInstances);
             SetupUserWithOdsInstanceRegistrations(testUser2.Id, testInstances);
 
-            var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext);
-            queryInstances.Execute(testUser1.Id).Count().ShouldBe(2);
-            queryInstances.Execute(testUser2.Id).Count().ShouldBe(2);
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
+                queryInstances.Execute(testUser1.Id).Count().ShouldBe(2);
+                queryInstances.Execute(testUser2.Id).Count().ShouldBe(2);
+            }
 
             var deregisterModel = new DeregisterOdsInstanceModel
             {
@@ -62,10 +66,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 Description = testInstanceToBeDeregistered.Description
             };
 
-
             using (var sqlServerUsersContext = new SqlServerUsersContext())
+            using (var identity = AdminAppIdentityDbContext.Create())
             {
-                var command = new DeregisterOdsInstanceCommand(SetupContext, sqlServerUsersContext);
+                var command = new DeregisterOdsInstanceCommand(SetupContext, sqlServerUsersContext, identity);
 
                 command.Execute(deregisterModel);
             }
@@ -79,19 +83,24 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             ShouldBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceToBeDeregistered.Id);
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceNotToBeDeregistered.Id);
 
-            var instancesAssignedToUser1 = queryInstances.Execute(testUser1.Id).ToList();
-            instancesAssignedToUser1.Count.ShouldBe(1);
-            var onlyInstanceAssignedToUser1 = instancesAssignedToUser1.Single();
-            onlyInstanceAssignedToUser1.Id.ShouldBe(testInstanceNotToBeDeregistered.Id);
-            onlyInstanceAssignedToUser1.Name.ShouldBe(testInstanceNotToBeDeregistered.Name);
-            onlyInstanceAssignedToUser1.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
 
-            var instancesAssignedToUser2 = queryInstances.Execute(testUser2.Id).ToList();
-            instancesAssignedToUser2.Count.ShouldBe(1);
-            var onlyInstanceAssignedToUser2 = instancesAssignedToUser2.Single();
-            onlyInstanceAssignedToUser2.Id.ShouldBe(testInstanceNotToBeDeregistered.Id);
-            onlyInstanceAssignedToUser2.Name.ShouldBe(testInstanceNotToBeDeregistered.Name);
-            onlyInstanceAssignedToUser2.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
+                var instancesAssignedToUser1 = queryInstances.Execute(testUser1.Id).ToList();
+                instancesAssignedToUser1.Count.ShouldBe(1);
+                var onlyInstanceAssignedToUser1 = instancesAssignedToUser1.Single();
+                onlyInstanceAssignedToUser1.Id.ShouldBe(testInstanceNotToBeDeregistered.Id);
+                onlyInstanceAssignedToUser1.Name.ShouldBe(testInstanceNotToBeDeregistered.Name);
+                onlyInstanceAssignedToUser1.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
+
+                var instancesAssignedToUser2 = queryInstances.Execute(testUser2.Id).ToList();
+                instancesAssignedToUser2.Count.ShouldBe(1);
+                var onlyInstanceAssignedToUser2 = instancesAssignedToUser2.Single();
+                onlyInstanceAssignedToUser2.Id.ShouldBe(testInstanceNotToBeDeregistered.Id);
+                onlyInstanceAssignedToUser2.Name.ShouldBe(testInstanceNotToBeDeregistered.Name);
+                onlyInstanceAssignedToUser2.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
+            }
 
             using (var database = new SqlServerUsersContext())
             {

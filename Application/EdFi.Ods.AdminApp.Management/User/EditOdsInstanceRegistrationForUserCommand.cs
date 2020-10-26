@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -12,27 +12,31 @@ namespace EdFi.Ods.AdminApp.Management.User
 {
     public class EditOdsInstanceRegistrationForUserCommand
     {
+        private readonly AdminAppIdentityDbContext _identity;
+
+        public EditOdsInstanceRegistrationForUserCommand(AdminAppIdentityDbContext identity)
+        {
+            _identity = identity;
+        }
+
         public void Execute(IEditOdsInstanceRegistrationForUserModel model)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                var preexistingAssociations = database.UserOdsInstanceRegistrations.Where(x => x.UserId == model.UserId).ToList();
+            var preexistingAssociations = _identity.UserOdsInstanceRegistrations.Where(x => x.UserId == model.UserId).ToList();
 
-                var selectedOdsInstanceRegistrationIds =
-                    model.OdsInstanceRegistrations.Where(x => x.Selected).Select(x => x.OdsInstanceRegistrationId).ToList();
+            var selectedOdsInstanceRegistrationIds =
+                model.OdsInstanceRegistrations.Where(x => x.Selected).Select(x => x.OdsInstanceRegistrationId).ToList();
 
-                var recordsToAdd = NewAssignments(model.UserId, selectedOdsInstanceRegistrationIds, preexistingAssociations);
+            var recordsToAdd = NewAssignments(model.UserId, selectedOdsInstanceRegistrationIds, preexistingAssociations);
 
-                if (recordsToAdd.Any())
-                    database.UserOdsInstanceRegistrations.AddRange(recordsToAdd);
+            if (recordsToAdd.Any())
+                _identity.UserOdsInstanceRegistrations.AddRange(recordsToAdd);
 
-                var recordsToRemove = AssignmentsToRemove(selectedOdsInstanceRegistrationIds, preexistingAssociations);
+            var recordsToRemove = AssignmentsToRemove(selectedOdsInstanceRegistrationIds, preexistingAssociations);
 
-                if (recordsToRemove.Any())
-                    database.UserOdsInstanceRegistrations.RemoveRange(recordsToRemove);
+            if (recordsToRemove.Any())
+                _identity.UserOdsInstanceRegistrations.RemoveRange(recordsToRemove);
 
-                database.SaveChanges();
-            }
+            _identity.SaveChanges();
         }
 
         private static List<UserOdsInstanceRegistration> AssignmentsToRemove(List<int> requestedOdsInstanceRegistrationIds, List<UserOdsInstanceRegistration> preexistingAssociations)

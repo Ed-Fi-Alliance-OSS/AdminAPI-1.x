@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
 using EdFi.Ods.AdminApp.Management.Helpers;
@@ -64,9 +65,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = description
                 };
                 var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
-             
-                var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object);
-                var newInstanceId = await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+
+                int newInstanceId;
+                using (var identity = AdminAppIdentityDbContext.Create())
+                {
+                    var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
+                    newInstanceId = await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                }
 
                 var addedInstance = Query<OdsInstanceRegistration>(newInstanceId);
                 var secretConfiguration =

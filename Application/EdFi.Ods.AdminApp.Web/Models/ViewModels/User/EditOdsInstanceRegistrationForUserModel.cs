@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -33,10 +33,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
     public class EditOdsInstanceRegistrationForUserModelValidator : AbstractValidator<EditOdsInstanceRegistrationForUserModel>
     {
         private static AdminAppDbContext _database;
+        private readonly AdminAppIdentityDbContext _identity;
 
-        public EditOdsInstanceRegistrationForUserModelValidator(AdminAppDbContext database)
+        public EditOdsInstanceRegistrationForUserModelValidator(AdminAppDbContext database, AdminAppIdentityDbContext identity)
         {
             _database = database;
+            _identity = identity;
 
             RuleFor(m => m.UserId).NotEmpty().Must(BeAnExistingUser).WithMessage("The user you are trying to edit does not exist in the database.");
             RuleFor(m => m.Email).NotEmpty();
@@ -45,10 +47,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 
         private bool BeAnExistingUser(string userId)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.Users.Any(x => x.Id == userId);
-            }
+            return _identity.Users.Any(x => x.Id == userId);
         }
 
         private bool BeAnExistingOdsInstanceRegistration(List<OdsInstanceRegistrationSelection> instances)

@@ -42,9 +42,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             SetupUserWithOdsInstanceRegistrations(userToBeDeleted.Id, testInstancesAssignedToDeletedUser);
             SetupUserWithOdsInstanceRegistrations(userNotToBeDeleted.Id, testInstancesAssignedToNotDeletedUser);
 
-            var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext);
-            queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(3);
-            queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
+                queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(3);
+                queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
+            }
 
             var deleteModel = new DeleteUserModel
             {
@@ -60,6 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
             using (var identity = AdminAppIdentityDbContext.Create())
             {
+                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 var queryRoles = new GetRoleForUserQuery(identity);
 
                 var deletedUser = Query(userToBeDeleted.Id);

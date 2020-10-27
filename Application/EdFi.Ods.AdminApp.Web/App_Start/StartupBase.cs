@@ -72,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Web
                 //NOTE: For development purposes only, uncomment this line to get diagnostics
                 //      on all IoC registrations:
                 //
-                //DescribeAllRegistrations();
+                DescribeAllRegistrations();
             }
             catch (Exception e)
             {

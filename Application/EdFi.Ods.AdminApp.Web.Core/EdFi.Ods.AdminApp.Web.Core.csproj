@@ -51,7 +51,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/EducationOrganizationsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ErrorController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/GlobalSettingsController.cs" LinkBase="Controllers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/IdentityController.cs" LinkBase="Controllers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" /> -->
@@ -247,7 +247,6 @@
     <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
     <Content Remove="Views\GlobalSettings\Users.cshtml" />
     <Content Remove="Views\GlobalSettings\Vendors.cshtml" />
-    <Content Remove="Views\Home\Index.cshtml" />
     <Content Remove="Views\Identity\ChangePassword.cshtml" />
     <Content Remove="Views\Identity\Login.cshtml" />
     <Content Remove="Views\Identity\Register.cshtml" />

@@ -1,8 +1,9 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management;
@@ -52,8 +53,12 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                     x.HomeScreen == HomeScreenEnumeration.Settings).IsEnabled = false;
             }
 
+            #if NET48
             if (!_userContext.Has(Permission.AccessGlobalSettings))
                 homeScreenDisplayList.RemoveAll(x => x.HomeScreen == HomeScreenEnumeration.Global);
+            #else
+            throw new Exception("The AccessGlobalSettings permission check is required even for .NET Core runs, but _userContext will not be reliable until AA-1120 enables authentication.");
+            #endif
 
             return homeScreenDisplayList;
         }

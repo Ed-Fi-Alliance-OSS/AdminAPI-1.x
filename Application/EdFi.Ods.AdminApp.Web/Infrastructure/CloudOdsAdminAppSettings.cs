@@ -15,30 +15,42 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
     {
         private static readonly Lazy<CloudOdsAdminAppSettings> _instance =
             new Lazy<CloudOdsAdminAppSettings>(() => new CloudOdsAdminAppSettings());
-        private readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
+
+        private AppSettings AppSettings
+        {
+            get
+            {
+            #if NET48
+                return ConfigurationHelper.GetAppSettings();         
+            #else
+                return Startup.ConfigurationAppSettings;
+            #endif
+            }
+        }
+
 
         protected CloudOdsAdminAppSettings() { }
 
         public static CloudOdsAdminAppSettings Instance => _instance.Value;
 
-        public string OdsInstanceName => _appSettings.DefaultOdsInstance;
+        public string OdsInstanceName => AppSettings.DefaultOdsInstance;
 
-        public string ProductionApiUrl => _appSettings.ProductionApiUrl;
+        public string ProductionApiUrl => AppSettings.ProductionApiUrl;
 
         public bool SystemManagedSqlServer
-            => _appSettings.SystemManagedSqlServer == null ||
+            => AppSettings.SystemManagedSqlServer == null ||
                bool.TrueString.Equals(
-                   _appSettings.SystemManagedSqlServer,
+                   AppSettings.SystemManagedSqlServer,
                    StringComparison.InvariantCultureIgnoreCase);
 
         public bool DbSetupEnabled => bool.TrueString.Equals(
-            _appSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
+            AppSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
 
         public int SecurityMetadataCacheTimeoutMinutes
         {
             get
             {
-                var timeOut = _appSettings.SecurityMetadataCacheTimeoutMinutes;
+                var timeOut = AppSettings.SecurityMetadataCacheTimeoutMinutes;
                 return int.Parse(timeOut ?? "0");
             }
         }
@@ -47,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         {
             get
             {
-                var mode = _appSettings.ApiStartupType;
+                var mode = AppSettings.ApiStartupType;
                 ApiMode startupMode;
 
                 if (string.IsNullOrWhiteSpace(mode))

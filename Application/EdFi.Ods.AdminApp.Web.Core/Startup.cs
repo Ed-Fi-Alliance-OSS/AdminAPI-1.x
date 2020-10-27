@@ -9,7 +9,6 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
-using EdFi.Ods.AdminApp.Web.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +52,13 @@ namespace EdFi.Ods.AdminApp.Web
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings());
-            var appStartup = Configuration["AppSettings:AppStartup"];
+
+            var appSettings = new AppSettings();
+            Configuration.GetSection("AppSettings").Bind(appSettings);
+            ConfigurationAppSettings = appSettings;
+
+            var appStartup = appSettings.AppStartup;
+
             if (appStartup == "OnPrem")
                 new OnPremInstaller().Install(services);
             else if (appStartup == "Azure")
@@ -100,5 +105,7 @@ namespace EdFi.Ods.AdminApp.Web
 
             XmlConfigurator.Configure(LogManager.GetRepository(assembly), new FileInfo(configPath));
         }
+
+        public static AppSettings ConfigurationAppSettings { get; set; }
     }
 }

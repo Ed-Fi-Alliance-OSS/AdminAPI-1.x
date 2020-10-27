@@ -53,7 +53,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult Error(string message)
         {
+            #if NET48
             var model = new HandleErrorInfo(new Exception(message), "Home", "Index");
+            #else
+            var model = new HandleErrorInfo(new Exception(message));
+            #endif
             return View(model);
         }
 

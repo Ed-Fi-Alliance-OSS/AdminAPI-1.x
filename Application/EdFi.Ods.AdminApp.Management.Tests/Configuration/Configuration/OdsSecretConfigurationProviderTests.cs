@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -17,10 +17,39 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
     public class OdsSecretConfigurationProviderTests : AdminAppDataTestBase
     {
-        private static OdsSecretConfigurationProvider OdsSecretConfigurationProvider =>
-            new OdsSecretConfigurationProvider(
+        private static OdsSecretConfigurationProvider OdsSecretConfigurationProvider(AdminAppDbContext database)
+        {
+            return new OdsSecretConfigurationProvider(
                 new StringEncryptorService(
-                    new EncryptionConfigurationProviderService()));
+                    new EncryptionConfigurationProviderService()), database);
+        }
+
+        private async Task<OdsSqlConfiguration> GetSqlConfiguration()
+        {
+            using (var database = new AdminAppDbContext())
+            {
+                var provider = OdsSecretConfigurationProvider(database);
+                return await provider.GetSqlConfiguration();
+            }
+        }
+
+        private async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
+        {
+            using (var database = new AdminAppDbContext())
+            {
+                var provider = OdsSecretConfigurationProvider(database);
+                return await provider.GetSecretConfiguration(instanceRegistrationId);
+            }
+        }
+
+        private async Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId = null)
+        {
+            using (var database = new AdminAppDbContext())
+            {
+                var provider = OdsSecretConfigurationProvider(database);
+                await provider.SetSecretConfiguration(configuration, instanceRegistrationId);
+            }
+        }
 
         private readonly ObjectCache _cache = MemoryCache.Default;
 
@@ -30,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             ClearSecretConfigurationCache();
             EnsureZeroSecretConfigurations();
 
-            var secretConfiguration = await OdsSecretConfigurationProvider.GetSecretConfiguration();
+            var secretConfiguration = await GetSecretConfiguration();
 
             secretConfiguration.ShouldBe(null);
         }
@@ -53,7 +82,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             AddSecretConfiguration(jsonConfiguration, odsInstanceRegistration.Id);
 
-            var secretConfiguration = await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration.Id);
+            var secretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
 
             secretConfiguration.ProductionApiKeyAndSecret.Key.ShouldBe("productionKey");
             secretConfiguration.ProductionApiKeyAndSecret.Secret.ShouldBe("productionSecret");
@@ -88,7 +117,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             AddSecretConfiguration(jsonConfiguration1, odsInstanceRegistration1.Id);
 
             var secretConfigurationForInstance1 =
-                await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration1.Id);
+                await GetSecretConfiguration(odsInstanceRegistration1.Id);
 
             secretConfigurationForInstance1.ProductionApiKeyAndSecret.Key.ShouldBe("productionKey1");
             secretConfigurationForInstance1.ProductionApiKeyAndSecret.Secret.ShouldBe("productionSecret1");
@@ -99,7 +128,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             AddSecretConfiguration(jsonConfiguration2, odsInstanceRegistration2.Id);
             var secretConfigurationForInstance2 =
-                await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration2.Id);
+                await GetSecretConfiguration(odsInstanceRegistration2.Id);
 
             secretConfigurationForInstance2.ProductionApiKeyAndSecret.Key.ShouldBe("productionKey2");
             secretConfigurationForInstance2.ProductionApiKeyAndSecret.Secret.ShouldBe("productionSecret2");
@@ -142,8 +171,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             odsInstanceRegistration.ShouldNotBeNull();
             
-            await OdsSecretConfigurationProvider.SetSecretConfiguration(secretConfiguration, odsInstanceRegistration.Id);
-            var createdSecretConfiguration = await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration.Id);
+            await SetSecretConfiguration(secretConfiguration, odsInstanceRegistration.Id);
+            var createdSecretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
 
             createdSecretConfiguration.ProductionApiKeyAndSecret.Key.ShouldBe(productionApiKey);
             createdSecretConfiguration.ProductionApiKeyAndSecret.Secret.ShouldBe(productionApiSecret);
@@ -151,9 +180,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             createdSecretConfiguration.LearningStandardsCredential.ShouldBe(null);
             createdSecretConfiguration.ProductionAcademicBenchmarkApiClientKeyAndSecret.ShouldBe(null);
 
-            await OdsSecretConfigurationProvider.SetSecretConfiguration(editSecretConfiguration, odsInstanceRegistration.Id);
+            await SetSecretConfiguration(editSecretConfiguration, odsInstanceRegistration.Id);
 
-            var editedSecretConfiguration = await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration.Id);
+            var editedSecretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
 
             editedSecretConfiguration.ProductionApiKeyAndSecret.Key.ShouldBe(newProductionApiKey);
             editedSecretConfiguration.ProductionApiKeyAndSecret.Secret.ShouldBe(newProductionApiSecret);
@@ -199,16 +228,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             odsInstanceRegistration2.ShouldNotBeNull();
 
             // Set secret configuration for instance 1
-            await OdsSecretConfigurationProvider.SetSecretConfiguration(secretConfiguration, odsInstanceRegistration1.Id);
+            await SetSecretConfiguration(secretConfiguration, odsInstanceRegistration1.Id);
 
             // Set secret configuration for instance 2
-            await OdsSecretConfigurationProvider.SetSecretConfiguration(secretConfiguration, odsInstanceRegistration2.Id);
+            await SetSecretConfiguration(secretConfiguration, odsInstanceRegistration2.Id);
 
             // Edit the secret configuration for instance 1
-            await OdsSecretConfigurationProvider.SetSecretConfiguration(editSecretConfiguration, odsInstanceRegistration1.Id);
+            await SetSecretConfiguration(editSecretConfiguration, odsInstanceRegistration1.Id);
 
             // Verify the secret configuration for instance 2
-            var createdSecretConfigurationForInstance2 = await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration2.Id);
+            var createdSecretConfigurationForInstance2 = await GetSecretConfiguration(odsInstanceRegistration2.Id);
             createdSecretConfigurationForInstance2.ProductionApiKeyAndSecret.Key.ShouldBe(productionApiKey);
             createdSecretConfigurationForInstance2.ProductionApiKeyAndSecret.Secret.ShouldBe(productionApiSecret);
             createdSecretConfigurationForInstance2.BulkUploadCredential.ShouldBe(null);
@@ -216,7 +245,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             createdSecretConfigurationForInstance2.ProductionAcademicBenchmarkApiClientKeyAndSecret.ShouldBe(null);
 
             // Verify the edited secret configuration for instance 1
-            var editedSecretConfigurationForInstance1 = await OdsSecretConfigurationProvider.GetSecretConfiguration(odsInstanceRegistration1.Id);
+            var editedSecretConfigurationForInstance1 = await GetSecretConfiguration(odsInstanceRegistration1.Id);
             editedSecretConfigurationForInstance1.ProductionApiKeyAndSecret.Key.ShouldBe(newProductionApiKey);
             editedSecretConfigurationForInstance1.ProductionApiKeyAndSecret.Secret.ShouldBe(newProductionApiSecret);
             editedSecretConfigurationForInstance1.BulkUploadCredential.ShouldBe(null);
@@ -230,7 +259,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             ClearSqlConfigurationCache();
             EnsureZeroSqlConfigurations();
 
-            var sqlConfiguration = await OdsSecretConfigurationProvider.GetSqlConfiguration();
+            var sqlConfiguration = await GetSqlConfiguration();
 
             sqlConfiguration.ShouldBe(null);
         }
@@ -246,7 +275,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             ClearSqlConfigurationCache();
             EnsureOneSqlConfiguration(jsonConfiguration);
 
-            var sqlConfiguration = await OdsSecretConfigurationProvider.GetSqlConfiguration();
+            var sqlConfiguration = await GetSqlConfiguration();
 
             sqlConfiguration.HostName.ShouldBe("localhost");
             sqlConfiguration.AdminCredentials.UserName.ShouldBe("adminUser");

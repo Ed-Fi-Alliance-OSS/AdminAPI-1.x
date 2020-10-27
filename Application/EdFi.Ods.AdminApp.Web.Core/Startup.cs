@@ -38,12 +38,20 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
-            services.AddScoped<AdminAppDbContext>();
+            // Ultimately, we wish to pivot AdminAppDbContext to an EF Core context
+            // with setup similar to that of AdminAppIdentityDbContext below.
+            // Until then, account for the lack of a .NET Framework-style app.config
+            // file by providing the connection string directly.
+            services.AddScoped(options =>
+            {
+                var connectionString = Configuration.GetConnectionString("Admin");
+                return new AdminAppDbContext(connectionString);
+            });
 
             services.AddDbContext<AdminAppIdentityDbContext>(options =>
             {
                 var connectionString = Configuration.GetConnectionString("Admin");
-                var databaseEngine = Configuration["AppSettings.DatabaseEngine"];
+                var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
 
                 if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
                     options.UseSqlServer(connectionString);

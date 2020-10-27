@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,10 @@ namespace EdFi.Ods.AdminApp.Web
                     options.UseNpgsql(connectionString);
             });
 
-            services.AddControllersWithViews()
+            services.AddControllersWithViews(options =>
+                    {
+                        options.Filters.Add<SetupRequiredFilter>();
+                    })
                     .AddFluentValidation(opt =>
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);

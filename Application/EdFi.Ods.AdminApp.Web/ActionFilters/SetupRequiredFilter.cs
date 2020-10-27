@@ -21,10 +21,21 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     public class SetupRequiredFilter : ActionFilterAttribute
     {
         private readonly IGetOdsStatusQuery _getOdsStatusQuery;
+        #if !NET48
+        private readonly AdminAppDbContext _database;
+        #endif
 
-        public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery)
+        public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery
+            #if !NET48
+            , AdminAppDbContext database
+            #endif
+            )
         {
             _getOdsStatusQuery = getOdsStatusQuery;
+
+            #if !NET48
+            _database = database;
+            #endif
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -45,9 +56,11 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private bool GeneralFirstTimeSetUpCompleted()
         {
-            using (var database = new AdminAppDbContext())
+            #if NET48
+            using (var _database = new AdminAppDbContext())
+            #endif
             {
-                var generalFirstTimeSetUpCompleted = database
+                var generalFirstTimeSetUpCompleted = _database
                                                          .ApplicationConfigurations
                                                          .SingleOrDefault()?
                                                          .FirstTimeSetUpCompleted ?? false;

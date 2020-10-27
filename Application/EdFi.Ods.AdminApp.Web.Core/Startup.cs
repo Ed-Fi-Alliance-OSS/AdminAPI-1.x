@@ -38,6 +38,8 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
+            services.AddScoped<AdminAppDbContext>();
+
             services.AddDbContext<AdminAppIdentityDbContext>(options =>
             {
                 var connectionString = Configuration.GetConnectionString("Admin");

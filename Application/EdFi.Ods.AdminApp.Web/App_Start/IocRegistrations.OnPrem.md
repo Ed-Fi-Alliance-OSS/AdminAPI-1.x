@@ -232,7 +232,7 @@ EdFi.Ods.AdminApp.Management.OdsInstanceServices.DatabaseValidationService Trans
 EdFi.Ods.AdminApp.Management.OdsInstanceServices.OdsInstanceFirstTimeSetupService Transient
     EdFi.Ods.AdminApp.Management.OdsInstanceServices.IOdsInstanceFirstTimeSetupService
 
-EdFi.Ods.AdminApp.Management.OdsSecretConfigurationProvider Singleton
+EdFi.Ods.AdminApp.Management.OdsSecretConfigurationProvider Transient
     EdFi.Ods.AdminApp.Management.IOdsSecretConfigurationProvider
 
 EdFi.Ods.AdminApp.Management.OnPrem.CompleteOnPremFirstTimeSetupCommand Transient

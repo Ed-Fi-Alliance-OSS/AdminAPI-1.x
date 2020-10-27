@@ -158,8 +158,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             InstallHostingSpecificClasses(services);
 
-            services.AddSingleton<IOdsSecretConfigurationProvider, OdsSecretConfigurationProvider>();
-
             services.AddScoped<InstanceContext>();
 
             services.AddTransient<ApplicationConfigurationService>();
@@ -170,9 +168,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
                 {
                     var concreteClass = type;
-
-                    if (concreteClass == typeof(OdsSecretConfigurationProvider))
-                        continue; //Singleton registered above.
 
                     if (concreteClass == typeof(OdsApiFacade))
                         continue; //IOdsApiFacade is never resolved. Instead, classes inject IOdsApiFacadeFactory.

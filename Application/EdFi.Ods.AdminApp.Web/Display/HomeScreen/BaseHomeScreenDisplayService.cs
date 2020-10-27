@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management;
@@ -55,9 +56,12 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
             #if NET48
             if (!_userContext.Has(Permission.AccessGlobalSettings))
                 homeScreenDisplayList.RemoveAll(x => x.HomeScreen == HomeScreenEnumeration.Global);
-            #endif
-
             return homeScreenDisplayList;
+            #else
+            throw new Exception(
+                "Identity implementation missing. Need to update the code once AA-1120 fix in place.");
+            return homeScreenDisplayList;
+            #endif
         }
     }
 }

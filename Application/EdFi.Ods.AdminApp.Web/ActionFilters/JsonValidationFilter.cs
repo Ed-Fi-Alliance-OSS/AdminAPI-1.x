@@ -8,6 +8,7 @@ using System.Web.Mvc;
 #else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using EdFi.Ods.AdminApp.Web.Helpers;
 #endif
 using Newtonsoft.Json;
 

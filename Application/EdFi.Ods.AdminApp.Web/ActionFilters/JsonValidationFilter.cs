@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             if (filterContext.HttpContext.Request.HttpMethod != "POST" || filterContext.Controller.ViewData.ModelState.IsValid)
                 return;
 
-            if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
+            if (filterContext.HttpContext.Request.IsAjaxRequest())
             {
                 var result = new ContentResult();
                 var content = JsonConvert.SerializeObject(filterContext.Controller.ViewData.ModelState,

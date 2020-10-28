@@ -9,6 +9,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,10 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
-            services.AddControllersWithViews()
+            services.AddControllersWithViews(options =>
+                    {
+                        options.Filters.Add<JsonValidationFilter>();
+                    })
                     .AddFluentValidation(opt =>
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);

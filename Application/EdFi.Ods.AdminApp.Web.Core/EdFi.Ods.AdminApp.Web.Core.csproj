@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -24,7 +24,7 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/DoNotCacheAjaxRequestsFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/HandleAjaxErrorAttribute.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/InstanceContextFilter.cs" LinkBase="ActionFilters" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PasswordChangeRequiredFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredAttribute.cs" LinkBase="ActionFilters" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredFilter.cs" LinkBase="ActionFilters" /> -->

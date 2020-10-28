@@ -18,10 +18,15 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+#if NET48
             var request = filterContext.HttpContext.Request;
             var modelState = filterContext.Controller.ViewData.ModelState;
             var requestMethod = request.HttpMethod;
-
+#else
+            var request = filterContext.HttpContext.Request;
+            var modelState = filterContext.ModelState;
+            var requestMethod = request.Method;
+#endif
             if (requestMethod != "POST" || modelState.IsValid)
                 return;
 
@@ -36,7 +41,9 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
                 result.Content = content;
                 result.ContentType = "application/json";
 
+#if NET48
                 filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+#endif
                 filterContext.HttpContext.Response.StatusCode = 400;
                 filterContext.Result = result;
             }

@@ -12,6 +12,25 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class AdminAppDataTestBase : DataTestBase<AdminAppDbContext>
     {
-        protected override string ConnectionString => ConfigurationHelper.GetConnectionStrings().Admin;
+        protected override string ConnectionString
+        {
+            get
+            {
+                #if NET48
+                    return ConfigurationHelper.GetConnectionStrings().Admin;
+                #else
+                    return Startup.ConfigurationConnectionStrings.Admin;
+                #endif
+            }
+        }
+
+        protected override AdminAppDbContext CreateDbContext()
+        {
+            #if NET48
+                return new AdminAppDbContext();
+            #else
+                return new AdminAppDbContext(ConnectionString);
+            #endif
+        }
     }
 }

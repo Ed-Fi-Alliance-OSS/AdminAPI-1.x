@@ -7,13 +7,14 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using NUnit.Framework;
 using Respawn;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class DataTestBase<T> where T: DbContext, new()
+    public abstract class DataTestBase<T> where T: DbContext
     {
         protected T TestContext { get; private set; }
         protected T SetupContext { get; private set; }
@@ -45,11 +46,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
         }
 
+        protected abstract T CreateDbContext();
+
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
         {
-            TestContext = new T();
-            SetupContext = new T();
+            TestContext = CreateDbContext();
+            SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
             {
@@ -68,8 +71,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [SetUp]
         public async Task SetUp()
         {
-            TestContext = new T();
-            SetupContext = new T();
+            TestContext = CreateDbContext();
+            SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
             {
@@ -113,22 +116,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             });
         }
 
-        protected static int Count<TEntity>() where TEntity : class
+        protected  int Count<TEntity>() where TEntity : class
         {
-            using (var database = new T())
+            using (var database = CreateDbContext())
                 return database.Set<TEntity>().Count();
         }
 
         protected void Transaction(Action<T> action)
         {
-            Transaction<T>(action);
+            using (var dbContext = CreateDbContext())
+                Transaction(dbContext, action);
         }
 
         protected TResult Transaction<TResult>(Func<T, TResult> query)
         {
             var result = default(TResult);
 
-            Transaction<T>(database =>
+            Transaction(database =>
             {
                 result = query(database);
             });
@@ -136,9 +140,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return result;
         }
 
-        protected void Transaction<TDbContext>(Action<TDbContext> action) where TDbContext : DbContext, new()
+        protected static void Transaction<TDbContext>(TDbContext dbContext, Action<TDbContext> action)
+            where TDbContext : DbContext
         {
-            using (var dbContext = new TDbContext())
+            using (var transaction = dbContext.Database.BeginTransaction())
+            {
+                action(dbContext);
+                dbContext.SaveChanges();
+                transaction.Commit();
+            }
+        }
+
+        protected static void Transaction<TDbContext>(Action<TDbContext> action)
+            where TDbContext : DbContext, new()
+        {
+            using(var dbContext = new TDbContext())
             using (var transaction = dbContext.Database.BeginTransaction())
             {
                 action(dbContext);

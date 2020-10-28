@@ -20,7 +20,26 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class SecurityDataTestBase : DataTestBase<SqlServerSecurityContext>
     {
-        protected override string ConnectionString => ConfigurationHelper.GetConnectionStrings().Security;
+        protected override string ConnectionString
+        {
+            get
+            {
+                #if NET48
+                    return ConfigurationHelper.GetConnectionStrings().Security;
+                #else
+                    return Startup.ConfigurationConnectionStrings.Security;
+                #endif
+            }
+        }
+
+        protected override SqlServerSecurityContext CreateDbContext()
+        {
+            #if NET48
+                return new SqlServerSecurityContext();
+            #else
+                return new SqlServerSecurityContext(ConnectionString);
+            #endif
+        }
 
         // This bool controls whether or not to run SecurityContext initialization
         // method. Setting this flag to true will cause seed data to be

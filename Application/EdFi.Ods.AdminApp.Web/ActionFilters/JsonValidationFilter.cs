@@ -18,13 +18,17 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Request.HttpMethod != "POST" || filterContext.Controller.ViewData.ModelState.IsValid)
+            var request = filterContext.HttpContext.Request;
+            var modelState = filterContext.Controller.ViewData.ModelState;
+            var requestMethod = request.HttpMethod;
+
+            if (requestMethod != "POST" || modelState.IsValid)
                 return;
 
-            if (filterContext.HttpContext.Request.IsAjaxRequest())
+            if (request.IsAjaxRequest())
             {
                 var result = new ContentResult();
-                var content = JsonConvert.SerializeObject(filterContext.Controller.ViewData.ModelState,
+                var content = JsonConvert.SerializeObject(modelState,
                     new JsonSerializerSettings
                     {
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore

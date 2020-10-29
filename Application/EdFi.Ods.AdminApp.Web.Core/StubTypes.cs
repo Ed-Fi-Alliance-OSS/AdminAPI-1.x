@@ -13,6 +13,12 @@ using EdFi.Ods.Common.Security;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
+    public class SetupController : ControllerBase
+    {
+        public object PostUpdateSetup() => Content("Stub content for SetupController.PostUpdateSetup()");
+        public object FirstTimeSetup() => Content("Stub content for SetupController.FirstTimeSetup()");
+    }
+
     public class OdsInstanceSettingsController
     {
         public object Applications() => throw new System.NotImplementedException();

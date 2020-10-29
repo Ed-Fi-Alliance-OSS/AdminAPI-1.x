@@ -16,12 +16,15 @@ namespace EdFi.Ods.AdminApp.Management.Instances
     {
         private readonly IOdsInstanceFirstTimeSetupService _odsInstanceFirstTimeSetupService;
         private readonly IDatabaseConnectionProvider _connectionProvider;
+        private readonly AdminAppIdentityDbContext _identity;
 
         public RegisterOdsInstanceCommand(IOdsInstanceFirstTimeSetupService odsInstanceFirstTimeSetupService
-            , IDatabaseConnectionProvider connectionProvider)
+            , IDatabaseConnectionProvider connectionProvider
+            , AdminAppIdentityDbContext identity)
         {
             _odsInstanceFirstTimeSetupService = odsInstanceFirstTimeSetupService;
             _connectionProvider = connectionProvider;
+            _identity = identity;
         }
 
         public async Task<int> Execute(IRegisterOdsInstanceModel instance, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
@@ -34,16 +37,16 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                 Description = instance.Description
             };
             await _odsInstanceFirstTimeSetupService.CompleteSetup(newInstance, cloudOdsClaimSet, mode);
-            using (var identityDbContext = AdminAppIdentityDbContext.Create())
-            {
-                identityDbContext.UserOdsInstanceRegistrations.Add(new UserOdsInstanceRegistration
+
+            _identity.UserOdsInstanceRegistrations.Add(
+                new UserOdsInstanceRegistration
                 {
                     OdsInstanceRegistrationId = newInstance.Id,
                     UserId = userId
                 });
 
-                identityDbContext.SaveChanges();
-            }
+            _identity.SaveChanges();
+
             return newInstance.Id;
         }
 

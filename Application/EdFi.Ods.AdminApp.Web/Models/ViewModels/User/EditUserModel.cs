@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -25,8 +25,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 
     public class EditUserModelValidator : AbstractValidator<EditUserModel>
     {
-        public EditUserModelValidator()
+        private readonly AdminAppIdentityDbContext _identity;
+
+        public EditUserModelValidator(AdminAppIdentityDbContext identity)
         {
+            _identity = identity;
+
             RuleFor(m => m.Email)
                 .NotEmpty()
                 .EmailAddress().Must(BeAUniqueEmail)
@@ -36,18 +40,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 
         private bool EmailIsChanged(EditUserModel model)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.Users.Single(x => x.Id == model.UserId).Email != model.Email;
-            }
+            return _identity.Users.Single(x => x.Id == model.UserId).Email != model.Email;
         }
 
-        private static bool BeAUniqueEmail(string newEmail)
+        private bool BeAUniqueEmail(string newEmail)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.Users.ToList().All(x => x.Email != newEmail);
-            }                
+            return _identity.Users.ToList().All(x => x.Email != newEmail);
         }
     }
 }

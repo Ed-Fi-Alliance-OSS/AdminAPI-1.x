@@ -8,8 +8,10 @@ using System.Web.Mvc;
 #else
 using Microsoft.AspNetCore.Mvc.Filters;
 #endif
+using System.Linq;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Web.Controllers;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -19,12 +21,21 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     public class SetupRequiredFilter : ActionFilterAttribute
     {
         private readonly IGetOdsStatusQuery _getOdsStatusQuery;
-        private readonly ApplicationConfigurationService _applicationConfigurationService;
+        #if !NET48
+        private readonly AdminAppDbContext _database;
+        #endif
 
-        public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery, ApplicationConfigurationService applicationConfigurationService)
+        public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery
+            #if !NET48
+            , AdminAppDbContext database
+            #endif
+            )
         {
             _getOdsStatusQuery = getOdsStatusQuery;
-            _applicationConfigurationService = applicationConfigurationService;
+
+            #if !NET48
+            _database = database;
+            #endif
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -45,7 +56,17 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private bool GeneralFirstTimeSetUpCompleted()
         {
-            return _applicationConfigurationService.IsFirstTimeSetUpCompleted();
+            #if NET48
+            using (var _database = new AdminAppDbContext())
+            #endif
+            {
+                var generalFirstTimeSetUpCompleted = _database
+                                                         .ApplicationConfigurations
+                                                         .SingleOrDefault()?
+                                                         .FirstTimeSetUpCompleted ?? false;
+
+                return generalFirstTimeSetUpCompleted;
+            }
         }
 
         private bool OdsInstanceFirstTimeSetupCompleted()

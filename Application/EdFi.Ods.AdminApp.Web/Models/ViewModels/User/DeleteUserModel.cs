@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -23,10 +23,13 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
     public class DeleteUserModelValidator : AbstractValidator<DeleteUserModel>
     {
         private readonly AdminAppUserContext _userContext;
+        private readonly AdminAppIdentityDbContext _identity;
 
-        public DeleteUserModelValidator(AdminAppUserContext userContext)
+        public DeleteUserModelValidator(AdminAppUserContext userContext, AdminAppIdentityDbContext identity)
         {
             _userContext = userContext;
+            _identity = identity;
+
             RuleFor(m => m.UserId)
                 .NotEmpty()
                 .Must(BeAnExistingUser).WithMessage("The user you are trying to delete does not exist in the database.")
@@ -41,10 +44,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 
         private bool BeAnExistingUser(string userId)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.Users.Any(x => x.Id == userId);
-            }
+            return _identity.Users.Any(x => x.Id == userId);
         }
     }
 }

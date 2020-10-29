@@ -7,7 +7,6 @@ using Castle.Windsor;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using System.Web.Mvc;
-using EdFi.Ods.AdminApp.Management.Configuration.Application;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -23,8 +22,7 @@ namespace EdFi.Ods.AdminApp.Web
             filters.Add(new DoNotCacheAjaxRequestsFilter());
             
             var odsStatusQuery = container.Resolve<IGetOdsStatusQuery>();
-            var applicationConfigurationService = container.Resolve<ApplicationConfigurationService>();
-            filters.Add(new SetupRequiredFilter(odsStatusQuery, applicationConfigurationService));
+            filters.Add(new SetupRequiredFilter(odsStatusQuery));
 
             filters.Add(new UserContextFilter());
 

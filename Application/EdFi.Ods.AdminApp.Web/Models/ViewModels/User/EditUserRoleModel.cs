@@ -32,10 +32,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
     public class EditUserRoleModelValidator : AbstractValidator<EditUserRoleModel>
     {
         private readonly AdminAppUserContext _userContext;
+        private readonly AdminAppIdentityDbContext _identity;
 
-        public EditUserRoleModelValidator(AdminAppUserContext userContext)
+        public EditUserRoleModelValidator(AdminAppUserContext userContext, AdminAppIdentityDbContext identity)
         {
             _userContext = userContext;
+            _identity = identity;
 
             RuleFor(m => m.UserId).NotEmpty()
                 .Must(BeAnExistingUser).WithMessage("The user you are trying to edit does not exist in the database.")
@@ -53,18 +55,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 
         private bool BeAnExistingUser(string userId)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.Users.Any(x => x.Id == userId);
-            }
+            return _identity.Users.Any(x => x.Id == userId);
         }
 
         private bool BeAnExistingRole(string roleId)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.Set<IdentityRole>().Any(x => x.Id == roleId);
-            }
+            return _identity.Set<IdentityRole>().Any(x => x.Id == roleId);
         }
     }
 }

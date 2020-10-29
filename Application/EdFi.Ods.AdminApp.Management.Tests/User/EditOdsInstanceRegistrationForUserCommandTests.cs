@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
@@ -41,15 +42,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }).ToList()
             };
 
-            var command = new EditOdsInstanceRegistrationForUserCommand();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var command = new EditOdsInstanceRegistrationForUserCommand(identity);
 
-            command.Execute(updateModel);
-            
-            var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext);
-            var results = query.Execute(existingUser.Id).ToList();
+                command.Execute(updateModel);
+            }
 
-            results.Count.ShouldBe(newInstancesToAdd.Count);
-            results.Select(x => x.Name).ShouldBe(newInstancesToAdd.Select(x => x.Name));
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
+                var results = query.Execute(existingUser.Id).ToList();
+
+                results.Count.ShouldBe(newInstancesToAdd.Count);
+                results.Select(x => x.Name).ShouldBe(newInstancesToAdd.Select(x => x.Name));
+            }
         }
 
         [Test]
@@ -61,11 +68,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
             SetupUserWithOdsInstanceRegistrations(existingUser.Id, alreadyAddedInstances);
 
-            var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext);
-            var results = query.Execute(existingUser.Id).ToList();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
+                var results = query.Execute(existingUser.Id).ToList();
 
-            results.Count.ShouldBe(5);
-            results.Select(x => x.Name).ShouldBe(alreadyAddedInstances.Select(x => x.Name));
+                results.Count.ShouldBe(5);
+                results.Select(x => x.Name).ShouldBe(alreadyAddedInstances.Select(x => x.Name));
+            }
 
             // Select only the first 3 instances
 
@@ -82,14 +92,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }).ToList()
             };
 
-            var command = new EditOdsInstanceRegistrationForUserCommand();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var command = new EditOdsInstanceRegistrationForUserCommand(identity);
 
-            command.Execute(updateModel);
+                command.Execute(updateModel);
+            }
 
-            results = query.Execute(existingUser.Id).ToList();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
 
-            results.Count.ShouldBe(3);
-            results.Select(x => x.Name).ShouldBe(instancesToKeep.Select(x => x.Name));
+                var results = query.Execute(existingUser.Id).ToList();
+
+                results.Count.ShouldBe(3);
+                results.Select(x => x.Name).ShouldBe(instancesToKeep.Select(x => x.Name));
+            }
         }
 
         [Test]
@@ -97,16 +115,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
         {
             var updateModel = new EditOdsInstanceRegistrationForUserModel();
 
-            var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext);
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+            using (var identity = AdminAppIdentityDbContext.Create())
             {
-                "'User Id' must not be empty."
-                , "The user you are trying to edit does not exist in the database."
-                , "'Email' must not be empty."
-                , "'Selected ODS Instances' must not be empty."
-            }, false);
+                var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext, identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+                {
+                    "'User Id' must not be empty."
+                    , "The user you are trying to edit does not exist in the database."
+                    , "'Email' must not be empty."
+                    , "'Selected ODS Instances' must not be empty."
+                }, false);
+            }
         }
 
         [Test]
@@ -131,10 +152,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }).ToList()
             };
 
-            var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext);
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user you are trying to edit does not exist in the database.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext, identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user you are trying to edit does not exist in the database.");
+            }
         }
 
         [Test]
@@ -170,11 +194,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }
             };
 
-            var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext);
-            var validationResults = validator.Validate(updateModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A selected instance does not exist in the database.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext, identity);
+                var validationResults = validator.Validate(updateModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A selected instance does not exist in the database.");
+            }
         }
-
     }
 }

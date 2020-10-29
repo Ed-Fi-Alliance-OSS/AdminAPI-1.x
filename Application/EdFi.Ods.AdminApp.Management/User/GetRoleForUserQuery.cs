@@ -14,14 +14,17 @@ namespace EdFi.Ods.AdminApp.Management.User
 {
     public class GetRoleForUserQuery
     {
+        private readonly AdminAppIdentityDbContext _identity;
+
+        public GetRoleForUserQuery(AdminAppIdentityDbContext identity)
+        {
+            _identity = identity;
+        }
+
         public Role Execute(string userId)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                var userRoleId = database.Set<IdentityUserRole>().SingleOrDefault(x => x.UserId == userId)?.RoleId;
-                return userRoleId != null ? Role.GetAll().Single(x => x.Value.Equals(int.Parse(userRoleId))) : null;
-            }
-                
+            var userRoleId = _identity.Set<IdentityUserRole>().SingleOrDefault(x => x.UserId == userId)?.RoleId;
+            return userRoleId != null ? Role.GetAll().Single(x => x.Value.Equals(int.Parse(userRoleId))) : null;
         }
     }
 }

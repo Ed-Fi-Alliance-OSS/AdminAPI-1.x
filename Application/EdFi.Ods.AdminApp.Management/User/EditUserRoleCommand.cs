@@ -15,26 +15,31 @@ namespace EdFi.Ods.AdminApp.Management.User
 {
     public class EditUserRoleCommand
     {
+        private readonly AdminAppIdentityDbContext _identity;
+
+        public EditUserRoleCommand(AdminAppIdentityDbContext identity)
+        {
+            _identity = identity;
+        }
+
         public void Execute(IEditUserRoleModel model)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
+            var newUserRole = new IdentityUserRole
             {
-                var newUserRole = new IdentityUserRole
-                {
-                    UserId = model.UserId,
-                    RoleId = model.RoleId
-                };
+                UserId = model.UserId,
+                RoleId = model.RoleId
+            };
 
-                var currentUserRole = database.Set<IdentityUserRole>().SingleOrDefault(x => x.UserId == model.UserId);
+            var currentUserRole =
+                _identity.Set<IdentityUserRole>().SingleOrDefault(x => x.UserId == model.UserId);
 
-                if (currentUserRole != null)
-                {
-                    database.Set<IdentityUserRole>().Remove(currentUserRole);
-                }
-
-                database.Set<IdentityUserRole>().Add(newUserRole);
-                database.SaveChanges();
+            if (currentUserRole != null)
+            {
+                _identity.Set<IdentityUserRole>().Remove(currentUserRole);
             }
+
+            _identity.Set<IdentityUserRole>().Add(newUserRole);
+            _identity.SaveChanges();
         }
     }
 

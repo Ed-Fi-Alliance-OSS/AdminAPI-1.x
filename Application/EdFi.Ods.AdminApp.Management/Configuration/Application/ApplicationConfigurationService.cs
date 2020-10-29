@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -12,8 +12,13 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
     public class ApplicationConfigurationService
     {
         private readonly AdminAppDbContext _database;
+        private readonly AdminAppIdentityDbContext _identity;
 
-        public ApplicationConfigurationService(AdminAppDbContext database) => _database = database;
+        public ApplicationConfigurationService(AdminAppDbContext database, AdminAppIdentityDbContext identity)
+        {
+            _database = database;
+            _identity = identity;
+        }
 
         public bool AllowUserRegistration()
         {
@@ -26,17 +31,6 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
                        .AllowUserRegistration ?? false;
         }
 
-        public bool IsFirstTimeSetUpCompleted()
-        {
-            using (var database = new AdminAppDbContext())
-            {
-                return database
-                           .ApplicationConfigurations
-                           .SingleOrDefault()?
-                           .FirstTimeSetUpCompleted ?? false;
-            }
-        }
-
         public void UpdateFirstTimeSetUpStatus(bool setUpCompleted)
         {
             var config = _database.EnsureSingle<ApplicationConfiguration>();
@@ -44,10 +38,9 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
            _database.SaveChanges();
         }
 
-        private static bool AnyUsersExist()
+        private bool AnyUsersExist()
         {
-            using (var identity = AdminAppIdentityDbContext.Create())
-                return identity.Users.Any();
+            return _identity.Users.Any();
         }
     }
 }

@@ -3,15 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.IO;
 using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,9 +39,30 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
+            // Ultimately, we wish to pivot AdminAppDbContext to an EF Core context
+            // with setup similar to that of AdminAppIdentityDbContext below.
+            // Until then, account for the lack of a .NET Framework-style app.config
+            // file by providing the connection string directly.
+            services.AddScoped(options =>
+            {
+                var connectionString = Configuration.GetConnectionString("Admin");
+                return new AdminAppDbContext(connectionString);
+            });
+
+            services.AddDbContext<AdminAppIdentityDbContext>(options =>
+            {
+                var connectionString = Configuration.GetConnectionString("Admin");
+                var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
+
+                if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
+                    options.UseSqlServer(connectionString);
+                else
+                    options.UseNpgsql(connectionString);
+            });
+
             services.AddControllersWithViews(options =>
                     {
-                        options.Filters.Add<JsonValidationFilter>();
+                        options.Filters.Add<SetupRequiredFilter>();
                     })
                     .AddFluentValidation(opt =>
                     {

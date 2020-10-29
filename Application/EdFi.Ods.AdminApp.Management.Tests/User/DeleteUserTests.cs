@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
@@ -41,11 +42,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             SetupUserWithOdsInstanceRegistrations(userToBeDeleted.Id, testInstancesAssignedToDeletedUser);
             SetupUserWithOdsInstanceRegistrations(userNotToBeDeleted.Id, testInstancesAssignedToNotDeletedUser);
 
-            var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext);
-            queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(3);
-            queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
-
-            var queryRoles = new GetRoleForUserQuery();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
+                queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(3);
+                queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
+            }
 
             var deleteModel = new DeleteUserModel
             {
@@ -53,20 +55,28 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = userToBeDeleted.Id
             };
 
-            var command = new DeleteUserCommand();
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var command = new DeleteUserCommand(identity);
+                command.Execute(deleteModel);
+            }
 
-            command.Execute(deleteModel);
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
+                var queryRoles = new GetRoleForUserQuery(identity);
 
-            var deletedUser = Query(userToBeDeleted.Id);
-            deletedUser.ShouldBeNull();
-            queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(0);
-            queryRoles.Execute(userToBeDeleted.Id).ShouldBeNull();
+                var deletedUser = Query(userToBeDeleted.Id);
+                deletedUser.ShouldBeNull();
+                queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(0);
+                queryRoles.Execute(userToBeDeleted.Id).ShouldBeNull();
 
-            var notDeletedUser = Query(userNotToBeDeleted.Id);
-            notDeletedUser.UserName.ShouldBe(userNotToBeDeleted.UserName);
-            notDeletedUser.Email.ShouldBe(userNotToBeDeleted.Email);
-            queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
-            queryRoles.Execute(userNotToBeDeleted.Id).ShouldBe(Role.Admin);
+                var notDeletedUser = Query(userNotToBeDeleted.Id);
+                notDeletedUser.UserName.ShouldBe(userNotToBeDeleted.UserName);
+                notDeletedUser.Email.ShouldBe(userNotToBeDeleted.Email);
+                queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
+                queryRoles.Execute(userNotToBeDeleted.Id).ShouldBe(Role.Admin);
+            }
         }
 
         [Test]
@@ -80,11 +90,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = ""
             };
 
-            var validator = new DeleteUserModelValidator(GetMockUserContext(superAdminUser, Role.SuperAdmin));
-            validator.ShouldNotValidate(deleteModel,
-                "'User Id' must not be empty.",
-                "The user you are trying to delete does not exist in the database.",
-                "'Email' must not be empty.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new DeleteUserModelValidator(GetMockUserContext(superAdminUser, Role.SuperAdmin), identity);
+                validator.ShouldNotValidate(deleteModel,
+                    "'User Id' must not be empty.",
+                    "The user you are trying to delete does not exist in the database.",
+                    "'Email' must not be empty.");
+            }
         }
 
         [Test]
@@ -104,9 +117,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = testUserNotInSystem.Id
             };
 
-            var validator = new DeleteUserModelValidator(GetMockUserContext(superAdminUser, Role.SuperAdmin));
-            validator.ShouldNotValidate(deleteModel,
-                "The user you are trying to delete does not exist in the database.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new DeleteUserModelValidator(GetMockUserContext(superAdminUser, Role.SuperAdmin), identity);
+                validator.ShouldNotValidate(
+                    deleteModel,
+                    "The user you are trying to delete does not exist in the database.");
+            }
         }
 
         [Test]
@@ -120,9 +137,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = superAdminUser.Id
             };
 
-            var validator = new DeleteUserModelValidator(GetMockUserContext(superAdminUser, Role.SuperAdmin));
-            validator.ShouldNotValidate(deleteModel,
-                "The user is not allowed to delete themselves.");
+            using (var identity = AdminAppIdentityDbContext.Create())
+            {
+                var validator = new DeleteUserModelValidator(GetMockUserContext(superAdminUser, Role.SuperAdmin), identity);
+                validator.ShouldNotValidate(
+                    deleteModel,
+                    "The user is not allowed to delete themselves.");
+            }
         }
     }
 }

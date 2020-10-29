@@ -92,7 +92,17 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton(TokenCache.DefaultShared);
 
+
+#if NET48
+            //For the .NET Core registration of this type, see Startup.cs.
             services.AddScoped<AdminAppDbContext>();
+
+            //For the .NET Core registration of this type, see Startup.cs.
+            //Note that in NET48 runs, this scoped instance is distinct from
+            //the scoped instance available via the OWIN IoC container.
+            services.AddScoped<AdminAppIdentityDbContext>();
+#endif
+
             services.AddScoped<AdminAppUserContext>();
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
@@ -150,8 +160,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             InstallHostingSpecificClasses(services);
 
-            services.AddSingleton<IOdsSecretConfigurationProvider, OdsSecretConfigurationProvider>();
-
             services.AddScoped<InstanceContext>();
 
             services.AddTransient<ApplicationConfigurationService>();
@@ -162,9 +170,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
                 {
                     var concreteClass = type;
-
-                    if (concreteClass == typeof(OdsSecretConfigurationProvider))
-                        continue; //Singleton registered above.
 
                     if (concreteClass == typeof(OdsApiFacade))
                         continue; //IOdsApiFacade is never resolved. Instead, classes inject IOdsApiFacadeFactory.

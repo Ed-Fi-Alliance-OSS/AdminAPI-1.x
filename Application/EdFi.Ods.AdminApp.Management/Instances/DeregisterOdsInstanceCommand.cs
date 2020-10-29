@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -13,11 +13,13 @@ namespace EdFi.Ods.AdminApp.Management.Instances
     {
         private readonly AdminAppDbContext _database;
         private readonly IUsersContext _usersContext;
+        private readonly AdminAppIdentityDbContext _identity;
 
-        public DeregisterOdsInstanceCommand(AdminAppDbContext database, IUsersContext usersContext)
+        public DeregisterOdsInstanceCommand(AdminAppDbContext database, IUsersContext usersContext, AdminAppIdentityDbContext identity)
         {
             _database = database;
             _usersContext = usersContext;
+            _identity = identity;
         }
 
         public void Execute(IDeregisterOdsInstanceModel userModel)
@@ -87,20 +89,17 @@ namespace EdFi.Ods.AdminApp.Management.Instances
             _database.SaveChanges();
         }
 
-        private static void RemoveExistingUserOdsInstanceRegistrations(int odsInstanceId)
+        private void RemoveExistingUserOdsInstanceRegistrations(int odsInstanceId)
         {
-            using (var dbContext = AdminAppIdentityDbContext.Create())
+            var existingUserOdsInstanceRegistrations =
+                _identity.UserOdsInstanceRegistrations.Where(x => x.OdsInstanceRegistrationId == odsInstanceId);
+
+            if (existingUserOdsInstanceRegistrations.Any())
             {
-                var existingUserOdsInstanceRegistrations =
-                    dbContext.UserOdsInstanceRegistrations.Where(x => x.OdsInstanceRegistrationId == odsInstanceId);
-
-                if (existingUserOdsInstanceRegistrations.Any())
-                {
-                    dbContext.UserOdsInstanceRegistrations.RemoveRange(existingUserOdsInstanceRegistrations);
-                }
-
-                dbContext.SaveChanges();
+                _identity.UserOdsInstanceRegistrations.RemoveRange(existingUserOdsInstanceRegistrations);
             }
+
+            _identity.SaveChanges();
         }
     }
 

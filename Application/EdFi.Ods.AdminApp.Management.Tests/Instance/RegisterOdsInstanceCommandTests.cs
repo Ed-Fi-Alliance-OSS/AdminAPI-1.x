@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
 using EdFi.Ods.AdminApp.Management.Helpers;
@@ -56,17 +57,24 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 _connectionProvider.Setup(x => x.CreateNewConnection(23456, ApiMode.DistrictSpecific))
                     .Returns(connection);
 
-                var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName);
-
                 var newInstance = new RegisterOdsInstanceModel
                 {
                     NumericSuffix = 23456,
                     Description = description
                 };
+
                 var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
-             
-                var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object);
-                var newInstanceId = await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+
+                int newInstanceId;
+
+                using (var database = new AdminAppDbContext())
+                using (var identity = AdminAppIdentityDbContext.Create())
+                {
+                    var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database);
+
+                    var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
+                    newInstanceId = await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                }
 
                 var addedInstance = Query<OdsInstanceRegistration>(newInstanceId);
                 var secretConfiguration =
@@ -97,11 +105,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         }
 
         private OdsInstanceFirstTimeSetupService GetOdsInstanceFirstTimeSetupService(string encryptedSecretConfigValue,
-            string instanceName)
+            string instanceName, AdminAppDbContext database)
         {
             var mockStringEncryptorService = new Mock<IStringEncryptorService>();
             mockStringEncryptorService.Setup(x => x.Encrypt(It.IsAny<string>())).Returns(encryptedSecretConfigValue);
-            var odsSecretConfigurationProvider = new OdsSecretConfigurationProvider(mockStringEncryptorService.Object);
+            var odsSecretConfigurationProvider = new OdsSecretConfigurationProvider(mockStringEncryptorService.Object, database);
 
             var mockFirstTimeSetupService = new Mock<IFirstTimeSetupService>();
             var mockReportViewsSetUp = new Mock<IReportViewsSetUp>();

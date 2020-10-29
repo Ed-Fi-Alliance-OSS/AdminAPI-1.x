@@ -15,44 +15,48 @@ namespace EdFi.Ods.AdminApp.Management.User
 {
     public class DeleteUserCommand
     {
-        public void Execute(IDeleteUserModel userModel)
+        private readonly AdminAppIdentityDbContext _identity;
+
+        public DeleteUserCommand(AdminAppIdentityDbContext identity)
         {
-            using (var dbContext = AdminAppIdentityDbContext.Create())
-            {
-                RemoveExistingUserRoles(userModel.UserId, dbContext);
-
-                RemoveExistingUserOdsInstanceRegistrations(userModel.UserId, dbContext);
-
-                dbContext.Users.Remove(dbContext.Users.Single(x => x.Id == userModel.UserId));
-
-                dbContext.SaveChanges();
-            }
+            _identity = identity;
         }
 
-        private static void RemoveExistingUserOdsInstanceRegistrations(string userId, AdminAppIdentityDbContext dbContext)
+        public void Execute(IDeleteUserModel userModel)
+        {
+            RemoveExistingUserRoles(userModel.UserId);
+
+            RemoveExistingUserOdsInstanceRegistrations(userModel.UserId);
+
+            _identity.Users.Remove(_identity.Users.Single(x => x.Id == userModel.UserId));
+
+            _identity.SaveChanges();
+        }
+
+        private void RemoveExistingUserOdsInstanceRegistrations(string userId)
         {
             var existingUserOdsInstanceRegistrations =
-                dbContext.UserOdsInstanceRegistrations.Where(x => x.UserId == userId);
+                _identity.UserOdsInstanceRegistrations.Where(x => x.UserId == userId);
 
             if (existingUserOdsInstanceRegistrations.Any())
             {
-                dbContext.UserOdsInstanceRegistrations.RemoveRange(existingUserOdsInstanceRegistrations);
+                _identity.UserOdsInstanceRegistrations.RemoveRange(existingUserOdsInstanceRegistrations);
             }
 
-            dbContext.SaveChanges();
+            _identity.SaveChanges();
         }
 
-        private static void RemoveExistingUserRoles(string userId, AdminAppIdentityDbContext dbContext)
+        private void RemoveExistingUserRoles(string userId)
         {
             var existingUserRoles =
-                dbContext.Set<IdentityUserRole>().Where(x => x.UserId == userId);
+                _identity.Set<IdentityUserRole>().Where(x => x.UserId == userId);
 
             if (existingUserRoles.Any())
             {
-                dbContext.Set<IdentityUserRole>().RemoveRange(existingUserRoles);
+                _identity.Set<IdentityUserRole>().RemoveRange(existingUserRoles);
             }
 
-            dbContext.SaveChanges();
+            _identity.SaveChanges();
         }
     }
 

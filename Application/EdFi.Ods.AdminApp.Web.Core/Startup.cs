@@ -22,6 +22,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using log4net;
 using log4net.Config;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -64,6 +65,7 @@ namespace EdFi.Ods.AdminApp.Web
                     {
                         options.Filters.Add<JsonValidationFilter>();
                         options.Filters.Add<SetupRequiredFilter>();
+                        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                     })
                     .AddFluentValidation(opt =>
                     {

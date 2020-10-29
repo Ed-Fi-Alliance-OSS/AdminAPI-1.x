@@ -12,7 +12,10 @@ var submitAjax = function ($form, updateTargetId, spinnerId) {
     $.ajax({
         url: $form.attr("action"),
         type: "post",
-        data: appendAntiForgeryToken($form.serialize()),
+        data: $form.serialize(),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("RequestVerificationToken", getAntiForgeryToken());
+        },
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         global: false,  //global handlers disabled as logic below handles these cases
         success: function (data, status, xhr) {

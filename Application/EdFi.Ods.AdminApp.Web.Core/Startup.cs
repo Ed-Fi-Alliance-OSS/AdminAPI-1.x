@@ -62,6 +62,7 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddControllersWithViews(options =>
                     {
+                        options.Filters.Add<JsonValidationFilter>();
                         options.Filters.Add<SetupRequiredFilter>();
                     })
                     .AddFluentValidation(opt =>

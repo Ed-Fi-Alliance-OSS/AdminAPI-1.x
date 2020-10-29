@@ -13,6 +13,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
+using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -101,11 +102,6 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddSignalR();
 
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings());
-
             var appSettings = new AppSettings();
             Configuration.GetSection("AppSettings").Bind(appSettings);
             ConfigurationAppSettings = appSettings;
@@ -120,6 +116,15 @@ namespace EdFi.Ods.AdminApp.Web
                 new OnPremInstaller().Install(services);
             else if (appStartup == "Azure")
                 new AzureInstaller().Install(services);
+
+
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings());
+            HangFireInstance.EnableWithoutSchemaMigration();
+            services.AddHangfireServer();
+
             CommonConfigurationInstaller.ConfigureLearningStandards(services);
         }
 

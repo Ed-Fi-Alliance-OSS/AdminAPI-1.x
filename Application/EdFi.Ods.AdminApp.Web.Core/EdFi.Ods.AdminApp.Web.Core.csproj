@@ -108,7 +108,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAzureActiveDirectoryClientInfo.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsUpdateService.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/EducationOrganizationTypes.cs" LinkBase="Infrastructure" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/InMemoryCache.cs" LinkBase="Infrastructure" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/BulkImportService.cs" LinkBase="Infrastructure/IO" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportConfiguration.cs" LinkBase="Infrastructure/IO" /> -->

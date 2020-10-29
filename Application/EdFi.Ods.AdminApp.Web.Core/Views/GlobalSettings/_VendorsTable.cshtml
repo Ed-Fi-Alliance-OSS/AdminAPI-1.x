@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -39,5 +39,5 @@ See the LICENSE and NOTICES files in the project root for more information.
     </div>
 }
 
-@{ Html.RenderPartial("_DeleteVendorModal", new DeleteVendorModel()); }
-@{ Html.RenderPartial("_EditVendorModal", new EditVendorModel()); }
+@{ await Html.RenderPartialAsync("_DeleteVendorModal", new DeleteVendorModel()); }
+@{ await Html.RenderPartialAsync("_EditVendorModal", new EditVendorModel()); }

@@ -85,6 +85,10 @@ namespace EdFi.Ods.AdminApp.Web
             Configuration.GetSection("AppSettings").Bind(appSettings);
             ConfigurationAppSettings = appSettings;
 
+            var connectionStrings = new ConnectionStrings();
+            Configuration.GetSection("ConnectionStrings").Bind(connectionStrings);
+            ConfigurationConnectionStrings = connectionStrings;
+
             var appStartup = appSettings.AppStartup;
 
             if (appStartup == "OnPrem")
@@ -135,5 +139,6 @@ namespace EdFi.Ods.AdminApp.Web
         }
 
         public static AppSettings ConfigurationAppSettings { get; set; }
+        public static ConnectionStrings ConfigurationConnectionStrings { get; set; }
     }
 }

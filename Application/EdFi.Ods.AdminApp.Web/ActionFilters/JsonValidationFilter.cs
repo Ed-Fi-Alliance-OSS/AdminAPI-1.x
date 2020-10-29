@@ -8,6 +8,7 @@ using System.Web.Mvc;
 #else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using EdFi.Ods.AdminApp.Web.Helpers;
 #endif
 using Newtonsoft.Json;
 
@@ -17,13 +18,22 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Request.HttpMethod != "POST" || filterContext.Controller.ViewData.ModelState.IsValid)
+#if NET48
+            var request = filterContext.HttpContext.Request;
+            var modelState = filterContext.Controller.ViewData.ModelState;
+            var requestMethod = request.HttpMethod;
+#else
+            var request = filterContext.HttpContext.Request;
+            var modelState = filterContext.ModelState;
+            var requestMethod = request.Method;
+#endif
+            if (requestMethod != "POST" || modelState.IsValid)
                 return;
 
-            if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
+            if (request.IsAjaxRequest())
             {
                 var result = new ContentResult();
-                var content = JsonConvert.SerializeObject(filterContext.Controller.ViewData.ModelState,
+                var content = JsonConvert.SerializeObject(modelState,
                     new JsonSerializerSettings
                     {
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -31,7 +41,9 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
                 result.Content = content;
                 result.ContentType = "application/json";
 
+#if NET48
                 filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+#endif
                 filterContext.HttpContext.Response.StatusCode = 400;
                 filterContext.Result = result;
             }

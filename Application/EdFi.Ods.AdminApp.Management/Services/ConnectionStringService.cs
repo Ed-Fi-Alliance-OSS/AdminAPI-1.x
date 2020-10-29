@@ -6,14 +6,22 @@
 using System;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
     public class ConnectionStringService: IConnectionStringService
     {
+        private readonly ConnectionStrings _connectionStrings;
+
+        public ConnectionStringService(IOptions<ConnectionStrings> connectionStrings)
+        {
+            _connectionStrings = connectionStrings.Value;
+        }
+
         public string GetConnectionString(string odsInstanceName, ApiMode apiMode)
         {
-            var connectionString = ConfigurationHelper.GetConnectionStrings().ProductionOds;
+            var connectionString = _connectionStrings.ProductionOds;
             if (apiMode.SupportsMultipleInstances)
             {
                 connectionString = GetModifiedConnectionString(connectionString, odsInstanceName);

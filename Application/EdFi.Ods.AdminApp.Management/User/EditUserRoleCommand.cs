@@ -31,14 +31,14 @@ namespace EdFi.Ods.AdminApp.Management.User
             };
 
             var currentUserRole =
-                _identity.Set<IdentityUserRole>().SingleOrDefault(x => x.UserId == model.UserId);
+                _identity.UserRoles.SingleOrDefault(x => x.UserId == model.UserId);
 
             if (currentUserRole != null)
             {
-                _identity.Set<IdentityUserRole>().Remove(currentUserRole);
+                _identity.UserRoles.Remove(currentUserRole);
             }
 
-            _identity.Set<IdentityUserRole>().Add(newUserRole);
+            _identity.UserRoles.Add(newUserRole);
             _identity.SaveChanges();
         }
     }

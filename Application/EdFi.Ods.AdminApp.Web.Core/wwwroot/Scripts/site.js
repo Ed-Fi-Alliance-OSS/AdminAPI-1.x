@@ -46,6 +46,9 @@ function GlobalInitialize() {
     SetupPanelToggle();
     LoadAsyncActions();
     ClaimSetWarningMessage();
+    //Temporarily break the __RequestVerificationToken, to prove that
+    //antiforgery tokens are not being enforced yet.
+    $("input[name=__RequestVerificationToken]").remove();
 }
 
 function ReinitializeForModal() {

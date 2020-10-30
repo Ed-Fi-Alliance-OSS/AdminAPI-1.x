@@ -60,7 +60,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 
         private bool BeAnExistingRole(string roleId)
         {
-            return _identity.Set<IdentityRole>().Any(x => x.Id == roleId);
+            return _identity.Roles.Any(x => x.Id == roleId);
         }
     }
 }

@@ -119,7 +119,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             }
             using (var database = AdminAppIdentityDbContext.Create())
             {
-                database.Set<IdentityUserRole>().AddRange(userRoleRecords);
+                database.UserRoles.AddRange(userRoleRecords);
                 database.SaveChanges();
             }
         }

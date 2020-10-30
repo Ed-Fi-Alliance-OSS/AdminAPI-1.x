@@ -41,6 +41,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
         }
 
         public DbSet<UserOdsInstanceRegistration> UserOdsInstanceRegistrations { get; set; }
+        public DbSet<IdentityUserRole> UserRoles { get; set; }
 
         public static AdminAppIdentityDbContext Create()
         {

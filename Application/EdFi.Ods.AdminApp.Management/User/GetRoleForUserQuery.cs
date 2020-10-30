@@ -23,7 +23,7 @@ namespace EdFi.Ods.AdminApp.Management.User
 
         public Role Execute(string userId)
         {
-            var userRoleId = _identity.Set<IdentityUserRole>().SingleOrDefault(x => x.UserId == userId)?.RoleId;
+            var userRoleId = _identity.UserRoles.SingleOrDefault(x => x.UserId == userId)?.RoleId;
             return userRoleId != null ? Role.GetAll().Single(x => x.Value.Equals(int.Parse(userRoleId))) : null;
         }
     }

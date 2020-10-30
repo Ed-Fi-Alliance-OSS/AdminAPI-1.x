@@ -49,11 +49,11 @@ namespace EdFi.Ods.AdminApp.Management.User
         private void RemoveExistingUserRoles(string userId)
         {
             var existingUserRoles =
-                _identity.Set<IdentityUserRole>().Where(x => x.UserId == userId);
+                _identity.UserRoles.Where(x => x.UserId == userId);
 
             if (existingUserRoles.Any())
             {
-                _identity.Set<IdentityUserRole>().RemoveRange(existingUserRoles);
+                _identity.UserRoles.RemoveRange(existingUserRoles);
             }
 
             _identity.SaveChanges();

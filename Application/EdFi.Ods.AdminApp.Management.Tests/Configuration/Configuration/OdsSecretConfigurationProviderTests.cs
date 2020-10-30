@@ -17,38 +17,38 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
     public class OdsSecretConfigurationProviderTests : AdminAppDataTestBase
     {
+        private AdminAppDbContext _dbContext;
+        private OdsSecretConfigurationProvider _provider;
+
+        [SetUp]
+        public void Init()
+        {
+            _dbContext = TestContext;
+            _provider = new OdsSecretConfigurationProvider(
+                new StringEncryptorService(
+                    new EncryptionConfigurationProviderService()), _dbContext);
+        }
+
         private static OdsSecretConfigurationProvider OdsSecretConfigurationProvider(AdminAppDbContext database)
         {
             return new OdsSecretConfigurationProvider(
                 new StringEncryptorService(
-                    new EncryptionConfigurationProviderService()), database);
+                    new EncryptionConfigurationProviderService()), database );
         }
 
         private async Task<OdsSqlConfiguration> GetSqlConfiguration()
         {
-            using (var database = new AdminAppDbContext())
-            {
-                var provider = OdsSecretConfigurationProvider(database);
-                return await provider.GetSqlConfiguration();
-            }
+            return await _provider.GetSqlConfiguration();
         }
 
         private async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
         {
-            using (var database = new AdminAppDbContext())
-            {
-                var provider = OdsSecretConfigurationProvider(database);
-                return await provider.GetSecretConfiguration(instanceRegistrationId);
-            }
+            return await _provider.GetSecretConfiguration(instanceRegistrationId);
         }
 
         private async Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId = null)
         {
-            using (var database = new AdminAppDbContext())
-            {
-                var provider = OdsSecretConfigurationProvider(database);
-                await provider.SetSecretConfiguration(configuration, instanceRegistrationId);
-            }
+            await _provider.SetSecretConfiguration(configuration, instanceRegistrationId);
         }
 
         private readonly ObjectCache _cache = MemoryCache.Default;
@@ -286,57 +286,56 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             sqlConfiguration.AdminAppCredentials.Password.ShouldBe("AdminAppPassword");
         }
 
-        private static void EnsureZeroSecretConfigurations()
+        private void EnsureZeroSecretConfigurations()
         {
-            using (var database = new AdminAppDbContext())
-            {
-                foreach (var entity in database.SecretConfigurations)
-                    database.SecretConfigurations.Remove(entity);
-                database.SaveChanges();
-            }
+
+            foreach (var entity in _dbContext.SecretConfigurations)
+                _dbContext.SecretConfigurations.Remove(entity);
+
+            _dbContext.SaveChanges();
+
         }
 
-        private static void EnsureZeroSqlConfigurations()
+        private void EnsureZeroSqlConfigurations()
         {
-            using (var database = new AdminAppDbContext())
-            {
-                foreach (var entity in database.AzureSqlConfigurations)
-                    database.AzureSqlConfigurations.Remove(entity);
-                database.SaveChanges();
-            }
+            foreach (var entity in _dbContext.AzureSqlConfigurations)
+                _dbContext.AzureSqlConfigurations.Remove(entity);
+
+            _dbContext.SaveChanges();
         }
 
-        private static void AddSecretConfiguration(string jsonConfiguration, int odsInstanceRegistrationId)
+        private void AddSecretConfiguration(string jsonConfiguration, int odsInstanceRegistrationId)
         {
-            using (var database = new AdminAppDbContext())
-            {
-                database.SecretConfigurations.Add(new SecretConfiguration { EncryptedData = jsonConfiguration, OdsInstanceRegistrationId = odsInstanceRegistrationId });
-                database.SaveChanges();
-            }
+
+            _dbContext.SecretConfigurations.Add(
+                new SecretConfiguration
+                {
+                    EncryptedData = jsonConfiguration, OdsInstanceRegistrationId = odsInstanceRegistrationId
+                });
+
+            _dbContext.SaveChanges();
+
         }
 
-        private static OdsInstanceRegistration CreateOdsInstanceRegistration(string instanceName)
+        private OdsInstanceRegistration CreateOdsInstanceRegistration(string instanceName)
         {
-            OdsInstanceRegistration createdOdsInstanceRegistration;
-            using (var database = new AdminAppDbContext())
-            {
-                database.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName});
-                database.SaveChanges();
-                createdOdsInstanceRegistration = database.OdsInstanceRegistrations.FirstOrDefault(x => x.Name == instanceName);
-            }
+            _dbContext.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName});
+            _dbContext.SaveChanges();
+
+            var createdOdsInstanceRegistration = _dbContext.OdsInstanceRegistrations.FirstOrDefault(x => x.Name == instanceName);
 
             return createdOdsInstanceRegistration;
         }
 
-        private static void EnsureOneSqlConfiguration(string jsonConfiguration)
+        private void EnsureOneSqlConfiguration(string jsonConfiguration)
         {
             EnsureZeroSqlConfigurations();
 
-            using (var database = new AdminAppDbContext())
-            {
-                database.AzureSqlConfigurations.Add(new AzureSqlConfiguration { Configurations = jsonConfiguration });
-                database.SaveChanges();
-            }
+            _dbContext.AzureSqlConfigurations.Add(
+                new AzureSqlConfiguration {Configurations = jsonConfiguration});
+
+            _dbContext.SaveChanges();
+
         }
 
         private void ClearSecretConfigurationCache()

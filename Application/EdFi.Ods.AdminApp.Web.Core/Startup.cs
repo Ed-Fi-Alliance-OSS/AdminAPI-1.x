@@ -9,6 +9,7 @@ using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
@@ -22,6 +23,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using log4net;
 using log4net.Config;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApp.Web
@@ -60,6 +62,9 @@ namespace EdFi.Ods.AdminApp.Web
                 else
                     options.UseNpgsql(connectionString);
             });
+
+            services.AddIdentity<AdminAppUser, IdentityRole>()
+                .AddEntityFrameworkStores<AdminAppIdentityDbContext>();
 
             services.AddControllersWithViews(options =>
                     {

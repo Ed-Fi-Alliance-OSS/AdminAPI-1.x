@@ -237,7 +237,6 @@
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
     <Content Remove="Views\GlobalSettings\Users.cshtml" />
-    <Content Remove="Views\Identity\ChangePassword.cshtml" />
     <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
     <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
     <Content Remove="Views\OdsInstances\Index.cshtml" />

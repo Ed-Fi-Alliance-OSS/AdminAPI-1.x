@@ -30,7 +30,6 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/RequreSecureConnectionFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/UserContextFilter.cs" LinkBase="ActionFilters" /> -->
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationUserManager.cs" LinkBase="App_Start" /> -->

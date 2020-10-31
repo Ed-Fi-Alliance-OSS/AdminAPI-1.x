@@ -40,8 +40,6 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/RouteConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/StartupBase.cs" LinkBase="App_Start" /> -->
 
-    <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
-
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ClaimSetsController.cs" LinkBase="Controllers" /> -->

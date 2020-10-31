@@ -26,6 +26,14 @@ namespace EdFi.Ods.AdminApp.Management.Database
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("adminapp");
 
+            modelBuilder.Entity<AdminAppUser>().ToTable("Users");
+            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+
             modelBuilder.Entity<AdminAppUser>().Property(x => x.Id).HasMaxLength(225);
 
             modelBuilder.Entity<IdentityRole>().Property(x => x.Id).HasMaxLength(225);

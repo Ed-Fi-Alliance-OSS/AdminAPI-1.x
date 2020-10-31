@@ -3,16 +3,6 @@
 -- The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 -- See the LICENSE and NOTICES files in the project root for more information.
 
-CREATE TABLE AspNetRoles (
-    Id nvarchar(450) NOT NULL,
-    Name nvarchar(256) NULL,
-    NormalizedName nvarchar(256) NULL,
-    ConcurrencyStamp nvarchar(max) NULL,
-    CONSTRAINT PK_AspNetRoles PRIMARY KEY (Id)
-);
-
-GO
-
 CREATE TABLE AspNetUsers (
     Id nvarchar(450) NOT NULL,
     UserName nvarchar(256) NULL,
@@ -34,13 +24,12 @@ CREATE TABLE AspNetUsers (
 
 GO
 
-CREATE TABLE AspNetRoleClaims (
-    Id int NOT NULL IDENTITY,
-    RoleId nvarchar(450) NOT NULL,
-    ClaimType nvarchar(max) NULL,
-    ClaimValue nvarchar(max) NULL,
-    CONSTRAINT PK_AspNetRoleClaims PRIMARY KEY (Id),
-    CONSTRAINT FK_AspNetRoleClaims_AspNetRoles_RoleId FOREIGN KEY (RoleId) REFERENCES AspNetRoles (Id) ON DELETE CASCADE
+CREATE TABLE AspNetRoles (
+    Id nvarchar(450) NOT NULL,
+    Name nvarchar(256) NULL,
+    NormalizedName nvarchar(256) NULL,
+    ConcurrencyStamp nvarchar(max) NULL,
+    CONSTRAINT PK_AspNetRoles PRIMARY KEY (Id)
 );
 
 GO
@@ -52,6 +41,17 @@ CREATE TABLE AspNetUserClaims (
     ClaimValue nvarchar(max) NULL,
     CONSTRAINT PK_AspNetUserClaims PRIMARY KEY (Id),
     CONSTRAINT FK_AspNetUserClaims_AspNetUsers_UserId FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id) ON DELETE CASCADE
+);
+
+GO
+
+CREATE TABLE AspNetRoleClaims (
+    Id int NOT NULL IDENTITY,
+    RoleId nvarchar(450) NOT NULL,
+    ClaimType nvarchar(max) NULL,
+    ClaimValue nvarchar(max) NULL,
+    CONSTRAINT PK_AspNetRoleClaims PRIMARY KEY (Id),
+    CONSTRAINT FK_AspNetRoleClaims_AspNetRoles_RoleId FOREIGN KEY (RoleId) REFERENCES AspNetRoles (Id) ON DELETE CASCADE
 );
 
 GO

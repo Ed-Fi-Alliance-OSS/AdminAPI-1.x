@@ -25,6 +25,7 @@ using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -68,6 +69,7 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddControllersWithViews(options =>
                     {
+                        options.Filters.Add(new AuthorizeFilter());
                         options.Filters.Add<JsonValidationFilter>();
                         options.Filters.Add<SetupRequiredFilter>();
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
@@ -76,6 +78,13 @@ namespace EdFi.Ods.AdminApp.Web
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);
                     });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Login";
+                options.LogoutPath = "/Identity/LogOut";
+                options.AccessDeniedPath = "/Identity/Login";
+            });
 
             services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
 

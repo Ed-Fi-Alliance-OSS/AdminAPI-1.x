@@ -28,8 +28,7 @@ namespace IdentityTemplate
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql("Host=localhost; Port=5432; Database=IDENTITY-TEMPLATE; username=username; password=Password; Application Name=EdFi.Ods.WebApi;"));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();

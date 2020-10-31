@@ -3,7 +3,7 @@
 -- The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 -- See the LICENSE and NOTICES files in the project root for more information.
 
-CREATE TABLE adminapp.AspNetUsers (
+CREATE TABLE adminapp.Users (
     Id nvarchar(450) NOT NULL,
     UserName nvarchar(256) NULL,
     NormalizedUserName nvarchar(256) NULL,
@@ -19,65 +19,65 @@ CREATE TABLE adminapp.AspNetUsers (
     LockoutEnd datetimeoffset NULL,
     LockoutEnabled bit NOT NULL,
     AccessFailedCount int NOT NULL,
-    CONSTRAINT PK_AspNetUsers PRIMARY KEY (Id)
+    CONSTRAINT PK_Users PRIMARY KEY (Id)
 );
 
-CREATE TABLE adminapp.AspNetRoles (
+CREATE TABLE adminapp.Roles (
     Id nvarchar(450) NOT NULL,
     Name nvarchar(256) NULL,
     NormalizedName nvarchar(256) NULL,
     ConcurrencyStamp nvarchar(max) NULL,
-    CONSTRAINT PK_AspNetRoles PRIMARY KEY (Id)
+    CONSTRAINT PK_Roles PRIMARY KEY (Id)
 );
 
-CREATE TABLE adminapp.AspNetUserClaims (
+CREATE TABLE adminapp.UserClaims (
     Id int NOT NULL IDENTITY,
     UserId nvarchar(450) NOT NULL,
     ClaimType nvarchar(max) NULL,
     ClaimValue nvarchar(max) NULL,
-    CONSTRAINT PK_AspNetUserClaims PRIMARY KEY (Id),
-    CONSTRAINT FK_AspNetUserClaims_AspNetUsers_UserId FOREIGN KEY (UserId) REFERENCES adminapp.AspNetUsers (Id) ON DELETE CASCADE
+    CONSTRAINT PK_UserClaims PRIMARY KEY (Id),
+    CONSTRAINT FK_UserClaims_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE adminapp.AspNetRoleClaims (
+CREATE TABLE adminapp.RoleClaims (
     Id int NOT NULL IDENTITY,
     RoleId nvarchar(450) NOT NULL,
     ClaimType nvarchar(max) NULL,
     ClaimValue nvarchar(max) NULL,
-    CONSTRAINT PK_AspNetRoleClaims PRIMARY KEY (Id),
-    CONSTRAINT FK_AspNetRoleClaims_AspNetRoles_RoleId FOREIGN KEY (RoleId) REFERENCES adminapp.AspNetRoles (Id) ON DELETE CASCADE
+    CONSTRAINT PK_RoleClaims PRIMARY KEY (Id),
+    CONSTRAINT FK_RoleClaims_Roles_RoleId FOREIGN KEY (RoleId) REFERENCES adminapp.Roles (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE adminapp.AspNetUserLogins (
+CREATE TABLE adminapp.UserLogins (
     LoginProvider nvarchar(128) NOT NULL,
     ProviderKey nvarchar(128) NOT NULL,
     ProviderDisplayName nvarchar(max) NULL,
     UserId nvarchar(450) NOT NULL,
-    CONSTRAINT PK_AspNetUserLogins PRIMARY KEY (LoginProvider, ProviderKey),
-    CONSTRAINT FK_AspNetUserLogins_AspNetUsers_UserId FOREIGN KEY (UserId) REFERENCES adminapp.AspNetUsers (Id) ON DELETE CASCADE
+    CONSTRAINT PK_UserLogins PRIMARY KEY (LoginProvider, ProviderKey),
+    CONSTRAINT FK_UserLogins_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE adminapp.AspNetUserRoles (
+CREATE TABLE adminapp.UserRoles (
     UserId nvarchar(450) NOT NULL,
     RoleId nvarchar(450) NOT NULL,
-    CONSTRAINT PK_AspNetUserRoles PRIMARY KEY (UserId, RoleId),
-    CONSTRAINT FK_AspNetUserRoles_AspNetRoles_RoleId FOREIGN KEY (RoleId) REFERENCES adminapp.AspNetRoles (Id) ON DELETE CASCADE,
-    CONSTRAINT FK_AspNetUserRoles_AspNetUsers_UserId FOREIGN KEY (UserId) REFERENCES adminapp.AspNetUsers (Id) ON DELETE CASCADE
+    CONSTRAINT PK_UserRoles PRIMARY KEY (UserId, RoleId),
+    CONSTRAINT FK_UserRoles_Roles_RoleId FOREIGN KEY (RoleId) REFERENCES adminapp.Roles (Id) ON DELETE CASCADE,
+    CONSTRAINT FK_UserRoles_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE adminapp.AspNetUserTokens (
+CREATE TABLE adminapp.UserTokens (
     UserId nvarchar(450) NOT NULL,
     LoginProvider nvarchar(128) NOT NULL,
     Name nvarchar(128) NOT NULL,
     Value nvarchar(max) NULL,
-    CONSTRAINT PK_AspNetUserTokens PRIMARY KEY (UserId, LoginProvider, Name),
-    CONSTRAINT FK_AspNetUserTokens_AspNetUsers_UserId FOREIGN KEY (UserId) REFERENCES adminapp.AspNetUsers (Id) ON DELETE CASCADE
+    CONSTRAINT PK_UserTokens PRIMARY KEY (UserId, LoginProvider, Name),
+    CONSTRAINT FK_UserTokens_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE
 );
 
-CREATE INDEX IX_AspNetRoleClaims_RoleId ON adminapp.AspNetRoleClaims (RoleId);
-CREATE UNIQUE INDEX RoleNameIndex ON adminapp.AspNetRoles (NormalizedName) WHERE NormalizedName IS NOT NULL;
-CREATE INDEX IX_AspNetUserClaims_UserId ON adminapp.AspNetUserClaims (UserId);
-CREATE INDEX IX_AspNetUserLogins_UserId ON adminapp.AspNetUserLogins (UserId);
-CREATE INDEX IX_AspNetUserRoles_RoleId ON adminapp.AspNetUserRoles (RoleId);
-CREATE INDEX EmailIndex ON adminapp.AspNetUsers (NormalizedEmail);
-CREATE UNIQUE INDEX UserNameIndex ON adminapp.AspNetUsers (NormalizedUserName) WHERE NormalizedUserName IS NOT NULL;
+CREATE INDEX IX_RoleClaims_RoleId ON adminapp.RoleClaims (RoleId);
+CREATE UNIQUE INDEX RoleNameIndex ON adminapp.Roles (NormalizedName) WHERE NormalizedName IS NOT NULL;
+CREATE INDEX IX_UserClaims_UserId ON adminapp.UserClaims (UserId);
+CREATE INDEX IX_UserLogins_UserId ON adminapp.UserLogins (UserId);
+CREATE INDEX IX_UserRoles_RoleId ON adminapp.UserRoles (RoleId);
+CREATE INDEX EmailIndex ON adminapp.Users (NormalizedEmail);
+CREATE UNIQUE INDEX UserNameIndex ON adminapp.Users (NormalizedUserName) WHERE NormalizedUserName IS NOT NULL;

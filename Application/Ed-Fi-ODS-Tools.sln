@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web.Core"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Core.Tests", "EdFi.Ods.AdminApp.Management.Core.Tests\EdFi.Ods.AdminApp.Management.Core.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityTemplate", "IdentityTemplate\IdentityTemplate.csproj", "{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AzureDev|Any CPU = AzureDev|Any CPU
@@ -627,58 +625,6 @@ Global
 		{6F2B44AA-A760-4083-8124-B380D91D5086}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6F2B44AA-A760-4083-8124-B380D91D5086}.Release|x64.ActiveCfg = Release|Any CPU
 		{6F2B44AA-A760-4083-8124-B380D91D5086}.Release|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureDev|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureDev|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureDev|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureDev|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureProd|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureProd|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureProd|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureProd|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureTest|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureTest|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureTest|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.AzureTest|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Debug|x64.Build.0 = Debug|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalMinimal|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalMinimal|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalMinimal|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalMinimal|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalTest|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalTest|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalTest|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalTest|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalUiTest|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalUiTest|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalUiTest|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.LocalUiTest|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremises|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremises|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremises|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremises|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremisesRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremisesRelease|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremisesRelease|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremisesRelease|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremNpgsql|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremNpgsql|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremNpgsql|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremNpgsql|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecific|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecific|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecific|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecific|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecificRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecificRelease|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecificRelease|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.OnPremYearSpecificRelease|x64.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Release|x64.ActiveCfg = Release|Any CPU
-		{A14BA506-6CEF-4673-AA94-7165A0C7BFD7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

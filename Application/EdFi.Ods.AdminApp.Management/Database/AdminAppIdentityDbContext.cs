@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 #if !NET48
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
@@ -24,6 +25,23 @@ namespace EdFi.Ods.AdminApp.Management.Database
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("adminapp");
+
+            modelBuilder.Entity<AdminAppUser>().Property(x => x.Id).HasMaxLength(225);
+
+            modelBuilder.Entity<IdentityRole>().Property(x => x.Id).HasMaxLength(225);
+
+            modelBuilder.Entity<IdentityUserClaim<string>>().Property(x => x.UserId).HasMaxLength(225);
+
+            modelBuilder.Entity<IdentityRoleClaim<string>>().Property(x => x.RoleId).HasMaxLength(225);
+
+            modelBuilder.Entity<IdentityUserLogin<string>>().Property(x => x.UserId).HasMaxLength(225);
+
+            modelBuilder.Entity<IdentityUserRole<string>>().Property(x => x.UserId).HasMaxLength(225);
+            modelBuilder.Entity<IdentityUserRole<string>>().Property(x => x.RoleId).HasMaxLength(225);
+
+            modelBuilder.Entity<IdentityUserToken<string>>().Property(x => x.UserId).HasMaxLength(225);
+            modelBuilder.Entity<IdentityUserToken<string>>().Property(x => x.LoginProvider).HasMaxLength(112);
+            modelBuilder.Entity<IdentityUserToken<string>>().Property(x => x.Name).HasMaxLength(112);
 
             modelBuilder.Entity<UserOdsInstanceRegistration>()
                 .HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId });

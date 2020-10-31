@@ -4,7 +4,7 @@
 -- See the LICENSE and NOTICES files in the project root for more information.
 
 CREATE TABLE adminapp.Users (
-    Id NVARCHAR(450) NOT NULL,
+    Id NVARCHAR(225) NOT NULL,
     UserName NVARCHAR(256) NULL,
     NormalizedUserName NVARCHAR(256) NULL,
     Email NVARCHAR(256) NULL,
@@ -23,7 +23,7 @@ CREATE TABLE adminapp.Users (
 );
 
 CREATE TABLE adminapp.Roles (
-    Id NVARCHAR(450) NOT NULL,
+    Id NVARCHAR(225) NOT NULL,
     Name NVARCHAR(256) NULL,
     NormalizedName NVARCHAR(256) NULL,
     ConcurrencyStamp NVARCHAR(MAX) NULL,
@@ -32,7 +32,7 @@ CREATE TABLE adminapp.Roles (
 
 CREATE TABLE adminapp.UserClaims (
     Id INT NOT NULL IDENTITY,
-    UserId NVARCHAR(450) NOT NULL,
+    UserId NVARCHAR(225) NOT NULL,
     ClaimType NVARCHAR(MAX) NULL,
     ClaimValue NVARCHAR(MAX) NULL,
     CONSTRAINT PK_UserClaims PRIMARY KEY (Id),
@@ -41,7 +41,7 @@ CREATE TABLE adminapp.UserClaims (
 
 CREATE TABLE adminapp.RoleClaims (
     Id INT NOT NULL IDENTITY,
-    RoleId NVARCHAR(450) NOT NULL,
+    RoleId NVARCHAR(225) NOT NULL,
     ClaimType NVARCHAR(MAX) NULL,
     ClaimValue NVARCHAR(MAX) NULL,
     CONSTRAINT PK_RoleClaims PRIMARY KEY (Id),
@@ -52,23 +52,23 @@ CREATE TABLE adminapp.UserLogins (
     LoginProvider NVARCHAR(128) NOT NULL,
     ProviderKey NVARCHAR(128) NOT NULL,
     ProviderDisplayName NVARCHAR(MAX) NULL,
-    UserId NVARCHAR(450) NOT NULL,
+    UserId NVARCHAR(225) NOT NULL,
     CONSTRAINT PK_UserLogins PRIMARY KEY (LoginProvider, ProviderKey),
     CONSTRAINT FK_UserLogins_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE
 );
 
 CREATE TABLE adminapp.UserRoles (
-    UserId NVARCHAR(450) NOT NULL,
-    RoleId NVARCHAR(450) NOT NULL,
+    UserId NVARCHAR(225) NOT NULL,
+    RoleId NVARCHAR(225) NOT NULL,
     CONSTRAINT PK_UserRoles PRIMARY KEY (UserId, RoleId),
     CONSTRAINT FK_UserRoles_Roles_RoleId FOREIGN KEY (RoleId) REFERENCES adminapp.Roles (Id) ON DELETE CASCADE,
     CONSTRAINT FK_UserRoles_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE
 );
 
 CREATE TABLE adminapp.UserTokens (
-    UserId NVARCHAR(450) NOT NULL,
-    LoginProvider NVARCHAR(128) NOT NULL,
-    Name NVARCHAR(128) NOT NULL,
+    UserId NVARCHAR(225) NOT NULL,
+    LoginProvider NVARCHAR(112) NOT NULL,
+    Name NVARCHAR(112) NOT NULL,
     Value NVARCHAR(MAX) NULL,
     CONSTRAINT PK_UserTokens PRIMARY KEY (UserId, LoginProvider, Name),
     CONSTRAINT FK_UserTokens_Users_UserId FOREIGN KEY (UserId) REFERENCES adminapp.Users (Id) ON DELETE CASCADE

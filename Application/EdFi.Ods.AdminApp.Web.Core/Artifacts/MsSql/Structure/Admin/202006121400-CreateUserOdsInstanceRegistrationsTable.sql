@@ -4,7 +4,7 @@
 -- See the LICENSE and NOTICES files in the project root for more information.
 
 CREATE TABLE adminapp.UserOdsInstanceRegistrations (
-    UserId NVARCHAR(128) NOT NULL,
+    UserId NVARCHAR(225) NOT NULL,
     OdsInstanceRegistrationId INT NOT NULL,
     CONSTRAINT PK_UserOdsInstanceRegistrations PRIMARY KEY CLUSTERED (UserId, OdsInstanceRegistrationId),
     CONSTRAINT FK_UserOdsInstanceRegistrations_OdsInstanceRegistrations_Id FOREIGN KEY (OdsInstanceRegistrationId) REFERENCES adminapp.OdsInstanceRegistrations (Id) ON DELETE CASCADE,

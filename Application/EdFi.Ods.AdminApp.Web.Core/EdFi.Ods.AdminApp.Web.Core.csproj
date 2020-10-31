@@ -273,7 +273,6 @@
     <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />
     <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
-    <Content Remove="Views\Shared\_LoginPartial.cshtml" />
     <Content Remove="Views\Shared\_LogSettings.cshtml" />
     <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
     <Content Remove="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />

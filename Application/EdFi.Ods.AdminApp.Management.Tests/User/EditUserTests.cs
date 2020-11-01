@@ -41,19 +41,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = userToBeEdited.Id
             };
 
-            var manager = SetupApplicationUserManager();
+            await ScopedAsync<UserManager<AdminAppUser>>(async manager =>
+            {
+                var command = new EditUserCommand();
 
-            var command = new EditUserCommand();
+                await command.Execute(updateModel, manager);
 
-            await command.Execute(updateModel, manager);
+                var editedUser = Query(userToBeEdited.Id);
+                editedUser.UserName.ShouldBe(updateModel.Email);
+                editedUser.Email.ShouldBe(updateModel.Email);
 
-            var editedUser = Query(userToBeEdited.Id);
-            editedUser.UserName.ShouldBe(updateModel.Email);
-            editedUser.Email.ShouldBe(updateModel.Email);
-
-            var notEditedUser = Query(userNotToBeEdited.Id);
-            notEditedUser.UserName.ShouldBe(userNotToBeEdited.UserName);
-            notEditedUser.Email.ShouldBe(userNotToBeEdited.Email);
+                var notEditedUser = Query(userNotToBeEdited.Id);
+                notEditedUser.UserName.ShouldBe(userNotToBeEdited.UserName);
+                notEditedUser.Email.ShouldBe(userNotToBeEdited.Email);
+            });
         }
 
         [Test]
@@ -121,11 +122,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A user with this email address already exists in the database.");
             });
-        }
-
-        private static UserManager<AdminAppUser> SetupApplicationUserManager()
-        {
-            return new UserManager<AdminAppUser>(new UserStore<AdminAppUser>(AdminAppIdentityDbContext.Create()));
         }
     }
 }

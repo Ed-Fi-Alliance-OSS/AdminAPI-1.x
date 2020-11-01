@@ -35,16 +35,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 ConfirmPassword = "testPassword"
             };
 
-            var manager = SetupApplicationUserManager();
+            await ScopedAsync<UserManager<AdminAppUser>>(async manager =>
+            {
+                var command = new AddUserCommand();
 
-            var command = new AddUserCommand();
+                var (userId, _) = await command.Execute(newUser, manager);
 
-            var (userId, _ ) = await command.Execute(newUser, manager);
-
-            var addedUser = Query(userId);
-            addedUser.UserName.ShouldBe($"test{guidString}@test.com");
-            addedUser.Email.ShouldBe($"test{guidString}@test.com");
-            addedUser.RequirePasswordChange.ShouldBe(true);
+                var addedUser = Query(userId);
+                addedUser.UserName.ShouldBe($"test{guidString}@test.com");
+                addedUser.Email.ShouldBe($"test{guidString}@test.com");
+                addedUser.RequirePasswordChange.ShouldBe(true);
+            });
         }
 
         [Test]
@@ -151,10 +152,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             "test",
             "test"+new string('0',110)
         };
-
-        private static UserManager<AdminAppUser> SetupApplicationUserManager()
-        {
-            return new UserManager<AdminAppUser>(new UserStore<AdminAppUser>(AdminAppIdentityDbContext.Create()));
-        }
     }
 }

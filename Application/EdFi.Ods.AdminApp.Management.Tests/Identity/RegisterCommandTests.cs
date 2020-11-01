@@ -34,18 +34,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "testPassword"
             };
 
-            var manager = SetupApplicationUserManager();
-
-            var command = new RegisterCommand();
-
-            var ( adminAppUser, _ ) = await command.Execute(newUser, manager);
-
-            Scoped<AdminAppIdentityDbContext>(database =>
+            await ScopedAsync<UserManager<AdminAppUser>>(async manager =>
             {
-                var addedUser = database.Users.Single(x => x.Id == adminAppUser.Id);
-                addedUser.UserName.ShouldBe($"test{guidString}@test.com");
-                addedUser.Email.ShouldBe($"test{guidString}@test.com");
-                addedUser.RequirePasswordChange.ShouldBe(false);
+                var command = new RegisterCommand();
+
+                var (adminAppUser, _) = await command.Execute(newUser, manager);
+
+                Scoped<AdminAppIdentityDbContext>(database =>
+                {
+                    var addedUser = database.Users.Single(x => x.Id == adminAppUser.Id);
+                    addedUser.UserName.ShouldBe($"test{guidString}@test.com");
+                    addedUser.Email.ShouldBe($"test{guidString}@test.com");
+                    addedUser.RequirePasswordChange.ShouldBe(false);
+                });
             });
         }
 
@@ -171,11 +172,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                     database.Users.Remove(entity);
                 database.SaveChanges();
             });
-        }
-
-        private static UserManager<AdminAppUser> SetupApplicationUserManager()
-        {
-            return new UserManager<AdminAppUser>(new UserStore<AdminAppUser>(AdminAppIdentityDbContext.Create()));
         }
     }
 }

@@ -41,5 +41,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 throw new NotSupportedException($"In NET48 test runs ScopedAsync<{typeof(TService).Name}>(...) is not supported.");
             }
         }
+
+        public static async Task<TResult> ScopedAsync<TService, TResult>(Func<TService, Task<TResult>> actionAsync)
+        {
+            if (typeof(TService) == typeof(AdminAppIdentityDbContext))
+            {
+                using (var service = AdminAppIdentityDbContext.Create())
+                    return await actionAsync((TService)(object)service);
+            }
+            else
+            {
+                throw new NotSupportedException($"In NET48 test runs ScopedAsync<{typeof(TService).Name}, {typeof(TResult).Name}>(...) is not supported.");
+            }
+        }
     }
 }

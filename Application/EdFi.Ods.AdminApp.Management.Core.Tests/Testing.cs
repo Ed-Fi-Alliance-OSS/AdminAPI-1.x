@@ -39,5 +39,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             using (var scope = ScopeFactory.CreateScope())
                 await actionAsync(scope.ServiceProvider.GetService<TService>());
         }
+
+        public static async Task<TResult> ScopedAsync<TService, TResult>(Func<TService, Task<TResult>> actionAsync)
+        {
+            using (var scope = ScopeFactory.CreateScope())
+                return await actionAsync(scope.ServiceProvider.GetService<TService>());
+        }
     }
 }

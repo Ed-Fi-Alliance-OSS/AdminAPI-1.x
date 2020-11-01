@@ -66,16 +66,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
 
-                int newInstanceId = 0;
+                int newInstanceId;
 
                 using (var database = new AdminAppDbContext())
                 {
-                    await ScopedAsync<AdminAppIdentityDbContext>(async identity =>
+                    newInstanceId = await ScopedAsync<AdminAppIdentityDbContext, int>(async identity =>
                     {
                         var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database);
 
                         var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
-                        newInstanceId = await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                        return await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
                     });
                 }
 

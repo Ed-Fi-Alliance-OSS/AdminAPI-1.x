@@ -12,7 +12,6 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Services;
 using NUnit.Framework;
 using Shouldly;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
@@ -27,29 +26,29 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
         private async Task<OdsSqlConfiguration> GetSqlConfiguration()
         {
-            return await ScopedAsync<AdminAppDbContext, OdsSqlConfiguration>(async database =>
+            using (var database = new AdminAppDbContext())
             {
                 var provider = OdsSecretConfigurationProvider(database);
                 return await provider.GetSqlConfiguration();
-            });
+            }
         }
 
         private async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
         {
-            return await ScopedAsync<AdminAppDbContext, OdsSecretConfiguration>(async database =>
+            using (var database = new AdminAppDbContext())
             {
                 var provider = OdsSecretConfigurationProvider(database);
                 return await provider.GetSecretConfiguration(instanceRegistrationId);
-            });
+            }
         }
 
         private async Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId = null)
         {
-            await ScopedAsync<AdminAppDbContext>(async database =>
+            using (var database = new AdminAppDbContext())
             {
                 var provider = OdsSecretConfigurationProvider(database);
                 await provider.SetSecretConfiguration(configuration, instanceRegistrationId);
-            });
+            }
         }
 
         private readonly ObjectCache _cache = MemoryCache.Default;
@@ -289,42 +288,42 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
         private static void EnsureZeroSecretConfigurations()
         {
-            Scoped<AdminAppDbContext>(database =>
+            using (var database = new AdminAppDbContext())
             {
                 foreach (var entity in database.SecretConfigurations)
                     database.SecretConfigurations.Remove(entity);
                 database.SaveChanges();
-            });
+            }
         }
 
         private static void EnsureZeroSqlConfigurations()
         {
-            Scoped<AdminAppDbContext>(database =>
+            using (var database = new AdminAppDbContext())
             {
                 foreach (var entity in database.AzureSqlConfigurations)
                     database.AzureSqlConfigurations.Remove(entity);
                 database.SaveChanges();
-            });
+            }
         }
 
         private static void AddSecretConfiguration(string jsonConfiguration, int odsInstanceRegistrationId)
         {
-            Scoped<AdminAppDbContext>(database =>
+            using (var database = new AdminAppDbContext())
             {
                 database.SecretConfigurations.Add(new SecretConfiguration { EncryptedData = jsonConfiguration, OdsInstanceRegistrationId = odsInstanceRegistrationId });
                 database.SaveChanges();
-            });
+            }
         }
 
         private static OdsInstanceRegistration CreateOdsInstanceRegistration(string instanceName)
         {
-            OdsInstanceRegistration createdOdsInstanceRegistration = null;
-            Scoped<AdminAppDbContext>(database =>
+            OdsInstanceRegistration createdOdsInstanceRegistration;
+            using (var database = new AdminAppDbContext())
             {
                 database.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName});
                 database.SaveChanges();
                 createdOdsInstanceRegistration = database.OdsInstanceRegistrations.FirstOrDefault(x => x.Name == instanceName);
-            });
+            }
 
             return createdOdsInstanceRegistration;
         }
@@ -333,11 +332,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         {
             EnsureZeroSqlConfigurations();
 
-            Scoped<AdminAppDbContext>(database =>
+            using (var database = new AdminAppDbContext())
             {
                 database.AzureSqlConfigurations.Add(new AzureSqlConfiguration { Configurations = jsonConfiguration });
                 database.SaveChanges();
-            });
+            }
         }
 
         private void ClearSecretConfigurationCache()

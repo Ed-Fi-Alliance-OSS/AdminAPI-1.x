@@ -65,7 +65,8 @@ namespace EdFi.Ods.AdminApp.Web
             });
 
             services.AddIdentity<AdminAppUser, IdentityRole>()
-                .AddEntityFrameworkStores<AdminAppIdentityDbContext>();
+                .AddEntityFrameworkStores<AdminAppIdentityDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews(options =>
                     {

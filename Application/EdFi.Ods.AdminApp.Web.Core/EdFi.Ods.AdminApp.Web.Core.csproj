@@ -165,6 +165,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ResetToDefaultAuthStrategyModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorCategoriesModel.cs" LinkBase="Models/ViewModels/Descriptors" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorModel.cs" LinkBase="Models/ViewModels/Descriptors" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorsIndexModel.cs" LinkBase="Models/ViewModels/Descriptors" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />

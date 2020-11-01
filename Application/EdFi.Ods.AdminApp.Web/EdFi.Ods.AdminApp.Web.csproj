@@ -637,6 +637,7 @@
     <Compile Include="Infrastructure\ResourceClaimSelectListBuilder.cs" />
     <Compile Include="Models\ViewModels\Global\UserIndexModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstanceSettings\BaseOdsInstanceSettingsModel.cs" />
+    <Compile Include="Models\ViewModels\Descriptors\DescriptorsIndexModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\DeregisterOdsInstanceModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\BulkRegisterOdsInstancesModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\RegisterOdsInstanceModel.cs" />

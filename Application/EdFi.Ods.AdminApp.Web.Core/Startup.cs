@@ -82,6 +82,11 @@ namespace EdFi.Ods.AdminApp.Web
                         opt.RegisterValidatorsFromAssembly(executingAssembly);
                     });
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Login";

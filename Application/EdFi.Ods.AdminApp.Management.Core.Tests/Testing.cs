@@ -3,7 +3,7 @@ using EdFi.Ods.AdminApp.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Core.Tests
+namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public static class Testing
     {

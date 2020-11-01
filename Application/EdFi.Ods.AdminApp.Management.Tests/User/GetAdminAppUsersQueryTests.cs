@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.User;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.User.UserTestSetup;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.User
@@ -22,7 +23,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
             var testUsers = SetupUsers().OrderBy(x => x.UserName).ToList();
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var command = new GetAdminAppUsersQuery(identity);
 
@@ -30,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
                 results.Count.ShouldBe(testUsers.Count);
                 results.Select(x => x.UserName).ShouldBe(testUsers.Select(x => x.UserName));
-            }
+            });
         }
     }
 }

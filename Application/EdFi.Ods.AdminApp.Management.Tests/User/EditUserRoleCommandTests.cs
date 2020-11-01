@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.User.UserTestSetup;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.User
@@ -41,14 +42,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 RoleId = Role.SuperAdmin.Value.ToString()
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var command = new EditUserRoleCommand(identity);
 
                 command.Execute(updateModel);
-            }
+            });
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var query = new GetRoleForUserQuery(identity);
 
@@ -57,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             
                 var notEditedUserRole = query.Execute(userToRemainAdmin.Id);
                 notEditedUserRole.ShouldBe(Role.Admin);
-            }
+            });
         }
 
         [Test]
@@ -76,13 +77,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 Email = testUserNotInSystem.Email
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserRoleModelValidator(GetMockUserContext(testUserNotInSystem, Role.Admin), identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user you are trying to edit does not exist in the database.");
-            }
+            });
         }
 
         [Test]
@@ -97,13 +98,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 Email = existingUser.Email
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserRoleModelValidator(GetMockUserContext(existingUser, Role.Admin), identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user is not allowed to assign/remove roles as they are logged in as a Super Administrator or have an Administrator role.");
-            }
+            });
         }
 
         [Test]
@@ -120,13 +121,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 Email = existingUser.Email
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserRoleModelValidator(GetMockUserContext(existingUser), identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The role you are trying to assign does not exist in the database.");
-            }
+            });
         }
 
         [Test]
@@ -134,7 +135,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
         {
             var updateModel = new EditUserRoleModel();
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserRoleModelValidator(GetMockUserContext(), identity);
                 var validationResults = validator.Validate(updateModel);
@@ -147,7 +148,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                     "The role you are trying to assign does not exist in the database.",
                     "'Email' must not be empty."
                 }, false);
-            }
+            });
         }
     }
 }

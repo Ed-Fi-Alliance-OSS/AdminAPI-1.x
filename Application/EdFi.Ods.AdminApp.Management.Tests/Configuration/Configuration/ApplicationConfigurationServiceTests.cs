@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
@@ -56,8 +57,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         {
             return Transaction(database =>
             {
-                using (var identity = AdminAppIdentityDbContext.Create())
-                    return new ApplicationConfigurationService(database, identity).AllowUserRegistration();
+                bool allowUserRegistration = false;
+
+                Scoped<AdminAppIdentityDbContext>(identity =>
+                {
+                    allowUserRegistration = new ApplicationConfigurationService(database, identity).AllowUserRegistration();
+                });
+
+                return allowUserRegistration;
             });
         }
 
@@ -77,23 +84,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
         private static void EnsureZeroUsers()
         {
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 foreach (var entity in database.Users)
                     database.Users.Remove(entity);
                 database.SaveChanges();
-            }
+            });
         }
 
         private static void EnsureOneUser()
         {
             EnsureZeroUsers();
 
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 database.Users.Add(new AdminAppUser("testUser"));
                 database.SaveChanges();
-            }
+            });
         }
     }
 }

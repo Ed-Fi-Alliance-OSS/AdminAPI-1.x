@@ -15,6 +15,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Identity
 {
@@ -39,13 +40,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
 
             var ( adminAppUser, _ ) = await command.Execute(newUser, manager);
 
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 var addedUser = database.Users.Single(x => x.Id == adminAppUser.Id);
                 addedUser.UserName.ShouldBe($"test{guidString}@test.com");
                 addedUser.Email.ShouldBe($"test{guidString}@test.com");
                 addedUser.RequirePasswordChange.ShouldBe(false);
-            }
+            });
         }
 
         [Test]
@@ -58,13 +59,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "testPassword"
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new RegisterViewModelValidator(identity);
                 var validationResults = validator.Validate(newUser);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Email' is not a valid email address.");
-            }
+            });
         }
 
         [Test]
@@ -77,13 +78,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "notTestPassword"
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new RegisterViewModelValidator(identity);
                 var validationResults = validator.Validate(newUser);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The password and confirmation password do not match.");
-            }
+            });
         }
 
         [Test]
@@ -91,7 +92,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
         {
             var newUser = new RegisterViewModel();
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new RegisterViewModelValidator(identity);
                 var validationResults = validator.Validate(newUser);
@@ -102,7 +103,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                     "'Password' must not be empty.",
                     "'Confirm Password' must not be empty."
                 }, false);
-            }
+            });
         }
 
         [Test, TestCaseSource("TestPasswords")]
@@ -116,13 +117,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = testPassword
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new RegisterViewModelValidator(identity);
                 var validationResults = validator.Validate(newUser);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldContain($"'Password' must be between 6 and 100 characters. You entered {testPassword.Length} characters.");
-            }
+            });
         }
 
         [Test]
@@ -130,7 +131,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
         {
             EnsureZeroUsers();
 
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 var user = new AdminAppUser()
                 {
@@ -139,7 +140,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 };
                 database.Users.Add(user);
                 database.SaveChanges();
-            }
+            });
 
             var newUser = new RegisterViewModel
             {
@@ -148,13 +149,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
                 ConfirmPassword = "testPassword"
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new RegisterViewModelValidator(identity);
                 var validationResults = validator.Validate(newUser);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A user with the email already exists in the database");
-            }
+            });
         }
 
         private static readonly string[] TestPasswords = {
@@ -164,12 +165,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
 
         private static void EnsureZeroUsers()
         {
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 foreach (var entity in database.Users)
                     database.Users.Remove(entity);
                 database.SaveChanges();
-            }
+            });
         }
 
         private static UserManager<AdminAppUser> SetupApplicationUserManager()

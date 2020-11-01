@@ -15,6 +15,7 @@ using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.Instance.InstanceTestSetup;
 using static EdFi.Ods.AdminApp.Management.Tests.User.UserTestSetup;
 using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
@@ -52,12 +53,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             SetupUserWithOdsInstanceRegistrations(testUser1.Id, testInstances);
             SetupUserWithOdsInstanceRegistrations(testUser2.Id, testInstances);
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 queryInstances.Execute(testUser1.Id).Count().ShouldBe(2);
                 queryInstances.Execute(testUser2.Id).Count().ShouldBe(2);
-            }
+            });
 
             var deregisterModel = new DeregisterOdsInstanceModel
             {
@@ -67,11 +68,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             };
 
             using (var sqlServerUsersContext = new SqlServerUsersContext())
-            using (var identity = AdminAppIdentityDbContext.Create())
             {
-                var command = new DeregisterOdsInstanceCommand(SetupContext, sqlServerUsersContext, identity);
+                Scoped<AdminAppIdentityDbContext>(identity =>
+                {
+                    var command = new DeregisterOdsInstanceCommand(SetupContext, sqlServerUsersContext, identity);
 
-                command.Execute(deregisterModel);
+                    command.Execute(deregisterModel);
+                });
             }
 
             var deregisteredOdsInstance = SetupContext.OdsInstanceRegistrations.SingleOrDefault(x => x.Id == testInstanceToBeDeregistered.Id);
@@ -83,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             ShouldBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceToBeDeregistered.Id);
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceNotToBeDeregistered.Id);
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
 
@@ -100,7 +103,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 onlyInstanceAssignedToUser2.Id.ShouldBe(testInstanceNotToBeDeregistered.Id);
                 onlyInstanceAssignedToUser2.Name.ShouldBe(testInstanceNotToBeDeregistered.Name);
                 onlyInstanceAssignedToUser2.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
-            }
+            });
 
             using (var database = new SqlServerUsersContext())
             {

@@ -15,6 +15,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.User.UserTestSetup;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.User
@@ -66,13 +67,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = existingUser.Id
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserModelValidator(identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Email' is not a valid email address.");
-            }
+            });
         }
 
         [Test]
@@ -85,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = existingUser.Id
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserModelValidator(identity);
                 var validationResults = validator.Validate(updateModel);
@@ -94,7 +95,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 {
                     "'Email' must not be empty."
                 }, false);
-            }
+            });
         }
 
         [Test]
@@ -113,13 +114,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 UserId = userToBeEdited.Id
             };
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var validator = new EditUserModelValidator(identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A user with this email address already exists in the database.");
-            }
+            });
         }
 
         private static UserManager<AdminAppUser> SetupApplicationUserManager()

@@ -16,6 +16,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 using (var service = AdminAppIdentityDbContext.Create())
                     action((TService)(object)service);
             }
+            else if (typeof(TService) == typeof(AdminAppDbContext))
+            {
+                using (var service = new AdminAppDbContext())
+                    action((TService)(object)service);
+            }
             else
             {
                 throw new NotSupportedException($"In NET48 test runs Scoped<{typeof(TService).Name}>(...) is not supported.");
@@ -27,6 +32,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             if (typeof(TService) == typeof(AdminAppIdentityDbContext))
             {
                 using (var service = AdminAppIdentityDbContext.Create())
+                    await actionAsync((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(AdminAppDbContext))
+            {
+                using (var service = new AdminAppDbContext())
                     await actionAsync((TService)(object)service);
             }
             else if (typeof(TService) == typeof(UserManager<AdminAppUser>))
@@ -47,6 +57,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             if (typeof(TService) == typeof(AdminAppIdentityDbContext))
             {
                 using (var service = AdminAppIdentityDbContext.Create())
+                    return await actionAsync((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(AdminAppDbContext))
+            {
+                using (var service = new AdminAppDbContext())
                     return await actionAsync((TService)(object)service);
             }
             else

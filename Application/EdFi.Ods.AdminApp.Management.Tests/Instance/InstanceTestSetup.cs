@@ -17,10 +17,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
     {
         public static void ResetOdsInstanceRegistrations()
         {
-            using (var dbContext = new AdminAppDbContext())
+            Scoped<AdminAppDbContext>(dbContext =>
             {
                 dbContext.Database.ExecuteSqlCommand("DELETE FROM [adminapp].[OdsInstanceRegistrations]");
-            }
+            });
         }
 
         public static IEnumerable<OdsInstanceRegistration> SetupOdsInstanceRegistrations(int instanceCount = 5, bool useGuidName = false)

@@ -23,10 +23,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
     {
         public static void ResetUsers()
         {
-            using (var dbContext = new AdminAppDbContext())
+            Scoped<AdminAppDbContext>(dbContext =>
             {
                 dbContext.Database.ExecuteSqlCommand("DELETE FROM [adminapp].[Users]");
-            }
+            });
         }
 
         public static AdminAppUserContext GetMockUserContext(AdminAppUser user = null, Role userRole = null)

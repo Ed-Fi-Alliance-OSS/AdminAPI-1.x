@@ -17,10 +17,6 @@ namespace EdFi.Ods.AdminApp.Management.Database
         {
         }
 
-        private AdminAppIdentityDbContext()
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -58,11 +54,6 @@ namespace EdFi.Ods.AdminApp.Management.Database
         }
 
         public DbSet<UserOdsInstanceRegistration> UserOdsInstanceRegistrations { get; set; }
-
-        public static AdminAppIdentityDbContext Create()
-        {
-            return new AdminAppIdentityDbContext();
-        }
     }
 }
 #endif

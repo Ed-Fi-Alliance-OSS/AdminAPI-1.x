@@ -53,7 +53,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UpdateController.cs" LinkBase="Controllers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" />
 
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config" LinkBase="DeveloperSettings" Condition="'$(Configuration)' == 'Debug'" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
@@ -235,7 +235,6 @@
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
-    <Content Remove="Views\GlobalSettings\Users.cshtml" />
     <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
     <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
     <Content Remove="Views\OdsInstances\Index.cshtml" />
@@ -280,11 +279,6 @@
     <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />
     <Content Remove="Views\Shared\Lockout.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
-    <Content Remove="Views\User\_DeleteUserModal.cshtml" />
-    <Content Remove="Views\User\_EditUserModal.cshtml" />
-    <Content Remove="Views\User\_EditUserRoleModal.cshtml" />
-    <Content Remove="Views\User\AddUser.cshtml" />
-    <Content Remove="Views\User\EditOdsInstanceRegistrationsForUser.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

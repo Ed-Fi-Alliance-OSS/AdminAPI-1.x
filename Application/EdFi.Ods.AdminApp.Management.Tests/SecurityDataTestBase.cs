@@ -7,7 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Helpers;
+#if NET48
+    using EdFi.Ods.AdminApp.Management.Helpers;
+#else
+    using EdFi.Ods.AdminApp.Web;
+#endif
 using EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;

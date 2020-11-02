@@ -53,7 +53,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
             parentGroupList = parentGroupList.OrderBy(x => x.Text).ToList();
             parentGroupList.AddRange(childGroupList.OrderBy(x => x.Text));
-            selectList.AddRange(new SelectList(parentGroupList, "Value", "Text", "Group.Name", -1));
+            #if NET48
+                selectList.AddRange(new SelectList(parentGroupList, "Value", "Text", "Group.Name", -1));
+            #else
+                selectList.AddRange(new SelectList(parentGroupList, "Value", "Text", -1, "Group.Name"));
+            #endif
             return selectList;
         }
     }

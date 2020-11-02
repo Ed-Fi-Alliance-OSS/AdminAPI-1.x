@@ -20,9 +20,17 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 {
     public class ClaimSetFileImportModel
     {
+        private SharingModel _sharingModel;
+
         [DisplayName("Import File")]
         [Accept(".json")]
         public HttpPostedFileBase ImportFile { get; set; }
+
+        public SharingModel AsSharingModel()
+        {
+                return _sharingModel ??
+                       (_sharingModel = SharingModel.DeserializeToSharingModel(ImportFile.InputStream));
+        }
 
         public class ClaimSetFileImportModelValidator : AbstractValidator<ClaimSetFileImportModel>
         {
@@ -32,12 +40,11 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
                 When(m => m.ImportFile != null, () =>
                 {
-                    RuleFor(x => x.ImportFile)
+                    RuleFor(x => x)
                         .SafeCustom((model, context) =>
                         {
                             var validator = new SharingModelValidator(securityContext, context.PropertyName);
-                            var sharingModel = model.DeserializeToSharingModel();
-                            context.AddFailures(validator.Validate(sharingModel));
+                            context.AddFailures(validator.Validate(model.AsSharingModel()));
                         });
                 });
             }

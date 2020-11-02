@@ -6,6 +6,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Helpers
+@using Newtonsoft.Json
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ExportClaimSetPreviewModel
 
 <h3>Export Claim Set Preview</h3>
@@ -29,7 +30,10 @@ See the LICENSE and NOTICES files in the project root for more information.
 
     var downloadFile = function(e) {
         e.preventDefault();
-        var downloadFileName = @Html.Raw(Json.Encode(Model.DownLoadFileTitle));
+        var downloadFileName = @Html.Raw(JsonConvert.SerializeObject(Model.DownLoadFileTitle, new JsonSerializerSettings
+                          {
+                              StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                          }));
         saveFile($("#exportJson").val(), downloadFileName.concat(".json"), "application/json");
     }
 

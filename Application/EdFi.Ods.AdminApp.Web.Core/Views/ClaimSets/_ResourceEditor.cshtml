@@ -5,8 +5,9 @@ The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
-@using System.Web.Mvc.Html
+@using Newtonsoft.Json;
 @using EdFi.Ods.AdminApp.Web.Helpers
+@using Newtonsoft.Json.Serialization
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetResourcesModel
 
 <h3>Resources</h3>
@@ -137,8 +138,14 @@ See the LICENSE and NOTICES files in the project root for more information.
     var deleteResourceUrl = '@Url.Action("DeleteResourceOnClaimSet", "ClaimSets")';
     var deleteResourceModalUrl = '@Url.Action("DeleteResourceOnClaimSetModal", "ClaimSets")';
     var overrideAuthStrategyModalUrl = '@Url.Action("AuthStrategyModal", "ClaimSets")';
-    var claimSetInfo = @Html.Raw(Json.Encode(new { claimSetId = Model.ClaimSetId, claimSetName = Model.ClaimSetName}));
-    var existingResources = @Html.Raw(Json.Encode(Model.ResourceClaims));
+    var claimSetInfo = @Html.Raw(JsonConvert.SerializeObject(new { claimSetId = Model.ClaimSetId, claimSetName = Model.ClaimSetName}, new JsonSerializerSettings
+                  {
+                      StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                  }));
+    var existingResources = @Html.Raw(JsonConvert.SerializeObject(Model.ResourceClaims, new JsonSerializerSettings
+                       {
+                           StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                       }));
     var childResourcesForParentUrl = '@Url.Action("GetSelectListForChildResourceClaims", "ClaimSets")';
     InitializeModalLoaders();
 </script>  

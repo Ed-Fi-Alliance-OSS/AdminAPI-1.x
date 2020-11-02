@@ -76,16 +76,15 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return JsonConvert.SerializeObject(model, UsingIndentedCamelCase());
         }
 
-        public static SharingModel DeserializeToSharingModel(this HttpPostedFileBase json)
+        public static SharingModel DeserializeToSharingModel(Stream jsonStream)
         {
-            using (var stream = GetMemoryStream(json))
-                using (var streamReader = new StreamReader(stream))
-                    using (JsonReader jsonReader = new JsonTextReader(streamReader))
-                    {
-                        return JsonSerializer
-                            .Create(UsingIndentedCamelCase())
-                            .Deserialize<SharingModel>(jsonReader);
-                    }
+            using (var streamReader = new StreamReader(jsonStream))
+                using (JsonReader jsonReader = new JsonTextReader(streamReader))
+                {
+                    return JsonSerializer
+                        .Create(UsingIndentedCamelCase())
+                        .Deserialize<SharingModel>(jsonReader);
+                }
         }
 
         private static JsonSerializerSettings UsingIndentedCamelCase()

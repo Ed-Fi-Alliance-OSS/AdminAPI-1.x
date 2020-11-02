@@ -495,9 +495,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(GetReportModel(id));
         }
 
-        OdsInstanceSettingsModel GetReportModel(int id)
+        ReportsIndexModel GetReportModel(int id)
         {
-            var model = new OdsInstanceSettingsModel
+            var model = new ReportsIndexModel
             {
                 ReportsModel = new ReportsModel
                 {

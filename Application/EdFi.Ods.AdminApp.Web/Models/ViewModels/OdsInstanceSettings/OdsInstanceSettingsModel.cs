@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
-
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
 {
     public class OdsInstanceSettingsModel : BaseOdsInstanceSettingsModel
@@ -13,7 +11,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
         public LogSettingsModel LogSettingsModel { get; set; }
         public LearningStandardsModel LearningStandardsModel { get; set; }
         public BulkFileUploadModel BulkFileUploadModel { get; set; }
-        public ReportsModel ReportsModel { get; set; }
         public string ProductionApiUrl { get; set; }
     }
 }

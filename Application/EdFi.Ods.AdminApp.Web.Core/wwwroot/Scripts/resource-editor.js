@@ -291,7 +291,7 @@ var populateChildResourcesForParent = function populateChildResourcesForParent(p
             $(data).each(function () {
                 var dropdown = $("#child-resource-dropdown-".concat(parentResourceId));
                 dropdown[0].selectedIndex = 0;
-                dropdown.append($("<option></option>").val(this.Value).html(this.Text).attr("disabled", this.Disabled));
+                dropdown.append($("<option></option>").val(this.value).html(this.text).attr("disabled", this.disabled));
                 var row = $("td[data-resource-id=".concat(parentResourceId, "]")).parent();
                 row.nextUntil("tr.parent-resource-claim").each(function () {
                     var resourceName = $(this).find(".resource-label").text();

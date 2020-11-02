@@ -44,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var copiedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
             copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 

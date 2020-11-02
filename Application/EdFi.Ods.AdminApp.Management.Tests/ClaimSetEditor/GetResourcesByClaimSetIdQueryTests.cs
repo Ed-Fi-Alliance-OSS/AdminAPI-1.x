@@ -34,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
             var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication);
             
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 
@@ -64,7 +64,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
             var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication);
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 
@@ -96,7 +96,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSets = SetupApplicationWithClaimSets(testApplication);
             var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSets, testApplication);
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 
@@ -145,7 +145,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet>{testClaimSet}, testApplication);
             var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 
@@ -174,7 +174,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication);
             var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
                 var testResourceClaim =
@@ -216,7 +216,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testResourceClaims = SetupParentResourceClaimsWithChildren(new List<ClaimSet> { testClaimSet }, testApplication);
             var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
                 var results = query.AllResources(testClaimSet.ClaimSetId).ToArray();

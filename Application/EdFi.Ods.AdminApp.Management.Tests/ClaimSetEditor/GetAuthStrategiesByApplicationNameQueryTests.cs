@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var query = new GetAuthStrategiesByApplicationNameQuery(TestContext);
                 var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
@@ -62,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var query = new GetAuthStrategiesByApplicationNameQuery(TestContext);
                 var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();

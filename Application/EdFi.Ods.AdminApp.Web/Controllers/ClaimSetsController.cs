@@ -280,8 +280,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult FileImport(ClaimSetFileImportModel claimSetFileImportModel)
         {
-            var sharingModel = claimSetFileImportModel.ImportFile.DeserializeToSharingModel();
-            _claimSetFileImportCommand.Execute(sharingModel);
+            _claimSetFileImportCommand.Execute(claimSetFileImportModel.AsSharingModel());
             return RedirectToAction("ClaimSets", "GlobalSettings");
         }
 
@@ -293,7 +292,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var exportClaimSetModel = new ExportClaimSetPreviewModel
             {
                 DownLoadFileTitle = $"{exports.Title}({currentDate})",
-                ExportPreviewString = InputFileExtensions.SerializeFromSharingModel(exports)
+                ExportPreviewString = SharingModel.SerializeFromSharingModel(exports)
             };
             return PartialView("_ExportClaimSetPreview", exportClaimSetModel);
         }

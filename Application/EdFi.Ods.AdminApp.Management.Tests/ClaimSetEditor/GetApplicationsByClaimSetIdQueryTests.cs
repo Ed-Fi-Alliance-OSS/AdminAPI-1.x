@@ -10,6 +10,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Web;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -26,26 +27,33 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         {
             var testClaimSets = SetupApplicationWithClaimSets();
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
             {
-                SetupApplications(testClaimSets, usersContext, applicationCount);
-
-                var query = new GetApplicationsByClaimSetIdQuery(TestContext, usersContext);
-
-                foreach (var testClaimSet in testClaimSets)
+                Transaction(usersDbContext, usersContext =>
                 {
-                    var results = query.Execute(testClaimSet.ClaimSetId).ToArray();
+                    SetupApplications(testClaimSets, usersContext, applicationCount);
 
-                    var testApplications =
-                        usersContext.Applications.Where(x => x.ClaimSetName == testClaimSet.ClaimSetName).Select(x => new Application
-                        {
-                            ApplicationName = x.ApplicationName,
-                            ApplicationId = x.ApplicationId
-                        }).ToArray();
-                    results.Length.ShouldBe(testApplications.Length);
-                    results.Select(x => x.Name).ShouldBe(testApplications.Select(x => x.ApplicationName), true);
-                }
-            });
+                    var query = new GetApplicationsByClaimSetIdQuery(TestContext, usersContext);
+
+                    foreach (var testClaimSet in testClaimSets)
+                    {
+                        var results = query.Execute(testClaimSet.ClaimSetId).ToArray();
+
+                        var testApplications =
+                            usersContext.Applications.Where(x => x.ClaimSetName == testClaimSet.ClaimSetName).Select(x => new Application
+                            {
+                                ApplicationName = x.ApplicationName,
+                                ApplicationId = x.ApplicationId
+                            }).ToArray();
+                        results.Length.ShouldBe(testApplications.Length);
+                        results.Select(x => x.Name).ShouldBe(testApplications.Select(x => x.ApplicationName), true);
+                    }
+                });
+            }
         }
 
         private IReadOnlyCollection<ClaimSet> SetupApplicationWithClaimSets(

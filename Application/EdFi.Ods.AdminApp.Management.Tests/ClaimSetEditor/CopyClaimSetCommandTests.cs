@@ -8,6 +8,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Web;
 using Moq;
 using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -44,7 +45,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var copiedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
             copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 
@@ -68,10 +69,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     parentResult.Children.All(x => x.Create).ShouldBe(true);
                 }
             });
-            Transaction<SqlServerUsersContext>(usersContext =>
+
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
             {
-                usersContext.Applications.Count(x => x.ClaimSetName == copiedClaimSet.ClaimSetName).ShouldBe(0);
-            });
+                Transaction(
+                    usersDbContext, usersContext =>
+                    {
+                        usersContext.Applications.Count(x => x.ClaimSetName == copiedClaimSet.ClaimSetName)
+                            .ShouldBe(0);
+                    });
+            }
         }
 
         [Test]

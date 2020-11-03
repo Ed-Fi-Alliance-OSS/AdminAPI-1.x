@@ -7,9 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+#if NET48
 using System.Web;
+#else
+using Microsoft.AspNetCore.Http;
+#endif
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
@@ -20,9 +23,26 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 {
     public class ClaimSetFileImportModel
     {
+        private SharingModel _sharingModel;
+
         [DisplayName("Import File")]
         [Accept(".json")]
-        public HttpPostedFileBase ImportFile { get; set; }
+
+        #if NET48
+            public HttpPostedFileBase ImportFile { get; set; }
+        #else
+            public IFormFile ImportFile { get; set; }
+        #endif
+
+        public SharingModel AsSharingModel()
+        {
+            #if NET48
+                return _sharingModel ??
+                       (_sharingModel = SharingModel.DeserializeToSharingModel(ImportFile.InputStream));
+            #else
+                return _sharingModel ??= SharingModel.DeserializeToSharingModel(ImportFile.OpenReadStream());
+            #endif
+        }
 
         public class ClaimSetFileImportModelValidator : AbstractValidator<ClaimSetFileImportModel>
         {
@@ -32,12 +52,11 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
                 When(m => m.ImportFile != null, () =>
                 {
-                    RuleFor(x => x.ImportFile)
+                    RuleFor(x => x)
                         .SafeCustom((model, context) =>
                         {
                             var validator = new SharingModelValidator(securityContext, context.PropertyName);
-                            var sharingModel = model.DeserializeToSharingModel();
-                            context.AddFailures(validator.Validate(sharingModel));
+                            context.AddFailures(validator.Validate(model.AsSharingModel()));
                         });
                 });
             }

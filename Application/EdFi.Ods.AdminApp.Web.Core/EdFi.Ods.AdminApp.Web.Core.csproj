@@ -38,7 +38,7 @@
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ClaimSetsController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ClaimSetsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ControllerBase.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/DescriptorsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/EducationOrganizationsController.cs" LinkBase="Controllers" />
@@ -129,7 +129,7 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/IFilteredModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/IFilteredPropertyBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Property.cs" LinkBase="Infrastructure" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ResourceClaimSelectListBuilder.cs" LinkBase="Infrastructure" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ResourceClaimSelectListBuilder.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/DefaultDisplayLabelBuilder.cs" LinkBase="Infrastructure/Tags" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlConventionLibrary.cs" LinkBase="Infrastructure/Tags" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlTagConventions.cs" LinkBase="Infrastructure/Tags" />
@@ -146,7 +146,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/AuthStrategyEditorModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetDetailsModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetFileExportModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetFileImportModel.cs" LinkBase="Models/ViewModels/ClaimSets" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetFileImportModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetResourcesModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/CopyClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/DeleteClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
@@ -209,17 +209,6 @@
     <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
     <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
     <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
-    <Content Remove="Views\ClaimSets\_AddClaimSet.cshtml" />
-    <Content Remove="Views\ClaimSets\_AuthStrategiesModal.cshtml" />
-    <Content Remove="Views\ClaimSets\_ClaimSetDetails.cshtml" />
-    <Content Remove="Views\ClaimSets\_CopyClaimSetModal.cshtml" />
-    <Content Remove="Views\ClaimSets\_DeleteClaimSetModal.cshtml" />
-    <Content Remove="Views\ClaimSets\_DeleteClaimSetResourceModal.cshtml" />
-    <Content Remove="Views\ClaimSets\_EditClaimSet.cshtml" />
-    <Content Remove="Views\ClaimSets\_ExportClaimSet.cshtml" />
-    <Content Remove="Views\ClaimSets\_ExportClaimSetPreview.cshtml" />
-    <Content Remove="Views\ClaimSets\_ImportExportClaimSet.cshtml" />
-    <Content Remove="Views\ClaimSets\_ResourceEditor.cshtml" />
     <Content Remove="Views\Descriptors\_Descriptor.cshtml" />
     <Content Remove="Views\Descriptors\_DescriptorCategories.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
@@ -232,7 +221,6 @@
     <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
-    <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
     <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
     <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
     <Content Remove="Views\OdsInstances\Index.cshtml" />

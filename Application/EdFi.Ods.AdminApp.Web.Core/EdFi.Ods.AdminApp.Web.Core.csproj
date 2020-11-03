@@ -190,6 +190,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/DeregisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/IndexModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/RegisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/BaseOdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSetupCompletedModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ProfileModel.cs" LinkBase="Models/ViewModels" />

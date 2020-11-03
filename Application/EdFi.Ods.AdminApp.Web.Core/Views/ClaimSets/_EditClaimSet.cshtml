@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -51,13 +51,13 @@ else
 <br />
 
 <div id="resource-editor-tab">
-    @Html.Partial("_ResourceEditor", new ClaimSetResourcesModel()
+   @{await Html.RenderPartialAsync("_ResourceEditor", new ClaimSetResourcesModel()
     {
         AllResourceClaims = Model.AllResourceClaims,
         ResourceClaims = Model.ResourceClaims,
         ClaimSetId = Model.ClaimSetId,
         ClaimSetName = Model.ClaimSetName
-    })
+    });}
 </div>
 <div class="padding-top-5">
     @Html.Button("Back").AddClass("back-btn back-ajax claimset-back-btn").Data("back-url", Url.Action("ClaimSets", "GlobalSettings"))

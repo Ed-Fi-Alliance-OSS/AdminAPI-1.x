@@ -1,14 +1,14 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
+@using System.Security.Claims
 @using EdFi.Ods.AdminApp.Management.Database.Models
 @using EdFi.Ods.AdminApp.Web.Infrastructure
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global
-@using Microsoft.AspNet.Identity
 @model GlobalSettingsModel
 
 @{
@@ -46,7 +46,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                                 }
                             </div>
                             <div class="col-md-3">
-                                @if (User.Identity.GetUserId() != user.UserId)
+                                @if (User.FindFirstValue(ClaimTypes.NameIdentifier) != user.UserId)
                                 {
                                     <a class="loads-ajax-modal" data-toggle="tooltip" title="Edit User Role" data-url="@Url.Action("EditUserRole", "User", new {userId = user.UserId})"><span class="fa fa-user action-icons"></span></a>
                                 }
@@ -57,7 +57,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
                             </div>
                             <div class="col-md-3">
-                                @if (User.Identity.GetUserId() != user.UserId)
+                                @if (User.FindFirstValue(ClaimTypes.NameIdentifier) != user.UserId)
                                 {
                                     <a class="loads-ajax-modal" data-toggle="tooltip" title="Delete User" data-url="@Url.Action("DeleteUser", "User", new {userId = user.UserId})"><span class="fa fa-trash action-icons"></span></a>
                                 }

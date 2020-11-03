@@ -422,6 +422,7 @@
     <Compile Include="Instance\GetOdsInstanceRegistrationsQueryTests.cs" />
     <Compile Include="Instance\InstanceTestSetup.cs" />
     <Compile Include="Helpers\OdsInstanceIdentityHelperTests.cs" />
+    <Compile Include="Testing.cs" />
     <Compile Include="TestingHelper.cs" />
     <Compile Include="User\EditOdsInstanceRegistrationForUserCommandTests.cs" />
     <Compile Include="User\EditUserRoleCommandTests.cs" />

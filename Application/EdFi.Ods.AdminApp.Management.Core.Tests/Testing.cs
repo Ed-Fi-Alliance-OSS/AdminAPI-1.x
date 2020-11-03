@@ -1,9 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Core.Tests
+namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public static class Testing
     {
@@ -31,6 +32,18 @@ namespace EdFi.Ods.AdminApp.Management.Core.Tests
         {
             using (var scope = ScopeFactory.CreateScope())
                 action(scope.ServiceProvider.GetService<TService>());
+        }
+
+        public static async Task ScopedAsync<TService>(Func<TService, Task> actionAsync)
+        {
+            using (var scope = ScopeFactory.CreateScope())
+                await actionAsync(scope.ServiceProvider.GetService<TService>());
+        }
+
+        public static async Task<TResult> ScopedAsync<TService, TResult>(Func<TService, Task<TResult>> actionAsync)
+        {
+            using (var scope = ScopeFactory.CreateScope())
+                return await actionAsync(scope.ServiceProvider.GetService<TService>());
         }
     }
 }

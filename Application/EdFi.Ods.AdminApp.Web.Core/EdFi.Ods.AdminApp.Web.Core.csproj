@@ -25,12 +25,8 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/HandleAjaxErrorAttribute.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/InstanceContextFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PasswordChangeRequiredFilter.cs" LinkBase="ActionFilters" /> -->
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredAttribute.cs" LinkBase="ActionFilters" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/PermissionRequiredFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/RequreSecureConnectionFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/UserContextFilter.cs" LinkBase="ActionFilters" /> -->
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationUserManager.cs" LinkBase="App_Start" /> -->
@@ -39,8 +35,6 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ModelBinderConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/RouteConfig.cs" LinkBase="App_Start" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/StartupBase.cs" LinkBase="App_Start" /> -->
-
-    <Content Include="../EdFi.Ods.AdminApp.Web/Artifacts/**/*.sql" LinkBase="Artifacts" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
@@ -51,13 +45,12 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ErrorController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/GlobalSettingsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/IdentityController.cs" LinkBase="Controllers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UpdateController.cs" LinkBase="Controllers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" />
 
     <!-- <Content Include="../EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config" LinkBase="DeveloperSettings" Condition="'$(Configuration)' == 'Debug'" /> -->
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
@@ -239,10 +232,6 @@
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Remove="Views\GlobalSettings\ClaimSets.cshtml" />
-    <Content Remove="Views\GlobalSettings\Users.cshtml" />
-    <Content Remove="Views\Identity\ChangePassword.cshtml" />
-    <Content Remove="Views\Identity\Login.cshtml" />
-    <Content Remove="Views\Identity\Register.cshtml" />
     <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
     <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
     <Content Remove="Views\OdsInstances\Index.cshtml" />
@@ -277,7 +266,6 @@
     <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />
     <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
-    <Content Remove="Views\Shared\_LoginPartial.cshtml" />
     <Content Remove="Views\Shared\_LogSettings.cshtml" />
     <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
     <Content Remove="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />
@@ -286,11 +274,6 @@
     <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />
     <Content Remove="Views\Shared\Lockout.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
-    <Content Remove="Views\User\_DeleteUserModal.cshtml" />
-    <Content Remove="Views\User\_EditUserModal.cshtml" />
-    <Content Remove="Views\User\_EditUserRoleModal.cshtml" />
-    <Content Remove="Views\User\AddUser.cshtml" />
-    <Content Remove="Views\User\EditOdsInstanceRegistrationsForUser.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

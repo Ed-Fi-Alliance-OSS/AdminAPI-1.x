@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -9,7 +9,7 @@ using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 #if NET48
 using Microsoft.AspNet.Identity.EntityFramework;
 #else
@@ -23,10 +23,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
     {
         public static void ResetUsers()
         {
-            using (var dbContext = new AdminAppDbContext())
+            Scoped<AdminAppDbContext>(dbContext =>
             {
                 dbContext.Database.ExecuteSqlCommand("DELETE FROM [adminapp].[Users]");
-            }
+            });
         }
 
         public static AdminAppUserContext GetMockUserContext(AdminAppUser user = null, Role userRole = null)
@@ -61,26 +61,25 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
         public static void SaveAdminAppUser(AdminAppUser user)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 database.Set<AdminAppUser>().Add(user);
                 database.SaveChanges();
-            }
+            });
         }
 
         public static void SaveAdminAppUser(List<AdminAppUser> users)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 database.Set<AdminAppUser>().AddRange(users);
                 database.SaveChanges();
-            }
+            });
         }
 
         public static void EnsureDefaultRoles()
         {
-            
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 var superAdminRole = database.Roles.SingleOrDefault(x => x.Id.Equals(Role.SuperAdmin.Value.ToString()));
                 var adminRole = database.Roles.SingleOrDefault(x => x.Id.Equals(Role.Admin.Value.ToString()));
@@ -103,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }
                 database.Set<IdentityRole>().AddRange(missingRolesToAdd);
                 database.SaveChanges();
-            }
+            });
         }
 
         public static void SaveUserRoles(List<AdminAppUser> users, Role userRole)
@@ -117,21 +116,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                     RoleId = userRole.Value.ToString()
                 });
             }
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 database.UserRoles.AddRange(userRoleRecords);
                 database.SaveChanges();
-            }
+            });
         }
 
         public static TResult Query<TResult>(Func<AdminAppIdentityDbContext, TResult> query)
         {
-            TResult result;
+            TResult result = default(TResult);
 
-            using (var database = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(database =>
             {
                 result = query(database);
-            }
+            });
 
             return result;
         }

@@ -46,7 +46,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             <ul class="nav navbar-nav pull-right">
                 <li>
                     <div class="btn-group">
-                       @* @Html.PartialAsync("_LoginPartial")*@
+                       @{ await Html.RenderPartialAsync("_LoginPartial"); }
                     </div>
                 </li>
             </ul>

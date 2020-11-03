@@ -45,9 +45,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private async Task<bool> IsPasswordChangeRequired(ActionExecutingContext filterContext)
         {
-            var userId = filterContext.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.GetUserAsync(filterContext.HttpContext.User);
             return user != null && user.RequirePasswordChange;
         }
     }

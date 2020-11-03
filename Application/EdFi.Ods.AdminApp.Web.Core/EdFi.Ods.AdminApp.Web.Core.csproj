@@ -228,8 +228,6 @@
     <Content Remove="Views\ClaimSets\_ExportClaimSetPreview.cshtml" />
     <Content Remove="Views\ClaimSets\_ImportExportClaimSet.cshtml" />
     <Content Remove="Views\ClaimSets\_ResourceEditor.cshtml" />
-    <Content Remove="Views\Descriptors\_Descriptor.cshtml" />
-    <Content Remove="Views\Descriptors\_DescriptorCategories.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
     <Content Remove="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
@@ -251,7 +249,6 @@
     <Content Remove="Views\OdsInstances\RegisterOdsInstance.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\Descriptors.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EnrollmentByEthnicity.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EnrollmentByGender.cshtml" />

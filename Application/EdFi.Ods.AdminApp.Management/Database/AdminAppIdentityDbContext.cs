@@ -4,17 +4,22 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 #if !NET48
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
     public class AdminAppIdentityDbContext : IdentityDbContext<AdminAppUser>
     {
-        public AdminAppIdentityDbContext(DbContextOptions<AdminAppIdentityDbContext> options)
+        private readonly IOptions<AppSettings> _appSettings;
+
+        public AdminAppIdentityDbContext(DbContextOptions<AdminAppIdentityDbContext> options, IOptions<AppSettings> appSettings)
             : base(options)
         {
+            _appSettings = appSettings;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,7 +55,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
             modelBuilder.Entity<UserOdsInstanceRegistration>()
                 .HasKey(k => new { k.UserId, k.OdsInstanceRegistrationId });
 
-            modelBuilder.ApplyDatabaseServerSpecificConventions();
+            modelBuilder.ApplyDatabaseServerSpecificConventions(_appSettings.Value.DatabaseEngine);
         }
 
         public DbSet<UserOdsInstanceRegistration> UserOdsInstanceRegistrations { get; set; }

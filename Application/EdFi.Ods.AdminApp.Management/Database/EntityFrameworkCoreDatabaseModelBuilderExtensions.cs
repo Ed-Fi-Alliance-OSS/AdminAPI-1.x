@@ -4,32 +4,35 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 #if !NET48
+using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
     public static class EntityFrameworkCoreDatabaseModelBuilderExtensions
     {
-        public static void ApplyDatabaseServerSpecificConventions(this ModelBuilder modelBuilder)
+        public static void ApplyDatabaseServerSpecificConventions(this ModelBuilder modelBuilder, string databaseEngine)
         {
-            if (DatabaseProviderHelper.PgSqlProvider)
+            if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
             {
-                foreach (var entity in modelBuilder.Model.GetEntityTypes())
-                {
-                    entity.SetTableName(entity.GetTableName().ToLowerInvariant());
+                return;
+            }
 
-                    foreach (var property in entity.GetProperties())
-                        property.SetColumnName(property.GetColumnName().ToLowerInvariant());
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                entity.SetTableName(entity.GetTableName().ToLowerInvariant());
 
-                    foreach (var key in entity.GetKeys())
-                        key.SetName(key.GetName().ToLowerInvariant());
+                foreach (var property in entity.GetProperties())
+                    property.SetColumnName(property.GetColumnName().ToLowerInvariant());
 
-                    foreach (var key in entity.GetForeignKeys())
-                        key.SetConstraintName(key.GetConstraintName().ToLowerInvariant());
+                foreach (var key in entity.GetKeys())
+                    key.SetName(key.GetName().ToLowerInvariant());
 
-                    foreach (var index in entity.GetIndexes())
-                        index.SetName(index.GetName().ToLowerInvariant());
-                }
+                foreach (var key in entity.GetForeignKeys())
+                    key.SetConstraintName(key.GetConstraintName().ToLowerInvariant());
+
+                foreach (var index in entity.GetIndexes())
+                    index.SetName(index.GetName().ToLowerInvariant());
             }
         }
     }

@@ -9,6 +9,7 @@ using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
@@ -22,7 +23,9 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using log4net;
 using log4net.Config;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -61,16 +64,35 @@ namespace EdFi.Ods.AdminApp.Web
                     options.UseNpgsql(connectionString);
             });
 
+            services.AddIdentity<AdminAppUser, IdentityRole>()
+                .AddEntityFrameworkStores<AdminAppIdentityDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddControllersWithViews(options =>
                     {
+                        options.Filters.Add(new AuthorizeFilter());
                         options.Filters.Add<JsonValidationFilter>();
                         options.Filters.Add<SetupRequiredFilter>();
+                        options.Filters.Add<UserContextFilter>();
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                        options.Filters.Add<PasswordChangeRequiredFilter>();
                     })
                     .AddFluentValidation(opt =>
                     {
                         opt.RegisterValidatorsFromAssembly(executingAssembly);
                     });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Login";
+                options.LogoutPath = "/Identity/LogOut";
+                options.AccessDeniedPath = "/Identity/Login";
+            });
 
             services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
 
@@ -121,6 +143,8 @@ namespace EdFi.Ods.AdminApp.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

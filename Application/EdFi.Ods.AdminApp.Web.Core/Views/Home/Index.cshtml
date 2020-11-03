@@ -27,7 +27,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     var UpdatesDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Updates);
 }
 
-@if (TemporaryAuthenticationHelper.RequestIsAuthenticatedOrTemporarilyAssumingAuthenticated())
+@if (User.Identity.IsAuthenticated)
 {
     if (Model.SetupJustCompleted)
     {

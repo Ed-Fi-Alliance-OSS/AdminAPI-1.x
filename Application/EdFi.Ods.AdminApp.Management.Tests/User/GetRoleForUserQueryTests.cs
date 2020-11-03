@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.User;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.User.UserTestSetup;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.User
@@ -24,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             var testSuperAdminUser = SetupUsers(1, Role.SuperAdmin).Single();
             var testAdminUser = SetupUsers(1, Role.Admin).Single();
 
-            using (var identity = AdminAppIdentityDbContext.Create())
+            Scoped<AdminAppIdentityDbContext>(identity =>
             {
                 var command = new GetRoleForUserQuery(identity);
 
@@ -33,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
                 result = command.Execute(testAdminUser.Id);
                 result.ShouldBe(Role.Admin);
-            }
+            });
         }
     }
 }

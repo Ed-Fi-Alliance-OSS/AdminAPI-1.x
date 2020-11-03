@@ -22,6 +22,7 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 using static EdFi.Ods.AdminApp.Management.Tests.Instance.InstanceTestSetup;
 
@@ -65,16 +66,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
 
-                int newInstanceId;
-
-                using (var database = new AdminAppDbContext())
-                using (var identity = AdminAppIdentityDbContext.Create())
+                int newInstanceId = await ScopedAsync<AdminAppIdentityDbContext, int>(async identity =>
                 {
-                    var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database);
+                    return await ScopedAsync<AdminAppDbContext, int>(async database =>
+                    {
+                        var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database);
 
-                    var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
-                    newInstanceId = await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
-                }
+                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
+                        return await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                    });
+                });
 
                 var addedInstance = Query<OdsInstanceRegistration>(newInstanceId);
                 var secretConfiguration =

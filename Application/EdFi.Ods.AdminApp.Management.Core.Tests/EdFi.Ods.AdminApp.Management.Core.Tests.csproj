@@ -26,8 +26,8 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/BulkUploadValidationTests.cs" LinkBase="Database/Commands" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Models/RolePermissionTests.cs" LinkBase="Database/Models" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/HomeScreenDisplayAssertions.cs" LinkBase="Display/HomeScreenDisplayService" />
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingAzureHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingOnPremisesHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingAzureHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingOnPremisesHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/AutomapperTests.cs" LinkBase="Infrastructure" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/CloudOdsApiConnectionInformationProviderTests/WhenGettingApiCredentials.cs" LinkBase="Infrastructure/CloudOdsApiConnectionInformationProviderTests" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/IO/WhenConfiguringFileImport.cs" LinkBase="Infrastructure/IO" /> -->

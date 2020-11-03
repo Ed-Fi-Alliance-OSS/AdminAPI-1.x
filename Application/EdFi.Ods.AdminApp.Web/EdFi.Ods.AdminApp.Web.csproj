@@ -1045,7 +1045,7 @@
     <Content Include="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
     <Content Include="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
     <Content Include="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\Descriptors.cshtml" />
+    <Content Include="Views\Descriptors\Index.cshtml" />
     <Content Include="Views\Descriptors\_DescriptorCategories.cshtml" />
     <Content Include="Views\Descriptors\_Descriptor.cshtml" />
     <Content Include="Views\EducationOrganizations\_EditLocalEducationAgencyModal.cshtml" />

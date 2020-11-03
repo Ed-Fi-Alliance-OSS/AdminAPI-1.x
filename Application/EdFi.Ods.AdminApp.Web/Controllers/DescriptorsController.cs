@@ -36,6 +36,18 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
         }
 
+        public ActionResult Index()
+        {
+            var model = new DescriptorsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Descriptors),
+                OdsInstance = _instanceContext
+            };
+
+            return View(model);
+        }
+
         public async Task<ActionResult> DescriptorCategoryList()
         {
             var model = new DescriptorCategoriesModel

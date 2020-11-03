@@ -27,7 +27,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Descriptors;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using FluentValidation;
@@ -153,18 +152,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
-                OdsInstance = _instanceContext
-            };
-
-            return View(model);
-        }
-
-        public ActionResult Descriptors()
-        {
-            var model = new DescriptorsIndexModel
-            {
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Descriptors),
                 OdsInstance = _instanceContext
             };
 

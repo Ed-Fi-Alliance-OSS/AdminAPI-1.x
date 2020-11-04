@@ -118,7 +118,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             mockFirstTimeSetupService.Setup(x => x.CreateAdminAppInAdminDatabase(It.IsAny<string>(), instanceName,
                 It.IsAny<string>(), ApiMode.DistrictSpecific)).ReturnsAsync(new ApplicationCreateResult());
             var odsInstanceFirstTimeSetupService = new OdsInstanceFirstTimeSetupService(odsSecretConfigurationProvider,
-                mockFirstTimeSetupService.Object, mockUsersContext.Object, mockReportViewsSetUp.Object, SetupContext);
+                mockFirstTimeSetupService.Object, mockUsersContext.Object, mockReportViewsSetUp.Object, SetupContext, new Net48Options<AppSettings>(new AppSettings()));
             return odsInstanceFirstTimeSetupService;
         }
 

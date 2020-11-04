@@ -48,7 +48,7 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UpdateController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" />
 
@@ -108,7 +108,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAzureActiveDirectoryClientInfo.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsUpdateService.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/EducationOrganizationTypes.cs" LinkBase="Infrastructure" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/InMemoryCache.cs" LinkBase="Infrastructure" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/BulkImportService.cs" LinkBase="Infrastructure/IO" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportConfiguration.cs" LinkBase="Infrastructure/IO" /> -->
@@ -250,8 +250,6 @@
     <Content Remove="Views\Reports\_StudentsByAttribute.cshtml" />
     <Content Remove="Views\Reports\_StudentsByProgram.cshtml" />
     <Content Remove="Views\Reports\_TotalEnrollment.cshtml" />
-    <Content Remove="Views\Setup\FirstTimeSetup.cshtml" />
-    <Content Remove="Views\Setup\PostUpdateSetup.cshtml" />
     <Content Remove="Views\Shared\_Applications.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />

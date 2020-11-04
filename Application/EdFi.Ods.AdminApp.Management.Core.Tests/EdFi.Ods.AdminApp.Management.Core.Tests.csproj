@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -67,9 +67,9 @@
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/CloudOdsUpdateCheckServiceTester.cs" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Claims/CloudOdsClaimSetConfiguratorTester.cs" LinkBase="Configuration\Claims" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Claims/ModifyClaimSetsServiceTests.cs" LinkBase="Configuration\Claims" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/OdsSecretConfigurationProviderTests.cs" LinkBase="Configuration\Configuration" /> -->
+         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/OdsSecretConfigurationProviderTests.cs" LinkBase="Configuration\Configuration" /> 
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/ApplicationConfigurationServiceTests.cs" LinkBase="Configuration\Configuration" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/EditConfigurationTests.cs" LinkBase="Configuration\Configuration" /> -->
+         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/EditConfigurationTests.cs" LinkBase="Configuration\Configuration" /> 
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetChildResourceClaimsForParentQueryTests.cs" LinkBase="Database/Queries" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetResourceClaimsQueryTests.cs" LinkBase="Database/Queries" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetOdsInstanceQueryTester.cs" LinkBase="Database/Queries" /> -->

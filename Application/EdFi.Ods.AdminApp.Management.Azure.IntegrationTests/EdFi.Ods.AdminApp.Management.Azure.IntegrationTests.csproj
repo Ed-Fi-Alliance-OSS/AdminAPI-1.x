@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <Copyright>Copyright © 2017 Ed-Fi Alliance</Copyright>
     <Configurations>Debug;Release;OnPremises</Configurations>
   </PropertyGroup>

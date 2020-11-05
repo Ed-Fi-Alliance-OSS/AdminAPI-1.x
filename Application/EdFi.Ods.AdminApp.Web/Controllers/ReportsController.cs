@@ -121,8 +121,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult StudentsByProgram(int id)
         {
-            var model = _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_StudentsByProgram",model);
+            var reportsModel = GetReportModel(id);
+            reportsModel.StudentsByProgramReport = _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_StudentsByProgram", reportsModel);
         }
 
         public ActionResult StudentsByAttribute(int id)

@@ -460,11 +460,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(GetReportModel(id));
         }
 
-        public ActionResult TotalEnrollment(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
         public ActionResult SchoolsBySchoolType(int id)
         {
             return View(GetReportModel(id));

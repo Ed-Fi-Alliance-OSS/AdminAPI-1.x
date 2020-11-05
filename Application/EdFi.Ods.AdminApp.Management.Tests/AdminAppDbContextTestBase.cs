@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database;
@@ -64,26 +63,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             SetupContext.Dispose();
         }
         
-        protected void Save(params object[] entities)
-        {
-            foreach (var entity in entities)
-            {
-                SetupContext.Set(entity.GetType()).Add(entity);
-            }
-
-            SetupContext.SaveChanges();
-        }
-
-        protected void Delete(params object[] entities)
-        {
-            foreach (var entity in entities)
-            {
-                SetupContext.Set(entity.GetType()).Remove(entity);
-            }
-
-            SetupContext.SaveChanges();
-        }
-
         protected void DeleteAll<TEntity>() where TEntity : class
         {
             Transaction(database =>
@@ -93,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             });
         }
 
-        protected  int Count<TEntity>() where TEntity : class
+        protected int Count<TEntity>() where TEntity : class
         {
             using (var database = CreateDbContext())
                 return database.Set<TEntity>().Count();

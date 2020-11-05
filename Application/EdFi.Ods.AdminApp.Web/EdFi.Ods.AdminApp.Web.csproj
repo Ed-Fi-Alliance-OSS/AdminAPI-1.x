@@ -574,7 +574,7 @@
     <Compile Include="Helpers\AutoMapperExtensions.cs" />
     <Compile Include="Helpers\ExpressionHelpers.cs" />
     <Compile Include="Helpers\HtmlTagExtensions.cs" />
-    <Compile Include="Helpers\InputFileExtensions.cs" />
+    <Compile Include="Helpers\InputFileHelper.cs" />
     <Compile Include="Helpers\OdsApiFacadeExtensions.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\ResponseHelpers.cs" />

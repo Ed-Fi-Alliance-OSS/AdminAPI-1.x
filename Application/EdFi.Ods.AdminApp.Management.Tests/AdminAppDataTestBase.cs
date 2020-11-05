@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class AdminAppDataTestBase : AdminAppDbContextTestBase<AdminAppDbContext>
+    public abstract class AdminAppDataTestBase : AdminAppDbContextTestBase
     {
         protected override string ConnectionString
         {

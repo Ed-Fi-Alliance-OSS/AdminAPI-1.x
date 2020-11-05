@@ -7,6 +7,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using NUnit.Framework;
 using Respawn;
@@ -14,10 +15,10 @@ using Respawn;
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class AdminAppDbContextTestBase<T> where T: DbContext
+    public abstract class AdminAppDbContextTestBase
     {
-        protected T TestContext { get; private set; }
-        protected T SetupContext { get; private set; }
+        protected AdminAppDbContext TestContext { get; private set; }
+        protected AdminAppDbContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
@@ -46,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
         }
 
-        protected abstract T CreateDbContext();
+        protected abstract AdminAppDbContext CreateDbContext();
 
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
@@ -122,13 +123,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 return database.Set<TEntity>().Count();
         }
 
-        protected void Transaction(Action<T> action)
+        protected void Transaction(Action<AdminAppDbContext> action)
         {
             using (var dbContext = CreateDbContext())
                 Transaction(dbContext, action);
         }
 
-        protected TResult Transaction<TResult>(Func<T, TResult> query)
+        protected TResult Transaction<TResult>(Func<AdminAppDbContext, TResult> query)
         {
             var result = default(TResult);
 

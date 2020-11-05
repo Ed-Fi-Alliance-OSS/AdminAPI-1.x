@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Linq;
 #if NET48
 using System.Web.Mvc;
 #else
@@ -18,11 +19,15 @@ using EdFi.Ods.AdminApp.Web.ActionFilters;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
+#if NET48
 using Microsoft.AspNet.Identity;
-using System.Linq;
+#endif
+#if !NET48
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+#endif
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -56,7 +61,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ViewResult Index()
         {
-            var instances = _getOdsInstanceRegistrationsByUserIdQuery.Execute(User.Identity.GetUserId());
+        #if NET48
+            var currentUserId = User.Identity.GetUserId();
+        #else
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        #endif
+            var instances = _getOdsInstanceRegistrationsByUserIdQuery.Execute(currentUserId);
 
             var model = new IndexModel
             {
@@ -77,7 +87,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [PermissionRequired(Permission.AccessGlobalSettings)]
         public async Task<ActionResult> RegisterOdsInstance(RegisterOdsInstanceModel model)
         {
+        #if NET48
             var currentUserId = User.Identity.GetUserId();
+        #else
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        #endif
 
             await _registerOdsInstanceCommand.Execute(model,
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId, CloudOdsAdminAppClaimSetConfiguration.Default);
@@ -95,10 +109,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [PermissionRequired(Permission.AccessGlobalSettings)]
         public async Task<ActionResult> BulkRegisterOdsInstances(BulkRegisterOdsInstancesModel model)
         {
+        #if NET48
             var currentUserId = User.Identity.GetUserId();
 
+        #else
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        #endif
             var results = await _bulkRegisterOdsInstancesCommand.Execute(
-                model.OdsInstancesFile.DataRecords(),
+                model.DataRecords(),
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId,
                 CloudOdsAdminAppClaimSetConfiguration.Default);
 
@@ -111,10 +129,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult ActivateOdsInstance(string instanceId)
         {
+        #if NET48
             var myCookie = new HttpCookie("Instance", instanceId);
 
             Response.Cookies.Add(myCookie);
 
+        #else
+            Response.Cookies.Append("Instance", instanceId, new CookieOptions());
+        #endif
             return RedirectToAction("Applications", "OdsInstanceSettings");
         }
 
@@ -137,6 +159,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             _deregisterOdsInstanceCommand.Execute(model);
 
+        #if NET48
             var instanceCookie = Request.Cookies.Get("Instance");
 
             if (instanceCookie != null && instanceCookie.Value == model.OdsInstanceId.ToString())
@@ -146,6 +169,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Response.Cookies.Add(instanceCookie);
             }
 
+        #else
+            Response.Cookies.Delete("Instance");
+        #endif
             return RedirectToActionJson<OdsInstancesController>(x => x.Index(), "Ods Instance deregistered successfully.");
         }
     }

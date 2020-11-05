@@ -97,8 +97,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult EnrollmentByGender(int id)
         {
-            var genderReport = _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_EnrollmentByGender", genderReport);
+            var reportsModel = GetReportModel(id);
+            reportsModel.StudentGenderReport = _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_EnrollmentByGender", reportsModel);
         }
 
         public ActionResult EnrollmentByRace(int id)

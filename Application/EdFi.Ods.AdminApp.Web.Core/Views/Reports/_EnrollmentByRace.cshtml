@@ -23,28 +23,28 @@
 <h3>Enrollment By Race</h3>
 @if (!Model.StudentRaceReport.RaceRepresentation.Any())
 {
-<em class="padding-top">There is no race data to display</em>
+    <em class="padding-top">There is no race data to display</em>
 }
 else
 {
-<table class="table table-condensed table-left-border">
-    <thead>
-        <tr>
-            <th>Race</th>
-            <th>Students</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var race in Model.StudentRaceReport.RaceRepresentation)
-        {
+    <table class="table table-condensed table-left-border">
+        <thead>
+            <tr>
+                <th>Race</th>
+                <th>Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var race in Model.StudentRaceReport.RaceRepresentation)
+            {
 
-        <tr>
-            <td>@race.GetDisplayName()</td>
-            <td>@race.PercentOfTotal.ToString("P2")</td>
-        </tr>
-        }
-    </tbody>
-</table>
+                <tr>
+                    <td>@race.GetDisplayName()</td>
+                    <td>@race.PercentOfTotal.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <a href="@Url.Action("SelectDistrict", "Reports" , new {id=Model.StudentRaceReport.LocalEducationAgencyId})">@Html.Button("Back to Reports")</a>

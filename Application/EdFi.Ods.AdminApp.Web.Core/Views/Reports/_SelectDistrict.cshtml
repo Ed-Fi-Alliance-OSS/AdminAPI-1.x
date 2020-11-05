@@ -17,13 +17,13 @@
 @Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
 
 @{
-<div class="row">
-    <div class="col-xs-12 margin-top-10">
-        <div class="alert alert-info">
-            <strong>Note: </strong>These reports allow for basic data quality inspection and system activity monitoring. They are not intended to support day-to-day analytics needs.
+    <div class="row">
+        <div class="col-xs-12 margin-top-10">
+            <div class="alert alert-info">
+                <strong>Note: </strong>These reports allow for basic data quality inspection and system activity monitoring. They are not intended to support day-to-day analytics needs.
+            </div>
         </div>
     </div>
-</div>
 }
 
 @{
@@ -33,24 +33,24 @@
 <div class="row">
     @if (Model.SelectDistrictModel.DistrictOptions.Any())
     {
-    if (Model.SelectDistrictModel.DistrictOptions.Count() == 1)
-    {
-    <div class="col-md-12 padding-top">
-        @Html.SelectListBlock(m => m.SelectDistrictModel.LocalEducationAgencyId, Model.SelectDistrictModel.DistrictOptions, x => x, null).Id("select-district-report")
-    </div>
+        if (Model.SelectDistrictModel.DistrictOptions.Count() == 1)
+        {
+            <div class="col-md-12 padding-top">
+                @Html.SelectListBlock(m => m.SelectDistrictModel.LocalEducationAgencyId, Model.SelectDistrictModel.DistrictOptions, x => x, null).Id("select-district-report")
+            </div>
+        }
+        else
+        {
+            <div class="col-md-12 padding-top">
+                @Html.SelectListBlock(m => m.SelectDistrictModel.LocalEducationAgencyId, Model.SelectDistrictModel.DistrictOptions, x => x, null, true).Id("select-district-report")
+            </div>
+        }
     }
     else
     {
-    <div class="col-md-12 padding-top">
-        @Html.SelectListBlock(m => m.SelectDistrictModel.LocalEducationAgencyId, Model.SelectDistrictModel.DistrictOptions, x => x, null, true).Id("select-district-report")
-    </div>
-    }
-    }
-    else
-    {
-    <div class="col-md-12 padding-top">
-        <strong>There are no reports available for this category</strong>
-    </div>
+        <div class="col-md-12 padding-top">
+            <strong>There are no reports available for this category</strong>
+        </div>
     }
 </div>
 

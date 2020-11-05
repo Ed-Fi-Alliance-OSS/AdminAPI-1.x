@@ -23,28 +23,28 @@
 <h3>Students By Attribute</h3>
 @if (Model.StudentEconomicSituationReport.TotalStudentCount == 0)
 {
-<em class="padding-top">There is no student data to display</em>
+    <em class="padding-top">There is no student data to display</em>
 }
 else
 {
-<table class="table table-condensed table-left-border">
-    <thead>
-        <tr>
-            <th>Other Student Information</th>
-            <th>Students</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var economicCategory in Model.StudentEconomicSituationReport.GetStudentEconomicSummary())
-        {
+    <table class="table table-condensed table-left-border">
+        <thead>
+            <tr>
+                <th>Other Student Information</th>
+                <th>Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var economicCategory in Model.StudentEconomicSituationReport.GetStudentEconomicSummary())
+            {
 
-        <tr>
-            <td>@economicCategory.Description</td>
-            <td>@economicCategory.PercentOfTotal.ToString("P2")</td>
-        </tr>
-        }
-    </tbody>
-</table>
+                <tr>
+                    <td>@economicCategory.Description</td>
+                    <td>@economicCategory.PercentOfTotal.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <a href="@Url.Action("SelectDistrict", "Reports" , new {id=Model.StudentEconomicSituationReport.LocalEducationAgencyId})">@Html.Button("Back to Reports")</a>

@@ -23,28 +23,28 @@
 <h3>Enrollment By Gender</h3>
 @if (!Model.StudentGenderReport.GenderRepresentation.Any())
 {
-<em class="padding-top">There is no gender data to display</em>
+    <em class="padding-top">There is no gender data to display</em>
 }
 else
 {
-<table class="table table-condensed table-left-border">
-    <thead>
-        <tr>
-            <th>Gender</th>
-            <th>Students</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var gender in Model.StudentGenderReport.GenderRepresentation)
-        {
+    <table class="table table-condensed table-left-border">
+        <thead>
+            <tr>
+                <th>Gender</th>
+                <th>Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gender in Model.StudentGenderReport.GenderRepresentation)
+            {
 
-        <tr>
-            <td>@gender.GetDisplayName()</td>
-            <td>@gender.PercentOfTotal.ToString("P2")</td>
-        </tr>
-        }
-    </tbody>
-</table>
+                <tr>
+                    <td>@gender.GetDisplayName()</td>
+                    <td>@gender.PercentOfTotal.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <a href="@Url.Action("SelectDistrict", "Reports" , new {id=Model.StudentGenderReport.LocalEducationAgencyId})">@Html.Button("Back to Reports")</a>

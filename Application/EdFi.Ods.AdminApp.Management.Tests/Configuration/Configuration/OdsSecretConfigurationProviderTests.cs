@@ -12,43 +12,44 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Services;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
     public class OdsSecretConfigurationProviderTests : AdminAppDataTestBase
     {
-        private AdminAppDbContext _dbContext;
-        private OdsSecretConfigurationProvider _provider;
-
-        [SetUp]
-        public void Init()
-        {
-            _dbContext = TestContext;
-            _provider = new OdsSecretConfigurationProvider(
-                new StringEncryptorService(
-                    new EncryptionConfigurationProviderService()), _dbContext);
-        }
-
         private static OdsSecretConfigurationProvider OdsSecretConfigurationProvider(AdminAppDbContext database)
         {
             return new OdsSecretConfigurationProvider(
                 new StringEncryptorService(
-                    new EncryptionConfigurationProviderService()), database );
+                    new EncryptionConfigurationProviderService()), database);
         }
 
         private async Task<OdsSqlConfiguration> GetSqlConfiguration()
         {
-            return await _provider.GetSqlConfiguration();
+            return await ScopedAsync<AdminAppDbContext, OdsSqlConfiguration>(async database =>
+            {
+                var provider = OdsSecretConfigurationProvider(database);
+                return await provider.GetSqlConfiguration();
+            });
         }
 
         private async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
         {
-            return await _provider.GetSecretConfiguration(instanceRegistrationId);
+            return await ScopedAsync<AdminAppDbContext, OdsSecretConfiguration>(async database =>
+            {
+                var provider = OdsSecretConfigurationProvider(database);
+                return await provider.GetSecretConfiguration(instanceRegistrationId);
+            });
         }
 
         private async Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId = null)
         {
-            await _provider.SetSecretConfiguration(configuration, instanceRegistrationId);
+            await ScopedAsync<AdminAppDbContext>(async database =>
+            {
+                var provider = OdsSecretConfigurationProvider(database);
+                await provider.SetSecretConfiguration(configuration, instanceRegistrationId);
+            });
         }
 
         private readonly ObjectCache _cache = MemoryCache.Default;
@@ -288,41 +289,51 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
         private void EnsureZeroSecretConfigurations()
         {
+            Scoped<AdminAppDbContext>(database =>
+            {
+                foreach (var entity in database.SecretConfigurations)
+                    database.SecretConfigurations.Remove(entity);
 
-            foreach (var entity in _dbContext.SecretConfigurations)
-                _dbContext.SecretConfigurations.Remove(entity);
-
-            _dbContext.SaveChanges();
-
+                database.SaveChanges();
+            });
         }
 
         private void EnsureZeroSqlConfigurations()
         {
-            foreach (var entity in _dbContext.AzureSqlConfigurations)
-                _dbContext.AzureSqlConfigurations.Remove(entity);
+            Scoped<AdminAppDbContext>(database =>
+            {
+                foreach (var entity in database.AzureSqlConfigurations)
+                    database.AzureSqlConfigurations.Remove(entity);
 
-            _dbContext.SaveChanges();
+                database.SaveChanges();
+            });
         }
 
         private void AddSecretConfiguration(string jsonConfiguration, int odsInstanceRegistrationId)
         {
+            Scoped<AdminAppDbContext>(database =>
+            {
+                database.SecretConfigurations.Add(
+                    new SecretConfiguration
+                    {
+                        EncryptedData = jsonConfiguration, OdsInstanceRegistrationId = odsInstanceRegistrationId
+                    });
 
-            _dbContext.SecretConfigurations.Add(
-                new SecretConfiguration
-                {
-                    EncryptedData = jsonConfiguration, OdsInstanceRegistrationId = odsInstanceRegistrationId
-                });
-
-            _dbContext.SaveChanges();
-
+                database.SaveChanges();
+            });
         }
 
         private OdsInstanceRegistration CreateOdsInstanceRegistration(string instanceName)
         {
-            _dbContext.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName});
-            _dbContext.SaveChanges();
+            OdsInstanceRegistration createdOdsInstanceRegistration = null;
+            Scoped<AdminAppDbContext>(database =>
+            {
+                database.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName});
+                database.SaveChanges();
 
-            var createdOdsInstanceRegistration = _dbContext.OdsInstanceRegistrations.FirstOrDefault(x => x.Name == instanceName);
+                createdOdsInstanceRegistration =
+                    database.OdsInstanceRegistrations.FirstOrDefault(x => x.Name == instanceName);
+            });
 
             return createdOdsInstanceRegistration;
         }
@@ -331,11 +342,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         {
             EnsureZeroSqlConfigurations();
 
-            _dbContext.AzureSqlConfigurations.Add(
-                new AzureSqlConfiguration {Configurations = jsonConfiguration});
+            Scoped<AdminAppDbContext>(database =>
+            {
+                database.AzureSqlConfigurations.Add(
+                    new AzureSqlConfiguration {Configurations = jsonConfiguration});
 
-            _dbContext.SaveChanges();
-
+                database.SaveChanges();
+            });
         }
 
         private void ClearSecretConfigurationCache()

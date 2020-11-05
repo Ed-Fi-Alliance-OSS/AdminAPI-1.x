@@ -89,9 +89,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult SchoolsBySchoolType(int id)
         {
-            var model = _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            var reportsModel = GetReportModel(id);
+            reportsModel.SchoolTypeReport= _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
-            return PartialView("_SchoolsBySchoolType", model);
+            return PartialView("_SchoolsBySchoolType", reportsModel);
         }
 
         public ActionResult EnrollmentByGender(int id)

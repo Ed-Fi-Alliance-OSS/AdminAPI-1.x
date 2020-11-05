@@ -12,5 +12,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports
     {
         public ReportsModel ReportsModel { get; set; }
         public TotalEnrollmentReport TotalEnrollmentReport { get; set; }
+        public SchoolTypeReport SchoolTypeReport { get; set; }
     }
 }

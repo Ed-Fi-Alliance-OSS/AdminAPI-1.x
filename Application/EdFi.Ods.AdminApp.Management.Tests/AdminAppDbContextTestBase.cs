@@ -15,7 +15,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class AdminAppDbContextTestBase
     {
-        protected AdminAppDbContext TestContext { get; private set; }
         protected AdminAppDbContext SetupContext { get; private set; }
 
         private readonly Checkpoint _checkpoint = new Checkpoint
@@ -37,7 +36,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
         {
-            TestContext = CreateDbContext();
             SetupContext = CreateDbContext();
         }
 
@@ -50,7 +48,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [SetUp]
         public async Task SetUp()
         {
-            TestContext = CreateDbContext();
             SetupContext = CreateDbContext();
 
             await _checkpoint.Reset(ConnectionString);
@@ -59,7 +56,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [TearDown]
         public void TearDown()
         {
-            TestContext.Dispose();
             SetupContext.Dispose();
         }
         

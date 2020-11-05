@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
 {
@@ -21,18 +22,21 @@ namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
         private readonly IUsersContext _usersContext;
         private readonly IReportViewsSetUp _reportViewsSetUp;
         private readonly AdminAppDbContext _database;
+        private readonly AppSettings _appSettings;
 
         public OdsInstanceFirstTimeSetupService(IOdsSecretConfigurationProvider odsSecretConfigurationProvider, 
             IFirstTimeSetupService firstTimeSetupService, 
             IUsersContext usersContext,
             IReportViewsSetUp reportViewsSetUp,
-            AdminAppDbContext database)
+            AdminAppDbContext database,
+            IOptions<AppSettings> appSettings)
         {
             _odsSecretConfigurationProvider = odsSecretConfigurationProvider;
             _firstTimeSetupService = firstTimeSetupService;
             _usersContext = usersContext;
             _reportViewsSetUp = reportViewsSetUp;
             _database = database;
+            _appSettings = appSettings.Value;
         }
 
         public async Task CompleteSetup(OdsInstanceRegistration odsInstanceRegistration, CloudOdsClaimSet claimSet,
@@ -50,7 +54,7 @@ namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
             var secretConfiguration = new OdsSecretConfiguration();
 
             var applicationCreateResult = await _firstTimeSetupService.CreateAdminAppInAdminDatabase(claimSet.ClaimSetName, odsInstanceRegistration.Name,
-                    ConfigurationHelper.GetAppSettings().AwsCurrentVersion, mode);
+                    _appSettings.AwsCurrentVersion, mode);
 
             secretConfiguration.ProductionApiKeyAndSecret = applicationCreateResult.ProductionKeyAndSecret;
          

@@ -115,6 +115,9 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<IOptions<AppSettings>>(
                 new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()));
 
+            services.AddSingleton<IOptions<ConnectionStrings>>(
+                new Net48Options<ConnectionStrings>(ConfigurationHelper.GetConnectionStrings()));
+
             services.Register(
                 Classes.FromThisAssembly()
                     .BasedOn<IController>()

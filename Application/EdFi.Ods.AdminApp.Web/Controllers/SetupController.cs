@@ -122,7 +122,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private JsonResult SetupFailure(Exception e)
         {
             Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        #if NET48
             Response.TrySkipIisCustomErrors = true;
+        #endif
 
             return Json(new { success = false, message = $"Failed to complete setup: {e.Message}", isTransientError = IsTransientError(e) });
         }

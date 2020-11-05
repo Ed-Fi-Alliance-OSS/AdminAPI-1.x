@@ -19,14 +19,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         protected AdminAppDbContext TestContext { get; private set; }
         protected AdminAppDbContext SetupContext { get; private set; }
 
-        protected enum CheckpointPolicyOptions
-        {
-            BeforeEachTest,
-            BeforeAnyTest
-        }
-
-        protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
-
         private readonly Checkpoint _checkpoint = new Checkpoint
         {
             TablesToIgnore = new[]
@@ -48,11 +40,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             TestContext = CreateDbContext();
             SetupContext = CreateDbContext();
-
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
         }
 
         [OneTimeTearDown]
@@ -67,10 +54,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             TestContext = CreateDbContext();
             SetupContext = CreateDbContext();
 
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
+            await _checkpoint.Reset(ConnectionString);
         }
 
         [TearDown]

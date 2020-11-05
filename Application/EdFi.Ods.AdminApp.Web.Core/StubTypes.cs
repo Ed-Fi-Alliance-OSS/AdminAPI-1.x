@@ -22,7 +22,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public object Setup() => throw new System.NotImplementedException();
         public object BulkLoad() => throw new System.NotImplementedException();
         public object LearningStandards() => throw new System.NotImplementedException();
-        public object SelectDistrict(int i) => throw new System.NotImplementedException();
     }
 
     public class OdsInstancesController

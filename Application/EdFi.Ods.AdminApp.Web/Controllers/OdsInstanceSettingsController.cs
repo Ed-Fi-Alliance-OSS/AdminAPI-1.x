@@ -28,7 +28,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using FluentValidation;
 using log4net;
 using Microsoft.Extensions.Options;
@@ -453,21 +452,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             config.BulkUploadCredential.ApiSecret = string.Empty;
             await _odsSecretConfigurationProvider.SetSecretConfiguration(config, _instanceContext.Id);
             return JsonSuccess("Credentials successfully reset");
-        }
-
-        ReportsIndexModel GetReportModel(int id)
-        {
-            var model = new ReportsIndexModel
-            {
-                ReportsModel = new ReportsModel
-                {
-                    LocalEducationAgencyId = id
-                },
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Reports),
-                OdsInstance = _instanceContext
-            };
-            return model;
         }
     }
 }

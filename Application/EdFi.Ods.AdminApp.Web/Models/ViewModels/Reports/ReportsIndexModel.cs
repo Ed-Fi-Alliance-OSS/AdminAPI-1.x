@@ -17,5 +17,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports
         public StudentRaceReport StudentRaceReport { get; set; }
         public StudentEthnicityReport StudentEthnicityReport { get; set; }
         public StudentsByProgramReport StudentsByProgramReport { get; set; }
+        public StudentEconomicSituationReport StudentEconomicSituationReport { get; set; }
     }
 }

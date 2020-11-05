@@ -460,11 +460,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(GetReportModel(id));
         }
 
-        public ActionResult StudentsByAttribute(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
         ReportsIndexModel GetReportModel(int id)
         {
             var model = new ReportsIndexModel

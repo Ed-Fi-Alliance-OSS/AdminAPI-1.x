@@ -129,8 +129,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult StudentsByAttribute(int id)
         {
-            var model = _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_StudentsByAttribute", model);
+            var reportsModel = GetReportModel(id);
+            reportsModel.StudentEconomicSituationReport = _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_StudentsByAttribute", reportsModel);
         }
 
         ReportsIndexModel GetReportModel(int id)

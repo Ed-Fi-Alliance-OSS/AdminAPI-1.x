@@ -6,7 +6,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+#if NET48
 using System.Web;
+#else
+using Microsoft.AspNetCore.Http;
+#endif
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
@@ -20,9 +24,34 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
     public class BulkRegisterOdsInstancesModel
     {
+        private IList<RegisterOdsInstanceModel> _dataRecords;
+        private IList<string> _missingHeaders;
+
         [Accept(".csv")]
         [Display(Name = "Instances Data File")]
+        #if NET48
         public HttpPostedFileBase OdsInstancesFile { get; set; }
+        #else
+        public IFormFile OdsInstancesFile { get; set; }
+        #endif
+
+        public IList<RegisterOdsInstanceModel> DataRecords()
+        {
+        #if NET48
+            return _dataRecords ?? (_dataRecords = InputFileHelper.DataRecords(OdsInstancesFile.InputStream));
+        #else
+            return _dataRecords ??= InputFileHelper.DataRecords(OdsInstancesFile.OpenReadStream());
+        #endif
+        }
+
+        public IList<string> MissingHeaders()
+        {
+        #if NET48
+            return _missingHeaders ?? (_missingHeaders = InputFileHelper.MissingHeaders(OdsInstancesFile.InputStream));
+        #else
+            return _missingHeaders ??= InputFileHelper.MissingHeaders(OdsInstancesFile.OpenReadStream());
+        #endif
+        }
     }
 
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
@@ -44,18 +73,20 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             RuleFor(m => m.OdsInstancesFile.FileName).NotNull().Must(x => x.ToLower().EndsWith(".csv"))
                 .WithMessage("Please select a file with .csv format.");
 
-            RuleFor(m => m.OdsInstancesFile)
-                .Must(HaveValidHeaders)
-                .When(m => m.OdsInstancesFile != null);
+            When(m => m.OdsInstancesFile != null, () =>
+                {
+                    RuleFor(m => m).SafeCustom(HaveValidHeaders);
+                });
 
-            RuleFor(m => m.OdsInstancesFile)
-                .Must(HaveUniqueRecords)
-                .When(m => m.OdsInstancesFile != null && !ValidHeadersRuleFailed);
+            When(m => m.OdsInstancesFile != null && !ValidHeadersRuleFailed, () =>
+                {
+                    RuleFor(m => m).SafeCustom(HaveUniqueRecords);
+                });
 
             When(
-                m => m.OdsInstancesFile != null && !UniquenessRuleFailed && !ValidHeadersRuleFailed,  () =>
+                m => m.OdsInstancesFile != null && !UniquenessRuleFailed && !ValidHeadersRuleFailed, () =>
                 {
-                    RuleFor(x => x.OdsInstancesFile)
+                    RuleFor(x => x)
                         .SafeCustom(
                             (model, context) =>
                             {
@@ -87,27 +118,22 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Where(g => g.Count() > 1).Select(x => x.Key).ToList();
         }
 
-        private bool HaveValidHeaders(BulkRegisterOdsInstancesModel model, HttpPostedFileBase file,
-            PropertyValidatorContext context)
+        private void HaveValidHeaders(BulkRegisterOdsInstancesModel model, CustomContext context)
         {
-            var missingHeaders = file.MissingHeaders();
+            var missingHeaders = model.MissingHeaders();
 
-            if (missingHeaders == null || !file.MissingHeaders().Any())
+            if (missingHeaders == null || !missingHeaders.Any())
             {
-                return true;
+                return;
             }
 
             ValidHeadersRuleFailed = true;
-            context.Rule.MessageBuilder =
-                c => $"Missing Headers: {string.Join(",", file.MissingHeaders())}";
-
-            return false;
-
+            context.AddFailure($"Missing Headers: {string.Join(",", model.MissingHeaders())}");
         }
 
-        private bool HaveUniqueRecords(BulkRegisterOdsInstancesModel model, HttpPostedFileBase file, PropertyValidatorContext context)
+        private void HaveUniqueRecords(BulkRegisterOdsInstancesModel model, CustomContext context)
         {
-            GetDuplicates(model.OdsInstancesFile.DataRecords().ToList(), out var duplicateNumericSuffixes, out var duplicateDescriptions);
+            GetDuplicates(model.DataRecords().ToList(), out var duplicateNumericSuffixes, out var duplicateDescriptions);
 
             var errorMessage = "";
 
@@ -122,13 +148,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             }
 
             if (errorMessage == "")
-                return true;
+            {
+                return;
+            }
 
             UniquenessRuleFailed = true;
-
-            context.Rule.MessageBuilder = c => errorMessage;
-
-            return false;
+            context.AddFailure(errorMessage);
         }
     }
 }

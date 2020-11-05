@@ -8,7 +8,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using NUnit.Framework;
 using Respawn;
 
@@ -22,7 +21,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         protected enum CheckpointPolicyOptions
         {
-            DoNotCheckpoint,
             BeforeEachTest,
             BeforeAnyTest
         }
@@ -43,10 +41,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
 
-        protected virtual void AdditionalFixtureSetup()
-        {
-        }
-
         protected abstract AdminAppDbContext CreateDbContext();
 
         [OneTimeSetUp]
@@ -59,8 +53,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             {
                 await _checkpoint.Reset(ConnectionString);
             }
-
-            AdditionalFixtureSetup();
         }
 
         [OneTimeTearDown]
@@ -144,18 +136,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         protected static void Transaction<TDbContext>(TDbContext dbContext, Action<TDbContext> action)
             where TDbContext : DbContext
         {
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
-        }
-
-        protected static void Transaction<TDbContext>(Action<TDbContext> action)
-            where TDbContext : DbContext, new()
-        {
-            using(var dbContext = new TDbContext())
             using (var transaction = dbContext.Database.BeginTransaction())
             {
                 action(dbContext);

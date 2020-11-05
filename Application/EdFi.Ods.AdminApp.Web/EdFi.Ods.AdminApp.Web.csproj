@@ -1052,10 +1052,7 @@
     <Content Include="Views\EducationOrganizations\_EditSchoolModal.cshtml" />
     <Content Include="Views\Reports\_StudentsByProgram.cshtml" />
     <Content Include="Views\Reports\_StudentsByAttribute.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\SelectDistrict.cshtml" />
     <Content Include="Views\Reports\_SelectDistrict.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\StudentsByProgram.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\StudentsByAttribute.cshtml" />
     <Content Include="Views\Setup\PostUpdateSetup.cshtml" />
     <Content Include="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Include="Views\Update\Index.cshtml" />
@@ -1073,13 +1070,8 @@
     <Content Include="Views\ClaimSets\_DeleteClaimSetModal.cshtml" />
     <Content Include="Views\ClaimSets\_EditClaimSet.cshtml" />
     <Content Include="Views\ClaimSets\_ResourceEditor.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\TotalEnrollment.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\SchoolsBySchoolType.cshtml" />
     <Content Include="Views\Reports\_SchoolsBySchoolType.cshtml" />
     <Content Include="Views\Reports\_TotalEnrollment.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\EnrollmentByGender.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\EnrollmentByEthnicity.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\EnrollmentByRace.cshtml" />
     <Content Include="Views\Reports\_EnrollmentByGender.cshtml" />
     <Content Include="Views\Reports\_EnrollmentByRace.cshtml" />
     <Content Include="Views\Reports\_EnrollmentByEthnicity.cshtml" />

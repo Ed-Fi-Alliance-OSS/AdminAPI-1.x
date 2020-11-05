@@ -235,14 +235,6 @@
     <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Remove="Views\Reports\_EnrollmentByEthnicity.cshtml" />
-    <Content Remove="Views\Reports\_EnrollmentByGender.cshtml" />
-    <Content Remove="Views\Reports\_EnrollmentByRace.cshtml" />
-    <Content Remove="Views\Reports\_SchoolsBySchoolType.cshtml" />
-    <Content Remove="Views\Reports\_SelectDistrict.cshtml" />
-    <Content Remove="Views\Reports\_StudentsByAttribute.cshtml" />
-    <Content Remove="Views\Reports\_StudentsByProgram.cshtml" />
-    <Content Remove="Views\Reports\_TotalEnrollment.cshtml" />
     <Content Remove="Views\Shared\_Applications.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />

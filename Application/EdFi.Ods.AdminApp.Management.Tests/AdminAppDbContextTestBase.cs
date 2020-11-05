@@ -30,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
+        protected abstract string ConnectionString { get; }
 
         protected abstract AdminAppDbContext CreateDbContext();
 

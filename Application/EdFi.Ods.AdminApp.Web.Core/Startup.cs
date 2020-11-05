@@ -77,6 +77,7 @@ namespace EdFi.Ods.AdminApp.Web
                         options.Filters.Add<UserContextFilter>();
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();
+                        options.Filters.Add<InstanceContextFilter>();
                     })
                     .AddFluentValidation(opt =>
                     {

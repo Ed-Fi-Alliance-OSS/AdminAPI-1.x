@@ -78,8 +78,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 });
 
                 var addedInstance = Query<OdsInstanceRegistration>(newInstanceId);
-                var secretConfiguration =
-                    SetupContext.SecretConfigurations.FirstOrDefault(x => x.OdsInstanceRegistrationId == newInstanceId);
+                var secretConfiguration = Transaction(database =>
+                    database.SecretConfigurations.FirstOrDefault(x => x.OdsInstanceRegistrationId == newInstanceId));
                 secretConfiguration.ShouldNotBeNull();
                 secretConfiguration.EncryptedData.ShouldBe(encryptedSecretConfigValue);
                 addedInstance.Name.ShouldBe(instanceName);
@@ -118,7 +118,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             mockFirstTimeSetupService.Setup(x => x.CreateAdminAppInAdminDatabase(It.IsAny<string>(), instanceName,
                 It.IsAny<string>(), ApiMode.DistrictSpecific)).ReturnsAsync(new ApplicationCreateResult());
             var odsInstanceFirstTimeSetupService = new OdsInstanceFirstTimeSetupService(odsSecretConfigurationProvider,
-                mockFirstTimeSetupService.Object, mockUsersContext.Object, mockReportViewsSetUp.Object, SetupContext, new Net48Options<AppSettings>(new AppSettings()));
+                mockFirstTimeSetupService.Object, mockUsersContext.Object, mockReportViewsSetUp.Object, database, new Net48Options<AppSettings>(new AppSettings()));
             return odsInstanceFirstTimeSetupService;
         }
 
@@ -131,10 +131,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
 
-            new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                .ShouldNotValidate(newInstance,
-                    "'ODS Instance District / EdOrg Id' must not be empty.",
-                    "'ODS Instance Description' must not be empty.");
+            Scoped<AdminAppDbContext>(database =>
+            {
+                new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    .ShouldNotValidate(newInstance,
+                        "'ODS Instance District / EdOrg Id' must not be empty.",
+                        "'ODS Instance Description' must not be empty.");
+            });
         }
 
         [TestCase(null)]
@@ -160,9 +163,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance,
-                        "'ODS Instance District / EdOrg Id' must be a valid positive integer.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance,
+                            "'ODS Instance District / EdOrg Id' must be a valid positive integer.");
+                });
             }
         }
       
@@ -188,11 +194,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance,
-                        invalidSchoolYear == null
-                        ? "'ODS Instance School Year' must not be empty."
-                        : "'ODS Instance School Year' must be between 1900 and 2099.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance,
+                            invalidSchoolYear == null
+                            ? "'ODS Instance School Year' must not be empty."
+                            : "'ODS Instance School Year' must be between 1900 and 2099.");
+                });
             }
         }
 
@@ -217,9 +226,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance,
-                        "An instance for this school year already exists.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance,
+                            "An instance for this school year already exists.");
+                });
             }
         }
 
@@ -244,12 +256,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(
-                        SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
-                        _connectionProvider.Object)
-                    .ShouldNotValidate(
-                        newInstance,
-                        "An instance for this Education Organization / District Id already exists.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(
+                            database, _apiModeProvider.Object, _databaseValidationService.Object,
+                            _connectionProvider.Object)
+                        .ShouldNotValidate(
+                            newInstance,
+                            "An instance for this Education Organization / District Id already exists.");
+                });
             }
         }
 
@@ -279,9 +294,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance,
-                        "Could not connect to an ODS instance database for this Education Organization / District Id.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance,
+                            "Could not connect to an ODS instance database for this Education Organization / District Id.");
+                });
             }
         }
 
@@ -310,9 +328,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance,
-                        "Could not connect to an ODS instance database for this school year.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance,
+                            "Could not connect to an ODS instance database for this school year.");
+                });
             }
         }
 
@@ -341,9 +362,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                         Description = Sample("Description")
                     };
 
-                    new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object,true)
-                        .ShouldNotValidate(newInstance,
-                            $"Could not connect to an ODS instance database for this school year({odsInstanceNumericSuffix}).");
+                    Scoped<AdminAppDbContext>(database =>
+                    {
+                        new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object,true)
+                            .ShouldNotValidate(newInstance,
+                                $"Could not connect to an ODS instance database for this school year({odsInstanceNumericSuffix}).");
+                    });
                 }
         }
 
@@ -368,12 +392,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                         Description = Sample("Description")
                     };
 
-                    new RegisterOdsInstanceModelValidator(
-                            SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
-                            _connectionProvider.Object, true)
-                        .ShouldNotValidate(
-                            newInstance,
-                            "An instance for this Education Organization / District Id(8787877) already exists.");
+                    Scoped<AdminAppDbContext>(database =>
+                    {
+                        new RegisterOdsInstanceModelValidator(
+                                database, _apiModeProvider.Object, _databaseValidationService.Object,
+                                _connectionProvider.Object, true)
+                            .ShouldNotValidate(
+                                newInstance,
+                                "An instance for this Education Organization / District Id(8787877) already exists.");
+                    });
                 }
         }
 
@@ -399,12 +426,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                         Description = createdInstance.Description
                     };
 
-                    new RegisterOdsInstanceModelValidator(
-                            SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
-                            _connectionProvider.Object, true)
-                        .ShouldNotValidate(newInstance,
-                            $"An instance with this description(Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
-                }
+                    Scoped<AdminAppDbContext>(database =>
+                    {
+                        new RegisterOdsInstanceModelValidator(
+                                database, _apiModeProvider.Object, _databaseValidationService.Object,
+                                _connectionProvider.Object, true)
+                            .ShouldNotValidate(newInstance,
+                                $"An instance with this description(Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
+                    });
+            }
         }
 
         [Test]
@@ -431,8 +461,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = instance.Description
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance, "An instance with this description already exists.");
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance, "An instance with this description already exists.");
+                });
             }
         }
 
@@ -459,9 +492,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     NumericSuffix = 7878787,
                     Description = Sample("Description")
                 };
-        
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldNotValidate(newInstance, $"The resulting database name {connection1.Database} would be too long for Admin App to set up necessary Application records. Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by 33 characters.");
+
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldNotValidate(newInstance, $"The resulting database name {connection1.Database} would be too long for Admin App to set up necessary Application records. Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by 33 characters.");
+                });
             }
         }
 
@@ -488,8 +524,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldValidate(newInstance);
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldValidate(newInstance);
+                });
             }
         }
 
@@ -515,8 +554,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Description = Sample("Description")
                 };
 
-                new RegisterOdsInstanceModelValidator(SetupContext, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                    .ShouldValidate(newInstance);
+                Scoped<AdminAppDbContext>(database =>
+                {
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                        .ShouldValidate(newInstance);
+                });
             }
         }
     }

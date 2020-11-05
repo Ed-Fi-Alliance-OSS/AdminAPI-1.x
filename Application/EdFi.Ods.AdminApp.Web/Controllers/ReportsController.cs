@@ -113,8 +113,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult EnrollmentByEthnicity(int id)
         {
-            var ethnicityReport = _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_EnrollmentByEthnicity", ethnicityReport);
+            var reportsModel = GetReportModel(id);
+            reportsModel.StudentEthnicityReport = _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_EnrollmentByEthnicity", reportsModel);
         }
 
         public ActionResult StudentsByProgram(int id)

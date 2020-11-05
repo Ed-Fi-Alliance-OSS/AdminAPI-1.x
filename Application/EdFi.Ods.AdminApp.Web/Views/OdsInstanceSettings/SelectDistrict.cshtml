@@ -4,25 +4,3 @@ Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 See the LICENSE and NOTICES files in the project root for more information.
 *@
-
-@using EdFi.Ods.AdminApp.Web.Helpers
-@using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports
-@model ReportsIndexModel
-
-@{
-    Layout = "~/Views/Shared/_Settings_Production.cshtml";
-    ViewBag.Title = "Ods Instance Reports";
-}
-
-@Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
-
-@{
-    <div class="row">
-        <div class="col-xs-12 margin-top-10">
-            <div class="alert alert-info">
-                <strong>Note: </strong>These reports allow for basic data quality inspection and system activity monitoring. They are not intended to support day-to-day analytics needs.
-            </div>
-        </div>
-    </div>
-    Html.RenderAction("SelectDistrict", "Reports", new { Model.ReportsModel.LocalEducationAgencyId });
-}

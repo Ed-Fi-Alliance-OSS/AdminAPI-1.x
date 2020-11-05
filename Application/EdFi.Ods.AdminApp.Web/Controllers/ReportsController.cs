@@ -54,12 +54,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _tabDisplayService = tabDisplayService;
         }
 
-        public ActionResult Index()
-        {
-            return RedirectToAction("SelectDistrict", "OdsInstanceSettings");
-        }
-
-        public ActionResult SelectDistrict(int localEducationAgencyId)
+        public ActionResult SelectDistrict(int id = 0)
         {
             var districtOptions = _getAllLocalEducationAgenciesQuery
                 .Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode)
@@ -67,16 +62,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     Text = x.Name,
                     Value = x.LocalEducationAgencyId.ToString(),
-                    Selected = x.LocalEducationAgencyId == localEducationAgencyId
+                    Selected = x.LocalEducationAgencyId == id
                 }).ToArray();
 
-            var model = new SelectDistrictModel
+            var reportsModel = GetReportModel(id);
+            reportsModel.SelectDistrictModel = new SelectDistrictModel
             {
-                LocalEducationAgencyId = localEducationAgencyId,
+                LocalEducationAgencyId = id,
                 DistrictOptions = districtOptions
             };
 
-            return PartialView("_SelectDistrict", model);
+            return PartialView("_SelectDistrict", reportsModel);
         }
 
         public ActionResult TotalEnrollment(int id)

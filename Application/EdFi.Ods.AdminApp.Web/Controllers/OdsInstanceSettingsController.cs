@@ -455,11 +455,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return JsonSuccess("Credentials successfully reset");
         }
 
-        public ActionResult SelectDistrict(int id = 0)
-        {
-            return View(GetReportModel(id));
-        }
-
         ReportsIndexModel GetReportModel(int id)
         {
             var model = new ReportsIndexModel

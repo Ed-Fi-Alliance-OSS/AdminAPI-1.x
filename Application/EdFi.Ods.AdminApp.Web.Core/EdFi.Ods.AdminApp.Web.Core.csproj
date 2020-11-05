@@ -83,7 +83,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsPrincipalExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ExpressionHelpers.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlTagExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileExtensions.cs" LinkBase="Helpers" /> 
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileHelper.cs" LinkBase="Helpers" /> 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/OdsApiFacadeExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ReflectionExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ResponseHelpers.cs" LinkBase="Helpers" />

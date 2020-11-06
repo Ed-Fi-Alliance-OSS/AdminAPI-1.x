@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
@@ -14,6 +13,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using Microsoft.AspNet.Identity.EntityFramework;
 #else
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 #endif
 
 
@@ -25,7 +25,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
         {
             Scoped<AdminAppDbContext>(dbContext =>
             {
+                #if NET48
                 dbContext.Database.ExecuteSqlCommand("DELETE FROM [adminapp].[Users]");
+                #else
+                dbContext.Database.ExecuteSqlRaw("DELETE FROM [adminapp].[Users]");
+                #endif
             });
         }
 

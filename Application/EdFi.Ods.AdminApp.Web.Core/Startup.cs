@@ -44,26 +44,8 @@ namespace EdFi.Ods.AdminApp.Web
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
-            // Ultimately, we wish to pivot AdminAppDbContext to an EF Core context
-            // with setup similar to that of AdminAppIdentityDbContext below.
-            // Until then, account for the lack of a .NET Framework-style app.config
-            // file by providing the connection string directly.
-            services.AddScoped(options =>
-            {
-                var connectionString = Configuration.GetConnectionString("Admin");
-                return new AdminAppDbContext(connectionString);
-            });
-
-            services.AddDbContext<AdminAppIdentityDbContext>(options =>
-            {
-                var connectionString = Configuration.GetConnectionString("Admin");
-                var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
-
-                if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
-                    options.UseSqlServer(connectionString);
-                else
-                    options.UseNpgsql(connectionString);
-            });
+            services.AddDbContext<AdminAppDbContext>(ConfigureForAdminDatabase);
+            services.AddDbContext<AdminAppIdentityDbContext>(ConfigureForAdminDatabase);
 
             services.AddIdentity<AdminAppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AdminAppIdentityDbContext>()
@@ -126,6 +108,17 @@ namespace EdFi.Ods.AdminApp.Web
             services.AddHangfireServer();
 
             CommonConfigurationInstaller.ConfigureLearningStandards(services);
+        }
+
+        private void ConfigureForAdminDatabase(DbContextOptionsBuilder options)
+        {
+            var connectionString = Configuration.GetConnectionString("Admin");
+            var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
+
+            if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
+                options.UseSqlServer(connectionString);
+            else
+                options.UseNpgsql(connectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

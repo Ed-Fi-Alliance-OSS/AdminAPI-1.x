@@ -23,13 +23,6 @@ namespace EdFi.Ods.AdminApp.Management.Database
         {
         }
 
-#if !NET48
-        public AdminAppDbContext(string connectionString)
-            : base(connectionString)
-        {
-        }
-#endif
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

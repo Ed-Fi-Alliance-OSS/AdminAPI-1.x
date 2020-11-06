@@ -18,17 +18,10 @@ namespace EdFi.Ods.AdminApp.Management.Database
             System.Data.Entity.Database.SetInitializer<AdminAppDbContext>(null);
         }
 
-        public AdminAppDbContext()
-            : base(CloudOdsDatabaseNames.Admin)
-        {
-        }
-
-#if !NET48
         public AdminAppDbContext(string connectionString)
             : base(connectionString)
         {
         }
-#endif
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

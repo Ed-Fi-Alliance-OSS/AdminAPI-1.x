@@ -1,7 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Management.User;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -20,6 +24,34 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             {
                 using (var service = new AdminAppDbContext())
                     action((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(GetOdsInstanceRegistrationsByUserIdQuery))
+            {
+                using (var identity = AdminAppIdentityDbContext.Create())
+                using (var database = new AdminAppDbContext())
+                {
+                    var service = new GetOdsInstanceRegistrationsByUserIdQuery(database, identity);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(EditOdsInstanceRegistrationForUserModelValidator))
+            {
+                using (var identity = AdminAppIdentityDbContext.Create())
+                using (var database = new AdminAppDbContext())
+                {
+                    var service = new EditOdsInstanceRegistrationForUserModelValidator(database, identity);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(DeregisterOdsInstanceCommand))
+            {
+                using (var sqlServerUsersContext = new SqlServerUsersContext())
+                using (var identity = AdminAppIdentityDbContext.Create())
+                using (var database = new AdminAppDbContext())
+                {
+                    var service = new DeregisterOdsInstanceCommand(database, sqlServerUsersContext, identity);
+                    action((TService)(object)service);
+                }
             }
             else
             {

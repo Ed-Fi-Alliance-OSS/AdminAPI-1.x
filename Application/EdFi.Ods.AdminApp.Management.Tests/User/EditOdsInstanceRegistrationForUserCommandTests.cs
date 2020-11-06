@@ -50,9 +50,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 command.Execute(updateModel);
             });
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(query =>
             {
-                var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 var results = query.Execute(existingUser.Id).ToList();
 
                 results.Count.ShouldBe(newInstancesToAdd.Count);
@@ -69,9 +68,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
             SetupUserWithOdsInstanceRegistrations(existingUser.Id, alreadyAddedInstances);
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(query =>
             {
-                var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 var results = query.Execute(existingUser.Id).ToList();
 
                 results.Count.ShouldBe(5);
@@ -100,10 +98,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 command.Execute(updateModel);
             });
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(query =>
             {
-                var query = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
-
                 var results = query.Execute(existingUser.Id).ToList();
 
                 results.Count.ShouldBe(3);
@@ -116,9 +112,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
         {
             var updateModel = new EditOdsInstanceRegistrationForUserModel();
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<EditOdsInstanceRegistrationForUserModelValidator>(validator =>
             {
-                var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext, identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
@@ -153,9 +148,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }).ToList()
             };
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<EditOdsInstanceRegistrationForUserModelValidator>(validator =>
             {
-                var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext, identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The user you are trying to edit does not exist in the database.");
@@ -195,9 +189,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 }
             };
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<EditOdsInstanceRegistrationForUserModelValidator>(validator =>
             {
-                var validator = new EditOdsInstanceRegistrationForUserModelValidator(SetupContext, identity);
                 var validationResults = validator.Validate(updateModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("A selected instance does not exist in the database.");

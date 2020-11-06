@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Web
                             opt.RegisterValidatorsFromAssembly(executingAssembly);
 
                             opt.ValidatorOptions.DisplayNameResolver = (type, memberInfo, expression)
-                                => memberInfo
+                                => memberInfo?
                                     .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
                         });
 

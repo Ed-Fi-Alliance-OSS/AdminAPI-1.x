@@ -409,7 +409,7 @@
     <Compile Include="Controllers\OdsInstanceSettingsController\WhenUpdatingLearningStandards.cs" />
     <Compile Include="Database\Commands\BulkUploadValidationTests.cs" />
     <Compile Include="Database\Models\RolePermissionTests.cs" />
-    <Compile Include="AdminAppDbContextTestBase.cs" />
+    <Compile Include="AdminAppDataTestBase.cs" />
     <Compile Include="Display\HomeScreenDisplayService\HomeScreenDisplayAssertions.cs" />
     <Compile Include="Display\HomeScreenDisplayService\WhenDisplayingAzureHomeScreen.cs" />
     <Compile Include="Display\HomeScreenDisplayService\WhenDisplayingOnPremisesHomeScreen.cs" />
@@ -433,7 +433,6 @@
     <Compile Include="User\GetAdminAppUserByIdQueryTests.cs" />
     <Compile Include="User\GetAdminAppUsersQueryTests.cs" />
     <Compile Include="User\AddUserTests.cs" />
-    <Compile Include="AdminAppDataTestBase.cs" />
     <Compile Include="AutoMapper\AutoMapperTests.cs" />
     <Compile Include="ClaimSetEditor\ClaimSetFileImportCommandTests.cs" />
     <Compile Include="ClaimSetEditor\DeleteResourceOnClaimSetCommandTests.cs" />

@@ -27,14 +27,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 #endif
             }
         }
-
-        protected override AdminAppDbContext CreateDbContext()
-        {
-            #if NET48
-                return new AdminAppDbContext();
-            #else
-                return new AdminAppDbContext(ConnectionString);
-            #endif
-        }
     }
 }

@@ -1,10 +1,9 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -26,9 +25,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            Transaction(securityContext =>
             {
-                var query = new GetAuthStrategiesByApplicationNameQuery(TestContext);
+                var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
                 var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(authStrategies.Count);
@@ -62,9 +61,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            Transaction(securityContext =>
             {
-                var query = new GetAuthStrategiesByApplicationNameQuery(TestContext);
+                var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
                 var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(authStrategies.Count);

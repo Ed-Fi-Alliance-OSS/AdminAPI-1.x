@@ -4,7 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Helpers;
+#if NET48
+    using EdFi.Ods.AdminApp.Management.Helpers;
+#else
+    using EdFi.Ods.AdminApp.Web;
+#endif
 using NUnit.Framework;
 
 namespace EdFi.Ods.AdminApp.Management.Tests

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -47,29 +47,29 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/User/GetAdminAppUserByIdQueryTests.cs" LinkBase="User" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/User/GetAdminAppUsersQueryTests.cs" LinkBase="User" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/User/AddUserTests.cs" LinkBase="User" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AdminAppDataTestBase.cs" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AdminAppDataTestBase.cs" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AutoMapper/AutoMapperTests.cs" LinkBase="AutoMapper" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ClaimSetFileImportCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/DeleteResourceOnClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ClaimSetFileExportCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ResetToDefaultAuthStrategyCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/OverrideDefaultAuthorizationStrategyCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/EditResourceOnClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/EditClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/AddClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/DeleteClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/CopyClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetAuthStrategiesByApplicationNameQueryTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetResourcesByClaimSetIdQueryTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetApplicationsByClaimSetIdQueryTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetClaimSetByIdQueryTests.cs" LinkBase="ClaimSetEditor" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetClaimSetsByApplicationNameQueryTests.cs" LinkBase="ClaimSetEditor" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ClaimSetFileImportCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/DeleteResourceOnClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ClaimSetFileExportCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ResetToDefaultAuthStrategyCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/OverrideDefaultAuthorizationStrategyCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/EditResourceOnClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/EditClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/AddClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/DeleteClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/CopyClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetAuthStrategiesByApplicationNameQueryTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetResourcesByClaimSetIdQueryTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetApplicationsByClaimSetIdQueryTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetClaimSetByIdQueryTests.cs" LinkBase="ClaimSetEditor" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/GetClaimSetsByApplicationNameQueryTests.cs" LinkBase="ClaimSetEditor" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/CloudOdsUpdateCheckServiceTester.cs" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Claims/CloudOdsClaimSetConfiguratorTester.cs" LinkBase="Configuration\Claims" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Claims/ModifyClaimSetsServiceTests.cs" LinkBase="Configuration\Claims" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/OdsSecretConfigurationProviderTests.cs" LinkBase="Configuration\Configuration" /> -->
+         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/OdsSecretConfigurationProviderTests.cs" LinkBase="Configuration\Configuration" /> 
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/ApplicationConfigurationServiceTests.cs" LinkBase="Configuration\Configuration" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/EditConfigurationTests.cs" LinkBase="Configuration\Configuration" /> -->
+         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Configuration/Configuration/EditConfigurationTests.cs" LinkBase="Configuration\Configuration" /> 
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetChildResourceClaimsForParentQueryTests.cs" LinkBase="Database/Queries" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetResourceClaimsQueryTests.cs" LinkBase="Database/Queries" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetOdsInstanceQueryTester.cs" LinkBase="Database/Queries" /> -->
@@ -105,7 +105,7 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetClaimSetNamesQueryTests.cs" LinkBase="Database/Queries" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetVendorByIdQueryTests.cs" LinkBase="Database/Queries" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetVendorsQueryTests.cs" LinkBase="Database/Queries" />
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/SecurityDataTestBase.cs" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/SecurityDataTestBase.cs" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/GetLatestPublishedOdsVersionQueryTester.cs" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/GetOdsStatusQueryTester.cs" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/MockExtensions.cs" />

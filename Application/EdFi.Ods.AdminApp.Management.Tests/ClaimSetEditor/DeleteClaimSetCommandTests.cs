@@ -52,7 +52,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var preservedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId);
             preservedClaimSet.ClaimSetName.ShouldBe(testClaimSetToPreserve.ClaimSetName);
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
 

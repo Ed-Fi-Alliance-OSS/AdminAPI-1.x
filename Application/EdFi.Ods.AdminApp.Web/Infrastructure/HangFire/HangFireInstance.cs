@@ -1,8 +1,9 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
@@ -22,9 +23,17 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
         private static void Start(bool enableSchemaMigration)
         {
             var schemaName = "adminapp_hangfire";
-            var connectionString = ConfigurationHelper.GetConnectionStrings().Admin;
 
-            if (DatabaseProviderHelper.PgSqlProvider)
+        #if NET48
+            var connectionString = ConfigurationHelper.GetConnectionStrings().Admin;
+            var isPostgreSql = DatabaseProviderHelper.PgSqlProvider;
+        #else
+            var connectionString = Startup.ConfigurationConnectionStrings.Admin;
+            var isPostgreSql = "PostgreSQL".Equals(
+                Startup.ConfigurationAppSettings.DatabaseEngine, StringComparison.InvariantCultureIgnoreCase);
+        #endif
+
+            if (isPostgreSql)
             {
                 var options = new PostgreSqlStorageOptions
                 {
@@ -41,7 +50,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
                     SchemaName = schemaName
                 };
 
-                GlobalConfiguration.Configuration.UseSqlServerStorage("EdFi_Admin", options);
+                GlobalConfiguration.Configuration.UseSqlServerStorage(connectionString, options);
             }
         }
 

@@ -5,7 +5,7 @@ The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
-@using System.Web.Mvc.Html
+@using Newtonsoft.Json;
 @using EdFi.Ods.AdminApp.Web.Helpers
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileExportModel
 
@@ -65,7 +65,10 @@ else
         var postData = {
             'Title': $("#Title").val(),
             'SelectedForExport': selectedClaimSetIds,
-            'ClaimSets': @Html.Raw(Json.Encode(Model.ClaimSets)),
+            'ClaimSets': @Html.Raw(JsonConvert.SerializeObject(Model.ClaimSets, new JsonSerializerSettings
+                    {
+                        StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                    })),
             "__RequestVerificationToken": getAntiForgeryToken()
         };
 

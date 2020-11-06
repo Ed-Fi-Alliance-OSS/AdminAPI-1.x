@@ -10,6 +10,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Web;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -32,7 +33,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
+                Transaction(usersDbContext, usersContext =>
             {
                 var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
@@ -60,7 +66,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
+                Transaction(usersDbContext, usersContext =>
             {
                 var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
@@ -75,7 +86,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         {
             var testClaimSets = SetupApplicationClaimSets();
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
+                Transaction(usersDbContext, usersContext =>
             {
                 var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
@@ -93,7 +109,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSets = SetupApplicationClaimSets();
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
+                Transaction(usersDbContext, usersContext =>
             {
                 var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
@@ -115,7 +136,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
+                Transaction(usersDbContext, usersContext =>
             {
                 var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
@@ -135,7 +161,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSets = SetupApplicationClaimSets();
 
-            Transaction<SqlServerUsersContext>(usersContext =>
+            #if NET48
+                using (var usersDbContext = new SqlServerUsersContext())
+            #else
+                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
+            #endif
+                Transaction(usersDbContext, usersContext =>
             {
                 foreach (var claimSet in testClaimSets)
                 {

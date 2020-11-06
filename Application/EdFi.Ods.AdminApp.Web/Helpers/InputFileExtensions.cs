@@ -70,32 +70,5 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
             return missingHeaders;
         }
-
-        public static string SerializeFromSharingModel(SharingModel model)
-        {
-            return JsonConvert.SerializeObject(model, UsingIndentedCamelCase());
-        }
-
-        public static SharingModel DeserializeToSharingModel(this HttpPostedFileBase json)
-        {
-            using (var stream = GetMemoryStream(json))
-                using (var streamReader = new StreamReader(stream))
-                    using (JsonReader jsonReader = new JsonTextReader(streamReader))
-                    {
-                        return JsonSerializer
-                            .Create(UsingIndentedCamelCase())
-                            .Deserialize<SharingModel>(jsonReader);
-                    }
-        }
-
-        private static JsonSerializerSettings UsingIndentedCamelCase()
-        {
-            return new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                Formatting = Formatting.Indented
-            };
-        }
-
     }
 }

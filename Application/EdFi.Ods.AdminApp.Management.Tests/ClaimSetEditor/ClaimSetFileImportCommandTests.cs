@@ -7,7 +7,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
+#if NET48
+    using System.Web;
+#else
+    using Microsoft.AspNetCore.Http;
+#endif
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
@@ -74,8 +78,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             }";
 
             var importModel = GetImportModel(testJSON);
-            var importSharingModel = importModel.ImportFile.DeserializeToSharingModel();
-
+            #if NET48
+                var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.InputStream);
+            #else
+                var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
+            #endif
             var getResourceByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper());
             var addClaimSetCommand = new AddClaimSetCommand(TestContext);
             var getResourceClaimsQuery = new GetResourceClaimsQuery(TestContext);
@@ -210,11 +217,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var byteArray = Encoding.UTF8.GetBytes(testJson);
             var stream = new MemoryStream(byteArray);
             var importModel = new ClaimSetFileImportModel();
-            var importFile = new Mock<HttpPostedFileBase>();
 
-            importFile.Setup(f => f.ContentLength).Returns(stream.Capacity);
+            #if NET48
+                var importFile = new Mock<HttpPostedFileBase>();
+                importFile.Setup(f => f.ContentLength).Returns(stream.Capacity);
+                importFile.Setup(f => f.InputStream).Returns(stream);
+            #else
+                var importFile = new Mock<IFormFile>();
+                importFile.Setup(f => f.Length).Returns(stream.Capacity);
+                importFile.Setup(f => f.OpenReadStream()).Returns(stream);
+            #endif
+
             importFile.Setup(f => f.FileName).Returns("testfile.json");
-            importFile.Setup(f => f.InputStream).Returns(stream);
             importModel.ImportFile = importFile.Object;
 
             return importModel;

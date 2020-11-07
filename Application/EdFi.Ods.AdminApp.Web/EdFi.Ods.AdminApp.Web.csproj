@@ -1041,7 +1041,7 @@
     <Content Include="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />
     <Content Include="Views\Application\_EditApplicationModal.cshtml" />
     <Content Include="Views\GlobalSettings\AdvancedSettings.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
+    <Content Include="Views\EducationOrganizations\Index.cshtml" />
     <Content Include="Views\EducationOrganizations\_EducationOrganizations.cshtml" />
     <Content Include="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
     <Content Include="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />

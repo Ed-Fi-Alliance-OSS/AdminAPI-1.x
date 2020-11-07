@@ -222,7 +222,6 @@
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Index.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\LearningStandards.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />

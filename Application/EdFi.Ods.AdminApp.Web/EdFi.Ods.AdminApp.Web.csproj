@@ -637,6 +637,7 @@
     <Compile Include="Infrastructure\ResourceClaimSelectListBuilder.cs" />
     <Compile Include="Models\ViewModels\Global\UserIndexModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstanceSettings\BaseOdsInstanceSettingsModel.cs" />
+    <Compile Include="Models\ViewModels\Descriptors\DescriptorsIndexModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\DeregisterOdsInstanceModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\BulkRegisterOdsInstancesModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\RegisterOdsInstanceModel.cs" />
@@ -1044,7 +1045,7 @@
     <Content Include="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
     <Content Include="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
     <Content Include="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\Descriptors.cshtml" />
+    <Content Include="Views\Descriptors\Index.cshtml" />
     <Content Include="Views\Descriptors\_DescriptorCategories.cshtml" />
     <Content Include="Views\Descriptors\_Descriptor.cshtml" />
     <Content Include="Views\EducationOrganizations\_EditLocalEducationAgencyModal.cshtml" />

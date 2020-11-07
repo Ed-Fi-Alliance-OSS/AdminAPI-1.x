@@ -157,6 +157,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ResetToDefaultAuthStrategyModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorCategoriesModel.cs" LinkBase="Models/ViewModels/Descriptors" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorModel.cs" LinkBase="Models/ViewModels/Descriptors" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorsIndexModel.cs" LinkBase="Models/ViewModels/Descriptors" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
@@ -208,8 +209,6 @@
     <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
     <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
     <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
-    <Content Remove="Views\Descriptors\_Descriptor.cshtml" />
-    <Content Remove="Views\Descriptors\_DescriptorCategories.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
     <Content Remove="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
@@ -222,7 +221,6 @@
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\Descriptors.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EnrollmentByEthnicity.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EnrollmentByGender.cshtml" />

@@ -22,28 +22,28 @@
 <h3>Students By Program</h3>
 @if (Model.StudentsByProgramReport.TotalStudentCount == 0)
 {
-<em class="padding-top">There is no program data to display</em>
+    <em class="padding-top">There is no program data to display</em>
 }
 else
 {
-<table class="table table-condensed table-left-border">
-    <thead>
-        <tr>
-            <th>Program</th>
-            <th>Students</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var program in Model.StudentsByProgramReport.GetAllPrograms())
-        {
+    <table class="table table-condensed table-left-border">
+        <thead>
+            <tr>
+                <th>Program</th>
+                <th>Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var program in Model.StudentsByProgramReport.GetAllPrograms())
+            {
 
-        <tr>
-            <td>@program.ProgramName</td>
-            <td>@program.PercentOfTotalStudents.ToString("P2")</td>
-        </tr>
-        }
-    </tbody>
-</table>
+                <tr>
+                    <td>@program.ProgramName</td>
+                    <td>@program.PercentOfTotalStudents.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <a href="@Url.Action("SelectDistrict", "Reports", new {id = Model.StudentsByProgramReport.LocalEducationAgencyId})">@Html.Button("Back to Reports")</a>

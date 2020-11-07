@@ -117,8 +117,9 @@
             window.location = url;
         });
 
-        @if (autoSelectSingleItem) {
-            @: $("#select-district-report").find("select").trigger("change");
+        @if (autoSelectSingleItem)
+        {
+            @:$("#select-district-report").find("select").trigger("change");
         }
     });
 </script>

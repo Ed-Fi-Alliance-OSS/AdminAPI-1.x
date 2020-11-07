@@ -164,6 +164,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/DeleteEducationOrganizationModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EditLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EditSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EducationOrganizationsIndexModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationViewModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/AddVendorModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/AdvancedSettingsModel.cs" LinkBase="Models/ViewModels/Global" />

@@ -96,6 +96,9 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private static bool SkipFilter(ControllerActionDescriptor actionDescriptor)
         {
+            if (actionDescriptor == null)
+                return false;
+
             var declaringType = actionDescriptor.MethodInfo.DeclaringType;
             return declaringType != null && declaringType.CustomAttributes.Any(ca => ca.AttributeType == typeof(BypassInstanceContextFilter));
         }

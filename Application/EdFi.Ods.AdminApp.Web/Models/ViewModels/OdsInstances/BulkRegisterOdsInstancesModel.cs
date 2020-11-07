@@ -24,6 +24,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
     public class BulkRegisterOdsInstancesModel
     {
+        private bool _streamWasRead = false;
         private IList<RegisterOdsInstanceModel> _dataRecords;
         private IList<string> _missingHeaders;
 
@@ -37,20 +38,27 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
         public IList<RegisterOdsInstanceModel> DataRecords()
         {
-        #if NET48
-            return _dataRecords ?? (_dataRecords = InputFileHelper.DataRecords(OdsInstancesFile.InputStream));
-        #else
-            return _dataRecords ??= InputFileHelper.DataRecords(OdsInstancesFile.OpenReadStream());
-        #endif
+            EnsureReadStreamOnce();
+            return _dataRecords;
         }
 
         public IList<string> MissingHeaders()
         {
-        #if NET48
-            return _missingHeaders ?? (_missingHeaders = InputFileHelper.MissingHeaders(OdsInstancesFile.InputStream));
-        #else
-            return _missingHeaders ??= InputFileHelper.MissingHeaders(OdsInstancesFile.OpenReadStream());
-        #endif
+            EnsureReadStreamOnce();
+            return _missingHeaders;
+        }
+
+        private void EnsureReadStreamOnce()
+        {
+            if (_streamWasRead)
+                return;
+
+#if NET48
+            _dataRecords = InputFileHelper.DataRecords(OdsInstancesFile.InputStream, out _missingHeaders);
+#else
+            _dataRecords = InputFileHelper.DataRecords(OdsInstancesFile.OpenReadStream(), out _missingHeaders);
+#endif
+            _streamWasRead = true;
         }
     }
 

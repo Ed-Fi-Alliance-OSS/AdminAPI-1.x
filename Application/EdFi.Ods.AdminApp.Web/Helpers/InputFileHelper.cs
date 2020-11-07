@@ -14,24 +14,10 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 {
     public static class InputFileHelper
     {
-        public static IList<RegisterOdsInstanceModel> DataRecords(Stream stream)
+        public static IList<RegisterOdsInstanceModel> DataRecords(Stream stream, out IList<string> missingHeaders)
         {
-            List<RegisterOdsInstanceModel> records;
-            using (var streamReader = new StreamReader(stream))
-                using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
-                {
-                    csv.Configuration.PrepareHeaderForMatch =
-                        (header, index) => header.ToLower();
-
-                    records = csv.GetRecords<RegisterOdsInstanceModel>().ToList();
-                }
-            return records;
-        }
-
-        public static IList<string> MissingHeaders(Stream stream)
-        {
-            var missingHeaders = new List<string>();
-
+            var localMissingHeaders = new List<string>();
+            List<RegisterOdsInstanceModel> records = new List<RegisterOdsInstanceModel>();
             using (var streamReader = new StreamReader(stream))
                 using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
                 {
@@ -45,16 +31,20 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
                         {
                             if (!isValid)
                             {
-                                missingHeaders.AddRange(headerNames.ToList());
+                                localMissingHeaders.AddRange(headerNames.ToList());
                             }
                         };
 
                     csv.Read();
                     csv.ReadHeader();
                     csv.ValidateHeader<RegisterOdsInstanceModel>();
+
+                    if (!localMissingHeaders.Any())
+                        records.AddRange(csv.GetRecords<RegisterOdsInstanceModel>());
                 }
 
-            return missingHeaders;
+            missingHeaders = localMissingHeaders;
+            return records;
         }
     }
 }

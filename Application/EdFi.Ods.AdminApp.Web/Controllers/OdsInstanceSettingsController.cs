@@ -144,19 +144,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             vendor.Applications = applications;
         }
 
-        public ActionResult EducationOrganizations()
-        {
-            var model = new OdsInstanceSettingsModel
-            {
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
-                        .EducationOrganizations),
-                OdsInstance = _instanceContext
-            };
-
-            return View(model);
-        }
-
         public async Task<ActionResult> Setup()
         {
             var setupCompleted = (await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production)).DoesApiDataExist();

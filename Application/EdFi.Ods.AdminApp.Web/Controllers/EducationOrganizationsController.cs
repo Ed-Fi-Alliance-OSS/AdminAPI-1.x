@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -27,13 +28,28 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
+        private readonly ITabDisplayService _tabDisplayService;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
-            , IMapper mapper, InstanceContext instanceContext)
+            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
             _instanceContext = instanceContext;
+            _tabDisplayService = tabDisplayService;
+        }
+
+        public ActionResult Index()
+        {
+            var model = new EducationOrganizationsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
+                        .EducationOrganizations),
+                OdsInstance = _instanceContext
+            };
+
+            return View(model);
         }
 
         public async Task<ActionResult> AddLocalEducationAgencyModal()

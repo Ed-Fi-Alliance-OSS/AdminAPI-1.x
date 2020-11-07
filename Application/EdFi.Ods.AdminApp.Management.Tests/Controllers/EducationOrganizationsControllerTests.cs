@@ -15,6 +15,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Web.Controllers;
+using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
 using Moq;
@@ -31,6 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         private EducationOrganizationsController _controller;
         private Mock<IOdsApiFacade> _mockOdsApiFacade;
         private Mock<InstanceContext> _mockInstanceContext;
+        private Mock<ITabDisplayService> _tabDisplayService;
 
         [SetUp]
         public void Init()
@@ -39,6 +41,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory = new Mock<IOdsApiFacadeFactory>();
             _mockOdsApiFacade = new Mock<IOdsApiFacade>();
             _mockInstanceContext = new Mock<InstanceContext>();
+            _tabDisplayService = new Mock<ITabDisplayService>();
         }
 
         [Test]
@@ -54,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.AddLocalEducationAgencyModal().Result as PartialViewResult;
@@ -83,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.AddLocalEducationAgency(addLocalEducationAgencyModel).Result as ContentResult;
@@ -105,7 +108,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.AddSchoolModal().Result as PartialViewResult;
@@ -134,7 +137,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.AddSchool(addSchoolModel).Result as ContentResult;
@@ -168,7 +171,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockMapper.Setup(x => x.Map<EditLocalEducationAgencyModel>(It.IsAny<LocalEducationAgency>()))
                 .Returns(editLocalEducationAgencyModel);
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result =
@@ -201,7 +204,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.EditLocalEducationAgency(editLocalEducationAgencyModel).Result as ContentResult;
@@ -230,7 +233,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.EditLocalEducationAgency(editLocalEducationAgencyModel).Result as ContentResult;
@@ -263,7 +266,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.EditSchoolModal(schoolId).Result as PartialViewResult;
@@ -293,7 +296,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.EditSchool(editSchoolModel).Result as ContentResult;
@@ -320,7 +323,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.EditSchool(editSchoolModel).Result as ContentResult;
@@ -349,7 +352,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.EducationOrganizationList().Result as PartialViewResult;
@@ -376,7 +379,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.DeleteLocalEducationAgency(deleteLocalEducationAgencyModel).Result as ContentResult;
@@ -402,7 +405,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.DeleteLocalEducationAgency(deleteLocalEducationAgencyModel).Result as ContentResult;
@@ -426,7 +429,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.DeleteSchool(deleteLocalEducationAgencyModel).Result as ContentResult;
@@ -452,7 +455,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
             var result = _controller.DeleteSchool(deleteLocalEducationAgencyModel).Result as ContentResult;

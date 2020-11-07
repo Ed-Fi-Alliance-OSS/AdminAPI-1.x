@@ -23,7 +23,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassSetupRequiredFilterAttribute.cs" LinkBase="ActionFilters" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/DoNotCacheAjaxRequestsFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/HandleAjaxErrorAttribute.cs" LinkBase="ActionFilters" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/InstanceContextFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/RequreSecureConnectionFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" />
@@ -45,7 +44,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ErrorController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/GlobalSettingsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" />
@@ -84,7 +83,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsPrincipalExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ExpressionHelpers.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlTagExtensions.cs" LinkBase="Helpers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileExtensions.cs" LinkBase="Helpers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileHelper.cs" LinkBase="Helpers" /> 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/OdsApiFacadeExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ReflectionExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ResponseHelpers.cs" LinkBase="Helpers" />
@@ -158,6 +157,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ResetToDefaultAuthStrategyModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorCategoriesModel.cs" LinkBase="Models/ViewModels/Descriptors" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorModel.cs" LinkBase="Models/ViewModels/Descriptors" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Descriptors/DescriptorsIndexModel.cs" LinkBase="Models/ViewModels/Descriptors" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/AddSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
@@ -179,7 +179,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Identity/RegisterViewModel.cs" LinkBase="Models/ViewModels/Identity" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/LearningStandardsModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/LogSettingsModel.cs" LinkBase="Models/ViewModels" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/BulkRegisterOdsInstancesModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/BulkRegisterOdsInstancesModel.cs" LinkBase="Models/ViewModels/OdsInstances" /> 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/DeregisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/IndexModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/RegisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
@@ -210,8 +210,6 @@
     <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
     <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
     <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
-    <Content Remove="Views\Descriptors\_Descriptor.cshtml" />
-    <Content Remove="Views\Descriptors\_DescriptorCategories.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
     <Content Remove="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
     <Content Remove="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
@@ -222,13 +220,8 @@
     <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
-    <Content Remove="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
-    <Content Remove="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
-    <Content Remove="Views\OdsInstances\Index.cshtml" />
-    <Content Remove="Views\OdsInstances\RegisterOdsInstance.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\Descriptors.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Index.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\LearningStandards.cshtml" />

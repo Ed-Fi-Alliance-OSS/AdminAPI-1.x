@@ -58,14 +58,14 @@ See the LICENSE and NOTICES files in the project root for more information.
     }
     <div class="container body-content">
         <div class="row">
-            @*@if (HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
+            @if (User.Identity.IsAuthenticated)
             {
                 <div class="col-md-1 col-md-offset-11 nav-links">
                     <a href="@Url.Action("Index", "Home")" class="text-nowrap">
                         <span class="fa fa-home"></span><strong>Home</strong>
                     </a>
                 </div>
-            }*@
+            }
         </div>
         <section>
             @RenderBody()

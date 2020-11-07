@@ -8,6 +8,8 @@ using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Descriptors;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management;
+using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 #if NET48
 using System.Web.Mvc;
 #else
@@ -20,12 +22,30 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     {
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly IMapper _mapper;
+        private readonly ITabDisplayService _tabDisplayService;
+        private readonly InstanceContext _instanceContext;
 
         public DescriptorsController(IOdsApiFacadeFactory odsApiFacadeFactory
-            , IMapper mapper)
+            , IMapper mapper
+            , ITabDisplayService tabDisplayService
+            , InstanceContext instanceContext)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
+            _tabDisplayService = tabDisplayService;
+            _instanceContext = instanceContext;
+        }
+
+        public ActionResult Index()
+        {
+            var model = new DescriptorsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Descriptors),
+                OdsInstance = _instanceContext
+            };
+
+            return View(model);
         }
 
         public async Task<ActionResult> DescriptorCategoryList()

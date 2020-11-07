@@ -210,13 +210,6 @@
     <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
     <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
     <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_EditLocalEducationAgencyModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_EditSchoolModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_EducationOrganizations.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_MissingData.cshtml" />
     <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />

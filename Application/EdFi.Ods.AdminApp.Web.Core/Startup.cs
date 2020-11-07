@@ -77,11 +77,17 @@ namespace EdFi.Ods.AdminApp.Web
                         options.Filters.Add<UserContextFilter>();
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();
+                        options.Filters.Add<InstanceContextFilter>();
                     })
-                    .AddFluentValidation(opt =>
-                    {
-                        opt.RegisterValidatorsFromAssembly(executingAssembly);
-                    });
+                    .AddFluentValidation(
+                        opt =>
+                        {
+                            opt.RegisterValidatorsFromAssembly(executingAssembly);
+
+                            opt.ValidatorOptions.DisplayNameResolver = (type, memberInfo, expression)
+                                => memberInfo?
+                                    .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
+                        });
 
             services.Configure<IdentityOptions>(options =>
             {

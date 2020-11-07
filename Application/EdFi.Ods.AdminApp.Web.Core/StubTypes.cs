@@ -23,15 +23,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public object LearningStandards() => throw new System.NotImplementedException();
         public object SelectDistrict(int i) => throw new System.NotImplementedException();
     }
-
-    public class OdsInstancesController
-    {
-        public object Index() => throw new System.NotImplementedException();
-        public object RegisterOdsInstance() => throw new System.NotImplementedException();
-        public object BulkRegisterOdsInstances() => throw new System.NotImplementedException();
-        public object ActivateOdsInstance() => throw new System.NotImplementedException();
-        public object DeregisterOdsInstance() => throw new System.NotImplementedException();
-    }
 }
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO

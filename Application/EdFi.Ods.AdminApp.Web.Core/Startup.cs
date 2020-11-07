@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Data.Entity;
 using System.IO;
 using System.Reflection;
 using AutoMapper;
@@ -43,6 +44,9 @@ namespace EdFi.Ods.AdminApp.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
+
+            var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(databaseEngine));
 
             services.AddDbContext<AdminAppDbContext>(ConfigureForAdminDatabase);
             services.AddDbContext<AdminAppIdentityDbContext>(ConfigureForAdminDatabase);

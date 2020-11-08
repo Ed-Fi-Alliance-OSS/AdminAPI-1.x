@@ -1035,7 +1035,7 @@
     <Content Include="Views\Shared\_Settings_Global.cshtml" />
     <Content Include="Views\Shared\_Settings_Production.cshtml" />
     <Content Include="Views\GlobalSettings\Vendors.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\Index.cshtml" />
+    <Content Include="Views\Application\Index.cshtml" />
     <Content Include="Views\Application\_AddApplicationModal.cshtml" />
     <Content Include="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
     <Content Include="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />

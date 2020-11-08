@@ -27,7 +27,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using FluentValidation;
 using log4net;
@@ -101,19 +100,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _inferOdsApiVersion = inferOdsApiVersion;
             _bulkLoadValidator = bulkLoadValidator;
             _appSettings = appSettingsAccessor.Value;
-        }
-
-        public async Task<ActionResult> Applications()
-        {
-            var model = new ApplicationsIndexModel
-            {
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Applications),
-                OdsInstance = _instanceContext,
-                ProductionApiUrl = (await GetConnectionInformationProvider()).ApiServerUrl
-            };
-
-            return View("Index", model);
         }
 
         public async Task<ActionResult> ApplicationList()

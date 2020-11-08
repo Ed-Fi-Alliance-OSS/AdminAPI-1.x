@@ -16,6 +16,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
@@ -36,6 +37,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly InstanceContext _instanceContext;
         private readonly RegenerateApiClientSecretCommand _regenerateApiClientSecretCommand;
+        private readonly ITabDisplayService _tabDisplayService;
+        private readonly IOdsApiConnectionInformationProvider _apiConnectionInformationProvider;
 
         public ApplicationController(IMapper mapper
             , IDeleteApplicationCommand deleteApplicationCommand
@@ -47,7 +50,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , GetProfilesQuery getProfilesQuery
             , RegenerateApiClientSecretCommand regenerateApiClientSecretCommand
             , IOdsApiFacadeFactory odsApiFacadeFactory
-            , InstanceContext instanceContext)
+            , InstanceContext instanceContext
+            , ITabDisplayService tabDisplayService
+            , IOdsApiConnectionInformationProvider apiConnectionInformationProvider)
         {
             _mapper = mapper;
             _deleteApplicationCommand = deleteApplicationCommand;
@@ -60,6 +65,21 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _regenerateApiClientSecretCommand = regenerateApiClientSecretCommand;
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _instanceContext = instanceContext;
+            _tabDisplayService = tabDisplayService;
+            _apiConnectionInformationProvider = apiConnectionInformationProvider;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            var model = new ApplicationsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Applications),
+                OdsInstance = _instanceContext,
+                ProductionApiUrl = (await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment()).ApiServerUrl
+            };
+
+            return View("Index", model);
         }
 
         public async Task<ActionResult> Add(int vendorId)

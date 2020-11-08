@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Web.Display.TabEnumeration
             ActionName = actionName;
         }
 
-        public static readonly OdsInstanceSettingsTabEnumeration Applications = new OdsInstanceSettingsTabEnumeration(1, "Applications", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.Applications()));
+        public static readonly OdsInstanceSettingsTabEnumeration Applications = new OdsInstanceSettingsTabEnumeration(1, "Applications", RouteHelpers.GetControllerName<ApplicationController>(), RouteHelpers.GetActionName<ApplicationController>(x => x.Index()));
         public static readonly OdsInstanceSettingsTabEnumeration Descriptors = new OdsInstanceSettingsTabEnumeration(2, "Descriptors", RouteHelpers.GetControllerName<DescriptorsController>(), RouteHelpers.GetActionName<DescriptorsController>(x => x.Index()));
         public static readonly OdsInstanceSettingsTabEnumeration Logging = new OdsInstanceSettingsTabEnumeration(3, "Logging", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.Logging()));
         public static readonly OdsInstanceSettingsTabEnumeration EducationOrganizations = new OdsInstanceSettingsTabEnumeration(4, "Education Organizations", RouteHelpers.GetControllerName<EducationOrganizationsController>(), RouteHelpers.GetActionName<EducationOrganizationsController>(x => x.Index()));

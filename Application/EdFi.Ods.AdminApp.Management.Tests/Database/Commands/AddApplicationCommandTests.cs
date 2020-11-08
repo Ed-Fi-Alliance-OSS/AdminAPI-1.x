@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,11 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
@@ -36,17 +38,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Save(vendor, user);
 
-            var command = new AddApplicationCommand(SetupContext, new InstanceContext());
-            var newApplication = new TestApplication
+            Scoped<IUsersContext>(usersContext =>
             {
-                Environment = CloudOdsEnvironment.Production,
-                ApplicationName = "Production-Test Application",
-                ClaimSetName = "FakeClaimSet",
-                ProfileId = 0,
-                VendorId = 0
-            };
+                var command = new AddApplicationCommand(usersContext, new InstanceContext());
+                var newApplication = new TestApplication
+                {
+                    Environment = CloudOdsEnvironment.Production,
+                    ApplicationName = "Production-Test Application",
+                    ClaimSetName = "FakeClaimSet",
+                    ProfileId = 0,
+                    VendorId = 0
+                };
 
-            Assert.Throws<InvalidOperationException>(() => command.Execute(newApplication));
+                Assert.Throws<InvalidOperationException>(() => command.Execute(newApplication));
+            });
         }
 
         [Test]
@@ -101,34 +106,43 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Save(vendor, user);
 
-            var command = new AddApplicationCommand(SetupContext, new InstanceContext());
-            var newApplication = new TestApplication
+            AddApplicationResult result = null;
+
+            Scoped<IUsersContext>(usersContext =>
             {
-                Environment = CloudOdsEnvironment.Production,
-                ApplicationName = "Test Application",
-                ClaimSetName = "FakeClaimSet",
-                ProfileId = null,
-                VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 }
-            };
+                var command = new AddApplicationCommand(usersContext, new InstanceContext());
+                var newApplication = new TestApplication
+                {
+                    Environment = CloudOdsEnvironment.Production,
+                    ApplicationName = "Test Application",
+                    ClaimSetName = "FakeClaimSet",
+                    ProfileId = null,
+                    VendorId = vendor.VendorId,
+                    EducationOrganizationIds = new List<int> { 12345, 67890 }
+                };
 
-            var result = command.Execute(newApplication);
+                result = command.Execute(newApplication);
+            });
 
-            var persistedApplication = TestContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
-            persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
-            persistedApplication.Profiles.Count.ShouldBe(0);
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            Transaction(usersContext =>
+            {
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
 
-            persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
-            persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
+                persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
+                persistedApplication.Profiles.Count.ShouldBe(0);
+                persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
+                persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
 
-            persistedApplication.ApiClients.Count.ShouldBe(1);
-            var apiClient = persistedApplication.ApiClients.First();
-            apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
-            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
-            apiClient.Key.ShouldBe(result.Key);
-            apiClient.Secret.ShouldBe(result.Secret);
+                persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
+                persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
+
+                persistedApplication.ApiClients.Count.ShouldBe(1);
+                var apiClient = persistedApplication.ApiClients.First();
+                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+                apiClient.Key.ShouldBe(result.Key);
+                apiClient.Secret.ShouldBe(result.Secret);
+            });
         }
         
         [Test]
@@ -170,38 +184,46 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Name = odsInstanceName
             };
 
-            var command = new AddApplicationCommand(SetupContext, instanceContext);
-            var newApplication = new TestApplication
+            AddApplicationResult result = null;
+            Scoped<IUsersContext>(usersContext =>
             {
-                Environment = CloudOdsEnvironment.Production,
-                ApplicationName = "Test Application",
-                ClaimSetName = "FakeClaimSet",
-                ProfileId = profile.ProfileId,
-                VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 }
-            };
+                var command = new AddApplicationCommand(usersContext, instanceContext);
+                var newApplication = new TestApplication
+                {
+                    Environment = CloudOdsEnvironment.Production,
+                    ApplicationName = "Test Application",
+                    ClaimSetName = "FakeClaimSet",
+                    ProfileId = profile.ProfileId,
+                    VendorId = vendor.VendorId,
+                    EducationOrganizationIds = new List<int> { 12345, 67890 }
+                };
 
-            var result = command.Execute(newApplication);
+                result = command.Execute(newApplication);
+            });
 
-            var persistedApplication = TestContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
-            persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
-            persistedApplication.Profiles.Count.ShouldBe(1);
-            persistedApplication.Profiles.First().ProfileName.ShouldBe("Test Profile");
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            Transaction(usersContext =>
+            {
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
 
-            persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
-            persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
+                persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
+                persistedApplication.Profiles.Count.ShouldBe(1);
+                persistedApplication.Profiles.First().ProfileName.ShouldBe("Test Profile");
+                persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
+                persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
 
-            persistedApplication.ApiClients.Count.ShouldBe(1);
-            var apiClient = persistedApplication.ApiClients.First();
-            apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
-            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
-            apiClient.Key.ShouldBe(result.Key);
-            apiClient.Secret.ShouldBe(result.Secret);
+                persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
+                persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
 
-            persistedApplication.OdsInstance.ShouldNotBeNull();
-            persistedApplication.OdsInstance.Name.ShouldBe(odsInstanceName);
+                persistedApplication.ApiClients.Count.ShouldBe(1);
+                var apiClient = persistedApplication.ApiClients.First();
+                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+                apiClient.Key.ShouldBe(result.Key);
+                apiClient.Secret.ShouldBe(result.Secret);
+
+                persistedApplication.OdsInstance.ShouldNotBeNull();
+                persistedApplication.OdsInstance.Name.ShouldBe(odsInstanceName);
+            });
         }
 
         private class TestApplication : IAddApplicationModel

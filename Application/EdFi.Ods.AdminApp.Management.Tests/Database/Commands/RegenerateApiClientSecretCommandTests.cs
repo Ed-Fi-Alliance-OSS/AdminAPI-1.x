@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,11 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -20,8 +22,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         [Test]
         public void ShouldFailIfApplicationDoesNotExist()
         {
-            var command = new RegenerateApiClientSecretCommand(TestContext);
-            Assert.Throws<InvalidOperationException>(() => command.Execute(0));
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new RegenerateApiClientSecretCommand(usersContext);
+                Assert.Throws<InvalidOperationException>(() => command.Execute(0));
+            });
         }
 
         [Test]
@@ -35,8 +40,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Save(application);
 
-            var command = new RegenerateApiClientSecretCommand(TestContext);
-            Assert.Throws<InvalidOperationException>(() => command.Execute(application.ApplicationId));
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new RegenerateApiClientSecretCommand(usersContext);
+                Assert.Throws<InvalidOperationException>(() => command.Execute(application.ApplicationId));
+            });
         }
 
         [Test]
@@ -83,10 +91,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var orignalKey = apiClient.Key;
             var originalSecret = apiClient.Secret;
 
-            var command = new RegenerateApiClientSecretCommand(SetupContext);
-            var result = command.Execute(application.ApplicationId);
+            RegenerateApiClientSecretResult result = null;
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new RegenerateApiClientSecretCommand(usersContext);
+                result = command.Execute(application.ApplicationId);
+            });
 
-            var updatedApiClient = TestContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId);
+            var updatedApiClient = Transaction(usersContext => usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId));
             
             result.Key.ShouldBe(orignalKey);
             result.Secret.ShouldNotBe(originalSecret);

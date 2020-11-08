@@ -6,11 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -54,9 +56,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Name = odsInstance1.Name
             };
 
-            var validator = new SaveBulkUploadCredentialsModelValidator(TestContext, instanceContext);
-            var validationResults = validator.Validate(saveBulkUploadCredentialsModel);
-            validationResults.IsValid.ShouldBe(true);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var validator = new SaveBulkUploadCredentialsModelValidator(usersContext, instanceContext);
+                var validationResults = validator.Validate(saveBulkUploadCredentialsModel);
+                validationResults.IsValid.ShouldBe(true);
+            });
         }
 
         [Test]
@@ -96,10 +101,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Name = odsInstance2.Name
             };
 
-            var validator = new SaveBulkUploadCredentialsModelValidator(TestContext, instanceContext);
-            var validationResults = validator.Validate(saveBulkUploadCredentialsModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The Api Key provided is not associated with the currently selected ODS instance.");
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var validator = new SaveBulkUploadCredentialsModelValidator(usersContext, instanceContext);
+                var validationResults = validator.Validate(saveBulkUploadCredentialsModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("The Api Key provided is not associated with the currently selected ODS instance.");
+            });
         }
 
         [Test]
@@ -117,13 +125,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Name = "Test Instance"
             };
 
-            var validator = new SaveBulkUploadCredentialsModelValidator(TestContext, instanceContext);
-            var validationResults = validator.Validate(saveBulkUploadCredentialsModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+            Scoped<IUsersContext>(usersContext =>
             {
-                "'Api Key' must not be empty.",
-                "'Api Secret' must not be empty."
+                var validator = new SaveBulkUploadCredentialsModelValidator(usersContext, instanceContext);
+                var validationResults = validator.Validate(saveBulkUploadCredentialsModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+                {
+                    "'Api Key' must not be empty.",
+                    "'Api Secret' must not be empty."
+                });
             });
         }       
 
@@ -135,13 +146,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 ApiKey = $"RandomKey-{Guid.NewGuid()}"
             };
 
-            var validator = new BulkFileUploadModelValidator(TestContext);
-            var validationResults = validator.Validate(bulkFileUpLoadModel);
-
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+            Scoped<IUsersContext>(usersContext =>
             {
-                "Provided Api Key is not associated with any application. Please reset the credentials."
+                var validator = new BulkFileUploadModelValidator(usersContext);
+                var validationResults = validator.Validate(bulkFileUpLoadModel);
+
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldBe(new List<string>
+                {
+                    "Provided Api Key is not associated with any application. Please reset the credentials."
+                });
             });
         }
 
@@ -164,10 +178,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 ApiKey = apiClientForInstance1.Key
             };
 
-            var validator = new BulkFileUploadModelValidator(TestContext);
-            var validationResults = validator.Validate(bulkFileUpLoadModel);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var validator = new BulkFileUploadModelValidator(usersContext);
+                var validationResults = validator.Validate(bulkFileUpLoadModel);
 
-            validationResults.IsValid.ShouldBe(true);          
+                validationResults.IsValid.ShouldBe(true);
+            });
         }
 
         private ApiClient SetupApplicationForInstance(OdsInstance instance)
@@ -198,34 +215,40 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Name = instance.Name
             };
 
-            var command = new AddApplicationCommand(SetupContext, instanceContext);
-            var newApplication = new TestApplication
+            AddApplicationResult result = null;
+            Scoped<IUsersContext>(usersContext =>
             {
-                Environment = CloudOdsEnvironment.Production,
-                ApplicationName = "Test Application",
-                ClaimSetName = "FakeClaimSet",
-                ProfileId = profile.ProfileId,
-                VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 }
-            };
+                var command = new AddApplicationCommand(usersContext, instanceContext);
+                var newApplication = new TestApplication
+                {
+                    Environment = CloudOdsEnvironment.Production,
+                    ApplicationName = "Test Application",
+                    ClaimSetName = "FakeClaimSet",
+                    ProfileId = profile.ProfileId,
+                    VendorId = vendor.VendorId,
+                    EducationOrganizationIds = new List<int> { 12345, 67890 }
+                };
+                result = command.Execute(newApplication);
+            });
 
-            var result = command.Execute(newApplication);
+            ApiClient apiClient = null;
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
+                persistedApplication.ApiClients.Count.ShouldBe(1);
 
-            var persistedApplication = TestContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
+                apiClient = persistedApplication.ApiClients.First();
+                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+                apiClient.Key.ShouldBe(result.Key);
+                apiClient.Secret.ShouldBe(result.Secret);
 
-            persistedApplication.ApiClients.Count.ShouldBe(1);
-            var apiClient = persistedApplication.ApiClients.First();
-            apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
-            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
-            apiClient.Key.ShouldBe(result.Key);
-            apiClient.Secret.ShouldBe(result.Secret);
-
-            persistedApplication.OdsInstance.ShouldNotBeNull();
-            persistedApplication.OdsInstance.Name.ShouldBe(instance.Name);
+                persistedApplication.OdsInstance.ShouldNotBeNull();
+                persistedApplication.OdsInstance.Name.ShouldBe(instance.Name);
+            });
 
             return apiClient;
         }
-        
 
         private class TestApplication : IAddApplicationModel
         {

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -8,7 +8,9 @@ using NUnit.Framework;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -29,10 +31,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             vendor.Applications.Add(application);
             Save(vendor);
 
-            var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(TestContext);
-            var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
-            results.Single().ApplicationName.ShouldBe("test application");
-            results.Single().ClaimSetName.ShouldBe("test claim set");
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
+                var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
+                results.Single().ApplicationName.ShouldBe("test application");
+                results.Single().ClaimSetName.ShouldBe("test claim set");
+            });
         }
 
         [Test]
@@ -54,9 +59,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var organizationId = applicationOrganization.ApplicationEducationOrganizationId;
             organizationId.ShouldBeGreaterThan(0);
 
-            var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(TestContext);
-            var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
-            results.Single().ApplicationEducationOrganizations.Single().ApplicationEducationOrganizationId.ShouldBe(organizationId);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
+                var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
+                results.Single().ApplicationEducationOrganizations.Single().ApplicationEducationOrganizationId.ShouldBe(organizationId);
+            });
         }
 
         [Test]
@@ -74,10 +82,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             Save(vendor);
             var profileId = profile.ProfileId;
             profileId.ShouldBeGreaterThan(0);
-            
-            var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(TestContext);
-            var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
-            results.Single().Profiles.Single().ProfileId.ShouldBe(profileId);
+
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
+                var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
+                results.Single().Profiles.Single().ProfileId.ShouldBe(profileId);
+            });
         }
     }
 }

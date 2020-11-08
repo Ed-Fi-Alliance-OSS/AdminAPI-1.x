@@ -53,6 +53,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                     action((TService)(object)service);
                 }
             }
+            else if (typeof(TService) == typeof(IUsersContext))
+            {
+                using (var service = new SqlServerUsersContext())
+                    action((TService)(object)service);
+            }
             else
             {
                 throw new NotSupportedException($"In NET48 test runs Scoped<{typeof(TService).Name}>(...) is not supported.");

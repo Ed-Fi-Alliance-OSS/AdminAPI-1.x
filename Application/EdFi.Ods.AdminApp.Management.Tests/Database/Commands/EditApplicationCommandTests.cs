@@ -1,16 +1,18 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
@@ -104,23 +106,28 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorId = _vendor.VendorId
             };
 
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new EditApplicationCommand(usersContext);
+                command.Execute(editModel);
+            });
 
-            var command = new EditApplicationCommand(SetupContext);
-            command.Execute(editModel);
+            Transaction(usersContext =>
+            {
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
 
-            var persistedApplication = TestContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
+                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
 
-            persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
-            persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
+                persistedApplication.ApiClients.Count.ShouldBe(1);
+                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
 
-            persistedApplication.ApiClients.Count.ShouldBe(1);
-            persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
-            persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
+                persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
+                persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 12345 || aeo.EducationOrganizationId == 67890);
 
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 12345 || aeo.EducationOrganizationId == 67890);
-
-            persistedApplication.Profiles.Count.ShouldBe(0);
+                persistedApplication.Profiles.Count.ShouldBe(0);
+            });
         }
 
         [Test]
@@ -139,24 +146,29 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorId = _otherVendor.VendorId
             };
 
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new EditApplicationCommand(usersContext);
+                command.Execute(editModel);
+            });
 
-            var command = new EditApplicationCommand(SetupContext);
-            command.Execute(editModel);
+            Transaction(usersContext =>
+            {
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
 
-            var persistedApplication = TestContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
+                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name", CloudOdsEnvironment.Production));
+                persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
 
-            persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name", CloudOdsEnvironment.Production));
-            persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
+                persistedApplication.ApiClients.Count.ShouldBe(1);
+                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name", CloudOdsEnvironment.Production));
+                persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
 
-            persistedApplication.ApiClients.Count.ShouldBe(1);
-            persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name", CloudOdsEnvironment.Production));
-            persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
+                persistedApplication.Profiles.Count.ShouldBe(1);
+                persistedApplication.Profiles.First().ProfileName.ShouldBe("Other Test Profile");
 
-            persistedApplication.Profiles.Count.ShouldBe(1);
-            persistedApplication.Profiles.First().ProfileName.ShouldBe("Other Test Profile");
-
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
+                persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
+                persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
+            });
         }
 
         [Test]

@@ -635,6 +635,7 @@
     <Compile Include="Infrastructure\ValidationExtensions.cs" />
     <Compile Include="Display\DisplayService\AzureTabDisplayService.cs" />
     <Compile Include="Infrastructure\ResourceClaimSelectListBuilder.cs" />
+    <Compile Include="Models\ViewModels\Application\ApplicationsIndexModel.cs" />
     <Compile Include="Models\ViewModels\EducationOrganizations\EducationOrganizationsIndexModel.cs" />
     <Compile Include="Models\ViewModels\Global\UserIndexModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstanceSettings\BaseOdsInstanceSettingsModel.cs" />

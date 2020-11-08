@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -19,16 +19,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
     [TestFixture]
     public class WhenGettingTheApplicationsScreenContents : OdsInstanceSettingsControllerFixture
     {
-
-        // Writing separate tests for each condition, when mock setup is required in all cases, seems
-        // impractical and redundant. This test will use a mixture of "bare" asserts and grouped
-        // "satisfy all" assertions: the initial assertions are deliberately separate, because
-        // the grouped assertions are meaningless if the initial assertions fail. The initial
-        // assertions are basically guard clauses for null values.
         [Test]
         public async Task ThenModelIsInitializedWithOdsInstanceSettings()
         {
-            // Arrange
             var productionTab = new List<TabDisplay<OdsInstanceSettingsTabEnumeration>>();
 
             TabDisplayService.Setup(x => x.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Applications))
@@ -39,25 +32,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             ApiConnectionInformationProvider.Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
                 .ReturnsAsync(new OdsApiConnectionInformation ("Ods Instance", ApiMode.Sandbox) {ApiServerUrl = baseUrl});
 
-            // Act
             var result = await SystemUnderTest.Applications();
-
-            // Assert
 
             result.ShouldNotBeNull();
             result.ShouldBeOfType<ViewResult>();
-            var viewResult = result as ViewResult;
+            var viewResult = (ViewResult)result;
 
-            // ReSharper disable PossibleNullReferenceException - assertions are the guard clauses
-            viewResult.Model.ShouldBeOfType<OdsInstanceSettingsModel>();
-            var model = viewResult.Model as OdsInstanceSettingsModel;
+            viewResult.Model.ShouldBeOfType<ApplicationsIndexModel>();
+            var model = (ApplicationsIndexModel)viewResult.Model;
 
             model.ShouldSatisfyAllConditions(
                 () => model.OdsInstanceSettingsTabEnumerations.ShouldBeSameAs(productionTab),
                 () => model.ProductionApiUrl.ShouldContain(baseUrl)
             );
-
-            // ReSharper restore PossibleNullReferenceException
         }
     }
 }

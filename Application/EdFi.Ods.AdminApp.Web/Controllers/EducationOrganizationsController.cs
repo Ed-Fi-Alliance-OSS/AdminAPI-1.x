@@ -52,28 +52,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> AddLocalEducationAgencyModal()
-        {
-            var api = await _odsApiFacadeFactory.Create();
-            var localEducationAgencyCategoryOptions = api.GetLocalEducationAgencyCategories();
-            var stateOptions = api.GetAllStateAbbreviations();
-            var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
-
-            var model = new AddLocalEducationAgencyModel
-            {
-                LocalEducationAgencyCategoryTypeOptions = localEducationAgencyCategoryOptions,
-                StateOptions = stateOptions,
-                RequiredApiDataExist = requiredApiDataExist
-            };
-
-            if (CloudOdsAdminAppSettings.Instance.Mode == ApiMode.DistrictSpecific)
-            {
-                model.LocalEducationAgencyId = OdsInstanceIdentityHelper.GetIdentityValue(_instanceContext.Name);
-            }
-
-            return PartialView("_AddLocalEducationAgencyModal", model);
-        }
-
         [HttpPost]
         public async Task<ActionResult> AddLocalEducationAgency(AddLocalEducationAgencyModel viewModel)
         {
@@ -140,19 +118,31 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var schools = api.GetAllSchools();
             var localEducationAgencies = api.GetAllLocalEducationAgencies();
 
+            var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
+
             var model = new EducationOrganizationViewModel
             {
                 Schools = schools,
                 LocalEducationAgencies = localEducationAgencies,
-                ShouldAllowMultipleDistricts = CloudOdsAdminAppSettings.Instance.Mode != ApiMode.DistrictSpecific
+                ShouldAllowMultipleDistricts = CloudOdsAdminAppSettings.Instance.Mode != ApiMode.DistrictSpecific,
+                AddSchoolModel = new AddSchoolModel
+                {
+                    GradeLevelOptions = api.GetAllGradeLevels(),
+                    StateOptions = api.GetAllStateAbbreviations(),
+                    RequiredApiDataExist = requiredApiDataExist
+                },
+                AddLocalEducationAgencyModel = new AddLocalEducationAgencyModel
+                {
+                    LocalEducationAgencyCategoryTypeOptions = api.GetLocalEducationAgencyCategories(),
+                    StateOptions = api.GetAllStateAbbreviations(),
+                    RequiredApiDataExist = requiredApiDataExist
+                }
             };
 
-            model.AddSchoolModel = new AddSchoolModel
+            if (CloudOdsAdminAppSettings.Instance.Mode == ApiMode.DistrictSpecific)
             {
-                GradeLevelOptions = api.GetAllGradeLevels(),
-                StateOptions = api.GetAllStateAbbreviations(),
-                RequiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist()
-            };
+                model.AddLocalEducationAgencyModel.LocalEducationAgencyId = OdsInstanceIdentityHelper.GetIdentityValue(_instanceContext.Name);
+            }
 
             return PartialView("_EducationOrganizations", model);
         }

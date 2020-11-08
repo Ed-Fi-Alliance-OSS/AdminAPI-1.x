@@ -15,5 +15,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
         public List<LocalEducationAgency> LocalEducationAgencies { get; set; }
         public bool ShouldAllowMultipleDistricts { get; set; }
         public AddSchoolModel AddSchoolModel { get; set; }
+        public AddLocalEducationAgencyModel AddLocalEducationAgencyModel { get; set; }
     }
 }

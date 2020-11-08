@@ -45,33 +45,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
-        public void When_Perform_Get_Request_To_AddLocalEducationAgencyModal_Return_PartialView_With_Expected_Model()
-        {
-            // Arrange
-            const string localEducationAgencyCategory = "School";
-            const string localEducationAgencyCategoryValue = "Namespace#School";
-
-            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgencyCategories())
-                .Returns(new List<SelectOptionModel>
-                    {new SelectOptionModel {DisplayText = localEducationAgencyCategory, Value = localEducationAgencyCategoryValue}});
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-            _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
-
-            // Act
-            var result = _controller.AddLocalEducationAgencyModal().Result as PartialViewResult;
-
-            // Assert
-            result.ShouldNotBeNull();
-            var model = (AddLocalEducationAgencyModel) result.ViewData.Model;
-            model.ShouldNotBeNull();
-            model.LocalEducationAgencyCategoryTypeOptions.Count.ShouldBeGreaterThan(0);
-            model.LocalEducationAgencyCategoryTypeOptions.First().DisplayText.ShouldBe(localEducationAgencyCategory);
-            model.LocalEducationAgencyCategoryTypeOptions.First().Value.ShouldBe(localEducationAgencyCategoryValue);
-        }
-
-        [Test]
         public void When_Perform_Post_Request_To_AddLocalEducationAgency_Return_Expected_Success_response()
         {
             // Arrange
@@ -322,6 +295,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             };
             const string gradeLevel = "FirstGrade";
             const string value = "Namespace#FirstGrade";
+            const string localEducationAgencyCategory = "School";
+            const string localEducationAgencyCategoryValue = "Namespace#School";
 
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(leas);
@@ -329,6 +304,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
                 .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
+            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgencyCategories())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = localEducationAgencyCategory, Value = localEducationAgencyCategoryValue}});
             _controller =
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
@@ -347,6 +325,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             addSchoolModel.GradeLevelOptions.Count.ShouldBe(1);
             addSchoolModel.GradeLevelOptions.Single().DisplayText.ShouldBe(gradeLevel);
             addSchoolModel.GradeLevelOptions.Single().Value.ShouldBe(value);
+
+            var addLocalEducationAgencyModel = model.AddLocalEducationAgencyModel;
+            addLocalEducationAgencyModel.ShouldNotBeNull();
+            addLocalEducationAgencyModel.LocalEducationAgencyCategoryTypeOptions.Count.ShouldBe(1);
+            addLocalEducationAgencyModel.LocalEducationAgencyCategoryTypeOptions.Single().DisplayText.ShouldBe(localEducationAgencyCategory);
+            addLocalEducationAgencyModel.LocalEducationAgencyCategoryTypeOptions.Single().Value.ShouldBe(localEducationAgencyCategoryValue);
         }
 
         [Test]

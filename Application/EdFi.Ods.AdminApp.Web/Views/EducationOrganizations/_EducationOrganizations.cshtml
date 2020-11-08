@@ -74,6 +74,6 @@ See the LICENSE and NOTICES files in the project root for more information.
 }
 
 @{ Html.RenderPartial("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
-@{ Html.RenderAction("AddLocalEducationAgencyModal", "EducationOrganizations"); }
+@{ Html.RenderPartial("_AddLocalEducationAgencyModal", Model.AddLocalEducationAgencyModel); }
 @{ Html.RenderPartial("_AddSchoolModal", Model.AddSchoolModel); }
 

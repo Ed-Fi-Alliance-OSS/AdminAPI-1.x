@@ -187,7 +187,7 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSetupCompletedModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ProfileModel.cs" LinkBase="Models/ViewModels" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/ReportsModel.cs" LinkBase="Models/ViewModels/Reports" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/ReportsIndexModel.cs" LinkBase="Models/ViewModels/Reports" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/SelectDistrictModel.cs" LinkBase="Models/ViewModels/Reports" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/AddUserModel.cs" LinkBase="Models/ViewModels/User" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/User/DeleteUserModel.cs" LinkBase="Models/ViewModels/User" />
@@ -222,27 +222,11 @@
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\EnrollmentByEthnicity.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\EnrollmentByGender.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\EnrollmentByRace.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Index.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\LearningStandards.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\SchoolsBySchoolType.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\SelectDistrict.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\StudentsByAttribute.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\StudentsByProgram.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\TotalEnrollment.cshtml" />
-    <Content Remove="Views\Reports\_EnrollmentByEthnicity.cshtml" />
-    <Content Remove="Views\Reports\_EnrollmentByGender.cshtml" />
-    <Content Remove="Views\Reports\_EnrollmentByRace.cshtml" />
-    <Content Remove="Views\Reports\_SchoolsBySchoolType.cshtml" />
-    <Content Remove="Views\Reports\_SelectDistrict.cshtml" />
-    <Content Remove="Views\Reports\_StudentsByAttribute.cshtml" />
-    <Content Remove="Views\Reports\_StudentsByProgram.cshtml" />
-    <Content Remove="Views\Reports\_TotalEnrollment.cshtml" />
     <Content Remove="Views\Shared\_Applications.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
     <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />

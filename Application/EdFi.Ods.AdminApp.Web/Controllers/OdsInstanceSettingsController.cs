@@ -28,7 +28,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using FluentValidation;
 using log4net;
 using Microsoft.Extensions.Options;
@@ -441,61 +440,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             config.BulkUploadCredential.ApiSecret = string.Empty;
             await _odsSecretConfigurationProvider.SetSecretConfiguration(config, _instanceContext.Id);
             return JsonSuccess("Credentials successfully reset");
-        }
-
-        public ActionResult SelectDistrict(int id = 0)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult TotalEnrollment(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult SchoolsBySchoolType(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult EnrollmentByGender(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult EnrollmentByRace(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult EnrollmentByEthnicity(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult StudentsByProgram(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        public ActionResult StudentsByAttribute(int id)
-        {
-            return View(GetReportModel(id));
-        }
-
-        OdsInstanceSettingsModel GetReportModel(int id)
-        {
-            var model = new OdsInstanceSettingsModel
-            {
-                ReportsModel = new ReportsModel
-                {
-                    LocalEducationAgencyId = id
-                },
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Reports),
-                OdsInstance = _instanceContext
-            };
-            return model;
         }
     }
 }

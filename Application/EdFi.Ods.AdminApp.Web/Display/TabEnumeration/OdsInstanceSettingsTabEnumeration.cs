@@ -27,6 +27,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.TabEnumeration
         public static readonly OdsInstanceSettingsTabEnumeration Setup = new OdsInstanceSettingsTabEnumeration(5, "Setup", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.Setup()));
         public static readonly OdsInstanceSettingsTabEnumeration BulkLoad = new OdsInstanceSettingsTabEnumeration(6, "Bulk Load", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.BulkLoad()));
         public static readonly OdsInstanceSettingsTabEnumeration LearningStandards = new OdsInstanceSettingsTabEnumeration(7, "Learning Standards", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.LearningStandards()));
-        public static readonly OdsInstanceSettingsTabEnumeration Reports = new OdsInstanceSettingsTabEnumeration(8, "Reports", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.SelectDistrict(0)));
+        public static readonly OdsInstanceSettingsTabEnumeration Reports = new OdsInstanceSettingsTabEnumeration(8, "Reports", RouteHelpers.GetControllerName<ReportsController>(), RouteHelpers.GetActionName<ReportsController>(x => x.SelectDistrict(0)));
     }
 }

@@ -10,7 +10,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports
 {
     public class ReportsIndexModel : BaseOdsInstanceSettingsModel
     {
-        public ReportsModel ReportsModel { get; set; }
         public SelectDistrictModel SelectDistrictModel { get; set; }
         public TotalEnrollmentReport TotalEnrollmentReport { get; set; }
         public SchoolTypeReport SchoolTypeReport { get; set; }

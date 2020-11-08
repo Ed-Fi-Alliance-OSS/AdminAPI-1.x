@@ -65,7 +65,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     Selected = x.LocalEducationAgencyId == id
                 }).ToArray();
 
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.SelectDistrictModel = new SelectDistrictModel
             {
                 LocalEducationAgencyId = id,
@@ -77,7 +77,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult TotalEnrollment(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.TotalEnrollmentReport = _totalEnrollmentQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_TotalEnrollment", reportsModel);
@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult SchoolsBySchoolType(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.SchoolTypeReport= _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_SchoolsBySchoolType", reportsModel);
@@ -93,7 +93,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult EnrollmentByGender(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.StudentGenderReport = _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_EnrollmentByGender", reportsModel);
@@ -101,7 +101,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult EnrollmentByRace(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.StudentRaceReport = _studentEnrollmentByRaceQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_EnrollmentByRace", reportsModel);
@@ -109,7 +109,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult EnrollmentByEthnicity(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.StudentEthnicityReport = _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_EnrollmentByEthnicity", reportsModel);
@@ -117,7 +117,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult StudentsByProgram(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.StudentsByProgramReport = _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_StudentsByProgram", reportsModel);
@@ -125,25 +125,20 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult StudentsByAttribute(int id)
         {
-            var reportsModel = GetReportModel(id);
+            var reportsModel = GetReportModel();
             reportsModel.StudentEconomicSituationReport = _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
             return PartialView("_StudentsByAttribute", reportsModel);
         }
 
-        ReportsIndexModel GetReportModel(int id)
+        private ReportsIndexModel GetReportModel()
         {
-            var model = new ReportsIndexModel
+            return new ReportsIndexModel
             {
-                ReportsModel = new ReportsModel
-                {
-                    LocalEducationAgencyId = id
-                },
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Reports),
                 OdsInstance = _instanceContext
             };
-            return model;
         }
     }
 }

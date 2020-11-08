@@ -687,7 +687,6 @@
     <Compile Include="Models\ViewModels\Global\ClaimSetEditorModel.cs" />
     <Compile Include="Models\ViewModels\OdsInstances\IndexModel.cs" />
     <Compile Include="Models\ViewModels\ProfileModel.cs" />
-    <Compile Include="Models\ViewModels\Reports\ReportsModel.cs" />
     <Compile Include="Models\ViewModels\Reports\SelectDistrictModel.cs" />
     <Compile Include="Models\ViewModels\LearningStandardsModel.cs" />
     <Compile Include="Models\ViewModels\VendorApplicationsModel.cs" />

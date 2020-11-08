@@ -201,7 +201,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var command = new AddApplicationCommand(SetupContext, instanceContext);
             var newApplication = new TestApplication
             {
-                Environment = CloudOdsEnvironment.Production,
                 ApplicationName = "Test Application",
                 ClaimSetName = "FakeClaimSet",
                 ProfileId = profile.ProfileId,
@@ -229,7 +228,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
         private class TestApplication : IAddApplicationModel
         {
-            public CloudOdsEnvironment Environment { get; set; }
             public string ApplicationName { get; set; }
             public int VendorId { get; set; }
             public string ClaimSetName { get; set; }

@@ -126,7 +126,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             {
                 VendorId = vendorId,
                 VendorName = vendor.VendorName,
-                Environment = CloudOdsEnvironment.Production,
                 LocalEducationAgencies = leas,
                 Schools = schools,
                 ClaimSetNames = GetClaimSetNames(),
@@ -145,11 +144,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 "_ApplicationKeyAndSecretContent", new ApplicationKeyModel
                 {
                     ApplicationName = model.ApplicationName,
-                    ApplicationEnvironment = model.Environment,
                     Key = result.Key,
                     Secret = result.Secret,
                     ApiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
-                        model.Environment, new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
+                        CloudOdsEnvironment.Production, new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
                 });
         }
 
@@ -167,10 +165,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return JsonSuccess("Application deleted successfully");
         }
 
-        public async Task<ActionResult> Edit(int applicationId, CloudOdsEnvironment environment)
+        public async Task<ActionResult> Edit(int applicationId)
         {
             var application = _getApplicationByIdQuery.Execute(applicationId);
-            var apiFacade = await _odsApiFacadeFactory.Create(environment);
+            var apiFacade = await _odsApiFacadeFactory.Create();
             var leas = apiFacade.GetAllLocalEducationAgencies().ToList();
             var schools = apiFacade.GetAllSchools().ToList();
             var profiles = _mapper.Map<List<ProfileModel>>(_getProfilesQuery.Execute());
@@ -191,7 +189,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 EducationOrganizationIds = application.ApplicationEducationOrganizations.Select(x => x.EducationOrganizationId),
                 LocalEducationAgencies = leas,
                 Schools = schools,
-                Environment = environment,
                 ProfileId = application.Profiles.FirstOrDefault()?.ProfileId ?? 0,
                 Profiles = profiles,
                 VendorId = application.Vendor.VendorId,
@@ -224,11 +221,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_ApplicationKeyAndSecretContent", new ApplicationKeyModel
             {
                 ApplicationName = application.ApplicationName,
-                ApplicationEnvironment = application.GetEnvironment(),
                 Key = regenerationResult.Key,
                 Secret = regenerationResult.Secret,
                 ApiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
-                    application.GetEnvironment(), new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
+                    CloudOdsEnvironment.Production, new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
             });
         }
 

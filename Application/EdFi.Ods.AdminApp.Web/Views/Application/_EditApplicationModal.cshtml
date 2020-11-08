@@ -22,7 +22,6 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     @Html.ValidationBlock()
                     @Html.Input(m => m.VendorId).Hide()
-                    @Html.Input(m => m.Environment).Hide().Value(Model.Environment.Value.ToString())
                     @Html.Input(m => m.ApplicationId).Hide()
                     @Html.InputBlock(m => m.ApplicationName, "Application Name", "Name that identifies this application")
                     <div class="row">

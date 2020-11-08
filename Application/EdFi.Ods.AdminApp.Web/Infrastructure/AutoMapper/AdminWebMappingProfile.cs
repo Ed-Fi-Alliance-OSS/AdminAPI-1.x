@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -26,8 +26,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
             CreateMap<Application, ApplicationModel>()
                 .ForMember(dst => dst.EducationOrganizations, opt => opt.MapFrom(src => src.ApplicationEducationOrganizations))
                 .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
-                .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName()))
-                .ForMember(dst => dst.Environment, opt => opt.MapFrom(src => src.GetEnvironment()));
+                .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName()));
 
             CreateMap<ApplicationEducationOrganization, EducationOrganizationModel>()
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.EducationOrganizationId))

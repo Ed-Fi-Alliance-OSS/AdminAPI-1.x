@@ -15,9 +15,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class OdsInstanceSettingsController
     {
-        public object Applications() => throw new System.NotImplementedException();
         public object Logging() => throw new System.NotImplementedException();
-        public object EducationOrganizations() => throw new System.NotImplementedException();
         public object Setup() => throw new System.NotImplementedException();
         public object BulkLoad() => throw new System.NotImplementedException();
         public object LearningStandards() => throw new System.NotImplementedException();

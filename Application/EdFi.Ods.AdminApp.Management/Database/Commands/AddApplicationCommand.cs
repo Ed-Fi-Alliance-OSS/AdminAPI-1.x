@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -36,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
             var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
 
-            var persistedApplicationName = CloudOdsApplicationName.GetPersistedName(applicationModel.ApplicationName, applicationModel.Environment);
+            var persistedApplicationName = CloudOdsApplicationName.GetPersistedName(applicationModel.ApplicationName, CloudOdsEnvironment.Production);
 
             var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
                 x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
@@ -96,7 +96,6 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
     public interface IAddApplicationModel
     {
-        CloudOdsEnvironment Environment { get; }
         string ApplicationName { get; }
         int VendorId { get; }
         string ClaimSetName { get; }

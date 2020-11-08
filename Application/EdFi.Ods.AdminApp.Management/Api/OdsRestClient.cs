@@ -115,10 +115,10 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
                 var response = _restClient.Execute(request);
-                if (response != null && (!response.StatusCode.Equals(HttpStatusCode.Created) ||
-                                         !response.StatusCode.Equals(HttpStatusCode.OK)))
+                if (response != null && response.StatusCode != HttpStatusCode.Created &&
+                                        response.StatusCode != HttpStatusCode.OK)
                 {
-                    result.ErrorMessage = response.ErrorMessage;
+                    result.ErrorMessage = response.ErrorMessage ?? $"ODS/API returned status code '{response.StatusCode}'";
                 }
 
                 return result;

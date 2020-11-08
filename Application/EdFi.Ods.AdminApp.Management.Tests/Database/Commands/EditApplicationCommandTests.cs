@@ -101,7 +101,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 ApplicationName = _application.ApplicationName,
                 ClaimSetName = _application.ClaimSetName,
                 EducationOrganizationIds = new List<int> { 12345, 67890 },
-                Environment = CloudOdsEnvironment.Production,
                 ProfileId = null,
                 VendorId = _vendor.VendorId
             };
@@ -141,7 +140,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 ApplicationName = "New Application Name",
                 ClaimSetName = "DifferentFakeClaimSet",
                 EducationOrganizationIds = new List<int> { 23456, 78901 },
-                Environment = CloudOdsEnvironment.Production,
                 ProfileId = _otherProfile.ProfileId,
                 VendorId = _otherVendor.VendorId
             };
@@ -184,7 +182,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 ApplicationName = newApplicationName,
                 ClaimSetName = "DifferentFakeClaimSet",
                 EducationOrganizationIds = new List<int> { 23456, 78901 },
-                Environment = CloudOdsEnvironment.Production,
                 ProfileId = _otherProfile.ProfileId,
                 VendorId = _otherVendor.VendorId
             };
@@ -196,7 +193,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         private class TestEditApplicationModel : IEditApplicationModel
         {
             public int ApplicationId { get; set; }
-            public CloudOdsEnvironment Environment { get; set; }
             public string ApplicationName { get; set; }
             public int VendorId { get; set; }
             public string ClaimSetName { get; set; }

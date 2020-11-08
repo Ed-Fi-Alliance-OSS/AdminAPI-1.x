@@ -27,7 +27,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
         {
             try
             {
-                var globalBulkUploadFolder = ConfigurationHelper.GetAppSettings().BulkUploadHashCache;
+                var globalBulkUploadFolder = CloudOdsAdminAppSettings.AppSettings.BulkUploadHashCache;
                 var instanceBulkUploadFolder = $"{globalBulkUploadFolder}\\{bulkUploadJobContext.OdsInstanceId}";
 
                 var workingFolderPath =

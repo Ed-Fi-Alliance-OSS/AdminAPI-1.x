@@ -137,7 +137,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         #else
             Response.Cookies.Append("Instance", instanceId, new CookieOptions());
         #endif
-            return RedirectToAction("Applications", "OdsInstanceSettings");
+            return RedirectToAction("Index", "Application");
         }
 
         [PermissionRequired(Permission.AccessGlobalSettings)]

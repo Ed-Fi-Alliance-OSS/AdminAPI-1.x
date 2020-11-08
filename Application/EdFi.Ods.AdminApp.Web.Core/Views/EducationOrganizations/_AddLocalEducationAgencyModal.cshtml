@@ -47,7 +47,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         }
         else
         {
-          @Html.Partial("_MissingData")
+            @await Html.PartialAsync("_MissingData")
         }
         </div>
     </div>

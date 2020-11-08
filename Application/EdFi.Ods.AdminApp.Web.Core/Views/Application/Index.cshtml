@@ -6,8 +6,8 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Helpers
-@using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
-@model OdsInstanceSettingsModel
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
+@model ApplicationsIndexModel
 
 @{
     Layout = "~/Views/Shared/_Settings_Production.cshtml";
@@ -18,14 +18,14 @@ See the LICENSE and NOTICES files in the project root for more information.
 
 <div class="tab-content">
     <div class="tab-pane active" id="production-applications">
-        @if (!Model.ProductionApiUrl.IsEmpty())
+        @if (!string.IsNullOrEmpty(Model.ProductionApiUrl))
         {
             <div class="alert alert-info">
                 <a href="javascript:void(0)" class="copy-to-clipboard" data-clipboard-text="@Model.ProductionApiUrl">
                     <span class="fa fa-clipboard"></span><span>Production API URL: </span><strong>@Model.ProductionApiUrl</strong>
                 </a>
             </div>
-            @Html.ActionAjax(Url.Action("ApplicationList", "OdsInstanceSettings", new { }), 250, "Warming up Production API....")
+            @Html.ActionAjax(Url.Action("ApplicationList", "Application", new { }), 250, "Warming up Production API....")
         }
     </div>
 </div>

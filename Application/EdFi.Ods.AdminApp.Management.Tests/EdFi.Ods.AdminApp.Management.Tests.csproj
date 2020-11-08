@@ -403,7 +403,6 @@
     <Compile Include="Controllers\ControllerBaseTester.cs" />
     <Compile Include="Controllers\EducationOrganizationsControllerTests.cs" />
     <Compile Include="Controllers\OdsInstanceSettingsController\OdsInstanceSettingsControllerFixture.cs" />
-    <Compile Include="Controllers\OdsInstanceSettingsController\WhenGettingTheApplicationsScreenContents.cs" />
     <Compile Include="Controllers\OdsInstanceSettingsController\WhenRunningBulkUpload.cs" />
     <Compile Include="Controllers\OdsInstanceSettingsController\WhenRunningTheLearningStandardsSync.cs" />
     <Compile Include="Controllers\OdsInstanceSettingsController\WhenUpdatingLearningStandards.cs" />

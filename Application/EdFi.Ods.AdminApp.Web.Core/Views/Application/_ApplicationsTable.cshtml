@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -17,7 +17,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </div>
 
             <div class="col-lg-6 text-right">
-                <a href="javascript:void(0)" class="edit-table loads-ajax-modal" data-url="@Url.Action("Edit", "Application", new { ApplicationId = application.ApplicationId, Environment = application.Environment.Value })"> <span class="fa fa-pencil action-icons"></span></a>
+                <a href="javascript:void(0)" class="edit-table loads-ajax-modal" data-url="@Url.Action("Edit", "Application", new { ApplicationId = application.ApplicationId })"> <span class="fa fa-pencil action-icons"></span></a>
                 <a href="javascript:void(0)" class="delete-application-link" data-id="@application.ApplicationId" data-application-name="@application.DisplayName"> <span class="fa fa-trash-o action-icons"></span></a>
                 <span class="custom-divider"> |</span>
                 <a href="javascript:void(0)" data-toggle="collapse" data-target="#app-details-@(application.ApplicationId)"><span class="fa fa-chevron-up caret-custom panel-toggle"></span></a>

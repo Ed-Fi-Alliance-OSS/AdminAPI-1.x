@@ -73,7 +73,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     </div>
 }
 
-@{ Html.RenderPartial("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
-@{ Html.RenderAction("AddLocalEducationAgencyModal", "EducationOrganizations"); }
-@{ Html.RenderAction("AddSchoolModal", "EducationOrganizations"); }
+@{ await Html.RenderPartialAsync("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
+@{ await Html.RenderPartialAsync("_AddLocalEducationAgencyModal", Model.AddLocalEducationAgencyModel); }
+@{ await Html.RenderPartialAsync("_AddSchoolModal", Model.AddSchoolModel); }
 

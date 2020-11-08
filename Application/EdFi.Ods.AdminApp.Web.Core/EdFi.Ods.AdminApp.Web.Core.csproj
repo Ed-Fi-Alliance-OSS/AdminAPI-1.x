@@ -134,6 +134,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlTagConventions.cs" LinkBase="Infrastructure/Tags" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ValidationExtensions.cs" LinkBase="Infrastructure" />
 
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/ApplicationsIndexModel.cs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/AddApplicationModel.cs" LinkBase="Models/ViewModels/Application" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/ApplicationKeyModel.cs" LinkBase="Models/ViewModels/Application" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/DeleteApplicationModel.cs" LinkBase="Models/ViewModels/Application" />
@@ -164,6 +165,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/DeleteEducationOrganizationModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EditLocalEducationAgencyModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EditSchoolModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizations/EducationOrganizationsIndexModel.cs" LinkBase="Models/ViewModels/EducationOrganizations" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/EducationOrganizationViewModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/AddVendorModel.cs" LinkBase="Models/ViewModels/Global" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Global/AdvancedSettingsModel.cs" LinkBase="Models/ViewModels/Global" />
@@ -205,35 +207,18 @@
 
     <!-- Manually delete these "Content Remove" lines to include each view into the solution.  -->
     <Content Remove="Views\Account\SignOutCallback.cshtml" />
-    <Content Remove="Views\Application\_AddApplicationModal.cshtml" />
-    <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
-    <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
-    <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_EditLocalEducationAgencyModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_EditSchoolModal.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_EducationOrganizations.cshtml" />
-    <Content Remove="Views\EducationOrganizations\_MissingData.cshtml" />
     <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\EducationOrganizations.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\Index.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\LearningStandards.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Remove="Views\Shared\_Applications.cshtml" />
-    <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
-    <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />
     <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
     <Content Remove="Views\Shared\_LogSettings.cshtml" />
     <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
-    <Content Remove="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />

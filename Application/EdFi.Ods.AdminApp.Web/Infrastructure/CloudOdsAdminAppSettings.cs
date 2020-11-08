@@ -16,7 +16,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         private static readonly Lazy<CloudOdsAdminAppSettings> _instance =
             new Lazy<CloudOdsAdminAppSettings>(() => new CloudOdsAdminAppSettings());
 
-        private AppSettings AppSettings
+        public static AppSettings AppSettings
         {
             get
             {

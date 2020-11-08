@@ -11,6 +11,5 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
         public LogSettingsModel LogSettingsModel { get; set; }
         public LearningStandardsModel LearningStandardsModel { get; set; }
         public BulkFileUploadModel BulkFileUploadModel { get; set; }
-        public string ProductionApiUrl { get; set; }
     }
 }

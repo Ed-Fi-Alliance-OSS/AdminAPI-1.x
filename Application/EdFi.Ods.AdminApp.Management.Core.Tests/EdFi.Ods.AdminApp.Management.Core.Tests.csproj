@@ -19,7 +19,6 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/ControllerBaseTester.cs" LinkBase="Controllers" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/EducationOrganizationsControllerTests.cs" LinkBase="Controllers" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/OdsInstanceSettingsControllerFixture.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenGettingTheApplicationsScreenContents.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenRunningBulkUpload.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenRunningTheLearningStandardsSync.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenUpdatingLearningStandards.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->

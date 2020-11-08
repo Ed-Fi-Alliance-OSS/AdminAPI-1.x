@@ -83,23 +83,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return addResult.Success ? JsonSuccess("Organization Added") : JsonError(addResult.ErrorMessage);
         }
 
-        public async Task<ActionResult> AddSchoolModal()
-        {
-            var api = await _odsApiFacadeFactory.Create();
-            var gradeLevelOptions = api.GetAllGradeLevels();
-            var stateOptions = api.GetAllStateAbbreviations();
-            var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
-
-            var model = new AddSchoolModel
-            {
-                GradeLevelOptions = gradeLevelOptions,
-                StateOptions = stateOptions,
-                RequiredApiDataExist = requiredApiDataExist
-            };
-
-            return PartialView("_AddSchoolModal", model);
-        }
-
         [HttpPost]
         public async Task<ActionResult> AddSchool(AddSchoolModel viewModel)
         {
@@ -162,6 +145,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Schools = schools,
                 LocalEducationAgencies = localEducationAgencies,
                 ShouldAllowMultipleDistricts = CloudOdsAdminAppSettings.Instance.Mode != ApiMode.DistrictSpecific
+            };
+
+            model.AddSchoolModel = new AddSchoolModel
+            {
+                GradeLevelOptions = api.GetAllGradeLevels(),
+                StateOptions = api.GetAllStateAbbreviations(),
+                RequiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist()
             };
 
             return PartialView("_EducationOrganizations", model);

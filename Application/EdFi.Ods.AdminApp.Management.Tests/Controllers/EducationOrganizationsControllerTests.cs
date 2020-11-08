@@ -97,32 +97,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
-        public void When_Perform_Get_Request_To_AddSchoolModal_Return_PartialView_With_Expected_Model()
-        {
-            // Arrange
-            const string gradeLevel = "FirstGrade";
-            const string value = "Namespace#FirstGrade";
-
-            _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
-                .Returns(new List<SelectOptionModel> {new SelectOptionModel{DisplayText = gradeLevel, Value = value}});
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-            _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
-
-            // Act
-            var result = _controller.AddSchoolModal().Result as PartialViewResult;
-
-            // Assert
-            result.ShouldNotBeNull();
-            var model = (AddSchoolModel) result.ViewData.Model;
-            model.ShouldNotBeNull();
-            model.GradeLevelOptions.Count.ShouldBeGreaterThan(0);
-            model.GradeLevelOptions.First().DisplayText.ShouldBe(gradeLevel);
-            model.GradeLevelOptions.First().Value.ShouldBe(value);
-        }
-
-        [Test]
         public void When_Perform_Post_Request_To_AddSchool_Return_Expected_Success_response()
         {
             // Arrange
@@ -346,11 +320,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 new LocalEducationAgency()
             };
-        
+            const string gradeLevel = "FirstGrade";
+            const string value = "Namespace#FirstGrade";
+
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(leas);
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
+                .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
             _controller =
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
@@ -363,6 +341,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             model.ShouldNotBeNull();
             model.Schools.Count.ShouldBeGreaterThan(0);
             model.LocalEducationAgencies.Count.ShouldBeGreaterThan(0);
+
+            var addSchoolModel = model.AddSchoolModel;
+            addSchoolModel.ShouldNotBeNull();
+            addSchoolModel.GradeLevelOptions.Count.ShouldBe(1);
+            addSchoolModel.GradeLevelOptions.Single().DisplayText.ShouldBe(gradeLevel);
+            addSchoolModel.GradeLevelOptions.Single().Value.ShouldBe(value);
         }
 
         [Test]

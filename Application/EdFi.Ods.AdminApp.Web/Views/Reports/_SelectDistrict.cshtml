@@ -1,30 +1,48 @@
-﻿@*
-SPDX-License-Identifier: Apache-2.0
-Licensed to the Ed-Fi Alliance under one or more agreements.
-The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
-See the LICENSE and NOTICES files in the project root for more information.
+@*
+    SPDX-License-Identifier: Apache-2.0
+    Licensed to the Ed-Fi Alliance under one or more agreements.
+    The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+    See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Helpers
-@model EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports.SelectDistrictModel
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports
+@model ReportsIndexModel
 
 @{
-    bool autoSelectSingleItem = Model.DistrictOptions.Length == 1 && Model.LocalEducationAgencyId.ToString() != Model.DistrictOptions.Single().Value;
+    Layout = "~/Views/Shared/_Settings_Production.cshtml";
+    ViewBag.Title = "Ods Instance Reports";
+}
+
+@Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
+
+@{
+    <div class="row">
+        <div class="col-xs-12 margin-top-10">
+            <div class="alert alert-info">
+                <strong>Note: </strong>These reports allow for basic data quality inspection and system activity monitoring. They are not intended to support day-to-day analytics needs.
+            </div>
+        </div>
+    </div>
+}
+
+@{
+    bool autoSelectSingleItem = Model.SelectDistrictModel.DistrictOptions.Length == 1 && Model.SelectDistrictModel.LocalEducationAgencyId.ToString() != Model.SelectDistrictModel.DistrictOptions.Single().Value;
 }
 
 <div class="row">
-    @if (Model.DistrictOptions.Any())
+    @if (Model.SelectDistrictModel.DistrictOptions.Any())
     {
-        if (Model.DistrictOptions.Count() == 1)
+        if (Model.SelectDistrictModel.DistrictOptions.Count() == 1)
         {
             <div class="col-md-12 padding-top">
-                @Html.SelectListBlock(m => m.LocalEducationAgencyId, Model.DistrictOptions, x => x, null).Id("select-district-report")
+                @Html.SelectListBlock(m => m.SelectDistrictModel.LocalEducationAgencyId, Model.SelectDistrictModel.DistrictOptions, x => x, null).Id("select-district-report")
             </div>
         }
         else
         {
             <div class="col-md-12 padding-top">
-                @Html.SelectListBlock(m => m.LocalEducationAgencyId, Model.DistrictOptions, x => x, null, true).Id("select-district-report")
+                @Html.SelectListBlock(m => m.SelectDistrictModel.LocalEducationAgencyId, Model.SelectDistrictModel.DistrictOptions, x => x, null, true).Id("select-district-report")
             </div>
         }
     }
@@ -38,9 +56,9 @@ See the LICENSE and NOTICES files in the project root for more information.
 
 <table id="reports-index" class="table" hidden>
     <thead>
-    <tr>
-        <th>Report Name</th>
-    </tr>
+        <tr>
+            <th>Report Name</th>
+        </tr>
     </thead>
     <tbody>
         <tr>
@@ -95,7 +113,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
         $("#select-district-report").find("select").change(function () {
             var leaId = $(this).val();
-            var url = "@Html.Raw(Url.Action("SelectDistrict", "OdsInstanceSettings"))" + "/" + leaId;
+            var url = "/Reports/SelectDistrict" + "/" + leaId;
             window.location = url;
         });
 

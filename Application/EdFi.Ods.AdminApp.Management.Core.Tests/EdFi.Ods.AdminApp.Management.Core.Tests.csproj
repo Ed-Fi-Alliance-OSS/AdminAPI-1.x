@@ -31,11 +31,11 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/AutomapperTests.cs" LinkBase="Infrastructure" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/CloudOdsApiConnectionInformationProviderTests/WhenGettingApiCredentials.cs" LinkBase="Infrastructure/CloudOdsApiConnectionInformationProviderTests" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/IO/WhenConfiguringFileImport.cs" LinkBase="Infrastructure/IO" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/GetOdsInstanceRegistrationsByUserIdQueryTests.cs" LinkBase="Instance" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/DeregisterOdsInstanceCommandTests.cs" LinkBase="Instance" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/BulkRegisterOdsInstancesRecordTests.cs" LinkBase="Instance" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/RegisterOdsInstanceCommandTests.cs" LinkBase="Instance" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/GetOdsInstanceRegistrationsQueryTests.cs" LinkBase="Instance" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/GetOdsInstanceRegistrationsByUserIdQueryTests.cs" LinkBase="Instance" /> 
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/DeregisterOdsInstanceCommandTests.cs" LinkBase="Instance" /> 
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/BulkRegisterOdsInstancesRecordTests.cs" LinkBase="Instance" /> 
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/RegisterOdsInstanceCommandTests.cs" LinkBase="Instance" /> 
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/GetOdsInstanceRegistrationsQueryTests.cs" LinkBase="Instance" /> 
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/InstanceTestSetup.cs" LinkBase="Instance" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Helpers/OdsInstanceIdentityHelperTests.cs" LinkBase="Helpers" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/TestingHelper.cs" />
@@ -129,7 +129,7 @@
 
     <ItemGroup>
       <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

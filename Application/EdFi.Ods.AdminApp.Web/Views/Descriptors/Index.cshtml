@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -6,14 +6,18 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Helpers
-@using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
-@model OdsInstanceSettingsModel
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.Descriptors
+@model DescriptorsIndexModel
 
 @{
-    ViewBag.Title = "Ods Instance Reports | Enrollment By Gender";
     Layout = "~/Views/Shared/_Settings_Production.cshtml";
+    ViewBag.Title = "Ods Instance | Descriptors";
 }
 
 @Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
 
-@{ Html.RenderAction("EnrollmentByGender", "Reports", new { id = Model.ReportsModel.LocalEducationAgencyId }); }
+<div class="tab-content">
+    <div class="tab-pane active">
+        @Html.ActionAjax(Url.Action("DescriptorCategoryList", "Descriptors", new { }), 500, "Retrieving descriptor list...")
+    </div>
+</div>

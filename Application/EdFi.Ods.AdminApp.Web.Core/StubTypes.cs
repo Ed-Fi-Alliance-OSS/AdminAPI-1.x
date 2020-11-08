@@ -16,22 +16,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     public class OdsInstanceSettingsController
     {
         public object Applications() => throw new System.NotImplementedException();
-        public object Descriptors() => throw new System.NotImplementedException();
         public object Logging() => throw new System.NotImplementedException();
         public object EducationOrganizations() => throw new System.NotImplementedException();
         public object Setup() => throw new System.NotImplementedException();
         public object BulkLoad() => throw new System.NotImplementedException();
         public object LearningStandards() => throw new System.NotImplementedException();
-        public object SelectDistrict(int i) => throw new System.NotImplementedException();
-    }
-
-    public class OdsInstancesController
-    {
-        public object Index() => throw new System.NotImplementedException();
-        public object RegisterOdsInstance() => throw new System.NotImplementedException();
-        public object BulkRegisterOdsInstances() => throw new System.NotImplementedException();
-        public object ActivateOdsInstance() => throw new System.NotImplementedException();
-        public object DeregisterOdsInstance() => throw new System.NotImplementedException();
     }
 }
 

@@ -7,6 +7,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using System.Linq;
+using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 #if NET48
 using System.Web.Mvc;
 #else
@@ -28,6 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly StudentEnrollmentByRaceQuery _studentEnrollmentByRaceQuery;
         private readonly StudentEnrollmentByEthnicityQuery _studentEnrollmentByEthnicityQuery;
         private readonly InstanceContext _instanceContext;
+        private readonly ITabDisplayService _tabDisplayService;
 
         public ReportsController(GetAllLocalEducationAgenciesQuery getAllLocalEducationAgenciesQuery
             , StudentsByProgramQuery studentsByProgramQuery
@@ -37,7 +39,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , StudentEnrollmentByGenderQuery studentEnrollmentByGenderQuery
             , StudentEnrollmentByRaceQuery studentEnrollmentByRaceQuery
             , StudentEnrollmentByEthnicityQuery studentEnrollmentByEthnicityQuery
-            , InstanceContext instanceContext)
+            , InstanceContext instanceContext
+            , ITabDisplayService tabDisplayService)
         {
             _getAllLocalEducationAgenciesQuery = getAllLocalEducationAgenciesQuery;
             _studentsByProgramQuery = studentsByProgramQuery;
@@ -48,14 +51,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _studentEnrollmentByRaceQuery = studentEnrollmentByRaceQuery;
             _studentEnrollmentByEthnicityQuery = studentEnrollmentByEthnicityQuery;
             _instanceContext = instanceContext;
+            _tabDisplayService = tabDisplayService;
         }
 
-        public ActionResult Index()
-        {
-            return RedirectToAction("SelectDistrict", "OdsInstanceSettings");
-        }
-
-        public ActionResult SelectDistrict(int localEducationAgencyId)
+        public ActionResult SelectDistrict(int id = 0)
         {
             var districtOptions = _getAllLocalEducationAgenciesQuery
                 .Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode)
@@ -63,60 +62,83 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     Text = x.Name,
                     Value = x.LocalEducationAgencyId.ToString(),
-                    Selected = x.LocalEducationAgencyId == localEducationAgencyId
+                    Selected = x.LocalEducationAgencyId == id
                 }).ToArray();
 
-            var model = new SelectDistrictModel
+            var reportsModel = GetReportModel();
+            reportsModel.SelectDistrictModel = new SelectDistrictModel
             {
-                LocalEducationAgencyId = localEducationAgencyId,
+                LocalEducationAgencyId = id,
                 DistrictOptions = districtOptions
             };
 
-            return PartialView("_SelectDistrict", model);
+            return PartialView("_SelectDistrict", reportsModel);
         }
 
         public ActionResult TotalEnrollment(int id)
         {
-            var model = _totalEnrollmentQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            var reportsModel = GetReportModel();
+            reportsModel.TotalEnrollmentReport = _totalEnrollmentQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
-            return PartialView("_TotalEnrollment", model);
+            return PartialView("_TotalEnrollment", reportsModel);
         }
 
         public ActionResult SchoolsBySchoolType(int id)
         {
-            var model = _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            var reportsModel = GetReportModel();
+            reportsModel.SchoolTypeReport= _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
 
-            return PartialView("_SchoolsBySchoolType", model);
+            return PartialView("_SchoolsBySchoolType", reportsModel);
         }
 
         public ActionResult EnrollmentByGender(int id)
         {
-            var genderReport = _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_EnrollmentByGender", genderReport);
+            var reportsModel = GetReportModel();
+            reportsModel.StudentGenderReport = _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_EnrollmentByGender", reportsModel);
         }
 
         public ActionResult EnrollmentByRace(int id)
         {
-            var raceReport = _studentEnrollmentByRaceQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_EnrollmentByRace", raceReport);
+            var reportsModel = GetReportModel();
+            reportsModel.StudentRaceReport = _studentEnrollmentByRaceQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_EnrollmentByRace", reportsModel);
         }
 
         public ActionResult EnrollmentByEthnicity(int id)
         {
-            var ethnicityReport = _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_EnrollmentByEthnicity", ethnicityReport);
+            var reportsModel = GetReportModel();
+            reportsModel.StudentEthnicityReport = _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_EnrollmentByEthnicity", reportsModel);
         }
 
         public ActionResult StudentsByProgram(int id)
         {
-            var model = _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_StudentsByProgram",model);
+            var reportsModel = GetReportModel();
+            reportsModel.StudentsByProgramReport = _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_StudentsByProgram", reportsModel);
         }
 
         public ActionResult StudentsByAttribute(int id)
         {
-            var model = _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
-            return PartialView("_StudentsByAttribute", model);
+            var reportsModel = GetReportModel();
+            reportsModel.StudentEconomicSituationReport = _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+
+            return PartialView("_StudentsByAttribute", reportsModel);
+        }
+
+        private ReportsIndexModel GetReportModel()
+        {
+            return new ReportsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Reports),
+                OdsInstance = _instanceContext
+            };
         }
     }
 }

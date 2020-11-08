@@ -25,7 +25,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                     <span class="fa fa-clipboard"></span><span>Production API URL: </span><strong>@Model.ProductionApiUrl</strong>
                 </a>
             </div>
-            @Html.ActionAjax(Url.Action("ApplicationList", "OdsInstanceSettings", new { }), 250, "Warming up Production API....")
+            @Html.ActionAjax(Url.Action("ApplicationList", "Application", new { }), 250, "Warming up Production API....")
         }
     </div>
 </div>

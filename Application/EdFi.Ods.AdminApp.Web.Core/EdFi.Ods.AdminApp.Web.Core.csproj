@@ -207,10 +207,6 @@
 
     <!-- Manually delete these "Content Remove" lines to include each view into the solution.  -->
     <Content Remove="Views\Account\SignOutCallback.cshtml" />
-    <Content Remove="Views\Application\_AddApplicationModal.cshtml" />
-    <Content Remove="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
-    <Content Remove="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
-    <Content Remove="Views\Application\_EditApplicationModal.cshtml" />
     <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\Error\NotYetImplemented.cshtml" />
     <Content Remove="Views\GlobalSettings\AdvancedSettings.cshtml" />
@@ -220,13 +216,9 @@
     <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Remove="Views\Shared\_Applications.cshtml" />
-    <Content Remove="Views\Shared\_ApplicationsByVendor.cshtml" />
-    <Content Remove="Views\Shared\_ApplicationsTable.cshtml" />
     <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
     <Content Remove="Views\Shared\_LogSettings.cshtml" />
     <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
-    <Content Remove="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />

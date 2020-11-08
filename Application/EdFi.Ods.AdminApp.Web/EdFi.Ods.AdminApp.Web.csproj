@@ -1024,14 +1024,14 @@
     <Content Include="Views\GlobalSettings\_SecurityHelpfulHints.cshtml" />
     <Content Include="Views\GlobalSettings\_AddVendorModal.cshtml" />
     <Content Include="Views\GlobalSettings\_VendorsTable.cshtml" />
-    <Content Include="Views\Shared\_Applications.cshtml" />
+    <Content Include="Views\Application\_Applications.cshtml" />
     <Content Include="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
-    <Content Include="Views\Shared\_DeleteVendorApplicationModal.cshtml" />
-    <Content Include="Views\Shared\_ApplicationsByVendor.cshtml" />
+    <Content Include="Views\Application\_DeleteVendorApplicationModal.cshtml" />
+    <Content Include="Views\Application\_ApplicationsByVendor.cshtml" />
     <Content Include="Views\Shared\_DeleteVendorModal.cshtml" />
     <Content Include="Views\GlobalSettings\_EditVendorModal.cshtml" />
     <Content Include="Views\GlobalSettings\_EditVendorForm.cshtml" />
-    <Content Include="Views\Shared\_ApplicationsTable.cshtml" />
+    <Content Include="Views\Application\_ApplicationsTable.cshtml" />
     <Content Include="Views\Shared\_Settings_Global.cshtml" />
     <Content Include="Views\Shared\_Settings_Production.cshtml" />
     <Content Include="Views\GlobalSettings\Vendors.cshtml" />
@@ -1039,7 +1039,7 @@
     <Content Include="Views\Application\_AddApplicationModal.cshtml" />
     <Content Include="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
     <Content Include="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
-    <Content Include="Views\Shared\_RegenerateApplicationSecretModal.cshtml" />
+    <Content Include="Views\Application\_RegenerateApplicationSecretModal.cshtml" />
     <Content Include="Views\Application\_EditApplicationModal.cshtml" />
     <Content Include="Views\GlobalSettings\AdvancedSettings.cshtml" />
     <Content Include="Views\EducationOrganizations\Index.cshtml" />

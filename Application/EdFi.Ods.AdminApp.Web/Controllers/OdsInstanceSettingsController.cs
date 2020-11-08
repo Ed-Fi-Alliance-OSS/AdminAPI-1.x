@@ -102,34 +102,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _appSettings = appSettingsAccessor.Value;
         }
 
-        public async Task<ActionResult> ApplicationList()
-        {
-            var vendors = _getVendorsQuery.Execute().Where(v => !v.IsSystemReservedVendor()).ToList();
-
-            var edOrgs = (await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production))
-                .GetAllEducationOrganizations(_mapper);
-
-            var vendorsApplicationsModel = _mapper.Map<List<VendorApplicationsModel>>(
-                vendors, opts => opts.WithEducationOrganizations(edOrgs));
-
-            if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
-            {
-                foreach (var model in vendorsApplicationsModel)
-                {
-                    FilterInstanceSpecificApplications(model);
-                }
-            }
-            return PartialView("_Applications", vendorsApplicationsModel);
-        }
-
-        private void FilterInstanceSpecificApplications(VendorApplicationsModel vendor)
-        {
-            var applications = vendor.Applications.Where(x =>
-                    x.OdsInstanceName.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase))
-                .ToList();
-            vendor.Applications = applications;
-        }
-
         public async Task<ActionResult> Setup()
         {
             var setupCompleted = (await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production)).DoesApiDataExist();

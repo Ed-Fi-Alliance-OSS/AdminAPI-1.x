@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly RegenerateApiClientSecretCommand _regenerateApiClientSecretCommand;
         private readonly ITabDisplayService _tabDisplayService;
         private readonly IOdsApiConnectionInformationProvider _apiConnectionInformationProvider;
+        private readonly IGetVendorsQuery _getVendorsQuery;
 
         public ApplicationController(IMapper mapper
             , IDeleteApplicationCommand deleteApplicationCommand
@@ -52,7 +54,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IOdsApiFacadeFactory odsApiFacadeFactory
             , InstanceContext instanceContext
             , ITabDisplayService tabDisplayService
-            , IOdsApiConnectionInformationProvider apiConnectionInformationProvider)
+            , IOdsApiConnectionInformationProvider apiConnectionInformationProvider
+            , IGetVendorsQuery getVendorsQuery)
         {
             _mapper = mapper;
             _deleteApplicationCommand = deleteApplicationCommand;
@@ -67,6 +70,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
             _tabDisplayService = tabDisplayService;
             _apiConnectionInformationProvider = apiConnectionInformationProvider;
+            _getVendorsQuery = getVendorsQuery;
         }
 
         public async Task<ActionResult> Index()
@@ -80,6 +84,34 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             };
 
             return View("Index", model);
+        }
+
+        public async Task<ActionResult> ApplicationList()
+        {
+            var vendors = _getVendorsQuery.Execute().Where(v => !v.IsSystemReservedVendor()).ToList();
+
+            var edOrgs = (await _odsApiFacadeFactory.Create())
+                .GetAllEducationOrganizations(_mapper);
+
+            var vendorsApplicationsModel = _mapper.Map<List<VendorApplicationsModel>>(
+                vendors, opts => opts.WithEducationOrganizations(edOrgs));
+
+            if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
+            {
+                foreach (var model in vendorsApplicationsModel)
+                {
+                    FilterInstanceSpecificApplications(model);
+                }
+            }
+            return PartialView("_Applications", vendorsApplicationsModel);
+        }
+
+        private void FilterInstanceSpecificApplications(VendorApplicationsModel vendor)
+        {
+            var applications = vendor.Applications.Where(x =>
+                    x.OdsInstanceName.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+            vendor.Applications = applications;
         }
 
         public async Task<ActionResult> Add(int vendorId)

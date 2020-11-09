@@ -4,12 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -96,54 +95,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             SetupContext.SaveChanges();
         }
 
-        protected void Delete(params object[] entities)
+        protected void Transaction(Action<ISecurityContext> action)
         {
-            foreach (var entity in entities)
+            Scoped<ISecurityContext>(securityContext =>
             {
-                SetupContext.Set(entity.GetType()).Remove(entity);
-            }
-
-            SetupContext.SaveChanges();
-        }
-
-        protected void DeleteAll<TEntity>() where TEntity : class
-        {
-            Transaction(database =>
-            {
-                foreach (var entity in database.Set<TEntity>())
-                    database.Set<TEntity>().Remove(entity);
-            });
-        }
-
-        protected  int Count<TEntity>() where TEntity : class
-        {
-            using (var database = CreateDbContext())
-                return database.Set<TEntity>().Count();
-        }
-
-        protected void Transaction(Action<SqlServerSecurityContext> action)
-        {
-            using (var dbContext = CreateDbContext())
-            {
-                using (var transaction = dbContext.Database.BeginTransaction())
+                using (var transaction = ((SqlServerSecurityContext)securityContext).Database.BeginTransaction())
                 {
-                    action(dbContext);
-                    dbContext.SaveChanges();
+                    action(securityContext);
+                    securityContext.SaveChanges();
                     transaction.Commit();
                 }
-            }
-        }
-
-        protected TResult Transaction<TResult>(Func<SqlServerSecurityContext, TResult> query)
-        {
-            var result = default(TResult);
-
-            Transaction(database =>
-            {
-                result = query(database);
             });
-
-            return result;
         }
     }
 }

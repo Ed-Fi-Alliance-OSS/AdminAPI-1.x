@@ -409,6 +409,7 @@
     <Compile Include="Database\Commands\BulkUploadValidationTests.cs" />
     <Compile Include="Database\Models\RolePermissionTests.cs" />
     <Compile Include="AdminAppDataTestBase.cs" />
+    <Compile Include="PlatformUsersContextTestBase.cs" />
     <Compile Include="Display\HomeScreenDisplayService\HomeScreenDisplayAssertions.cs" />
     <Compile Include="Display\HomeScreenDisplayService\WhenDisplayingAzureHomeScreen.cs" />
     <Compile Include="Display\HomeScreenDisplayService\WhenDisplayingOnPremisesHomeScreen.cs" />

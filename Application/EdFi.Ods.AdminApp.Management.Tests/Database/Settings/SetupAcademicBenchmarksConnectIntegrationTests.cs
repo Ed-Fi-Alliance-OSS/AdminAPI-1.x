@@ -20,11 +20,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Settings
     [TestFixture]
     public class SetupAcademicBenchmarksConnectIntegrationTests : AdminDataTestBase
     {
-        public SetupAcademicBenchmarksConnectIntegrationTests()
-        {
-            CheckpointPolicy = CheckpointPolicyOptions.BeforeAnyTest;
-        }
-
         [Test]
         public async Task ShouldSaveNewApplication()
         {

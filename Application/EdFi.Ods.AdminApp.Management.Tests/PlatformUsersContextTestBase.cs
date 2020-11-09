@@ -15,17 +15,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class PlatformUsersContextTestBase
     {
-        protected SqlServerUsersContext SetupContext { get; private set; }
-
-        protected enum CheckpointPolicyOptions
-        {
-            DoNotCheckpoint,
-            BeforeEachTest,
-            BeforeAnyTest
-        }
-
-        protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
-
         private readonly Checkpoint _checkpoint = new Checkpoint
         {
             TablesToIgnore = new[]
@@ -40,25 +29,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         protected abstract string ConnectionString { get; }
 
-        protected virtual void AdditionalFixtureSetup()
-        {
-        }
-
-        protected abstract SqlServerUsersContext CreateDbContext();
-
-        [OneTimeSetUp]
-        public virtual async Task FixtureSetup()
-        {
-            SetupContext = CreateDbContext();
-
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
-
-            AdditionalFixtureSetup();
-        }
-
         [OneTimeTearDown]
         public async Task FixtureTearDown()
         {
@@ -68,20 +38,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [SetUp]
         public async Task SetUp()
         {
-            SetupContext = CreateDbContext();
-
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
+            await _checkpoint.Reset(ConnectionString);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            SetupContext.Dispose();
-        }
-        
         protected void Save(params object[] entities)
         {
             Transaction(usersContext =>

@@ -27,14 +27,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 #endif
             }
         }
-
-        protected override SqlServerUsersContext CreateDbContext()
-        {
-            #if NET48
-                return new SqlServerUsersContext();
-            #else
-                return new SqlServerUsersContext(ConnectionString);
-            #endif
-        }
     }
 }

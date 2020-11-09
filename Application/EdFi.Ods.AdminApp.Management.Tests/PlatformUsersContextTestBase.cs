@@ -4,17 +4,17 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Data.Entity;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class PlatformUsersContextTestBase<T> where T: DbContext
+    public abstract class PlatformUsersContextTestBase
     {
-        protected T SetupContext { get; private set; }
+        protected SqlServerUsersContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
@@ -43,7 +43,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
         }
 
-        protected abstract T CreateDbContext();
+        protected abstract SqlServerUsersContext CreateDbContext();
 
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
@@ -91,7 +91,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             SetupContext.SaveChanges();
         }
 
-        protected void Transaction(Action<T> action)
+        protected void Transaction(Action<SqlServerUsersContext> action)
         {
             using (var dbContext = CreateDbContext())
             {
@@ -104,7 +104,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         }
 
-        protected TResult Transaction<TResult>(Func<T, TResult> query)
+        protected TResult Transaction<TResult>(Func<SqlServerUsersContext, TResult> query)
         {
             var result = default(TResult);
 

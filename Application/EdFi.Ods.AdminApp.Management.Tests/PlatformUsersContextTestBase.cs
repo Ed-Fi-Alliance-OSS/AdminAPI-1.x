@@ -5,9 +5,7 @@
 
 using System;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using NUnit.Framework;
 using Respawn;
 
@@ -16,7 +14,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class PlatformUsersContextTestBase<T> where T: DbContext
     {
-        protected T TestContext { get; private set; }
         protected T SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
@@ -40,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
+        protected abstract string ConnectionString { get; }
 
         protected virtual void AdditionalFixtureSetup()
         {
@@ -51,7 +48,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
         {
-            TestContext = CreateDbContext();
             SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
@@ -71,7 +67,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [SetUp]
         public async Task SetUp()
         {
-            TestContext = CreateDbContext();
             SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
@@ -83,7 +78,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         [TearDown]
         public void TearDown()
         {
-            TestContext.Dispose();
             SetupContext.Dispose();
         }
         
@@ -97,35 +91,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             SetupContext.SaveChanges();
         }
 
-        protected void Delete(params object[] entities)
-        {
-            foreach (var entity in entities)
-            {
-                SetupContext.Set(entity.GetType()).Remove(entity);
-            }
-
-            SetupContext.SaveChanges();
-        }
-
-        protected void DeleteAll<TEntity>() where TEntity : class
-        {
-            Transaction(database =>
-            {
-                foreach (var entity in database.Set<TEntity>())
-                    database.Set<TEntity>().Remove(entity);
-            });
-        }
-
-        protected  int Count<TEntity>() where TEntity : class
-        {
-            using (var database = CreateDbContext())
-                return database.Set<TEntity>().Count();
-        }
-
         protected void Transaction(Action<T> action)
         {
             using (var dbContext = CreateDbContext())
-                Transaction(dbContext, action);
+            {
+                using (var transaction = dbContext.Database.BeginTransaction())
+                {
+                    action(dbContext);
+                    dbContext.SaveChanges();
+                    transaction.Commit();
+                }
+            }
         }
 
         protected TResult Transaction<TResult>(Func<T, TResult> query)
@@ -138,29 +114,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             });
 
             return result;
-        }
-
-        protected static void Transaction<TDbContext>(TDbContext dbContext, Action<TDbContext> action)
-            where TDbContext : DbContext
-        {
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
-        }
-
-        protected static void Transaction<TDbContext>(Action<TDbContext> action)
-            where TDbContext : DbContext, new()
-        {
-            using(var dbContext = new TDbContext())
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -83,28 +84,27 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         
         protected void Save(params object[] entities)
         {
-            foreach (var entity in entities)
+            Transaction(usersContext =>
             {
-                SetupContext.Set(entity.GetType()).Add(entity);
-            }
-
-            SetupContext.SaveChanges();
+                foreach (var entity in entities)
+                    ((SqlServerUsersContext) usersContext).Set(entity.GetType()).Add(entity);
+            });
         }
 
-        protected void Transaction(Action<SqlServerUsersContext> action)
+        protected void Transaction(Action<IUsersContext> action)
         {
-            using (var dbContext = CreateDbContext())
+            Scoped<IUsersContext>(usersContext =>
             {
-                using (var transaction = dbContext.Database.BeginTransaction())
+                using (var transaction = ((SqlServerUsersContext)usersContext).Database.BeginTransaction())
                 {
-                    action(dbContext);
-                    dbContext.SaveChanges();
+                    action(usersContext);
+                    usersContext.SaveChanges();
                     transaction.Commit();
                 }
-            }
+            });
         }
 
-        protected TResult Transaction<TResult>(Func<SqlServerUsersContext, TResult> query)
+        protected TResult Transaction<TResult>(Func<IUsersContext, TResult> query)
         {
             var result = default(TResult);
 

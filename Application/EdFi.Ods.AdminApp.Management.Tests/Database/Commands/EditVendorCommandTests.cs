@@ -42,11 +42,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Vendor = originalVendor
             };
             originalVendor.Users.Add(originalVendorContact);
-            Save(originalVendor);
-            _vendorId = originalVendor.VendorId;
-
             originalVendorWithNoNameSpace.Users.Add(originalVendorContact);
-            Save(originalVendorWithNoNameSpace);
+
+            Save(originalVendor, originalVendorWithNoNameSpace);
+            _vendorId = originalVendor.VendorId;
             _vendorWithNoNameSpaceId = originalVendorWithNoNameSpace.VendorId;
         }
 

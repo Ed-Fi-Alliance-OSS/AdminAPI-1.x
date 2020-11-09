@@ -83,6 +83,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 using (var service = new UserManager<AdminAppUser>(userStore))
                     await actionAsync((TService)(object)service);
             }
+            else if (typeof(TService) == typeof(IUsersContext))
+            {
+                using (var service = new SqlServerUsersContext())
+                    await actionAsync((TService)(object)service);
+            }
             else
             {
                 throw new NotSupportedException($"In NET48 test runs ScopedAsync<{typeof(TService).Name}>(...) is not supported.");

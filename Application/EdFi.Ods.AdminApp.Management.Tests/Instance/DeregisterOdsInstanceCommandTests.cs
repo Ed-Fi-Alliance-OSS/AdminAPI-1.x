@@ -42,18 +42,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             MockInstanceRegistrationSetup(testInstances);
 
-        #if NET48
-            using (var database = new SqlServerUsersContext())
-        #else
-            using (var database = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-        #endif
+            Scoped<IUsersContext>(database =>
             {
                 database.OdsInstances.Count().ShouldBe(2);
                 database.Applications.Count().ShouldBe(2);
                 database.Clients.Count().ShouldBe(2);
                 database.ApplicationEducationOrganizations.Count().ShouldBe(2);
                 database.ClientAccessTokens.Count().ShouldBe(2);
-            }
+            });
 
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceToBeDeregistered.Id);
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceNotToBeDeregistered.Id);
@@ -102,18 +98,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 onlyInstanceAssignedToUser2.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
             });
 
-#if NET48
-            using (var database = new SqlServerUsersContext())
-#else
-            using (var database = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-#endif
+            Scoped<IUsersContext>(database =>
             {
                 database.OdsInstances.Count().ShouldBe(2);
                 database.Applications.Count().ShouldBe(1);
                 database.Clients.Count().ShouldBe(1);
                 database.ApplicationEducationOrganizations.Count().ShouldBe(1);
                 database.ClientAccessTokens.Count().ShouldBe(1);
-            }
+            });
         }
 
         private static void MockInstanceRegistrationSetup(List<OdsInstanceRegistration> odsInstanceRegistrations)
@@ -160,11 +152,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 application.ApplicationEducationOrganizations.Add(appEduOrganization);
             }
 
-#if NET48
-            using (var database = new SqlServerUsersContext())
-#else
-            using (var database = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-#endif
+            Scoped<IUsersContext>(database =>
             {
                 foreach (var odsInstance in odsInstances)
                 {
@@ -177,7 +165,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 }
 
                 database.SaveChanges();
-            }
+            });
         }
 
         [Test]

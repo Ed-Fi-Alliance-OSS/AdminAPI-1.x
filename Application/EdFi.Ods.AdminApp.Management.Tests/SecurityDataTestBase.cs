@@ -22,7 +22,7 @@ using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase<SqlServerSecurityContext>
+    public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     {
         protected override string ConnectionString
         {

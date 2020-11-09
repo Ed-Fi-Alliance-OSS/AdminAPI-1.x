@@ -7,21 +7,20 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class PlatformSecurityContextTestBase<T> where T: DbContext
+    public abstract class PlatformSecurityContextTestBase
     {
-        protected T TestContext { get; private set; }
-        protected T SetupContext { get; private set; }
+        protected SqlServerSecurityContext TestContext { get; private set; }
+        protected SqlServerSecurityContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
-            DoNotCheckpoint,
             BeforeEachTest,
             BeforeAnyTest
         }
@@ -46,7 +45,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
         }
 
-        protected abstract T CreateDbContext();
+        protected abstract SqlServerSecurityContext CreateDbContext();
 
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
@@ -122,13 +121,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 return database.Set<TEntity>().Count();
         }
 
-        protected void Transaction(Action<T> action)
+        protected void Transaction(Action<SqlServerSecurityContext> action)
         {
             using (var dbContext = CreateDbContext())
                 Transaction(dbContext, action);
         }
 
-        protected TResult Transaction<TResult>(Func<T, TResult> query)
+        protected TResult Transaction<TResult>(Func<SqlServerSecurityContext, TResult> query)
         {
             var result = default(TResult);
 

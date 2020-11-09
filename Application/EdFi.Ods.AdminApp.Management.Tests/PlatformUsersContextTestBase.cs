@@ -10,6 +10,12 @@ using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
+#if NET48
+using EdFi.Ods.AdminApp.Management.Helpers;
+#else
+using EdFi.Ods.AdminApp.Web;
+#endif
+
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
@@ -27,7 +33,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        protected abstract string ConnectionString { get; }
+        protected string ConnectionString
+        {
+            get
+            {
+                #if NET48
+                return ConfigurationHelper.GetConnectionStrings().Admin;
+                #else
+                return Startup.ConfigurationConnectionStrings.Admin;
+                #endif
+            }
+        }
 
         [OneTimeTearDown]
         public async Task FixtureTearDown()

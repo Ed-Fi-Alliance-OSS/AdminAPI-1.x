@@ -16,7 +16,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class DeleteApplicationCommandTests : AdminDataTestBase
+    public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldDeleteApplication()

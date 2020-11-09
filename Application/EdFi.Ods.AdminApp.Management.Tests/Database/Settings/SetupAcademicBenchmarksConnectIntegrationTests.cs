@@ -18,7 +18,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Settings
 {
     [TestFixture]
-    public class SetupAcademicBenchmarksConnectIntegrationTests : AdminDataTestBase
+    public class SetupAcademicBenchmarksConnectIntegrationTests : PlatformUsersContextTestBase
     {
         [Test]
         public async Task ShouldSaveNewApplication()

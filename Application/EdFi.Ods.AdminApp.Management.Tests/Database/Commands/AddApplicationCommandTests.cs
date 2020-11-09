@@ -18,7 +18,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class AddApplicationCommandTests : AdminDataTestBase
+    public class AddApplicationCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldFailForInvalidVendor()

@@ -14,7 +14,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class AddVendorCommandTests : AdminDataTestBase
+    public class AddVendorCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldAddVendor()

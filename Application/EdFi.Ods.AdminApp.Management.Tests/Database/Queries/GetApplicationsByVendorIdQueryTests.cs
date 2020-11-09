@@ -15,7 +15,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
     [TestFixture]
-    public class GetApplicationsByVendorIdQueryTests : AdminDataTestBase
+    public class GetApplicationsByVendorIdQueryTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldGetBasicApplicationData()

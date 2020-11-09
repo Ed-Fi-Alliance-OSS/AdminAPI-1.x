@@ -15,7 +15,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
     [TestFixture]
-    public class GetVendorsQueryTests : AdminDataTestBase
+    public class GetVendorsQueryTests : PlatformUsersContextTestBase
     {
         [Test]
         public void Should_retreive_vendors()

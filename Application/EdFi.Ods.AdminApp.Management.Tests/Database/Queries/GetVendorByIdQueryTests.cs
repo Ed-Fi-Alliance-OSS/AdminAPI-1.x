@@ -13,7 +13,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
     [TestFixture]
-    public class GetVendorByIdQueryTests : AdminDataTestBase
+    public class GetVendorByIdQueryTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldGetVendorById()

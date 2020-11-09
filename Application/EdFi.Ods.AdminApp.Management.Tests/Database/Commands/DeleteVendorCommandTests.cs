@@ -15,7 +15,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class DeleteVendorCommandTests : AdminDataTestBase
+    public class DeleteVendorCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldDeleteVendor()

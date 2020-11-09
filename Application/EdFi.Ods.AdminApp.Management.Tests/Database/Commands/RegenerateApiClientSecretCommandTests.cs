@@ -17,7 +17,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class RegenerateApiClientSecretCommandTests : AdminDataTestBase
+    public class RegenerateApiClientSecretCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldFailIfApplicationDoesNotExist()

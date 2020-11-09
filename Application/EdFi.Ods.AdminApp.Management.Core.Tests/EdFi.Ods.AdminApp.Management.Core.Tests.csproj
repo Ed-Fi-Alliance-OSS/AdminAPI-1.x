@@ -84,7 +84,6 @@
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/Ods/StudentsByProgramQueryTests.cs" LinkBase="Database/Queries/Ods" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Setup/FirstTimeSetupTests.cs" LinkBase="Database/Setup" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/FakeOdsSecretConfigurationProvider.cs" />
-        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AdminDataTestBase.cs" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/AddApplicationCommandTests.cs" LinkBase="Database/Commands" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/AddVendorCommandTests.cs" LinkBase="Database/Commands" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/DeleteApplicationCommandTests.cs" LinkBase="Database/Commands" /> -->

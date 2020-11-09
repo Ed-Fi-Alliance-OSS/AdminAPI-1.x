@@ -470,7 +470,6 @@
     <Compile Include="Database\Queries\Ods\StudentsByProgramQueryTests.cs" />
     <Compile Include="Database\Setup\FirstTimeSetupTests.cs" />
     <Compile Include="FakeOdsSecretConfigurationProvider.cs" />
-    <Compile Include="AdminDataTestBase.cs" />
     <Compile Include="Database\Commands\AddApplicationCommandTests.cs" />
     <Compile Include="Database\Commands\AddVendorCommandTests.cs" />
     <Compile Include="Database\Commands\DeleteApplicationCommandTests.cs" />

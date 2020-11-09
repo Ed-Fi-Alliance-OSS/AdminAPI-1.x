@@ -16,7 +16,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
     [TestFixture]
-    public class GetProfilesQueryTests : AdminDataTestBase
+    public class GetProfilesQueryTests : PlatformUsersContextTestBase
     {
         [Test]
         public void Should_retreive_profiles()

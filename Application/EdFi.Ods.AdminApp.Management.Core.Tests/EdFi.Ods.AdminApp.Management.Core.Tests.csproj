@@ -91,7 +91,7 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/EditApplicationCommandTests.cs" LinkBase="Database/Commands" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/EditVendorCommandTests.cs" LinkBase="Database/Commands" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/RegenerateApiClientSecretCommandTests.cs" LinkBase="Database/Commands" /> -->
-        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/DataTestBase.cs" />
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/PlatformSecurityContextTestBase.cs" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/PlatformUsersContextTestBase.cs" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Queries/GetOdsAdminAppApiCredentialsQueryTests.cs" LinkBase="Database/Queries" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Identity/RegisterCommandTests.cs" LinkBase="Identity" /> -->

@@ -477,7 +477,7 @@
     <Compile Include="Database\Commands\EditApplicationCommandTests.cs" />
     <Compile Include="Database\Commands\EditVendorCommandTests.cs" />
     <Compile Include="Database\Commands\RegenerateApiClientSecretCommandTests.cs" />
-    <Compile Include="DataTestBase.cs" />
+    <Compile Include="PlatformSecurityContextTestBase.cs" />
     <Compile Include="Database\Queries\GetOdsAdminAppApiCredentialsQueryTests.cs" />
     <Compile Include="Identity\RegisterCommandTests.cs" />
     <Compile Include="ResetLearningStandardsTests.cs" />

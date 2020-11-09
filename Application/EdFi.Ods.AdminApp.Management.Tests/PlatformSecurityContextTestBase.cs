@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -14,7 +14,7 @@ using Respawn;
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class DataTestBase<T> where T: DbContext
+    public abstract class PlatformSecurityContextTestBase<T> where T: DbContext
     {
         protected T TestContext { get; private set; }
         protected T SetupContext { get; private set; }

@@ -6,6 +6,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
+using EdFi.Security.DataAccess.Contexts;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -56,6 +57,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             else if (typeof(TService) == typeof(IUsersContext))
             {
                 using (var service = new SqlServerUsersContext())
+                    action((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(ISecurityContext))
+            {
+                using (var service = new SqlServerSecurityContext())
                     action((TService)(object)service);
             }
             else

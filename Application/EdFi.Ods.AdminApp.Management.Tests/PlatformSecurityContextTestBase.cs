@@ -124,7 +124,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         protected void Transaction(Action<SqlServerSecurityContext> action)
         {
             using (var dbContext = CreateDbContext())
-                Transaction(dbContext, action);
+            {
+                using (var transaction = dbContext.Database.BeginTransaction())
+                {
+                    action(dbContext);
+                    dbContext.SaveChanges();
+                    transaction.Commit();
+                }
+            }
         }
 
         protected TResult Transaction<TResult>(Func<SqlServerSecurityContext, TResult> query)
@@ -137,29 +144,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             });
 
             return result;
-        }
-
-        protected static void Transaction<TDbContext>(TDbContext dbContext, Action<TDbContext> action)
-            where TDbContext : DbContext
-        {
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
-        }
-
-        protected static void Transaction<TDbContext>(Action<TDbContext> action)
-            where TDbContext : DbContext, new()
-        {
-            using(var dbContext = new TDbContext())
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
         }
     }
 }

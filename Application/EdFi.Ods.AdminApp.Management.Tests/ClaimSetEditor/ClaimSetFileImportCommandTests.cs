@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -20,9 +20,10 @@ using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
+using EdFi.Security.DataAccess.Contexts;
 using Moq;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileImportModel;
-
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -155,11 +156,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var importModel = GetImportModel(testJSON);
 
-            var validator = new ClaimSetFileImportModelValidator(TestContext);
-            var validationResults = validator.Validate(importModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain(
-                "This template contains a claimset with a name which already exists in the system. Please use a unique name for 'Test Claimset'.\n");
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var validationResults = validator.Validate(importModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain(
+                    "This template contains a claimset with a name which already exists in the system. Please use a unique name for 'Test Claimset'.\n");
+            });
         }
 
         [Test]
@@ -196,20 +200,27 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var importModel = GetImportModel(testJSON);
 
-            var validator = new ClaimSetFileImportModelValidator(TestContext);
-            var validationResults = validator.Validate(importModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim88'.\n");
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var validationResults = validator.Validate(importModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim88'.\n");
+            });
         }
 
         [Test]
         public void ShouldNotImportIfImportFileEmpty()
         {
             var importModel = new ClaimSetFileImportModel();
-            var validator = new ClaimSetFileImportModelValidator(TestContext);
-            var validationResults = validator.Validate(importModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Import File' must not be empty.");
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var validationResults = validator.Validate(importModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Import File' must not be empty.");
+            });
         }
 
         private static ClaimSetFileImportModel GetImportModel(string testJson)

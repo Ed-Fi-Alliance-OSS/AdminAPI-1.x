@@ -94,10 +94,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Name = "TestClaimSet",
                 OriginalId = testClaimSet.ClaimSetId
             };
-            var validator = new CopyClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(newClaimSet);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new CopyClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(newClaimSet);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
+            });
         }
     }
 }

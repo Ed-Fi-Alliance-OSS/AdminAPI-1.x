@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -13,7 +13,7 @@ using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -42,15 +42,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var deleteModel = new Mock<IDeleteClaimSetModel>();
             deleteModel.Setup(x => x.Name).Returns(testClaimSetToDelete.ClaimSetName);
             deleteModel.Setup(x => x.Id).Returns(testClaimSetToDelete.ClaimSetId);
-            var command = new DeleteClaimSetCommand(TestContext);
 
-            command.Execute(deleteModel.Object);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new DeleteClaimSetCommand(securityContext);
 
-            TestContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId).ShouldBeNull();
-            TestContext.ClaimSetResourceClaims.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId)
+                command.Execute(deleteModel.Object);
+            });
+
+            Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId)).ShouldBeNull();
+            Transaction(securityContext => securityContext.ClaimSetResourceClaims.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
                 .ShouldBe(0);
 
-            var preservedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId);
+            var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));
             preservedClaimSet.ClaimSetName.ShouldBe(testClaimSetToPreserve.ClaimSetName);
             Transaction(securityContext =>
             {
@@ -96,11 +100,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Id = testClaimSet.ClaimSetId,
                 IsEditable = false
             };
-            var validator = new DeleteClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
 
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new DeleteClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(claimSetToDelete);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
+            });
         }
 
         [Test]
@@ -121,11 +128,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Id = 99,
                 IsEditable = true
             };
-            var validator = new DeleteClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
 
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new DeleteClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(claimSetToDelete);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
+            });
         }
 
         [Test]
@@ -147,10 +157,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = true,
                 VendorApplicationCount = 1
             };
-            var validator = new DeleteClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new DeleteClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(claimSetToDelete);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
+            });
         }
     }
 }

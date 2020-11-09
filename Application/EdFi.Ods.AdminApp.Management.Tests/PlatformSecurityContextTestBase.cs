@@ -107,5 +107,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 }
             });
         }
+
+        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
+        {
+            var result = default(TResult);
+
+            Transaction(database =>
+            {
+                result = query(database);
+            });
+
+            return result;
+        }
     }
 }

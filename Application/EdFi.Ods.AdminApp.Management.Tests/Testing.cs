@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -52,6 +53,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 {
                     var service = new DeregisterOdsInstanceCommand(database, sqlServerUsersContext, identity);
                     action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(GetClaimSetsByApplicationNameQuery))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                using (var usersContext = new SqlServerUsersContext())
+                {
+                    var service = new GetClaimSetsByApplicationNameQuery(securityContext, usersContext);
+                    action((TService) (object) service);
                 }
             }
             else if (typeof(TService) == typeof(IUsersContext))

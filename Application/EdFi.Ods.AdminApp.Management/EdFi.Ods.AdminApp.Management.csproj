@@ -17,10 +17,17 @@
     <PackageReference Include="dbup-core" Version="4.2.0" />
     <PackageReference Include="dbup-postgresql" Version="4.2.0" />
     <PackageReference Include="dbup-sqlserver" Version="4.2.0" />
-    <PackageReference Include="EdFi.Common" Version="5.1.0-pre0017" />
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="5.1.0-pre0017" />
-    <PackageReference Include="EdFi.Suite3.Common" Version="5.1.0-pre0012" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="5.1.0-pre0007" />
+
+    <!-- The latest stable platform packages do NOT support .NET Framework, so we conditionally reference older packages for NET48 builds. -->
+    <PackageReference Include="EdFi.Common" Version="5.1.0-pre0017" Condition="'$(TargetFramework)' == 'net48'" />
+    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="5.1.0-pre0017" Condition="'$(TargetFramework)' == 'net48'" />
+    <PackageReference Include="EdFi.Suite3.Common" Version="5.1.0-pre0012" Condition="'$(TargetFramework)' == 'net48'" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="5.1.0-pre0007" Condition="'$(TargetFramework)' == 'net48'" />
+
+    <!-- The latest stable platform packages do support .NET Core, so we conditionally stable packages for NETCOREAPP builds. -->
+    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="5.1.0" Condition="'$(TargetFramework)' != 'net48'" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="5.1.0" Condition="'$(TargetFramework)' != 'net48'" />
+
     <PackageReference Include="EntityFramework" Version="6.4.0" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="log4net" Version="2.0.12" />

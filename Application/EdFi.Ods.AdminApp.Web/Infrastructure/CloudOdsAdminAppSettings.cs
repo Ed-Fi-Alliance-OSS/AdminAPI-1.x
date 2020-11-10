@@ -7,7 +7,11 @@ using System;
 using System.Configuration;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+#if NET48
 using EdFi.Ods.Common.Extensions;
+#else
+using EdFi.Common.Extensions;
+#endif
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {

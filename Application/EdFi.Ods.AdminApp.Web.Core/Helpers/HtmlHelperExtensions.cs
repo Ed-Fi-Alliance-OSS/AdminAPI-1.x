@@ -21,7 +21,11 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Property = EdFi.Ods.AdminApp.Web.Infrastructure.Property;
+#if NET48
 using Preconditions = EdFi.Ods.Common.Preconditions;
+#else
+using Preconditions = EdFi.Common.Preconditions;
+#endif
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
 {

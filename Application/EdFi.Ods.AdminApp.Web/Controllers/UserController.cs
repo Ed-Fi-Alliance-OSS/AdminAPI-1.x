@@ -19,11 +19,12 @@ using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
-using EdFi.Ods.Common.Utils.Extensions;
 #if NET48
+using EdFi.Ods.Common.Utils.Extensions;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 #else
+using EdFi.Common.Utils.Extensions;
 using Microsoft.AspNetCore.Identity;
 #endif
 

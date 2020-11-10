@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -15,7 +15,7 @@ using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -70,19 +70,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 }
             });
 
-            #if NET48
-                using (var usersDbContext = new SqlServerUsersContext())
-            #else
-                using (var usersDbContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-            #endif
+            Scoped<IUsersContext>(usersContext =>
             {
-                Transaction(
-                    usersDbContext, usersContext =>
-                    {
-                        usersContext.Applications.Count(x => x.ClaimSetName == copiedClaimSet.ClaimSetName)
-                            .ShouldBe(0);
-                    });
-            }
+                usersContext.Applications.Count(x => x.ClaimSetName == copiedClaimSet.ClaimSetName)
+                    .ShouldBe(0);
+            });
         }
 
         [Test]
@@ -102,10 +94,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Name = "TestClaimSet",
                 OriginalId = testClaimSet.ClaimSetId
             };
-            var validator = new CopyClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(newClaimSet);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new CopyClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(newClaimSet);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -9,13 +9,15 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    class EditVendorCommandTests : AdminDataTestBase
+    class EditVendorCommandTests : PlatformUsersContextTestBase
     {
         private int _vendorId;
         private int _vendorWithNoNameSpaceId;
@@ -40,11 +42,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Vendor = originalVendor
             };
             originalVendor.Users.Add(originalVendorContact);
-            Save(originalVendor);
-            _vendorId = originalVendor.VendorId;
-
             originalVendorWithNoNameSpace.Users.Add(originalVendorContact);
-            Save(originalVendorWithNoNameSpace);
+
+            Save(originalVendor, originalVendorWithNoNameSpace);
+            _vendorId = originalVendor.VendorId;
             _vendorWithNoNameSpaceId = originalVendorWithNoNameSpace.VendorId;
         }
 
@@ -58,14 +59,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            var editVendorCommand = new EditVendorCommand(TestContext);
-            editVendorCommand.Execute(newVendorData.Object);
-
-            var changedVendor = TestContext.Vendors.Single(v => v.VendorId == _vendorId);
-            changedVendor.VendorName.ShouldBe("new vendor name");
-            changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
-            changedVendor.Users.First().FullName.ShouldBe("new contact name");
-            changedVendor.Users.First().Email.ShouldBe("new contact email");
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var editVendorCommand = new EditVendorCommand(usersContext);
+                editVendorCommand.Execute(newVendorData.Object);
+            });
+            
+            Transaction(usersContext =>
+            {
+                var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                changedVendor.VendorName.ShouldBe("new vendor name");
+                changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
+                changedVendor.Users.First().FullName.ShouldBe("new contact name");
+                changedVendor.Users.First().Email.ShouldBe("new contact email");
+            });
         }
 
         [Test]
@@ -78,14 +85,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            var editVendorCommand = new EditVendorCommand(TestContext);
-            editVendorCommand.Execute(newVendorData.Object);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var editVendorCommand = new EditVendorCommand(usersContext);
+                editVendorCommand.Execute(newVendorData.Object);
+            });
 
-            var changedVendor = TestContext.Vendors.Single(v => v.VendorId == _vendorId);
-            changedVendor.VendorName.ShouldBe("new vendor name");
-            changedVendor.VendorNamespacePrefixes.ShouldBeEmpty();
-            changedVendor.Users.First().FullName.ShouldBe("new contact name");
-            changedVendor.Users.First().Email.ShouldBe("new contact email");
+            Transaction(usersContext =>
+            {
+                var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                changedVendor.VendorName.ShouldBe("new vendor name");
+                changedVendor.VendorNamespacePrefixes.ShouldBeEmpty();
+                changedVendor.Users.First().FullName.ShouldBe("new contact name");
+                changedVendor.Users.First().Email.ShouldBe("new contact email");
+            });
         }
 
         [Test]
@@ -98,14 +111,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            var editVendorCommand = new EditVendorCommand(TestContext);
-            editVendorCommand.Execute(newVendorData.Object);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var editVendorCommand = new EditVendorCommand(usersContext);
+                editVendorCommand.Execute(newVendorData.Object);
+            });
 
-            var changedVendor = TestContext.Vendors.Single(v => v.VendorId == _vendorWithNoNameSpaceId);
-            changedVendor.VendorName.ShouldBe("new vendor name");
-            changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
-            changedVendor.Users.First().FullName.ShouldBe("new contact name");
-            changedVendor.Users.First().Email.ShouldBe("new contact email");
+            Transaction(usersContext =>
+            {
+                var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorWithNoNameSpaceId);
+                changedVendor.VendorName.ShouldBe("new vendor name");
+                changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
+                changedVendor.Users.First().FullName.ShouldBe("new contact name");
+                changedVendor.Users.First().Email.ShouldBe("new contact email");
+            });
         }
     }
 }

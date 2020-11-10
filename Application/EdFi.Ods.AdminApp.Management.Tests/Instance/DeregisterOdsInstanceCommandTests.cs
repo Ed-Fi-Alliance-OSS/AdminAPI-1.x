@@ -42,18 +42,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             MockInstanceRegistrationSetup(testInstances);
 
-        #if NET48
-            using (var database = new SqlServerUsersContext())
-        #else
-            using (var database = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-        #endif
+            Scoped<IUsersContext>(database =>
             {
                 database.OdsInstances.Count().ShouldBe(2);
                 database.Applications.Count().ShouldBe(2);
                 database.Clients.Count().ShouldBe(2);
                 database.ApplicationEducationOrganizations.Count().ShouldBe(2);
                 database.ClientAccessTokens.Count().ShouldBe(2);
-            }
+            });
 
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceToBeDeregistered.Id);
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceNotToBeDeregistered.Id);
@@ -61,9 +57,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             SetupUserWithOdsInstanceRegistrations(testUser1.Id, testInstances);
             SetupUserWithOdsInstanceRegistrations(testUser2.Id, testInstances);
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
-                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 queryInstances.Execute(testUser1.Id).Count().ShouldBe(2);
                 queryInstances.Execute(testUser2.Id).Count().ShouldBe(2);
             });
@@ -75,33 +70,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 Description = testInstanceToBeDeregistered.Description
             };
 
-#if NET48
-            using (var sqlServerUsersContext = new SqlServerUsersContext())
-#else
-            using (var sqlServerUsersContext = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-#endif
-            {
-                Scoped<AdminAppIdentityDbContext>(identity =>
-                {
-                    var command = new DeregisterOdsInstanceCommand(SetupContext, sqlServerUsersContext, identity);
+            Scoped<DeregisterOdsInstanceCommand>(command => command.Execute(deregisterModel));
 
-                    command.Execute(deregisterModel);
-                });
-            }
-
-            var deregisteredOdsInstance = SetupContext.OdsInstanceRegistrations.SingleOrDefault(x => x.Id == testInstanceToBeDeregistered.Id);
+            var deregisteredOdsInstance = Transaction(database => database.OdsInstanceRegistrations.SingleOrDefault(x => x.Id == testInstanceToBeDeregistered.Id));
             deregisteredOdsInstance.ShouldBeNull();
 
-            var notDeregisteredOdsInstance = SetupContext.OdsInstanceRegistrations.SingleOrDefault(x => x.Id == testInstanceNotToBeDeregistered.Id);
+            var notDeregisteredOdsInstance = Transaction(database => database.OdsInstanceRegistrations.SingleOrDefault(x => x.Id == testInstanceNotToBeDeregistered.Id));
             notDeregisteredOdsInstance.ShouldNotBeNull();
 
             ShouldBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceToBeDeregistered.Id);
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceNotToBeDeregistered.Id);
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
-                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
-
                 var instancesAssignedToUser1 = queryInstances.Execute(testUser1.Id).ToList();
                 instancesAssignedToUser1.Count.ShouldBe(1);
                 var onlyInstanceAssignedToUser1 = instancesAssignedToUser1.Single();
@@ -117,18 +98,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 onlyInstanceAssignedToUser2.Description.ShouldBe(testInstanceNotToBeDeregistered.Description);
             });
 
-#if NET48
-            using (var database = new SqlServerUsersContext())
-#else
-            using (var database = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-#endif
+            Scoped<IUsersContext>(database =>
             {
                 database.OdsInstances.Count().ShouldBe(2);
                 database.Applications.Count().ShouldBe(1);
                 database.Clients.Count().ShouldBe(1);
                 database.ApplicationEducationOrganizations.Count().ShouldBe(1);
                 database.ClientAccessTokens.Count().ShouldBe(1);
-            }
+            });
         }
 
         private static void MockInstanceRegistrationSetup(List<OdsInstanceRegistration> odsInstanceRegistrations)
@@ -175,11 +152,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 application.ApplicationEducationOrganizations.Add(appEduOrganization);
             }
 
-#if NET48
-            using (var database = new SqlServerUsersContext())
-#else
-            using (var database = new SqlServerUsersContext(Startup.ConfigurationConnectionStrings.Admin))
-#endif
+            Scoped<IUsersContext>(database =>
             {
                 foreach (var odsInstance in odsInstances)
                 {
@@ -192,7 +165,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 }
 
                 database.SaveChanges();
-            }
+            });
         }
 
         [Test]
@@ -205,12 +178,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 Description = ""
             };
 
-            var validator = new DeregisterOdsInstanceModelValidator(SetupContext);
-            validator.ShouldNotValidate(deregisterModel,
-                "'ODS Instance Database' must not be empty.", 
-                "'ODS Instance Description' must not be empty.", 
-                "'Ods Instance Id' must not be empty.", 
-                "The instance you are trying to deregister does not exist in the database.");
+            Scoped<AdminAppDbContext>(database =>
+            {
+                var validator = new DeregisterOdsInstanceModelValidator(database);
+                validator.ShouldNotValidate(deregisterModel,
+                    "'ODS Instance Database' must not be empty.", 
+                    "'ODS Instance Description' must not be empty.", 
+                    "'Ods Instance Id' must not be empty.", 
+                    "The instance you are trying to deregister does not exist in the database.");
+            });
         }
 
         [Test]
@@ -230,8 +206,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 Description = testInstanceNotInSystem.Description
             };
 
-            var validator = new DeregisterOdsInstanceModelValidator(SetupContext);
-            validator.ShouldNotValidate(deregisterModel,"The instance you are trying to deregister does not exist in the database.");
+            Scoped<AdminAppDbContext>(database =>
+            {
+                var validator = new DeregisterOdsInstanceModelValidator(database);
+                validator.ShouldNotValidate(deregisterModel,"The instance you are trying to deregister does not exist in the database.");
+            });
         }
     }
 }

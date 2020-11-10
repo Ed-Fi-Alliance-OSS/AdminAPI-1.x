@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+#if !NET48
+using Microsoft.EntityFrameworkCore;
+#endif
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 
@@ -19,7 +22,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             Scoped<AdminAppDbContext>(dbContext =>
             {
+                #if NET48
                 dbContext.Database.ExecuteSqlCommand("DELETE FROM [adminapp].[OdsInstanceRegistrations]");
+                #else
+                dbContext.Database.ExecuteSqlRaw("DELETE FROM [adminapp].[OdsInstanceRegistrations]");
+                #endif
             });
         }
 

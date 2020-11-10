@@ -43,9 +43,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             SetupUserWithOdsInstanceRegistrations(userToBeDeleted.Id, testInstancesAssignedToDeletedUser);
             SetupUserWithOdsInstanceRegistrations(userNotToBeDeleted.Id, testInstancesAssignedToNotDeletedUser);
 
-            Scoped<AdminAppIdentityDbContext>(identity =>
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
-                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(3);
                 queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
             });
@@ -62,20 +61,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 command.Execute(deleteModel);
             });
 
+            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
+            {
+                queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(0);
+                queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
+            });
+
             Scoped<AdminAppIdentityDbContext>(identity =>
             {
-                var queryInstances = new GetOdsInstanceRegistrationsByUserIdQuery(SetupContext, identity);
                 var queryRoles = new GetRoleForUserQuery(identity);
 
                 var deletedUser = Query(userToBeDeleted.Id);
                 deletedUser.ShouldBeNull();
-                queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(0);
                 queryRoles.Execute(userToBeDeleted.Id).ShouldBeNull();
 
                 var notDeletedUser = Query(userNotToBeDeleted.Id);
                 notDeletedUser.UserName.ShouldBe(userNotToBeDeleted.UserName);
                 notDeletedUser.Email.ShouldBe(userNotToBeDeleted.Email);
-                queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
                 queryRoles.Execute(userNotToBeDeleted.Id).ShouldBe(Role.Admin);
             });
         }

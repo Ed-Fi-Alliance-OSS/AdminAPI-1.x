@@ -408,6 +408,8 @@
     <Compile Include="Controllers\OdsInstanceSettingsController\WhenUpdatingLearningStandards.cs" />
     <Compile Include="Database\Commands\BulkUploadValidationTests.cs" />
     <Compile Include="Database\Models\RolePermissionTests.cs" />
+    <Compile Include="AdminAppDataTestBase.cs" />
+    <Compile Include="PlatformUsersContextTestBase.cs" />
     <Compile Include="Display\HomeScreenDisplayService\HomeScreenDisplayAssertions.cs" />
     <Compile Include="Display\HomeScreenDisplayService\WhenDisplayingAzureHomeScreen.cs" />
     <Compile Include="Display\HomeScreenDisplayService\WhenDisplayingOnPremisesHomeScreen.cs" />
@@ -431,7 +433,6 @@
     <Compile Include="User\GetAdminAppUserByIdQueryTests.cs" />
     <Compile Include="User\GetAdminAppUsersQueryTests.cs" />
     <Compile Include="User\AddUserTests.cs" />
-    <Compile Include="AdminAppDataTestBase.cs" />
     <Compile Include="AutoMapper\AutoMapperTests.cs" />
     <Compile Include="ClaimSetEditor\ClaimSetFileImportCommandTests.cs" />
     <Compile Include="ClaimSetEditor\DeleteResourceOnClaimSetCommandTests.cs" />
@@ -469,7 +470,6 @@
     <Compile Include="Database\Queries\Ods\StudentsByProgramQueryTests.cs" />
     <Compile Include="Database\Setup\FirstTimeSetupTests.cs" />
     <Compile Include="FakeOdsSecretConfigurationProvider.cs" />
-    <Compile Include="AdminDataTestBase.cs" />
     <Compile Include="Database\Commands\AddApplicationCommandTests.cs" />
     <Compile Include="Database\Commands\AddVendorCommandTests.cs" />
     <Compile Include="Database\Commands\DeleteApplicationCommandTests.cs" />
@@ -477,7 +477,7 @@
     <Compile Include="Database\Commands\EditApplicationCommandTests.cs" />
     <Compile Include="Database\Commands\EditVendorCommandTests.cs" />
     <Compile Include="Database\Commands\RegenerateApiClientSecretCommandTests.cs" />
-    <Compile Include="DataTestBase.cs" />
+    <Compile Include="PlatformSecurityContextTestBase.cs" />
     <Compile Include="Database\Queries\GetOdsAdminAppApiCredentialsQueryTests.cs" />
     <Compile Include="Identity\RegisterCommandTests.cs" />
     <Compile Include="ResetLearningStandardsTests.cs" />

@@ -1,27 +1,25 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class DataTestBase<T> where T: DbContext
+    public abstract class PlatformSecurityContextTestBase
     {
-        protected T TestContext { get; private set; }
-        protected T SetupContext { get; private set; }
+        protected SqlServerSecurityContext TestContext { get; private set; }
+        protected SqlServerSecurityContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
-            DoNotCheckpoint,
             BeforeEachTest,
             BeforeAnyTest
         }
@@ -46,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
         }
 
-        protected abstract T CreateDbContext();
+        protected abstract SqlServerSecurityContext CreateDbContext();
 
         [OneTimeSetUp]
         public virtual async Task FixtureSetup()
@@ -97,38 +95,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             SetupContext.SaveChanges();
         }
 
-        protected void Delete(params object[] entities)
+        protected void Transaction(Action<ISecurityContext> action)
         {
-            foreach (var entity in entities)
+            Scoped<ISecurityContext>(securityContext =>
             {
-                SetupContext.Set(entity.GetType()).Remove(entity);
-            }
-
-            SetupContext.SaveChanges();
-        }
-
-        protected void DeleteAll<TEntity>() where TEntity : class
-        {
-            Transaction(database =>
-            {
-                foreach (var entity in database.Set<TEntity>())
-                    database.Set<TEntity>().Remove(entity);
+                using (var transaction = ((SqlServerSecurityContext)securityContext).Database.BeginTransaction())
+                {
+                    action(securityContext);
+                    securityContext.SaveChanges();
+                    transaction.Commit();
+                }
             });
         }
 
-        protected  int Count<TEntity>() where TEntity : class
-        {
-            using (var database = CreateDbContext())
-                return database.Set<TEntity>().Count();
-        }
-
-        protected void Transaction(Action<T> action)
-        {
-            using (var dbContext = CreateDbContext())
-                Transaction(dbContext, action);
-        }
-
-        protected TResult Transaction<TResult>(Func<T, TResult> query)
+        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
         {
             var result = default(TResult);
 
@@ -138,29 +118,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             });
 
             return result;
-        }
-
-        protected static void Transaction<TDbContext>(TDbContext dbContext, Action<TDbContext> action)
-            where TDbContext : DbContext
-        {
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
-        }
-
-        protected static void Transaction<TDbContext>(Action<TDbContext> action)
-            where TDbContext : DbContext, new()
-        {
-            using(var dbContext = new TDbContext())
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                action(dbContext);
-                dbContext.SaveChanges();
-                transaction.Commit();
-            }
         }
     }
 }

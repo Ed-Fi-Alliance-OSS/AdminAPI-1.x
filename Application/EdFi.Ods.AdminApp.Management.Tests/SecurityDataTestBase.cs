@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -22,7 +22,7 @@ using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class SecurityDataTestBase : DataTestBase<SqlServerSecurityContext>
+    public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     {
         protected override string ConnectionString
         {

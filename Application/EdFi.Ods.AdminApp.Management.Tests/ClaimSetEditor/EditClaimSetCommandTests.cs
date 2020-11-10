@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -11,7 +11,8 @@ using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-
+using EdFi.Security.DataAccess.Contexts;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -57,10 +58,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSet1", ClaimSetId = testClaimSet.ClaimSetId };
 
-            var validator = new EditClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(editModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("A claim set with this name already exists in the database. Please enter a unique name.");
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new EditClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(editModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("A claim set with this name already exists in the database. Please enter a unique name.");
+            });
         }
 
         [Test]
@@ -77,10 +81,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "", ClaimSetId = testClaimSet.ClaimSetId };
 
-            var validator = new EditClaimSetModelValidator(TestContext);
-            var validationResults = validator.Validate(editModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("'Claim Set Name' must not be empty.");
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new EditClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(editModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("'Claim Set Name' must not be empty.");
+            });
         }
     }
 }

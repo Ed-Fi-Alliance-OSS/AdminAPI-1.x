@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -22,9 +22,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             var testInstances = SetupOdsInstanceRegistrations(instanceCount).OrderBy(x => x.Name).ToList();
 
-            var command = new GetOdsInstanceRegistrationsQuery(SetupContext);
+            var results = Transaction(database =>
+            {
+                var command = new GetOdsInstanceRegistrationsQuery(database);
 
-            var results = command.Execute().ToList();
+                return command.Execute().ToList();
+            });
 
             results.Count.ShouldBe(testInstances.Count);
             results.Select(x => x.Name).ShouldBe(testInstances.Select(x => x.Name));
@@ -35,9 +38,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             var testInstance = SetupOdsInstanceRegistrations(1).Single();
 
-            var command = new GetOdsInstanceRegistrationsQuery(SetupContext);
+            var result = Transaction(database =>
+            {
+                var command = new GetOdsInstanceRegistrationsQuery(database);
 
-            var result = command.Execute(testInstance.Id);
+                return command.Execute(testInstance.Id);
+            });
 
             result.Id.ShouldBe(testInstance.Id);
             result.Name.ShouldBe(testInstance.Name);
@@ -49,9 +55,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             var testInstance = SetupOdsInstanceRegistrations(1).Single();
 
-            var command = new GetOdsInstanceRegistrationsQuery(SetupContext);
+            var result = Transaction(database =>
+            {
+                var command = new GetOdsInstanceRegistrationsQuery(database);
 
-            var result = command.Execute(testInstance.Name);
+                return command.Execute(testInstance.Name);
+            });
 
             result.Id.ShouldBe(testInstance.Id);
             result.Name.ShouldBe(testInstance.Name);

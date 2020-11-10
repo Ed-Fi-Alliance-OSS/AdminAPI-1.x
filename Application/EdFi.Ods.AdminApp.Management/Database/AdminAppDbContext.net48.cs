@@ -2,31 +2,32 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-
-#if !NET48
+#if NET48
+using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Management.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
     public class AdminAppDbContext : DbContext
     {
-        private readonly IOptions<AppSettings> _appSettings;
-
-        public AdminAppDbContext(DbContextOptions<AdminAppDbContext> options, IOptions<AppSettings> appSettings)
-            : base(options)
+        static AdminAppDbContext()
         {
-            _appSettings = appSettings;
+            // We pass in null here because we want to suppress the overly-aggressive initializer provided by EF.
+            // Instead, we trust that the EdFi_Admin database was created/populated through some other means, like DbUp.
+            System.Data.Entity.Database.SetInitializer<AdminAppDbContext>(null);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public AdminAppDbContext()
+            : base(CloudOdsDatabaseNames.Admin)
+        {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("adminapp");
-            modelBuilder.ApplyDatabaseServerSpecificConventions(_appSettings.Value.DatabaseEngine);
+            modelBuilder.ApplyDatabaseServerSpecificConventions();
         }
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }

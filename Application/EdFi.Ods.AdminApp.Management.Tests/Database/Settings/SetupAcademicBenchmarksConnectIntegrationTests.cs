@@ -1,27 +1,25 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.Common.Security;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Settings
 {
     [TestFixture]
-    public class SetupAcademicBenchmarksConnectIntegrationTests : AdminDataTestBase
+    public class SetupAcademicBenchmarksConnectIntegrationTests : PlatformUsersContextTestBase
     {
-        public SetupAcademicBenchmarksConnectIntegrationTests()
-        {
-            CheckpointPolicy = CheckpointPolicyOptions.BeforeAnyTest;
-        }
-
         [Test]
         public async Task ShouldSaveNewApplication()
         {
@@ -45,15 +43,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Settings
             var secretConfigProvider = new Mock<IOdsSecretConfigurationProvider>();
             secretConfigProvider.Setup(x => x.GetSecretConfiguration(1)).ReturnsAsync(new OdsSecretConfiguration());
 
-            var service = new SetupAcademicBenchmarksConnectService(TestContext, hashProvider.Object,
-                hashConfigProvider.Object, secretConfigProvider.Object, instanceContext);
+            await ScopedAsync<IUsersContext>(async usersContext =>
+            {
+                var service = new SetupAcademicBenchmarksConnectService(usersContext, hashProvider.Object,
+                    hashConfigProvider.Object, secretConfigProvider.Object, instanceContext);
 
-            await service.CreateAcademicBenchmarksConnectAppInAdminDatabase(ApiMode.SharedInstance);
+                await service.CreateAcademicBenchmarksConnectAppInAdminDatabase(ApiMode.SharedInstance);
 
-            TestContext.SaveChanges();
+                usersContext.SaveChanges();
+            });
 
-            var newApplication = TestContext.Applications.FirstOrDefault(x =>
-                x.ApplicationName == applicationName);
+            var newApplication = Transaction(usersContext => usersContext.Applications.FirstOrDefault(x =>
+                x.ApplicationName == applicationName));
 
             newApplication.ShouldNotBeNull();
         }
@@ -81,15 +82,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Settings
             var secretConfigProvider = new Mock<IOdsSecretConfigurationProvider>();
             secretConfigProvider.Setup(x => x.GetSecretConfiguration(1)).ReturnsAsync(new OdsSecretConfiguration());
 
-            var service = new SetupAcademicBenchmarksConnectService(TestContext, hashProvider.Object,
-                hashConfigProvider.Object, secretConfigProvider.Object, instanceContext);
+            await ScopedAsync<IUsersContext>(async usersContext =>
+            {
+                var service = new SetupAcademicBenchmarksConnectService(usersContext, hashProvider.Object,
+                    hashConfigProvider.Object, secretConfigProvider.Object, instanceContext);
 
-            await service.CreateAcademicBenchmarksConnectAppInAdminDatabase(ApiMode.DistrictSpecific);
+                await service.CreateAcademicBenchmarksConnectAppInAdminDatabase(ApiMode.DistrictSpecific);
 
-            TestContext.SaveChanges();
+                usersContext.SaveChanges();
+            });
 
-            var newApplication = TestContext.Applications.FirstOrDefault(x =>
-                x.ApplicationName == applicationName);
+            var newApplication = Transaction(usersContext =>
+                usersContext
+                    .Applications
+                    .Include(x => x.ApplicationEducationOrganizations)
+                    .FirstOrDefault(x => x.ApplicationName == applicationName));
 
             newApplication.ShouldNotBeNull();
             newApplication.ApplicationEducationOrganizations.ShouldNotBeEmpty();

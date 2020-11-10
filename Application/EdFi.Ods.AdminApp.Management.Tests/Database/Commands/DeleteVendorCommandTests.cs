@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -7,13 +7,15 @@ using EdFi.Ods.AdminApp.Management.Database.Commands;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class DeleteVendorCommandTests : AdminDataTestBase
+    public class DeleteVendorCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldDeleteVendor()
@@ -22,9 +24,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             Save(newVendor);
             var vendorId = newVendor.VendorId;
 
-            var deleteVendorCommand = new DeleteVendorCommand(TestContext, null);
-            deleteVendorCommand.Execute(vendorId);
-            TestContext.Vendors.Where(v => v.VendorId == vendorId).ShouldBeEmpty();
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
+                deleteVendorCommand.Execute(vendorId);
+            });
+            
+            Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
         }
 
         [Test]
@@ -37,13 +43,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var vendorId = newVendor.VendorId;
             var applicationId = newApplication.ApplicationId;
             applicationId.ShouldBeGreaterThan(0);
-
-            var deleteApplicationCommand = new DeleteApplicationCommand(TestContext);
-            var deleteVendorCommand = new DeleteVendorCommand(TestContext, deleteApplicationCommand);
-
-            deleteVendorCommand.Execute(vendorId);
-            TestContext.Vendors.Where(v => v.VendorId == vendorId).ShouldBeEmpty();
-            TestContext.Applications.Where(a => a.ApplicationId == applicationId).ShouldBeEmpty();
+            
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+                var deleteVendorCommand = new DeleteVendorCommand(usersContext, deleteApplicationCommand);
+                deleteVendorCommand.Execute(vendorId);
+            });
+            
+            Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
+            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
         }
 
         [Test]
@@ -57,10 +66,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var userId = newUser.UserId;
             userId.ShouldBeGreaterThan(0);
 
-            var deleteVendorCommand = new DeleteVendorCommand(TestContext, null);
-            deleteVendorCommand.Execute(vendorId);
-            TestContext.Vendors.Where(v => v.VendorId == vendorId).ShouldBeEmpty();
-            TestContext.Users.Where(u => u.UserId == userId).ShouldBeEmpty();
+
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
+                deleteVendorCommand.Execute(vendorId);
+            });
+            
+            Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
+            Transaction(usersContext => usersContext.Users.Where(u => u.UserId == userId).ToArray()).ShouldBeEmpty();
         }
     }
 }

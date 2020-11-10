@@ -4,23 +4,22 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
 #if NET48
 using EdFi.Ods.AdminApp.Management.Helpers;
 #else
 using EdFi.Ods.AdminApp.Web;
 #endif
 
-
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     [TestFixture]
-    public abstract class AdminAppDataTestBase
+    public abstract class PlatformUsersContextTestBase
     {
         private readonly Checkpoint _checkpoint = new Checkpoint
         {
@@ -34,7 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        private string ConnectionString
+        protected string ConnectionString
         {
             get
             {
@@ -58,34 +57,29 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             await _checkpoint.Reset(ConnectionString);
         }
 
-        protected void DeleteAll<TEntity>() where TEntity : class
+        protected void Save(params object[] entities)
         {
-            Transaction(database =>
+            Transaction(usersContext =>
             {
-                foreach (var entity in database.Set<TEntity>())
-                    database.Set<TEntity>().Remove(entity);
+                foreach (var entity in entities)
+                    ((SqlServerUsersContext) usersContext).Set(entity.GetType()).Add(entity);
             });
         }
 
-        protected int Count<TEntity>() where TEntity : class
+        protected void Transaction(Action<IUsersContext> action)
         {
-            return Transaction(database => database.Set<TEntity>().Count());
-        }
-
-        protected void Transaction(Action<AdminAppDbContext> action)
-        {
-            Scoped<AdminAppDbContext>(database =>
+            Scoped<IUsersContext>(usersContext =>
             {
-                using (var transaction = database.Database.BeginTransaction())
+                using (var transaction = ((SqlServerUsersContext)usersContext).Database.BeginTransaction())
                 {
-                    action(database);
-                    database.SaveChanges();
+                    action(usersContext);
+                    usersContext.SaveChanges();
                     transaction.Commit();
                 }
             });
         }
 
-        protected TResult Transaction<TResult>(Func<AdminAppDbContext, TResult> query)
+        protected TResult Transaction<TResult>(Func<IUsersContext, TResult> query)
         {
             var result = default(TResult);
 

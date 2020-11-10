@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -14,6 +15,7 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 {
@@ -52,16 +54,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
 
-            var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
-                SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
-                _connectionProvider.Object);
+            Scoped<AdminAppDbContext>(database =>
+            {
+                var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
+                    database, _apiModeProvider.Object, _databaseValidationService.Object,
+                    _connectionProvider.Object);
 
-            bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
+                bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
 
-            duplicateNumericSuffixes.Count.ShouldBe(2);
+                duplicateNumericSuffixes.Count.ShouldBe(2);
 
-            duplicateDescriptions.Count.ShouldBe(2);
-
+                duplicateDescriptions.Count.ShouldBe(2);
+            });
         }
 
         [Test]
@@ -71,15 +75,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
 
-            var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
-                SetupContext, _apiModeProvider.Object, _databaseValidationService.Object,
-                _connectionProvider.Object);
+            Scoped<AdminAppDbContext>(database =>
+            {
+                var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
+                    database, _apiModeProvider.Object, _databaseValidationService.Object,
+                    _connectionProvider.Object);
 
-            bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
+                bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
 
-            duplicateNumericSuffixes.Count.ShouldBe(0);
+                duplicateNumericSuffixes.Count.ShouldBe(0);
 
-            duplicateDescriptions.Count.ShouldBe(0);
+                duplicateDescriptions.Count.ShouldBe(0);
+            });
         }
 
         private List<RegisterOdsInstanceModel> GetSampleDataRecords(int numberOfRecords = 5, int numberOfDuplicates = 0)

@@ -1,14 +1,16 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -29,12 +31,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             var testParentResource = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            ResourceClaim[] results = null;
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var query = new GetChildResourceClaimsForParentQuery(securityContext);
 
-                var results = query.Execute(testParentResource.ResourceClaimId).ToArray();
+                results = query.Execute(testParentResource.ResourceClaimId).ToArray();
+            });
 
+            Scoped<ISecurityContext>(securityContext =>
+            {
                 var testChildResourceClaims = securityContext.ResourceClaims.Where(x =>
                     x.ParentResourceClaimId == testParentResource.ResourceClaimId);
 

@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
@@ -12,6 +13,7 @@ using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -30,12 +32,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             var testResourceClaims = SetupResourceClaims(testApplication);
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            Management.ClaimSetEditor.ResourceClaim[] results = null;
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var query = new GetResourceClaimsQuery(securityContext);
 
-                var results = query.Execute().ToArray();
+                results = query.Execute().ToArray();
+            });
 
+            Scoped<ISecurityContext>(securityContext =>
+            {
                 results.Length.ShouldBe(testResourceClaims.Count);
                 results.Select(x => x.Name).ShouldBe(testResourceClaims.Select(x => x.ResourceName), true);
                 results.Select(x => x.Id).ShouldBe(testResourceClaims.Select(x => x.ResourceClaimId), true);
@@ -64,17 +70,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var childResourceNames = testResourceClaims.Where(x => x.ParentResourceClaim != null)
                 .OrderBy(x => x.ResourceName).Select(x => x.ResourceName).ToList();
 
-            Transaction<SqlServerSecurityContext>(securityContext =>
+            List<SelectListItem> results = null;
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var query = new GetResourceClaimsQuery(securityContext);
 
                 var allResourceClaims = query.Execute().ToList();
 
-                var results = GetSelectListForResourceClaims(allResourceClaims);
+                results = GetSelectListForResourceClaims(allResourceClaims);
 
                 // Removing "Please select a value" SelectListItem from the results
                 results.RemoveAt(0);
+            });
 
+            Scoped<ISecurityContext>(securityContext =>
+            {
                 results.Count.ShouldBe(testResourceClaims.Count);
                 results.Where(x => x.Group.Name == "Groups").Select(x => x.Text).ToList().ShouldBe(parentResourceNames);
                 results.Where(x => x.Group.Name == "Resources").Select(x => x.Text).ToList().ShouldBe(childResourceNames);

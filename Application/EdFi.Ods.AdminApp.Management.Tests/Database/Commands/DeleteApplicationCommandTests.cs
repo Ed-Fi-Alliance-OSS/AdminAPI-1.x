@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -9,12 +9,14 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
     [TestFixture]
-    public class DeleteApplicationCommandTests : AdminDataTestBase
+    public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
     {
         [Test]
         public void ShouldDeleteApplication()
@@ -23,9 +25,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             Save(application);
             var applicationId = application.ApplicationId;
 
-            var deleteApplicationCommand = new DeleteApplicationCommand(TestContext);
-            deleteApplicationCommand.Execute(applicationId);
-            TestContext.Applications.Where(a => a.ApplicationId == applicationId).ShouldBeEmpty();
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+                deleteApplicationCommand.Execute(applicationId);
+            });
+            
+            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
         }
 
         [Test]
@@ -61,11 +67,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var tokenId = clientAccessToken.Id;
             tokenId.ShouldNotBe(Guid.Empty);
 
-            var deleteApplicationCommand = new DeleteApplicationCommand(TestContext);
-            deleteApplicationCommand.Execute(applicationId);
-
-            TestContext.Applications.Where(a => a.ApplicationId == applicationId).ShouldBeEmpty();
-            TestContext.Clients.Where(c => c.ApiClientId == clientId).ShouldBeEmpty();
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+                deleteApplicationCommand.Execute(applicationId);
+            });
+            
+            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+            Transaction(usersContext => usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray()).ShouldBeEmpty();
         }
 
         [Test]
@@ -96,11 +105,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var organizationId = organization.ApplicationEducationOrganizationId;
             organizationId.ShouldBeGreaterThan(0);
 
-            var deleteApplicationCommand = new DeleteApplicationCommand(TestContext);
-            deleteApplicationCommand.Execute(applicationId);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+                deleteApplicationCommand.Execute(applicationId);
+            });
 
-            TestContext.Applications.Where(a => a.ApplicationId == applicationId).ShouldBeEmpty();
-            TestContext.ApplicationEducationOrganizations.Where(o => o.ApplicationEducationOrganizationId == organizationId).ShouldBeEmpty();
+            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+            Transaction(usersContext => usersContext.ApplicationEducationOrganizations.Where(o => o.ApplicationEducationOrganizationId == organizationId).ToArray()).ShouldBeEmpty();
         }
 
         [Test]
@@ -118,11 +130,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var profileId = profile.ProfileId;
             profileId.ShouldBeGreaterThan(0);
 
-            var deleteApplicationCommand = new DeleteApplicationCommand(TestContext);
-            deleteApplicationCommand.Execute(applicationId);
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+                deleteApplicationCommand.Execute(applicationId);
+            });
 
-            TestContext.Applications.Where(a => a.ApplicationId == applicationId).ShouldBeEmpty();
-            TestContext.Profiles.Where(p => p.ProfileId == profileId).ShouldNotBeEmpty();
+            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+            Transaction(usersContext => usersContext.Profiles.Where(p => p.ProfileId == profileId).ToArray()).ShouldNotBeEmpty();
         }
     }
 }

@@ -1,7 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Management.User;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
+using EdFi.Security.DataAccess.Contexts;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -19,6 +25,53 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             else if (typeof(TService) == typeof(AdminAppDbContext))
             {
                 using (var service = new AdminAppDbContext())
+                    action((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(GetOdsInstanceRegistrationsByUserIdQuery))
+            {
+                using (var identity = AdminAppIdentityDbContext.Create())
+                using (var database = new AdminAppDbContext())
+                {
+                    var service = new GetOdsInstanceRegistrationsByUserIdQuery(database, identity);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(EditOdsInstanceRegistrationForUserModelValidator))
+            {
+                using (var identity = AdminAppIdentityDbContext.Create())
+                using (var database = new AdminAppDbContext())
+                {
+                    var service = new EditOdsInstanceRegistrationForUserModelValidator(database, identity);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(DeregisterOdsInstanceCommand))
+            {
+                using (var sqlServerUsersContext = new SqlServerUsersContext())
+                using (var identity = AdminAppIdentityDbContext.Create())
+                using (var database = new AdminAppDbContext())
+                {
+                    var service = new DeregisterOdsInstanceCommand(database, sqlServerUsersContext, identity);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(GetClaimSetsByApplicationNameQuery))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                using (var usersContext = new SqlServerUsersContext())
+                {
+                    var service = new GetClaimSetsByApplicationNameQuery(securityContext, usersContext);
+                    action((TService) (object) service);
+                }
+            }
+            else if (typeof(TService) == typeof(IUsersContext))
+            {
+                using (var service = new SqlServerUsersContext())
+                    action((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(ISecurityContext))
+            {
+                using (var service = new SqlServerSecurityContext())
                     action((TService)(object)service);
             }
             else
@@ -44,6 +97,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 using (var identity = AdminAppIdentityDbContext.Create())
                 using (var userStore = new UserStore<AdminAppUser>(identity))
                 using (var service = new UserManager<AdminAppUser>(userStore))
+                    await actionAsync((TService)(object)service);
+            }
+            else if (typeof(TService) == typeof(IUsersContext))
+            {
+                using (var service = new SqlServerUsersContext())
                     await actionAsync((TService)(object)service);
             }
             else

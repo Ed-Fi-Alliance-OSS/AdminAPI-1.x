@@ -49,17 +49,6 @@ namespace EdFi.Ods.AdminApp.Web.Hubs
     }
 }
 
-public class StubPbkdf2HmacSha1SecureHasher : ISecureHasher
-{
-    public PackedHash ComputeHash(string secret, int hashAlgorithm, int iterations, byte[] salt)
-        => throw new System.NotImplementedException();
-
-    public PackedHash ComputeHash(string secret, int hashAlgorithm, int iterations, int saltSizeInBytes)
-        => throw new System.NotImplementedException();
-
-    public string Algorithm { get => throw new System.NotImplementedException(); }
-}
-
 public class HandleErrorInfo
 {
     public HandleErrorInfo(Exception exception)

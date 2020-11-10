@@ -10,8 +10,9 @@ using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-#else
 using EdFi.Ods.Common.Extensions;
+#else
+using EdFi.Common.Extensions;
 #endif
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.LearningStandards.Core.Configuration;
@@ -26,8 +27,13 @@ using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
+#if NET48
 using EdFi.Ods.Common.Configuration;
 using EdFi.Ods.Common.Security;
+#else
+using EdFi.Common.Configuration;
+using EdFi.Common.Security;
+#endif
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using Hangfire;

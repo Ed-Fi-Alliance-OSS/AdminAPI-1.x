@@ -9,7 +9,7 @@
 using System;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
-using EdFi.Ods.Common.Security;
+using EdFi.Common.Security;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -34,9 +34,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Scoped<IUsersContext>(usersContext =>
+            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
             {
-                var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
                 results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
@@ -62,9 +61,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Scoped<IUsersContext>(usersContext =>
+            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
             {
-                var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
                 results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
@@ -77,9 +75,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         {
             var testClaimSets = SetupApplicationClaimSets();
 
-            Scoped<IUsersContext>(usersContext =>
+            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
             {
-                var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(testClaimSets.Count);
@@ -95,9 +92,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSets = SetupApplicationClaimSets();
 
-            Scoped<IUsersContext>(usersContext =>
+            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
             {
-                var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(testClaimSets.Count);
@@ -117,9 +113,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Scoped<IUsersContext>(usersContext =>
+            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
             {
-                var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
                 results.Count(x => x.IsEditable).ShouldBe(testClaimSets.Count);
@@ -155,9 +150,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 usersContext.SaveChanges();
             });
 
-            Scoped<IUsersContext>(usersContext =>
+            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
             {
-                var query = new GetClaimSetsByApplicationNameQuery(TestContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(testClaimSets.Count);

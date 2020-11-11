@@ -56,20 +56,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));
             preservedClaimSet.ClaimSetName.ShouldBe(testClaimSetToPreserve.ClaimSetName);
+
+            var results =
+                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(
+                    query => query.AllResources(testClaimSetToPreserve.ClaimSetId).ToArray());
+
+            var testParentResourceClaimsForId =
+                resourceClaimsForPreservedClaimSet.Where(x => x.ClaimSet.ClaimSetId == testClaimSetToPreserve.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
+
+            results.Length.ShouldBe(testParentResourceClaimsForId.Length);
+            results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
+            results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
+            results.All(x => x.Create).ShouldBe(true);
+
             Transaction(securityContext =>
             {
-                var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
-
-                var results = query.AllResources(testClaimSetToPreserve.ClaimSetId).ToArray();
-
-                var testParentResourceClaimsForId =
-                    resourceClaimsForPreservedClaimSet.Where(x => x.ClaimSet.ClaimSetId == testClaimSetToPreserve.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
-
-                results.Length.ShouldBe(testParentResourceClaimsForId.Length);
-                results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
-                results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
-                results.All(x => x.Create).ShouldBe(true);
-
                 foreach (var testParentResourceClaim in testParentResourceClaimsForId)
                 {
                     var testChildren = securityContext.ResourceClaims.Where(x =>

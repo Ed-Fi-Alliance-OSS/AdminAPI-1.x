@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -92,8 +93,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var command = new DeleteResourceOnClaimSetCommand(TestContext);
             command.Execute(deleteResourceOnClaimSetModel);
 
-            var resourceClaimsForClaimSet = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper()).AllResources(testClaimSet.ClaimSetId).ToList();
-            resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount);
+            var resourceClaimsForClaimSet =
+                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
+                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            resourceClaimsForClaimSet.Count.ShouldBe(parentResourcesOnClaimSetOriginalCount);
 
             var resultChildResources =
                 TestContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);

@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -81,10 +82,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var importModel = GetImportModel(testJSON);
             #if NET48
                 var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.InputStream);
-            #else
+#else
                 var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
-            #endif
-            var getResourceByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper());
+#endif
             var addClaimSetCommand = new AddClaimSetCommand(TestContext);
             var getResourceClaimsQuery = new GetResourceClaimsQuery(TestContext);
             var editResourceOnClaimSetCommand = new EditResourceOnClaimSetCommand(TestContext);
@@ -94,7 +94,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSet = TestContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset");
             testClaimSet.ShouldNotBeNull();
-            var resourcesForClaimSet = getResourceByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
+
+            var resourcesForClaimSet =
+                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
+                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+
             resourcesForClaimSet.Count.ShouldBeGreaterThan(0);
             var testResources = resourcesForClaimSet.Where(x => x.ParentId == 0).ToArray();
             testResources.Count().ShouldBe(3);

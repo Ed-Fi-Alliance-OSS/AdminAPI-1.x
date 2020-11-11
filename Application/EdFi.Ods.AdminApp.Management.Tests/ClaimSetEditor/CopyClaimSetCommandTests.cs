@@ -45,20 +45,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var copiedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
             copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
+
+            var results = Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(
+                query => query.AllResources(copiedClaimSet.ClaimSetId).ToArray());
+
+            var testParentResourceClaimsForId =
+                testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
+
+            results.Length.ShouldBe(testParentResourceClaimsForId.Length);
+            results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
+            results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
+            results.All(x => x.Create).ShouldBe(true);
+
             Transaction(securityContext =>
             {
-                var query = new GetResourcesByClaimSetIdQuery(securityContext, GetMapper());
-
-                var results = query.AllResources(copiedClaimSet.ClaimSetId).ToArray();
-
-                var testParentResourceClaimsForId =
-                    testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
-
-                results.Length.ShouldBe(testParentResourceClaimsForId.Length);
-                results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
-                results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
-                results.All(x => x.Create).ShouldBe(true);
-
                 foreach (var testParentResourceClaim in testParentResourceClaimsForId)
                 {
                     var testChildren = securityContext.ResourceClaims.Where(x =>

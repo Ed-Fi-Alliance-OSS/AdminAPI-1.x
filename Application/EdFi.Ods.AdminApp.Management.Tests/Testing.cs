@@ -5,6 +5,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -102,6 +103,26 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 using (var securityContext = new SqlServerSecurityContext())
                 {
                     var service = new GetResourcesByClaimSetIdQuery(securityContext, _mapper);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(ClaimSetFileImportCommand))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                {
+                    var addClaimSetCommand = new AddClaimSetCommand(securityContext);
+                    var getResourceClaimsQuery = new GetResourceClaimsQuery(securityContext);
+                    var editResourceOnClaimSetCommand = new EditResourceOnClaimSetCommand(securityContext);
+                    var service = new ClaimSetFileImportCommand(addClaimSetCommand, editResourceOnClaimSetCommand, getResourceClaimsQuery);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(ClaimSetFileExportCommand))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                {
+                    var getResourceByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, _mapper);
+                    var service = new ClaimSetFileExportCommand(securityContext, getResourceByClaimSetIdQuery);
                     action((TService)(object)service);
                 }
             }

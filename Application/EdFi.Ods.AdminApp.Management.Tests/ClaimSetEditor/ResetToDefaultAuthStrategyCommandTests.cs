@@ -7,6 +7,7 @@ using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
+using EdFi.Security.DataAccess.Contexts;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -70,8 +71,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ClaimSetId = testClaimSet.ClaimSetId
             };
 
-            var command = new ResetToDefaultAuthStrategyCommand(TestContext);
-            command.Execute(resetModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new ResetToDefaultAuthStrategyCommand(securityContext);
+                command.Execute(resetModel);
+            });
 
             var resultResourceClaimAfterReset =
                 Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
@@ -142,8 +146,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ClaimSetId = testClaimSet.ClaimSetId
             };
 
-            var command = new ResetToDefaultAuthStrategyCommand(TestContext);
-            command.Execute(resetModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new ResetToDefaultAuthStrategyCommand(securityContext);
+                command.Execute(resetModel);
+            });
 
             resultParentResource =
                 Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
@@ -176,7 +183,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testResourceToEdit = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
 
-            TestContext.ClaimSetResourceClaims.Any(x => x.ResourceClaim.ResourceClaimId == testResourceToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId).ShouldBe(false);
+            Transaction(securityContext => securityContext.ClaimSetResourceClaims
+                .Any(x => x.ResourceClaim.ResourceClaimId == testResourceToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId))
+                .ShouldBe(false);
 
             var invalidResetModel = new ResetToDefaultAuthStrategyModel
             {
@@ -184,13 +193,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ClaimSetId = testClaimSet.ClaimSetId
             };
 
-            var command = new ResetToDefaultAuthStrategyCommand(TestContext);
-            command.Execute(invalidResetModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new ResetToDefaultAuthStrategyCommand(securityContext);
+                command.Execute(invalidResetModel);
+            });
 
-            var validator = new ResetToDefaultAuthStrategyModelValidator(TestContext);
-            var validationResults = validator.Validate(invalidResetModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new ResetToDefaultAuthStrategyModelValidator(securityContext);
+                var validationResults = validator.Validate(invalidResetModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
+            });
         }
 
         private void SetupOverridesForResourceCreateAction(int resourceClaimId, int claimSetId, int authorizationStrategyId)
@@ -205,8 +220,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 AuthorizationStrategyForDelete = 0
             };
 
-            var command = new OverrideDefaultAuthorizationStrategyCommand(TestContext);
-            command.Execute(overrideModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+                command.Execute(overrideModel);
+            });
         }
     }
 }

@@ -59,12 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 };
             });
 
-
-            var sharingModel = Scoped<IGetResourcesByClaimSetIdQuery, SharingModel>(getResourceByClaimSetIdQuery =>
-            {
-                var command = new ClaimSetFileExportCommand(TestContext, getResourceByClaimSetIdQuery);
-                return command.Execute(exportModel);
-            });
+            var sharingModel = Scoped<ClaimSetFileExportCommand, SharingModel>(command => command.Execute(exportModel));
 
             var resourcesForClaimSet1 =
                 Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(

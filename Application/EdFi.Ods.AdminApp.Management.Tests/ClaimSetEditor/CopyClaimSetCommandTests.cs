@@ -39,11 +39,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var newClaimSet = new Mock<ICopyClaimSetModel>();
             newClaimSet.Setup(x => x.Name).Returns("TestClaimSet_Copy");
             newClaimSet.Setup(x => x.OriginalId).Returns(testClaimSet.ClaimSetId);
-            var command = new CopyClaimSetCommand(TestContext);
 
-            var copyClaimSetId = command.Execute(newClaimSet.Object);
+            int copyClaimSetId = Scoped<ISecurityContext, int>(securityContext =>
+            {
+                var command = new CopyClaimSetCommand(securityContext);
+                return command.Execute(newClaimSet.Object);
+            });
 
-            var copiedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
+            var copiedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId));
             copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
 
             var results = Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(

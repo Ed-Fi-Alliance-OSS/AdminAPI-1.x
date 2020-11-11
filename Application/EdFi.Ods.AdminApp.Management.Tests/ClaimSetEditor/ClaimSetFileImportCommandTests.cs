@@ -85,14 +85,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 #else
                 var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
 #endif
-            var addClaimSetCommand = new AddClaimSetCommand(TestContext);
-            var getResourceClaimsQuery = new GetResourceClaimsQuery(TestContext);
-            var editResourceOnClaimSetCommand = new EditResourceOnClaimSetCommand(TestContext);
 
-            var command = new ClaimSetFileImportCommand(addClaimSetCommand, editResourceOnClaimSetCommand, getResourceClaimsQuery);
-            command.Execute(importSharingModel);
+            Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
 
-            var testClaimSet = TestContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset");
+            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
             testClaimSet.ShouldNotBeNull();
 
             var resourcesForClaimSet =

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -87,20 +87,24 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
             var configurator = new CloudOdsClaimSetConfigurator(SetupContext);
             configurator.ApplyConfiguration(testClaimSet);
 
-            var claimSet = TestContext.ClaimSets.Single(cs => cs.ClaimSetName == testClaimSet.ClaimSetName);
-            var claimSetResourceClaims = TestContext.ClaimSetResourceClaims
-                .Include(c => c.Action)
-                .Include(c => c.ResourceClaim)
-                .Include(c => c.AuthorizationStrategyOverride)
-                .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
+            var claimSet = Transaction(securityContext => securityContext.ClaimSets.Single(cs => cs.ClaimSetName == testClaimSet.ClaimSetName));
 
-            foreach (var claim in testClaimSet.Claims)
+            Transaction(securityContext =>
             {
-                foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
+                var claimSetResourceClaims = securityContext.ClaimSetResourceClaims
+                    .Include(c => c.Action)
+                    .Include(c => c.ResourceClaim)
+                    .Include(c => c.AuthorizationStrategyOverride)
+                    .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
+
+                foreach (var claim in testClaimSet.Claims)
                 {
-                    resourceClaim.AuthorizationStrategyOverride.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
+                    foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
+                    {
+                        resourceClaim.AuthorizationStrategyOverride.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
+                    }
                 }
-            }
+            });
         }
 
         [Test]

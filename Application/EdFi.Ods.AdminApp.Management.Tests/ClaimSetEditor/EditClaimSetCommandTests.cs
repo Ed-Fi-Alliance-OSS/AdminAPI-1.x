@@ -32,12 +32,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(alreadyExistingClaimSet);
 
             var editModel = new EditClaimSetModel {ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId};
-            
-            var command = new EditClaimSetCommand(TestContext);
 
-            command.Execute(editModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new EditClaimSetCommand(securityContext);
+                command.Execute(editModel);
+            });
 
-            var editedClaimSet = TestContext.ClaimSets.Single(x => x.ClaimSetId == alreadyExistingClaimSet.ClaimSetId);
+            var editedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == alreadyExistingClaimSet.ClaimSetId));
             editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
         }
 

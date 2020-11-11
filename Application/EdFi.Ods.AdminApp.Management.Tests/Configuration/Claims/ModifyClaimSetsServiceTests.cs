@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -30,12 +30,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 
             TestContext.SaveChanges();
 
-            var testAuthorizationStrat = TestContext.ResourceClaimAuthorizationMetadatas
+            var testAuthorizationStrat = Transaction(securityContext => securityContext.ResourceClaimAuthorizationMetadatas
                 .Include(x => x.AuthorizationStrategy)
                 .Single(x =>
                     x.Action.ActionName == CloudOdsClaimAction.Read.ActionName &&
                     x.ResourceClaim.ResourceName == "educationStandards")
-                .AuthorizationStrategy;
+                .AuthorizationStrategy);
 
             testAuthorizationStrat.AuthorizationStrategyName.ShouldBe(CloudOdsClaimAuthorizationStrategy
                 .NoFurtherAuthorizationRequired.StrategyName);

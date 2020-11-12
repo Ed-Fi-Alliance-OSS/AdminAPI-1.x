@@ -54,7 +54,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
         @if (!CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
         {
-            <a href="@Url.Action("Applications", "OdsInstanceSettings")" class="@GetCssClassName(SettingsDisplay.IsEnabled)">
+            <a href="@Url.Action("Index", "Application")" class="@GetCssClassName(SettingsDisplay.IsEnabled)">
                 <div class="col-md-4 col-sm-6 hero-feature">
                     <div class="border-circular">
                         <img src="~/Content/images/settings@2x.png" width="200" alt="Settings"/>

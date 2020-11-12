@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
 #if NET48
     using EdFi.Ods.AdminApp.Management.Helpers;
 #else
@@ -295,13 +296,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             Save(resourceClaimWithDefaultAuthStrategies.Cast<object>().ToArray());
 
             return resourceClaimWithDefaultAuthStrategies;
-        }
-
-        protected IMapper GetMapper()
-        {
-            var profile = new AdminWebMappingProfile();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
-            return config.CreateMapper();
         }
     }
 }

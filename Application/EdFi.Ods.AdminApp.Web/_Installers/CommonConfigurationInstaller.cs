@@ -4,14 +4,16 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 #if NET48
 using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-#else
 using EdFi.Ods.Common.Extensions;
+#else
+using EdFi.Common.Extensions;
 #endif
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.LearningStandards.Core.Configuration;
@@ -26,8 +28,13 @@ using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
+#if NET48
 using EdFi.Ods.Common.Configuration;
 using EdFi.Ods.Common.Security;
+#else
+using EdFi.Common.Configuration;
+using EdFi.Common.Security;
+#endif
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using Hangfire;
@@ -139,25 +146,12 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<IProductionLearningStandardsJob, ProductionLearningStandardsJob>();
             services.AddSingleton(x => (WorkflowJob<LearningStandardsJobContext, ProductionLearningStandardsHub>) x.GetService<IProductionLearningStandardsJob>());//Resolve previously queued job.
 
-#if NET48
             services.AddSingleton<ISecureHasher, Pbkdf2HmacSha1SecureHasher>();
-#else
-            // The intended type Pbkdf2HmacSha1SecureHasher relies on the NET48-only ODS
-            // ChainOfResponsibilityFacility concept in the currently referenced version
-            // of ODS Platform packages. This appears to the .NET Core IoC container as an
-            // unresolvable circular dependency. Upon upgrading ODS Platform NuGet packages to
-            // a higher, .NET Core-only version, we expect Pbkdf2HmacSha1SecureHasher's constructor
-            // to simplify as it no longer uses ChainOfResponsibilityFacility and will no longer
-            // present as a circular dependency. Until then, we register a stub alternative
-            // to satisfy the IoC container. Upon upgrading packages, this and the stub class
-            // should be removed in favor of registering Pbkdf2HmacSha1SecureHasher like NET48
-            // above.
-            //
-            // Although the type is resolved at runtime, current code paths do not in fact invoke
-            // methods on the type, so this does not pose an immediate risk of defects.
-            services.AddSingleton<ISecureHasher, StubPbkdf2HmacSha1SecureHasher>();
-#endif
             services.AddSingleton<IPackedHashConverter, PackedHashConverter>();
+#if !NET48
+            services.AddSingleton<ISecureHasherProvider, SecureHasherProvider>(
+                x => new SecureHasherProvider(new List<ISecureHasher> { x.GetService<ISecureHasher>() }));
+#endif
             services.AddSingleton<ISecurePackedHashProvider, SecurePackedHashProvider>();
             services.AddSingleton<IHashConfigurationProvider, DefaultHashConfigurationProvider>();
 

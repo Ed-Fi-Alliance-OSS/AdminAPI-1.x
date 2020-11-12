@@ -1,11 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
 using EdFi.Security.DataAccess.Contexts;
 using Microsoft.AspNet.Identity;
@@ -15,6 +18,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public static class Testing
     {
+        private static IMapper _mapper = AutoMapperBootstrapper.CreateMapper();
+
+        public static TResult Scoped<TService, TResult>(Func<TService, TResult> func)
+        {
+            var result = default(TResult);
+
+            Scoped<TService>(service =>
+            {
+                result = func(service);
+            });
+
+            return result;
+        }
+
         public static void Scoped<TService>(Action<TService> action)
         {
             if (typeof(TService) == typeof(AdminAppIdentityDbContext))
@@ -55,13 +72,58 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                     action((TService)(object)service);
                 }
             }
-            else if (typeof(TService) == typeof(GetClaimSetsByApplicationNameQuery))
+            else if (typeof(TService) == typeof(IGetClaimSetsByApplicationNameQuery))
             {
                 using (var securityContext = new SqlServerSecurityContext())
                 using (var usersContext = new SqlServerUsersContext())
                 {
                     var service = new GetClaimSetsByApplicationNameQuery(securityContext, usersContext);
                     action((TService) (object) service);
+                }
+            }
+            else if (typeof(TService) == typeof(IGetApplicationsByClaimSetIdQuery))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                using (var usersContext = new SqlServerUsersContext())
+                {
+                    var service = new GetApplicationsByClaimSetIdQuery(securityContext, usersContext);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(IGetClaimSetByIdQuery))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                {
+                    var service = new GetClaimSetByIdQuery(securityContext);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(IGetResourcesByClaimSetIdQuery))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                {
+                    var service = new GetResourcesByClaimSetIdQuery(securityContext, _mapper);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(ClaimSetFileImportCommand))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                {
+                    var addClaimSetCommand = new AddClaimSetCommand(securityContext);
+                    var getResourceClaimsQuery = new GetResourceClaimsQuery(securityContext);
+                    var editResourceOnClaimSetCommand = new EditResourceOnClaimSetCommand(securityContext);
+                    var service = new ClaimSetFileImportCommand(addClaimSetCommand, editResourceOnClaimSetCommand, getResourceClaimsQuery);
+                    action((TService)(object)service);
+                }
+            }
+            else if (typeof(TService) == typeof(ClaimSetFileExportCommand))
+            {
+                using (var securityContext = new SqlServerSecurityContext())
+                {
+                    var getResourceByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, _mapper);
+                    var service = new ClaimSetFileExportCommand(securityContext, getResourceByClaimSetIdQuery);
+                    action((TService)(object)service);
                 }
             }
             else if (typeof(TService) == typeof(IUsersContext))

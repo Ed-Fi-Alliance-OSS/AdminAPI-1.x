@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -10,6 +10,9 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using System.Collections.Generic;
+using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -49,10 +52,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 AuthorizationStrategyForDelete = 0
             };
 
-            var command = new OverrideDefaultAuthorizationStrategyCommand(TestContext);
-            command.Execute(overrideModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+                command.Execute(overrideModel);
+            });
 
-            var resourceClaimsForClaimSet = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper()).AllResources(testClaimSet.ClaimSetId).ToList();
+            var resourceClaimsForClaimSet =
+                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
+                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
 
             var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
             
@@ -107,10 +115,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 AuthorizationStrategyForDelete = 0
             };
 
-            var command = new OverrideDefaultAuthorizationStrategyCommand(TestContext);
-            command.Execute(overrideModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+                command.Execute(overrideModel);
+            });
 
-            var resourceClaimsForClaimSet = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper()).AllResources(testClaimSet.ClaimSetId).ToList();
+            var resourceClaimsForClaimSet =
+                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
+                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
 
             var resultParentResource = resourceClaimsForClaimSet.Single(x => x.Id == testParentResource.ResourceClaimId);
             var resultChildResource1 =
@@ -150,7 +163,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testResource1ToEdit = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
 
-            TestContext.ClaimSetResourceClaims.Any(x => x.ResourceClaim.ResourceClaimId == testResource1ToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId).ShouldBe(false);
+            Transaction(securityContext => securityContext.ClaimSetResourceClaims
+                .Any(x => x.ResourceClaim.ResourceClaimId == testResource1ToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId))
+                .ShouldBe(false);
 
             var invalidOverrideModel = new OverrideDefaultAuthorizationStrategyModel
             {
@@ -162,10 +177,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 AuthorizationStrategyForDelete = appAuthorizationStrategies.Single(x => x.AuthorizationStrategyName == "TestAuthStrategy2").AuthorizationStrategyId
             };
 
-            var validator = new OverrideDefaultAuthorizationStrategyModelValidator(TestContext);
-            var validationResults = validator.Validate(invalidOverrideModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new OverrideDefaultAuthorizationStrategyModelValidator(securityContext);
+                var validationResults = validator.Validate(invalidOverrideModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
+            });
         }
     }
 }

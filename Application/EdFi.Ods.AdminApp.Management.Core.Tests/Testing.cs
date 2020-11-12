@@ -34,6 +34,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 action(scope.ServiceProvider.GetService<TService>());
         }
 
+        public static TResult Scoped<TService, TResult>(Func<TService, TResult> func)
+        {
+            var result = default(TResult);
+
+            Scoped<TService>(service =>
+            {
+                result = func(service);
+            });
+
+            return result;
+        }
+
         public static async Task ScopedAsync<TService>(Func<TService, Task> actionAsync)
         {
             using (var scope = ScopeFactory.CreateScope())

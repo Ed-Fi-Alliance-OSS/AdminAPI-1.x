@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -48,16 +49,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ResourceName = testResourceToDelete.ResourceName
             };
 
-            var command = new DeleteResourceOnClaimSetCommand(TestContext);
-            command.Execute(deleteResourceOnClaimSetModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new DeleteResourceOnClaimSetCommand(securityContext);
+                command.Execute(deleteResourceOnClaimSetModel);
+            });
 
-            var resourceClaimsForClaimSet =
-                TestContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
-            resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount - 1);
+            Transaction(securityContext =>
+            {
+                var resourceClaimsForClaimSet =
+                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
+                resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount - 1);
 
-            var resultResourceClaim = resourceClaimsForClaimSet.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testResourceToDelete.ResourceClaimId);
+                var resultResourceClaim = resourceClaimsForClaimSet.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testResourceToDelete.ResourceClaimId);
 
-            resultResourceClaim.ShouldBeNull();
+                resultResourceClaim.ShouldBeNull();
+            });
         }
 
         [Test]
@@ -89,19 +96,27 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ResourceName = testChildResourceToDelete.ResourceName
             };
 
-            var command = new DeleteResourceOnClaimSetCommand(TestContext);
-            command.Execute(deleteResourceOnClaimSetModel);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var command = new DeleteResourceOnClaimSetCommand(securityContext);
+                command.Execute(deleteResourceOnClaimSetModel);
+            });
 
-            var resourceClaimsForClaimSet = new GetResourcesByClaimSetIdQuery(TestContext, GetMapper()).AllResources(testClaimSet.ClaimSetId).ToList();
-            resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount);
+            var resourceClaimsForClaimSet =
+                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
+                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            resourceClaimsForClaimSet.Count.ShouldBe(parentResourcesOnClaimSetOriginalCount);
 
-            var resultChildResources =
-                TestContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
-            resultChildResources.Count().ShouldBe(childResourcesForParentOriginalCount - 1);
+            Transaction(securityContext =>
+            {
+                var resultChildResources =
+                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
+                resultChildResources.Count().ShouldBe(childResourcesForParentOriginalCount - 1);
 
-            var resultResourceClaim = resultChildResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testChildResourceToDelete.ResourceClaimId);
+                var resultResourceClaim = resultChildResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testChildResourceToDelete.ResourceClaimId);
 
-            resultResourceClaim.ShouldBeNull();
+                resultResourceClaim.ShouldBeNull();
+            });
         }
 
         [Test]

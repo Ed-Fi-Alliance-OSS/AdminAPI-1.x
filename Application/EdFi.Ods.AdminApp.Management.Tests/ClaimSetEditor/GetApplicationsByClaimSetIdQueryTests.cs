@@ -31,14 +31,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             foreach (var testClaimSet in testClaimSets)
             {
-                Management.ClaimSetEditor.Application[] results = null;
-
-                Scoped<IUsersContext>(usersContext =>
-                {
-                    var query = new GetApplicationsByClaimSetIdQuery(TestContext, usersContext);
-
-                    results = query.Execute(testClaimSet.ClaimSetId).ToArray();
-                });
+                var results = Scoped<IGetApplicationsByClaimSetIdQuery, Management.ClaimSetEditor.Application[]>(
+                    query => query.Execute(testClaimSet.ClaimSetId).ToArray());
 
                 Scoped<IUsersContext>(usersContext =>
                 {

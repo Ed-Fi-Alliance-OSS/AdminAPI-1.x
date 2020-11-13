@@ -33,27 +33,17 @@ namespace EdFi.Ods.AdminApp.Web
 {
     public class Startup
     {
-        private readonly IWebHostEnvironment _env;
-
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            _env = env;
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; set; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
-          
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(_env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-              Configuration = builder.Build();
 
             var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(databaseEngine));

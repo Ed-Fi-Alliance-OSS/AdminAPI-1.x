@@ -54,7 +54,7 @@ param(
     # UnitTest / UnitTests, IntegrationTest / IntegrationTests, Package, Push.
     [string]
     [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push",
-        "BuildAndTest", "UnitTests", "IntegrationTests")]
+        "BuildAndTest", "UnitTests", "IntegrationTests","BuildAndPackageNetCore")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -94,7 +94,12 @@ param(
     # applies with the Push command. If not set, then the script looks for a
     # NuGet package corresponding to the provided $Version and $BuildCounter.
     [string]
-    $PackageFile
+    $PackageFile,
+	
+    # Path for publishing the core application files. Required, 
+    # if BuildAndPackageNetCore command selected. 
+    [string]
+    $OutputDirectory
 )
 
 $solution = "Application\Ed-Fi-ODS-Tools.sln"
@@ -378,6 +383,30 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
+function Invoke-BuildAndPackageNetCore{
+
+    if(!$OutputDirectory)
+    {
+        throw "Please provide OutputDirectory, while selecting BuildAndPackageNetCore command"  
+    }
+	
+    $outputPath = "$OutputDirectory/publish" 
+    $env:ASPNETCORE_ENVIRONMENT=$configuration
+    $project = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/EdFi.Ods.AdminApp.Web.Core.csproj" 
+    dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath
+ 
+    InitializeNuGet
+    $arguments = @(
+            "pack",  "$outputPath/EdFi.Ods.AdminApp.Web.Core.nuspec",
+            "-OutputDirectory", "$outputPath",
+            "-Version", "$Version",
+            "-Properties", "Configuration=$configuration",
+            "-NoPackageAnalysis"
+        )
+        Write-Host "$nugetExe $arguments" -ForegroundColor Magenta
+        &$script:nugetExe @arguments
+}
+
 Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
@@ -393,6 +422,7 @@ Invoke-Main {
         }
         Package { Invoke-BuildPackage }
         Push { Invoke-PushPackage }
+        BuildAndPackageNetCore { Invoke-BuildAndPackageNetCore }
         default { throw "Command '$Command' is not recognized" }
     }
 }

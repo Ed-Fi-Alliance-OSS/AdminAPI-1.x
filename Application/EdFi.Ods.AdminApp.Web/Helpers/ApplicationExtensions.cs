@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
     {
         public static bool IsSystemReservedApplicationName(string applicationName)
         {
-            return CloudOdsAdminApp.ApplicationName.Equals(applicationName.Trim());
+            return applicationName != null && CloudOdsAdminApp.ApplicationName.Equals(applicationName.Trim());
         }
 
         public static bool IsSystemReservedApplication(this Application application)

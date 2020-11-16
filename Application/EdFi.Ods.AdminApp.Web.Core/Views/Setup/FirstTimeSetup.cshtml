@@ -60,7 +60,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         var handleSuccess = function() {
             $('#finish-setup-link').removeClass('btn-primary btn-danger').addClass('btn-success');
             $('#finish-setup-link').html('Success <span class="padding-left"><i class="fa fa-check-circle"></i></span>');
-            window.location = '@Url.Action("Index", "Home", new { setupCompleted = true })';
+            window.location = '@Url.Action("PostSetup", "Home", new { setupCompleted = true })';
         };
 
         var handleFailure = function (data) {

@@ -1099,6 +1099,7 @@
     <Content Include="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
     <Content Include="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Include="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
+    <Content Include="Views\Home\PostSetup.cshtml" />
     <None Include="Web.base.config" />
     <Content Include="Views\OdsInstances\RegisterOdsInstance.cshtml" />
     <Content Include="Views\OdsInstances\Index.cshtml" />

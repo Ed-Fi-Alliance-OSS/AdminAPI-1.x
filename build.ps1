@@ -54,7 +54,7 @@ param(
     # UnitTest / UnitTests, IntegrationTest / IntegrationTests, Package, Push.
     [string]
     [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push",
-        "BuildAndTest", "UnitTests", "IntegrationTests","BuildAndPackageNetCore")]
+        "BuildAndTest", "UnitTests", "IntegrationTests")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -95,11 +95,10 @@ param(
     # NuGet package corresponding to the provided $Version and $BuildCounter.
     [string]
     $PackageFile,
-	
-    # Path for publishing the core application files. Required, 
-    # if BuildAndPackageNetCore command selected. 
-    [string]
-    $OutputDirectory
+
+    # Specify whether net core build 
+    [switch]
+    $netCore  
 )
 
 $solution = "Application\Ed-Fi-ODS-Tools.sln"
@@ -292,8 +291,16 @@ function RunNuGetPack {
         $PackageVersion
     )
 
+    if($netCore)
+    {
+        $nugetSpecPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/publish/EdFi.Ods.AdminApp.Web.Core.nuspec"
+    }
+    else
+    {
+        $nugetSpecPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web/EdFi.Ods.AdminApp.Web.nuspec"
+    }
     $arguments = @(
-        "pack",  "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web/EdFi.Ods.AdminApp.Web.nuspec",
+        "pack",  $nugetSpecPath,
         "-OutputDirectory", "$PSScriptRoot",
         "-Version", "$PackageVersion",
         "-Properties", "Configuration=$configuration",
@@ -309,7 +316,7 @@ function GetPackagePreleaseVersion {
 
 function BuildPackage {
     RunNuGetPack -PackageVersion $Version
-    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion)
+    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion)   
 }
 
 function PushPackage {
@@ -332,14 +339,23 @@ function PushPackage {
 
 function Invoke-Build {
     Write-Host "Building Version $Version" -ForegroundColor Cyan
-
-    Invoke-Step { Initialize-MsBuild $MsBuildFolder }
-    Invoke-Step { InitializeNuGet }
-    Invoke-Step { Clean }
-    Invoke-Step { Restore }
-    Invoke-Step { AssemblyInfo }
-    Invoke-Step { Compile }
-    Invoke-Step { RevertAssemblyInfo }
+ 
+    if($netCore)
+    {
+        $outputPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/publish"        
+        $project = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/EdFi.Ods.AdminApp.Web.Core.csproj" 
+        dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath
+    }
+    else
+    {
+        Invoke-Step { Initialize-MsBuild $MsBuildFolder }
+        Invoke-Step { InitializeNuGet }
+        Invoke-Step { Clean }
+        Invoke-Step { Restore }
+        Invoke-Step { AssemblyInfo }
+        Invoke-Step { Compile }
+        Invoke-Step { RevertAssemblyInfo }  
+    }
 }
 
 function Invoke-Clean {
@@ -383,30 +399,6 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
-function Invoke-BuildAndPackageNetCore{
-
-    if(!$OutputDirectory)
-    {
-        throw "Please provide OutputDirectory, while selecting BuildAndPackageNetCore command"  
-    }
-	
-    $outputPath = "$OutputDirectory/publish" 
-    $env:ASPNETCORE_ENVIRONMENT=$configuration
-    $project = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/EdFi.Ods.AdminApp.Web.Core.csproj" 
-    dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath
- 
-    InitializeNuGet
-    $arguments = @(
-            "pack",  "$outputPath/EdFi.Ods.AdminApp.Web.Core.nuspec",
-            "-OutputDirectory", "$outputPath",
-            "-Version", "$Version",
-            "-Properties", "Configuration=$configuration",
-            "-NoPackageAnalysis"
-        )
-        Write-Host "$nugetExe $arguments" -ForegroundColor Magenta
-        &$script:nugetExe @arguments
-}
-
 Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
@@ -421,8 +413,7 @@ Invoke-Main {
             Invoke-IntegrationTests
         }
         Package { Invoke-BuildPackage }
-        Push { Invoke-PushPackage }
-        BuildAndPackageNetCore { Invoke-BuildAndPackageNetCore }
+        Push { Invoke-PushPackage }      
         default { throw "Command '$Command' is not recognized" }
     }
 }

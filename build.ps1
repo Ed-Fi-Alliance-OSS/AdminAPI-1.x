@@ -342,9 +342,15 @@ function Invoke-Build {
  
     if($netCore)
     {
-        $outputPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/publish"        
-        $project = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/EdFi.Ods.AdminApp.Web.Core.csproj" 
-        dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath
+        $baseDir = "$PSScriptRoot/Application"
+        $projectPaths = Get-ChildItem -Path $baseDir -Include *.csproj -Recurse -exclude EdFi.Ods.AdminApp.Web.csproj,EdFi.Ods.AdminApp.Management.Tests.csproj       
+        foreach ($projectPath in $projectPaths) {  
+            Write-Host ("Building => " + $projectPath)
+            dotnet build $projectPath -c $configuration
+        }      
+        $outputPath = "$baseDir/EdFi.Ods.AdminApp.Web.Core/publish"        
+        $project = "$baseDir/EdFi.Ods.AdminApp.Web.Core/EdFi.Ods.AdminApp.Web.Core.csproj" 
+        dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath --no-build
     }
     else
     {

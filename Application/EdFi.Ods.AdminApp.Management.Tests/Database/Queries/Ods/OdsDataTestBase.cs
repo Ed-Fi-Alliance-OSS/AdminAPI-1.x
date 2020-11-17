@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using Microsoft.Extensions.Options;
 using Moq;
 
 
@@ -517,7 +518,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
             var mockReportConfigProvider = new Mock<IReportsConfigProvider>();
             mockReportConfigProvider.Setup(x => x.Create(CloudOdsDatabaseNames.ProductionOds, ApiMode.Sandbox)).Returns(new ReportsConfig
                 { ConnectionString = TestOdsConnectionProvider.ConnectionString, ScriptFolder = "Reports.Sql" });
-            var reportViews = new ReportViewsSetUp(mockReportConfigProvider.Object, new UpgradeEngineFactory());
+            #if NET48
+                var upgradeEngineFactory = new UpgradeEngineFactory();
+            #else
+                var appSettings = new Mock<IOptions<AppSettings>>();
+                appSettings.Setup(x => x.Value).Returns(ConfigurationHelper.GetAppSettings());
+                var options = appSettings.Object;
+                var upgradeEngineFactory = new UpgradeEngineFactory(options);
+            #endif
+            var reportViews = new ReportViewsSetUp(mockReportConfigProvider.Object, upgradeEngineFactory);
             reportViews.CreateReportViews(CloudOdsDatabaseNames.ProductionOds, ApiMode.Sandbox);
         }
 

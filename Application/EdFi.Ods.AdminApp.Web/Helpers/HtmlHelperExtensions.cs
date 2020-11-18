@@ -440,7 +440,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
             var errorMessage = "Restarting the ODS / API is known to solve issues with first time setup or previously cached information, and may help resolve this issue on its own." +
                                " Please try restarting the ODS / API now and reload this to see if this same error occurs." +
-                               " If the error persists, please feel to schedule a ticket via <a href='https://tracker.ed-fi.org/projects/EDFI/issues'>Ed-Fi Tracker</a>" +
+                               " If the error persists, please check the application logs and then feel to schedule a ticket via <a href='https://tracker.ed-fi.org/projects/EDFI/issues'>Ed-Fi Tracker</a>" +
                                " or visit <a href='https://techdocs.ed-fi.org/display/ADMIN'>Admin App documentation</a> for more information.";
 
             var contentLoadingArea = new DivTag().Data("source-url", url).Data("error-message", errorMessage).AddClass("load-action-async");

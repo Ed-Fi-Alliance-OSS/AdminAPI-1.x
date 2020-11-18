@@ -67,7 +67,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private bool TryQueryInstanceRegistration(out OdsInstanceRegistration instanceRegistration)
         {
-            var singleInstanceLookup = _adminAppDbContext.OdsInstanceRegistrations.FirstOrDefault(x =>
+            var singleInstanceLookup = _adminAppDbContext.OdsInstanceRegistrations.AsEnumerable().FirstOrDefault(x =>
                 x.Name.Equals(CloudOdsAdminAppSettings.Instance.OdsInstanceName,
                     StringComparison.InvariantCultureIgnoreCase));
 

@@ -111,9 +111,10 @@
 
         }
 
-        $("#select-district-report").find("select").change(function () {
+        $("#select-district-report").find("select").change(function () {            
             var leaId = $(this).val();
-            var url = "/Reports/SelectDistrict" + "/" + leaId;
+            var url = "@Url.Action("SelectDistrict", "Reports", new { id="param-id" })";
+            url = url.replace("param-id", leaId);           
             window.location = url;
         });
 

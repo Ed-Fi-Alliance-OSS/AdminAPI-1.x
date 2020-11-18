@@ -51,6 +51,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
+        public ActionResult PostSetup(bool setupCompleted = false)
+        {
+            if (setupCompleted)
+            {
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Error(string message)
         {
             #if NET48

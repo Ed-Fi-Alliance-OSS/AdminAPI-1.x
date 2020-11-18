@@ -64,6 +64,7 @@ namespace EdFi.Ods.AdminApp.Web
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();
                         options.Filters.Add<InstanceContextFilter>();
+                        options.Filters.Add<HandleAjaxErrorAttribute>();
                     })
                     .AddFluentValidation(
                         opt =>

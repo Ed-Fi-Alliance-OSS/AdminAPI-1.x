@@ -351,6 +351,7 @@ function LoadAsyncActions() {
     $(".load-action-async").each(function () {
         var $target = $(this);
         var sourceUrl = $target.attr("data-source-url");
+        var customErrorMessage = $target.attr("data-error-message");
 
         $.ajax({
             async: true,
@@ -371,7 +372,11 @@ function LoadAsyncActions() {
                     errorMessage = errorMessage + "No response from server";
                 }
 
-                $target.html("<em class='text-danger'>"+ errorMessage + "</em>");
+                if (!StringIsNullOrWhitespace(customErrorMessage)) {
+                    errorMessage = errorMessage + ". <br/><b>" + customErrorMessage + "</b>";
+                }
+
+                $target.html("<em class='text-danger'>" + errorMessage + "</em>");
             },
             complete: function() {
                 $target.removeClass("load-action-async");

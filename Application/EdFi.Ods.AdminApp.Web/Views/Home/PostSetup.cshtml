@@ -1,0 +1,21 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+
+@{
+    ViewBag.Title = "Post Setup | ODS Restart Needed";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>ODS Restart Needed</h2>
+        <div class="alert alert-info">
+            Admin App has prepared the ODS / API for use, including updates to its Claim Sets security rules and other items that may be cached. For those rules to take effect, <b> please restart the ODS now before proceeding.</b>
+        </div>
+        @Html.ActionLink("Proceed", "Index", "Home", new {setupCompleted = true}, new {@class = "btn btn-primary"})
+    </div>
+</div>

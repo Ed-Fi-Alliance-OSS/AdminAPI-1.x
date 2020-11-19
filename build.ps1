@@ -94,7 +94,11 @@ param(
     # applies with the Push command. If not set, then the script looks for a
     # NuGet package corresponding to the provided $Version and $BuildCounter.
     [string]
-    $PackageFile
+    $PackageFile,
+
+    # Specify whether net core build 
+    [switch]
+    $netCore  
 )
 
 $solution = "Application\Ed-Fi-ODS-Tools.sln"
@@ -287,8 +291,16 @@ function RunNuGetPack {
         $PackageVersion
     )
 
+    if($netCore)
+    {
+        $nugetSpecPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web.Core/publish/EdFi.Ods.AdminApp.Web.Core.nuspec"
+    }
+    else
+    {
+        $nugetSpecPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web/EdFi.Ods.AdminApp.Web.nuspec"
+    }
     $arguments = @(
-        "pack",  "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web/EdFi.Ods.AdminApp.Web.nuspec",
+        "pack",  $nugetSpecPath,
         "-OutputDirectory", "$PSScriptRoot",
         "-Version", "$PackageVersion",
         "-Properties", "Configuration=$configuration",
@@ -304,7 +316,7 @@ function GetPackagePreleaseVersion {
 
 function BuildPackage {
     RunNuGetPack -PackageVersion $Version
-    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion)
+    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion)   
 }
 
 function PushPackage {
@@ -327,14 +339,29 @@ function PushPackage {
 
 function Invoke-Build {
     Write-Host "Building Version $Version" -ForegroundColor Cyan
-
-    Invoke-Step { Initialize-MsBuild $MsBuildFolder }
-    Invoke-Step { InitializeNuGet }
-    Invoke-Step { Clean }
-    Invoke-Step { Restore }
-    Invoke-Step { AssemblyInfo }
-    Invoke-Step { Compile }
-    Invoke-Step { RevertAssemblyInfo }
+ 
+    if($netCore)
+    {
+        $baseDir = "$PSScriptRoot/Application"
+        $projectPaths = Get-ChildItem -Path $baseDir -Include *.csproj -Recurse -exclude EdFi.Ods.AdminApp.Web.csproj,EdFi.Ods.AdminApp.Management.Tests.csproj       
+        foreach ($projectPath in $projectPaths) {  
+            Write-Host ("Building => " + $projectPath)
+            dotnet build $projectPath -c $configuration
+        }      
+        $outputPath = "$baseDir/EdFi.Ods.AdminApp.Web.Core/publish"        
+        $project = "$baseDir/EdFi.Ods.AdminApp.Web.Core/EdFi.Ods.AdminApp.Web.Core.csproj" 
+        dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath --no-build
+    }
+    else
+    {
+        Invoke-Step { Initialize-MsBuild $MsBuildFolder }
+        Invoke-Step { InitializeNuGet }
+        Invoke-Step { Clean }
+        Invoke-Step { Restore }
+        Invoke-Step { AssemblyInfo }
+        Invoke-Step { Compile }
+        Invoke-Step { RevertAssemblyInfo }  
+    }
 }
 
 function Invoke-Clean {
@@ -392,7 +419,7 @@ Invoke-Main {
             Invoke-IntegrationTests
         }
         Package { Invoke-BuildPackage }
-        Push { Invoke-PushPackage }
+        Push { Invoke-PushPackage }      
         default { throw "Command '$Command' is not recognized" }
     }
 }

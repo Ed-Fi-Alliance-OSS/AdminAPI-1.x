@@ -1059,7 +1059,6 @@
     <Content Include="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Include="Views\Update\Index.cshtml" />
     <Content Include="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Include="Views\Error\NotYetImplemented.cshtml" />
     <Content Include="Views\Shared\_SignalRStatus_LS.cshtml" />
     <Content Include="Views\Shared\_BulkUploadForm.cshtml" />
     <Content Include="Views\OdsInstanceSettings\BulkLoad.cshtml" />

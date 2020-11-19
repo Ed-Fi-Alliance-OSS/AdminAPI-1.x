@@ -13,12 +13,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
         public override List<TabDisplay<GlobalSettingsTabEnumeration>> GetGlobalSettingsTabDisplay(GlobalSettingsTabEnumeration selectedTab)
         {
             var globalSettingsTabs = base.GetGlobalSettingsTabDisplay(selectedTab);
-
-            var lookAndFeelTab =
-                globalSettingsTabs.Find(x => x.Tab == GlobalSettingsTabEnumeration.LookAndFeel);
-
-            lookAndFeelTab.IsEnabled = false;
-
             return globalSettingsTabs;
         }
 

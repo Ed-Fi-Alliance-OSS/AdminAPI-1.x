@@ -217,11 +217,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 _appSettings.DefaultOdsInstance, model.Environment, settings);
 
             return JsonSuccess("Log settings updated successfully");
-        }
-
-        public ActionResult LookAndFeel()
-        {
-            return RedirectToAction("NotYetImplemented", "Error");
-        }
+        }       
     }
 }

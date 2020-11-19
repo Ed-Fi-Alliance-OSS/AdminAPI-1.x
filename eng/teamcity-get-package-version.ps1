@@ -7,14 +7,14 @@
 # was copied over from an upstream dependency.
 
 # There should only be one file here - the pre-release NuGet package from the upstream build artifacts
-$pkg = Get-ChildItem -Filter "*pre*.nupkg"
+$pkg = Get-ChildItem -Filter "*Core*pre*.nupkg"
 
 if (-not $pkg) {
     throw "No pre-release package found."
 }
 
 # Extract the version number
-$result = $pkg -match "Web\.(\d)\.(\d)\.(\d)\-pre(\d+)\.nupkg"
+$result = $pkg -match "Web.Core\.(\d)\.(\d)\.(\d)\-pre(\d+)\.nupkg"
 
 if (-not $result) {
     throw "Package name does not match the expected naming convention."

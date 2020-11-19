@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -20,8 +20,7 @@ namespace EdFi.Ods.AdminApp.Web.Display.TabEnumeration
         }
 
         public static readonly GlobalSettingsTabEnumeration Vendors = new GlobalSettingsTabEnumeration(1, "Vendors", RouteHelpers.GetActionName<GlobalSettingsController>(x => x.Vendors()));
-        public static readonly GlobalSettingsTabEnumeration AdvancedSettings = new GlobalSettingsTabEnumeration(2, "Advanced Settings", RouteHelpers.GetActionName<GlobalSettingsController>(x => x.AdvancedSettings()));
-        public static readonly GlobalSettingsTabEnumeration LookAndFeel = new GlobalSettingsTabEnumeration(3, "Look & Feel", RouteHelpers.GetActionName<GlobalSettingsController>(x => x.LookAndFeel()));
+        public static readonly GlobalSettingsTabEnumeration AdvancedSettings = new GlobalSettingsTabEnumeration(2, "Advanced Settings", RouteHelpers.GetActionName<GlobalSettingsController>(x => x.AdvancedSettings()));        
         public static readonly GlobalSettingsTabEnumeration ClaimSets = new GlobalSettingsTabEnumeration(4, "Claim Sets", RouteHelpers.GetActionName<GlobalSettingsController>(x => x.ClaimSets()));
         public static readonly GlobalSettingsTabEnumeration Users = new GlobalSettingsTabEnumeration(5, "Users", RouteHelpers.GetActionName<GlobalSettingsController>(x => x.Users()));
     }

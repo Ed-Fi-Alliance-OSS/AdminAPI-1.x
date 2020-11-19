@@ -23,8 +23,7 @@ namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
             var globalSettingsTabs = base.GetGlobalSettingsTabDisplay(selectedTab);
 
             var tabsToDisable = globalSettingsTabs.Where(x =>
-                x.Tab == GlobalSettingsTabEnumeration.AdvancedSettings ||
-                x.Tab == GlobalSettingsTabEnumeration.LookAndFeel);
+                x.Tab == GlobalSettingsTabEnumeration.AdvancedSettings);
 
             tabsToDisable.ForEach(tab =>
             {

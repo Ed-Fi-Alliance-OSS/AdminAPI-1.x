@@ -15,11 +15,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     [BypassSetupRequiredFilter, BypassInstanceContextFilter]
     public class ErrorController : ControllerBase
     {
-        public ActionResult NotYetImplemented()
-        {
-            return View();
-        }
-
         public ActionResult MultiInstanceError()
         {
             return View();

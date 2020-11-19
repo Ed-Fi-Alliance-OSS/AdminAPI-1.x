@@ -617,8 +617,7 @@ function Invoke-DbUpScripts {
         if(!(Test-IsPostgreSQL -Engine $Config.engine)){
             $engine = "SqlServer"
         }
-        Write-Host $Config.WebApplicationPath
-        Write-Host $adminConnectionString
+        
         $params = @{
             Verb = "Deploy"
             Engine = $engine

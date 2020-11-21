@@ -21,7 +21,7 @@
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenRunningBulkUpload.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenRunningTheLearningStandardsSync.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/OdsInstanceSettingsController/WhenUpdatingLearningStandards.cs" LinkBase="Controllers/OdsInstanceSettingsController" /> -->
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/BulkUploadValidationTests.cs" LinkBase="Database/Commands" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Commands/BulkUploadValidationTests.cs" LinkBase="Database/Commands" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Database/Models/RolePermissionTests.cs" LinkBase="Database/Models" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/HomeScreenDisplayAssertions.cs" LinkBase="Display/HomeScreenDisplayService" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingAzureHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" />

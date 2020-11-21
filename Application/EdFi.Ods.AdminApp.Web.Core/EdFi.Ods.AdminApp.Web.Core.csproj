@@ -142,7 +142,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/EditApplicationModel.cs" LinkBase="Models/ViewModels/Application" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/RegenerateSecretModel.cs" LinkBase="Models/ViewModels/Application" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ApplicationModel.cs" LinkBase="Models/ViewModels" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/BulkFileUploadModel.cs" LinkBase="Models/ViewModels" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/BulkFileUploadModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/AddClaimSetModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/AuthStrategyEditorModel.cs" LinkBase="Models/ViewModels/ClaimSets" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ClaimSets/ClaimSetDetailsModel.cs" LinkBase="Models/ViewModels/ClaimSets" />

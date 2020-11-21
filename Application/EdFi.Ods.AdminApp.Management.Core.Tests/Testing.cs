@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 .Build()
                 .Services;
 
-            ScopeFactory = serviceProvider.GetService<IServiceScopeFactory>();
+            ScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
         }
 
         public static void EnsureInitialized()
@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public static void Scoped<TService>(Action<TService> action)
         {
             using (var scope = ScopeFactory.CreateScope())
-                action(scope.ServiceProvider.GetService<TService>());
+                action(scope.ServiceProvider.GetRequiredService<TService>());
         }
 
         public static TResult Scoped<TService, TResult>(Func<TService, TResult> func)
@@ -49,13 +49,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public static async Task ScopedAsync<TService>(Func<TService, Task> actionAsync)
         {
             using (var scope = ScopeFactory.CreateScope())
-                await actionAsync(scope.ServiceProvider.GetService<TService>());
+                await actionAsync(scope.ServiceProvider.GetRequiredService<TService>());
         }
 
         public static async Task<TResult> ScopedAsync<TService, TResult>(Func<TService, Task<TResult>> actionAsync)
         {
             using (var scope = ScopeFactory.CreateScope())
-                return await actionAsync(scope.ServiceProvider.GetService<TService>());
+                return await actionAsync(scope.ServiceProvider.GetRequiredService<TService>());
         }
     }
 }

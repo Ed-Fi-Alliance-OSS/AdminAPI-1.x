@@ -35,7 +35,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             SetupUserWithOdsInstanceRegistrations(testUser1.Id, testInstancesAssignedToUser1);
             SetupUserWithOdsInstanceRegistrations(testUser2.Id, testInstancesAssignedToUser2);
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(command =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(command =>
             {
                 var resultsForUser1 = command.Execute(testUser1.Id).ToList();
 

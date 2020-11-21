@@ -44,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 using (var service = new AdminAppDbContext())
                     action((TService)(object)service);
             }
-            else if (typeof(TService) == typeof(GetOdsInstanceRegistrationsByUserIdQuery))
+            else if (typeof(TService) == typeof(IGetOdsInstanceRegistrationsByUserIdQuery))
             {
                 using (var identity = AdminAppIdentityDbContext.Create())
                 using (var database = new AdminAppDbContext())

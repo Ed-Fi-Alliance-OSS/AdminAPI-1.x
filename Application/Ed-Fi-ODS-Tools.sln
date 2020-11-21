@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Managemen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web.Core", "EdFi.Ods.AdminApp.Web.Core\EdFi.Ods.AdminApp.Web.Core.csproj", "{7B0859A2-C153-461A-ACC1-D5874994030E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Core.Tests", "EdFi.Ods.AdminApp.Management.Core.Tests\EdFi.Ods.AdminApp.Management.Core.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Tests", "EdFi.Ods.AdminApp.Management.Tests\EdFi.Ods.AdminApp.Management.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

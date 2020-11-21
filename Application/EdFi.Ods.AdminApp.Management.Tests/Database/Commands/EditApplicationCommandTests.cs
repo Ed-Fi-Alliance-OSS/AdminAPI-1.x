@@ -115,11 +115,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             {
                 var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
 
-                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
                 persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
-                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
 
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
@@ -154,11 +154,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             {
                 var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
 
-                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name", CloudOdsEnvironment.Production));
+                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
                 persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
-                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name", CloudOdsEnvironment.Production));
+                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
 
                 persistedApplication.Profiles.Count.ShouldBe(1);

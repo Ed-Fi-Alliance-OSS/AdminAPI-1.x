@@ -34,15 +34,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             var newUser = new AddUserModel
             {
                 Email = $"test{guidString}@test.com",
-                Password = "testPassword",
-                ConfirmPassword = "testPassword"
+                Password = "Passw0rd!",
+                ConfirmPassword = "Passw0rd!"
             };
 
             await ScopedAsync<UserManager<AdminAppUser>>(async manager =>
             {
                 var command = new AddUserCommand();
 
-                var (userId, _) = await command.Execute(newUser, manager);
+                var (userId, identityResult) = await command.Execute(newUser, manager);
+
+#if NET48
+                string.Join(Environment.NewLine, identityResult.Errors).ShouldBe("");
+#else
+                string.Join(Environment.NewLine, identityResult.Errors.Select(x => x.Description)).ShouldBe("");
+#endif
+                identityResult.Succeeded.ShouldBeTrue();
 
                 var addedUser = Query(userId);
                 addedUser.UserName.ShouldBe($"test{guidString}@test.com");

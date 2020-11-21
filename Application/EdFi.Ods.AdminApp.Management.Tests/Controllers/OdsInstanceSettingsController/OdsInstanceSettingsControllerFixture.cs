@@ -3,9 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -17,10 +15,16 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
+#if !NET48
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+#endif
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsController
 {
@@ -33,8 +37,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         [SetUp]
         public void SetUp()
         {
-            Mapper = new Mock<IMapper>();
-            GetVendorsQuery = new Mock<IGetVendorsQuery>();
             OdsApiFacadeFactory = new Mock<IOdsApiFacadeFactory>();
             GetProductionApiProvisioningWarningsQuery = new Mock<IGetProductionApiProvisioningWarningsQuery>();
             CachedItems = new Mock<ICachedItems>();
@@ -58,11 +60,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     => x.ValidateAsync(It.IsAny<BulkFileUploadModel>(), CancellationToken.None)).
                 Returns(Task.FromResult(validationResult));
             AppSettings = new Mock<IOptions<AppSettings>>();
+#if NET48
             AppSettings.Setup(x => x.Value).Returns(ConfigurationHelper.GetAppSettings());
+#else
+            Scoped<IOptions<AppSettings>>(appSettings =>
+            {
+                AppSettings.Setup(x => x.Value).Returns(appSettings.Value);
+            });
+            WebHostingEnvironment = new Mock<IWebHostEnvironment>();
+            WebHostingEnvironment.Setup(x => x.ContentRootPath).Returns(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+#endif
 
             SystemUnderTest = new Web.Controllers.OdsInstanceSettingsController(
-                Mapper.Object,
-                GetVendorsQuery.Object,
                 OdsApiFacadeFactory.Object,
                 GetProductionApiProvisioningWarningsQuery.Object,
                 CachedItems.Object,
@@ -81,13 +90,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 InferOdsApiVersion.Object,
                 bulkFileUploadValidator.Object,
                 AppSettings.Object
+#if !NET48
+                , WebHostingEnvironment.Object
+#endif
             );
 
             AdditionalSetup();
         }
 
-        protected Mock<IMapper> Mapper;
-        protected Mock<IGetVendorsQuery> GetVendorsQuery;
         protected Mock<IOdsApiFacadeFactory> OdsApiFacadeFactory;
         protected Mock<IGetProductionApiProvisioningWarningsQuery> GetProductionApiProvisioningWarningsQuery;
         protected Mock<ICachedItems> CachedItems;
@@ -107,5 +117,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         protected int OdsInstanceId = 1234;
         protected Mock<IInferOdsApiVersion> InferOdsApiVersion;
         protected Mock<IOptions<AppSettings>> AppSettings;
+#if !NET48
+        protected Mock<IWebHostEnvironment> WebHostingEnvironment;
+#endif
     }
 }

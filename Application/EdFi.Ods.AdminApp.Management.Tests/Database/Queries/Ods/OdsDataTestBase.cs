@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -17,7 +17,7 @@ using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using Microsoft.Extensions.Options;
 using Moq;
-
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
 {
@@ -518,16 +518,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
             var mockReportConfigProvider = new Mock<IReportsConfigProvider>();
             mockReportConfigProvider.Setup(x => x.Create(CloudOdsDatabaseNames.ProductionOds, ApiMode.Sandbox)).Returns(new ReportsConfig
                 { ConnectionString = TestOdsConnectionProvider.ConnectionString, ScriptFolder = "Reports.Sql" });
-            #if NET48
-                var upgradeEngineFactory = new UpgradeEngineFactory();
-            #else
-                var appSettings = new Mock<IOptions<AppSettings>>();
-                appSettings.Setup(x => x.Value).Returns(ConfigurationHelper.GetAppSettings());
-                var options = appSettings.Object;
-                var upgradeEngineFactory = new UpgradeEngineFactory(options);
-            #endif
-            var reportViews = new ReportViewsSetUp(mockReportConfigProvider.Object, upgradeEngineFactory);
-            reportViews.CreateReportViews(CloudOdsDatabaseNames.ProductionOds, ApiMode.Sandbox);
+
+            Scoped<IUpgradeEngineFactory>(upgradeEngineFactory =>
+            {
+                var reportViews = new ReportViewsSetUp(mockReportConfigProvider.Object, upgradeEngineFactory);
+                reportViews.CreateReportViews(CloudOdsDatabaseNames.ProductionOds, ApiMode.Sandbox);
+            });
         }
 
         [OneTimeTearDown]

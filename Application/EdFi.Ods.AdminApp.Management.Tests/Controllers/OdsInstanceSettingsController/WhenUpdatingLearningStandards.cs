@@ -5,7 +5,11 @@
 
 using System;
 using System.Threading.Tasks;
+#if NET48
 using System.Web.Mvc;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
@@ -44,10 +48,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 // Act
                 var result = await SystemUnderTest.UpdateLearningStandards();
 
+#if NET48
                 // Assert
                 result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                ((HttpStatusCodeResult)result).StatusCode.ShouldBe(200);
+#else
+                // Assert
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
+#endif
             }
 
 
@@ -107,10 +116,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 // Act
                 var result = await SystemUnderTest.UpdateLearningStandards();
 
+#if NET48
                 // Assert
                 result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                ((HttpStatusCodeResult)result).StatusCode.ShouldBe(200);
+#else
+                // Assert
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
+#endif
             }
 
 
@@ -169,10 +183,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 // Act
                 var result = await SystemUnderTest.UpdateLearningStandards();
 
+#if NET48
                 // Assert
                 result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                ((HttpStatusCodeResult)result).StatusCode.ShouldBe(200);
+#else
+                // Assert
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
+#endif
             }
 
 

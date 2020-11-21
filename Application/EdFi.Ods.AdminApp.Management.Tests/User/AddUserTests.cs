@@ -11,11 +11,7 @@ using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
-#if NET48
-using Microsoft.AspNet.Identity;
-#else
 using Microsoft.AspNetCore.Identity;
-#endif
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -44,11 +40,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
                 var (userId, identityResult) = await command.Execute(newUser, manager);
 
-#if NET48
-                string.Join(Environment.NewLine, identityResult.Errors).ShouldBe("");
-#else
                 string.Join(Environment.NewLine, identityResult.Errors.Select(x => x.Description)).ShouldBe("");
-#endif
                 identityResult.Succeeded.ShouldBeTrue();
 
                 var addedUser = Query(userId);

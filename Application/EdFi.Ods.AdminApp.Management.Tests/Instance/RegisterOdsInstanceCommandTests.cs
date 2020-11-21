@@ -112,13 +112,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         private OdsInstanceFirstTimeSetupService GetOdsInstanceFirstTimeSetupService(string encryptedSecretConfigValue,
             string instanceName, AdminAppDbContext database)
         {
-#if NET48
-            var options = new Net48Options<AppSettings>(new AppSettings());
-#else
             var appSettings = new Mock<IOptions<AppSettings>>();
             appSettings.Setup(x => x.Value).Returns(new AppSettings());
             var options = appSettings.Object;
-#endif
+
             var mockStringEncryptorService = new Mock<IStringEncryptorService>();
             mockStringEncryptorService.Setup(x => x.Encrypt(It.IsAny<string>())).Returns(encryptedSecretConfigValue);
             var odsSecretConfigurationProvider = new OdsSecretConfigurationProvider(mockStringEncryptorService.Object, database);

@@ -31,13 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 return Assembly.GetAssembly(typeof(EdFi.Ods.AdminApp.Web.Controllers.ControllerBase))
                 .GetTypes()
-                .Where(t => t.IsSubclassOf(
-#if NET48
-                    typeof(System.Web.Mvc.ControllerBase)
-#else
-                    typeof(Microsoft.AspNetCore.Mvc.ControllerBase)
-#endif
-                    ));
+                .Where(t => t.IsSubclassOf(typeof(Microsoft.AspNetCore.Mvc.ControllerBase)));
             }
         } 
     }

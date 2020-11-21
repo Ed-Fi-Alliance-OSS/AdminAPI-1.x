@@ -20,10 +20,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
-#if !NET48
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-#endif
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsController
@@ -60,16 +58,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     => x.ValidateAsync(It.IsAny<BulkFileUploadModel>(), CancellationToken.None)).
                 Returns(Task.FromResult(validationResult));
             AppSettings = new Mock<IOptions<AppSettings>>();
-#if NET48
-            AppSettings.Setup(x => x.Value).Returns(ConfigurationHelper.GetAppSettings());
-#else
             Scoped<IOptions<AppSettings>>(appSettings =>
             {
                 AppSettings.Setup(x => x.Value).Returns(appSettings.Value);
             });
             WebHostingEnvironment = new Mock<IWebHostEnvironment>();
             WebHostingEnvironment.Setup(x => x.ContentRootPath).Returns(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-#endif
 
             SystemUnderTest = new Web.Controllers.OdsInstanceSettingsController(
                 OdsApiFacadeFactory.Object,
@@ -89,10 +83,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 ApiModeProvider.Object,
                 InferOdsApiVersion.Object,
                 bulkFileUploadValidator.Object,
-                AppSettings.Object
-#if !NET48
-                , WebHostingEnvironment.Object
-#endif
+                AppSettings.Object,
+                WebHostingEnvironment.Object
             );
 
             AdditionalSetup();
@@ -117,8 +109,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         protected int OdsInstanceId = 1234;
         protected Mock<IInferOdsApiVersion> InferOdsApiVersion;
         protected Mock<IOptions<AppSettings>> AppSettings;
-#if !NET48
         protected Mock<IWebHostEnvironment> WebHostingEnvironment;
-#endif
     }
 }

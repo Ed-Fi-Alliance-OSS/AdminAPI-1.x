@@ -6,11 +6,7 @@
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -67,15 +63,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 // Act
                 var result = await SystemUnderTest.LearningStandards(_settingsModel);
 
-#if NET48
-                // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                ((HttpStatusCodeResult)result).StatusCode.ShouldBe(200);
-#else
                 // Assert
                 result.ShouldBeOfType<OkResult>();
                 ((OkResult)result).StatusCode.ShouldBe(200);
-#endif
             }
 
             [Test]
@@ -169,15 +159,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 // Act
                 var result = await SystemUnderTest.LearningStandards(_settingsModel);
 
-#if NET48
-                // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                ((HttpStatusCodeResult)result).StatusCode.ShouldBe(200);
-#else
                 // Assert
                 result.ShouldBeOfType<OkResult>();
                 ((OkResult)result).StatusCode.ShouldBe(200);
-#endif
             }
 
             [Test]
@@ -270,15 +254,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 // Act
                 var result = await SystemUnderTest.LearningStandards(_settingsModel);
 
-#if NET48
-                // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                ((HttpStatusCodeResult)result).StatusCode.ShouldBe(200);
-#else
                 // Assert
                 result.ShouldBeOfType<OkResult>();
                 ((OkResult)result).StatusCode.ShouldBe(200);
-#endif
             }
 
             [Test]
@@ -330,20 +308,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
 
             private static void UpdateConfiguration()
             {
-#if NET48
-                ConfigurationHelper.SetApiMode("DistrictSpecific");
-#else
                 Startup.ConfigurationAppSettings.ApiStartupType = "DistrictSpecific";
-#endif
             }
 
             private static void ResetConfiguration()
             {
-#if NET48
-                ConfigurationHelper.SetApiMode("sandbox");
-#else
                 Startup.ConfigurationAppSettings.ApiStartupType = "sandbox";
-#endif
             }
         }
     }

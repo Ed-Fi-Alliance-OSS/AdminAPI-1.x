@@ -6,14 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
-#if NET48
-    using EdFi.Ods.AdminApp.Management.Helpers;
-#else
-    using EdFi.Ods.AdminApp.Web;
-#endif
-using EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper;
+using EdFi.Ods.AdminApp.Web;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -29,21 +22,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                #if NET48
-                    return ConfigurationHelper.GetConnectionStrings().Security;
-                #else
-                    return Startup.ConfigurationConnectionStrings.Security;
-                #endif
+                return Startup.ConfigurationConnectionStrings.Security;
             }
         }
 
         protected override SqlServerSecurityContext CreateDbContext()
         {
-            #if NET48
-                return new SqlServerSecurityContext();
-            #else
-                return new SqlServerSecurityContext(ConnectionString);
-            #endif
+            return new SqlServerSecurityContext(ConnectionString);
         }
 
         // This bool controls whether or not to run SecurityContext initialization

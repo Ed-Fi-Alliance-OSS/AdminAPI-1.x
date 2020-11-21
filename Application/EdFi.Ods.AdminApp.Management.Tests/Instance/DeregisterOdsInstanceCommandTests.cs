@@ -12,7 +12,6 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
-using EdFi.Ods.AdminApp.Web;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using NUnit.Framework;
 using Shouldly;

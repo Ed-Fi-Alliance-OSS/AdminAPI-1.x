@@ -1,4 +1,3 @@
-#if !NET48
 using System;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Web;
@@ -60,4 +59,3 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         }
     }
 }
-#endif

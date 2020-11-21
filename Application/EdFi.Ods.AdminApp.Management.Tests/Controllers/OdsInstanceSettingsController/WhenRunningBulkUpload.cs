@@ -10,14 +10,9 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
-#if NET48
-using System.Web.Hosting;
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-#endif
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -125,20 +120,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-#if NET48
-                    BulkFiles = new List<HttpPostedFileBase>()
-#else
                     BulkFiles = new List<IFormFile>()
-#endif
                 }
             };
 
             // Act
-#if NET48
-            var result = (HttpStatusCodeResult) await SystemUnderTest.BulkFileUpload(model);
-#else
             var result = (NoContentResult)await SystemUnderTest.BulkFileUpload(model);
-#endif
 
             // Assert
             result.ShouldNotBeNull();
@@ -149,28 +136,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         public void When_Perform_Post_Request_To_BulkFileUpload_With_Greater_File_ContentLength_ThrowsException()
         {
             // Arrange
-#if NET48
-            var file = new Mock<HttpPostedFileBase>();
-            file.Setup(x => x.ContentLength).Returns(20000002);
-#else
             var file = new Mock<IFormFile>();
             file.Setup(x => x.Length).Returns(20000002);
-#endif
             var model = new OdsInstanceSettingsModel
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-#if NET48
-                    BulkFiles = new List<HttpPostedFileBase>
-                    {
-                        file.Object
-                    }
-#else
                     BulkFiles = new List<IFormFile>
                     {
                         file.Object
                     }
-#endif
                 }
             };
 
@@ -183,33 +158,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         public void When_Perform_Post_Request_To_BulkFileUpload_With_Multiple_Files_ThrowsException()
         {
             // Arrange
-#if NET48
-            var file1 = new Mock<HttpPostedFileBase>();
-            file1.Setup(x => x.ContentLength).Returns(200);
-            var file2 = new Mock<HttpPostedFileBase>();
-            file2.Setup(x => x.ContentLength).Returns(200);
-#else
             var file1 = new Mock<IFormFile>();
             file1.Setup(x => x.Length).Returns(200);
             var file2 = new Mock<IFormFile>();
             file2.Setup(x => x.Length).Returns(200);
-#endif
 
             var model = new OdsInstanceSettingsModel
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-#if NET48
-                    BulkFiles = new List<HttpPostedFileBase>
-                    {
-                        file1.Object, file2.Object
-                    }
-#else
                     BulkFiles = new List<IFormFile>
                     {
                         file1.Object, file2.Object
                     }
-#endif
                 }
             };
 
@@ -226,11 +187,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
             InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
 
-#if NET48
-            var schemaBasePath = HostingEnvironment.MapPath(ConfigurationHelper.GetAppSettings().XsdFolder);
-#else
             var schemaBasePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Schema");
-#endif
             var schemaPath = $"{schemaBasePath}\\{edfiStandardVersion}";
 
             var model = SetupBulkUpload(out var fileUploadResult);
@@ -333,21 +290,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         {
             const string filename = "test.xml";
 
-#if NET48
-            var file = new Mock<HttpPostedFileBase>();
-            file.Setup(x => x.ContentLength).Returns(200);
-            file.Setup(x => x.FileName).Returns("test.xml");
-            var model = new OdsInstanceSettingsModel
-            {
-                BulkFileUploadModel = new BulkFileUploadModel
-                {
-                    BulkFiles = new List<HttpPostedFileBase>
-                    {
-                        file.Object
-                    }
-                }
-            };
-#else
             var file = new Mock<IFormFile>();
             file.Setup(x => x.Length).Returns(200);
             file.Setup(x => x.FileName).Returns("test.xml");
@@ -361,7 +303,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     }
                 }
             };
-#endif
+
             fileUploadResult = new FileUploadResult
             {
                 Directory = "directoryPath",
@@ -371,15 +313,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             InstanceContext.Id = OdsInstanceContext.Id;
             InstanceContext.Name = OdsInstanceContext.Name;
 
-#if NET48
-            FileUploadHandler.Setup(x =>
-                    x.SaveFilesToUploadDirectory(It.IsAny<HttpPostedFileBase[]>(), It.IsAny<Func<string, string>>()))
-                .Returns(fileUploadResult);
-#else
             FileUploadHandler.Setup(x =>
                     x.SaveFilesToUploadDirectory(It.IsAny<IFormFile[]>(), It.IsAny<Func<string, string>>()))
                 .Returns(fileUploadResult);
-#endif
 
             ApiConnectionInformationProvider
                 .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))

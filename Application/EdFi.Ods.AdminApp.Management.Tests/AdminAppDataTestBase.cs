@@ -10,12 +10,7 @@ using EdFi.Ods.AdminApp.Management.Database;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-#if NET48
-using EdFi.Ods.AdminApp.Management.Helpers;
-#else
 using EdFi.Ods.AdminApp.Web;
-#endif
-
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -38,11 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                #if NET48
-                return ConfigurationHelper.GetConnectionStrings().Admin;
-                #else
                 return Startup.ConfigurationConnectionStrings.Admin;
-                #endif
             }
         }
 

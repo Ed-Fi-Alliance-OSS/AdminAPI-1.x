@@ -26,9 +26,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
     public class DeregisterOdsInstanceCommandTests: AdminAppDataTestBase
     {
         [Test]
-#if !NET48
-        [Ignore("Ignore temporarily. Will be enabled, once the Identity schema changes in place")]
-#endif
         public void ShouldDeregisterOdsInstance()
         {
             var users = SetupUsers(2).ToList();

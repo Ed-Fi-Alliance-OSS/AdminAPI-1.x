@@ -47,9 +47,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         }
 
         [Test]
-#if !NET48
-        [Ignore("Ignore temporarily. Will be enabled, once the Identity schema changes in place")]
-#endif
         public async Task ShouldRegisterOdsInstance()
         {
             ResetOdsInstanceRegistrations();

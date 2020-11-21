@@ -556,7 +556,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
 
     public class TestOdsConnectionProvider : IDatabaseConnectionProvider
     {
-        public static string ConnectionString => ConfigurationHelper.GetConnectionStrings().OdsEmpty;
+        public static string ConnectionString =
+            Scoped<IOptions<ConnectionStrings>, string>(connectionStrings => connectionStrings.Value.OdsEmpty);
 
         public IDbConnection CreateNewConnection(int odsInstanceNumericSuffix, ApiMode apiMode)
         {

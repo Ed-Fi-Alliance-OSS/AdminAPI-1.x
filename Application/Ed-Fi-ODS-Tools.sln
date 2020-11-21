@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApp.Web", "Ed
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management", "EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj", "{FBBA172C-6F81-4753-92B9-C31277B032DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApp.Management.Tests", "EdFi.Ods.AdminApp.Management.Tests\EdFi.Ods.AdminApp.Management.Tests.csproj", "{55E0CD4B-926F-47AB-AAFF-B47C320254F6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Azure", "EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj", "{A1951107-BE72-4745-8C9E-6EC1F741384D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Azure.UnitTests", "EdFi.Ods.AdminApp.Management.Azure.UnitTests\EdFi.Ods.AdminApp.Management.Azure.UnitTests.csproj", "{470BAA61-6F58-4940-B71A-E90A74A1B073}"
@@ -109,34 +107,6 @@ Global
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.ActiveCfg = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.Build.0 = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Debug|x64.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremises|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremises|Any CPU.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremises|x64.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremises|x64.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremisesRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremisesRelease|Any CPU.Build.0 = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremisesRelease|x64.ActiveCfg = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremisesRelease|x64.Build.0 = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremNpgsql|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremNpgsql|Any CPU.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremNpgsql|x64.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremNpgsql|x64.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecific|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecific|Any CPU.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecific|x64.ActiveCfg = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecific|x64.Build.0 = Debug|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecificRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecificRelease|Any CPU.Build.0 = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecificRelease|x64.ActiveCfg = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.OnPremYearSpecificRelease|x64.Build.0 = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Release|x64.ActiveCfg = Release|Any CPU
-		{55E0CD4B-926F-47AB-AAFF-B47C320254F6}.Release|x64.Build.0 = Release|Any CPU
 		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|x64.ActiveCfg = Debug|Any CPU

@@ -1,3 +1,4 @@
+#if NET48
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -195,3 +196,4 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         }
     }
 }
+#endif

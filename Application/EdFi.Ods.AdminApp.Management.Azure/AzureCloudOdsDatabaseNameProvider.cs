@@ -10,54 +10,24 @@ namespace EdFi.Ods.AdminApp.Management.Azure
         public string GetDatabaseName(CloudOdsDatabases cloudOdsDatabase)
         {
             if (cloudOdsDatabase == CloudOdsDatabases.Admin)
-                return GetAdminDatabaseName();
+                return "EdFi_Admin";
 
             if (cloudOdsDatabase == CloudOdsDatabases.Security)
-                return GetSecurityDatabaseName();
+                return "EdFi_Security";
 
             if (cloudOdsDatabase == CloudOdsDatabases.ProductionOds)
-                return GetProductionOdsDatabaseName();
+                return "EdFi_Ods_Production";
 
             if (cloudOdsDatabase == CloudOdsDatabases.Master)
-                return GetMasterDatabaseName();
+                return "master";
 
             if (cloudOdsDatabase == CloudOdsDatabases.MinimalTemplate)
-                return GetMinimalTemplateDatabaseName();
+                return "EdFi_Ods_Minimal_Template";
 
             if (cloudOdsDatabase == CloudOdsDatabases.PopulatedTemplate)
-                return GetPopulatedTemplateDatabaseName();
+                return "EdFi_Ods_Populated_Template";
 
             return string.Empty;
-        }
-
-        private static string GetAdminDatabaseName()
-        {
-            return "EdFi_Admin";
-        }
-
-        private static string GetSecurityDatabaseName()
-        {
-            return "EdFi_Security";
-        }
-
-        private static string GetProductionOdsDatabaseName()
-        {
-            return "EdFi_Ods_Production";
-        }
-
-        private static string GetMasterDatabaseName()
-        {
-            return "master";
-        }
-
-        private static string GetMinimalTemplateDatabaseName()
-        {
-            return "EdFi_Ods_Minimal_Template";
-        }
-
-        private static string GetPopulatedTemplateDatabaseName()
-        {
-            return "EdFi_Ods_Populated_Template";
         }
     }
 }

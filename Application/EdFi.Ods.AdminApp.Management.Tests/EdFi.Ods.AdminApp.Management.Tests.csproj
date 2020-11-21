@@ -433,7 +433,6 @@
     <Compile Include="User\GetAdminAppUserByIdQueryTests.cs" />
     <Compile Include="User\GetAdminAppUsersQueryTests.cs" />
     <Compile Include="User\AddUserTests.cs" />
-    <Compile Include="AutoMapper\AutoMapperTests.cs" />
     <Compile Include="ClaimSetEditor\ClaimSetFileImportCommandTests.cs" />
     <Compile Include="ClaimSetEditor\DeleteResourceOnClaimSetCommandTests.cs" />
     <Compile Include="ClaimSetEditor\ClaimSetFileExportCommandTests.cs" />

@@ -34,7 +34,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         public static void Scoped<TService>(Action<TService> action)
         {
-            if (typeof(TService) == typeof(AdminAppIdentityDbContext))
+            if (typeof(TService) == typeof(IMapper))
+            {
+                action((TService)_mapper);
+            }
+            else if (typeof(TService) == typeof(AdminAppIdentityDbContext))
             {
                 using (var service = AdminAppIdentityDbContext.Create())
                     action((TService)(object)service);

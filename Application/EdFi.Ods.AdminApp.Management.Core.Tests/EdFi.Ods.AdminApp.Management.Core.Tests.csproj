@@ -27,7 +27,7 @@
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/HomeScreenDisplayAssertions.cs" LinkBase="Display/HomeScreenDisplayService" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingAzureHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingOnPremisesHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" />
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/AutomapperTests.cs" LinkBase="Infrastructure" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/AutomapperTests.cs" LinkBase="Infrastructure" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/CloudOdsApiConnectionInformationProviderTests/WhenGettingApiCredentials.cs" LinkBase="Infrastructure/CloudOdsApiConnectionInformationProviderTests" />
         <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/IO/WhenConfiguringFileImport.cs" LinkBase="Infrastructure/IO" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/GetOdsInstanceRegistrationsByUserIdQueryTests.cs" LinkBase="Instance" /> 
@@ -47,7 +47,6 @@
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/User/GetAdminAppUsersQueryTests.cs" LinkBase="User" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/User/AddUserTests.cs" LinkBase="User" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AdminAppDataTestBase.cs" />
-        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AutoMapper/AutoMapperTests.cs" LinkBase="AutoMapper" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ClaimSetFileImportCommandTests.cs" LinkBase="ClaimSetEditor" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/DeleteResourceOnClaimSetCommandTests.cs" LinkBase="ClaimSetEditor" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ClaimSetEditor/ClaimSetFileExportCommandTests.cs" LinkBase="ClaimSetEditor" />

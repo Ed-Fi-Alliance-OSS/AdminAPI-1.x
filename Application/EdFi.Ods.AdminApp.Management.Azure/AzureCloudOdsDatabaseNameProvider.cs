@@ -9,23 +9,8 @@ namespace EdFi.Ods.AdminApp.Management.Azure
     {
         public string GetDatabaseName(CloudOdsDatabases cloudOdsDatabase)
         {
-            if (cloudOdsDatabase == CloudOdsDatabases.Admin)
-                return "EdFi_Admin";
-
-            if (cloudOdsDatabase == CloudOdsDatabases.Security)
-                return "EdFi_Security";
-
-            if (cloudOdsDatabase == CloudOdsDatabases.ProductionOds)
-                return "EdFi_Ods_Production";
-
-            if (cloudOdsDatabase == CloudOdsDatabases.Master)
-                return "master";
-
-            if (cloudOdsDatabase == CloudOdsDatabases.MinimalTemplate)
-                return "EdFi_Ods_Minimal_Template";
-
-            if (cloudOdsDatabase == CloudOdsDatabases.PopulatedTemplate)
-                return "EdFi_Ods_Populated_Template";
+            if (cloudOdsDatabase != null)
+                return cloudOdsDatabase.DatabaseName;
 
             return string.Empty;
         }

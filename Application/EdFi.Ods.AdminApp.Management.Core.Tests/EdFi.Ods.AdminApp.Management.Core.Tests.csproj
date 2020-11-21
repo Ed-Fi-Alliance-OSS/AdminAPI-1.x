@@ -28,7 +28,7 @@
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Display/HomeScreenDisplayService/WhenDisplayingOnPremisesHomeScreen.cs" LinkBase="Display/HomeScreenDisplayService" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/AutomapperTests.cs" LinkBase="Infrastructure" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/CloudOdsApiConnectionInformationProviderTests/WhenGettingApiCredentials.cs" LinkBase="Infrastructure/CloudOdsApiConnectionInformationProviderTests" />
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/IO/WhenConfiguringFileImport.cs" LinkBase="Infrastructure/IO" /> -->
+        <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Infrastructure/IO/WhenConfiguringFileImport.cs" LinkBase="Infrastructure/IO" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/GetOdsInstanceRegistrationsByUserIdQueryTests.cs" LinkBase="Instance" /> 
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/DeregisterOdsInstanceCommandTests.cs" LinkBase="Instance" /> 
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Instance/BulkRegisterOdsInstancesRecordTests.cs" LinkBase="Instance" /> 

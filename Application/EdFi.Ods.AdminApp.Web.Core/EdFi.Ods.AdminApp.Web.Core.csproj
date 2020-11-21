@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -46,7 +46,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/GlobalSettingsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UpdateController.cs" LinkBase="Controllers" />
@@ -187,7 +187,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/IndexModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstances/RegisterOdsInstanceModel.cs" LinkBase="Models/ViewModels/OdsInstances" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/BaseOdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSettingsModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/OdsInstanceSettings/OdsInstanceSetupCompletedModel.cs" LinkBase="Models/ViewModels/OdsInstanceSettings" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/ProfileModel.cs" LinkBase="Models/ViewModels" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Reports/ReportsIndexModel.cs" LinkBase="Models/ViewModels/Reports" />

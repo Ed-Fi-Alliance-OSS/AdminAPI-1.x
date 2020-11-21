@@ -9,23 +9,24 @@
 using System;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
-using EdFi.Common.Security;
-
-namespace EdFi.Ods.AdminApp.Web.Controllers
-{
-    public class OdsInstanceSettingsController
-    {
-        public object Logging() => throw new System.NotImplementedException();
-        public object Setup() => throw new System.NotImplementedException();
-        public object BulkLoad() => throw new System.NotImplementedException();
-        public object LearningStandards() => throw new System.NotImplementedException();
-    }
-}
+using Microsoft.AspNetCore.Http;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
-    public interface IFileUploadHandler { }
-    public class LocalFileSystemFileUploadHandler : IFileUploadHandler { }
+    public interface IFileUploadHandler
+    {
+        FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc);
+    }
+    public class FileUploadResult
+    {
+        public string Directory { get; set; }
+        public string[] FileNames { get; set; }
+    }
+    public class LocalFileSystemFileUploadHandler : IFileUploadHandler
+    {
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc)
+            => throw new NotImplementedException();
+    }
     public class BulkImportService
     {
         public event WorkflowStatusUpdated StatusUpdated

@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web.Mvc;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using NUnit.Framework;
 using Shouldly;
@@ -32,7 +31,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 return Assembly.GetAssembly(typeof(EdFi.Ods.AdminApp.Web.Controllers.ControllerBase))
                 .GetTypes()
-                .Where(t => t.GetInterfaces().Contains(typeof(IController)));
+                .Where(t => t.IsSubclassOf(
+#if NET48
+                    typeof(System.Web.Mvc.ControllerBase)
+#else
+                    typeof(Microsoft.AspNetCore.Mvc.ControllerBase)
+#endif
+                    ));
             }
         } 
     }

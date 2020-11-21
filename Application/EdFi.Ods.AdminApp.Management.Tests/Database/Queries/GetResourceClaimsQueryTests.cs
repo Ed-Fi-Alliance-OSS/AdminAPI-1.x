@@ -5,7 +5,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+#if NET48
 using System.Web.Mvc;
+#else
+using Microsoft.AspNetCore.Mvc.Rendering;
+#endif
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;

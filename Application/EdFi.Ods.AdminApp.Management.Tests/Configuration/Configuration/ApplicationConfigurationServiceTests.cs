@@ -6,7 +6,6 @@
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;

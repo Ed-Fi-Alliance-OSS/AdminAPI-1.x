@@ -26,7 +26,6 @@
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/DoNotCacheAjaxRequestsFilter.cs" LinkBase="ActionFilters" /> -->
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/HandleAjaxErrorAttribute.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/RequreSecureConnectionFilter.cs" LinkBase="ActionFilters" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" />
 
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ApplicationSignInManager.cs" LinkBase="App_Start" /> -->

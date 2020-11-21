@@ -14,7 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/ActionFilters/RequireSecureConnectionFilterTests.cs" LinkBase="ActionFilters" /> -->
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/AssertionExtensions.cs" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/ControllerBaseTester.cs" LinkBase="Controllers" />
         <Compile Include="../EdFi.Ods.AdminApp.Management.Tests/Controllers/EducationOrganizationsControllerTests.cs" LinkBase="Controllers" />

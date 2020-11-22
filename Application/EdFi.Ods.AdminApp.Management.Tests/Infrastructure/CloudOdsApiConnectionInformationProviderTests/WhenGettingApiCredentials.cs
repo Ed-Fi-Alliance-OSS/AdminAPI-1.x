@@ -34,9 +34,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
             return _system.GetConnectionInformationForEnvironment();
         }
 
-        protected OdsApiConnectionInformation Run(CloudOdsEnvironment environment, OdsApiCredential apiCredentials)
+        protected OdsApiConnectionInformation Run(OdsApiCredential apiCredentials)
         {
-            return CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(environment, apiCredentials, "Ods Instance", ApiMode.Sandbox);
+            return CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(apiCredentials, "Ods Instance", ApiMode.Sandbox);
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
             };
 
             // Act
-            var actual = Run(CloudOdsEnvironment.Production, apiCredentials);
+            var actual = Run(apiCredentials);
 
             // Assert
             actual.ShouldNotBeNull();
@@ -122,29 +122,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
         }
 
         [Test]
-        public void ForDefaultEnvironment_GivenCredentialsAreProvided_ThenThrowInvalidOperationException()
-        {
-            // Arrange
-            const string key = "asdfasdf";
-            const string secret = "89798798";
-            var apiCredentials = new OdsApiCredential
-            {
-                Key = key,
-                Secret = secret
-            };
-
-            // Act
-            void Act() => Run(default(CloudOdsEnvironment), apiCredentials);
-
-            // Assert
-            Should.Throw<InvalidOperationException>((Action)Act);
-        }
-
-        [Test]
         public void ForAnyEnvironment_GivenCredentialsAreProvidedButObjectIsNull_ThenThrowArgumentNullException()
         {
             // Act
-            void Act() => Run(default(CloudOdsEnvironment), null);
+            void Act() => Run(null);
 
             // Assert
             Should.Throw<ArgumentNullException>((Action)Act);
@@ -154,7 +135,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
         public void ForAnyEnvironment_GivenCredentialsAreProvidedButSecretIsNull_ThenThrowArgumentException()
         {
             // Act
-            void Act() => Run(default(CloudOdsEnvironment), new OdsApiCredential { Key = "as" });
+            void Act() => Run(new OdsApiCredential { Key = "as" });
 
             // Assert
             Should.Throw<ArgumentException>((Action)Act);
@@ -164,7 +145,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
         public void ForAnyEnvironment_GivenCredentialsAreProvidedButSecretIsWhitespace_ThenThrowArgumentException()
         {
             // Act
-            void Act() => Run(default(CloudOdsEnvironment), new OdsApiCredential { Key = "as", Secret = "    " });
+            void Act() => Run(new OdsApiCredential { Key = "as", Secret = "    " });
 
             // Assert
             Should.Throw<ArgumentException>((Action)Act);
@@ -174,7 +155,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
         public void ForAnyEnvironment_GivenCredentialsAreProvidedButKeyIsNull_ThenThrowArgumentException()
         {
             // Act
-            void Act() => Run(default(CloudOdsEnvironment), new OdsApiCredential { Secret = "as" });
+            void Act() => Run(new OdsApiCredential { Secret = "as" });
 
             // Assert
             Should.Throw<ArgumentException>((Action)Act);
@@ -184,7 +165,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
         public void ForAnyEnvironment_GivenCredentialsAreProvidedButKeyIsWhitespace_ThenThrowArgumentException()
         {
             // Act
-            void Act() => Run(default(CloudOdsEnvironment), new OdsApiCredential { Secret = "as", Key = "    " });
+            void Act() => Run(new OdsApiCredential { Secret = "as", Key = "    " });
 
             // Assert
             Should.Throw<ArgumentException>((Action)Act);

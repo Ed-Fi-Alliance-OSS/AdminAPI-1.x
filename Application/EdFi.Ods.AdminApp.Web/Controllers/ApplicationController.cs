@@ -147,7 +147,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     Key = result.Key,
                     Secret = result.Secret,
                     ApiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
-                        CloudOdsEnvironment.Production, new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
+                        new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
                 });
         }
 
@@ -224,7 +224,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Key = regenerationResult.Key,
                 Secret = regenerationResult.Secret,
                 ApiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
-                    CloudOdsEnvironment.Production, new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
+                    new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
             });
         }
 

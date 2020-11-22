@@ -26,7 +26,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public async Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment()
         {
-            var environment = CloudOdsEnvironment.Production;
             var apiCredentials = await _getOdsAdminAppApiCredentialsQuery.Execute();
 
             if (ApiCredentialAreCorrupted())
@@ -34,11 +33,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                 ThrowSecretCorruptionException();
             }
 
-            return GetConnectionInformationForEnvironment(environment, apiCredentials.ProductionApiCredential, _instanceContext.Name, _apiModeProvider.GetApiMode());
+            return GetConnectionInformationForEnvironment(apiCredentials.ProductionApiCredential, _instanceContext.Name, _apiModeProvider.GetApiMode());
 
             bool ApiCredentialAreCorrupted()
             {
-                return apiCredentials == null || environment == CloudOdsEnvironment.Production && apiCredentials.ProductionApiCredential == null;
+                return apiCredentials == null || apiCredentials.ProductionApiCredential == null;
             }
 
             void ThrowSecretCorruptionException()
@@ -49,7 +48,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
         }
 
-        public static OdsApiConnectionInformation GetConnectionInformationForEnvironment(CloudOdsEnvironment environment, OdsApiCredential apiCredentials, string instanceName, ApiMode apiMode)
+        public static OdsApiConnectionInformation GetConnectionInformationForEnvironment(OdsApiCredential apiCredentials, string instanceName, ApiMode apiMode)
         {
             if (apiCredentials == null)
             {
@@ -64,12 +63,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                 throw new ArgumentException($"{nameof(apiCredentials.Secret)} in {nameof(apiCredentials)} cannot be null or whitespace");
             }
 
-            if (environment == CloudOdsEnvironment.Production)
-            {
-                return ConnectionInformationForEnvironment(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, apiCredentials, instanceName, apiMode);
-            }
-
-            throw new InvalidOperationException($"Cannot provide connection information for '{environment?.DisplayName ?? "null"}' environment");
+            return ConnectionInformationForEnvironment(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, apiCredentials, instanceName, apiMode);
         }
 
         private static OdsApiConnectionInformation ConnectionInformationForEnvironment(string apiUrl, OdsApiCredential apiCredentials, string instanceName, ApiMode apiMode)

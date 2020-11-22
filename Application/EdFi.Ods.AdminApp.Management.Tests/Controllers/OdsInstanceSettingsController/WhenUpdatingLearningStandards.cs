@@ -60,7 +60,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.SchoolYear.ShouldBeNull()
                     );
@@ -122,7 +121,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.SchoolYear.ShouldBe(Year)
                     );
@@ -183,7 +181,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.OdsInstanceId.ShouldBe(_instanceContext.Id)
                     );

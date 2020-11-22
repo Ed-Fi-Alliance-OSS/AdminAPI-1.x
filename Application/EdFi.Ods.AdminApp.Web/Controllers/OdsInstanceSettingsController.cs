@@ -251,7 +251,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var jobContext = new LearningStandardsJobContext
             {
-                Environment = CloudOdsEnvironment.Production.Value,
                 ApiUrl = connectionInformation.ApiServerUrl,
                 SchoolYear = schoolYear,
                 OdsInstanceId = _instanceContext.Id

@@ -533,10 +533,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Hubs\EdfiOdsHub.cs" />
-    <Compile Include="Hubs\ProductionLearningStandardsHub.cs" />
-    <Compile Include="Hubs\ProductionSetupHub.cs" />
-    <Compile Include="Hubs\BulkUploadHub.cs" />
     <Compile Include="Infrastructure\AutoMapperBootstrapper.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Net48Options.cs" />
@@ -546,7 +542,6 @@
     <Compile Include="Infrastructure\IoC\CastleWindsorControllerFactory.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorFluentValidatorFactory.cs" />
     <Compile Include="Infrastructure\IoC\WindsorDependencyResolver.cs" />
-    <Compile Include="Infrastructure\IO\LocalFileSystemFileUploadHandler.cs" />
     <Compile Include="Infrastructure\ModelBinding\CompositeModelBinder.cs" />
     <Compile Include="Infrastructure\ModelBinding\EnumerationModelBinder.cs" />
     <Compile Include="Infrastructure\ModelBinding\EnumerationPropertyBinder.cs" />

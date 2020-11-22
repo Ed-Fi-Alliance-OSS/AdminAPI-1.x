@@ -523,29 +523,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <None Include="Web.base.config" />
-    <None Include="Web.OnPremises.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.OnPremisesRelease.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.OnPremNpgsql.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.OnPremYearSpecific.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.OnPremYearSpecificRelease.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

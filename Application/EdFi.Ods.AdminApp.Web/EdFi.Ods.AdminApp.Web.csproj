@@ -526,7 +526,6 @@
     <Compile Include="ActionFilters\ValidateAntiForgeryTokenOnPostActionsFilter.cs" />
     <Compile Include="App_Start\ApplicationSignInManager.cs" />
     <Compile Include="App_Start\ApplicationUserManager.cs" />
-    <Compile Include="App_Start\LearningStandardLogProvider.cs" />
     <Compile Include="App_Start\OnPremStartup.cs" />
     <Compile Include="App_Start\ModelBinderConfig.cs" />
     <Compile Include="App_Start\AzureStartup.cs" />

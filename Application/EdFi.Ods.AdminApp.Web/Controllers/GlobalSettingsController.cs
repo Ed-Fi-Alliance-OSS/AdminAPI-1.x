@@ -173,8 +173,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> AdvancedSettings()
         {
-            var currentSettings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
+            var currentSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             var model = new GlobalSettingsModel
             {
@@ -193,13 +192,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateAdvancedSettings(GlobalSettingsModel model)
         {
-            var instanceSettings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
+            var instanceSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             instanceSettings.BearerTokenTimeoutInMinutes = model.AdvancedSettingsModel.BearerTokenTimeoutInMinutes;
 
-            await _cloudOdsSettingsService.UpdateSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production, instanceSettings);
+            await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, instanceSettings);
 
             return RedirectToActionJson<GlobalSettingsController>(
                 x => x.AdvancedSettings(), "Settings updated successfully");
@@ -208,13 +205,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateLogSettings(LogSettingsModel model)
         {
-            var settings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, model.Environment);
+            var settings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             settings.LogLevel = model.LogLevel;
 
-            await _cloudOdsSettingsService.UpdateSettings(
-                _appSettings.DefaultOdsInstance, model.Environment, settings);
+            await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, settings);
 
             return JsonSuccess("Log settings updated successfully");
         }       

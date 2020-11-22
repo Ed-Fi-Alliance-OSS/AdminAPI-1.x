@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -9,9 +9,9 @@ namespace EdFi.Ods.AdminApp.Management.Settings
 {
     public interface ICloudOdsSettingsService
     {
-        Task<CloudOdsApiWebsiteSettings> GetSettings(string instanceName, CloudOdsEnvironment environment);
+        Task<CloudOdsApiWebsiteSettings> GetSettings(string instanceName);
 
-        Task UpdateSettings(string instanceName, CloudOdsEnvironment environment, CloudOdsApiWebsiteSettings newSettings);
+        Task UpdateSettings(string instanceName, CloudOdsApiWebsiteSettings newSettings);
     }
 
     public class CloudOdsSettingsService : ICloudOdsSettingsService
@@ -29,19 +29,18 @@ namespace EdFi.Ods.AdminApp.Management.Settings
             _updateCloudOdsApiWebsiteSettingsCommand = updateCloudOdsApiWebsiteSettingsCommand;
         }
 
-        public async Task<CloudOdsApiWebsiteSettings> GetSettings(string instanceName, CloudOdsEnvironment environment)
+        public async Task<CloudOdsApiWebsiteSettings> GetSettings(string instanceName)
         {
             var instance = await GetCloudOdsInstance(instanceName);
-            var context = new CloudOdsApiOperationContext(instance, environment);
+            var context = new CloudOdsApiOperationContext(instance, CloudOdsEnvironment.Production);
 
             return await _getCloudOdsApiWebsiteSettingsQuery.Execute(context);
         }
 
-        public async Task UpdateSettings(string instanceName, CloudOdsEnvironment environment,
-            CloudOdsApiWebsiteSettings newSettings)
+        public async Task UpdateSettings(string instanceName, CloudOdsApiWebsiteSettings newSettings)
         {
             var instance = await GetCloudOdsInstance(instanceName);
-            var context = new CloudOdsApiOperationContext(instance, environment);
+            var context = new CloudOdsApiOperationContext(instance, CloudOdsEnvironment.Production);
 
             await _updateCloudOdsApiWebsiteSettingsCommand.Execute(context, newSettings);
         }

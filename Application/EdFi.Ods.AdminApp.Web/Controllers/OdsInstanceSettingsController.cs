@@ -157,14 +157,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> Logging()
         {
-            var settings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
+            var settings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             var model = new OdsInstanceSettingsModel
             {
                 LogSettingsModel = new LogSettingsModel
                 {
-                    Environment = CloudOdsEnvironment.Production,
                     LogLevel = settings.LogLevel
                 },
                 OdsInstanceSettingsTabEnumerations =

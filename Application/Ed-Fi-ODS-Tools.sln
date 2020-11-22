@@ -29,6 +29,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web.Core"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Tests", "EdFi.Ods.AdminApp.Management.Tests\EdFi.Ods.AdminApp.Management.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy NET48 Web App Files", "Legacy NET48 Web App Files", "{0EC4F26E-497B-4320-AD67-66FEA772AAAF}"
+	ProjectSection(SolutionItems) = preProject
+		Legacy NET48 Web App Files\ApplicationInsights.config = Legacy NET48 Web App Files\ApplicationInsights.config
+		Legacy NET48 Web App Files\StartupBase.cs = Legacy NET48 Web App Files\StartupBase.cs
+		Legacy NET48 Web App Files\Web.base.config = Legacy NET48 Web App Files\Web.base.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

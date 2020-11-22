@@ -318,7 +318,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 .Returns(fileUploadResult);
 
             ApiConnectionInformationProvider
-                .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                .Setup(x => x.GetConnectionInformationForEnvironment())
                 .ReturnsAsync(_connectionInformation);
 
             OdsSecretConfigurationProvider.Setup(x => x.GetSecretConfiguration(It.IsAny<int>()))

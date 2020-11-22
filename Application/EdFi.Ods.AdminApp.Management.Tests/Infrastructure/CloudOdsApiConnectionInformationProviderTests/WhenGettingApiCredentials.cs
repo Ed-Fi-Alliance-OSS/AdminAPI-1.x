@@ -29,9 +29,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
             _system = new CloudOdsApiConnectionInformationProvider(_mockQuery.Object, new InstanceContext(), _mockApiProvider.Object);
         }
 
-        protected Task<OdsApiConnectionInformation> Run(CloudOdsEnvironment environment)
+        protected Task<OdsApiConnectionInformation> Run()
         {
-            return _system.GetConnectionInformationForEnvironment(environment);
+            return _system.GetConnectionInformationForEnvironment();
         }
 
         protected OdsApiConnectionInformation Run(CloudOdsEnvironment environment, OdsApiCredential apiCredentials)
@@ -46,7 +46,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
             _mockQuery.Setup(x => x.Execute()).ReturnsAsync(null as OdsAdminAppApiCredentials);
 
             // Act
-            Task Act() => Run(CloudOdsEnvironment.Production);
+            Task Act() => Run();
 
             // Assert
             Should.ThrowAsync<InvalidOperationException>(Act);
@@ -59,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
             _mockQuery.Setup(x => x.Execute()).ReturnsAsync(new OdsAdminAppApiCredentials());
 
             // Act
-            Task Act() => Run(CloudOdsEnvironment.Production);
+            Task Act() => Run();
 
             // Assert
             Assert.ThrowsAsync<InvalidOperationException>(Act);
@@ -86,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
                 .Returns(ApiMode.Sandbox);
 
             // Act
-            var actual = await Run(CloudOdsEnvironment.Production);
+            var actual = await Run();
 
             // Assert
             actual.ShouldNotBeNull();
@@ -95,28 +95,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.CloudOdsApiConnectio
             actual.ApiBaseUrl.ShouldNotBeNullOrWhiteSpace();
             actual.OAuthUrl.ShouldNotBeNullOrWhiteSpace();
             actual.ApiServerUrl.ShouldBeNullOrWhiteSpace();
-        }
-
-        [Test]
-        public void ForDefaultEnvironment_ThenThrowInvalidOperationException()
-        {
-            // Arrange
-            const string key = "asdfasdf";
-            const string secret = "89798798";
-            _mockQuery.Setup(x => x.Execute()).ReturnsAsync(new OdsAdminAppApiCredentials
-            {
-                ProductionApiCredential = new OdsApiCredential
-                {
-                    Key = key,
-                    Secret = secret
-                }
-            });
-
-            // Act
-            Task Act() => Run(default(CloudOdsEnvironment));
-
-            // Assert
-            Assert.ThrowsAsync<InvalidOperationException>(Act);
         }
 
         [Test]

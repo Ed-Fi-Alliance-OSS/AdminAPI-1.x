@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.Sandbox);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation("Ods Instance", ApiMode.Sandbox) { ApiServerUrl = ProductionUrl });
 
                 LearningStandardsJob.Setup(x => x.EnqueueJob(It.IsAny<LearningStandardsJobContext>()));
@@ -93,7 +93,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.YearSpecific);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation (_instanceContext.Name, ApiMode.YearSpecific) { ApiServerUrl = ProductionUrl});
 
                 LearningStandardsJob.Setup(x => x.EnqueueJob(It.IsAny<LearningStandardsJobContext>()));
@@ -154,7 +154,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.DistrictSpecific);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation (_instanceContext.Name, ApiMode.DistrictSpecific) { ApiServerUrl = ProductionUrl });
 
                 LearningStandardsJob.Setup(x => x.EnqueueJob(It.IsAny<LearningStandardsJobContext>()));

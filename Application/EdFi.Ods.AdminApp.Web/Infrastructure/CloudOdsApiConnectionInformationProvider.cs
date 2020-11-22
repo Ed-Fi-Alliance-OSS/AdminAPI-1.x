@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -24,13 +24,9 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             _apiModeProvider = apiModeProvider;
         }
 
-        public Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment()
+        public async Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment()
         {
-            return GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production);
-        }
-
-        public async Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment(CloudOdsEnvironment environment)
-        {
+            var environment = CloudOdsEnvironment.Production;
             var apiCredentials = await _getOdsAdminAppApiCredentialsQuery.Execute();
 
             if (ApiCredentialAreCorrupted())

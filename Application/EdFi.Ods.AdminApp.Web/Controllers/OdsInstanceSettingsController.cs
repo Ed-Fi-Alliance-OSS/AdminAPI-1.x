@@ -274,8 +274,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         private async Task<OdsApiConnectionInformation> GetConnectionInformationProvider()
         {
-            return await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment(CloudOdsEnvironment
-                .Production);
+            return await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment();
         }
 
         public async Task<ActionResult> BulkLoad()

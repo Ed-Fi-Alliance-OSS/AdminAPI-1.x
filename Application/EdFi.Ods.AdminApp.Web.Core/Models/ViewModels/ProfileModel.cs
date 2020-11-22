@@ -5,9 +5,9 @@
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 {
-    public class EducationOrganizationModel
+    public class ProfileModel
     {
-        public int EducationOrganizationId { get; set; }
-        public string Name { get; set; }
+        public int ProfileId { get; set; }
+        public string ProfileName { get; set; }
     }
 }

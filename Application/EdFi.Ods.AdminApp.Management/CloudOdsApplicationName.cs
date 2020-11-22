@@ -12,16 +12,15 @@ namespace EdFi.Ods.AdminApp.Management
             return applicationName.Replace("Production-", "").Replace("Staging-", "");
         }
 
-        public static string GetPersistedNamePrefix(CloudOdsEnvironment environment)
+        public static string GetPersistedNamePrefix()
         {
+            var environment = CloudOdsEnvironment.Production;
             return $"{environment.DisplayName}-";
         }
 
         public static string GetPersistedName(string applicationName)
         {
-            var environment = CloudOdsEnvironment.Production;
-
-            var environmentPrefix = GetPersistedNamePrefix(environment);
+            var environmentPrefix = GetPersistedNamePrefix();
             return applicationName.StartsWith(environmentPrefix) 
                 ? applicationName 
                 : $"{environmentPrefix}{applicationName}";

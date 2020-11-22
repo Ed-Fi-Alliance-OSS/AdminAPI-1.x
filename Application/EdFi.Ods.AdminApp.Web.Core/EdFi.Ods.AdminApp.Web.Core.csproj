@@ -38,24 +38,6 @@
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.ttf" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/AzureTabDisplayService.cs" LinkBase="Display/DisplayService" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremHomeScreenDisplayService.cs" LinkBase="Display/DisplayService" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/DisplayService/OnPremTabDisplayService.cs" LinkBase="Display/DisplayService" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/BaseHomeScreenDisplayService.cs" LinkBase="Display/HomeScreen" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/HomeScreenDisplay.cs" LinkBase="Display/HomeScreen" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/HomeScreenEnumeration.cs" LinkBase="Display/HomeScreen" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/IHomeScreen.cs" LinkBase="Display/HomeScreen" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/HomeScreen/IHomeScreenDisplayService.cs" LinkBase="Display/HomeScreen" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/RadioButton/IRadioButton.cs" LinkBase="Display/RadioButton" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/RadioButton/RadioButtonDisplay.cs" LinkBase="Display/RadioButton" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/BaseTabDisplayService.cs" LinkBase="Display/TabEnumeration" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/GlobalSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabDisplayService.cs" LinkBase="Display/TabEnumeration" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/ITabEnumeration.cs" LinkBase="Display/TabEnumeration" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/OdsInstanceSettingsTabEnumeration.cs" LinkBase="Display/TabEnumeration" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Display/TabEnumeration/TabDisplay.cs" LinkBase="Display/TabEnumeration" />
-
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AdminModelExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ApplicationExtensions.cs" LinkBase="Helpers" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AutoMapperExtensions.cs" LinkBase="Helpers" />

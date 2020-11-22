@@ -544,22 +544,6 @@
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Display\DisplayService\AzureHomeScreenDisplayService.cs" />
-    <Compile Include="Display\DisplayService\OnPremHomeScreenDisplayService.cs" />
-    <Compile Include="Display\DisplayService\OnPremTabDisplayService.cs" />
-    <Compile Include="Display\HomeScreen\BaseHomeScreenDisplayService.cs" />
-    <Compile Include="Display\HomeScreen\HomeScreenEnumeration.cs" />
-    <Compile Include="Display\HomeScreen\HomeScreenDisplay.cs" />
-    <Compile Include="Display\HomeScreen\IHomeScreen.cs" />
-    <Compile Include="Display\HomeScreen\IHomeScreenDisplayService.cs" />
-    <Compile Include="Display\RadioButton\IRadioButton.cs" />
-    <Compile Include="Display\RadioButton\RadioButtonDisplay.cs" />
-    <Compile Include="Display\TabEnumeration\BaseTabDisplayService.cs" />
-    <Compile Include="Display\TabEnumeration\ITabDisplayService.cs" />
-    <Compile Include="Display\TabEnumeration\ITabEnumeration.cs" />
-    <Compile Include="Display\TabEnumeration\GlobalSettingsTabEnumeration.cs" />
-    <Compile Include="Display\TabEnumeration\OdsInstanceSettingsTabEnumeration.cs" />
-    <Compile Include="Display\TabEnumeration\TabDisplay.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -627,7 +611,6 @@
     <Compile Include="Infrastructure\Tags\OdsAdminHtmlTagConventions.cs" />
     <Compile Include="Infrastructure\Tags\OdsAdminHtmlConventionLibrary.cs" />
     <Compile Include="Infrastructure\ValidationExtensions.cs" />
-    <Compile Include="Display\DisplayService\AzureTabDisplayService.cs" />
     <Compile Include="Infrastructure\ResourceClaimSelectListBuilder.cs" />
     <Compile Include="Models\ViewModels\Application\ApplicationsIndexModel.cs" />
     <Compile Include="Models\ViewModels\EducationOrganizations\EducationOrganizationsIndexModel.cs" />

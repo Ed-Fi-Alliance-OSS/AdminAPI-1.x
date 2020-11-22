@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.UnitTests", "EdFi.Ods.AdminApp.Management.UnitTests\EdFi.Ods.AdminApp.Management.UnitTests.csproj", "{F62C9CF6-A632-4894-B61A-674198DAB86E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web.Core", "EdFi.Ods.AdminApp.Web.Core\EdFi.Ods.AdminApp.Web.Core.csproj", "{7B0859A2-C153-461A-ACC1-D5874994030E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web", "EdFi.Ods.AdminApp.Web.Core\EdFi.Ods.AdminApp.Web.csproj", "{7B0859A2-C153-461A-ACC1-D5874994030E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Tests", "EdFi.Ods.AdminApp.Management.Tests\EdFi.Ods.AdminApp.Management.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
 EndProject

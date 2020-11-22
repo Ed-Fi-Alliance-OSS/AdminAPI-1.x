@@ -7,30 +7,6 @@
 //These types are intended to be removed as they are ported in full to .NET Core.
 
 using System;
-using EdFi.Ods.AdminApp.Management.Workflow;
-using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
-using Microsoft.AspNetCore.Http;
-
-namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
-{
-    public class LocalFileSystemFileUploadHandler : IFileUploadHandler
-    {
-        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile) => throw new NotImplementedException();
-        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, string fileName) => throw new NotImplementedException();
-        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles) => throw new NotImplementedException();
-        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc) => throw new NotImplementedException();
-        public string GetNewTempDirectory() => throw new NotImplementedException();
-        public string GetWorkingDirectory(string customDirectory) => throw new NotImplementedException();
-    }
-}
-
-namespace EdFi.Ods.AdminApp.Web.Hubs
-{
-    public abstract class EdfiOdsHub<T>
-    {
-        public void SendOperationStatusUpdate(WorkflowStatus status) => throw new System.NotImplementedException();
-    }
-}
 
 public class HandleErrorInfo
 {

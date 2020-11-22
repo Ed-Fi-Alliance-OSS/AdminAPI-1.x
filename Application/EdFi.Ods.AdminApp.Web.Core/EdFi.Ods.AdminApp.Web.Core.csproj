@@ -15,7 +15,6 @@
          these files will be moved from the legacy project to this project, at
          which point these explicit inclusions will become redundant. -->
 
-
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff2" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff" LinkBase="fonts" />
@@ -23,11 +22,11 @@
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/BulkUploadHub.cs" LinkBase="Hubs" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/EdfiOdsHub.cs" LinkBase="Hubs" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/EdfiOdsHub.cs" LinkBase="Hubs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionLearningStandardsHub.cs" LinkBase="Hubs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionSetupHub.cs" LinkBase="Hubs" />
 
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/LocalFileSystemFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/LocalFileSystemFileUploadHandler.cs" LinkBase="Infrastructure/IO" />
 
     <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">

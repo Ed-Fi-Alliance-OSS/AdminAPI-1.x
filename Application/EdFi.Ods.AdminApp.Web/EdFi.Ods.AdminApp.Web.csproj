@@ -517,10 +517,6 @@
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Start\StartupBase.cs" />
-    <Content Include="log4net\log4net.config" />
-    <Content Include="log4net\log4net.OnPremisesRelease.config" />
-    <Content Include="log4net\log4net.OnPremisesYearSpecificRelease.config" />
-    <Content Include="log4net\log4net.Release.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationInsights.config">

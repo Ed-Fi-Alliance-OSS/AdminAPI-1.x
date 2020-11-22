@@ -514,16 +514,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionFilters\AuthorizationFilter.cs" />
-    <Compile Include="ActionFilters\DoNotCacheAjaxRequestsFilter.cs" />
-    <Compile Include="ActionFilters\HandleAjaxErrorAttribute.cs" />
-    <Compile Include="ActionFilters\InstanceContextFilter.cs" />
-    <Compile Include="ActionFilters\PermissionRequiredAttribute.cs" />
-    <Compile Include="ActionFilters\PermissionRequiredFilter.cs" />
-    <Compile Include="ActionFilters\RequreSecureConnectionFilter.cs" />
-    <Compile Include="ActionFilters\PasswordChangeRequiredFilter.cs" />
-    <Compile Include="ActionFilters\UserContextFilter.cs" />
-    <Compile Include="ActionFilters\ValidateAntiForgeryTokenOnPostActionsFilter.cs" />
     <Compile Include="App_Start\OnPremStartup.cs" />
     <Compile Include="App_Start\ModelBinderConfig.cs" />
     <Compile Include="App_Start\AzureStartup.cs" />

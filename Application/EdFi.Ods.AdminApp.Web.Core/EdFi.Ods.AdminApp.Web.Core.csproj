@@ -38,21 +38,6 @@
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.ttf" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.eot" LinkBase="fonts" />
 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AdminModelExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ApplicationExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/AutoMapperExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsIdentityExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ClaimsPrincipalExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ExpressionHelpers.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/HtmlTagExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/InputFileHelper.cs" LinkBase="Helpers" /> 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/OdsApiFacadeExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ReflectionExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/ResponseHelpers.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/RouteHelpers.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/StringExtensions.cs" LinkBase="Helpers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Helpers/VendorExtensions.cs" LinkBase="Helpers" />
-
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/BulkUploadHub.cs" LinkBase="Hubs" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/EdfiOdsHub.cs" LinkBase="Hubs" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionLearningStandardsHub.cs" LinkBase="Hubs" />

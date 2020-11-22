@@ -547,18 +547,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AdminModelExtensions.cs" />
-    <Compile Include="Helpers\ApplicationExtensions.cs" />
-    <Compile Include="Helpers\AutoMapperExtensions.cs" />
-    <Compile Include="Helpers\ExpressionHelpers.cs" />
-    <Compile Include="Helpers\HtmlTagExtensions.cs" />
-    <Compile Include="Helpers\InputFileHelper.cs" />
-    <Compile Include="Helpers\OdsApiFacadeExtensions.cs" />
-    <Compile Include="Helpers\ReflectionExtensions.cs" />
-    <Compile Include="Helpers\ResponseHelpers.cs" />
-    <Compile Include="Helpers\RouteHelpers.cs" />
-    <Compile Include="Helpers\StringExtensions.cs" />
-    <Compile Include="Helpers\VendorExtensions.cs" />
     <Compile Include="Hubs\EdfiOdsHub.cs" />
     <Compile Include="Hubs\ProductionLearningStandardsHub.cs" />
     <Compile Include="Hubs\ProductionSetupHub.cs" />
@@ -583,8 +571,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Helpers\ClaimsIdentityExtensions.cs" />
-    <Compile Include="Helpers\ClaimsPrincipalExtensions.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorControllerFactory.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorFluentValidatorFactory.cs" />
     <Compile Include="Infrastructure\IoC\WindsorDependencyResolver.cs" />

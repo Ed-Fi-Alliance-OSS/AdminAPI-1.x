@@ -27,37 +27,7 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionLearningStandardsHub.cs" LinkBase="Hubs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Hubs/ProductionSetupHub.cs" LinkBase="Hubs" />
 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AcceptAttribute.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/AdminWebMappingProfile.cs" LinkBase="Infrastructure/AutoMapper" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/AutoMapper/EducationOrganizationNameResolver.cs" LinkBase="Infrastructure/AutoMapper" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CachedItems.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppClaimSetConfiguration.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettings.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAdminAppSettingsForAzure.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsApiConnectionInformationProvider.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsAzureActiveDirectoryClientInfo.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/CloudOdsUpdateService.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/EducationOrganizationTypes.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/HangFire/HangFireInstance.cs" LinkBase="Infrastructure/HangFire" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/InMemoryCache.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/BulkImportService.cs" LinkBase="Infrastructure/IO" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportConfiguration.cs" LinkBase="Infrastructure/IO" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportService.cs" LinkBase="Infrastructure/IO" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/IFileUploadHandler.cs" LinkBase="Infrastructure/IO" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileHelpers.cs" LinkBase="Infrastructure/IO" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileType.cs" LinkBase="Infrastructure/IO" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/LocalFileSystemFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/BulkUploadJob.cs" LinkBase="Infrastructure/Jobs" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/IWorkflowJob.cs" LinkBase="Infrastructure/Jobs" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/LearningStandardsJob.cs" LinkBase="Infrastructure/Jobs" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/ProductionSetupJob.cs" LinkBase="Infrastructure/Jobs" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/WorkflowJob.cs" LinkBase="Infrastructure/Jobs" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Property.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ResourceClaimSelectListBuilder.cs" LinkBase="Infrastructure" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/DefaultDisplayLabelBuilder.cs" LinkBase="Infrastructure/Tags" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlConventionLibrary.cs" LinkBase="Infrastructure/Tags" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/OdsAdminHtmlTagConventions.cs" LinkBase="Infrastructure/Tags" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ValidationExtensions.cs" LinkBase="Infrastructure" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/ApplicationsIndexModel.cs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Models/ViewModels/Application/AddApplicationModel.cs" LinkBase="Models/ViewModels/Application" />

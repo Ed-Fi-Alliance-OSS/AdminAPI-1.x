@@ -717,57 +717,8 @@
     <Content Include="Scripts\signalr.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\css\bootstrap-multiselect.css" />
-    <Content Include="Content\css\bootstrap-theme.css" />
-    <Content Include="Content\css\bootstrap-theme.min.css" />
-    <Content Include="Content\css\bootstrap.css" />
-    <Content Include="Content\css\bootstrap.min.css" />
-    <Content Include="Content\css\font-awesome.css" />
-    <Content Include="Content\css\font-awesome.min.css" />
-    <Content Include="Content\css\heroic-features.css" />
-    <Content Include="Content\css\Site.css" />
-    <Content Include="Content\css\toastr.min.css" />
-    <Content Include="Content\fonts\fontawesome-webfont.svg" />
-    <Content Include="Content\images\delete%402x.png" />
-    <Content Include="Content\images\edit%402x.png" />
-    <Content Include="Content\images\eye%402x.png" />
-    <Content Include="Content\images\hint%402x.png" />
-    <Content Include="Content\images\key_icon%402x.png" />
-    <Content Include="Content\images\logo-edfi%402x.png" />
-    <Content Include="Content\images\logo-edfi.png" />
-    <Content Include="Content\images\reports%402x.png" />
-    <Content Include="Content\images\reports_2%402x.png" />
-    <Content Include="Content\images\settings%402x.png" />
-    <Content Include="Content\images\settings_2%402x.png" />
-    <Content Include="Content\images\updates%402x.png" />
-    <Content Include="Content\images\updates.png" />
-    <Content Include="Content\images\vendor-icon%402x.png" />
     <Content Include="favicon.ico" />
     <Content Include="DeveloperSettings\AzureActiveDirectory.config" Condition=" '$(Configuration)' == 'Debug' " />
-    <Content Include="Content\css\bootstrap-theme.css.map" />
-    <Content Include="Content\css\bootstrap-theme.min.css.map" />
-    <Content Include="Content\css\bootstrap.css.map" />
-    <Content Include="Content\css\bootstrap.min.css.map" />
-    <Content Include="Content\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
-    <Content Include="Content\fonts\FontAwesome.otf" />
-    <Content Include="Content\fonts\Montserrat-SemiBold.otf" />
-    <Content Include="Content\fonts\opensans-bold-webfont.ttf" />
-    <Content Include="Content\fonts\opensans-bold-webfont.woff" />
-    <Content Include="Content\fonts\opensans-bold-webfont.woff2" />
-    <Content Include="Content\fonts\opensans-light-webfont.ttf" />
-    <Content Include="Content\fonts\opensans-light-webfont.woff" />
-    <Content Include="Content\fonts\opensans-light-webfont.woff2" />
-    <Content Include="Content\fonts\opensans-regular-webfont.ttf" />
-    <Content Include="Content\fonts\opensans-regular-webfont.woff" />
-    <Content Include="Content\fonts\opensans-regular-webfont.woff2" />
-    <Content Include="Content\fonts\opensans-semibold-webfont.ttf" />
-    <Content Include="Content\fonts\opensans-semibold-webfont.woff" />
-    <Content Include="Content\fonts\opensans-semibold-webfont.woff2" />
-    <Content Include="Content\fonts\montserrat-bold-webfont.woff2" />
-    <Content Include="Content\fonts\montserrat-regular-webfont.woff2" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

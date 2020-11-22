@@ -9,10 +9,11 @@
   <ItemGroup>
     <Content Include="EdFi.Ods.AdminApp.Web.Core.nuspec" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
     <Content Include="Artifacts\**" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
-    <Content Include="../EdFi.Ods.AdminApp.Web/Schema/**/*.*" LinkBase="Schema" />
+    <Content Include="Schema/**/*.*" />
     <Content Include="../EdFi.Ods.AdminApp.Web/uploads/placeholder.txt" LinkBase="uploads">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+
 
     <!-- Manually delete these "Content Remove" lines to include each view into the solution.  -->
     <Content Remove="Views\Account\SignOutCallback.cshtml" />

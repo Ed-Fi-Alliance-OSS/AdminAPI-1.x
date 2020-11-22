@@ -524,8 +524,6 @@
     <Compile Include="ActionFilters\PasswordChangeRequiredFilter.cs" />
     <Compile Include="ActionFilters\UserContextFilter.cs" />
     <Compile Include="ActionFilters\ValidateAntiForgeryTokenOnPostActionsFilter.cs" />
-    <Compile Include="App_Start\ApplicationSignInManager.cs" />
-    <Compile Include="App_Start\ApplicationUserManager.cs" />
     <Compile Include="App_Start\OnPremStartup.cs" />
     <Compile Include="App_Start\ModelBinderConfig.cs" />
     <Compile Include="App_Start\AzureStartup.cs" />
@@ -536,9 +534,7 @@
     <Compile Include="Infrastructure\AutoMapperBootstrapper.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Net48Options.cs" />
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorControllerFactory.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorFluentValidatorFactory.cs" />
     <Compile Include="Infrastructure\IoC\WindsorDependencyResolver.cs" />

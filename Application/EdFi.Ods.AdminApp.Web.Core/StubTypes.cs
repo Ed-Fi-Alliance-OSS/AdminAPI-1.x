@@ -22,20 +22,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
         public string GetNewTempDirectory() => throw new NotImplementedException();
         public string GetWorkingDirectory(string customDirectory) => throw new NotImplementedException();
     }
-
-    public class BulkImportService
-    {
-        public event WorkflowStatusUpdated StatusUpdated
-        {
-            add { throw new System.NotImplementedException(); }
-            remove { throw new System.NotImplementedException(); }
-        }
-
-        public WorkflowResult Execute(BulkUploadJobContext bulkUploadJobContext)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
 }
 
 namespace EdFi.Ods.AdminApp.Web.Hubs

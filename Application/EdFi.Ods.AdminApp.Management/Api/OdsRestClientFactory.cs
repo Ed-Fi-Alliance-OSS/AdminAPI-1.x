@@ -24,10 +24,9 @@ namespace EdFi.Ods.AdminApp.Management.Api
             _odsApiConnectionInformationProvider = odsApiConnectionInformationProvider;
         }
 
-        public async Task<IOdsRestClient> Create(CloudOdsEnvironment environment)
+        public async Task<IOdsRestClient> Create()
         {
-            Preconditions.ThrowIfNull(environment, nameof(environment));
-            var connectionInfo = await _odsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(environment);
+            var connectionInfo = await _odsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production);
             _tokenRetriever = new TokenRetriever(connectionInfo);
             _restClient = new RestClient(connectionInfo.ApiBaseUrl);
             return new OdsRestClient(connectionInfo, _restClient, _tokenRetriever);

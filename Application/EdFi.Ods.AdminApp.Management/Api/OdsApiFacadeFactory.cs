@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         public async Task<IOdsApiFacade> Create()
         {
-            var restClient = await _restClientFactory.Create(CloudOdsEnvironment.Production);
+            var restClient = await _restClientFactory.Create();
             return new OdsApiFacade(_mapper, restClient);
         }
     }

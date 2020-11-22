@@ -195,11 +195,9 @@
     <Content Remove="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\BulkLoad.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\LearningStandards.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\Logging.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
     <Content Remove="Views\Shared\_BulkUploadForm.cshtml" />
-    <Content Remove="Views\Shared\_LogSettings.cshtml" />
     <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />

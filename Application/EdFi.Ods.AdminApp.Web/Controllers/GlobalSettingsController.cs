@@ -203,11 +203,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateLogSettings(LogSettingsModel model)
+        public async Task<ActionResult> UpdateLogSettings(int logLevel)
         {
+            var parsedLogLevel = LogLevel.FromInt32(logLevel);
+
             var settings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
-            settings.LogLevel = model.LogLevel;
+            settings.LogLevel = parsedLogLevel;
 
             await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, settings);
 

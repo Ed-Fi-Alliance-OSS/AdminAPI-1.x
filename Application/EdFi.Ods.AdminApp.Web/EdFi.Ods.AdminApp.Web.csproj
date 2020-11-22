@@ -530,20 +530,7 @@
     <Compile Include="App_Start\OnPremStartup.cs" />
     <Compile Include="App_Start\ModelBinderConfig.cs" />
     <Compile Include="App_Start\AzureStartup.cs" />
-    <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\ControllerBase.cs" />
-    <Compile Include="Controllers\ClaimSetsController.cs" />
-    <Compile Include="Controllers\DescriptorsController.cs" />
-    <Compile Include="Controllers\EducationOrganizationsController.cs" />
-    <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Controllers\OdsInstancesController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
-    <Compile Include="Controllers\GlobalSettingsController.cs" />
-    <Compile Include="Controllers\OdsInstanceSettingsController.cs" />
-    <Compile Include="Controllers\ReportsController.cs" />
-    <Compile Include="Controllers\SetupController.cs" />
-    <Compile Include="Controllers\UpdateController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -570,7 +557,6 @@
     <Compile Include="Infrastructure\InMemoryCache.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorControllerFactory.cs" />
     <Compile Include="Infrastructure\IoC\CastleWindsorFluentValidatorFactory.cs" />
     <Compile Include="Infrastructure\IoC\WindsorDependencyResolver.cs" />

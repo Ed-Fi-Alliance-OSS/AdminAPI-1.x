@@ -17,21 +17,6 @@
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/LearningStandardLogProvider.cs" LinkBase="App_Start" />
 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ClaimSetsController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ControllerBase.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/DescriptorsController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/EducationOrganizationsController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ErrorController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/GlobalSettingsController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/HomeController.cs" LinkBase="Controllers" /> 
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstancesController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/OdsInstanceSettingsController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ReportsController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/SetupController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UpdateController.cs" LinkBase="Controllers" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/UserController.cs" LinkBase="Controllers" />
-
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.svg" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff2" LinkBase="fonts" />
     <Content Include="../EdFi.Ods.AdminApp.Web/fonts/glyphicons-halflings-regular.woff" LinkBase="fonts" />

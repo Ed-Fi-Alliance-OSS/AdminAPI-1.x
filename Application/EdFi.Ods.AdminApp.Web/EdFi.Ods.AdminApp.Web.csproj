@@ -734,8 +734,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\resource-editor.js" />
-    <Content Include="Views\ClaimSets\_AddClaimSet.cshtml" />
-    <Content Include="Views\ClaimSets\_ClaimSetDetails.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -746,96 +744,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Account\SignOutCallback.cshtml" />
     <Content Include="Service References\AzureAD\ConnectedService.json" />
-    <Content Include="Views\Setup\FirstTimeSetup.cshtml" />
-    <Content Include="Views\GlobalSettings\_SecurityHelpfulHints.cshtml" />
-    <Content Include="Views\GlobalSettings\_AddVendorModal.cshtml" />
-    <Content Include="Views\GlobalSettings\_VendorsTable.cshtml" />
-    <Content Include="Views\Application\_Applications.cshtml" />
-    <Content Include="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
-    <Content Include="Views\Application\_DeleteVendorApplicationModal.cshtml" />
-    <Content Include="Views\Application\_ApplicationsByVendor.cshtml" />
-    <Content Include="Views\Shared\_DeleteVendorModal.cshtml" />
-    <Content Include="Views\GlobalSettings\_EditVendorModal.cshtml" />
-    <Content Include="Views\GlobalSettings\_EditVendorForm.cshtml" />
-    <Content Include="Views\Application\_ApplicationsTable.cshtml" />
-    <Content Include="Views\Shared\_Settings_Global.cshtml" />
-    <Content Include="Views\Shared\_Settings_Production.cshtml" />
-    <Content Include="Views\GlobalSettings\Vendors.cshtml" />
-    <Content Include="Views\Application\Index.cshtml" />
-    <Content Include="Views\Application\_AddApplicationModal.cshtml" />
-    <Content Include="Views\Application\_ApplicationKeyAndSecretModal.cshtml" />
-    <Content Include="Views\Application\_ApplicationKeyAndSecretContent.cshtml" />
-    <Content Include="Views\Application\_RegenerateApplicationSecretModal.cshtml" />
-    <Content Include="Views\Application\_EditApplicationModal.cshtml" />
-    <Content Include="Views\GlobalSettings\AdvancedSettings.cshtml" />
-    <Content Include="Views\EducationOrganizations\Index.cshtml" />
-    <Content Include="Views\EducationOrganizations\_EducationOrganizations.cshtml" />
-    <Content Include="Views\EducationOrganizations\_AddLocalEducationAgencyModal.cshtml" />
-    <Content Include="Views\EducationOrganizations\_DeleteOrganizationModal.cshtml" />
-    <Content Include="Views\EducationOrganizations\_AddSchoolModal.cshtml" />
-    <Content Include="Views\Descriptors\Index.cshtml" />
-    <Content Include="Views\Descriptors\_DescriptorCategories.cshtml" />
-    <Content Include="Views\Descriptors\_Descriptor.cshtml" />
-    <Content Include="Views\EducationOrganizations\_EditLocalEducationAgencyModal.cshtml" />
-    <Content Include="Views\EducationOrganizations\_EditSchoolModal.cshtml" />
-    <Content Include="Views\Reports\_StudentsByProgram.cshtml" />
-    <Content Include="Views\Reports\_StudentsByAttribute.cshtml" />
-    <Content Include="Views\Reports\_SelectDistrict.cshtml" />
-    <Content Include="Views\Setup\PostUpdateSetup.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\Setup.cshtml" />
-    <Content Include="Views\Update\Index.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Include="Views\Shared\_SignalRStatus_LS.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\BulkLoad.cshtml" />
-    <Content Include="Views\Shared\_LogSettings.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\Logging.cshtml" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
-    <Content Include="Views\OdsInstanceSettings\LearningStandards.cshtml" />
-    <Content Include="Views\GlobalSettings\ClaimSets.cshtml" />
-    <Content Include="Views\ClaimSets\_CopyClaimSetModal.cshtml" />
-    <Content Include="Views\ClaimSets\_DeleteClaimSetModal.cshtml" />
-    <Content Include="Views\ClaimSets\_EditClaimSet.cshtml" />
-    <Content Include="Views\ClaimSets\_ResourceEditor.cshtml" />
-    <Content Include="Views\Reports\_SchoolsBySchoolType.cshtml" />
-    <Content Include="Views\Reports\_TotalEnrollment.cshtml" />
-    <Content Include="Views\Reports\_EnrollmentByGender.cshtml" />
-    <Content Include="Views\Reports\_EnrollmentByRace.cshtml" />
-    <Content Include="Views\Reports\_EnrollmentByEthnicity.cshtml" />
-    <Content Include="Views\ClaimSets\_DeleteClaimSetResourceModal.cshtml" />
-    <Content Include="Views\EducationOrganizations\_MissingData.cshtml" />
-    <Content Include="Views\ClaimSets\_ImportExportClaimSet.cshtml" />
-    <Content Include="Views\ClaimSets\_ExportClaimSet.cshtml" />
-    <Content Include="Views\ClaimSets\_ExportClaimSetPreview.cshtml" />
-    <Content Include="Views\Identity\Login.cshtml" />
-    <Content Include="Views\Identity\Register.cshtml" />
-    <Content Include="Views\Identity\ChangePassword.cshtml" />
-    <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\ClaimSets\_AuthStrategiesModal.cshtml" />
-    <Content Include="Views\Shared\_SettingsGlobalHeader.cshtml" />
-    <Content Include="Views\User\AddUser.cshtml" />
-    <Content Include="Views\GlobalSettings\Users.cshtml" />
-    <Content Include="Views\User\EditOdsInstanceRegistrationsForUser.cshtml" />
-    <Content Include="Views\User\_EditUserModal.cshtml" />
-    <Content Include="Views\User\_EditUserRoleModal.cshtml" />
-    <Content Include="Views\Error\MultiInstanceError.cshtml" />
-    <Content Include="Views\User\_DeleteUserModal.cshtml" />
-    <Content Include="Views\Shared\_SignalRStatus.cshtml" />
-    <Content Include="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
-    <Content Include="Views\OdsInstanceSettings\_SaveBulkUploadCredentialsForm.cshtml" />
-    <Content Include="Views\OdsInstances\BulkRegisterOdsInstances.cshtml" />
-    <Content Include="Views\Home\PostSetup.cshtml" />
     <None Include="Web.base.config" />
-    <Content Include="Views\OdsInstances\RegisterOdsInstance.cshtml" />
-    <Content Include="Views\OdsInstances\Index.cshtml" />
-    <Content Include="Views\OdsInstances\_DeregisterOdsInstanceModal.cshtml" />
     <None Include="Web.OnPremises.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -854,7 +765,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\BulkUpload\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

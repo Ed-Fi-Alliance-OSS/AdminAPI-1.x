@@ -26,7 +26,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/LearningStandardLogProvider.cs" LinkBase="App_Start" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/ModelBinderConfig.cs" LinkBase="App_Start" /> -->
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/BulkUploadController.cs" LinkBase="Controllers" /> -->
@@ -114,12 +113,6 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/LearningStandardsJob.cs" LinkBase="Infrastructure/Jobs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/ProductionSetupJob.cs" LinkBase="Infrastructure/Jobs" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Jobs/WorkflowJob.cs" LinkBase="Infrastructure/Jobs" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/CompositeModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/EnumerationModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/EnumerationPropertyBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/FilteredPropertyBinderBase.cs" LinkBase="Infrastructure/ModelBinding" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/IFilteredModelBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ModelBinding/IFilteredPropertyBinder.cs" LinkBase="Infrastructure/ModelBinding" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Property.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/ResourceClaimSelectListBuilder.cs" LinkBase="Infrastructure" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/Tags/DefaultDisplayLabelBuilder.cs" LinkBase="Infrastructure/Tags" />

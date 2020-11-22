@@ -524,7 +524,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
-    <Content Include="DeveloperSettings\AzureActiveDirectory.config" Condition=" '$(Configuration)' == 'Debug' " />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

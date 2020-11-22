@@ -103,8 +103,8 @@
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/InMemoryCache.cs" LinkBase="Infrastructure" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/BulkImportService.cs" LinkBase="Infrastructure/IO" /> -->
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportConfiguration.cs" LinkBase="Infrastructure/IO" />
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportService.cs" LinkBase="Infrastructure/IO" /> -->
-    <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/IFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/FileImportService.cs" LinkBase="Infrastructure/IO" />
+    <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/IFileUploadHandler.cs" LinkBase="Infrastructure/IO" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileHelpers.cs" LinkBase="Infrastructure/IO" />
     <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/InterchangeFileType.cs" LinkBase="Infrastructure/IO" />
     <!-- <Compile Include="../EdFi.Ods.AdminApp.Web/Infrastructure/IO/LocalFileSystemFileUploadHandler.cs" LinkBase="Infrastructure/IO" /> -->

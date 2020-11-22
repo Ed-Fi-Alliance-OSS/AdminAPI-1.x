@@ -13,20 +13,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
-    public interface IFileUploadHandler
-    {
-        FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc);
-    }
-    public class FileUploadResult
-    {
-        public string Directory { get; set; }
-        public string[] FileNames { get; set; }
-    }
     public class LocalFileSystemFileUploadHandler : IFileUploadHandler
     {
-        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc)
-            => throw new NotImplementedException();
+        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile) => throw new NotImplementedException();
+        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, string fileName) => throw new NotImplementedException();
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles) => throw new NotImplementedException();
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc) => throw new NotImplementedException();
+        public string GetNewTempDirectory() => throw new NotImplementedException();
+        public string GetWorkingDirectory(string customDirectory) => throw new NotImplementedException();
     }
+
     public class BulkImportService
     {
         public event WorkflowStatusUpdated StatusUpdated

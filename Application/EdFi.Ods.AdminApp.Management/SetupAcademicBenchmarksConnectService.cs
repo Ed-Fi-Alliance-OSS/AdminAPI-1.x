@@ -105,15 +105,15 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task CreateAndSaveNewApiClients(Application newApplication)
         {
-            var apiCreds = CreateNewApiClient(CloudOdsEnvironment.Production, newApplication);
+            var apiCreds = CreateNewApiClient(newApplication);
             await StoreApiCredentials(apiCreds);
         }
 
-        private OdsApiCredential CreateNewApiClient(CloudOdsEnvironment environment, Application newApplication)
+        private OdsApiCredential CreateNewApiClient(Application newApplication)
         {
             var apiWithCredentials =
                 new ApiClientFactory(_securePackedHashProvider, _hashConfigurationProvider)
-                    .GetApiClientAndCredentials(environment, CloudsOdsAcademicBenchmarksConnectApp.ApplicationName);
+                    .GetApiClientAndCredentials(CloudsOdsAcademicBenchmarksConnectApp.ApplicationName);
 
             newApplication.ApiClients.Add(apiWithCredentials.ApiClient);
 

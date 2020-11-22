@@ -78,8 +78,7 @@ namespace EdFi.Ods.AdminApp.Management
 
             var apiClientFactory = new ApiClientFactory(_securePackedHashProvider, _hashConfigurationProvider);
 
-            var apiWithCredentials = apiClientFactory.GetApiClientAndCredentials(CloudOdsEnvironment.Production,
-                applicationName);
+            var apiWithCredentials = apiClientFactory.GetApiClientAndCredentials(applicationName);
 
             result.Application.ApiClients.Add(apiWithCredentials.ApiClient);
             result.ProductionKeyAndSecret = apiWithCredentials.ApiCredentials;

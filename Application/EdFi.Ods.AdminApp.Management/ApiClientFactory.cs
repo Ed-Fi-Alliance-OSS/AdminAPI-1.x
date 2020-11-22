@@ -30,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management
             _hashConfigurationProvider = hashConfigurationProvider;
         }
 
-        public ApiWithCredentials GetApiClientAndCredentials(CloudOdsEnvironment environment, string applicationName)
+        public ApiWithCredentials GetApiClientAndCredentials(string applicationName)
         {
             var apiClient = CreateProductionApiClient(applicationName);
 

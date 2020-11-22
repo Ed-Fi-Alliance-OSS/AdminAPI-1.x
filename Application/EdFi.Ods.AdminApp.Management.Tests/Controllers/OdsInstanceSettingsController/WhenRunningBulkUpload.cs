@@ -198,7 +198,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             Func<BulkUploadJobContext, bool> bulkUploadJobEnqueueVerifier = actual =>
             {
                 actual.ShouldSatisfyAllConditions(
-                    () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                     () => actual.DataDirectoryFullPath.ShouldBe(fileUploadResult.Directory),
                     () => actual.OdsInstanceId.ShouldBe(OdsInstanceContext.Id),
                     () => actual.ApiBaseUrl.ShouldBe(_connectionInformation.ApiBaseUrl),

@@ -373,7 +373,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var jobContext = new BulkUploadJobContext
             {
                 DataDirectoryFullPath = uploadedFiles.Directory,
-                Environment = CloudOdsEnvironment.Production.Value,
                 OdsInstanceId = _instanceContext.Id,
                 OdsInstanceName = _instanceContext.Name,
                 ApiBaseUrl = connectionInformation.ApiBaseUrl,

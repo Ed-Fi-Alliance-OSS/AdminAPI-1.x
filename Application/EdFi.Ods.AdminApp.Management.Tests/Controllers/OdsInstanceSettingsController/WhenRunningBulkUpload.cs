@@ -29,7 +29,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
     [TestFixture]
     public class WhenRunningBulkUpload : OdsInstanceSettingsControllerFixture
     {
-        private readonly CloudOdsEnvironment _environment = CloudOdsEnvironment.Production;
         private static readonly InstanceContext OdsInstanceContext = new InstanceContext
         {
             Id = 1234,
@@ -61,7 +60,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             result.ShouldNotBeNull();
             var model = (OdsInstanceSettingsModel) result.Model;
             model.ShouldNotBeNull();
-            model.BulkFileUploadModel.CloudOdsEnvironment.ShouldBeSameAs(_environment);
             model.BulkFileUploadModel.ApiKey.ShouldBeEmpty();
             model.BulkFileUploadModel.ApiSecret.ShouldBeEmpty();
             model.BulkFileUploadModel.CredentialsSaved.ShouldBeFalse();
@@ -91,7 +89,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             result.ShouldNotBeNull();
             var model = (OdsInstanceSettingsModel) result.Model;
             model.ShouldNotBeNull();
-            model.BulkFileUploadModel.CloudOdsEnvironment.ShouldBeSameAs(_environment);
             model.BulkFileUploadModel.ApiKey.ShouldBe(expectedKey);
             model.BulkFileUploadModel.ApiSecret.ShouldBe(expectedSecret);
             model.BulkFileUploadModel.CredentialsSaved.ShouldBeTrue();

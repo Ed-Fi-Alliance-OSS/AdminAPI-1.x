@@ -27,7 +27,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 #else
         public IEnumerable<IFormFile> BulkFiles { get; set; }
 #endif
-        public CloudOdsEnvironment CloudOdsEnvironment { get; set; }
         public const int MaxFileSize = 20000000;
         public bool CredentialsSaved => !string.IsNullOrEmpty(ApiKey);
         [Display(Name = "Api Key")]

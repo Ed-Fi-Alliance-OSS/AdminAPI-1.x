@@ -291,8 +291,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
                     ApiKey = config.BulkUploadCredential?.ApiKey ?? string.Empty,
-                    ApiSecret = config.BulkUploadCredential?.ApiSecret ?? string.Empty,
-                    CloudOdsEnvironment = CloudOdsEnvironment.Production
+                    ApiSecret = config.BulkUploadCredential?.ApiSecret ?? string.Empty
                 },
                 OdsInstance = _instanceContext
             };

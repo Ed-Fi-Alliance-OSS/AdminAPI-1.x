@@ -30,9 +30,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [ChildActionOnly]
-        public PartialViewResult BulkUploadForm(CloudOdsEnvironment environment)
+        public PartialViewResult BulkUploadForm()
         {
-            return PartialView("_BulkUploadForm", new BulkFileUploadModel { CloudOdsEnvironment = environment });
+            return PartialView("_BulkUploadForm", new BulkFileUploadModel());
         }
 
         [HttpPost]

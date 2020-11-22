@@ -547,10 +547,6 @@
     <Compile Include="App_Start\StartupBase.cs" />
     <Content Include="Global.asax" />
     <Content Include="Schema\3.2.0-b\InterchangeOrderMetadata.xml" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\clipboard.js" />
-    <Content Include="Scripts\clipboard.min.js" />
     <Content Include="Schema\3.2.0-b\Ed-Fi-Core.xsd">
       <SubType>Designer</SubType>
     </Content>
@@ -696,25 +692,6 @@
     <Content Include="log4net\log4net.OnPremisesRelease.config" />
     <Content Include="log4net\log4net.OnPremisesYearSpecificRelease.config" />
     <Content Include="log4net\log4net.Release.config" />
-    <None Include="Scripts\jquery-2.2.3.intellisense.js" />
-    <Content Include="Scripts\jquery-2.2.3.js" />
-    <Content Include="Scripts\jquery-2.2.3.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.1.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\lodash.core.js" />
-    <Content Include="Scripts\lodash.core.min.js" />
-    <Content Include="Scripts\lodash.js" />
-    <Content Include="Scripts\lodash.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\auth-editor.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\signalr.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -726,14 +703,9 @@
     <None Include="Properties\PublishProfiles\LocalPackage.pubxml">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Scripts\bootstrap-multiselect.js" />
-    <Content Include="Scripts\site-form-handlers.js" />
-    <Content Include="Scripts\site.js" />
-    <Content Include="Scripts\toastr.min.js" />
     <Content Include="uploads\placeholder.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\resource-editor.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -745,7 +717,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Service References\AzureAD\ConnectedService.json" />
-    <Content Include="Scripts\jquery-2.2.3.min.map" />
     <None Include="Web.base.config" />
     <None Include="Web.OnPremises.config">
       <DependentUpon>Web.config</DependentUpon>

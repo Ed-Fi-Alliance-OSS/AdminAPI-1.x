@@ -94,7 +94,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 _logger.Info("Setup process completed");
                 if (CloudOdsAdminAppSettings.Instance.Mode.SupportsSingleInstance)
                 {
-                    await WarmupApiServer(CloudOdsEnvironment.Production);
+                    await WarmupApiServer();
                 }
                 _logger.Info("API warmup complete");
                 return SetupSucess();
@@ -106,16 +106,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             }
         }
 
-        private async Task WarmupApiServer(CloudOdsEnvironment environment)
+        private async Task WarmupApiServer()
         {
-            _logger.Info($"Setup: Warming up {environment.DisplayName} API");
+            _logger.Info("Setup: Warming up API");
             try
             {
-                (await _odsApiFacadeFactory.Create(environment)).WarmUp();
+                (await _odsApiFacadeFactory.Create()).WarmUp();
             }
             catch (Exception ex)
             {
-                _logger.Error($"Setup: {environment.DisplayName} API Warmup Failed", ex);
+                _logger.Error("Setup: API Warmup Failed", ex);
             }
         }
 

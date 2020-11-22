@@ -112,7 +112,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> Setup()
         {
-            var setupCompleted = (await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production)).DoesApiDataExist();
+            var setupCompleted = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
             if (setupCompleted) return RedirectToAction("SetupComplete");
 
@@ -177,7 +177,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> LearningStandards()
         {
-            var odsApiFacade = await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production);
+            var odsApiFacade = await _odsApiFacadeFactory.Create();
             var config = await _odsSecretConfigurationProvider.GetSecretConfiguration(_instanceContext.Id);
 
             if (config == null)

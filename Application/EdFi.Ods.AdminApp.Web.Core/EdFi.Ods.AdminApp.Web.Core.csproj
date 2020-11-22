@@ -15,13 +15,6 @@
          these files will be moved from the legacy project to this project, at
          which point these explicit inclusions will become redundant. -->
 
-
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassInstanceContextFilter.cs" LinkBase="ActionFilters" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassPasswordChangeRequiredFilterAttribute.cs" LinkBase="ActionFilters" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/BypassSetupRequiredFilterAttribute.cs" LinkBase="ActionFilters" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/JsonValidationFilter.cs" LinkBase="ActionFilters" />
-    <Compile Include="../EdFi.Ods.AdminApp.Web/ActionFilters/SetupRequiredFilter.cs" LinkBase="ActionFilters" />
-
     <Compile Include="../EdFi.Ods.AdminApp.Web/App_Start/LearningStandardLogProvider.cs" LinkBase="App_Start" />
 
     <Compile Include="../EdFi.Ods.AdminApp.Web/Controllers/ApplicationController.cs" LinkBase="Controllers" />

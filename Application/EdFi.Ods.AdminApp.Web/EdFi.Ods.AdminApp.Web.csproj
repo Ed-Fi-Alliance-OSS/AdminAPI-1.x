@@ -536,7 +536,6 @@
     <Compile Include="App_Start\ModelBinderConfig.cs" />
     <Compile Include="App_Start\AzureStartup.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\BulkUploadController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ClaimSetsController.cs" />
     <Compile Include="Controllers\DescriptorsController.cs" />
@@ -1060,7 +1059,6 @@
     <Content Include="Views\Update\Index.cshtml" />
     <Content Include="Views\OdsInstanceSettings\SetupComplete.cshtml" />
     <Content Include="Views\Shared\_SignalRStatus_LS.cshtml" />
-    <Content Include="Views\Shared\_BulkUploadForm.cshtml" />
     <Content Include="Views\OdsInstanceSettings\BulkLoad.cshtml" />
     <Content Include="Views\Shared\_LogSettings.cshtml" />
     <Content Include="Views\OdsInstanceSettings\Logging.cshtml" />

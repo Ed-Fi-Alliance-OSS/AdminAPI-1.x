@@ -523,11 +523,9 @@
     <Content Include="log4net\log4net.Release.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="favicon.ico" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\LocalPackage.pubxml">
       <SubType>Designer</SubType>
     </None>

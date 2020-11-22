@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApp.Web", "EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.csproj", "{3FADE813-D96D-461C-A064-10B1534DAEB0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management", "EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj", "{FBBA172C-6F81-4753-92B9-C31277B032DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Azure", "EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj", "{A1951107-BE72-4745-8C9E-6EC1F741384D}"
@@ -49,34 +47,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Debug|x64.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremises|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremises|Any CPU.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremises|x64.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremises|x64.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremisesRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremisesRelease|Any CPU.Build.0 = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremisesRelease|x64.ActiveCfg = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremisesRelease|x64.Build.0 = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremNpgsql|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremNpgsql|Any CPU.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremNpgsql|x64.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremNpgsql|x64.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecific|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecific|Any CPU.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecific|x64.ActiveCfg = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecific|x64.Build.0 = Debug|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecificRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecificRelease|Any CPU.Build.0 = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecificRelease|x64.ActiveCfg = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.OnPremYearSpecificRelease|x64.Build.0 = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Release|x64.ActiveCfg = Release|Any CPU
-		{3FADE813-D96D-461C-A064-10B1534DAEB0}.Release|x64.Build.0 = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|x64.ActiveCfg = Debug|Any CPU

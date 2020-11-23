@@ -47,10 +47,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IGetOdsInstanceRegistrationsByUserIdQuery getOdsInstanceRegistrationsByUserIdQuery
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
             , ITabDisplayService tabDisplayService
-            #if !NET48
             , SignInManager<AdminAppUser> signInManager
             , UserManager<AdminAppUser> userManager
-            #endif
             )
         {
             _addUserCommand = addUserCommand;
@@ -64,10 +62,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
             _tabDisplayService = tabDisplayService;            
 
-            #if !NET48
             SignInManager = signInManager;
             UserManager = userManager;
-            #endif
         }
 
         public ActionResult AddUser()

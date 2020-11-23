@@ -49,9 +49,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IInferOdsApiVersion _inferOdsApiVersion;   
         private readonly IValidator<BulkFileUploadModel> _bulkLoadValidator;
         private readonly AppSettings _appSettings;
-#if !NET48
         private readonly IWebHostEnvironment _webHostEnvironment;
-#endif
 
         public OdsInstanceSettingsController(
               IOdsApiFacadeFactory odsApiFacadeFactory
@@ -72,9 +70,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IInferOdsApiVersion inferOdsApiVersion          
             , IValidator<BulkFileUploadModel> bulkLoadValidator
             , IOptions<AppSettings> appSettingsAccessor
-#if !NET48
             , IWebHostEnvironment webHostEnvironment
-#endif
             )
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
@@ -95,10 +91,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _inferOdsApiVersion = inferOdsApiVersion;
             _bulkLoadValidator = bulkLoadValidator;
             _appSettings = appSettingsAccessor.Value;
-
-#if !NET48
             _webHostEnvironment = webHostEnvironment;
-#endif
         }
 
         public async Task<ActionResult> Setup()

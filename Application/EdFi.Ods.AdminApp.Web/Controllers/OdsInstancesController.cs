@@ -15,10 +15,8 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
-#if !NET48
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-#endif
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {

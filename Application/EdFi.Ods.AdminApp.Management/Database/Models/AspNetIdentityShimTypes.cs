@@ -1,4 +1,3 @@
-#if !NET48
 using Microsoft.AspNetCore.Identity;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Models
@@ -15,4 +14,3 @@ namespace EdFi.Ods.AdminApp.Management.Database.Models
     {
     }
 }
-#endif

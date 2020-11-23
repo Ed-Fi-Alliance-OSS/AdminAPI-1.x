@@ -3,12 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-#if !NET48
 using System;
 using EdFi.Common.Configuration;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
-#endif
 using System.Data;
 using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Services;
@@ -27,20 +25,14 @@ namespace EdFi.Ods.AdminApp.Management.Database.Ods
     {
         private readonly IConnectionStringService _connectionStringService;
 
-        #if !NET48
-            private readonly IOptions<AppSettings> _appSettings;
-        #endif
+        private readonly IOptions<AppSettings> _appSettings;
 
         public DatabaseConnectionProvider(IConnectionStringService connectionStringService
-        #if !NET48
             , IOptions<AppSettings> appSettings
-        #endif
             )
         {
             _connectionStringService = connectionStringService;
-        #if !NET48
             _appSettings = appSettings;
-        #endif
         }
 
         public IDbConnection CreateNewConnection(int odsInstanceNumericSuffix, ApiMode apiMode)

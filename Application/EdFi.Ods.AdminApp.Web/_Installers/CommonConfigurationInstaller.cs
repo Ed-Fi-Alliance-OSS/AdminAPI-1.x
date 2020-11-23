@@ -87,10 +87,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<ISecureHasher, Pbkdf2HmacSha1SecureHasher>();
             services.AddSingleton<IPackedHashConverter, PackedHashConverter>();
-#if !NET48
+
             services.AddSingleton<ISecureHasherProvider, SecureHasherProvider>(
                 x => new SecureHasherProvider(new List<ISecureHasher> { x.GetService<ISecureHasher>() }));
-#endif
+
             services.AddSingleton<ISecurePackedHashProvider, SecurePackedHashProvider>();
             services.AddSingleton<IHashConfigurationProvider, DefaultHashConfigurationProvider>();
 

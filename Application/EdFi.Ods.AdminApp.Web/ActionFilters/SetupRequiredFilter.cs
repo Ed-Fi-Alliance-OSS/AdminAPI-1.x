@@ -17,21 +17,15 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     public class SetupRequiredFilter : ActionFilterAttribute
     {
         private readonly IGetOdsStatusQuery _getOdsStatusQuery;
-        #if !NET48
         private readonly AdminAppDbContext _database;
-        #endif
 
         public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery
-            #if !NET48
             , AdminAppDbContext database
-            #endif
             )
         {
             _getOdsStatusQuery = getOdsStatusQuery;
 
-            #if !NET48
             _database = database;
-            #endif
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)

@@ -3,12 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-#if !NET48
 using System;
 using EdFi.Common.Configuration;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
-#endif
 using System.Reflection;
 using DbUp;
 using DbUp.Builder;
@@ -23,14 +21,13 @@ namespace EdFi.Ods.AdminApp.Management.Database.Ods.Reports
 
     public class UpgradeEngineFactory : IUpgradeEngineFactory
     {
-        #if !NET48
-            private static IOptions<AppSettings> _appSettings;
-            public UpgradeEngineFactory(IOptions<AppSettings> appSettings)
-            {
-                    _appSettings = appSettings;
-    
-            }
-        #endif
+        private static IOptions<AppSettings> _appSettings;
+        public UpgradeEngineFactory(IOptions<AppSettings> appSettings)
+        {
+                _appSettings = appSettings;
+
+        }
+
         public UpgradeEngine Create(ReportsConfig config)
         {
             return UpgradeEngineBuilder(config.ConnectionString)

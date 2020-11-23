@@ -3,21 +3,6 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-function Get-Copyright {
-    param (
-        [string]
-        $BirthYear,
-
-        [string]
-        $Maintainers
-    )
-
-    $date = Get-Date
-    $year = $date.Year
-    $copyright_span = if ($year -eq $BirthYear) { $year } else { "$BirthYear-$year" }
-    return "Copyright (c) $copyright_span $Maintainers"
-}
-
 function Invoke-RegenerateFile {
     param (
         [string]

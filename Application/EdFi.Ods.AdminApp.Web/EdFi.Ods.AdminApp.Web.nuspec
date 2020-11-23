@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>EdFi.Suite3.ODS.AdminApp.Web.Core</id>
+    <id>EdFi.Suite3.ODS.AdminApp.Web</id>
     <version>1.0.0.0</version>
     <title>Ed-Fi ODS AdminApp</title>
     <authors>Ed-Fi Alliance</authors>

@@ -166,14 +166,6 @@ using System.Runtime.InteropServices;
     }
 }
 
-function RevertAssemblyInfo {
-    Invoke-Execute {
-        # TeamCity thinks there is an error coming out of the following command and therefore
-        # it fails the build. Suppress the error output.
-        &git checkout :**/AssemblyInfo.cs 2>$null
-    }
-}
-
 function Compile {
     Invoke-Execute {
         dotnet build $solutionRoot -c $configuration --nologo
@@ -295,7 +287,6 @@ function Invoke-Build {
     Invoke-Step { Restore }
     Invoke-Step { AssemblyInfo }
     Invoke-Step { Compile }
-    Invoke-Step { RevertAssemblyInfo }
 }
 
 function Invoke-Clean {

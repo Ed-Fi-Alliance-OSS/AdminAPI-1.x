@@ -327,6 +327,8 @@ function Invoke-PushPackage {
 }
 
 Invoke-Main {
+    dotnet --info
+
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }

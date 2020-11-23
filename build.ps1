@@ -165,7 +165,7 @@ using System.Runtime.InteropServices;
 
 function Compile {
     Invoke-Execute {
-        dotnet build $solutionRoot -c $configuration --nologo
+        dotnet build $solutionRoot -c $configuration --nologo --no-restore
 
         $outputPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish"
         $project = "$solutionRoot/EdFi.Ods.AdminApp.Web/"

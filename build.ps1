@@ -75,12 +75,6 @@ param(
     [ValidateSet("Debug", "Release", "OnPremisesRelease")]
     $BuildConfiguration = "Debug",
 
-    # Optional location of msbuild.exe. If not provided, the script attempts to
-    # use vswhere.exe to find and use the latest installed version of
-    # msbuild.exe.
-    [string]
-    $MsBuildFolder = $null,
-
     # Ed-Fi's official NuGet package feed for package download and distribution.
     [string]
     $EdFiNuGetFeed = "https://www.myget.org/F/ed-fi/api/v3/index.json",
@@ -296,7 +290,6 @@ function PushPackage {
 function Invoke-Build {
     Write-Host "Building Version $Version" -ForegroundColor Cyan
 
-    Invoke-Step { Initialize-MsBuild $MsBuildFolder }
     Invoke-Step { InitializeNuGet }
     Invoke-Step { Clean }
     Invoke-Step { Restore }
@@ -306,7 +299,6 @@ function Invoke-Build {
 }
 
 function Invoke-Clean {
-    Invoke-Step { Initialize-MsBuild $MsBuildFolder }
     Invoke-Step { Clean }
 }
 

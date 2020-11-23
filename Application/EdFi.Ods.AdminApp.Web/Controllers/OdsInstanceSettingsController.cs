@@ -4,27 +4,18 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-#if NET48
-using System.Web.Mvc;
-using System.Web.Hosting;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
-#endif
-using AutoMapper;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
@@ -148,11 +139,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             if (CloudOdsAdminAppSettings.Instance.SystemManagedSqlServer)
                 _productionSetupJob.EnqueueJob(1);
 
-#if NET48
-            return new HttpStatusCodeResult(200);
-#else
             return Ok();
-#endif
         }
 
         public async Task<ActionResult> Logging()
@@ -219,11 +206,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             await RunLearningStandardsJob();
 
-#if NET48
-            return new HttpStatusCodeResult(200);
-#else
             return Ok();
-#endif
         }
 
         [HttpPost]
@@ -231,11 +214,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             await RunLearningStandardsJob();
 
-#if NET48
-            return new HttpStatusCodeResult(200);
-#else
             return Ok();
-#endif
         }
 
         private async Task RunLearningStandardsJob()
@@ -300,26 +279,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> BulkFileUpload(OdsInstanceSettingsModel model)
         {
-#if NET48
-            var bulkFiles = model.BulkFileUploadModel.BulkFiles.Where(file => file != null && file.ContentLength > 0).ToArray();
-#else
             var bulkFiles = model.BulkFileUploadModel.BulkFiles.Where(file => file != null && file.Length > 0).ToArray();
-#endif
 
             if (!bulkFiles.Any())
             {
-#if NET48
-                return new HttpStatusCodeResult(HttpStatusCode.NoContent);
-#else
                 return NoContent();
-#endif
             }
 
-#if NET48
-            if (bulkFiles.Sum(f => f.ContentLength) > BulkFileUploadModel.MaxFileSize)
-#else
             if (bulkFiles.Sum(f => f.Length) > BulkFileUploadModel.MaxFileSize)
-#endif
             {
                 throw new Exception($"Upload exceeds maximum limit of {BulkFileUploadModel.MaxFileSize} bytes");
             }
@@ -348,18 +315,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
                     Response.StatusCode = (int) HttpStatusCode.BadRequest;
-#if NET48
-                    Response.TrySkipIisCustomErrors = true;
-#endif
                     return Json(new {Result = new {Errors = new[] {new {ErrorMessage = errorMessage}}}});
                 }
             }
 
-#if NET48
-            var schemaBasePath = HostingEnvironment.MapPath(_appSettings.XsdFolder);
-#else
             var schemaBasePath = Path.Combine(_webHostEnvironment.ContentRootPath, _appSettings.XsdFolder);
-#endif
             var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
             var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
 

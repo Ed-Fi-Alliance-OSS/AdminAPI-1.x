@@ -7,11 +7,7 @@ using System;
 using System.Data.SqlClient;
 using System.Net;
 using System.Threading.Tasks;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
@@ -122,9 +118,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private JsonResult SetupFailure(Exception e)
         {
             Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        #if NET48
-            Response.TrySkipIisCustomErrors = true;
-        #endif
 
             return Json(new { success = false, message = $"Failed to complete setup: {e.Message}", isTransientError = IsTransientError(e) });
         }

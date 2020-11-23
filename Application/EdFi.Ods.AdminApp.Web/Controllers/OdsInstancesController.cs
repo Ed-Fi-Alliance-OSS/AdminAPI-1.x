@@ -3,15 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Linq;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
@@ -21,9 +15,6 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
-#if NET48
-using Microsoft.AspNet.Identity;
-#endif
 #if !NET48
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -61,11 +52,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ViewResult Index()
         {
-        #if NET48
-            var currentUserId = User.Identity.GetUserId();
-        #else
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        #endif
             var instances = _getOdsInstanceRegistrationsByUserIdQuery.Execute(currentUserId);
 
             var model = new IndexModel
@@ -87,11 +74,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [PermissionRequired(Permission.AccessGlobalSettings)]
         public async Task<ActionResult> RegisterOdsInstance(RegisterOdsInstanceModel model)
         {
-        #if NET48
-            var currentUserId = User.Identity.GetUserId();
-        #else
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        #endif
 
             await _registerOdsInstanceCommand.Execute(model,
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId, CloudOdsAdminAppClaimSetConfiguration.Default);
@@ -109,12 +92,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [PermissionRequired(Permission.AccessGlobalSettings)]
         public async Task<ActionResult> BulkRegisterOdsInstances(BulkRegisterOdsInstancesModel model)
         {
-        #if NET48
-            var currentUserId = User.Identity.GetUserId();
-
-        #else
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        #endif
             var results = await _bulkRegisterOdsInstancesCommand.Execute(
                 model.DataRecords(),
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId,
@@ -129,14 +107,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult ActivateOdsInstance(string instanceId)
         {
-        #if NET48
-            var myCookie = new HttpCookie("Instance", instanceId);
-
-            Response.Cookies.Add(myCookie);
-
-        #else
             Response.Cookies.Append("Instance", instanceId, new CookieOptions());
-        #endif
+
             return RedirectToAction("Index", "Application");
         }
 
@@ -159,19 +131,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             _deregisterOdsInstanceCommand.Execute(model);
 
-        #if NET48
-            var instanceCookie = Request.Cookies.Get("Instance");
-
-            if (instanceCookie != null && instanceCookie.Value == model.OdsInstanceId.ToString())
-            {
-                instanceCookie.Expires = DateTime.Now.AddDays(-1);
-                instanceCookie.Value = null;
-                Response.Cookies.Add(instanceCookie);
-            }
-
-        #else
             Response.Cookies.Delete("Instance");
-        #endif
+
             return RedirectToActionJson<OdsInstancesController>(x => x.Index(), "Ods Instance deregistered successfully.");
         }
     }

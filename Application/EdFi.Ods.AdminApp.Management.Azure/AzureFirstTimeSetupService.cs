@@ -7,11 +7,7 @@ using System.Linq;
 using System.Threading;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Contexts;
-#if NET48
-using EdFi.Ods.Common.Security;
-#else
 using EdFi.Common.Security;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Azure
 {

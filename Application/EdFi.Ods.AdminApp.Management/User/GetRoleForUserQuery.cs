@@ -6,9 +6,6 @@
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-#if NET48
-using Microsoft.AspNet.Identity.EntityFramework;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.User
 {

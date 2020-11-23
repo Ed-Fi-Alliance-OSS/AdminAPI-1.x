@@ -8,11 +8,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Helpers;
-#if NET48
-using EdFi.Ods.Common.Configuration;
-#else
 using EdFi.Common.Configuration;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {

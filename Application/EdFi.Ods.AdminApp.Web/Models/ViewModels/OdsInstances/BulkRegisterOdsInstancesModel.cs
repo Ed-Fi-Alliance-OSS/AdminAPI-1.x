@@ -6,11 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-#if NET48
-using System.Web;
-#else
 using Microsoft.AspNetCore.Http;
-#endif
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
@@ -30,11 +26,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
         [Accept(".csv")]
         [Display(Name = "Instances Data File")]
-        #if NET48
-        public HttpPostedFileBase OdsInstancesFile { get; set; }
-        #else
         public IFormFile OdsInstancesFile { get; set; }
-        #endif
 
         public IList<RegisterOdsInstanceModel> DataRecords()
         {
@@ -53,11 +45,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             if (_streamWasRead)
                 return;
 
-#if NET48
-            _dataRecords = InputFileHelper.DataRecords(OdsInstancesFile.InputStream, out _missingHeaders);
-#else
             _dataRecords = InputFileHelper.DataRecords(OdsInstancesFile.OpenReadStream(), out _missingHeaders);
-#endif
             _streamWasRead = true;
         }
     }

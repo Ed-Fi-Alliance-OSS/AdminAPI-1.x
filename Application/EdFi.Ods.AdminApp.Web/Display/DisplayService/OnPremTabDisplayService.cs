@@ -7,11 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
-#if NET48
-using EdFi.Ods.Common.Utils.Extensions;
-#else
 using EdFi.Common.Utils.Extensions;
-#endif
 
 namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
 {

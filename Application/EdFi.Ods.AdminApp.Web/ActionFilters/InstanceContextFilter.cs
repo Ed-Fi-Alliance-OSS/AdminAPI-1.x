@@ -6,12 +6,7 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
-#if NET48
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;

@@ -6,15 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if NET48
-using System.Web.Mvc;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
-using EdFi.Ods.Common.Extensions;
-#else
 using EdFi.Common.Extensions;
-#endif
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.LearningStandards.Core.Configuration;
 using EdFi.Admin.LearningStandards.Core.Services;
@@ -22,21 +14,13 @@ using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
-using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
-#if NET48
-using EdFi.Ods.Common.Configuration;
-using EdFi.Ods.Common.Security;
-#else
-using EdFi.Common.Configuration;
 using EdFi.Common.Security;
-#endif
 using EdFi.Security.DataAccess.Contexts;
-using FluentValidation;
 using Hangfire;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,33 +31,13 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public abstract class CommonConfigurationInstaller
-#if NET48
-        : IWindsorInstaller
-#endif
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(CommonConfigurationInstaller));
 
-#if NET48
-        public void Install(IWindsorContainer services, IConfigurationStore store)
-#else
         public void Install(IServiceCollection services)
-#endif
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
-#if NET48
-            services.AddSingleton(AutoMapperBootstrapper.CreateMapper());
-
-            services.AddSingleton<IApiConfigurationProvider, ApiConfigurationProvider>();
-            services.AddSingleton<IConfigValueProvider, AppConfigValueProvider>();
-            services.AddSingleton<IDatabaseEngineProvider, DatabaseEngineProvider>();
-            services.AddSingleton<IConfigConnectionStringsProvider, AppConfigConnectionStringsProvider>();
-
-            services.AddSingleton<ISecurityContextFactory, SecurityContextFactory>();
-            services.AddSingleton<IUsersContextFactory, UsersContextFactory>();
-            services.AddScoped(x => x.GetService<ISecurityContextFactory>().CreateContext());
-            services.AddScoped(x => x.GetService<IUsersContextFactory>().CreateContext());
-#else
             services.AddScoped<ISecurityContext>(x =>
             {
                 var appSettings = x.GetService<IOptions<AppSettings>>();
@@ -95,20 +59,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
                 return new PostgresUsersContext(connectionStrings.Value.Admin);
             });
-#endif
 
             services.AddSingleton(TokenCache.DefaultShared);
-
-
-#if NET48
-            //For the .NET Core registration of this type, see Startup.cs.
-            services.AddScoped<AdminAppDbContext>();
-
-            //For the .NET Core registration of this type, see Startup.cs.
-            //Note that in NET48 runs, this scoped instance is distinct from
-            //the scoped instance available via the OWIN IoC container.
-            services.AddScoped<AdminAppIdentityDbContext>();
-#endif
 
             services.AddScoped<AdminAppUserContext>();
 
@@ -117,19 +69,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<ICachedItems, CachedItems>();
 
             services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
-
-#if NET48
-            services.AddSingleton<IOptions<AppSettings>>(
-                new Net48Options<AppSettings>(ConfigurationHelper.GetAppSettings()));
-
-            services.AddSingleton<IOptions<ConnectionStrings>>(
-                new Net48Options<ConnectionStrings>(ConfigurationHelper.GetConnectionStrings()));
-
-            services.Register(
-                Classes.FromThisAssembly()
-                    .BasedOn<IController>()
-                    .LifestyleTransient());
-#endif
 
             services.AddTransient<ProductionSetupHub>();
             services.AddTransient<BulkUploadHub>();
@@ -196,28 +135,11 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             }
 
             services.AddSingleton<CloudOdsUpdateService>();
-
-#if NET48
-            services.Register(
-                Classes.FromThisAssembly()
-                    .BasedOn(typeof(IValidator<>))
-                    .WithService
-                    .Base()
-                    .LifestyleTransient());
-#endif
         }
 
-#if NET48
-        protected abstract void InstallHostingSpecificClasses(IWindsorContainer services);
-#else
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);
-#endif
 
-#if NET48
-        public static void ConfigureLearningStandards(IWindsorContainer services)
-#else
         public static void ConfigureLearningStandards(IServiceCollection services)
-#endif
         {
             var config = new EdFiOdsApiClientConfiguration(
                 maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());

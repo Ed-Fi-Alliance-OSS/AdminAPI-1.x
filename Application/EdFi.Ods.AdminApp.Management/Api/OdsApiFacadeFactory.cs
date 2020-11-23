@@ -5,11 +5,6 @@
 
 using System.Threading.Tasks;
 using AutoMapper;
-#if NET48
-using EdFi.Ods.Common;
-#else
-using EdFi.Common;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Api
 {

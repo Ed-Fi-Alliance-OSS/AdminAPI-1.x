@@ -10,11 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {

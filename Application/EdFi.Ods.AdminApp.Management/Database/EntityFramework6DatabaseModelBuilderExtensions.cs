@@ -7,13 +7,8 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
-#if NET48
-using EdFi.Ods.Common;
-using EdFi.Ods.Common.Utils.Extensions;
-#else
 using EdFi.Common;
 using EdFi.Common.Utils.Extensions;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {

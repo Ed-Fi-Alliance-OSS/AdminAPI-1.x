@@ -52,11 +52,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Ods
         {
             var connectionString = _connectionStringService.GetConnectionString(odsInstanceName, apiMode);
 
-            #if NET48
-                var isPostgreSql = DatabaseProviderHelper.PgSqlProvider;
-            #else
-                var isPostgreSql = ApiConfigurationConstants.PostgreSQL.Equals(_appSettings.Value.DatabaseEngine, StringComparison.InvariantCultureIgnoreCase);
-            #endif
+            var isPostgreSql = ApiConfigurationConstants.PostgreSQL.Equals(_appSettings.Value.DatabaseEngine, StringComparison.InvariantCultureIgnoreCase);
 
             if (isPostgreSql)
             {

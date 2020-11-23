@@ -7,11 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
-#if NET48
-using System.Web;
-#else
 using Microsoft.AspNetCore.Http;
-#endif
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
@@ -22,11 +18,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
     public class BulkFileUploadModel
     {
         public InterchangeFileType BulkFileType { get; set; }
-#if NET48
-        public IEnumerable<HttpPostedFileBase> BulkFiles { get; set; }
-#else
         public IEnumerable<IFormFile> BulkFiles { get; set; }
-#endif
         public const int MaxFileSize = 20000000;
         public bool CredentialsSaved => !string.IsNullOrEmpty(ApiKey);
         [Display(Name = "Api Key")]

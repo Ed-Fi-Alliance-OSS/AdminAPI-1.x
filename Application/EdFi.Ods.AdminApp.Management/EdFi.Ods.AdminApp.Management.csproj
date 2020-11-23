@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Configurations>Debug;Release;OnPremises;OnPremNpgsql</Configurations>
     <Copyright>Copyright © 2016 Ed-Fi Alliance</Copyright>
   </PropertyGroup>
 

@@ -28,7 +28,7 @@ object BuildAndTestTemplate : Template({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = script {
                 content = """
-                    .\build.ps1 -BuildCounter %build.counter% -Command Build -Version "%adminApp.version%" -BuildConfiguration OnPremisesRelease
+                    .\build.ps1 -BuildCounter %build.counter% -Command Build -Version "%adminApp.version%" -BuildConfiguration Release
                 """.trimIndent()
             }
         }
@@ -43,7 +43,7 @@ object BuildAndTestTemplate : Template({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = script {
                 content = """
-                    .\build.ps1 -Version %adminApp.version% -BuildCounter %build.counter% -Command Package -BuildConfiguration OnPremisesRelease
+                    .\build.ps1 -Version %adminApp.version% -BuildCounter %build.counter% -Command Package -BuildConfiguration Release
                 """.trimIndent()
             }
         }
@@ -53,7 +53,7 @@ object BuildAndTestTemplate : Template({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = script {
                 content = """
-                    .\build.ps1 -Command UnitTest -BuildConfiguration OnPremisesRelease
+                    .\build.ps1 -Command UnitTest -BuildConfiguration Release
                 """.trimIndent()
             }
         }
@@ -63,7 +63,7 @@ object BuildAndTestTemplate : Template({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = script {
                 content = """
-                    .\build.ps1 -Command IntegrationTest -BuildConfiguration OnPremisesRelease
+                    .\build.ps1 -Command IntegrationTest -BuildConfiguration Release
                 """.trimIndent()
             }
         }

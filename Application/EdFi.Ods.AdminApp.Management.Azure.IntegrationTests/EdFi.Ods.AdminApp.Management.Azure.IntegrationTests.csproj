@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © 2017 Ed-Fi Alliance</Copyright>
-    <Configurations>Debug;Release;OnPremises</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

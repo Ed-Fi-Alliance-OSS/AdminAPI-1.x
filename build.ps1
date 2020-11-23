@@ -70,9 +70,9 @@ param(
     [string]
     $BuildCounter = "1",
 
-    # .NET project build configuration, defaults to "Debug". Options are: Debug, Release, OnPremisesRelease.
+    # .NET project build configuration, defaults to "Debug". Options are: Debug, Release.
     [string]
-    [ValidateSet("Debug", "Release", "OnPremisesRelease")]
+    [ValidateSet("Debug", "Release")]
     $BuildConfiguration = "Debug",
 
     # Ed-Fi's official NuGet package feed for package download and distribution.
@@ -97,11 +97,8 @@ $solutionRoot = "$PSScriptRoot/Application"
 if ("Release" -eq $BuildConfiguration) {
     $configuration = "Release"
     $testConfiguration = "Release"
-} elseif ("OnPremisesRelease" -eq $BuildConfiguration) {
-    $configuration = "OnPremisesRelease"
-    $testConfiguration = "Release"
 } else {
-    $configuration = "OnPremises"
+    $configuration = "Debug"
     $testConfiguration = "Debug"
 }
 

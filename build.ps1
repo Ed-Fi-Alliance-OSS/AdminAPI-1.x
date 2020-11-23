@@ -151,11 +151,12 @@ function AssemblyInfo {
 
 function Compile {
     Invoke-Execute {
+        dotnet --info
         dotnet build $solutionRoot -c $configuration --nologo --no-restore
 
         $outputPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish"
         $project = "$solutionRoot/EdFi.Ods.AdminApp.Web/"
-        dotnet publish $project -c $configuration /p:EnvironmentName=OnPremisesRelease -o $outputPath --no-build
+        dotnet publish $project -c $configuration /p:EnvironmentName=OnPremisesRelease -o $outputPath --no-build --nologo
     }
 }
 
@@ -313,8 +314,6 @@ function Invoke-PushPackage {
 }
 
 Invoke-Main {
-    dotnet --info
-
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }

@@ -96,10 +96,8 @@ $solutionRoot = "$PSScriptRoot/Application"
 
 if ("Release" -eq $BuildConfiguration) {
     $configuration = "Release"
-    $testConfiguration = "Release"
 } else {
     $configuration = "Debug"
-    $testConfiguration = "Debug"
 }
 
 $supportedApiVersions = @(
@@ -184,7 +182,7 @@ function RunTests {
         $Filter
     )
 
-    $testAssemblyPath = "$solutionRoot/$Filter/bin/$testConfiguration/"
+    $testAssemblyPath = "$solutionRoot/$Filter/bin/$configuration/"
     $testAssemblies = Get-ChildItem -Path $testAssemblyPath -Filter "$Filter.dll" -Recurse
 
     if ($testAssemblies.Length -eq 0) {

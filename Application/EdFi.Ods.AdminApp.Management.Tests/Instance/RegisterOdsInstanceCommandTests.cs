@@ -90,7 +90,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
         private static SqlConnection GetDatabaseConnection(string instanceName, string prefix = "")
         {
-            var connectionString = ConfigurationHelper.GetConnectionStrings().OdsEmpty;
+            var connectionString = "Data Source=.\\;Integrated Security=True";
 
             var databaseName = instanceName;
 

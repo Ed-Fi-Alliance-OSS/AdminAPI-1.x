@@ -169,7 +169,7 @@ function Compile {
 
         $outputPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish"
         $project = "$solutionRoot/EdFi.Ods.AdminApp.Web/"
-        dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath --no-build
+        dotnet publish $project -c $configuration /p:EnvironmentName=OnPremisesRelease -o $outputPath --no-build
     }
 }
 

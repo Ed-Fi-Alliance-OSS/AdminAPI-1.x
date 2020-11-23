@@ -50,11 +50,9 @@
         .\build.ps1 push -NuGetApiKey $env:nuget_key
 #>
 param(
-    # Command to execute, defaults to "Build". Options are: Clean, Build,
-    # UnitTest / UnitTests, IntegrationTest / IntegrationTests, Package, Push.
+    # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push",
-        "BuildAndTest", "UnitTests", "IntegrationTests")]
+    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -306,9 +304,7 @@ Invoke-Main {
         Clean { Invoke-Clean }
         Build { Invoke-Build }
         UnitTest { Invoke-UnitTests }
-        UnitTests { Invoke-UnitTests }
         IntegrationTest { Invoke-IntegrationTests }
-        IntegrationTests { Invoke-IntegrationTests }
         BuildAndTest {
             Invoke-Build
             Invoke-UnitTests

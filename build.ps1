@@ -26,7 +26,7 @@
         * Push: uploads a NuGet package to the NuGet feed.
 
     .EXAMPLE
-        .\build.ps1 build -BuildConfiguration Release -Version "2.0.0" -BuildCounter 45
+        .\build.ps1 build -Configuration Release -Version "2.0.0" -BuildCounter 45
 
         Overrides the default build configuration (Debug) to build in release
         mode with assembly version 2.0.0.45.
@@ -73,7 +73,7 @@ param(
     # .NET project build configuration, defaults to "Debug". Options are: Debug, Release.
     [string]
     [ValidateSet("Debug", "Release")]
-    $BuildConfiguration = "Debug",
+    $Configuration = "Debug",
 
     # Ed-Fi's official NuGet package feed for package download and distribution.
     [string]
@@ -94,12 +94,6 @@ param(
 
 $solutionRoot = "$PSScriptRoot/Application"
 
-if ("Release" -eq $BuildConfiguration) {
-    $configuration = "Release"
-} else {
-    $configuration = "Debug"
-}
-
 $supportedApiVersions = @(
     @{
         OdsPackageName = "EdFi.RestApi.Databases.EFA"
@@ -118,7 +112,7 @@ Import-Module -Name "$PSScriptRoot/eng/build-helpers.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/package-manager.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/database-manager.psm1" -Force
 function Clean {
-    Invoke-Execute { dotnet clean $solutionRoot -c $configuration --nologo -v minimal }
+    Invoke-Execute { dotnet clean $solutionRoot -c $Configuration --nologo -v minimal }
 }
 function InitializeNuGet {
     Invoke-Execute { $script:nugetExe = Install-NugetCli }
@@ -152,11 +146,11 @@ function AssemblyInfo {
 function Compile {
     Invoke-Execute {
         dotnet --info
-        dotnet build $solutionRoot -c $configuration --nologo --no-restore
+        dotnet build $solutionRoot -c $Configuration --nologo --no-restore
 
         $outputPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish"
         $project = "$solutionRoot/EdFi.Ods.AdminApp.Web/"
-        dotnet publish $project -c $configuration /p:EnvironmentName=OnPremisesRelease -o $outputPath --no-build --nologo
+        dotnet publish $project -c $Configuration /p:EnvironmentName=OnPremisesRelease -o $outputPath --no-build --nologo
     }
 }
 
@@ -167,7 +161,7 @@ function RunTests {
         $Filter
     )
 
-    $testAssemblyPath = "$solutionRoot/$Filter/bin/$configuration/"
+    $testAssemblyPath = "$solutionRoot/$Filter/bin/$Configuration/"
     $testAssemblies = Get-ChildItem -Path $testAssemblyPath -Filter "$Filter.dll" -Recurse
 
     if ($testAssemblies.Length -eq 0) {
@@ -225,7 +219,7 @@ function RunNuGetPack {
         "pack",  $nugetSpecPath,
         "-OutputDirectory", "$PSScriptRoot",
         "-Version", "$PackageVersion",
-        "-Properties", "Configuration=$configuration",
+        "-Properties", "Configuration=$Configuration",
         "-NoPackageAnalysis"
     )
     Write-Host "$nugetExe $arguments" -ForegroundColor Magenta

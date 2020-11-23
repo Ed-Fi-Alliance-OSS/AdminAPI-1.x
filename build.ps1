@@ -11,8 +11,8 @@
     .DESCRIPTION
         Provides automation of the following tasks:
 
-        * Clean: runs the MSBuild `clean` task
-        * Build: runs the MSBuild `build` task with several implicit steps
+        * Clean: runs `dotnet clean`
+        * Build: runs `dotnet build` with several implicit steps
           (clean, restore, inject version information).
         * UnitTest: executes NUnit tests in projects named `*.UnitTests`, which
           do not connect to a database.
@@ -21,14 +21,14 @@
           installing fresh test databases.
         * BuildAndTest: executes the Build, UnitTest, and IntegrationTest
           commands.
-        * Package: builds pre-release and release NuGet packages fro the Admin
+        * Package: builds pre-release and release NuGet packages for the Admin
           App web application.
         * Push: uploads a NuGet package to the NuGet feed.
 
     .EXAMPLE
-        .\build.ps1 build -BuildConfiguration release -Version "2.0.0" -BuildCounter 45
+        .\build.ps1 build -BuildConfiguration Release -Version "2.0.0" -BuildCounter 45
 
-        Overrides the default build configuration (debug) to build in release
+        Overrides the default build configuration (Debug) to build in release
         mode with assembly version 2.0.0.45.
 
     .EXAMPLE

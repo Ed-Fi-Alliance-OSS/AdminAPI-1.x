@@ -161,37 +161,9 @@ function Get-RestApiPackage {
     return (Resolve-Path $wildcardPath)
 }
 
-function Install-NUnitConsole {
-    param(
-        [string]
-        $ToolsPath = "$PSScriptRoot/.tools",
-
-        [string]
-        $Version = "3.11.1"
-    )
-
-    $nugetExe = Install-NugetCli -ToolsPath $ToolsPath
-
-    $arguments = @(
-        "install", "NUnit.Console",
-        "-Version", "3.11.1",
-        "-OutputDirectory", "$ToolsPath"
-    )
-
-    Write-Host "Executing: nuget.exe $arguments" -ForegroundColor Magenta
-    &$nugetExe @arguments | Out-Null
-
-    if ($LASTEXITCODE -ne 0) {
-        throw "NuGet package install failed for NUnit3"
-    }
-
-    return "$ToolsPath/NUnit.ConsoleRunner.$Version/tools/nunit3-console.exe"
-}
-
 $functions = @(
     "Install-NugetCli",
     "Get-RestApiPackage",
-    "Install-NUnitConsole",
     "Push-Package"
 )
 

@@ -160,10 +160,6 @@ function Compile {
     }
 }
 
-function InitializeNUnit {
-    Invoke-Execute { $script:nunitExe = Install-NUnitConsole }
-}
-
 function RunTests {
     param (
         # File search filter
@@ -278,13 +274,11 @@ function Invoke-Clean {
 }
 
 function Invoke-UnitTests {
-    Invoke-Step { InitializeNUnit }
     Invoke-Step { UnitTests }
 }
 
 function Invoke-IntegrationTests {
     Invoke-Step { InitializeNuGet }
-    Invoke-Step { InitializeNUnit }
 
     $supportedApiVersions | ForEach-Object {
         Write-Host "Running Integration Tests for ODS Version" $_.OdsVersion -ForegroundColor Cyan

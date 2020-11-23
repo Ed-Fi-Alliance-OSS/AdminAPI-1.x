@@ -97,7 +97,8 @@ param(
     $PackageFile
 )
 
-$solution = "Application\Ed-Fi-ODS-Tools.sln"
+
+$solutionRoot = "$PSScriptRoot/Application"
 
 if ("Release" -eq $BuildConfiguration) {
     $configuration = "Release"
@@ -128,23 +129,14 @@ Import-Module -Name "$PSScriptRoot/eng/build-helpers.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/package-manager.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/database-manager.psm1" -Force
 function Clean {
-    Invoke-Execute {
-        $arguments = @(
-            "/t:clean",
-            "/v:m",
-            "/nologo",
-            "/p:Configuration=$configuration",
-            "$solution"
-        )
-        &msbuild @arguments
-    }
+    Invoke-Execute { dotnet clean $solutionRoot -c $configuration --nologo -v minimal }
 }
 function InitializeNuGet {
     Invoke-Execute { $script:nugetExe = Install-NugetCli }
 }
 
 function Restore {
-    Invoke-Execute { &$script:nugetExe restore $solution }
+    Invoke-Execute { dotnet restore $solutionRoot --configfile $solutionRoot/NuGet.Config }
 }
 
 function AssemblyInfo {
@@ -190,17 +182,11 @@ function RevertAssemblyInfo {
 
 function Compile {
     Invoke-Execute {
-        $arguments = @(
-            "/t:build",
-            "/v:m",
-            "/nologo",
-            "/nr:false",
-            "/m",
-            "/p:Configuration=$configuration",
-            $solution
-        )
-        Write-Host "msbuild $arguments" -ForegroundColor Magenta
-        &msbuild @arguments
+        dotnet build $solutionRoot -c $configuration --nologo
+
+        $outputPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish"
+        $project = "$solutionRoot/EdFi.Ods.AdminApp.Web/"
+        dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath --no-build
     }
 }
 
@@ -212,14 +198,10 @@ function RunTests {
     param (
         # File search filter
         [string]
-        $Filter,
-
-        # Used for differentiating integration tests
-        [string]
-        $OdsVersion
+        $Filter
     )
 
-    $testAssemblyPath = "$PSScriptRoot/Application/$Filter/bin/$testConfiguration/"
+    $testAssemblyPath = "$solutionRoot/$Filter/bin/$testConfiguration/"
     $testAssemblies = Get-ChildItem -Path $testAssemblyPath -Filter "$Filter.dll" -Recurse
 
     if ($testAssemblies.Length -eq 0) {
@@ -227,19 +209,8 @@ function RunTests {
     }
 
     $testAssemblies | ForEach-Object {
-        if ($_.FullName.Contains("netcoreapp")) {
-            Write-Host "Executing: dotnet test $($_)"
-            Invoke-Execute { dotnet test $_ }
-        } else {
-            Write-Host "Executing: $($script:nunitExe) $($_)"
-
-            $outFile = "$($_.name).xml"
-            if ($OdsVersion) {
-                $outFile = "$($_.name)_ODS_$OdsVersion.xml"
-            }
-
-            Invoke-Execute { &$script:nunitExe $_ --result $outFile}
-        }
+        Write-Host "Executing: dotnet test $($_)"
+        Invoke-Execute { dotnet test $_ }
     }
 }
 
@@ -273,12 +244,7 @@ function ResetTestDatabases {
 }
 
 function IntegrationTests {
-    param (
-        [string]
-        $OdsVersion
-    )
-
-    Invoke-Execute { RunTests -Filter "*.Tests" -OdsVersion $OdsVersion }
+    Invoke-Execute { RunTests -Filter "*.Tests" }
 }
 
 function RunNuGetPack {
@@ -287,7 +253,7 @@ function RunNuGetPack {
         $PackageVersion
     )
 
-    $nugetSpecPath = "$PSScriptRoot/Application/EdFi.Ods.AdminApp.Web/publish/EdFi.Ods.AdminApp.Web.nuspec"
+    $nugetSpecPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/EdFi.Ods.AdminApp.Web.nuspec"
 
     $arguments = @(
         "pack",  $nugetSpecPath,
@@ -330,24 +296,13 @@ function PushPackage {
 function Invoke-Build {
     Write-Host "Building Version $Version" -ForegroundColor Cyan
 
-    $baseDir = "$PSScriptRoot/Application"
-    $projectPaths = Get-ChildItem -Path $baseDir -Include *.csproj -Recurse
-    foreach ($projectPath in $projectPaths) {
-        Write-Host ("Building => " + $projectPath)
-        dotnet build $projectPath -c $configuration
-    }
-    $outputPath = "$baseDir/EdFi.Ods.AdminApp.Web/publish"
-    $project = "$baseDir/EdFi.Ods.AdminApp.Web/EdFi.Ods.AdminApp.Web.csproj"
-    dotnet publish $project -c $configuration /p:EnvironmentName=$configuration -o $outputPath --no-build
-
-    # Previous NET48 Implemenation:
-    # Invoke-Step { Initialize-MsBuild $MsBuildFolder }
-    # Invoke-Step { InitializeNuGet }
-    # Invoke-Step { Clean }
-    # Invoke-Step { Restore }
-    # Invoke-Step { AssemblyInfo }
-    # Invoke-Step { Compile }
-    # Invoke-Step { RevertAssemblyInfo }
+    Invoke-Step { Initialize-MsBuild $MsBuildFolder }
+    Invoke-Step { InitializeNuGet }
+    Invoke-Step { Clean }
+    Invoke-Step { Restore }
+    Invoke-Step { AssemblyInfo }
+    Invoke-Step { Compile }
+    Invoke-Step { RevertAssemblyInfo }
 }
 
 function Invoke-Clean {
@@ -376,7 +331,7 @@ function Invoke-IntegrationTests {
             ResetTestDatabases @arguments
         }
         Invoke-Step {
-            IntegrationTests -OdsVersion $_.OdsVersion
+            IntegrationTests
         }
     }
 }

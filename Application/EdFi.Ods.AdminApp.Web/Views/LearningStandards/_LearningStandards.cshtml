@@ -63,7 +63,7 @@
         </div>
     }
     <div class="tab-pane" id="status-tab-content-prod">
-        @Html.Partial("_SignalRStatus_LS")
+        @await Html.PartialAsync("_SignalRStatus_LS")
     </div>
 }
 else

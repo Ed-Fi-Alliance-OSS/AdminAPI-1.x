@@ -104,7 +104,17 @@ else
     }
     $(function () {
         edfiODS.signalR.hideProgress();
-        edfiODS.signalR.startListener($.connection.productionLearningStandardsHub, null);
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/productionLearningStandardsHub")
+            .configureLogging(signalR.LogLevel.Error)
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: retryContext => {
+                    return Math.random() * 5000;
+                }
+            })
+            .build();
+
+        edfiODS.signalR.startListener(connection, null);
         edfiODS.signalR.changeStatusMessage("Initializing Learning Standards");
 
         var isJobRunning = "@(Model.IsJobRunning ? "true" : "false")";

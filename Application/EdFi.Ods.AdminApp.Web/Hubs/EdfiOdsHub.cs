@@ -6,29 +6,22 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Workflow;
 
 namespace EdFi.Ods.AdminApp.Web.Hubs
 {
     [Authorize]
-    public abstract class EdfiOdsHub<T> : Hub<T> where T : class, IHub
+    public class EdfiOdsHub<T> : Hub<T> where T : class
     {
         protected string GroupName => typeof(T).ToString();
 
-        public Task Subscribe()
+        public async Task Subscribe()
         {
-            return Groups.Add(Context.ConnectionId, GroupName);
+            await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
         }
 
-        public Task Unsubscribe()
+        public async Task Unsubscribe()
         {
-            return Groups.Remove(Context.ConnectionId, GroupName);
-        }
-
-        public void SendOperationStatusUpdate(WorkflowStatus status)
-        {
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<T>();
-            hubContext.Clients.Group(GroupName).updateStatus(status);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupName);
         }
     }
 }

@@ -42,15 +42,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             CloudOdsSettingsService = new Mock<ICloudOdsSettingsService>();
             TabDisplayService = new Mock<ITabDisplayService>();
 
-            LearningStandardsJob = new Mock<IProductionLearningStandardsJob>();
-            LearningStandardsSetupCommand = new Mock<IEnableLearningStandardsSetupCommand>();
             OdsSecretConfigurationProvider = new Mock<IOdsSecretConfigurationProvider>();
-            ResetLearningStandards = new Mock<IResetLearningStandards>();
             ApiConnectionInformationProvider = new Mock<IOdsApiConnectionInformationProvider>();
             FileUploadHandler = new Mock<IFileUploadHandler>();
             BulkUploadJob = new Mock<IBulkUploadJob>();
             InstanceContext = new InstanceContext {Id = OdsInstanceId, Name = "TestOdsInstance", Description = "TestOdsInstance Description" };
-            ApiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             InferOdsApiVersion = new Mock<IInferOdsApiVersion>();
             var validationResult = new ValidationResult(new List<ValidationFailure>());
             var bulkFileUploadValidator = new Mock<IValidator<BulkFileUploadModel>>();            
@@ -72,15 +68,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 ProductionSetupJob.Object,
                 CloudOdsSettingsService.Object,
                 TabDisplayService.Object,
-                LearningStandardsJob.Object,
-                LearningStandardsSetupCommand.Object,
                 OdsSecretConfigurationProvider.Object,
-                ResetLearningStandards.Object,
                 ApiConnectionInformationProvider.Object,
                 FileUploadHandler.Object,
                 BulkUploadJob.Object,
                 InstanceContext,
-                ApiModeProvider.Object,
                 InferOdsApiVersion.Object,
                 bulkFileUploadValidator.Object,
                 AppSettings.Object,
@@ -96,15 +88,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         protected Mock<IProductionSetupJob> ProductionSetupJob;
         protected Mock<ICloudOdsSettingsService> CloudOdsSettingsService;
         protected Mock<ITabDisplayService> TabDisplayService;
-        protected Mock<IProductionLearningStandardsJob> LearningStandardsJob;
-        protected Mock<IEnableLearningStandardsSetupCommand> LearningStandardsSetupCommand;
         protected Mock<IOdsSecretConfigurationProvider> OdsSecretConfigurationProvider;
-        protected Mock<IResetLearningStandards> ResetLearningStandards;
         protected Mock<IOdsApiConnectionInformationProvider> ApiConnectionInformationProvider;
         protected Mock<IFileUploadHandler> FileUploadHandler;
         protected Mock<IBulkUploadJob> BulkUploadJob;
         protected InstanceContext InstanceContext;
-        protected Mock<ICloudOdsAdminAppSettingsApiModeProvider> ApiModeProvider;
         protected Web.Controllers.OdsInstanceSettingsController SystemUnderTest;
         protected int OdsInstanceId = 1234;
         protected Mock<IInferOdsApiVersion> InferOdsApiVersion;

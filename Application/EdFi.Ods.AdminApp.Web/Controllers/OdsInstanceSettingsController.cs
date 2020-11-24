@@ -33,19 +33,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICachedItems _cachedItems;
         private readonly ICloudOdsSettingsService _cloudOdsSettingsService;
         private readonly IGetProductionApiProvisioningWarningsQuery _getProductionApiProvisioningWarningsQuery;
-        private readonly IProductionLearningStandardsJob _learningStandardsJob;
-        private readonly IEnableLearningStandardsSetupCommand _learningStandardsSetupCommand;
         private readonly ILog _logger = LogManager.GetLogger(typeof(OdsInstanceSettingsController));
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly IOdsSecretConfigurationProvider _odsSecretConfigurationProvider;
         private readonly IProductionSetupJob _productionSetupJob;
-        private readonly IResetLearningStandards _resetLearningStandards;
         private readonly ITabDisplayService _tabDisplayService;
         private readonly string _missingOdsSecretConfig = "ODS secret configuration can not be null";
         private readonly IFileUploadHandler _fileUploadHandler;
         private readonly IBulkUploadJob _bulkUploadJob;
         private readonly InstanceContext _instanceContext;
-        private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
         private readonly IInferOdsApiVersion _inferOdsApiVersion;   
         private readonly IValidator<BulkFileUploadModel> _bulkLoadValidator;
         private readonly AppSettings _appSettings;
@@ -58,15 +54,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IProductionSetupJob productionSetupJob
             , ICloudOdsSettingsService cloudOdsSettingsService
             , ITabDisplayService tabDisplayService 
-            , IProductionLearningStandardsJob learningStandardsJob
-            , IEnableLearningStandardsSetupCommand learningStandardsSetupCommand
             , IOdsSecretConfigurationProvider odsSecretConfigurationProvider
-            , IResetLearningStandards resetLearningStandards
             , IOdsApiConnectionInformationProvider apiConnectionInformationProvider
             , IFileUploadHandler fileUploadHandler
             , IBulkUploadJob bulkUploadJob
             , InstanceContext instanceContext
-            , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
             , IInferOdsApiVersion inferOdsApiVersion          
             , IValidator<BulkFileUploadModel> bulkLoadValidator
             , IOptions<AppSettings> appSettingsAccessor
@@ -79,15 +71,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _productionSetupJob = productionSetupJob;
             _cloudOdsSettingsService = cloudOdsSettingsService;
             _tabDisplayService = tabDisplayService;
-            _learningStandardsJob = learningStandardsJob;
-            _learningStandardsSetupCommand = learningStandardsSetupCommand;
             _odsSecretConfigurationProvider = odsSecretConfigurationProvider;
-            _resetLearningStandards = resetLearningStandards;
             _apiConnectionInformationProvider = apiConnectionInformationProvider;
             _fileUploadHandler = fileUploadHandler;
             _bulkUploadJob = bulkUploadJob;
             _instanceContext = instanceContext;
-            _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
             _inferOdsApiVersion = inferOdsApiVersion;
             _bulkLoadValidator = bulkLoadValidator;
             _appSettings = appSettingsAccessor.Value;

@@ -17,5 +17,5 @@
 @Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
 
 <div class="tab-content">
-    @{ Html.RenderPartial("_LearningStandards", Model.LearningStandardsModel); }
+    @{ await Html.RenderPartialAsync("_LearningStandards", Model.LearningStandardsModel); }
 </div>

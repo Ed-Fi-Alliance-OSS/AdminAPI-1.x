@@ -9,7 +9,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
     {
         public OdsInstanceSetupCompletedModel ProductionSetupCompletedModel { get; set; }
         public LogSettingsModel LogSettingsModel { get; set; }
-        public LearningStandardsModel LearningStandardsModel { get; set; }
         public BulkFileUploadModel BulkFileUploadModel { get; set; }
     }
 }

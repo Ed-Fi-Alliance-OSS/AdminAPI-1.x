@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using Hangfire;
 using log4net;
+using Microsoft.AspNetCore.SignalR;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -16,15 +17,17 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(WorkflowJob<,>));
         private readonly THub _hub;
+        private readonly IHubContext<THub> _hubContext;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private static int _runningJobCount = 0;
         private static long _runningJobId = 0;
         public string JobName { get; }
 
-        protected WorkflowJob(IBackgroundJobClient backgroundJobClient, THub hub, string jobName)
+        protected WorkflowJob(IBackgroundJobClient backgroundJobClient, THub hub, string jobName, IHubContext<THub> hubContext)
         {
             _backgroundJobClient = backgroundJobClient;
             _hub = hub;
+            _hubContext = hubContext;
             JobName = jobName;
         }
 
@@ -135,7 +138,12 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         protected void OperationStatusUpdated(WorkflowStatus operationStatus)
         {
-            _hub.SendOperationStatusUpdate(operationStatus);
+            SendStatusUpdate(operationStatus);
+        }
+
+        private async Task SendStatusUpdate(WorkflowStatus operationStatus)
+        {
+            await _hubContext.Clients.Group(typeof(THub).ToString()).SendAsync("UpdateStatus", operationStatus);
         }
     }
 }

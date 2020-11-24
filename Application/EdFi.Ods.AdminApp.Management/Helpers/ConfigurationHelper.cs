@@ -47,7 +47,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _connectionStrings.Security = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security].ConnectionString : "";
             _connectionStrings.ProductionOds = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.ProductionOds] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.ProductionOds].ConnectionString : "";
             _connectionStrings.OdsEmpty = ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"] != null ? ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"].ConnectionString : "";
-            _connectionStrings.IntegrationTests = ConfigurationManager.ConnectionStrings["IntegrationTests"] != null ? ConfigurationManager.ConnectionStrings["IntegrationTests"].ConnectionString : "";
             _connectionStrings.AzureSql = ConfigurationManager.ConnectionStrings["AzureSql"] != null ? ConfigurationManager.ConnectionStrings["AzureSql"].ConnectionString : "";
         }
 
@@ -109,7 +108,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string Security { get; set; }
         public string ProductionOds { get; set; }
         public string OdsEmpty { get; set; }
-        public string IntegrationTests { get; set; }
         public string AzureSql { get; set; }
     }
 }

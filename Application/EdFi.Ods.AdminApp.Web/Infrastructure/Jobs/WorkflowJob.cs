@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
-    public abstract class WorkflowJob<TContext, THub> where THub: Hubs.EdfiOdsHub<THub>
+    public abstract class WorkflowJob<TContext, THub>: IWorkflowJob<TContext>
+        where THub: Hubs.EdfiOdsHub<THub>
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(WorkflowJob<,>));
         private readonly THub _hub;

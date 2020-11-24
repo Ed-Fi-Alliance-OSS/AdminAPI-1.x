@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Web.Display.TabEnumeration
         public static readonly OdsInstanceSettingsTabEnumeration EducationOrganizations = new OdsInstanceSettingsTabEnumeration(4, "Education Organizations", RouteHelpers.GetControllerName<EducationOrganizationsController>(), RouteHelpers.GetActionName<EducationOrganizationsController>(x => x.Index()));
         public static readonly OdsInstanceSettingsTabEnumeration Setup = new OdsInstanceSettingsTabEnumeration(5, "Setup", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.Setup()));
         public static readonly OdsInstanceSettingsTabEnumeration BulkLoad = new OdsInstanceSettingsTabEnumeration(6, "Bulk Load", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.BulkLoad()));
-        public static readonly OdsInstanceSettingsTabEnumeration LearningStandards = new OdsInstanceSettingsTabEnumeration(7, "Learning Standards", RouteHelpers.GetControllerName<OdsInstanceSettingsController>(), RouteHelpers.GetActionName<OdsInstanceSettingsController>(x => x.LearningStandards()));
+        public static readonly OdsInstanceSettingsTabEnumeration LearningStandards = new OdsInstanceSettingsTabEnumeration(7, "Learning Standards", RouteHelpers.GetControllerName<LearningStandardsController>(), RouteHelpers.GetActionName<LearningStandardsController>(x => x.Index()));
         public static readonly OdsInstanceSettingsTabEnumeration Reports = new OdsInstanceSettingsTabEnumeration(8, "Reports", RouteHelpers.GetControllerName<ReportsController>(), RouteHelpers.GetActionName<ReportsController>(x => x.SelectDistrict(0)));
     }
 }

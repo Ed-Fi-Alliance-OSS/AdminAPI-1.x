@@ -104,7 +104,7 @@ else
     }
     $(function () {
         edfiODS.signalR.hideProgress();
-        const connection = new signalR.HubConnectionBuilder()
+        var connection = new signalR.HubConnectionBuilder()
             .withUrl("/productionLearningStandardsHub")
             .configureLogging(signalR.LogLevel.Error)
             .withAutomaticReconnect({

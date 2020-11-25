@@ -15,6 +15,14 @@ using EdFi.Ods.AdminApp.Management.Workflow;
 
 namespace EdFi.Ods.AdminApp.Web.Hubs
 {
+#if !NET48
+    //Temporary stub allowing for compilation, but expected to fail at runtime.
+    //Port the NET48 code below and then remove this stub.
+    public abstract class EdfiOdsHub<T>
+    {
+        public void SendOperationStatusUpdate(WorkflowStatus status) => throw new System.NotImplementedException();
+    }
+#else
     [Authorize]
     public abstract class EdfiOdsHub<T> : Hub<T> where T : class, IHub
     {
@@ -36,4 +44,5 @@ namespace EdFi.Ods.AdminApp.Web.Hubs
             hubContext.Clients.Group(GroupName).updateStatus(status);
         }
     }
+#endif
 }

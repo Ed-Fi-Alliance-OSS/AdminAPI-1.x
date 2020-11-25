@@ -6,11 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -173,8 +169,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> AdvancedSettings()
         {
-            var currentSettings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
+            var currentSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             var model = new GlobalSettingsModel
             {
@@ -193,28 +188,26 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateAdvancedSettings(GlobalSettingsModel model)
         {
-            var instanceSettings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
+            var instanceSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             instanceSettings.BearerTokenTimeoutInMinutes = model.AdvancedSettingsModel.BearerTokenTimeoutInMinutes;
 
-            await _cloudOdsSettingsService.UpdateSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production, instanceSettings);
+            await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, instanceSettings);
 
             return RedirectToActionJson<GlobalSettingsController>(
                 x => x.AdvancedSettings(), "Settings updated successfully");
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateLogSettings(LogSettingsModel model)
+        public async Task<ActionResult> UpdateLogSettings(int logLevel)
         {
-            var settings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, model.Environment);
+            var parsedLogLevel = LogLevel.FromInt32(logLevel);
 
-            settings.LogLevel = model.LogLevel;
+            var settings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
-            await _cloudOdsSettingsService.UpdateSettings(
-                _appSettings.DefaultOdsInstance, model.Environment, settings);
+            settings.LogLevel = parsedLogLevel;
+
+            await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, settings);
 
             return JsonSuccess("Log settings updated successfully");
         }       

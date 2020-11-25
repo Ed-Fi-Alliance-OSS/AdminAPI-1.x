@@ -1,8 +1,27 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+#if !NET48
+using System;
+using Microsoft.AspNetCore.Http;
+
+namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
+{
+    //Temporary stub allowing for compilation, but expected to fail at runtime.
+    //Port the NET48 code below and then remove this stub.
+    public class LocalFileSystemFileUploadHandler : IFileUploadHandler
+    {
+        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile) => throw new NotImplementedException();
+        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, string fileName) => throw new NotImplementedException();
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles) => throw new NotImplementedException();
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc) => throw new NotImplementedException();
+        public string GetNewTempDirectory() => throw new NotImplementedException();
+        public string GetWorkingDirectory(string customDirectory) => throw new NotImplementedException();
+    }
+}
+#else
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -110,3 +129,4 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
         }
     }
 }
+#endif

@@ -12,12 +12,9 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
 
         private static readonly AppSettings _appSettings;
 
-        private static readonly ConnectionStrings _connectionStrings;
-
         static ConfigurationHelper()
         {
             _appSettings = new AppSettings();
-            _connectionStrings = new ConnectionStrings();
 
             _appSettings.AppStartup = ConfigurationManager.AppSettings["owin:appStartup"];
             _appSettings.DatabaseEngine = ConfigurationManager.AppSettings["DatabaseEngine"];
@@ -42,13 +39,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             _appSettings.AwsCurrentVersion = ConfigurationManager.AppSettings["AwsCurrentVersion"];
             _appSettings.OptionalEntropy = ConfigurationManager.AppSettings["OptionalEntropy"];
             _appSettings.Log4NetConfigPath = ConfigurationManager.AppSettings["log4net.Config"];
-
-            _connectionStrings.Admin = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Admin].ConnectionString : "";
-            _connectionStrings.Security = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.Security].ConnectionString : "";
-            _connectionStrings.ProductionOds = ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.ProductionOds] != null ? ConfigurationManager.ConnectionStrings[CloudOdsDatabaseNames.ProductionOds].ConnectionString : "";
-            _connectionStrings.OdsEmpty = ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"] != null ? ConfigurationManager.ConnectionStrings["EdFi_Ods_Empty"].ConnectionString : "";
-            _connectionStrings.IntegrationTests = ConfigurationManager.ConnectionStrings["IntegrationTests"] != null ? ConfigurationManager.ConnectionStrings["IntegrationTests"].ConnectionString : "";
-            _connectionStrings.AzureSql = ConfigurationManager.ConnectionStrings["AzureSql"] != null ? ConfigurationManager.ConnectionStrings["AzureSql"].ConnectionString : "";
         }
 
         public static AppSettings GetAppSettings()
@@ -56,25 +46,9 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
             return _appSettings;
         }
 
-        public static void SetApiMode(string apiMode)
-        {
-            ConfigurationManager.AppSettings["apiStartup:type"] = apiMode;
-            _appSettings.ApiStartupType = apiMode;
-        }
-
-        public static ConnectionStrings GetConnectionStrings()
-        {
-            return _connectionStrings;
-        }
-
         public static string GetConnectionStringByName(string databaseName)
         {
             return ConfigurationManager.ConnectionStrings[databaseName]?.ConnectionString;
-        }
-
-        public static ConnectionStringSettingsCollection GetConnectionStringCollection()
-        {
-            return ConfigurationManager.ConnectionStrings;
         }
     }
 
@@ -109,7 +83,5 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string Security { get; set; }
         public string ProductionOds { get; set; }
         public string OdsEmpty { get; set; }
-        public string IntegrationTests { get; set; }
-        public string AzureSql { get; set; }
     }
 }

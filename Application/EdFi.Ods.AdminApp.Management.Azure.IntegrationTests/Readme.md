@@ -1,4 +1,4 @@
-﻿# Ed-Fi-ODS-AdminApp.Management.Azure.Tests
+# Ed-Fi-ODS-AdminApp.Management.Azure.Tests
 
 Contains Integration Tests for the Azure-specific components of the Ed-Fi Cloud ODS AdminApp.
 
@@ -21,11 +21,7 @@ Many tests in this assembly make direct calls to the Azure Resource Manager API.
 
 2.  Run the from **Ed-Fi-Ods-Deploy-Azure/Application/Published/ScaleDown-EdFiOds.ps1** script to minimize the costs of keeping the instance running. You can even delete the databases if the only purpose is to do local testing – that will get you to $0 per month
 
-3.  SQL server authentication must be enabled when using a local sql server. Ensure a "IntegrationTests" user account has been created and given the sysadmin role
-    
-    1.  Set the password accordingly in your **Ed-Fi-Ods-AdminApp/EdFi.Ods.AdminApp.Management.Azure.IntegrationTests/app.config**_IntegrationTests_ connection string.
-        
-4.  Edit and place the following in **EdFi.Ods.AdminApp.Management.Azure.IntegrationTests/DeveloperSettings/AzureActiveDirectory.config**
+3.  Edit and place the following in **EdFi.Ods.AdminApp.Management.Azure.IntegrationTests/DeveloperSettings/AzureActiveDirectory.config**
 
     ```xml
     <appSettings>
@@ -36,6 +32,8 @@ Many tests in this assembly make direct calls to the Azure Resource Manager API.
       <add key="ida:ClientSecret" value=""/>
     </appSettings>
     ```
+
+    DO NOT CHECK THESE VALUES INTO SOURCE CONTROL
 
     1.  [TenantId](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Properties) (same as Directory ID) and [Subscription ID](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade) can be procured from the Azure portal
     2.  ClientId is the "Application (client) ID" in [Azure Active Directory \ App Registrations](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) for the Azure AD app registered when you deployed

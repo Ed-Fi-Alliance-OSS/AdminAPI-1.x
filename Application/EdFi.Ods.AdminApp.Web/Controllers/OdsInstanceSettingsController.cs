@@ -4,25 +4,18 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Hosting;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
-using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
@@ -40,11 +33,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICachedItems _cachedItems;
         private readonly ICloudOdsSettingsService _cloudOdsSettingsService;
         private readonly IGetProductionApiProvisioningWarningsQuery _getProductionApiProvisioningWarningsQuery;
-        private readonly IGetVendorsQuery _getVendorsQuery;
         private readonly IProductionLearningStandardsJob _learningStandardsJob;
         private readonly IEnableLearningStandardsSetupCommand _learningStandardsSetupCommand;
         private readonly ILog _logger = LogManager.GetLogger(typeof(OdsInstanceSettingsController));
-        private readonly IMapper _mapper;
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly IOdsSecretConfigurationProvider _odsSecretConfigurationProvider;
         private readonly IProductionSetupJob _productionSetupJob;
@@ -58,10 +49,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IInferOdsApiVersion _inferOdsApiVersion;   
         private readonly IValidator<BulkFileUploadModel> _bulkLoadValidator;
         private readonly AppSettings _appSettings;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public OdsInstanceSettingsController(IMapper mapper
-            , IGetVendorsQuery getVendorsQuery
-            , IOdsApiFacadeFactory odsApiFacadeFactory
+        public OdsInstanceSettingsController(
+              IOdsApiFacadeFactory odsApiFacadeFactory
             , IGetProductionApiProvisioningWarningsQuery getProductionApiProvisioningWarningsQuery
             , ICachedItems cachedItems
             , IProductionSetupJob productionSetupJob
@@ -78,10 +69,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
             , IInferOdsApiVersion inferOdsApiVersion          
             , IValidator<BulkFileUploadModel> bulkLoadValidator
-            , IOptions<AppSettings> appSettingsAccessor)
+            , IOptions<AppSettings> appSettingsAccessor
+            , IWebHostEnvironment webHostEnvironment
+            )
         {
-            _getVendorsQuery = getVendorsQuery;
-            _mapper = mapper;
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _getProductionApiProvisioningWarningsQuery = getProductionApiProvisioningWarningsQuery;
             _cachedItems = cachedItems;
@@ -100,11 +91,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _inferOdsApiVersion = inferOdsApiVersion;
             _bulkLoadValidator = bulkLoadValidator;
             _appSettings = appSettingsAccessor.Value;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<ActionResult> Setup()
         {
-            var setupCompleted = (await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production)).DoesApiDataExist();
+            var setupCompleted = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
             if (setupCompleted) return RedirectToAction("SetupComplete");
 
@@ -140,19 +132,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             if (CloudOdsAdminAppSettings.Instance.SystemManagedSqlServer)
                 _productionSetupJob.EnqueueJob(1);
 
-            return new HttpStatusCodeResult(200);
+            return Ok();
         }
 
         public async Task<ActionResult> Logging()
         {
-            var settings = await _cloudOdsSettingsService.GetSettings(
-                _appSettings.DefaultOdsInstance, CloudOdsEnvironment.Production);
+            var settings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
 
             var model = new OdsInstanceSettingsModel
             {
                 LogSettingsModel = new LogSettingsModel
                 {
-                    Environment = CloudOdsEnvironment.Production,
                     LogLevel = settings.LogLevel
                 },
                 OdsInstanceSettingsTabEnumerations =
@@ -165,7 +155,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> LearningStandards()
         {
-            var odsApiFacade = await _odsApiFacadeFactory.Create(CloudOdsEnvironment.Production);
+            var odsApiFacade = await _odsApiFacadeFactory.Create();
             var config = await _odsSecretConfigurationProvider.GetSecretConfiguration(_instanceContext.Id);
 
             if (config == null)
@@ -209,7 +199,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             await RunLearningStandardsJob();
 
-            return new HttpStatusCodeResult(200);
+            return Ok();
         }
 
         [HttpPost]
@@ -217,7 +207,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             await RunLearningStandardsJob();
 
-            return new HttpStatusCodeResult(200);
+            return Ok();
         }
 
         private async Task RunLearningStandardsJob()
@@ -233,7 +223,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var jobContext = new LearningStandardsJobContext
             {
-                Environment = CloudOdsEnvironment.Production.Value,
                 ApiUrl = connectionInformation.ApiServerUrl,
                 SchoolYear = schoolYear,
                 OdsInstanceId = _instanceContext.Id
@@ -254,8 +243,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         private async Task<OdsApiConnectionInformation> GetConnectionInformationProvider()
         {
-            return await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment(CloudOdsEnvironment
-                .Production);
+            return await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment();
         }
 
         public async Task<ActionResult> BulkLoad()
@@ -274,8 +262,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
                     ApiKey = config.BulkUploadCredential?.ApiKey ?? string.Empty,
-                    ApiSecret = config.BulkUploadCredential?.ApiSecret ?? string.Empty,
-                    CloudOdsEnvironment = CloudOdsEnvironment.Production
+                    ApiSecret = config.BulkUploadCredential?.ApiSecret ?? string.Empty
                 },
                 OdsInstance = _instanceContext
             };
@@ -285,14 +272,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> BulkFileUpload(OdsInstanceSettingsModel model)
         {
-            var bulkFiles = model.BulkFileUploadModel.BulkFiles.Where(file => file != null && file.ContentLength > 0).ToArray();
+            var bulkFiles = model.BulkFileUploadModel.BulkFiles.Where(file => file != null && file.Length > 0).ToArray();
 
             if (!bulkFiles.Any())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NoContent);
+                return NoContent();
             }
 
-            if (bulkFiles.Sum(f => f.ContentLength) > BulkFileUploadModel.MaxFileSize)
+            if (bulkFiles.Sum(f => f.Length) > BulkFileUploadModel.MaxFileSize)
             {
                 throw new Exception($"Upload exceeds maximum limit of {BulkFileUploadModel.MaxFileSize} bytes");
             }
@@ -321,12 +308,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
                     Response.StatusCode = (int) HttpStatusCode.BadRequest;
-                    Response.TrySkipIisCustomErrors = true;
                     return Json(new {Result = new {Errors = new[] {new {ErrorMessage = errorMessage}}}});
                 }
             }
 
-            var schemaBasePath = HostingEnvironment.MapPath(_appSettings.XsdFolder);
+            var schemaBasePath = Path.Combine(_webHostEnvironment.ContentRootPath, _appSettings.XsdFolder);
             var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
             var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
 
@@ -340,7 +326,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var jobContext = new BulkUploadJobContext
             {
                 DataDirectoryFullPath = uploadedFiles.Directory,
-                Environment = CloudOdsEnvironment.Production.Value,
                 OdsInstanceId = _instanceContext.Id,
                 OdsInstanceName = _instanceContext.Name,
                 ApiBaseUrl = connectionInformation.ApiBaseUrl,

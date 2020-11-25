@@ -5,7 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.Sandbox);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation("Ods Instance", ApiMode.Sandbox) { ApiServerUrl = ProductionUrl });
 
                 LearningStandardsJob.Setup(x => x.EnqueueJob(It.IsAny<LearningStandardsJobContext>()));
@@ -45,9 +45,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 var result = await SystemUnderTest.UpdateLearningStandards();
 
                 // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
             }
 
 
@@ -61,7 +60,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.SchoolYear.ShouldBeNull()
                     );
@@ -94,7 +92,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.YearSpecific);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation (_instanceContext.Name, ApiMode.YearSpecific) { ApiServerUrl = ProductionUrl});
 
                 LearningStandardsJob.Setup(x => x.EnqueueJob(It.IsAny<LearningStandardsJobContext>()));
@@ -108,9 +106,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 var result = await SystemUnderTest.UpdateLearningStandards();
 
                 // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
             }
 
 
@@ -124,7 +121,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.SchoolYear.ShouldBe(Year)
                     );
@@ -156,7 +152,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.DistrictSpecific);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation (_instanceContext.Name, ApiMode.DistrictSpecific) { ApiServerUrl = ProductionUrl });
 
                 LearningStandardsJob.Setup(x => x.EnqueueJob(It.IsAny<LearningStandardsJobContext>()));
@@ -170,9 +166,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 var result = await SystemUnderTest.UpdateLearningStandards();
 
                 // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
             }
 
 
@@ -186,7 +181,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.OdsInstanceId.ShouldBe(_instanceContext.Id)
                     );

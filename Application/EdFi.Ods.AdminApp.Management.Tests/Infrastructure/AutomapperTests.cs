@@ -3,8 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Web.Infrastructure;
+using AutoMapper;
 using NUnit.Framework;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure
 {
@@ -14,7 +15,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure
         [Test]
         public void Assert_config_is_valid()
         {
-            AutoMapperBootstrapper.CreateMapper().ConfigurationProvider.AssertConfigurationIsValid();
+            Scoped<IMapper>(mapper => mapper.ConfigurationProvider.AssertConfigurationIsValid());
         }
     }
 }

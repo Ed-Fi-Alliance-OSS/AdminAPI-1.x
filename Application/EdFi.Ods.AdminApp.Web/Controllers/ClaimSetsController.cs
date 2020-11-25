@@ -6,12 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Models;
@@ -191,11 +187,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Text = x.Name,
                 Value = x.Id.ToString()
             }), "Value", "Text"));
-            return Json(selectList
-                #if NET48
-                , JsonRequestBehavior.AllowGet
-                #endif
-                );
+            return Json(selectList);
         }
 
         [HttpPost]

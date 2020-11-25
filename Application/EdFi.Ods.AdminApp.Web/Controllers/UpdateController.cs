@@ -4,11 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Threading.Tasks;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers

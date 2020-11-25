@@ -3,52 +3,28 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-#if NET48
-using System.Web.Mvc;
-#else
-using Microsoft.AspNetCore.Authorization;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EdFi.Ods.AdminApp.Web.ActionFilters
 {
-    public class PermissionRequiredFilter : AuthorizeAttribute
+    public class PermissionRequiredFilter : IAuthorizationFilter
     {
-        public override void OnAuthorization(AuthorizationContext filterContext)
-        {
-            var userContext = DependencyResolver.Current.GetService<AdminAppUserContext>();
-            var actionRequirements = ActionRequirements(filterContext);
-            var controllerRequirements = ControllerRequirements(filterContext);
+        private readonly Permission _permission;
+        private readonly AdminAppUserContext _userContext;
 
-            foreach (var permission in actionRequirements.Union(controllerRequirements))
-                if (!userContext.Has(permission))
-                    Forbidden(filterContext);
+        public PermissionRequiredFilter(Permission permission, AdminAppUserContext userContext)
+        {
+            _permission = permission;
+            _userContext = userContext;
         }
 
-        private static IEnumerable<Permission> ActionRequirements(AuthorizationContext filterContext)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
-            return ((PermissionRequiredAttribute[]) filterContext
-                    .ActionDescriptor
-                    .GetCustomAttributes(typeof(PermissionRequiredAttribute), true))
-                .Select(x => x.RequiredPermission);
-        }
-
-        private static IEnumerable<Permission> ControllerRequirements(AuthorizationContext filterContext)
-        {
-            return ((PermissionRequiredAttribute[]) filterContext
-                    .ActionDescriptor
-                    .ControllerDescriptor
-                    .GetCustomAttributes(typeof(PermissionRequiredAttribute), true))
-                .Select(x => x.RequiredPermission);
-        }
-
-        private static void Forbidden(AuthorizationContext filterContext)
-        {
-            filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            if (!_userContext.Has(_permission))
+                context.Result = new ForbidResult();
         }
     }
 }

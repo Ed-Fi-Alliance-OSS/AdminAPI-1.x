@@ -4,10 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -34,17 +32,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             _apiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
             _connectionProvider =  new Mock<IDatabaseConnectionProvider>();
-        }
-
-        private static SqlConnection GetDatabaseConnection(string instanceName)
-        {
-            var connectionString = ConfigurationHelper.GetConnectionStrings().OdsEmpty;
-
-            var sqlConnectionBuilder =
-                new SqlConnectionStringBuilder(connectionString) {InitialCatalog = instanceName};
-
-            var connection = new SqlConnection(sqlConnectionBuilder.ConnectionString);
-            return connection;
         }
 
         [Test]

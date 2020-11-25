@@ -6,6 +6,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Display.HomeScreen
+@using EdFi.Ods.AdminApp.Web.Helpers
 @using EdFi.Ods.AdminApp.Web.Infrastructure
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.Home.IndexModel
 
@@ -26,7 +27,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     var UpdatesDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Updates);
 }
 
-@if (Request.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
     if (Model.SetupJustCompleted)
     {

@@ -3,12 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-#if NET48
-using Castle.Windsor;
-#else
 using Microsoft.Extensions.DependencyInjection;
-#endif
-
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.OnPrem;
 using EdFi.Ods.AdminApp.Management.Services;
@@ -20,11 +15,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public class OnPremInstaller : CommonConfigurationInstaller
     {
-#if NET48
-        protected override void InstallHostingSpecificClasses(IWindsorContainer services)
-#else
         protected override void InstallHostingSpecificClasses(IServiceCollection services)
-#endif
         {
             services.AddTransient<IGetCloudOdsInstanceQuery, GetOnPremOdsInstanceQuery>();
             services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetOnPremOdsApiWebsiteSettingsQuery>();
@@ -35,7 +26,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IRestartAppServicesCommand, RestartOnPremAppServicesCommand>();
             services.AddTransient<IFirstTimeSetupService, OnPremFirstTimeSetupService>();
             services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration,OnPremOdsDatabaseSqlServerSecurityConfiguration>();
-            services.AddTransient<ICloudOdsDatabaseNameProvider, OnPremOdsDatabaseNameProvider>();
             services.AddTransient<ITabDisplayService, OnPremTabDisplayService>();
             services.AddTransient<IHomeScreenDisplayService, OnPremHomeScreenDisplayService>();
             services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteOnPremFirstTimeSetupCommand>();

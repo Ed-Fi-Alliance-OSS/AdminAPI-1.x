@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -12,7 +12,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     ViewBag.Title = "Global | Users | Add User";
 }
 
-@Html.Partial("_SettingsGlobalHeader", Model.GlobalSettingsTabEnumerations)
+@{ await Html.RenderPartialAsync("_SettingsGlobalHeader", Model.GlobalSettingsTabEnumerations); }
 
 <div class="row">
     <div class="col-md-offset-2 col-md-8">

@@ -3,12 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-#if NET48
-using Castle.Windsor;
-#else
 using Microsoft.Extensions.DependencyInjection;
-#endif
-
 using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Services;
@@ -21,11 +16,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 {
     public class AzureInstaller : CommonConfigurationInstaller
     {
-#if NET48
-        protected override void InstallHostingSpecificClasses(IWindsorContainer services)
-#else
         protected override void InstallHostingSpecificClasses(IServiceCollection services)
-#endif
         {
             services.AddSingleton(CloudOdsAzureActiveDirectoryClientInfo.GetActiveDirectoryClientInfoForUser());
 

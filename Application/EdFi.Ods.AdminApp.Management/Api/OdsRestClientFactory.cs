@@ -4,11 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Threading.Tasks;
-#if NET48
-using EdFi.Ods.Common;
-#else
-using EdFi.Common;
-#endif
 using RestSharp;
 
 namespace EdFi.Ods.AdminApp.Management.Api
@@ -24,10 +19,9 @@ namespace EdFi.Ods.AdminApp.Management.Api
             _odsApiConnectionInformationProvider = odsApiConnectionInformationProvider;
         }
 
-        public async Task<IOdsRestClient> Create(CloudOdsEnvironment environment)
+        public async Task<IOdsRestClient> Create()
         {
-            Preconditions.ThrowIfNull(environment, nameof(environment));
-            var connectionInfo = await _odsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(environment);
+            var connectionInfo = await _odsApiConnectionInformationProvider.GetConnectionInformationForEnvironment();
             _tokenRetriever = new TokenRetriever(connectionInfo);
             _restClient = new RestClient(connectionInfo.ApiBaseUrl);
             return new OdsRestClient(connectionInfo, _restClient, _tokenRetriever);

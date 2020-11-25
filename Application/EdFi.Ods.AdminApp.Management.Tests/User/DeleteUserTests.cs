@@ -43,7 +43,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
             SetupUserWithOdsInstanceRegistrations(userToBeDeleted.Id, testInstancesAssignedToDeletedUser);
             SetupUserWithOdsInstanceRegistrations(userNotToBeDeleted.Id, testInstancesAssignedToNotDeletedUser);
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
                 queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(3);
                 queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);
@@ -61,7 +61,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 command.Execute(deleteModel);
             });
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
                 queryInstances.Execute(userToBeDeleted.Id).Count().ShouldBe(0);
                 queryInstances.Execute(userNotToBeDeleted.Id).Count().ShouldBe(3);

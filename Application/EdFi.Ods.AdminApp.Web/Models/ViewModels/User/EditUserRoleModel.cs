@@ -10,11 +10,6 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using FluentValidation;
-#if NET48
-using Microsoft.AspNet.Identity.EntityFramework;
-#else
-using Microsoft.AspNetCore.Identity;
-#endif
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.User
 {

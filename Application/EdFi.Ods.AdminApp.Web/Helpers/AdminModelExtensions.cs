@@ -28,7 +28,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
         public static bool IsProductionApplication(this Application application)
         {
-            var prefix = CloudOdsApplicationName.GetPersistedNamePrefix(CloudOdsEnvironment.Production);
+            var prefix = CloudOdsApplicationName.GetPersistedNamePrefix();
             return application.ApplicationName.StartsWith(prefix);
         }
 

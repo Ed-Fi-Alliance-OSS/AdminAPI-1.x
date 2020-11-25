@@ -5,13 +5,8 @@
 
 using System;
 using System.Linq.Expressions;
-#if NET48
-using System.Web.Mvc;
-using System.Web.Routing;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-#endif
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
 {

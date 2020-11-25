@@ -5,11 +5,6 @@
 
 using System.Threading.Tasks;
 using AutoMapper;
-#if NET48
-using EdFi.Ods.Common;
-#else
-using EdFi.Common;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Api
 {
@@ -24,15 +19,9 @@ namespace EdFi.Ods.AdminApp.Management.Api
             _restClientFactory = restClientFactory;
         }
 
-        public Task<IOdsApiFacade> Create()
+        public async Task<IOdsApiFacade> Create()
         {
-            return Create(CloudOdsEnvironment.Production);
-        }
-
-        public async Task<IOdsApiFacade> Create(CloudOdsEnvironment environment)
-        {
-            Preconditions.ThrowIfNull(environment, nameof(environment));
-            var restClient = await _restClientFactory.Create(environment);
+            var restClient = await _restClientFactory.Create();
             return new OdsApiFacade(_mapper, restClient);
         }
     }

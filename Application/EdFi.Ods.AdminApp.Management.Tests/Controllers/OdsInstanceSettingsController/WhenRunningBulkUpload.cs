@@ -5,11 +5,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Hosting;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -26,7 +29,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
     [TestFixture]
     public class WhenRunningBulkUpload : OdsInstanceSettingsControllerFixture
     {
-        private readonly CloudOdsEnvironment _environment = CloudOdsEnvironment.Production;
         private static readonly InstanceContext OdsInstanceContext = new InstanceContext
         {
             Id = 1234,
@@ -58,7 +60,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             result.ShouldNotBeNull();
             var model = (OdsInstanceSettingsModel) result.Model;
             model.ShouldNotBeNull();
-            model.BulkFileUploadModel.CloudOdsEnvironment.ShouldBeSameAs(_environment);
             model.BulkFileUploadModel.ApiKey.ShouldBeEmpty();
             model.BulkFileUploadModel.ApiSecret.ShouldBeEmpty();
             model.BulkFileUploadModel.CredentialsSaved.ShouldBeFalse();
@@ -88,7 +89,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             result.ShouldNotBeNull();
             var model = (OdsInstanceSettingsModel) result.Model;
             model.ShouldNotBeNull();
-            model.BulkFileUploadModel.CloudOdsEnvironment.ShouldBeSameAs(_environment);
             model.BulkFileUploadModel.ApiKey.ShouldBe(expectedKey);
             model.BulkFileUploadModel.ApiSecret.ShouldBe(expectedSecret);
             model.BulkFileUploadModel.CredentialsSaved.ShouldBeTrue();
@@ -117,12 +117,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-                    BulkFiles = new List<HttpPostedFileBase>()
+                    BulkFiles = new List<IFormFile>()
                 }
             };
 
             // Act
-            var result = (HttpStatusCodeResult) await SystemUnderTest.BulkFileUpload(model);
+            var result = (NoContentResult)await SystemUnderTest.BulkFileUpload(model);
 
             // Assert
             result.ShouldNotBeNull();
@@ -133,13 +133,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         public void When_Perform_Post_Request_To_BulkFileUpload_With_Greater_File_ContentLength_ThrowsException()
         {
             // Arrange
-            var file = new Mock<HttpPostedFileBase>();
-            file.Setup(x => x.ContentLength).Returns(20000002);
+            var file = new Mock<IFormFile>();
+            file.Setup(x => x.Length).Returns(20000002);
             var model = new OdsInstanceSettingsModel
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-                    BulkFiles = new List<HttpPostedFileBase>
+                    BulkFiles = new List<IFormFile>
                     {
                         file.Object
                     }
@@ -155,16 +155,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         public void When_Perform_Post_Request_To_BulkFileUpload_With_Multiple_Files_ThrowsException()
         {
             // Arrange
-            var file1 = new Mock<HttpPostedFileBase>();
-            file1.Setup(x => x.ContentLength).Returns(200);
-            var file2 = new Mock<HttpPostedFileBase>();
-            file2.Setup(x => x.ContentLength).Returns(200);
+            var file1 = new Mock<IFormFile>();
+            file1.Setup(x => x.Length).Returns(200);
+            var file2 = new Mock<IFormFile>();
+            file2.Setup(x => x.Length).Returns(200);
 
             var model = new OdsInstanceSettingsModel
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-                    BulkFiles = new List<HttpPostedFileBase>
+                    BulkFiles = new List<IFormFile>
                     {
                         file1.Object, file2.Object
                     }
@@ -184,7 +184,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
             InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
 
-            var schemaBasePath = HostingEnvironment.MapPath(ConfigurationHelper.GetAppSettings().XsdFolder);
+            var schemaBasePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Schema");
             var schemaPath = $"{schemaBasePath}\\{edfiStandardVersion}";
 
             var model = SetupBulkUpload(out var fileUploadResult);
@@ -198,7 +198,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             Func<BulkUploadJobContext, bool> bulkUploadJobEnqueueVerifier = actual =>
             {
                 actual.ShouldSatisfyAllConditions(
-                    () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                     () => actual.DataDirectoryFullPath.ShouldBe(fileUploadResult.Directory),
                     () => actual.OdsInstanceId.ShouldBe(OdsInstanceContext.Id),
                     () => actual.ApiBaseUrl.ShouldBe(_connectionInformation.ApiBaseUrl),
@@ -286,19 +285,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         private OdsInstanceSettingsModel SetupBulkUpload(out FileUploadResult fileUploadResult)
         {
             const string filename = "test.xml";
-            var file = new Mock<HttpPostedFileBase>();
-            file.Setup(x => x.ContentLength).Returns(200);
+
+            var file = new Mock<IFormFile>();
+            file.Setup(x => x.Length).Returns(200);
             file.Setup(x => x.FileName).Returns("test.xml");
             var model = new OdsInstanceSettingsModel
             {
                 BulkFileUploadModel = new BulkFileUploadModel
                 {
-                    BulkFiles = new List<HttpPostedFileBase>
+                    BulkFiles = new List<IFormFile>
                     {
                         file.Object
                     }
                 }
             };
+
             fileUploadResult = new FileUploadResult
             {
                 Directory = "directoryPath",
@@ -309,11 +310,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             InstanceContext.Name = OdsInstanceContext.Name;
 
             FileUploadHandler.Setup(x =>
-                    x.SaveFilesToUploadDirectory(It.IsAny<HttpPostedFileBase[]>(), It.IsAny<Func<string, string>>()))
+                    x.SaveFilesToUploadDirectory(It.IsAny<IFormFile[]>(), It.IsAny<Func<string, string>>()))
                 .Returns(fileUploadResult);
 
             ApiConnectionInformationProvider
-                .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                .Setup(x => x.GetConnectionInformationForEnvironment())
                 .ReturnsAsync(_connectionInformation);
 
             OdsSecretConfigurationProvider.Setup(x => x.GetSecretConfiguration(It.IsAny<int>()))

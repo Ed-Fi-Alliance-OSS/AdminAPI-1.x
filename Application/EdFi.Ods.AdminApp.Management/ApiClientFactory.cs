@@ -4,11 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
-#if NET48
-using EdFi.Ods.Common.Security;
-#else
 using EdFi.Common.Security;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management
 {
@@ -30,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management
             _hashConfigurationProvider = hashConfigurationProvider;
         }
 
-        public ApiWithCredentials GetApiClientAndCredentials(CloudOdsEnvironment environment, string applicationName)
+        public ApiWithCredentials GetApiClientAndCredentials(string applicationName)
         {
             var apiClient = CreateProductionApiClient(applicationName);
 

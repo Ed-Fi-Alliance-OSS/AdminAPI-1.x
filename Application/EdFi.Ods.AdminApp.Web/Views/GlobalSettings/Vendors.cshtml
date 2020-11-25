@@ -19,7 +19,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     <div class="tab-pane active" id="global-vendors">
         <div class="row subsection">
             <div class="col-lg-12">
-                @{ Html.RenderPartial("_SecurityHelpfulHints"); }
+                @{ await Html.RenderPartialAsync("_SecurityHelpfulHints"); }
             </div>
         </div>
         <div class="row subsection-headline">
@@ -48,10 +48,10 @@ See the LICENSE and NOTICES files in the project root for more information.
         </div>
         <div class="row subsection">
             <div class="col-lg-12">
-                @{ Html.RenderPartial("_VendorsTable", Model.VendorListModel); }
+                @{ await Html.RenderPartialAsync("_VendorsTable", Model.VendorListModel); }
             </div>
         </div>
     </div>
 </div>
 
-@{ Html.RenderPartial("_AddVendorModal", new AddVendorModel()); }
+@{ await Html.RenderPartialAsync("_AddVendorModal", new AddVendorModel()); }

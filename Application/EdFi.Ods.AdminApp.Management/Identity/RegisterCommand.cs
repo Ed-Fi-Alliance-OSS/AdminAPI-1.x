@@ -5,11 +5,7 @@
 
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-#if NET48
-using Microsoft.AspNet.Identity;
-#else
 using Microsoft.AspNetCore.Identity;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.Identity
 {

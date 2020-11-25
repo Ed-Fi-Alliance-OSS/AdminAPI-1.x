@@ -50,7 +50,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 command.Execute(updateModel);
             });
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(query =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(query =>
             {
                 var results = query.Execute(existingUser.Id).ToList();
 
@@ -68,7 +68,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
 
             SetupUserWithOdsInstanceRegistrations(existingUser.Id, alreadyAddedInstances);
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(query =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(query =>
             {
                 var results = query.Execute(existingUser.Id).ToList();
 
@@ -98,7 +98,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.User
                 command.Execute(updateModel);
             });
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(query =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(query =>
             {
                 var results = query.Execute(existingUser.Id).ToList();
 

@@ -12,7 +12,6 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
-using EdFi.Ods.AdminApp.Web;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using NUnit.Framework;
 using Shouldly;
@@ -27,9 +26,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
     public class DeregisterOdsInstanceCommandTests: AdminAppDataTestBase
     {
         [Test]
-#if !NET48
-        [Ignore("Ignore temporarily. Will be enabled, once the Identity schema changes in place")]
-#endif
         public void ShouldDeregisterOdsInstance()
         {
             var users = SetupUsers(2).ToList();
@@ -57,7 +53,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             SetupUserWithOdsInstanceRegistrations(testUser1.Id, testInstances);
             SetupUserWithOdsInstanceRegistrations(testUser2.Id, testInstances);
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
                 queryInstances.Execute(testUser1.Id).Count().ShouldBe(2);
                 queryInstances.Execute(testUser2.Id).Count().ShouldBe(2);
@@ -81,7 +77,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             ShouldBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceToBeDeregistered.Id);
             ShouldNotBeNull<SecretConfiguration>(x => x.OdsInstanceRegistrationId == testInstanceNotToBeDeregistered.Id);
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(queryInstances =>
             {
                 var instancesAssignedToUser1 = queryInstances.Execute(testUser1.Id).ToList();
                 instancesAssignedToUser1.Count.ShouldBe(1);

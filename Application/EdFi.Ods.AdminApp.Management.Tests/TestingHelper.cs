@@ -4,11 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-#if NET48
-using System.Data.Entity;
-#else
 using Microsoft.EntityFrameworkCore;
-#endif
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;

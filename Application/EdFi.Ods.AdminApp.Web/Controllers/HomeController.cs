@@ -6,12 +6,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-#endif
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
@@ -63,11 +59,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult Error(string message)
         {
-            #if NET48
-            var model = new HandleErrorInfo(new Exception(message), "Home", "Index");
-            #else
             var model = new HandleErrorInfo(new Exception(message));
-            #endif
             return View(model);
         }
 

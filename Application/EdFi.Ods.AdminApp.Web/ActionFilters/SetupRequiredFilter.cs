@@ -3,11 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc.Filters;
-#endif
 using System.Linq;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
@@ -21,21 +17,15 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     public class SetupRequiredFilter : ActionFilterAttribute
     {
         private readonly IGetOdsStatusQuery _getOdsStatusQuery;
-        #if !NET48
         private readonly AdminAppDbContext _database;
-        #endif
 
         public SetupRequiredFilter(IGetOdsStatusQuery getOdsStatusQuery
-            #if !NET48
             , AdminAppDbContext database
-            #endif
             )
         {
             _getOdsStatusQuery = getOdsStatusQuery;
 
-            #if !NET48
             _database = database;
-            #endif
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -56,9 +46,6 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         private bool GeneralFirstTimeSetUpCompleted()
         {
-            #if NET48
-            using (var _database = new AdminAppDbContext())
-            #endif
             {
                 var generalFirstTimeSetUpCompleted = _database
                                                          .ApplicationConfigurations

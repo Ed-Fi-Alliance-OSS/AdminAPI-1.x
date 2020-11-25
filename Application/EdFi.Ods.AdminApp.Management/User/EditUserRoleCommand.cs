@@ -5,11 +5,7 @@
 
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
-#if NET48
-using Microsoft.AspNet.Identity.EntityFramework;
-#else
 using EdFi.Ods.AdminApp.Management.Database.Models;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management.User
 {

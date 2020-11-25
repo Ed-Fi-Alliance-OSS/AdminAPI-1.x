@@ -47,9 +47,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         }
 
         [Test]
-#if !NET48
-        [Ignore("Ignore temporarily. Will be enabled, once the Identity schema changes in place")]
-#endif
         public async Task ShouldRegisterOdsInstance()
         {
             ResetOdsInstanceRegistrations();
@@ -93,7 +90,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
         private static SqlConnection GetDatabaseConnection(string instanceName, string prefix = "")
         {
-            var connectionString = ConfigurationHelper.GetConnectionStrings().OdsEmpty;
+            var connectionString = "Data Source=.\\;Integrated Security=True";
 
             var databaseName = instanceName;
 
@@ -112,13 +109,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         private OdsInstanceFirstTimeSetupService GetOdsInstanceFirstTimeSetupService(string encryptedSecretConfigValue,
             string instanceName, AdminAppDbContext database)
         {
-#if NET48
-            var options = new Net48Options<AppSettings>(new AppSettings());
-#else
             var appSettings = new Mock<IOptions<AppSettings>>();
-            appSettings.Setup(x => x.Value).Returns(ConfigurationHelper.GetAppSettings());
+            appSettings.Setup(x => x.Value).Returns(new AppSettings());
             var options = appSettings.Object;
-#endif
+
             var mockStringEncryptorService = new Mock<IStringEncryptorService>();
             mockStringEncryptorService.Setup(x => x.Encrypt(It.IsAny<string>())).Returns(encryptedSecretConfigValue);
             var odsSecretConfigurationProvider = new OdsSecretConfigurationProvider(mockStringEncryptorService.Object, database);

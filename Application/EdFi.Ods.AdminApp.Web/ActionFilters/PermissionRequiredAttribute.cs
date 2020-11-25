@@ -5,17 +5,17 @@
 
 using System;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApp.Web.ActionFilters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-    public class PermissionRequiredAttribute : Attribute
+    public class PermissionRequiredAttribute : TypeFilterAttribute
     {
-        public Permission RequiredPermission { get; }
-
         public PermissionRequiredAttribute(Permission permission)
+            : base(typeof(PermissionRequiredFilter))
         {
-            RequiredPermission = permission;
+            Arguments = new object[] { permission };
         }
     }
 }

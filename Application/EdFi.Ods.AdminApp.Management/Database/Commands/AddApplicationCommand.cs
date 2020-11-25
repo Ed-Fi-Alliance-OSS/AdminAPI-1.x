@@ -36,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
             var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
 
-            var persistedApplicationName = CloudOdsApplicationName.GetPersistedName(applicationModel.ApplicationName, CloudOdsEnvironment.Production);
+            var persistedApplicationName = CloudOdsApplicationName.GetPersistedName(applicationModel.ApplicationName);
 
             var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
                 x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));

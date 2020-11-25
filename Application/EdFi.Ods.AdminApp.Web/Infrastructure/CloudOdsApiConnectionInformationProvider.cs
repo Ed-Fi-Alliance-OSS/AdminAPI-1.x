@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -24,12 +24,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             _apiModeProvider = apiModeProvider;
         }
 
-        public Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment()
-        {
-            return GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production);
-        }
-
-        public async Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment(CloudOdsEnvironment environment)
+        public async Task<OdsApiConnectionInformation> GetConnectionInformationForEnvironment()
         {
             var apiCredentials = await _getOdsAdminAppApiCredentialsQuery.Execute();
 
@@ -38,11 +33,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                 ThrowSecretCorruptionException();
             }
 
-            return GetConnectionInformationForEnvironment(environment, apiCredentials.ProductionApiCredential, _instanceContext.Name, _apiModeProvider.GetApiMode());
+            return GetConnectionInformationForEnvironment(apiCredentials.ProductionApiCredential, _instanceContext.Name, _apiModeProvider.GetApiMode());
 
             bool ApiCredentialAreCorrupted()
             {
-                return apiCredentials == null || environment == CloudOdsEnvironment.Production && apiCredentials.ProductionApiCredential == null;
+                return apiCredentials == null || apiCredentials.ProductionApiCredential == null;
             }
 
             void ThrowSecretCorruptionException()
@@ -53,7 +48,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
         }
 
-        public static OdsApiConnectionInformation GetConnectionInformationForEnvironment(CloudOdsEnvironment environment, OdsApiCredential apiCredentials, string instanceName, ApiMode apiMode)
+        public static OdsApiConnectionInformation GetConnectionInformationForEnvironment(OdsApiCredential apiCredentials, string instanceName, ApiMode apiMode)
         {
             if (apiCredentials == null)
             {
@@ -68,12 +63,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                 throw new ArgumentException($"{nameof(apiCredentials.Secret)} in {nameof(apiCredentials)} cannot be null or whitespace");
             }
 
-            if (environment == CloudOdsEnvironment.Production)
-            {
-                return ConnectionInformationForEnvironment(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, apiCredentials, instanceName, apiMode);
-            }
-
-            throw new InvalidOperationException($"Cannot provide connection information for '{environment?.DisplayName ?? "null"}' environment");
+            return ConnectionInformationForEnvironment(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, apiCredentials, instanceName, apiMode);
         }
 
         private static OdsApiConnectionInformation ConnectionInformationForEnvironment(string apiUrl, OdsApiCredential apiCredentials, string instanceName, ApiMode apiMode)

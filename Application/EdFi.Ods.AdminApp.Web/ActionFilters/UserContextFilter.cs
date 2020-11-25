@@ -3,50 +3,45 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-#if NET48
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-#else
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
-
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EdFi.Ods.AdminApp.Web.ActionFilters
 {
-    public class UserContextFilter : AuthorizeAttribute
+    public class UserContextFilter : IAuthorizationFilter
     {
-        public override void OnAuthorization(AuthorizationContext filterContext)
+        private readonly AdminAppUserContext _userContext;
+        private readonly AdminAppIdentityDbContext _identity;
+
+        public UserContextFilter(AdminAppUserContext userContext, AdminAppIdentityDbContext identity)
         {
-            var userId = filterContext.HttpContext.User.Identity.GetUserId();
+            _userContext = userContext;
+            _identity = identity;
+        }
+
+        public void OnAuthorization(AuthorizationFilterContext filterContext)
+        {
+            var userId = filterContext.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             TryQueryUser(userId, out var user);
 
-            var userContext = DependencyResolver.Current.GetService<AdminAppUserContext>();
-
-            userContext.User = user;
+            _userContext.User = user;
             if (user != null)
             {
-                userContext.Permissions = PopulatePermissions(user.Roles);
+                var userRoles = _identity.UserRoles.Where(x => x.UserId == user.Id).ToArray();
+                _userContext.Permissions = PopulatePermissions(userRoles);
             }
         }
 
-        private static bool TryQueryUser(string userId, out AdminAppUser user)
+        private bool TryQueryUser(string userId, out AdminAppUser user)
         {
-            AdminAppUser userLookup;
-            using (var dbContext = AdminAppIdentityDbContext.Create())
-            {
-                userLookup = dbContext.Users.Include(x => x.Roles).SingleOrDefault(x => x.Id == userId);
-            }
+            var userLookup = _identity.Users.SingleOrDefault(x => x.Id == userId);
 
             if (userLookup != null)
             {
@@ -58,9 +53,9 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             return false;
         }
 
-        private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole> userRoles)
+        private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole<string>> userRoles)
         {
-            IEnumerable<Permission> permissions = new Permission[] {};
+            IEnumerable<Permission> permissions = new Permission[] { };
             permissions = userRoles.Aggregate(permissions, (current, userRole) => current.Union(RolePermission.GetPermissions(userRole.RoleId)));
             return permissions.ToArray();
         }

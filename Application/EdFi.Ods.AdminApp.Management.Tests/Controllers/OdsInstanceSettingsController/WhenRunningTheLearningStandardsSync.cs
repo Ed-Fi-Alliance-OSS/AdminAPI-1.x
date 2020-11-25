@@ -6,10 +6,11 @@
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
@@ -46,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.Sandbox);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation ("Ods Instance", ApiMode.Sandbox) { ApiServerUrl = ProductionUrl });
 
                 LearningStandardsSetupCommand.Setup(x => x.Execute(It.IsAny<AcademicBenchmarkConfig>()))
@@ -63,9 +64,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 var result = await SystemUnderTest.LearningStandards(_settingsModel);
 
                 // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
             }
 
             [Test]
@@ -98,7 +98,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.SchoolYear.ShouldBeNull()
                     );
@@ -143,7 +142,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.YearSpecific);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation (_instanceContext.Name, ApiMode.YearSpecific) { ApiServerUrl = ProductionUrl });
 
                 LearningStandardsSetupCommand.Setup(x => x.Execute(It.IsAny<AcademicBenchmarkConfig>()))
@@ -160,9 +159,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 var result = await SystemUnderTest.LearningStandards(_settingsModel);
 
                 // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
             }
 
             [Test]
@@ -195,7 +193,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.SchoolYear.ShouldBe(Year)
                     );
@@ -239,7 +236,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                     .Returns(ApiMode.DistrictSpecific);
 
                 ApiConnectionInformationProvider
-                    .Setup(x => x.GetConnectionInformationForEnvironment(CloudOdsEnvironment.Production))
+                    .Setup(x => x.GetConnectionInformationForEnvironment())
                     .ReturnsAsync(new OdsApiConnectionInformation (_instanceContext.Name, ApiMode.DistrictSpecific) { ApiServerUrl = ProductionUrl});
 
                 LearningStandardsSetupCommand.Setup(x => x.Execute(It.IsAny<AcademicBenchmarkConfig>()))
@@ -256,9 +253,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 var result = await SystemUnderTest.LearningStandards(_settingsModel);
 
                 // Assert
-                result.ShouldBeOfType<HttpStatusCodeResult>();
-                // ReSharper disable once PossibleNullReferenceException - assert above is the guard clause
-                (result as HttpStatusCodeResult).StatusCode.ShouldBe(200);
+                result.ShouldBeOfType<OkResult>();
+                ((OkResult)result).StatusCode.ShouldBe(200);
             }
 
             [Test]
@@ -297,7 +293,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
                 {
                     actual.ShouldSatisfyAllConditions(
-                        () => actual.Environment.ShouldBe(CloudOdsEnvironment.Production.Value),
                         () => actual.ApiUrl.ShouldBe(ProductionUrl),
                         () => actual.OdsInstanceId.ShouldBe(_instanceContext.Id)
                     );
@@ -310,12 +305,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
 
             private static void UpdateConfiguration()
             {
-                ConfigurationHelper.SetApiMode("DistrictSpecific");
+                Startup.ConfigurationAppSettings.ApiStartupType = "DistrictSpecific";
             }
 
             private static void ResetConfiguration()
             {
-                ConfigurationHelper.SetApiMode("sandbox");
+                Startup.ConfigurationAppSettings.ApiStartupType = "sandbox";
             }
         }
     }

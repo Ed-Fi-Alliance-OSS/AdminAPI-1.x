@@ -10,11 +10,7 @@ using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;

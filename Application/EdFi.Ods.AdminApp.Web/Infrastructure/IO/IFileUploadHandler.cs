@@ -4,16 +4,16 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
     public interface IFileUploadHandler
     {
-        FileUploadResult SaveFileToUploadDirectory(HttpPostedFileBase uploadedFile);
-        FileUploadResult SaveFileToUploadDirectory(HttpPostedFileBase uploadedFile, string fileName);
-        FileUploadResult SaveFilesToUploadDirectory(HttpPostedFileBase[] uploadedFiles);
-        FileUploadResult SaveFilesToUploadDirectory(HttpPostedFileBase[] uploadedFiles, Func<string, string> fileNameTransformFunc);
+        FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile);
+        FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, string fileName);
+        FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles);
+        FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc);
 
         string GetNewTempDirectory();
         string GetWorkingDirectory(string customDirectory);

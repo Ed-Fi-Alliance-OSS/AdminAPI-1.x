@@ -12,10 +12,10 @@ See the LICENSE and NOTICES files in the project root for more information.
     ViewBag.Title = "Production | Applications";
 }
 
-@{ Html.RenderPartial("_DeleteVendorApplicationModal", new DeleteApplicationModel()); }
-@{ Html.RenderPartial("_RegenerateApplicationSecretModal", new RegenerateSecretModel()); }
+@{ await Html.RenderPartialAsync("_DeleteVendorApplicationModal", new DeleteApplicationModel()); }
+@{ await Html.RenderPartialAsync("_RegenerateApplicationSecretModal", new RegenerateSecretModel()); }
 
 @foreach (var vendorApplicationModel in Model)
 {
-    Html.RenderPartial("_ApplicationsByVendor", vendorApplicationModel);
+    await Html.RenderPartialAsync("_ApplicationsByVendor", vendorApplicationModel);
 }

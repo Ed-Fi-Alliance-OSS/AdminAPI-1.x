@@ -5,9 +5,7 @@ The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
-@using Microsoft.AspNet.Identity
-
-@if (Request.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
     using (Html.BeginForm("LogOut", "Identity", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
@@ -15,7 +13,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink(User.Identity.GetUserName(), "ChangePassword", "Identity", new { }, new { id = "usernameLink" })
+                @Html.ActionLink(User.Identity.Name, "ChangePassword", "Identity", new { }, new { id = "usernameLink" })
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log Out</a></li>
         </ul>

@@ -5,26 +5,34 @@
 
 using System;
 using System.Linq;
-#if NET48
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-#else
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EdFi.Ods.AdminApp.Web.ActionFilters
 {
-    public class InstanceContextFilter : AuthorizeAttribute
+    public class InstanceContextFilter : ActionFilterAttribute, IAuthorizationFilter
     {
-        public override void OnAuthorization(AuthorizationContext filterContext)
+        private readonly InstanceContext _instanceContext;
+        private readonly AdminAppDbContext _adminAppDbContext;
+        private readonly AdminAppIdentityDbContext _adminAppIdentityDbContext;
+
+        public InstanceContextFilter(InstanceContext instanceContext, AdminAppDbContext adminAppDbContext,
+            AdminAppIdentityDbContext adminAppIdentityDbContext)
         {
-            if (SkipFilter(filterContext)) return;
+            _instanceContext = instanceContext;
+            _adminAppDbContext = adminAppDbContext;
+            _adminAppIdentityDbContext = adminAppIdentityDbContext;
+        }
+
+        public void OnAuthorization(AuthorizationFilterContext filterContext)
+        {
+            if (SkipFilter(filterContext.ActionDescriptor as ControllerActionDescriptor)) return;
 
             OdsInstanceRegistration instance;
             if (CloudOdsAdminAppSettings.Instance.Mode.SupportsSingleInstance)
@@ -37,8 +45,8 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             }
             else
             {
-                var unsafeInstanceId = filterContext.HttpContext.Request.Cookies.Get("Instance")?.Value;
-                var userId = filterContext.HttpContext.User.Identity.GetUserId();
+                var unsafeInstanceId = filterContext.HttpContext.Request.Cookies["Instance"];
+                var userId = filterContext.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (!TryQueryInstanceRegistration(userId, unsafeInstanceId, out instance))
                 {
@@ -47,37 +55,28 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
                 }
             }
 
-            var instanceContext = DependencyResolver.Current.GetService<InstanceContext>();
-
-            instanceContext.Id = instance.Id;
-            instanceContext.Name = instance.Name;
-            instanceContext.Description = instance.Description;
+            _instanceContext.Id = instance.Id;
+            _instanceContext.Name = instance.Name;
+            _instanceContext.Description = instance.Description;
         }
 
-        private static bool TryQueryInstanceRegistration(out OdsInstanceRegistration instanceRegistration)
+        private bool TryQueryInstanceRegistration(out OdsInstanceRegistration instanceRegistration)
         {
-            OdsInstanceRegistration singleInstanceLookup;
-            using (var dbContext = new AdminAppDbContext())
-            {
-                singleInstanceLookup = dbContext.OdsInstanceRegistrations.FirstOrDefault(x =>
-                    x.Name.Equals(CloudOdsAdminAppSettings.Instance.OdsInstanceName,
-                        StringComparison.InvariantCultureIgnoreCase));
-            }
+            var singleInstanceLookup = _adminAppDbContext.OdsInstanceRegistrations.AsEnumerable().FirstOrDefault(x =>
+                x.Name.Equals(CloudOdsAdminAppSettings.Instance.OdsInstanceName,
+                    StringComparison.InvariantCultureIgnoreCase));
+
             instanceRegistration = singleInstanceLookup;
             return singleInstanceLookup != null;
         }
 
-        private static bool TryQueryInstanceRegistration(string userId, string unsafeInstanceId, out OdsInstanceRegistration instanceRegistration)
+        private bool TryQueryInstanceRegistration(string userId, string unsafeInstanceId, out OdsInstanceRegistration instanceRegistration)
         {
             if (int.TryParse(unsafeInstanceId, out var safeInstanceId))
             {
                 var isAuthorized = IsUserAuthorizedForInstance(safeInstanceId, userId);
 
-                OdsInstanceRegistration instanceLookup;
-                using (var dbContext = new AdminAppDbContext())
-                {
-                    instanceLookup = dbContext.OdsInstanceRegistrations.Find(safeInstanceId);
-                }
+                var instanceLookup = _adminAppDbContext.OdsInstanceRegistrations.Find(safeInstanceId);
 
                 if (isAuthorized && instanceLookup != null)
                 {
@@ -90,20 +89,21 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             return false;
         }
 
-        private static bool SkipFilter(ControllerContext filterContext)
+        private static bool SkipFilter(ControllerActionDescriptor actionDescriptor)
         {
-            var hasBypassAttr = filterContext.Controller.GetType().GetAttribute<BypassInstanceContextFilter>() != null;
-            return hasBypassAttr;
+            if (actionDescriptor == null)
+                return false;
+
+            var declaringType = actionDescriptor.MethodInfo.DeclaringType;
+            return declaringType != null && declaringType.CustomAttributes.Any(ca => ca.AttributeType == typeof(BypassInstanceContextFilter));
         }
 
-        private static bool IsUserAuthorizedForInstance(int instanceId, string userId)
+        private bool IsUserAuthorizedForInstance(int instanceId, string userId)
         {
-            using (var database = AdminAppIdentityDbContext.Create())
-            {
-                return database.UserOdsInstanceRegistrations.Any(x =>
+            return _adminAppIdentityDbContext.UserOdsInstanceRegistrations.Any(
+                x =>
                     x.OdsInstanceRegistrationId == instanceId
                     && x.UserId == userId);
-            }
         }
     }
 }

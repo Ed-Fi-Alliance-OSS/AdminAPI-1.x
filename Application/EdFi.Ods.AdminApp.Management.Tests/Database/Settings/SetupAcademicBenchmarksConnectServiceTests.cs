@@ -9,11 +9,7 @@ using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
-#if NET48
-using EdFi.Ods.Common.Security;
-#else
 using EdFi.Common.Security;
-#endif
 using Moq;
 using NUnit.Framework;
 using Shouldly;

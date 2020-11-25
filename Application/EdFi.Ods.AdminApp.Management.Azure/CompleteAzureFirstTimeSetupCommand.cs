@@ -86,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
 
             await _usersContext.SaveChangesAsync();
             await _securityContext.SaveChangesAsync();
-            await _restartAppServicesCommand.Execute(new CloudOdsApiOperationContext(cloudOdsInstance, CloudOdsEnvironment.Production));
+            await _restartAppServicesCommand.Execute(new CloudOdsApiOperationContext(cloudOdsInstance));
         }
 
         private void SetupAndRuntimeConfigurations(OdsFirstTimeSetupConfiguration firstTimeSetupConfiguration)

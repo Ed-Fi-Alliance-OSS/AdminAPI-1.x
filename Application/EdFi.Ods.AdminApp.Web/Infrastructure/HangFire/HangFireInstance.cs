@@ -8,8 +8,6 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 using Hangfire.Storage;
-using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
 {
@@ -24,14 +22,9 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
         {
             var schemaName = "adminapp_hangfire";
 
-        #if NET48
-            var connectionString = ConfigurationHelper.GetConnectionStrings().Admin;
-            var isPostgreSql = DatabaseProviderHelper.PgSqlProvider;
-        #else
             var connectionString = Startup.ConfigurationConnectionStrings.Admin;
             var isPostgreSql = "PostgreSQL".Equals(
                 Startup.ConfigurationAppSettings.DatabaseEngine, StringComparison.InvariantCultureIgnoreCase);
-        #endif
 
             if (isPostgreSql)
             {

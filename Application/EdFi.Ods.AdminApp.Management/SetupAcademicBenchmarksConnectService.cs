@@ -11,11 +11,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
-#if NET48
-using EdFi.Ods.Common.Security;
-#else
 using EdFi.Common.Security;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management
 {
@@ -105,15 +101,15 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task CreateAndSaveNewApiClients(Application newApplication)
         {
-            var apiCreds = CreateNewApiClient(CloudOdsEnvironment.Production, newApplication);
+            var apiCreds = CreateNewApiClient(newApplication);
             await StoreApiCredentials(apiCreds);
         }
 
-        private OdsApiCredential CreateNewApiClient(CloudOdsEnvironment environment, Application newApplication)
+        private OdsApiCredential CreateNewApiClient(Application newApplication)
         {
             var apiWithCredentials =
                 new ApiClientFactory(_securePackedHashProvider, _hashConfigurationProvider)
-                    .GetApiClientAndCredentials(environment, CloudsOdsAcademicBenchmarksConnectApp.ApplicationName);
+                    .GetApiClientAndCredentials(CloudsOdsAcademicBenchmarksConnectApp.ApplicationName);
 
             newApplication.ApiClients.Add(apiWithCredentials.ApiClient);
 

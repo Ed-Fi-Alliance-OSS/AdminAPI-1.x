@@ -8,11 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if NET48
-    using System.Web;
-#else
-    using Microsoft.AspNetCore.Http;
-#endif
+using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
@@ -80,11 +76,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             }";
 
             var importModel = GetImportModel(testJSON);
-            #if NET48
-                var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.InputStream);
-#else
-                var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
-#endif
+            var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
 
             Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
 
@@ -229,15 +221,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var stream = new MemoryStream(byteArray);
             var importModel = new ClaimSetFileImportModel();
 
-            #if NET48
-                var importFile = new Mock<HttpPostedFileBase>();
-                importFile.Setup(f => f.ContentLength).Returns(stream.Capacity);
-                importFile.Setup(f => f.InputStream).Returns(stream);
-            #else
-                var importFile = new Mock<IFormFile>();
-                importFile.Setup(f => f.Length).Returns(stream.Capacity);
-                importFile.Setup(f => f.OpenReadStream()).Returns(stream);
-            #endif
+            var importFile = new Mock<IFormFile>();
+            importFile.Setup(f => f.Length).Returns(stream.Capacity);
+            importFile.Setup(f => f.OpenReadStream()).Returns(stream);
 
             importFile.Setup(f => f.FileName).Returns("testfile.json");
             importModel.ImportFile = importFile.Object;

@@ -65,7 +65,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 
         private bool BeWithinApplicationNameMaxLength(EditApplicationModel model, string applicationName, PropertyValidatorContext context)
         {
-            var persistedName = CloudOdsApplicationName.GetPersistedName(applicationName, CloudOdsEnvironment.Production);
+            var persistedName = CloudOdsApplicationName.GetPersistedName(applicationName);
             var extraCharactersInName = persistedName.Length - ApplicationExtensions.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)
             {

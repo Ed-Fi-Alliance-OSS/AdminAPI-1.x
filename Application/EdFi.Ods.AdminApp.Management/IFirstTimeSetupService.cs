@@ -12,11 +12,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
-#if NET48
-using EdFi.Ods.Common.Security;
-#else
 using EdFi.Common.Security;
-#endif
 
 namespace EdFi.Ods.AdminApp.Management
 {
@@ -78,8 +74,7 @@ namespace EdFi.Ods.AdminApp.Management
 
             var apiClientFactory = new ApiClientFactory(_securePackedHashProvider, _hashConfigurationProvider);
 
-            var apiWithCredentials = apiClientFactory.GetApiClientAndCredentials(CloudOdsEnvironment.Production,
-                applicationName);
+            var apiWithCredentials = apiClientFactory.GetApiClientAndCredentials(applicationName);
 
             result.Application.ApiClients.Add(apiWithCredentials.ApiClient);
             result.ProductionKeyAndSecret = apiWithCredentials.ApiCredentials;

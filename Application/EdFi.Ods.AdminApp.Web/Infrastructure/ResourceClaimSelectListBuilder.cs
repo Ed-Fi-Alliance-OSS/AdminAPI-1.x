@@ -5,11 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc.Rendering;
-#endif
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
 
@@ -53,11 +49,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
             parentGroupList = parentGroupList.OrderBy(x => x.Text).ToList();
             parentGroupList.AddRange(childGroupList.OrderBy(x => x.Text));
-            #if NET48
-                selectList.AddRange(new SelectList(parentGroupList, "Value", "Text", "Group.Name", -1));
-            #else
-                selectList.AddRange(new SelectList(parentGroupList, "Value", "Text", -1, "Group.Name"));
-            #endif
+            selectList.AddRange(new SelectList(parentGroupList, "Value", "Text", -1, "Group.Name"));
             return selectList;
         }
     }

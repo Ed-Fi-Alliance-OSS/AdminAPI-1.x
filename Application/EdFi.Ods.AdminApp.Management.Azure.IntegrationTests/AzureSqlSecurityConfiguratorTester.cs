@@ -3,20 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Setup;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
 
 namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 {
-    //See App.config - requires the User named in the "IntegrationTests" connection string to be
-    //in the sysadmin role on the database server
     [Ignore("These tests are intended to be marked [Explicit], but a " +
             "VS2019 Test Explorer bug prevents that attribute from " +
             "functioning as intended. To run these tests, temporarily" +
@@ -82,12 +80,28 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
             }
         };
 
+        private string MasterConnectionString
+        {
+            get
+            {
+                /*
+                    Run these tests only if you understand the full consequences.
 
+                    SQL Server Authentication must be enabled when using a local SQL Server
+                    for these tests. Ensure a "IntegrationTests" user account has been created
+                    and given the sysadmin role. Set the password in this connection string
+                    and return it.
 
-        private readonly string _masterConnectionString =
-            ConfigurationHelper.GetConnectionStrings().IntegrationTests;
+                    DO NOT CHECK THESE VALUES INTO SOURCE CONTROL
+                 */
 
-        private SqlConnectionStringBuilder MasterSqlConnectionStringBuilder => new SqlConnectionStringBuilder(_masterConnectionString);
+                throw new NotImplementedException("Temporarily uncomment the following line when you need to run this test. Your master database will be affected.");
+
+                //return "Server=.\\;Database=master;User Id=IntegrationTests;Password=IntegrationTests_User_Password_Here";
+            }
+        }
+
+        private SqlConnectionStringBuilder MasterSqlConnectionStringBuilder => new SqlConnectionStringBuilder(MasterConnectionString);
 
         private OdsSqlConfiguration GetOdsSqlConfiguration()
         {
@@ -114,7 +128,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 
         private string GetConnectionStringForDatabase(string databaseName)
         {
-            var connectionStringBuilder = new SqlConnectionStringBuilder(_masterConnectionString)
+            var connectionStringBuilder = new SqlConnectionStringBuilder(MasterConnectionString)
             {
                 InitialCatalog = databaseName
             };
@@ -287,7 +301,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 
             }
 
-            using (var connection = new SqlConnection(_masterConnectionString))
+            using (var connection = new SqlConnection(MasterConnectionString))
             {
                 connection.Open();
                 foreach (var login in _expectedSqlServerSetup.Logins)
@@ -306,7 +320,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
         [Test]
         public void ShouldCreateServerLogins()
         {
-            using (var connection = new SqlConnection(_masterConnectionString))
+            using (var connection = new SqlConnection(MasterConnectionString))
             {
                 connection.Open();
 

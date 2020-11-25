@@ -11,27 +11,6 @@
     <description>Ed-Fi AdminApp for the ODS</description>
   </metadata>
   <files>
-    <file src="bin\*.dll" target="bin" />
-    <file src="bin\*.compiled" target="bin" />
-    <file src="bin\roslyn\*" target="bin\roslyn" />
-    <file src="Content\**" target="Content" />
-    <file src="log4net\**" target="log4net" />
-    <file src="fonts\**" target="fonts" />
-    <file src="Schema\**" target="Schema" />
-    <file src="Scripts\**" target="Scripts" />
-    <file src="Service References\AzureAD\**" target="Service References\AzureAD" />
-    <file src="uploads\**" target="uploads" />
-    <file src="Artifacts\**" target="Artifacts" />
-    <file src="Views\**" target="Views" />
-    <file src="ApplicationInsights.config" target="" />
-    <file src="favicon.ico" target="" />
-    <file src="Global.asax" target="" />
-    <file src="packages.config" target="" />
-    <file src="Web.config" target="" />
-    <file src="Web.base.config" target="" />
-    <file src="Web.OnPremisesRelease.config" target="" />
-    <file src="Web.OnPremNpgsql.config" target="" />
-    <file src="Web.OnPremYearSpecificRelease.config" target="" />
-    <file src="Web.Release.config" target="" />
+       <file src="**" />
   </files>
 </package>

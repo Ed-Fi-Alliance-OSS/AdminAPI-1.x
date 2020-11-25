@@ -135,7 +135,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
                 var apiClient = persistedApplication.ApiClients.First();
-                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
                 apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
                 apiClient.Key.ShouldBe(result.Key);
                 apiClient.Secret.ShouldBe(result.Secret);
@@ -212,7 +212,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
                 var apiClient = persistedApplication.ApiClients.First();
-                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application", CloudOdsEnvironment.Production));
+                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
                 apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
                 apiClient.Key.ShouldBe(result.Key);
                 apiClient.Secret.ShouldBe(result.Secret);

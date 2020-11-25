@@ -8,12 +8,8 @@ using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using System.Linq;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-#endif
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers

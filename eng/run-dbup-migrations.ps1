@@ -15,8 +15,7 @@ Param(
         "databasePassword" = ""
         "useIntegratedSecurity" = $true
         "adminDatabaseName" = "EdFi_Admin"
-    },
-	[Switch] $netCore
+    }
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,10 +33,6 @@ $arguments = @{
     Username = $config.databaseUser
     Password = $config.databasePassword
     NuGetFeed = "https://www.myget.org/F/ed-fi/api/v3/index.json"
-}
-if($netCore)
-{
-	$arguments.FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.AdminApp.Web.Core"
 }
 
 Write-Host "Installing the Admin App tables to $($arguments.DatabaseName)" -ForegroundColor Cyan

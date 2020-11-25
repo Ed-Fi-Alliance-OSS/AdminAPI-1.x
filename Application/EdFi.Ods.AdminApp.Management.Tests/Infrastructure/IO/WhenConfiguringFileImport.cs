@@ -123,7 +123,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.IO
         {
             const string apiServerUrl = "http://abc";
             const string oauthUrl = "http://abc";
-            const int year = 123;
             const string expected = "http://abc/metadata/123";
 
             _connectionInfo = new OdsApiConnectionInformation("Ed_Fi_Ods_123", ApiMode.YearSpecific)

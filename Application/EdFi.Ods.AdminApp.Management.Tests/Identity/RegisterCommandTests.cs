@@ -11,8 +11,7 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Identity;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Identity;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -30,15 +29,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Identity
             var newUser = new RegisterViewModel
             {
                 Email = $"test{guidString}@test.com",
-                Password = "testPassword",
-                ConfirmPassword = "testPassword"
+                Password = "Passw0rd!",
+                ConfirmPassword = "Passw0rd!"
             };
 
             await ScopedAsync<UserManager<AdminAppUser>>(async manager =>
             {
                 var command = new RegisterCommand();
 
-                var (adminAppUser, _) = await command.Execute(newUser, manager);
+                var (adminAppUser, identityResult) = await command.Execute(newUser, manager);
+
+                string.Join(Environment.NewLine, identityResult.Errors.Select(x => x.Description)).ShouldBe("");
+                identityResult.Succeeded.ShouldBeTrue();
 
                 Scoped<AdminAppIdentityDbContext>(database =>
                 {

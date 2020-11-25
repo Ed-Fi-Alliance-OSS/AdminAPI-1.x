@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
-    <Configurations>Debug;Release;OnPremises;OnPremNpgsql</Configurations>
-    <Copyright>Copyright © 2016 Ed-Fi Alliance</Copyright>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,25 +16,16 @@
     <PackageReference Include="dbup-postgresql" Version="4.2.0" />
     <PackageReference Include="dbup-sqlserver" Version="4.2.0" />
 
-    <!-- The latest stable platform packages do NOT support .NET Framework, so we conditionally reference older packages for NET48 builds. -->
-    <PackageReference Include="EdFi.Common" Version="5.1.0-pre0017" Condition="'$(TargetFramework)' == 'net48'" />
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="5.1.0-pre0017" Condition="'$(TargetFramework)' == 'net48'" />
-    <PackageReference Include="EdFi.Suite3.Common" Version="5.1.0-pre0012" Condition="'$(TargetFramework)' == 'net48'" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="5.1.0-pre0007" Condition="'$(TargetFramework)' == 'net48'" />
-
     <!-- The latest stable platform packages do support .NET Core, so we conditionally stable packages for NETCOREAPP builds. -->
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="5.1.0" Condition="'$(TargetFramework)' != 'net48'" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="5.1.0" Condition="'$(TargetFramework)' != 'net48'" />
+    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="5.1.0" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="5.1.0" />
 
     <PackageReference Include="EntityFramework" Version="6.4.0" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" Condition="'$(TargetFramework)' == 'net48'" />
-    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" Condition="'$(TargetFramework)' == 'net48'" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" Condition="'$(TargetFramework)' != 'net48'" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" Condition="'$(TargetFramework)' != 'net48'" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" Condition="'$(TargetFramework)' == 'net48'" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" Condition="'$(TargetFramework)' != 'net48'" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Npgsql" Version="4.1.5" />
     <PackageReference Include="RestSharp" Version="106.11.5" />

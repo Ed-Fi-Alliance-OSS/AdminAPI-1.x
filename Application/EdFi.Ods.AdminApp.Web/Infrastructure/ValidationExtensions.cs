@@ -5,11 +5,7 @@
 
 using System;
 using System.Linq;
-#if NET48
-using EdFi.Ods.Common.Utils.Extensions;
-#else
 using EdFi.Common.Utils.Extensions;
-#endif
 using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.Validators;

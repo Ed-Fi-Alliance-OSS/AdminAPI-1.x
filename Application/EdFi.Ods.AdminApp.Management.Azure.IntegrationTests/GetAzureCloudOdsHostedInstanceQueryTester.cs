@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -40,7 +40,10 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
         //
         //In practice, as long as the test Azure account already has a non-Cloud ODS resource group,
         //the above tests will validate that non-Cloud ODS resource groups are ignored by this query.
-        [Explicit]
+        [Ignore("This test is intended to be marked [Explicit], but a " +
+                "VS2019 Test Explorer bug prevents that attribute from " +
+                "functioning as intended. To run this tests, temporarily" +
+                "comment out this [Ignore(...)] attribute.")]
         [Test]
         public async Task ShouldIgnoreNonOdsResourceGroups()
         {

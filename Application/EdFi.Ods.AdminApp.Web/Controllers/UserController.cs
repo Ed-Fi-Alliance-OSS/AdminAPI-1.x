@@ -7,26 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-#if NET48
-using System.Web.Mvc;
-#else
 using Microsoft.AspNetCore.Mvc;
-#endif
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
-#if NET48
-using EdFi.Ods.Common.Utils.Extensions;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-#else
 using EdFi.Common.Utils.Extensions;
 using Microsoft.AspNetCore.Identity;
-#endif
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -34,13 +23,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     [PermissionRequired(Permission.AccessGlobalSettings)]
     public class UserController : ControllerBase
     {
-#if NET48
-        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-        private ApplicationSignInManager SignInManager => HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-#else
         private readonly SignInManager<AdminAppUser> SignInManager;
         private readonly UserManager<AdminAppUser> UserManager;
-#endif
 
         private readonly AddUserCommand _addUserCommand;
         private readonly EditUserCommand _editUserCommand;
@@ -63,10 +47,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IGetOdsInstanceRegistrationsByUserIdQuery getOdsInstanceRegistrationsByUserIdQuery
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
             , ITabDisplayService tabDisplayService
-            #if !NET48
             , SignInManager<AdminAppUser> signInManager
             , UserManager<AdminAppUser> userManager
-            #endif
             )
         {
             _addUserCommand = addUserCommand;
@@ -80,10 +62,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
             _tabDisplayService = tabDisplayService;            
 
-            #if !NET48
             SignInManager = signInManager;
             UserManager = userManager;
-            #endif
         }
 
         public ActionResult AddUser()
@@ -147,11 +127,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 return EditUser(model.UserId);
             }
 
-#if NET48
-            var loggedInUserId = User.Identity.GetUserId();
-#else
             var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-#endif
 
             if (model.UserId == loggedInUserId)
             {
@@ -159,11 +135,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
                 if (user != null)
                 {
-#if NET48
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-#else
                     await SignInManager.SignInAsync(user, isPersistent: false);
-#endif
                 }
             }
 
@@ -256,11 +228,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             foreach (var error in result.Errors)
             {
-#if NET48
-                ModelState.AddModelError("", error);
-#else
                 ModelState.AddModelError("", error.Description);
-#endif
             }
         }
 

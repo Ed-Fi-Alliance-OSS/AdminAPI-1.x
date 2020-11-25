@@ -6,21 +6,31 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Helpers
-@using EdFi.Ods.AdminApp.Web.Infrastructure
+@using Microsoft.AspNetCore.Http
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Ed-Fi ODS Admin App for Suite 3</title>
-    @Styles.Render("~/Content/css/styles")
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/toastr")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/scripts/lodash")
-    @Scripts.Render("~/bundles/scripts/site")
-    @Scripts.Render("~/bundles/scripts/clipboard")
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ed-Fi ODS Admin App for Suite 3</title>
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/bundles/bootstrap-multiselect.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Content/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Content/css/toastr.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/bundles/site.min.css" asp-append-version="true" />
+    <script type="text/javascript" src="~/Scripts/jquery-2.2.3.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/toastr.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/respond.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/bundles/bootstrap-multiselect.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/clipboard.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/bundles/modernizr.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/lodash.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/bundles/site.min.js" asp-append-version="true"></script>
 </head>
 <body>
     <div id="dynamic-modal-container"></div>
@@ -30,13 +40,13 @@ See the LICENSE and NOTICES files in the project root for more information.
     <nav class="navbar navbar-inverse navbar-custom" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand brand" href="@Url.Action("Index", "Home")"> <img src="~/Content/images/logo-edfi@2x.png" width="132" height="70" alt=""/> </a>
+                <a class="navbar-brand brand" href="@Url.Action("Index", "Home")"> <img src="~/Content/images/logo-edfi@2x.png" width="132" height="70" alt="" /> </a>
                 <span class="topbar_headline"> Ed-Fi ODS Admin App for Suite 3 </span>
             </div>
             <ul class="nav navbar-nav pull-right">
                 <li>
                     <div class="btn-group">
-                        @Html.Partial("_LoginPartial")
+                       @{ await Html.RenderPartialAsync("_LoginPartial"); }
                     </div>
                 </li>
             </ul>
@@ -48,7 +58,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     }
     <div class="container body-content">
         <div class="row">
-            @if (HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
+            @if (User.Identity.IsAuthenticated)
             {
                 <div class="col-md-1 col-md-offset-11 nav-links">
                     <a href="@Url.Action("Index", "Home")" class="text-nowrap">
@@ -79,8 +89,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </div>
         </div>
     </footer>
-
-    @RenderSection("scripts", required: false)
+    @RenderSection("Scripts", required: false)
     <script type="text/javascript">
         GlobalInitialize();
     </script>

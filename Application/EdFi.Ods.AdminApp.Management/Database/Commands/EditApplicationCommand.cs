@@ -36,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 .Single(a => a.ApplicationId == model.ApplicationId);
 
             var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
-            var newApplicationName = CloudOdsApplicationName.GetPersistedName(model.ApplicationName, CloudOdsEnvironment.Production);
+            var newApplicationName = CloudOdsApplicationName.GetPersistedName(model.ApplicationName);
             var newProfile = model.ProfileId.HasValue
                 ? _context.Profiles.Single(p => p.ProfileId == model.ProfileId.Value)
                 : null;

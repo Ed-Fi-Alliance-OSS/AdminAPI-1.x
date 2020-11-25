@@ -18,9 +18,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
     public class GetOdsInstanceRegistrationsByUserIdQueryTests: AdminAppDataTestBase
     {
         [Test]
-#if !NET48
-        [Ignore("Ignore temporarily. Will be enabled, once the Identity schema changes in place")]
-#endif
         public void ShouldGetAdminAppOdsInstancesForUserSortedByName()
         {
             var users = SetupUsers(2).ToList();
@@ -35,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             SetupUserWithOdsInstanceRegistrations(testUser1.Id, testInstancesAssignedToUser1);
             SetupUserWithOdsInstanceRegistrations(testUser2.Id, testInstancesAssignedToUser2);
 
-            Scoped<GetOdsInstanceRegistrationsByUserIdQuery>(command =>
+            Scoped<IGetOdsInstanceRegistrationsByUserIdQuery>(command =>
             {
                 var resultsForUser1 = command.Execute(testUser1.Id).ToList();
 

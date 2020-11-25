@@ -10,11 +10,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management.Instances;
-#if NET48
-using EdFi.Ods.Common.Security;
-#else
 using EdFi.Common.Security;
-#endif
 using EdFi.Security.DataAccess.Contexts;
 using Moq;
 using NUnit.Framework;

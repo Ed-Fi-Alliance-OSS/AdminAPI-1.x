@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 
-namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
+namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload
 {
     public class BulkFileUploadModel
     {

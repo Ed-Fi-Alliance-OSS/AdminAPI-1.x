@@ -7,14 +7,11 @@ using System;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Web.Helpers;
-using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class ControllerBase : Controller
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(ControllerBase));
-
         public ActionResult RedirectToAction<TController>(Expression<Func<TController, object>> actionExpression) 
             where TController : Controller
         {
@@ -60,26 +57,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             return ResponseHelpers.JsonResult(model);
         }
-
-        #if NET48
-        protected override void OnException(ExceptionContext exceptionContext)
-        {
-            if (exceptionContext.ExceptionHandled)
-                return;
-
-            _logger.Error("Unhandled exception", exceptionContext.Exception);
-
-            var controllerName = (exceptionContext.RouteData.Values["controller"] as string) ?? "";
-            var actionName = (exceptionContext.RouteData.Values["action"] as string) ?? "";
-
-            exceptionContext.ExceptionHandled = true;
-            exceptionContext.Result = new ViewResult
-            {
-                ViewName = "~/Views/Shared/Error.cshtml",
-                ViewData = new ViewDataDictionary(new HandleErrorInfo(exceptionContext.Exception, controllerName, actionName))
-            };
-        }
-        #endif
 
         protected void SuccessToastMessage(string message)
         {

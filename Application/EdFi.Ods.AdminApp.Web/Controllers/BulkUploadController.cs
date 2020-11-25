@@ -15,7 +15,7 @@ using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using FluentValidation;
 using log4net;
@@ -64,7 +64,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<ActionResult> BulkLoad()
+        public async Task<ActionResult> Index()
         {
             var config = await _odsSecretConfigurationProvider.GetSecretConfiguration(_instanceContext.Id);
             if (config == null)
@@ -72,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 _logger.Error(_missingOdsSecretConfig);
                 return JsonError(_missingOdsSecretConfig);
             }
-            var model = new OdsInstanceSettingsModel
+            var model = new BulkFileUploadIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
@@ -88,9 +88,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> BulkFileUpload(OdsInstanceSettingsModel model)
+        public async Task<ActionResult> BulkFileUpload(BulkFileUploadModel model)
         {
-            var bulkFiles = model.BulkFileUploadModel.BulkFiles.Where(file => file != null && file.Length > 0).ToArray();
+            var bulkFiles = model.BulkFiles.Where(file => file != null && file.Length > 0).ToArray();
 
             if (!bulkFiles.Any())
             {
@@ -108,7 +108,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             }
 
             var uploadedFiles = _fileUploadHandler.SaveFilesToUploadDirectory(bulkFiles,
-                fileName => InterchangeFileHelpers.BuildFileNameForImport(model.BulkFileUploadModel.BulkFileType, fileName));
+                fileName => InterchangeFileHelpers.BuildFileNameForImport(model.BulkFileType, fileName));
 
             var connectionInformation = await GetConnectionInformationProvider();
 
@@ -118,10 +118,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 throw new InvalidOperationException("ODS secret configuration can not be null.");
             }
 
-            if (model.BulkFileUploadModel != null)
+            if (model != null)
             {
-                model.BulkFileUploadModel.ApiKey = config.BulkUploadCredential?.ApiKey;
-                var validationResult = await _bulkLoadValidator.ValidateAsync(model.BulkFileUploadModel);
+                model.ApiKey = config.BulkUploadCredential?.ApiKey;
+                var validationResult = await _bulkLoadValidator.ValidateAsync(model);
                 if (!validationResult.IsValid)
                 {
                     var errorMessage = string.Join(",", validationResult.Errors.Select(x => x.ErrorMessage));
@@ -162,8 +162,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             }
 
             var updatedValue = model;
-            updatedValue.BulkFileUploadModel.IsJobRunning = _bulkUploadJob.IsJobRunning();
-            updatedValue.BulkFileUploadModel.IsSameOdsInstance = _bulkUploadJob.IsSameOdsInstance(_instanceContext.Id, typeof(BulkUploadJobContext));
+            updatedValue.IsJobRunning = _bulkUploadJob.IsJobRunning();
+            updatedValue.IsSameOdsInstance = _bulkUploadJob.IsSameOdsInstance(_instanceContext.Id, typeof(BulkUploadJobContext));
             return PartialView("_SignalRStatus_BulkLoad", updatedValue);
         }
 

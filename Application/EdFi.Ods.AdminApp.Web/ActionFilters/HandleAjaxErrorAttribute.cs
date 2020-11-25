@@ -31,10 +31,6 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
                     : filterContext.Exception.Message;
                 filterContext.HttpContext.Response.WriteAsync(responseText);
             }
-            else
-            {
-                base.OnException(filterContext);
-            }
         }
 
         private static bool IsReportsController(ControllerActionDescriptor actionDescriptor)

@@ -23,7 +23,6 @@
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_BulkLoad.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus_LS.cshtml" />
-    <Content Remove="Views\Shared\Lockout.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
   </ItemGroup>
 

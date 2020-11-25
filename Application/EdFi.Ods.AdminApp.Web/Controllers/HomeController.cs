@@ -57,10 +57,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Error(string message)
+        public ActionResult Error()
         {
-            var model = new HandleErrorInfo(new Exception(message));
-            return View(model);
+            return View();
         }
 
         private bool ZeroOdsInstanceRegistrations()

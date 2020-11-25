@@ -58,13 +58,13 @@ namespace EdFi.Ods.AdminApp.Web
             services.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new AuthorizeFilter());
+                        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<JsonValidationFilter>();
+                        options.Filters.Add<HandleAjaxErrorAttribute>();
                         options.Filters.Add<SetupRequiredFilter>();
                         options.Filters.Add<UserContextFilter>();
-                        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();
                         options.Filters.Add<InstanceContextFilter>();
-                        options.Filters.Add<HandleAjaxErrorAttribute>();
                     })
                     .AddFluentValidation(
                         opt =>

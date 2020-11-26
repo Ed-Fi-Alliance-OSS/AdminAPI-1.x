@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using log4net;
@@ -24,7 +25,23 @@ namespace EdFi.Ods.AdminApp.Management.Instances
         public async Task<IEnumerable<BulkRegisterOdsInstancesResult>> Execute(IEnumerable<IRegisterOdsInstanceModel> odsInstances, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
         {
             var results = new List<BulkRegisterOdsInstancesResult>();
-            foreach (var instance in odsInstances)
+
+            var odsInstancesRecords = odsInstances;
+            var newOdsInstanceToRegister = _registerOdsInstanceCommand.PreExistingOdsInstanceRegistrations(odsInstancesRecords, mode);
+            var skippedOdsInstances = odsInstancesRecords.Where(p => !newOdsInstanceToRegister.Any(p2 => p2.NumericSuffix == p.NumericSuffix));
+
+            foreach (var skippedInstance in skippedOdsInstances)
+            {
+                results.Add(new BulkRegisterOdsInstancesResult
+                {
+                    NumericSuffix = skippedInstance.NumericSuffix.ToString(),
+                    Description = skippedInstance.Description,
+                    IndividualInstanceResult = IndividualInstanceResult.Skipped
+                });
+                _logger.Info($"Ods instance({skippedInstance.NumericSuffix.ToString()}) was skipped because it was previously registered.");
+            }
+
+            foreach (var instance in newOdsInstanceToRegister)
             {
                 try
                 {
@@ -33,7 +50,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                     {
                         NumericSuffix = instance.NumericSuffix.ToString(),
                         Description = instance.Description,
-                        Success = true
+                        IndividualInstanceResult = IndividualInstanceResult.Succeded
                     });
                     _logger.Info($"Ods instance({instance.NumericSuffix.ToString()}) registered successfully.");
                 }
@@ -43,7 +60,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                     {
                         NumericSuffix = instance.NumericSuffix.ToString(),
                         Description = instance.Description,
-                        Success = false,
+                        IndividualInstanceResult = IndividualInstanceResult.Failed,
                         ErrorMessage = ex.Message
                     });
                     _logger.Error($"Ods instance({instance.NumericSuffix.ToString()}) registration failed. Error: {ex.Message}");
@@ -54,9 +71,16 @@ namespace EdFi.Ods.AdminApp.Management.Instances
         }
     }
 
+    public enum IndividualInstanceResult
+    {
+        Succeded,
+        Skipped,
+        Failed
+    }
+
     public class BulkRegisterOdsInstancesResult
     {
-        public bool Success { get; set; }
+        public IndividualInstanceResult IndividualInstanceResult { get; set; }
         public string ErrorMessage { get; set; }
         public string NumericSuffix { get; set; }
         public string Description { get; set; }

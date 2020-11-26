@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
@@ -126,6 +127,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             var trim = newInstanceDescription.Trim();
 
             return !_database.OdsInstanceRegistrations.Any(x => x.Description == trim);
+        }
+
+        public IEnumerable<RegisterOdsInstanceModel> GetOdsInstancesToRegister(IList<RegisterOdsInstanceModel> dataRecords) {
+            var previousRegisters = _database.OdsInstanceRegistrations;
+            var newRows = dataRecords.Where(p => !previousRegisters.Any(p2 => p2.Name == InferInstanceDatabaseName(p.NumericSuffix)));
+            return newRows;
         }
     }
 }

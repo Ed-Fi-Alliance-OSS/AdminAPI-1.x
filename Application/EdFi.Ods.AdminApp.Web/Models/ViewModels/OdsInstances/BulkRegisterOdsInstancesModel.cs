@@ -90,7 +90,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     database, apiModeProvider, databaseValidationService,
                                     databaseConnectionProvider, true);
 
-                                foreach (var record in model.DataRecords())
+                                var dataRecords = model.DataRecords();
+                                var newOdsInstanceToRegister = validator.GetOdsInstancesToRegister(dataRecords);
+                                
+                                foreach (var record in newOdsInstanceToRegister)
                                 {
                                     var results = validator.Validate(record);
                                     if (!results.IsValid)

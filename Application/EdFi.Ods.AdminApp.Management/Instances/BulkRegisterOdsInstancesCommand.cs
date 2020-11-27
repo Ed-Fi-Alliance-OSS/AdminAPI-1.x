@@ -45,12 +45,13 @@ namespace EdFi.Ods.AdminApp.Management.Instances
             {
                 try
                 {
-                    await _registerOdsInstanceCommand.Execute(instance, mode, userId, cloudOdsClaimSet);
+                    var odsInstanceRegisteredId = await _registerOdsInstanceCommand.Execute(instance, mode, userId, cloudOdsClaimSet);
                     results.Add(new BulkRegisterOdsInstancesResult
                     {
                         NumericSuffix = instance.NumericSuffix.ToString(),
                         Description = instance.Description,
-                        IndividualInstanceResult = IndividualInstanceResult.Succeded
+                        IndividualInstanceResult = IndividualInstanceResult.Succeded,
+                        OdsInstanceRegisteredId = odsInstanceRegisteredId
                     });
                     _logger.Info($"Ods instance({instance.NumericSuffix.ToString()}) registered successfully.");
                 }
@@ -84,5 +85,6 @@ namespace EdFi.Ods.AdminApp.Management.Instances
         public string ErrorMessage { get; set; }
         public string NumericSuffix { get; set; }
         public string Description { get; set; }
+        public int OdsInstanceRegisteredId { get; set; }
     }
 }

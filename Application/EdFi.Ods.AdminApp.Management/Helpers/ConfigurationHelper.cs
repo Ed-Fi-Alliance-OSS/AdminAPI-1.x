@@ -82,6 +82,5 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string Admin { get; set; }
         public string Security { get; set; }
         public string ProductionOds { get; set; }
-        public string OdsEmpty { get; set; }
     }
 }

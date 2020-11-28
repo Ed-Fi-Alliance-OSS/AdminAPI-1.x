@@ -15,9 +15,6 @@ rcf/
 #Visual Studio files
 .vs/
 
-#Developer-only settings should not get checked in
-DeveloperSettings/
-
 #NCrunch
 _NCrunch*
 *.ncrunchsolution.user
@@ -66,7 +63,6 @@ libs.codegen/
 **/Metadata/types/*.json
 **/Metadata/resources/*.json
 **/Metadata/descriptors/*.json
-Application/EdFi.Ods.AdminApp.Web/AzureActiveDirectory.config
 
 #Overrides
 !/Application/EdFi.Ods.Deployment.Azure/Tools/*.dll

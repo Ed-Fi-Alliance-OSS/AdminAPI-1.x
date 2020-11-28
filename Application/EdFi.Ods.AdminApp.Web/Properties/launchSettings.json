@@ -30,6 +30,28 @@
             }
         },
 
+        "District Specific (Postgres)": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-DistrictSpecific"
+            }
+        },
+        "Shared Instance (Postgres)": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-SharedInstance"
+            }
+        },
+        "Year Specific (Postgres)": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific"
+            }
+        },
+
 
         "EdFi.Ods.AdminApp.Web": {
             "commandName": "Project",

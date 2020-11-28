@@ -55,15 +55,6 @@ credentials-*.xml
 libs/
 libs.codegen/
 
-#Generated code
-*.generated.cs
-*.generated.txt
-*.generated.sql
-*.hbm.xml
-**/Metadata/types/*.json
-**/Metadata/resources/*.json
-**/Metadata/descriptors/*.json
-
 #Overrides
 !/Application/EdFi.Ods.Deployment.Azure/Tools/*.dll
 !/Application/EdFi.Ods.Deployment.Azure/Tools/*.exe

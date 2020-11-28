@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Moq;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -557,7 +558,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
     public class TestOdsConnectionProvider : IDatabaseConnectionProvider
     {
         public static string ConnectionString =
-            Scoped<IOptions<ConnectionStrings>, string>(connectionStrings => connectionStrings.Value.OdsEmpty);
+            Scoped<IConfiguration, string>(configuration => configuration["ConnectionStrings:OdsEmpty"]);
 
         public IDbConnection CreateNewConnection(int odsInstanceNumericSuffix, ApiMode apiMode)
         {

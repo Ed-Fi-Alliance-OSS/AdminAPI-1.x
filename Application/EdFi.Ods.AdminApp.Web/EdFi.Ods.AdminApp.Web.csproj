@@ -47,4 +47,13 @@
     <PackageReference Include="Npgsql" Version="4.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.PostgreSql-DistrictSpecific.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.PostgreSql-SharedInstance.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.PostgreSql-YearSpecific.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.SqlServer-DistrictSpecific.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.SqlServer-SharedInstance.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.SqlServer-YearSpecific.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 </Project>

@@ -14,11 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj" />
+    <ProjectReference Include="..\EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DeveloperSettings\AzureActiveDirectory.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

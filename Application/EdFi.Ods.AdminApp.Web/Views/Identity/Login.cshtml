@@ -42,7 +42,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     if (Model.AllowUserRegistration)
     {
         <p class="text-right">
-            @Html.ActionLink("Register as a new user", "Register")
+            @Html.ActionLink("Register as a new user", "Register", (object)null, new { @class = "btn btn-primary cta" })
         </p>
     }
 }

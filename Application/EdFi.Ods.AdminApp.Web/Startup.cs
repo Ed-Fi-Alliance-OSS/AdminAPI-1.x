@@ -58,13 +58,13 @@ namespace EdFi.Ods.AdminApp.Web
             services.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new AuthorizeFilter());
+                        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<JsonValidationFilter>();
+                        options.Filters.Add<HandleAjaxErrorAttribute>();
                         options.Filters.Add<SetupRequiredFilter>();
                         options.Filters.Add<UserContextFilter>();
-                        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();
                         options.Filters.Add<InstanceContextFilter>();
-                        options.Filters.Add<HandleAjaxErrorAttribute>();
                     })
                     .AddFluentValidation(
                         opt =>
@@ -137,16 +137,18 @@ namespace EdFi.Ods.AdminApp.Web
         {
             ConfigureLogging();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            if (env.IsProduction())
             {
                 app.UseExceptionHandler("/Home/Error");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            else
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();

@@ -20,19 +20,16 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
         public override void OnException(ExceptionContext filterContext)
         {
+            _logger.Error(filterContext.Exception);
+
             if (filterContext.HttpContext.Request.IsAjaxRequest())
             {
-                _logger.Error(filterContext.Exception);
                 filterContext.ExceptionHandled = true;
                 filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 var responseText = IsReportsController(filterContext.ActionDescriptor as ControllerActionDescriptor) && filterContext.Exception is SqlException
                     ? "An error occurred trying to access the SQL views for reports."
                     : filterContext.Exception.Message;
                 filterContext.HttpContext.Response.WriteAsync(responseText);
-            }
-            else
-            {
-                base.OnException(filterContext);
             }
         }
 

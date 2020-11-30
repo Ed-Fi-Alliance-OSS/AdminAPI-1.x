@@ -91,7 +91,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     databaseConnectionProvider, true);
 
                                 var dataRecords = model.DataRecords();
-                                var newOdsInstanceToRegister = validator.GetOdsInstancesToRegister(dataRecords);
+                                var newOdsInstanceToRegister = validator.GetNewOdsInstancesToRegister(dataRecords);
                                 
                                 foreach (var record in newOdsInstanceToRegister)
                                 {

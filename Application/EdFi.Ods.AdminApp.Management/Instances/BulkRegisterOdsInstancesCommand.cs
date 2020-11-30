@@ -24,11 +24,9 @@ namespace EdFi.Ods.AdminApp.Management.Instances
 
         public async Task<IEnumerable<BulkRegisterOdsInstancesResult>> Execute(IEnumerable<IRegisterOdsInstanceModel> odsInstances, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
         {
-            var results = new List<BulkRegisterOdsInstancesResult>();
-
-            var odsInstancesRecords = odsInstances;
-            var newOdsInstanceToRegister = _registerOdsInstanceCommand.PreExistingOdsInstanceRegistrations(odsInstancesRecords, mode);
-            var skippedOdsInstances = odsInstancesRecords.Where(p => !newOdsInstanceToRegister.Any(p2 => p2.NumericSuffix == p.NumericSuffix));
+            var results = new List<BulkRegisterOdsInstancesResult>();                      
+            var newOdsInstancesToRegister = _registerOdsInstanceCommand.GetNewOdsInstancesToRegister(odsInstances, mode);
+            var skippedOdsInstances = odsInstances.Where(odsInstance => !newOdsInstancesToRegister.Any(newInstanceToRegister => newInstanceToRegister.NumericSuffix == odsInstance.NumericSuffix));
 
             foreach (var skippedInstance in skippedOdsInstances)
             {
@@ -41,7 +39,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                 _logger.Info($"Ods instance({skippedInstance.NumericSuffix.ToString()}) was skipped because it was previously registered.");
             }
 
-            foreach (var instance in newOdsInstanceToRegister)
+            foreach (var instance in newOdsInstancesToRegister)
             {
                 try
                 {

@@ -60,8 +60,9 @@ namespace EdFi.Ods.AdminApp.Management.Instances
 
         public IEnumerable<IRegisterOdsInstanceModel> GetNewOdsInstancesToRegister(IEnumerable<IRegisterOdsInstanceModel> odsInstancesRecords, ApiMode mode)
         {
-            var previousOdsInstanceRegistrations = _odsInstanceFirstTimeSetupService.PreExistingOdsInstanceRegistrations();
-            return odsInstancesRecords.Where(odsInstancesRecord => !previousOdsInstanceRegistrations.Any(previousInstances => previousInstances.Name == InferInstanceDatabaseName((int)odsInstancesRecord.NumericSuffix, mode)));
+            var previousOdsInstanceRegistrations = _odsInstanceFirstTimeSetupService.PreExistingOdsInstanceRegistrations().ToList();
+            return odsInstancesRecords.Where(odsInstancesRecord => !previousOdsInstanceRegistrations
+                                                  .Any(previousInstances => previousInstances.Name == InferInstanceDatabaseName((int)odsInstancesRecord.NumericSuffix, mode)));
         }
     }
 

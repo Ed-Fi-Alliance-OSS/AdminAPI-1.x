@@ -120,6 +120,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
+        public ActionResult AddVendor()
+        {
+            return PartialView("_AddVendorModal", new AddVendorModel());
+        }
+
         [HttpPost]
         public ActionResult AddVendor(AddVendorModel model)
         {
@@ -210,6 +215,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, settings);
 
             return JsonSuccess("Log settings updated successfully");
-        }       
+        }
     }
 }

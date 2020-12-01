@@ -1,8 +1,8 @@
 @*
-SPDX-License-Identifier: Apache-2.0
-Licensed to the Ed-Fi Alliance under one or more agreements.
-The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
-See the LICENSE and NOTICES files in the project root for more information.
+    SPDX-License-Identifier: Apache-2.0
+    Licensed to the Ed-Fi Alliance under one or more agreements.
+    The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+    See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Management.Instances
@@ -27,7 +27,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <h7><img class="padding-right" src="~/Content/images/vendor-icon@2x.png" alt=""/>Vendors</h7>
             </div>
             <div class="col-lg-6 text-right">
-                <button class="btn btn-primary cta" data-toggle="modal" data-target=".add-vendor-modal">
+                <button class="cta loads-ajax-modal" data-url="@Url.Action("AddVendor", "GlobalSettings")">
                     Add Vendor
                 </button>
                 @if (Model.VendorListModel.Vendors.Any())
@@ -53,5 +53,3 @@ See the LICENSE and NOTICES files in the project root for more information.
         </div>
     </div>
 </div>
-
-@{ await Html.RenderPartialAsync("_AddVendorModal", new AddVendorModel()); }

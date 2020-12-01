@@ -26,7 +26,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <h4 class="modal-title">Bulk Upload</h4>
             </div>
             <div class="modal-body center-block" id="signalRstatus">
-                @await Html.PartialAsync("_SignalRStatus_BulkLoad")
+                @await Html.PartialAsync("_SignalRStatus_BulkLoad", Model.BulkFileUploadModel)
             </div>
             <div class="modal-footer">
                 @Html.CancelModalButton("Close")

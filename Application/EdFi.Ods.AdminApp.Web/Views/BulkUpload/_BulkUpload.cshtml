@@ -43,7 +43,7 @@ else
         <div class="row padding-bottom-10">
             <div class="col-lg-6">
                 <label>Select File Type:</label>
-                @(Html.SelectList(x => x.BulkFileType))
+                @(Html.SelectList(Model.BulkFileType, "BulkFileType"))
             </div>
         </div>
         <div class="row">
@@ -53,7 +53,7 @@ else
                     <div class="input-group-btn">
                         <button style="margin-left: -37px; display: none; z-index: 2;" class="btn btn-default btn-hover" id="clear-file-upload"><i class="fa fa-times fa-lg"></i></button>
                         <label type="button" class="btn btn-primary">
-                            <input id="bulk-files-input" name="BulkFileUploadModel.BulkFiles" value="@Model.BulkFiles" type="file" style="display: none;" maxlength="@BulkFileUploadModel.MaxFileSize" accept=".xml" />
+                            <input id="bulk-files-input" asp-for="BulkFiles" name="BulkFiles" value="@Model.BulkFiles" type="file" style="display: none;" maxlength="@BulkFileUploadModel.MaxFileSize" accept=".xml" multiple/>
                             Select file
                         </label>
                     </div>
@@ -127,14 +127,25 @@ else
     });
 
     $(function () {
-        edfiODS.signalR.startListener($.connection.bulkUploadHub, null);
+
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/bulkUploadHub")
+            .configureLogging(signalR.LogLevel.Error)
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: retryContext => {
+                    return Math.random() * 5000;
+                }
+            })
+            .build();
+
+        edfiODS.signalR.startListener(connection, null);
         edfiODS.signalR.changeStatusMessage("Initializing file importer");
     });
 
     $("#bulk-upload-form").submit(function (e) {
         e.preventDefault();
         var $form = $(this);
-        var formData = appendAntiForgeryTokenForFileUpload($form);
+        var formData = new FormData($form[0]);
 
         $('#upload-button-spinner').show();
         $('#upload-bulk-files-button').prop("disabled", true);

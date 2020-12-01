@@ -3,43 +3,23 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-#if !NET48
 using System;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
-    //Temporary stub allowing for compilation, but expected to fail at runtime.
-    //Port the NET48 code below and then remove this stub.
     public class LocalFileSystemFileUploadHandler : IFileUploadHandler
     {
-        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile) => throw new NotImplementedException();
-        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, string fileName) => throw new NotImplementedException();
-        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles) => throw new NotImplementedException();
-        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc) => throw new NotImplementedException();
-        public string GetNewTempDirectory() => throw new NotImplementedException();
-        public string GetWorkingDirectory(string customDirectory) => throw new NotImplementedException();
-    }
-}
-#else
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Web;
-using System.Web.Hosting;
-
-namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
-{
-    public class LocalFileSystemFileUploadHandler : IFileUploadHandler
-    {
-        public string GetNewUploadDirectory()
+        public string GetNewUploadDirectory(IWebHostEnvironment environment)
         {
-            const string baseUploadDirectory = "~/uploads/";
+            const string baseUploadDirectory = "uploads";
             var sortableDatetimeString = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             var directoryName = GetSafeFilename($"{sortableDatetimeString}");
-            var relativePath = Path.Combine(baseUploadDirectory, directoryName);
-
-            var fullPath = HostingEnvironment.MapPath(relativePath);
+            var uploadDirectoryPath = Path.Combine(baseUploadDirectory, directoryName);
+            var fullPath = Path.Combine(environment.ContentRootPath, uploadDirectoryPath);
             Directory.CreateDirectory(fullPath);
 
             return fullPath;
@@ -72,14 +52,14 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             return Path.Combine(directory, fileName);
         }
         
-        public FileUploadResult SaveFileToUploadDirectory(HttpPostedFileBase uploadedFile)
+        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, IWebHostEnvironment environment)
         {
-            return SaveFileToUploadDirectory(uploadedFile, uploadedFile.FileName);
+            return SaveFileToUploadDirectory(uploadedFile, uploadedFile.FileName, environment);
         }
-        
-        public FileUploadResult SaveFileToUploadDirectory(HttpPostedFileBase uploadedFile, string fileName)
+
+        public FileUploadResult SaveFileToUploadDirectory(IFormFile uploadedFile, string fileName, IWebHostEnvironment environment)
         {
-            var uploadDirectory = GetNewUploadDirectory();
+            var uploadDirectory = GetNewUploadDirectory(environment);
             var uploadedFilePath = GetUploadFilePath(uploadDirectory, fileName);
 
             SaveFileToPath(uploadedFilePath, uploadedFile);
@@ -91,18 +71,18 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             };
         }
 
-        public FileUploadResult SaveFilesToUploadDirectory(HttpPostedFileBase[] uploadedFiles)
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, IWebHostEnvironment environment)
         {
-            return SaveFilesToUploadDirectory(uploadedFiles, filename => filename);
+            return SaveFilesToUploadDirectory(uploadedFiles, filename => filename, environment);
         }
 
-        public FileUploadResult SaveFilesToUploadDirectory(HttpPostedFileBase[] uploadedFiles, Func<string, string> fileNameTransformFunc)
+        public FileUploadResult SaveFilesToUploadDirectory(IFormFile[] uploadedFiles, Func<string, string> fileNameTransformFunc, IWebHostEnvironment environment)
         {
             if (uploadedFiles == null || uploadedFiles.Length == 0) return null;
 
             var savedFiles = new List<string>(uploadedFiles.Length);
 
-            var uploadDirectory = GetNewUploadDirectory();
+            var uploadDirectory = GetNewUploadDirectory(environment);
             foreach (var uploadedFile in uploadedFiles)
             {
                 var uploadFilePath = GetUploadFilePath(uploadDirectory, fileNameTransformFunc(uploadedFile.FileName));
@@ -118,9 +98,15 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             };
         }
 
-        private static void SaveFileToPath(string destinationPath, HttpPostedFileBase uploadedFile)
+        private static void SaveFileToPath(string destinationPath, IFormFile uploadedFile)
         {
-            uploadedFile.SaveAs(destinationPath);
+            if (uploadedFile.Length > 0)
+            {
+                using (Stream fileStream = new FileStream(destinationPath, FileMode.Create))
+                {
+                    uploadedFile.CopyTo(fileStream);
+                }
+            }
         }
 
         public static string GetSafeFilename(string filename)
@@ -129,4 +115,3 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
         }
     }
 }
-#endif

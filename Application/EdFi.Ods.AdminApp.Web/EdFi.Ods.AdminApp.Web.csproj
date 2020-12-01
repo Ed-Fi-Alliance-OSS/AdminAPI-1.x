@@ -8,7 +8,7 @@
     <Content Include="EdFi.Ods.AdminApp.Web.nuspec" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
 
     <Content Include="Artifacts\**" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
-    <Content Include="Schema/**/*.*" />
+    <Content Include="Schema/**/*.*" CopyToPublishDirectory="Always" />
     <Content Include="uploads\placeholder.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -18,7 +18,6 @@
     <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Remove="Views\Shared\_ProductionStagingReadOnlyNotice.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Shared\Lockout.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
@@ -44,6 +43,15 @@
     <PackageReference Include="HtmlTags" Version="8.0.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="Npgsql" Version="4.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.PostgreSql-DistrictSpecific.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.PostgreSql-SharedInstance.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.PostgreSql-YearSpecific.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.SqlServer-DistrictSpecific.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.SqlServer-SharedInstance.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.SqlServer-YearSpecific.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
 </Project>

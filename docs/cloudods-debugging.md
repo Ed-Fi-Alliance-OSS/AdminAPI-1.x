@@ -21,42 +21,39 @@ be able to debug the Cloud ODS locally:
    the databases if the only purpose is to do local testing - that will get you
    to $0 per month
 4. Edit and place the following code in
-   **EdFi.Ods.AdminApp.Web/DeveloperSettings/AzureActiveDirectory.config**
+   **EdFi.Ods.AdminApp.Web/appsettings.json**
 
-    ```xml
-    <appSettings>
-      <add key="ida:ClientId" value="" />
-      <add key="ida:TenantId" value="" />
-      <add key="ida:SubscriptionId" value="" />
-      <add key="ida:AADInstance" value="https://login.microsoftonline.com/" />
-      <add key="ida:ClientSecret" value=""/>
-    </appSettings>
+    ```json
+      "IdaAADInstance": "https://login.microsoftonline.com/"
+      "IdaClientId": ""
+      "IdaClientSecret": ""
+      "IdaTenantId": ""
+      "IdaSubscriptionId": ""
     ```
 
-    1. [TenantId](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Properties)
-       (same as Directory ID) and [Subscription
-       ID](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade)
+    1. [IdaTenantId](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Properties)
+       (same as Directory ID) and [IdaSubscriptionId](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade)
        can be procured from the Azure portal
-    2. ClientId is the “Application (client) ID” in [Azure Active Directory \
+    2. IdaClientId is the “Application (client) ID” in [Azure Active Directory \
        App
        Registrations](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
        for the Azure AD app registered when you deployed
-    3. ClientSecret - In the App Registration screen for the AdminApp. Click on
+    3. IdaClientSecret - In the App Registration screen for the AdminApp. Click on
        "Certificates & secrets" and add a New Client Secret. This key value is
-       your ClientSecret
+       your IdaClientSecret
 5. Create an account on your local SQL Server that matches the credentials you
    provided for the Azure SQL server during deployment
     1. This account must be added to the sysadmin fixed role
-6. Edit **Ed-Fi-ODS-Implementation/Application/EdFi.Ods.Admin.Web/Web.config**
-    1. Ensure the API code is configured to run in **SharedInstance** mode
-    2. Ensure the EdFi_Ods connection string is pointing to a valid database
+6. Edit **EdFi.Ods.Admin.Web/appsettings.json**
+    1. Ensure the ApiStartupType is configured to run in **SharedInstance** mode
+    2. Ensure the ProductionOds connection string is pointing to a valid database
        name
 7. [Run](https://techdocs.ed-fi.org/pages/viewpage.action?pageId=30638189) the
    Ed-Fi ODS API
-8. Edit **Ed-Fi-ODS-AdminApp/Application/EdFi.Ods.AdminApp.Web\\Web.config**
+8. Edit **EdFi.Ods.AdminApp.Web\\appsettings.json**
     1. Ensure the “DefaultOdsInstance” value matches the “Install Friendly Name”
        you provided when the Cloud ODS was deployed
-    2. Set "owin:AppStartup" to "Azure"
+    2. Set "AppStartup" to "Azure"
 9. In Visual Studio with the AdminApp project open, start a Debugging Session
    and you should be able login via Azure Active Directory while the app itself
    runs locally  

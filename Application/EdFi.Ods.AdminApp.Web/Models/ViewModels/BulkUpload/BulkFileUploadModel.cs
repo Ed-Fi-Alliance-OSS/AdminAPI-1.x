@@ -17,7 +17,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload
 {
     public class BulkFileUploadModel
     {
-        public InterchangeFileType BulkFileType { get; set; }
+        public int? BulkFileType { get; set; }
         public IEnumerable<IFormFile> BulkFiles { get; set; }
         public const int MaxFileSize = 20000000;
         public bool CredentialsSaved => !string.IsNullOrEmpty(ApiKey);

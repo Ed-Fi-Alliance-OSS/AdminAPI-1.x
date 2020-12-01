@@ -107,8 +107,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 throw new Exception("Currently, the bulk import process only supports a single file at a time");
             }
 
+
+            InterchangeFileType bulkFileUploadType = null;
+            if (model.BulkFileType != null)
+                bulkFileUploadType = InterchangeFileType.FromInt32(model.BulkFileType.Value);
             var uploadedFiles = _fileUploadHandler.SaveFilesToUploadDirectory(bulkFiles,
-                fileName => InterchangeFileHelpers.BuildFileNameForImport(model.BulkFileType, fileName));
+                fileName => InterchangeFileHelpers.BuildFileNameForImport(bulkFileUploadType, fileName), _webHostEnvironment);
 
             var connectionInformation = await GetConnectionInformationProvider();
 

@@ -164,6 +164,7 @@ namespace EdFi.Ods.AdminApp.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<ProductionLearningStandardsHub>("/productionLearningStandardsHub");
+                endpoints.MapHub<BulkUploadHub>("/bulkUploadHub");
             });
         }
 

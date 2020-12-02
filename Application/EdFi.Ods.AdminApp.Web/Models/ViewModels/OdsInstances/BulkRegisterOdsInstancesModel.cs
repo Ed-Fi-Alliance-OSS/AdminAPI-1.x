@@ -15,6 +15,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using FluentValidation;
 using log4net;
 using FluentValidation.Validators;
+using EdFi.Ods.AdminApp.Management.Instances;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
@@ -53,7 +54,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
     {
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
-       
+        private static AdminAppDbContext _database;
+        private static IDatabaseConnectionProvider _databaseConnectionProvider;
+        private static ApiMode _mode;
+
         private bool UniquenessRuleFailed { get; set; }
 
         private bool ValidHeadersRuleFailed { get; set; }
@@ -63,6 +67,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             , IDatabaseValidationService databaseValidationService
             , IDatabaseConnectionProvider databaseConnectionProvider)
         {
+            _database = database;
+            _databaseConnectionProvider = databaseConnectionProvider;
+            _mode = apiModeProvider.GetApiMode();
+
             RuleFor(m => m.OdsInstancesFile)
                 .NotEmpty();
 
@@ -90,9 +98,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     database, apiModeProvider, databaseValidationService,
                                     databaseConnectionProvider, true);
 
-                                var dataRecords = model.DataRecords();
-                                var newOdsInstanceToRegister = validator.GetNewOdsInstancesToRegister(dataRecords);
-                                
+                                var newOdsInstanceToRegister = GetNewOdsInstancesToRegister(model.DataRecords());
+
                                 foreach (var record in newOdsInstanceToRegister)
                                 {
                                     var results = validator.Validate(record);
@@ -106,7 +113,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     context.AddFailures(results);
                                 }
                             });
-                });
+                });   
         }
 
         public void GetDuplicates(List<RegisterOdsInstanceModel> dataRecords, out List<int?> duplicateNumericSuffixes, out List<string> duplicateDescriptions)
@@ -154,5 +161,17 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             UniquenessRuleFailed = true;
             context.AddFailure(errorMessage);
         }
+        private IEnumerable<RegisterOdsInstanceModel> GetNewOdsInstancesToRegister(IList<RegisterOdsInstanceModel> dataRecords)
+        {
+            var previousRegisters = _database.OdsInstanceRegistrations;
+            var newRows = dataRecords.Where(dataRecord => !previousRegisters.Any(previousRegister => previousRegister.Name == InferInstanceDatabaseName(dataRecord.NumericSuffix)));
+            return newRows;
+        }
+        private static string InferInstanceDatabaseName(int? newInstanceNumericSuffix)
+        {
+            using (var connection = _databaseConnectionProvider.CreateNewConnection(newInstanceNumericSuffix.Value, _mode))
+                return connection.Database;
+        }
+
     }
 }

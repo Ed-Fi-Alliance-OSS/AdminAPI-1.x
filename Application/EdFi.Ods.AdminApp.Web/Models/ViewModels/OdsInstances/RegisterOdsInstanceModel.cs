@@ -127,12 +127,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             var trim = newInstanceDescription.Trim();
 
             return !_database.OdsInstanceRegistrations.Any(x => x.Description == trim);
-        }
-
-        public IEnumerable<RegisterOdsInstanceModel> GetNewOdsInstancesToRegister(IList<RegisterOdsInstanceModel> dataRecords) {
-            var previousRegisters = _database.OdsInstanceRegistrations;
-            var newRows = dataRecords.Where(dataRecord => !previousRegisters.Any(previousRegister => previousRegister.Name == InferInstanceDatabaseName(dataRecord.NumericSuffix)));
-            return newRows;
-        }
+        }       
     }
 }

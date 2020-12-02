@@ -36,6 +36,24 @@ https://github.com/AutoMapper/AutoMapper/
     IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+## BuildBundlerMinifier
+
+https://github.com/madskristensen/BundlerMinifier
+
+    Copyright 2015-2020 Mads Kristensen
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
 ## bootstrap
 
 https://github.com/twbs/bootstrap
@@ -61,6 +79,12 @@ https://github.com/twbs/bootstrap
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
+
+## CsvHelper
+
+https://github.com/JoshClose/CsvHelper
+
+Dual licensing under MS-PL and Apache 2.0. See the license at [LICENSE](https://github.com/JoshClose/CsvHelper/blob/master/LICENSE.txt).
 
 ## Dapper
 
@@ -378,6 +402,18 @@ https://github.com/aspnet/Microsoft.AspNet.TelemetryCorrelation/
 
 See the [Apache License, Version 2.0](LICENSE) file in this application.
 
+## Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+https://github.com/dotnet/aspnetcore
+
+See the [Apache License, Version 2.0](LICENSE) file in this application.
+
+## Microsoft.EntityFrameworkCore.SqlServer
+
+https://github.com/dotnet/efcore
+
+See the [Apache License, Version 2.0](LICENSE) file in this application.
+
 ## Modernizr
 
 http://www.modernizr.com/
@@ -463,6 +499,28 @@ https://www.newtonsoft.com/json
 ## Npgsql
 
 https://github.com/npgsql/npgsql
+
+    Copyright (c) 2002-2019, Npgsql
+
+    Permission to use, copy, modify, and distribute this software and its
+    documentation for any purpose, without fee, and without a written agreement
+    is hereby granted, provided that the above copyright notice and this
+    paragraph and the following two paragraphs appear in all copies.
+
+    IN NO EVENT SHALL NPGSQL BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+    SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+    ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+    Npgsql HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    NPGSQL SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED
+    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+    PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND Npgsql
+    HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
+    OR MODIFICATIONS.
+
+## Npgsql.EntityFrameworkCore.PostgreSQL
+
+https://github.com/npgsql/efcore.pg
 
     Copyright (c) 2002-2019, Npgsql
 
@@ -756,6 +814,7 @@ The license below applies to all of these packages:
 * System.Net.Primitives
 * System.Reflection.Extensions
 * System.Reflection
+* System.Runtime.Caching
 * System.Runtime.Extensions
 * System.Runtime.InteropServices
 * System.Runtime.Serialization.Json
@@ -765,6 +824,7 @@ The license below applies to all of these packages:
 * System.Security.Cryptography.Encoding
 * System.Security.Cryptography.Primitives
 * System.Security.Cryptography.X509Certificates
+* System.Security.Cryptography.ProtectedData
 * System.Spatial
 * System.Text.Encoding.Extensions
 * System.Text.Encoding

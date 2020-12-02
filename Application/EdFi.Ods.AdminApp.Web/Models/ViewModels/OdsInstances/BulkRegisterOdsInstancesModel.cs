@@ -24,6 +24,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         private bool _streamWasRead = false;
         private IList<RegisterOdsInstanceModel> _dataRecords;
         private IList<string> _missingHeaders;
+        public IEnumerable<RegisterOdsInstanceModel> _filteredDataRecords;
 
         [Accept(".csv")]
         [Display(Name = "Instances Data File")]
@@ -33,6 +34,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         {
             EnsureReadStreamOnce();
             return _dataRecords;
+        }
+        public IEnumerable<RegisterOdsInstanceModel> FilteredDataRecords(IEnumerable<RegisterOdsInstanceModel> filteredDataRecords)
+        {
+            EnsureReadStreamOnce();
+            _filteredDataRecords = filteredDataRecords;
+            return _filteredDataRecords;
         }
 
         public IList<string> MissingHeaders()
@@ -56,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
         private static AdminAppDbContext _database;
         private static IDatabaseConnectionProvider _databaseConnectionProvider;
-        private static ApiMode _mode;
+        private static ApiMode _mode;        
 
         private bool UniquenessRuleFailed { get; set; }
 
@@ -69,7 +76,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         {
             _database = database;
             _databaseConnectionProvider = databaseConnectionProvider;
-            _mode = apiModeProvider.GetApiMode();
+            _mode = apiModeProvider.GetApiMode();            
 
             RuleFor(m => m.OdsInstancesFile)
                 .NotEmpty();
@@ -99,6 +106,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     databaseConnectionProvider, true);
 
                                 var newOdsInstanceToRegister = GetNewOdsInstancesToRegister(model.DataRecords());
+                                model.FilteredDataRecords(newOdsInstanceToRegister);
 
                                 foreach (var record in newOdsInstanceToRegister)
                                 {
@@ -113,7 +121,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     context.AddFailures(results);
                                 }
                             });
-                });   
+                });
         }
 
         public void GetDuplicates(List<RegisterOdsInstanceModel> dataRecords, out List<int?> duplicateNumericSuffixes, out List<string> duplicateDescriptions)
@@ -163,7 +171,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         }
         private IEnumerable<RegisterOdsInstanceModel> GetNewOdsInstancesToRegister(IList<RegisterOdsInstanceModel> dataRecords)
         {
-            var previousRegisters = _database.OdsInstanceRegistrations;
+            var previousRegisters = _database.OdsInstanceRegistrations.ToList();
             var newRows = dataRecords.Where(dataRecord => !previousRegisters.Any(previousRegister => previousRegister.Name == InferInstanceDatabaseName(dataRecord.NumericSuffix)));
             return newRows;
         }

@@ -16,17 +16,16 @@ namespace EdFi.Ods.AdminApp.Management.Instances
     {
         private readonly RegisterOdsInstanceCommand _registerOdsInstanceCommand;
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
-
+        
         public BulkRegisterOdsInstancesCommand(RegisterOdsInstanceCommand registerOdsInstanceCommand)
         {
-            _registerOdsInstanceCommand = registerOdsInstanceCommand;
+            _registerOdsInstanceCommand = registerOdsInstanceCommand;            
         }
 
-        public async Task<IEnumerable<BulkRegisterOdsInstancesResult>> Execute(IEnumerable<IRegisterOdsInstanceModel> odsInstances, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
+        public async Task<IEnumerable<BulkRegisterOdsInstancesResult>> Execute(IEnumerable<IRegisterOdsInstanceModel> odsInstances, IEnumerable<IRegisterOdsInstanceModel> _filteredDataRecords, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
         {
-            var results = new List<BulkRegisterOdsInstancesResult>();                      
-            var newOdsInstancesToRegister = _registerOdsInstanceCommand.GetNewOdsInstancesToRegister(odsInstances, mode);
-            var skippedOdsInstances = odsInstances.Where(odsInstance => !newOdsInstancesToRegister.Any(newInstanceToRegister => newInstanceToRegister.NumericSuffix == odsInstance.NumericSuffix));
+            var results = new List<BulkRegisterOdsInstancesResult>();                                  
+            var skippedOdsInstances = odsInstances.Where(odsInstance => !_filteredDataRecords.Any(newInstanceToRegister => newInstanceToRegister.NumericSuffix == odsInstance.NumericSuffix));
 
             foreach (var skippedInstance in skippedOdsInstances)
             {
@@ -39,7 +38,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                 _logger.Info($"Ods instance({skippedInstance.NumericSuffix.ToString()}) was skipped because it was previously registered.");
             }
 
-            foreach (var instance in newOdsInstancesToRegister)
+            foreach (var instance in _filteredDataRecords)
             {
                 try
                 {
@@ -67,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
             }
 
             return results;
-        }
+        }      
     }
 
     public enum IndividualInstanceResult

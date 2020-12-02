@@ -32,8 +32,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
     {
         private Mock<IDatabaseValidationService> _databaseValidationService;
         private Mock<ICloudOdsAdminAppSettingsApiModeProvider> _apiModeProvider;
-        private Mock<IDatabaseConnectionProvider> _connectionProvider;        
-
+        private Mock<IDatabaseConnectionProvider> _connectionProvider;
+        
         [SetUp]
         public void Init()
         {
@@ -41,7 +41,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             _databaseValidationService.Setup(x => x.IsValidDatabase(It.IsAny<int>(), It.IsAny<ApiMode>())).Returns(true);
             _apiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
-            _connectionProvider = new Mock<IDatabaseConnectionProvider>();
+            _connectionProvider = new Mock<IDatabaseConnectionProvider>();            
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             ResetOdsInstanceRegistrations();
             var instanceName = "TestInstance_23456";
             const string description = "Test Description";
-            var encryptedSecretConfigValue = "Encrypted string";            
+            var encryptedSecretConfigValue = "Encrypted string";
 
             using (var connection = GetDatabaseConnection(instanceName))
             {
@@ -76,7 +76,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                         RegisterOdsInstanceCommand registerOdsInstanceCommand = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
 
                         var command = new BulkRegisterOdsInstancesCommand(registerOdsInstanceCommand);
-                         return await command.Execute(odsInstancesToRegister, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                        return await command.Execute(odsInstancesToRegister, new List<RegisterOdsInstanceModel>(), ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
                     });
                 });
 
@@ -87,10 +87,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 secretConfiguration.EncryptedData.ShouldBe(encryptedSecretConfigValue);
                 addedInstance.Name.ShouldBe(instanceName);
                 addedInstance.Description.ShouldBe(newInstance1.Description);
-            }   
+            }
 
         }
-        
+
         [Test]
         public async Task BulkShouldNotRegisterOneOdsInstancePreviouslyRegistered()
         {
@@ -117,7 +117,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 {
                     NumericSuffix = 23456,
                     Description = description
-                };                
+                };
 
                 var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
 
@@ -149,7 +149,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                         RegisterOdsInstanceCommand registerOdsInstanceCommand = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
 
                         var command = new BulkRegisterOdsInstancesCommand(registerOdsInstanceCommand);
-                        return await command.Execute(odsInstancesToRegister, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                        return await command.Execute(odsInstancesToRegister, odsInstancesToRegister, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
                     });
                 });
 
@@ -164,7 +164,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 newInstances.FirstOrDefault().IndividualInstanceResult.ShouldBe(IndividualInstanceResult.Skipped);
             }
 
-        }        
+        }
 
         private static SqlConnection GetDatabaseConnection(string instanceName, string prefix = "")
         {

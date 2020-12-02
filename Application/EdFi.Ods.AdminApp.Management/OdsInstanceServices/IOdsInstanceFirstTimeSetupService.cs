@@ -13,7 +13,6 @@ namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
 {
     public interface IOdsInstanceFirstTimeSetupService
     {
-        Task CompleteSetup(OdsInstanceRegistration odsInstance, CloudOdsClaimSet claimSet, ApiMode apiMode);
-        IEnumerable<OdsInstanceRegistration> PreExistingOdsInstanceRegistrations();
+        Task CompleteSetup(OdsInstanceRegistration odsInstance, CloudOdsClaimSet claimSet, ApiMode apiMode);        
     }
 }

@@ -118,7 +118,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             };
 
             return View(model);
-        }       
+        }
 
         [HttpPost]
         public ActionResult AddVendor(AddVendorModel model)

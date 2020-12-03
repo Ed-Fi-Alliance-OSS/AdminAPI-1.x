@@ -1,17 +1,17 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
-@using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
-@model OdsInstanceSettingsModel
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload
+@model BulkFileUploadModel
 
-@if (Model.BulkFileUploadModel.IsJobRunning)
+@if (Model.IsJobRunning)
 {
 <div id="signalr-progress">
-    @if (Model.BulkFileUploadModel.IsSameOdsInstance)
+    @if (Model.IsSameOdsInstance)
     {
         <div class="progress" id="progress-bar">
             <div id="signalr-status-progress-bar" class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 1%;"></div>
@@ -33,5 +33,4 @@ See the LICENSE and NOTICES files in the project root for more information.
 </div>
 }
 
-@Scripts.Render("~/bundles/scripts/signalr")
-@Scripts.Render("~/signalr/hubs")
+<script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.js" asp-append-version="true"></script>

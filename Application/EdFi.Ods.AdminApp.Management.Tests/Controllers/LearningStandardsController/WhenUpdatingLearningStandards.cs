@@ -13,14 +13,14 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsController
+namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsController
 {
     [TestFixture]
     public class WhenUpdatingLearningStandards
     {
 
         [TestFixture]
-        public class GivenNotUsingYearSpecificMode : OdsInstanceSettingsControllerFixture
+        public class GivenNotUsingYearSpecificMode : LearningStandardsControllerFixture
         {
             private const string ProductionUrl = "http://example.com";
 
@@ -72,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         }
 
         [TestFixture]
-        public class GivenIsUsingYearSpecificMode : OdsInstanceSettingsControllerFixture
+        public class GivenIsUsingYearSpecificMode : LearningStandardsControllerFixture
         {
             private const string ProductionUrl = "http://example.com";
             private const int Year = 1234;
@@ -133,7 +133,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         }
 
         [TestFixture]
-        public class GivenUsingMultiInstanceMode : OdsInstanceSettingsControllerFixture
+        public class GivenUsingMultiInstanceMode : LearningStandardsControllerFixture
         {
             private const string ProductionUrl = "http://example.com";
             private readonly InstanceContext _instanceContext = new InstanceContext

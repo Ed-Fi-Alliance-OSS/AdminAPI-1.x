@@ -10,6 +10,7 @@ using EdFi.Ods.AdminApp.Management.Workflow;
 using Hangfire;
 using EdFi.LoadTools.BulkLoadClient;
 using EdFi.Ods.AdminApp.Management.Instances;
+using Microsoft.AspNetCore.SignalR;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -21,8 +22,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         private const string WorkflowJobName = "Bulk Upload";
         private readonly BulkImportService _bulkImportService;
 
-        public BulkUploadJob(BulkImportService bulkImportService, IBackgroundJobClient backgroundJobClient, BulkUploadHub bulkUploadHub)
-            : base(backgroundJobClient, bulkUploadHub, WorkflowJobName)
+        public BulkUploadJob(BulkImportService bulkImportService, IBackgroundJobClient backgroundJobClient, BulkUploadHub bulkUploadHub, IHubContext<BulkUploadHub> bulkUploadHubContext)
+            : base(backgroundJobClient, bulkUploadHub, WorkflowJobName, bulkUploadHubContext)
         {
             _bulkImportService = bulkImportService;
 

@@ -5,7 +5,7 @@
 * A functioning local copy of an [Ed-Fi
   ODS for Suite 3](https://techdocs.ed-fi.org/display/ETKB/Ed-Fi+Operational+Data+Store+and+API)
   * Currently supported versions: 3.4, 5.0.0
-* Visual Studio 2017 or greater
+* Visual Studio 2019 or greater
 * Latest Azure SDK
 * Support for file names longer than 256 characters:
   1. Start the registry editor (regedit.exe)
@@ -17,7 +17,7 @@
 
 The PowerShell script `build.ps1` in the root directory contains several options
 to assist in running standard processes from the command line. This script
-assumes that Visual Studio 2017 or newer is installed, providing MSBuild 15 or
+assumes that Visual Studio 2019 or newer is installed, providing MSBuild 15 or
 MSBuild 16. Other dependencies tools are downloaded as needed (nuget, nunit).
 
 Available commands:

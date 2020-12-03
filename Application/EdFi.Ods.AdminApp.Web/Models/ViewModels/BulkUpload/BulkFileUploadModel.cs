@@ -7,17 +7,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 
-namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
+namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload
 {
     public class BulkFileUploadModel
     {
-        public InterchangeFileType BulkFileType { get; set; }
+        public int? BulkFileType { get; set; }
         public IEnumerable<IFormFile> BulkFiles { get; set; }
         public const int MaxFileSize = 20000000;
         public bool CredentialsSaved => !string.IsNullOrEmpty(ApiKey);

@@ -82,18 +82,17 @@ $.extend(true, edfiODS, {
             edfiODS.signalR.showFinalStatus();
         },
 
-        stopListener: function() {
-            $.connection.hub.stop();
+        stopListener: function($connection) {
+            $connection.stop();
         },
 
-        startListener: function ($hub, finalRedirectUrl) {
-            $hub.client.updateStatus = function (status) {
-                if (status.Complete) {
-                    $hub.server.unsubscribe();
-
+        startListener: function (connection, finalRedirectUrl) {
+            connection.on("UpdateStatus", function (status) {
+                if (status.complete) {
+                    connection.invoke("Unsubscribe");
                     if (status.Error) {
-                        if (!StringIsNullOrWhitespace(status.ErrorMessage)) {
-                            edfiODS.signalR.setStatusText(status.ErrorMessage, true);
+                        if (!StringIsNullOrWhitespace(status.errorMessage)) {
+                            edfiODS.signalR.setStatusText(status.errorMessage, true);
                         } else {
                             edfiODS.signalR.setStatusText("Error - Operation could not be completed", true);
                         }
@@ -101,8 +100,8 @@ $.extend(true, edfiODS, {
                         edfiODS.signalR.showFinalStatus();
 
                     } else {
-                        edfiODS.signalR.setStatusText(status.StatusMessage);
-                        if (status.Warning) {
+                        edfiODS.signalR.setStatusText(status.statusMessage);
+                        if (status.warning) {
                             edfiODS.signalR.setProgress(100, false, true);
                         } else {
                             edfiODS.signalR.setProgress(100, false, false);
@@ -110,31 +109,32 @@ $.extend(true, edfiODS, {
                         edfiODS.signalR.showFinalStatus(finalRedirectUrl);
                     }
                 } else {
-                    var percentComplete = status.TotalSteps ? Math.max(Math.round((status.CurrentStep / status.TotalSteps) * 100), 1) : 1;
-                    edfiODS.signalR.setProgress(percentComplete, status.Error, false);
-                    edfiODS.signalR.setStatusText(status.StatusMessage, status.Error);
+                    var percentComplete = status.totalSteps ? Math.max(Math.round((status.currentStep / status.totalSteps) * 100), 1) : 1;
+                    edfiODS.signalR.setProgress(percentComplete, status.error, false);
+                    edfiODS.signalR.setStatusText(status.statusMessage, status.error);
                 }
-            };
-
-            $.connection.hub.disconnected(function () {
-                setTimeout(function () {
-                    $.connection.hub.start().done(function () {
-                        $hub.server.subscribe();
-                    });
-                }, 5000); // Restart connection after 5 seconds.
             });
 
-            $.connection.hub.start().done(function () {
-                $hub.server.subscribe();
+            edfiODS.signalR.start(connection, function () {
+                connection.invoke("Subscribe");
             });
 
             $(window).unload(function () {
-                $.connection.hub.stop();
+                connection.stop();
             });
         },
 
         changeStatusMessage: function(newStatusMessage) {
             $("#signalr-status-message").text(newStatusMessage);
+        },
+
+        start: async function(connection, success) {
+            try {
+                await connection.start().then(success);
+            } catch (err) {
+                console.log(err);
+                setTimeout(edfiODS.signalR.start, 5000);
+            }
         }
     }
 });

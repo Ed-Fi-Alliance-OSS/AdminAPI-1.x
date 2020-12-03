@@ -9,7 +9,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;

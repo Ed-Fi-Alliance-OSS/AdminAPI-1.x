@@ -90,6 +90,7 @@ param(
 )
 
 
+$solution = "Application\Ed-Fi-ODS-Tools.sln"
 $solutionRoot = "$PSScriptRoot/Application"
 
 $supportedApiVersions = @(
@@ -117,7 +118,7 @@ function InitializeNuGet {
 }
 
 function Restore {
-    Invoke-Execute { dotnet restore $solutionRoot --configfile $solutionRoot/NuGet.Config }
+    Invoke-Execute { &$script:nugetExe restore $solution }
 }
 
 function AssemblyInfo {

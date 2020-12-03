@@ -89,6 +89,7 @@ param(
     $PackageFile
 )
 
+$Env:MSBUILDDISABLENODEREUSE = "1"
 
 $solution = "Application\Ed-Fi-ODS-Tools.sln"
 $solutionRoot = "$PSScriptRoot/Application"

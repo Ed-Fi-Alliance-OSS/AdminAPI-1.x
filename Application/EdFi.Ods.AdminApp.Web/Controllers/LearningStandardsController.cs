@@ -22,7 +22,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IOdsApiConnectionInformationProvider _apiConnectionInformationProvider;
         private readonly IProductionLearningStandardsJob _learningStandardsJob;
         private readonly IEnableLearningStandardsSetupCommand _learningStandardsSetupCommand;
-        private readonly ILog _logger = LogManager.GetLogger(typeof(OdsInstanceSettingsController));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(LearningStandardsController));
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly IOdsSecretConfigurationProvider _odsSecretConfigurationProvider;
         private readonly IResetLearningStandards _resetLearningStandards;

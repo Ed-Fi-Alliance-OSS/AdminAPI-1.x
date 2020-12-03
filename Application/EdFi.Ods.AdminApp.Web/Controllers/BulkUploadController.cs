@@ -16,7 +16,6 @@ using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using FluentValidation;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class BulkUploadController : ControllerBase
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(OdsInstanceSettingsController));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(BulkUploadController));
         private readonly IOdsSecretConfigurationProvider _odsSecretConfigurationProvider;
         private readonly IOdsApiConnectionInformationProvider _apiConnectionInformationProvider;
         private readonly ITabDisplayService _tabDisplayService;

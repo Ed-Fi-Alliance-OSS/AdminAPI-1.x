@@ -14,12 +14,9 @@
     </Content>
 
     <!-- Manually delete these "Content Remove" lines to include each view into the solution.  -->
-    <Content Remove="Views\Account\SignOutCallback.cshtml" />
-    <Content Remove="Views\Error\MultiInstanceError.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
     <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
     <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
-    <Content Remove="Views\Shared\Lockout.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
   </ItemGroup>
 

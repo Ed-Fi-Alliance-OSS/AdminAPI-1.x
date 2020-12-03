@@ -16,6 +16,7 @@ using System.Reflection;
 using EdFi.Ods.AdminApp.Web.Display.RadioButton;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
+using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using HtmlTags.Reflection;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -144,6 +145,41 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             var convertedExpression = expression.Cast<T, TR, object>();
 
             return helper.SelectList(convertedExpression, enumerationValues, i => new SelectListItem { Text = i.DisplayName, Value = i.Value.ToString(), Selected = i == expressionValue}, includeBlankOption);
+        }
+
+        public static HtmlTag SelectList<T>(this IHtmlHelper<T> helper, int? bulkFileType, string fieldName, bool includeBlankOption = false)
+            where T : class
+        {
+            var getAllMethod = typeof(InterchangeFileType).GetMethod("GetAll", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var enumerationValues = (IEnumerable<InterchangeFileType>)getAllMethod.Invoke(null, null);
+
+            var input = new HtmlTag("select").Attr("name", fieldName).Attr("id", fieldName).RemoveAttr("value");
+        
+            if (includeBlankOption)
+            {
+                var blankSelectListItem = new SelectListItem
+                {
+                    Text = "",
+                    Value = ""
+                };
+        
+                AppendSelectListOption(blankSelectListItem, input);
+            }
+            
+            InterchangeFileType bulkFileUploadType = null;
+            if (bulkFileType != null)
+                bulkFileUploadType = InterchangeFileType.FromInt32(bulkFileType.Value);
+        
+            var selectListItems = enumerationValues.Select(
+                i => new SelectListItem
+                    {Text = i.DisplayName, Value = i.Value.ToString(), Selected = i == bulkFileUploadType}); 
+        
+            foreach (var selectListItem in selectListItems)
+            {
+                AppendSelectListOption(selectListItem, input);
+            }
+        
+            return input;
         }
 
         public static HtmlTag SelectList<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, IEnumerable<TR> options, Func<TR, SelectListItem> selectListItemBuilder, bool includeBlankOption = false) where T : class

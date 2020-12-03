@@ -14,6 +14,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -37,9 +38,10 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
             IBackgroundJobClient backgroundJobClient,
             ProductionLearningStandardsHub hub,
             ILearningStandardsCorePluginConnector learningStandardsPlugin,
-            IOdsSecretConfigurationProvider odsSecretConfigurationProvider
+            IOdsSecretConfigurationProvider odsSecretConfigurationProvider,
+            IHubContext<ProductionLearningStandardsHub> productionLearningStandardsHubContext
             )
-            : base(backgroundJobClient, hub, learningStandardsPlugin, odsSecretConfigurationProvider) { }
+            : base(backgroundJobClient, hub, learningStandardsPlugin, odsSecretConfigurationProvider, productionLearningStandardsHubContext) { }
     }
 
     public abstract class LearningStandardsJob<THub> : WorkflowJob<LearningStandardsJobContext, THub>
@@ -54,8 +56,9 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
             IBackgroundJobClient backgroundJobClient,
             THub hub,
             ILearningStandardsCorePluginConnector learningStandardsPlugin,
-            IOdsSecretConfigurationProvider odsSecretConfigurationProvider)
-            : base(backgroundJobClient, hub, LearningStandardsJobName)
+            IOdsSecretConfigurationProvider odsSecretConfigurationProvider
+            , IHubContext<THub> hubContext)
+            : base(backgroundJobClient, hub, LearningStandardsJobName, hubContext)
         {
             _learningStandardsPlugin = learningStandardsPlugin;
             _odsSecretConfigurationProvider = odsSecretConfigurationProvider;

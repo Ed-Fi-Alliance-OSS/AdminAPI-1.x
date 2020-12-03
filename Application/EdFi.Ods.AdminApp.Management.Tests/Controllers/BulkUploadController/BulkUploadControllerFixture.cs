@@ -4,14 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using Moq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Collections.Generic;
@@ -21,12 +18,13 @@ using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
 using System.IO;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.BulkUpload;
 using Microsoft.AspNetCore.Hosting;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsController
+namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.BulkUploadController
 {
-    public class OdsInstanceSettingsControllerFixture
+    public class BulkUploadControllerFixture
     {
         protected virtual void AdditionalSetup()
         {
@@ -35,22 +33,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
         [SetUp]
         public void SetUp()
         {
-            OdsApiFacadeFactory = new Mock<IOdsApiFacadeFactory>();
-            GetProductionApiProvisioningWarningsQuery = new Mock<IGetProductionApiProvisioningWarningsQuery>();
-            CachedItems = new Mock<ICachedItems>();
-            ProductionSetupJob = new Mock<IProductionSetupJob>();
-            CloudOdsSettingsService = new Mock<ICloudOdsSettingsService>();
             TabDisplayService = new Mock<ITabDisplayService>();
 
-            LearningStandardsJob = new Mock<IProductionLearningStandardsJob>();
-            LearningStandardsSetupCommand = new Mock<IEnableLearningStandardsSetupCommand>();
             OdsSecretConfigurationProvider = new Mock<IOdsSecretConfigurationProvider>();
-            ResetLearningStandards = new Mock<IResetLearningStandards>();
             ApiConnectionInformationProvider = new Mock<IOdsApiConnectionInformationProvider>();
             FileUploadHandler = new Mock<IFileUploadHandler>();
             BulkUploadJob = new Mock<IBulkUploadJob>();
             InstanceContext = new InstanceContext {Id = OdsInstanceId, Name = "TestOdsInstance", Description = "TestOdsInstance Description" };
-            ApiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             InferOdsApiVersion = new Mock<IInferOdsApiVersion>();
             var validationResult = new ValidationResult(new List<ValidationFailure>());
             var bulkFileUploadValidator = new Mock<IValidator<BulkFileUploadModel>>();            
@@ -65,22 +54,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             WebHostingEnvironment = new Mock<IWebHostEnvironment>();
             WebHostingEnvironment.Setup(x => x.ContentRootPath).Returns(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
-            SystemUnderTest = new Web.Controllers.OdsInstanceSettingsController(
-                OdsApiFacadeFactory.Object,
-                GetProductionApiProvisioningWarningsQuery.Object,
-                CachedItems.Object,
-                ProductionSetupJob.Object,
-                CloudOdsSettingsService.Object,
+            SystemUnderTest = new Web.Controllers.BulkUploadController(
                 TabDisplayService.Object,
-                LearningStandardsJob.Object,
-                LearningStandardsSetupCommand.Object,
                 OdsSecretConfigurationProvider.Object,
-                ResetLearningStandards.Object,
                 ApiConnectionInformationProvider.Object,
                 FileUploadHandler.Object,
                 BulkUploadJob.Object,
                 InstanceContext,
-                ApiModeProvider.Object,
                 InferOdsApiVersion.Object,
                 bulkFileUploadValidator.Object,
                 AppSettings.Object,
@@ -90,22 +70,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.OdsInstanceSettingsCont
             AdditionalSetup();
         }
 
-        protected Mock<IOdsApiFacadeFactory> OdsApiFacadeFactory;
-        protected Mock<IGetProductionApiProvisioningWarningsQuery> GetProductionApiProvisioningWarningsQuery;
-        protected Mock<ICachedItems> CachedItems;
-        protected Mock<IProductionSetupJob> ProductionSetupJob;
-        protected Mock<ICloudOdsSettingsService> CloudOdsSettingsService;
         protected Mock<ITabDisplayService> TabDisplayService;
-        protected Mock<IProductionLearningStandardsJob> LearningStandardsJob;
-        protected Mock<IEnableLearningStandardsSetupCommand> LearningStandardsSetupCommand;
         protected Mock<IOdsSecretConfigurationProvider> OdsSecretConfigurationProvider;
-        protected Mock<IResetLearningStandards> ResetLearningStandards;
         protected Mock<IOdsApiConnectionInformationProvider> ApiConnectionInformationProvider;
         protected Mock<IFileUploadHandler> FileUploadHandler;
         protected Mock<IBulkUploadJob> BulkUploadJob;
         protected InstanceContext InstanceContext;
-        protected Mock<ICloudOdsAdminAppSettingsApiModeProvider> ApiModeProvider;
-        protected Web.Controllers.OdsInstanceSettingsController SystemUnderTest;
+        protected Web.Controllers.BulkUploadController SystemUnderTest;
         protected int OdsInstanceId = 1234;
         protected Mock<IInferOdsApiVersion> InferOdsApiVersion;
         protected Mock<IOptions<AppSettings>> AppSettings;

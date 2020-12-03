@@ -24,6 +24,7 @@ Import-Module -Force $folders.modules.invoke("Environment/Prerequisites.psm1") -
 Set-TlsVersion
 Install-DotNetCore "C:\temp\tools"
 
+Import-Module -Force -Scope Global $folders.modules.invoke("utility/hashtable.psm1")
 Import-Module -Force $folders.modules.invoke("packaging/nuget-helper.psm1")
 Import-Module -Force $folders.modules.invoke("tasks/TaskHelper.psm1")
 Import-Module -Force $folders.modules.invoke("tools/ToolsHelper.psm1")
@@ -252,7 +253,12 @@ function Install-EdFiOdsAdminApp {
 
         # Database Config
         [switch]
-        $NoDuration
+        $NoDuration,
+
+        # App startup will decide admin app startup type. Valid values are OnPrem, Azure. Installer always used in 
+        # OnPrem mode. So, the default value set to OnPrem
+        [String]
+        $AppStartUp = "OnPrem"
     )
 
     Write-InvocationInfo $MyInvocation
@@ -287,19 +293,15 @@ function Install-EdFiOdsAdminApp {
         SecurityDbConnectionInfo = $SecurityDbConnectionInfo
         AdminAppFeatures = $AdminAppFeatures
         NoDuration = $NoDuration
+        AppStartUp = $AppStartUp
     }
 
     $elapsed = Use-StopWatch {
         $result += Initialize-Configuration -Config $config
         $result += Get-AdminAppPackage -Config $Config
-        $result += Get-DbDeploy -Config $Config
-        $result += Invoke-TransformWebConfigOnPremRelease -Config $Config
-
-        if (Test-IsPostgreSQL -Engine $config.engine) {
-            $result += Invoke-TransformWebConfigPostgreSQL -Config $Config
-        }
-        $result += Invoke-TransformWebConfigAppSettings -Config $Config
-        $result += Invoke-TransformWebConfigConnectionStrings -Config $config
+        $result += Get-DbDeploy -Config $Config      
+        $result += Invoke-TransformAppSettings -Config $Config
+        $result += Invoke-TransformConnectionStrings -Config $config
         $result += Install-Application -Config $Config
         $result += Create-SqlLogins -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
@@ -457,11 +459,25 @@ function Get-AdminAppPackage {
         Test-Error
 
         $Config.PackageDirectory = $packageDir
-        $Config.WebConfigLocation = Resolve-Path "$packageDir/Web.config"
+        $Config.WebConfigLocation = $packageDir
     }
 }
 
-function Invoke-TransformWebConfigPostgreSQL {
+function New-JsonFile {
+    param(
+        [string] $FilePath,
+
+        [hashtable] $Hashtable,
+
+        [switch] $Overwrite
+    )
+
+    if (-not $Overwrite -and (Test-Path $FilePath)) { return }
+
+    $Hashtable | ConvertTo-Json -Depth 10 | Out-File -FilePath $FilePath -NoNewline -Encoding UTF8
+}
+
+function Invoke-TransformAppSettings {
     [CmdletBinding()]
     param (
         [hashtable]
@@ -470,66 +486,37 @@ function Invoke-TransformWebConfigPostgreSQL {
     )
 
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
-        $transformParams = @{
-            sourceFile = "$($Config.PackageDirectory)/Web.base.config"
-            transformFile = "$($Config.PackageDirectory)/Web.OnPremNpgsql.config"
-            destinationFile = "$($Config.PackageDirectory)/Web.config"
-            toolsPath = $Config.ToolsPath
-        }
-        Invoke-ConfigTransformation @transformParams
-    }
-}
-
-function Invoke-TransformWebConfigOnPremRelease {
-    [CmdletBinding()]
-    param (
-        [hashtable]
-        [Parameter(Mandatory=$true)]
-        $Config
-    )
-    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
-        $transformParams = @{
-            sourceFile = "$($Config.PackageDirectory)/Web.Base.config"
-            transformFile = "$($Config.PackageDirectory)/Web.OnPremisesRelease.config"
-            destinationFile = "$($Config.PackageDirectory)/Web.config"
-            toolsPath = $Config.ToolsPath
-        }
-        Invoke-ConfigTransformation @transformParams
-    }
-}
-
-function Invoke-TransformWebConfigAppSettings {
-    [CmdletBinding()]
-    param (
-        [hashtable]
-        [Parameter(Mandatory=$true)]
-        $Config
-    )
-
-    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
-
-        $appSettings = @{
-            'ProductionApiUrl' = $Config.OdsApiUrl
-            'SecurityMetadataCacheTimeoutMinutes' = '10'
+        $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+        $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
+        $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'  
+        $settings.AppSettings.DatabaseEngine = $config.engine
+        $settings.AppSettings.AppStartup = $Config.AppStartUp
+        if("OnPrem" -ieq $Config.AppStartup)
+        {
+            $settings.AppSettings.Log4NetConfigPath = "log4net\log4net.OnPremisesRelease.config" 
+            $settings.AppSettings.DbSetupEnabled = "false"
         }
 
         if ($Config.AdminAppFeatures) {
             if ($Config.AdminAppFeatures.ContainsKey("ApiMode") -and $Config.AdminAppFeatures.ApiMode) {
-                $appSettings["apiStartup:type"] = $Config.AdminAppFeatures.ApiMode
+                $settings.AppSettings.ApiStartupType = $Config.AdminAppFeatures.ApiMode
                 if ($Config.AdminAppFeatures.ApiMode -ieq "yearspecific" -or $Config.AdminAppFeatures.ApiMode -ieq "districtspecific") {
                     $Config.OdsDatabaseName = "EdFi_{0}"
                 }
             }
             if ($Config.AdminAppFeatures.ContainsKey("SecurityMetadataCacheTimeoutMinutes")) {
-                $appSettings.SecurityMetadataCacheTimeoutMinutes = $Config.AdminAppFeatures.SecurityMetadataCacheTimeoutMinutes
+                $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = $Config.AdminAppFeatures.SecurityMetadataCacheTimeoutMinutes
             }
         }
 
-        Set-ApplicationSettings -ConfigFile $Config.WebConfigLocation -appSettings $appSettings
+        $EmptyHashTable=@{}
+        $mergedSettings = Merge-Hashtables $settings, $EmptyHashTable
+        New-JsonFile $settingsFile $mergedSettings -Overwrite        
     }
 }
 
-function Invoke-TransformWebConfigConnectionStrings {
+function Invoke-TransformConnectionStrings {
     [CmdletBinding()]
     param (
         [hashtable]
@@ -560,16 +547,24 @@ function Invoke-TransformWebConfigConnectionStrings {
             }
         }
 
+        $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
         Write-Host "Setting database connections in $($Config.WebConfigLocation)"
-        $parameters = @{
-            ConfigFile = $Config.WebConfigLocation
-            AdminDbConnectionInfo = $Config.AdminDbConnectionInfo
-            OdsDbConnectionInfo = $Config.OdsDbConnectionInfo
-            SecurityDbConnectionInfo = $Config.SecurityDbConnectionInfo
-            OdsConnectionName = "EdFi_Ods_Production"
-            SspiUsername = $Config.WebApplicationName
+        $adminconnString = New-ConnectionString -ConnectionInfo $Config.AdminDbConnectionInfo -SspiUsername $Config.WebApplicationName
+        $odsconnString = New-ConnectionString -ConnectionInfo $Config.OdsDbConnectionInfo -SspiUsername $Config.WebApplicationName
+        $securityConnString = New-ConnectionString -ConnectionInfo $Config.SecurityDbConnectionInfo -SspiUsername $Config.WebApplicationName
+
+        $connectionstrings = @{
+            ConnectionStrings = @{
+                ProductionOds = $odsconnString
+                Admin = $adminconnString
+                Security = $securityConnString 
+            }
         }
-        Set-DatabaseConnections @parameters
+
+        $mergedSettings = Merge-Hashtables $settings, $connectionstrings
+        New-JsonFile $settingsFile  $mergedSettings -Overwrite
     }
 }
 

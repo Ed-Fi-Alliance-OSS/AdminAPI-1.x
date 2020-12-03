@@ -76,7 +76,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                         RegisterOdsInstanceCommand registerOdsInstanceCommand = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
 
                         var command = new BulkRegisterOdsInstancesCommand(registerOdsInstanceCommand);
-                        return await command.Execute(odsInstancesToRegister, new List<RegisterOdsInstanceModel>(), ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                        return await command.Execute(odsInstancesToRegister, odsInstancesToRegister, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
                     });
                 });
 
@@ -149,7 +149,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                         RegisterOdsInstanceCommand registerOdsInstanceCommand = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
 
                         var command = new BulkRegisterOdsInstancesCommand(registerOdsInstanceCommand);
-                        return await command.Execute(odsInstancesToRegister, odsInstancesToRegister, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                        return await command.Execute(odsInstancesToRegister, new List<RegisterOdsInstanceModel>(), ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
                     });
                 });
 

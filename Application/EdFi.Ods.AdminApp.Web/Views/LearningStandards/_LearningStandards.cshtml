@@ -103,9 +103,10 @@ else
         $('#status-tab-content-prod').toggleClass('active');
     }
     $(function () {
+        var hubUrl = '@ViewData["PathBase"]' + "/productionLearningStandardsHub";
         edfiODS.signalR.hideProgress();
         var connection = new signalR.HubConnectionBuilder()
-            .withUrl("/productionLearningStandardsHub")
+            .withUrl(hubUrl)
             .configureLogging(signalR.LogLevel.Error)
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: retryContext => {

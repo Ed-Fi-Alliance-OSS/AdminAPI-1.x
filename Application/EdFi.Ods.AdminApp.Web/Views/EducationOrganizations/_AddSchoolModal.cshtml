@@ -55,7 +55,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         });
        
         $("#add-school-modal").on("show.bs.modal", function () {                  
-            $("#addSchoolFormModal").get(0).reset()
+            $("#addSchoolFormModal").get(0).reset();
             $(".form-group").removeClass("has-error");
             $(".validationSummary").addClass("hidden");
             $(".multiselect.dropdown-toggle").attr("title", "None");

@@ -210,6 +210,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             await _cloudOdsSettingsService.UpdateSettings(_appSettings.DefaultOdsInstance, settings);
 
             return JsonSuccess("Log settings updated successfully");
-        }       
+        }
     }
 }

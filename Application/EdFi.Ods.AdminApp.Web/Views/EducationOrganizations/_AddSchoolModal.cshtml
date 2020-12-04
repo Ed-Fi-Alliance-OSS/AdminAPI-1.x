@@ -54,7 +54,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             $modal.modal("show");
         });
        
-        $("#add-school-modal").on("hidden.bs.modal", function () {                  
+        $("#add-school-modal").on("show.bs.modal", function () {                  
             $("#addSchoolFormModal").get(0).reset()
             $(".form-group").removeClass("has-error");
             $(".validationSummary").addClass("hidden");

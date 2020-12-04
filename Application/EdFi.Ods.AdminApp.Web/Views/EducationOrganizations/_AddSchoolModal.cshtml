@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -17,8 +17,8 @@ See the LICENSE and NOTICES files in the project root for more information.
             </div>
         @if (Model.RequiredApiDataExist)
         {
-            <div class="modal-body center-block text-center">
-                @using (Html.BeginForm("AddSchool", "EducationOrganizations"))
+            <div class="modal-body center-block text-center">                
+                @using (Html.BeginForm("AddSchool", "EducationOrganizations", FormMethod.Post, new { id = "addSchoolFormModal" }))
                 {
                     @Html.Input(m => m.LocalEducationAgencyId).Id("add-school-lea-id").Hide()
                     @Html.ValidationBlock()
@@ -52,6 +52,15 @@ See the LICENSE and NOTICES files in the project root for more information.
             var leaId = $(this).attr("data-lea-id");
             $modal.find("#add-school-lea-id").val(leaId);
             $modal.modal("show");
+        });
+       
+        $("#add-school-modal").on("show.bs.modal", function () {                  
+            $("#addSchoolFormModal").get(0).reset();
+            $(".form-group").removeClass("has-error");
+            $(".validationSummary").addClass("hidden");
+            $(".multiselect.dropdown-toggle").attr("title", "None");
+            $(".multiselect-selected-text").html("None selected");
+            $(".multiselect-container.dropdown-menu > li").removeClass("active");
         });
     });
 </script>

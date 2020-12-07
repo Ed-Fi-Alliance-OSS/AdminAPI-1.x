@@ -32,7 +32,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             _databaseValidationService.Setup(x => x.IsValidDatabase(It.IsAny<int>(), It.IsAny<ApiMode>())).Returns(true);
             _apiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
-            _connectionProvider =  new Mock<IDatabaseConnectionProvider>();            
+            _connectionProvider =  new Mock<IDatabaseConnectionProvider>();
+            _dataFiltrationService = new Mock<IBulkRegisterOdsInstancesFiltrationService>();
         }
 
         [Test]

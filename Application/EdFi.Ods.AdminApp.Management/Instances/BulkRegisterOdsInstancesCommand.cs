@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
+using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using log4net;
 
 namespace EdFi.Ods.AdminApp.Management.Instances
@@ -15,19 +16,31 @@ namespace EdFi.Ods.AdminApp.Management.Instances
     public class BulkRegisterOdsInstancesCommand
     {
         private readonly RegisterOdsInstanceCommand _registerOdsInstanceCommand;
+        private readonly IBulkRegisterOdsInstancesFiltrationService _dataFiltrationService;
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
         
-        public BulkRegisterOdsInstancesCommand(RegisterOdsInstanceCommand registerOdsInstanceCommand)
+        public BulkRegisterOdsInstancesCommand(RegisterOdsInstanceCommand registerOdsInstanceCommand, IBulkRegisterOdsInstancesFiltrationService dataFiltrationService)
         {
-            _registerOdsInstanceCommand = registerOdsInstanceCommand;            
+            _registerOdsInstanceCommand = registerOdsInstanceCommand;
+            _dataFiltrationService = dataFiltrationService;
+
         }
 
-        public async Task<IEnumerable<BulkRegisterOdsInstancesResult>> Execute(IEnumerable<IRegisterOdsInstanceModel> odsInstances, IEnumerable<IRegisterOdsInstanceModel> _filteredDataRecords, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
+        public async Task<IEnumerable<BulkRegisterOdsInstancesResult>> Execute(IEnumerable<IRegisterOdsInstanceModel> odsInstances, IEnumerable<IRegisterOdsInstanceModel> filteredDataRecords, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
         {
-            var results = new List<BulkRegisterOdsInstancesResult>();                                  
-            var skippedOdsInstances = odsInstances.Where(odsInstance => !_filteredDataRecords.Any(newInstanceToRegister => newInstanceToRegister.NumericSuffix == odsInstance.NumericSuffix));
+            var results = new List<BulkRegisterOdsInstancesResult>();
 
-            foreach (var skippedInstance in skippedOdsInstances)
+            var dataRecords = odsInstances.ToList();
+            var recordsToProcess = filteredDataRecords.ToList();
+
+            if (!recordsToProcess.Any())
+            {
+                recordsToProcess = _dataFiltrationService.FilteredRecords(dataRecords, mode).ToList();
+            }
+
+            var skippedRecords = dataRecords.Except(recordsToProcess);
+
+            foreach (var skippedInstance in skippedRecords)
             {
                 results.Add(new BulkRegisterOdsInstancesResult
                 {
@@ -38,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
                 _logger.Info($"Ods instance({skippedInstance.NumericSuffix.ToString()}) was skipped because it was previously registered.");
             }
 
-            foreach (var instance in _filteredDataRecords)
+            foreach (var instance in recordsToProcess)
             {
                 try
                 {

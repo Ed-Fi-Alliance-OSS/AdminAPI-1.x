@@ -92,7 +92,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var results = await _bulkRegisterOdsInstancesCommand.Execute(
-                model.DataRecords(),model._filteredDataRecords,
+                model.DataRecords(), model.FilteredDataRecords,
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId,
                 CloudOdsAdminAppClaimSetConfiguration.Default);
 

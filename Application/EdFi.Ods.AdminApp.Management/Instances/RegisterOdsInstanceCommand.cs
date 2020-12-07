@@ -56,7 +56,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
         {
             using (var connection = _connectionProvider.CreateNewConnection(odsInstanceNumericSuffix, mode))
                 return connection.Database;
-        }      
+        }
     }
 
     public interface IRegisterOdsInstanceModel

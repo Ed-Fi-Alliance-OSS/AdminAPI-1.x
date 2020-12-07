@@ -66,6 +66,6 @@ namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
         {
             _database.OdsInstanceRegistrations.Add(odsInstanceRegistration);
             await _database.SaveChangesAsync();
-        }      
+        }
     }
 }

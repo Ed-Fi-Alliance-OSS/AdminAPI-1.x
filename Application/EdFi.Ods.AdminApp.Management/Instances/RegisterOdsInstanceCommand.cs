@@ -18,7 +18,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
     {
         private readonly IOdsInstanceFirstTimeSetupService _odsInstanceFirstTimeSetupService;
         private readonly IDatabaseConnectionProvider _connectionProvider;
-        private readonly AdminAppIdentityDbContext _identity;      
+        private readonly AdminAppIdentityDbContext _identity;
 
         public RegisterOdsInstanceCommand(IOdsInstanceFirstTimeSetupService odsInstanceFirstTimeSetupService
             , IDatabaseConnectionProvider connectionProvider
@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Instances
         {
             _odsInstanceFirstTimeSetupService = odsInstanceFirstTimeSetupService;
             _connectionProvider = connectionProvider;
-            _identity = identity;            
+            _identity = identity;
         }
 
         public async Task<int> Execute(IRegisterOdsInstanceModel instance, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)

@@ -23,7 +23,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
     {
         private bool _streamWasRead = false;
         private IList<RegisterOdsInstanceModel> _dataRecords;
-        private IList<string> _missingHeaders;      
+        private IList<string> _missingHeaders;
 
         [Accept(".csv")]
         [Display(Name = "Instances Data File")]
@@ -163,6 +163,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
             UniquenessRuleFailed = true;
             context.AddFailure(errorMessage);
-        }      
+        }
     }
 }

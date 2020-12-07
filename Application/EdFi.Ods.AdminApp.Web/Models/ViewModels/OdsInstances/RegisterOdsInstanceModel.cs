@@ -127,6 +127,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             var trim = newInstanceDescription.Trim();
 
             return !_database.OdsInstanceRegistrations.Any(x => x.Description == trim);
-        }       
+        }
     }
 }

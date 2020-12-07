@@ -23,6 +23,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         private Mock<IDatabaseValidationService> _databaseValidationService;
         private Mock<ICloudOdsAdminAppSettingsApiModeProvider> _apiModeProvider;
         private Mock<IDatabaseConnectionProvider> _connectionProvider;
+        private Mock<IBulkRegisterOdsInstancesFiltrationService> _dataFiltrationService;
 
         [SetUp]
         public void Init()
@@ -32,6 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             _apiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
             _connectionProvider =  new Mock<IDatabaseConnectionProvider>();
+            _dataFiltrationService = new Mock<IBulkRegisterOdsInstancesFiltrationService>();
         }
 
         [Test]
@@ -45,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             {
                 var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
                     database, _apiModeProvider.Object, _databaseValidationService.Object,
-                    _connectionProvider.Object);
+                    _connectionProvider.Object, _dataFiltrationService.Object);
 
                 bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
 
@@ -66,7 +68,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             {
                 var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
                     database, _apiModeProvider.Object, _databaseValidationService.Object,
-                    _connectionProvider.Object);
+                    _connectionProvider.Object, _dataFiltrationService.Object);
 
                 bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
 

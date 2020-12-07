@@ -70,9 +70,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             , IDatabaseConnectionProvider databaseConnectionProvider
             , IBulkRegisterOdsInstancesFiltrationService dataFilterService)
         {
-            _database = database;
-            _databaseConnectionProvider = databaseConnectionProvider;
-            _mode = apiModeProvider.GetApiMode();            
+            var mode = apiModeProvider.GetApiMode();
 
             RuleFor(m => m.OdsInstancesFile)
                 .NotEmpty();
@@ -106,7 +104,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
                                 foreach (var record in newOdsInstancesToRegister)
                                 {
-                                    var results = validator.Validate(record);
+                                    var data = (RegisterOdsInstanceModel)record;
+                                    var results = validator.Validate(data);
                                     if (!results.IsValid)
                                     {
                                         foreach (var failure in results.Errors)

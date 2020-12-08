@@ -15,6 +15,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using FluentValidation;
 using log4net;
 using FluentValidation.Validators;
+using EdFi.Ods.AdminApp.Management.Instances;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
@@ -33,6 +34,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             EnsureReadStreamOnce();
             return _dataRecords;
         }
+
+        public IEnumerable<IRegisterOdsInstanceModel> FilteredDataRecords { get; set; }
 
         public IList<string> MissingHeaders()
         {
@@ -53,7 +56,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
     {
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
-       
+        private static AdminAppDbContext _database;
+        private static IDatabaseConnectionProvider _databaseConnectionProvider;
+        private static ApiMode _mode;        
+
         private bool UniquenessRuleFailed { get; set; }
 
         private bool ValidHeadersRuleFailed { get; set; }
@@ -61,8 +67,11 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         public BulkRegisterOdsInstancesModelValidator(AdminAppDbContext database
             , ICloudOdsAdminAppSettingsApiModeProvider apiModeProvider
             , IDatabaseValidationService databaseValidationService
-            , IDatabaseConnectionProvider databaseConnectionProvider)
+            , IDatabaseConnectionProvider databaseConnectionProvider
+            , IBulkRegisterOdsInstancesFiltrationService dataFilterService)
         {
+            var mode = apiModeProvider.GetApiMode();
+
             RuleFor(m => m.OdsInstancesFile)
                 .NotEmpty();
 
@@ -90,9 +99,13 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                                     database, apiModeProvider, databaseValidationService,
                                     databaseConnectionProvider, true);
 
-                                foreach (var record in model.DataRecords())
+                                var newOdsInstancesToRegister = dataFilterService.FilteredRecords(model.DataRecords(), mode).ToList();
+                                model.FilteredDataRecords = newOdsInstancesToRegister;
+
+                                foreach (var record in newOdsInstancesToRegister)
                                 {
-                                    var results = validator.Validate(record);
+                                    var data = (RegisterOdsInstanceModel)record;
+                                    var results = validator.Validate(data);
                                     if (!results.IsValid)
                                     {
                                         foreach (var failure in results.Errors)

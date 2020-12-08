@@ -92,15 +92,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var results = await _bulkRegisterOdsInstancesCommand.Execute(
-                model.DataRecords(),
+                model.DataRecords(), model.FilteredDataRecords,
                 CloudOdsAdminAppSettings.Instance.Mode, currentUserId,
                 CloudOdsAdminAppClaimSetConfiguration.Default);
 
             var bulkRegisterOdsInstancesResults = results.ToList();
-            var successCount = bulkRegisterOdsInstancesResults.Count(x => x.Success);
-            var failCount = bulkRegisterOdsInstancesResults.Count(x => !x.Success);
+            var successCount = bulkRegisterOdsInstancesResults.Count(x => x.IndividualInstanceResult == IndividualInstanceResult.Succeded);
+            var failCount = bulkRegisterOdsInstancesResults.Count(x => x.IndividualInstanceResult == IndividualInstanceResult.Failed);
+            var skippedCount = bulkRegisterOdsInstancesResults.Count(x => x.IndividualInstanceResult == IndividualInstanceResult.Skipped);
             return JsonSuccess(
-                $"Successful instance registrations: {successCount}. Failed instance registrations: {failCount}. Please refer log file for further details.");
+                $"Successful instance registrations: {successCount}. Failed instance registrations: {failCount}. Skipped instance registrations: {skippedCount}. Please refer to log file for further details.");
         }
 
         public ActionResult ActivateOdsInstance(string instanceId)

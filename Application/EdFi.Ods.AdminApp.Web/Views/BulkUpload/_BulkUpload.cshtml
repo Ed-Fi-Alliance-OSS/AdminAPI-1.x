@@ -128,8 +128,9 @@ else
 
     $(function () {
 
+        var hubUrl = '@ViewData["PathBase"]' + "/bulkUploadHub";
         var connection = new signalR.HubConnectionBuilder()
-            .withUrl("/bulkUploadHub")
+            .withUrl(hubUrl)
             .configureLogging(signalR.LogLevel.Error)
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: retryContext => {

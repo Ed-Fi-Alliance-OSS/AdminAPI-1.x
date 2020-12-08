@@ -84,13 +84,15 @@ var updateCellAfterEdit = function (cell, defaultStrategy, authStrategyOverride)
                 .replaceWith('<span class="overridden-strategy">(Overridden)</span>');
         }
     } else {
-        strategyName.html(defaultStrategy.DisplayName);
-        if (defaultStrategy.IsInheritedFromParent) {
-            cell.find("span:nth-child(2)")
-                .replaceWith('<span class="default-strategy inherited-strategy">(Default)</span>');
-        } else {
-            cell.find("span:nth-child(2)")
-                .replaceWith('<span class="default-strategy">(Default)</span>');
+        if (defaultStrategy != null) {
+            strategyName.html(defaultStrategy.DisplayName);
+            if (defaultStrategy.IsInheritedFromParent) {
+                cell.find("span:nth-child(2)")
+                    .replaceWith('<span class="default-strategy inherited-strategy">(Default)</span>');
+            } else {
+                cell.find("span:nth-child(2)")
+                    .replaceWith('<span class="default-strategy">(Default)</span>');
+            }
         }
     }
 }

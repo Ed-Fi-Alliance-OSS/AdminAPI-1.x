@@ -502,7 +502,11 @@ function Invoke-TransformAppSettings {
             if ($Config.AdminAppFeatures.ContainsKey("ApiMode") -and $Config.AdminAppFeatures.ApiMode) {
                 $settings.AppSettings.ApiStartupType = $Config.AdminAppFeatures.ApiMode
                 if ($Config.AdminAppFeatures.ApiMode -ieq "yearspecific" -or $Config.AdminAppFeatures.ApiMode -ieq "districtspecific") {
-                    $Config.OdsDatabaseName = "EdFi_{0}"
+                    if (-not $Config.OdsDatabaseName.Contains("{0}")) {
+                        $Config.OdsDatabaseName += "_{0}"
+
+                        $Config.OdsDatabaseName = $Config.OdsDatabaseName -replace "_Ods_\{0\}", "_{0}"
+                    }
                 }
             }
             if ($Config.AdminAppFeatures.ContainsKey("SecurityMetadataCacheTimeoutMinutes")) {

@@ -82,6 +82,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 OdsInstance = _instanceContext
             };
 
+            ViewData["PathBase"] = Request != null ? Request.PathBase.ToString() : "";
+
             return View(model);
         }
 

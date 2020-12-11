@@ -3,55 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Configuration;
-
 namespace EdFi.Ods.AdminApp.Management.Helpers
 {
-    public static class ConfigurationHelper
-    {
-
-        private static readonly AppSettings _appSettings;
-
-        static ConfigurationHelper()
-        {
-            _appSettings = new AppSettings();
-
-            _appSettings.AppStartup = ConfigurationManager.AppSettings["owin:appStartup"];
-            _appSettings.DatabaseEngine = ConfigurationManager.AppSettings["DatabaseEngine"];
-            _appSettings.ApplicationInsightsInstrumentationKey =
-                ConfigurationManager.AppSettings["ApplicationInsightsInstrumentationKey"];
-            _appSettings.XsdFolder = ConfigurationManager.AppSettings["XsdFolder"];
-            _appSettings.DefaultOdsInstance = ConfigurationManager.AppSettings["DefaultOdsInstance"];
-            _appSettings.ProductionApiUrl = ConfigurationManager.AppSettings["ProductionApiUrl"];
-            _appSettings.SystemManagedSqlServer = ConfigurationManager.AppSettings["SystemManagedSqlServer"];
-            _appSettings.DbSetupEnabled = ConfigurationManager.AppSettings["DbSetupEnabled"];
-            _appSettings.SecurityMetadataCacheTimeoutMinutes =
-                ConfigurationManager.AppSettings["SecurityMetadataCacheTimeoutMinutes"];
-            _appSettings.ApiStartupType = ConfigurationManager.AppSettings["apiStartup:type"];
-            _appSettings.LocalEducationAgencyTypeValue = ConfigurationManager.AppSettings["LocalEducationAgencyTypeValue"];
-            _appSettings.SchoolTypeValue = ConfigurationManager.AppSettings["SchoolTypeValue"];
-            _appSettings.BulkUploadHashCache = ConfigurationManager.AppSettings["BulkUploadHashCache"];
-            _appSettings.IdaAADInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
-            _appSettings.IdaClientId = ConfigurationManager.AppSettings["ida:ClientId"];
-            _appSettings.IdaClientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
-            _appSettings.IdaTenantId = ConfigurationManager.AppSettings["ida:TenantId"];
-            _appSettings.IdaSubscriptionId = ConfigurationManager.AppSettings["ida:SubscriptionId"];
-            _appSettings.AwsCurrentVersion = ConfigurationManager.AppSettings["AwsCurrentVersion"];
-            _appSettings.OptionalEntropy = ConfigurationManager.AppSettings["OptionalEntropy"];
-            _appSettings.Log4NetConfigPath = ConfigurationManager.AppSettings["log4net.Config"];
-        }
-
-        public static AppSettings GetAppSettings()
-        {
-            return _appSettings;
-        }
-
-        public static string GetConnectionStringByName(string databaseName)
-        {
-            return ConfigurationManager.ConnectionStrings[databaseName]?.ConnectionString;
-        }
-    }
-
     public class AppSettings
     {
         public string AppStartup { get; set; }

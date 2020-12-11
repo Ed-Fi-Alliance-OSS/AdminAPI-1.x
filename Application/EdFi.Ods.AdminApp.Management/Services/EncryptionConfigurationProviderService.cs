@@ -5,14 +5,22 @@
 
 using System.Text;
 using EdFi.Ods.AdminApp.Management.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
     public class EncryptionConfigurationProviderService : IEncryptionConfigurationProviderService
     {
+        private readonly AppSettings _appSettings;
+
+        public EncryptionConfigurationProviderService(IOptions<AppSettings> appSettingsAccessor)
+        {
+            _appSettings = appSettingsAccessor.Value;
+        }
+
         public byte[] GetEntropy()
         {
-            var optionalEntropyValue = ConfigurationHelper.GetAppSettings().OptionalEntropy;
+            var optionalEntropyValue = _appSettings.OptionalEntropy;
             var entropy = string.IsNullOrEmpty(optionalEntropyValue)
                 ? null
                 : Encoding.ASCII.GetBytes(optionalEntropyValue);

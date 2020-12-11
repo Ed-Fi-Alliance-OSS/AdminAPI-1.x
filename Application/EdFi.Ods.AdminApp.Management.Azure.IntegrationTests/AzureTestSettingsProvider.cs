@@ -5,12 +5,15 @@
 
 using System;
 using EdFi.Ods.AdminApp.Management.Helpers;
+using Microsoft.Extensions.Options;
+using Moq;
+using static EdFi.Ods.AdminApp.Management.Azure.IntegrationTests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 {
     public static class AzureTestSettingsProvider
     {
-        private static readonly AppSettings _appSettings = ConfigurationHelper.GetAppSettings();
+        private static readonly AppSettings _appSettings = GetAppSettings();
 
         public static string GetTestConfigVariable(string variableName, string defaultValue = null)
         {
@@ -41,5 +44,16 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
         (
             DefaultTestCloudOdsInstance
         );
+
+        private static AppSettings GetAppSettings()
+        {
+            var appSettingsAccessor = new Mock<IOptions<AppSettings>>();
+            Scoped<IOptions<AppSettings>>(appSettings =>
+            {
+                appSettingsAccessor.Setup(x => x.Value).Returns(appSettings.Value);
+            });
+
+            return appSettingsAccessor.Object.Value;
+        }
     }
 }

@@ -82,5 +82,20 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string Admin { get; set; }
         public string Security { get; set; }
         public string ProductionOds { get; set; }
+
+        public string GetConnectionStringByName(string databaseName)
+        {
+            switch (databaseName)
+            {
+                case CloudOdsDatabaseNames.Admin:
+                    return Admin;
+                case CloudOdsDatabaseNames.Security:
+                    return Security;
+                case CloudOdsDatabaseNames.ProductionOds:
+                    return ProductionOds;
+                default:
+                    return null;
+            }
+        }
     }
 }

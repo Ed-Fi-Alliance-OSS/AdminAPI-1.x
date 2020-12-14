@@ -26,15 +26,15 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return application?.Profiles?.FirstOrDefault()?.ProfileName;
         }
 
-        public static bool IsProductionApplication(this Application application)
-        {
-            var prefix = CloudOdsApplicationName.GetPersistedNamePrefix();
-            return application.ApplicationName.StartsWith(prefix);
-        }
+        //public static bool IsProductionApplication(this Application application)
+        //{
+        //    var prefix = CloudOdsApplicationName.GetPersistedNamePrefix();
+        //    return application.ApplicationName.StartsWith(prefix);
+        //}
 
-        public static string DisplayName(this Application application)
-        {
-            return CloudOdsApplicationName.GetDisplayName(application.ApplicationName);
-        }
+        //public static string DisplayName(this Application application)
+        //{
+        //    return CloudOdsApplicationName.GetDisplayName(application.ApplicationName);
+        //}
     }
 }

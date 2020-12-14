@@ -179,7 +179,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var model = new EditApplicationViewModel
             {
                 ApplicationId = applicationId,
-                ApplicationName = application.DisplayName(),
+                //ApplicationName = application.DisplayName(),
+                ApplicationName = application.ApplicationName,
                 ClaimSetName = application.ClaimSetName,
                 ClaimSetNames = GetClaimSetNames(),
                 EducationOrganizationIds = application.ApplicationEducationOrganizations.Select(x => x.EducationOrganizationId),

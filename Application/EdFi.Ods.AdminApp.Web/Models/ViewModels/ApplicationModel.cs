@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
         public int ApplicationId { get; set; }
         public string ApplicationName { get; set; }
 
-        public string DisplayName { get; set; }
+        //public string DisplayName { get; set; }
 
         public string ClaimSetName { get; set; }
         public string ProfileName { get; set; }

@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
@@ -31,6 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.IntegrationTests
 
             rawSqlConnectionService.GetDatabaseConnectionFromConfigFile(CloudOdsDatabaseNames.Admin).ConnectionString.ShouldBe(connectionStrings.Admin);
             rawSqlConnectionService.GetDatabaseConnectionFromConfigFile(CloudOdsDatabaseNames.Security).ConnectionString.ShouldBe(connectionStrings.Security);
+            Assert.Throws<Exception>(() => rawSqlConnectionService.GetDatabaseConnectionFromConfigFile(null));
         }
     }
 }

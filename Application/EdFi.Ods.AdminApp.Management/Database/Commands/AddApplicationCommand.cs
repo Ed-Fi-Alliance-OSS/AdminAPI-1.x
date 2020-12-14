@@ -36,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
             var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
 
-            var persistedApplicationName = CloudOdsApplicationName.GetPersistedName(applicationModel.ApplicationName);
+            //var persistedApplicationName = CloudOdsApplicationName.GetPersistedName(applicationModel.ApplicationName);
 
             var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
                 x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
@@ -44,13 +44,15 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             var user = new VendorUser
             {
                 Email = "",
-                FullName = persistedApplicationName,
+                //FullName = persistedApplicationName,
+                FullName = applicationModel.ApplicationName,
                 Vendor = vendor
             };
 
             var apiClient = new ApiClient(true)
             {
-                Name = persistedApplicationName,
+                Name = applicationModel.ApplicationName,
+                //Name = persistedApplicationName,
                 IsApproved = true,
                 UseSandbox = false,
                 KeyStatus = "Active",
@@ -67,7 +69,8 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
             var application = new Application
             {
-                ApplicationName = persistedApplicationName,
+                //ApplicationName = persistedApplicationName,
+                ApplicationName = applicationModel.ApplicationName,
                 ApiClients = new List<ApiClient> { apiClient },
                 ApplicationEducationOrganizations = new List<ApplicationEducationOrganization>(applicationEdOrgs),
                 ClaimSetName = applicationModel.ClaimSetName,

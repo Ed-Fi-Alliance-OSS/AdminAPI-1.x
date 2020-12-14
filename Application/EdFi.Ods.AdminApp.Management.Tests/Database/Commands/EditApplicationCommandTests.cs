@@ -115,11 +115,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             {
                 var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
 
-                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                //persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                persistedApplication.ApplicationName.ShouldBe("Test Application");
                 persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
-                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                //persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                persistedApplication.ApiClients.First().Name.ShouldBe("Test Application");
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
 
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
@@ -154,11 +156,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             {
                 var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
 
-                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
+                //persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
+                persistedApplication.ApplicationName.ShouldBe("New Application Name");
                 persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
-                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
+                //persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
+                persistedApplication.ApiClients.First().Name.ShouldBe("New Application Name");
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
 
                 persistedApplication.Profiles.Count.ShouldBe(1);
@@ -174,7 +178,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         {
             SetupTestEntities();
 
-            var newApplicationName = Sample("New Application", 50);
+            var newApplicationName = Sample("New Application", 51);
 
             var editApplication = new EditApplicationModel
             {
@@ -187,7 +191,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             new EditApplicationModelValidator()
-                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 11 characters.");
+                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 characters.");
         }
 
         private class TestEditApplicationModel : IEditApplicationModel

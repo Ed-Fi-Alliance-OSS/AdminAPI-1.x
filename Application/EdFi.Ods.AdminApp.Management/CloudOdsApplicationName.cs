@@ -18,12 +18,12 @@ namespace EdFi.Ods.AdminApp.Management
             return $"{environment.DisplayName}-";
         }
 
-        public static string GetPersistedName(string applicationName)
-        {
-            var environmentPrefix = GetPersistedNamePrefix();
-            return applicationName.StartsWith(environmentPrefix) 
-                ? applicationName 
-                : $"{environmentPrefix}{applicationName}";
-        }
+        //public static string GetPersistedName(string applicationName)
+        //{
+        //    var environmentPrefix = GetPersistedNamePrefix();
+        //    return applicationName.StartsWith(environmentPrefix)
+        //        ? applicationName
+        //        : $"{environmentPrefix}{applicationName}";
+        //}
     }
 }

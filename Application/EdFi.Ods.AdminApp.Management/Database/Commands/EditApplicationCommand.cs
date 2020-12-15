@@ -35,17 +35,14 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 .Include(a => a.Profiles)
                 .Single(a => a.ApplicationId == model.ApplicationId);
 
-            var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
-            //var newApplicationName = CloudOdsApplicationName.GetPersistedName(model.ApplicationName);            
+            var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);            
             var newProfile = model.ProfileId.HasValue
                 ? _context.Profiles.Single(p => p.ProfileId == model.ProfileId.Value)
                 : null;
 
-            var apiClient = application.ApiClients.Single();
-            //apiClient.Name = newApplicationName;
+            var apiClient = application.ApiClients.Single();            
             apiClient.Name = model.ApplicationName;
-
-            //application.ApplicationName = newApplicationName;
+                        
             application.ApplicationName = model.ApplicationName;
             application.ClaimSetName = model.ClaimSetName;
             application.Vendor = newVendor;

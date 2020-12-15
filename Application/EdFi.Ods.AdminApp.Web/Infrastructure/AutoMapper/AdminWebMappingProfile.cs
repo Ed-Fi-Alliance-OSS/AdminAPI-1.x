@@ -25,8 +25,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
         {
             CreateMap<Application, ApplicationModel>()
                 .ForMember(dst => dst.EducationOrganizations, opt => opt.MapFrom(src => src.ApplicationEducationOrganizations))
-                .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()));
-                //.ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName()));
+                .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()));                
 
             CreateMap<ApplicationEducationOrganization, EducationOrganizationModel>()
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.EducationOrganizationId))
@@ -42,10 +41,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
                     src.VendorNamespacePrefixes != null && src.VendorNamespacePrefixes.Any()
                         ? src.VendorNamespacePrefixes.First().NamespacePrefix
                         : string.Empty));
-
-            //CreateMap<Vendor, VendorApplicationsModel>()
-            //    .ForMember(dst => dst.Applications,
-            //        opt => opt.MapFrom(src => src.Applications == null ? null : src.Applications.Where(app => app.IsProductionApplication())));
+            
             CreateMap<Vendor, VendorApplicationsModel>()
                 .ForMember(dst => dst.Applications,
                     opt => opt.MapFrom(src => src.Applications == null ? null : src.Applications.Where(app => app.OdsInstance!=null)));

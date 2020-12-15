@@ -40,9 +40,8 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 ? _context.Profiles.Single(p => p.ProfileId == model.ProfileId.Value)
                 : null;
 
-            var apiClient = application.ApiClients.Single();            
-            apiClient.Name = model.ApplicationName;
-                        
+            var apiClient = application.ApiClients.Single();
+            apiClient.Name = model.ApplicationName;                        
             application.ApplicationName = model.ApplicationName;
             application.ClaimSetName = model.ClaimSetName;
             application.Vendor = newVendor;

@@ -113,18 +113,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Transaction(usersContext =>
             {
-                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
-                                
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);                                
                 persistedApplication.ApplicationName.ShouldBe("Test Application");
                 persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
-
-                persistedApplication.ApiClients.Count.ShouldBe(1);                
+                persistedApplication.ApiClients.Count.ShouldBe(1);
                 persistedApplication.ApiClients.First().Name.ShouldBe("Test Application");
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
-
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
                 persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 12345 || aeo.EducationOrganizationId == 67890);
-
                 persistedApplication.Profiles.Count.ShouldBe(0);
             });
         }
@@ -152,18 +148,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Transaction(usersContext =>
             {
-                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
-                                
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);                                
                 persistedApplication.ApplicationName.ShouldBe("New Application Name");
                 persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
-
-                persistedApplication.ApiClients.Count.ShouldBe(1);                
+                persistedApplication.ApiClients.Count.ShouldBe(1);
                 persistedApplication.ApiClients.First().Name.ShouldBe("New Application Name");
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
-
                 persistedApplication.Profiles.Count.ShouldBe(1);
                 persistedApplication.Profiles.First().ProfileName.ShouldBe("Other Test Profile");
-
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
                 persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
             });

@@ -37,7 +37,9 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             OdsInstanceRegistration instance;
             if (CloudOdsAdminAppSettings.Instance.Mode.SupportsSingleInstance)
             {
-                if (!TryQueryInstanceRegistration(out instance))
+                instance = GetQueryInstanceRegistration();
+
+                if (instance == null)
                 {
                     filterContext.Result = new RedirectResult("~/Error/MultiInstanceError");
                     return;
@@ -60,14 +62,12 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             _instanceContext.Description = instance.Description;
         }
 
-        private bool TryQueryInstanceRegistration(out OdsInstanceRegistration instanceRegistration)
+        private OdsInstanceRegistration GetQueryInstanceRegistration()
         {
-            var singleInstanceLookup = _adminAppDbContext.OdsInstanceRegistrations.AsEnumerable().FirstOrDefault(x =>
-                x.Name.Equals(CloudOdsAdminAppSettings.Instance.OdsInstanceName,
-                    StringComparison.InvariantCultureIgnoreCase));
+            var singleInstanceLookup = _adminAppDbContext.OdsInstanceRegistrations.FirstOrDefault(x =>
+                x.Name == CloudOdsAdminAppSettings.Instance.OdsInstanceName);
 
-            instanceRegistration = singleInstanceLookup;
-            return singleInstanceLookup != null;
+            return singleInstanceLookup;
         }
 
         private bool TryQueryInstanceRegistration(string userId, string unsafeInstanceId, out OdsInstanceRegistration instanceRegistration)

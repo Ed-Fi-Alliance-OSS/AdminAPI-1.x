@@ -3,6 +3,7 @@
 csx/
 rcf/
 [Oo]bj
+publish/
 
 #User-specific files
 *.suo

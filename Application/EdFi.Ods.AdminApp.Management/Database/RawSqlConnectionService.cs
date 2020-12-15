@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
@@ -21,6 +22,13 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
     public class RawSqlConnectionService : IRawSqlConnectionService
     {
+        private readonly ConnectionStrings _connectionStrings;
+
+        public RawSqlConnectionService(IOptions<ConnectionStrings> connectionStrings)
+        {
+            _connectionStrings = connectionStrings.Value;
+        }
+
         public SqlConnection GetDatabaseConnectionFromConfigFile(string databaseName)
         {
             var connectionString = GetConnectionStringFromConfigFile(databaseName);
@@ -29,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
         private string GetConnectionStringFromConfigFile(string databaseName)
         {
-            return ConfigurationHelper.GetConnectionStringByName(databaseName);
+            return _connectionStrings.GetConnectionStringByName(databaseName);
         }
 
         private SqlConnection GetDatabaseConnection(string connectionString)

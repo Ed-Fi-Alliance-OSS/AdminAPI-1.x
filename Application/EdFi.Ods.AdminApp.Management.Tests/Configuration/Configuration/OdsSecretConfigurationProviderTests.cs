@@ -9,7 +9,10 @@ using System.Runtime.Caching;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Services;
+using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -20,9 +23,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
     {
         private static OdsSecretConfigurationProvider OdsSecretConfigurationProvider(AdminAppDbContext database)
         {
+
+            var appSettingsAccessor = new Mock<IOptions<AppSettings>>();
+            Scoped<IOptions<AppSettings>>(appSettings =>
+            {
+                appSettingsAccessor.Setup(x => x.Value).Returns(appSettings.Value);
+            });
+
             return new OdsSecretConfigurationProvider(
                 new StringEncryptorService(
-                    new EncryptionConfigurationProviderService()), database);
+                    new EncryptionConfigurationProviderService(appSettingsAccessor.Object)), database);
         }
 
         private async Task<OdsSqlConfiguration> GetSqlConfiguration()

@@ -47,7 +47,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
             //    .ForMember(dst => dst.Applications,
             //        opt => opt.MapFrom(src => src.Applications == null ? null : src.Applications.Where(app => app.IsProductionApplication())));
             CreateMap<Vendor, VendorApplicationsModel>()
-                .ForMember(dst => dst.Applications, opt => opt.MapFrom(src => src.Applications));
+                .ForMember(dst => dst.Applications,
+                    opt => opt.MapFrom(src => src.Applications == null ? null : src.Applications.Where(app => app.OdsInstance!=null)));
 
             CreateMap<Vendor, VendorOverviewModel>()
                 .ForMember(dst => dst.NamespacePrefix, opt => opt.MapFrom(src =>

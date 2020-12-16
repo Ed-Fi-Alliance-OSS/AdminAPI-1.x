@@ -113,18 +113,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Transaction(usersContext =>
             {
-                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
-
-                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);                                
+                persistedApplication.ApplicationName.ShouldBe("Test Application");
                 persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
-
                 persistedApplication.ApiClients.Count.ShouldBe(1);
-                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                persistedApplication.ApiClients.First().Name.ShouldBe("Test Application");
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
-
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
                 persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 12345 || aeo.EducationOrganizationId == 67890);
-
                 persistedApplication.Profiles.Count.ShouldBe(0);
             });
         }
@@ -152,18 +148,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Transaction(usersContext =>
             {
-                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
-
-                persistedApplication.ApplicationName.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
+                var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);                                
+                persistedApplication.ApplicationName.ShouldBe("New Application Name");
                 persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
-
                 persistedApplication.ApiClients.Count.ShouldBe(1);
-                persistedApplication.ApiClients.First().Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("New Application Name"));
+                persistedApplication.ApiClients.First().Name.ShouldBe("New Application Name");
                 persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
-
                 persistedApplication.Profiles.Count.ShouldBe(1);
                 persistedApplication.Profiles.First().ProfileName.ShouldBe("Other Test Profile");
-
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
                 persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
             });
@@ -174,7 +166,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         {
             SetupTestEntities();
 
-            var newApplicationName = Sample("New Application", 50);
+            var newApplicationName = Sample("New Application", 51);
 
             var editApplication = new EditApplicationModel
             {
@@ -187,7 +179,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             new EditApplicationModelValidator()
-                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 11 characters.");
+                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
         }
 
         private class TestEditApplicationModel : IEditApplicationModel

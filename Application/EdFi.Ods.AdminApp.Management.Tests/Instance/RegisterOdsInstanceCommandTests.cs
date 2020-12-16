@@ -501,7 +501,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 Scoped<AdminAppDbContext>(database =>
                 {
                     new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                        .ShouldNotValidate(newInstance, $"The resulting database name {connection1.Database} would be too long for Admin App to set up necessary Application records. Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by 33 characters.");
+                        .ShouldNotValidate(newInstance, $"The resulting database name {connection1.Database} would be too long for Admin App to set up necessary Application records. Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by 33 character(s).");
                 });
             }
         }

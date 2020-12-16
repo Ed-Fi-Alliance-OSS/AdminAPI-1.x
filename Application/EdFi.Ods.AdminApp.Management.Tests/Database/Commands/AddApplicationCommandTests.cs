@@ -71,7 +71,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Save(vendor, user);
 
-            var applicationName = Sample("Test Application", 50);
+            var applicationName = Sample("Test Application", 51);
 
             var newApplication = new AddApplicationModel
             {
@@ -83,7 +83,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             new AddApplicationModelValidator()
-                .ShouldNotValidate(newApplication, $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 11 characters.");
+                .ShouldNotValidate(newApplication, $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
                 var apiClient = persistedApplication.ApiClients.First();
-                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                apiClient.Name.ShouldBe("Test Application");
                 apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
                 apiClient.Key.ShouldBe(result.Key);
                 apiClient.Secret.ShouldBe(result.Secret);
@@ -212,7 +212,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
                 persistedApplication.ApiClients.Count.ShouldBe(1);
                 var apiClient = persistedApplication.ApiClients.First();
-                apiClient.Name.ShouldBe(CloudOdsApplicationName.GetPersistedName("Test Application"));
+                apiClient.Name.ShouldBe("Test Application");
                 apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
                 apiClient.Key.ShouldBe(result.Key);
                 apiClient.Secret.ShouldBe(result.Secret);

@@ -13,12 +13,12 @@ See the LICENSE and NOTICES files in the project root for more information.
     <div class="vendor-application card">
         <div class="row">
             <div class="col-lg-6">
-                <h8>@application.DisplayName.ToTitleCase()</h8>
+                <h8>@application.ApplicationName.ToTitleCase()</h8>
             </div>
 
             <div class="col-lg-6 text-right">
                 <a href="javascript:void(0)" class="edit-table loads-ajax-modal" data-url="@Url.Action("Edit", "Application", new { ApplicationId = application.ApplicationId })"> <span class="fa fa-pencil action-icons"></span></a>
-                <a href="javascript:void(0)" class="delete-application-link" data-id="@application.ApplicationId" data-application-name="@application.DisplayName"> <span class="fa fa-trash-o action-icons"></span></a>
+                <a href="javascript:void(0)" class="delete-application-link" data-id="@application.ApplicationId" data-application-name="@application.ApplicationName"> <span class="fa fa-trash-o action-icons"></span></a>
                 <span class="custom-divider"> |</span>
                 <a href="javascript:void(0)" data-toggle="collapse" data-target="#app-details-@(application.ApplicationId)"><span class="fa fa-chevron-up caret-custom panel-toggle"></span></a>
             </div>
@@ -52,7 +52,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                     <div class="key-section">
                         <div class="row">
                             <div class="col-lg-6">
-                                <strong class="key-label">Key: </strong><a class="regenerate-application-secret-link" data-id="@application.ApplicationId" data-name="@application.DisplayName" href="javascript:void(0)">Regenerate</a>
+                                <strong class="key-label">Key: </strong><a class="regenerate-application-secret-link" data-id="@application.ApplicationId" data-name="@application.ApplicationName" href="javascript:void(0)">Regenerate</a>
                             </div>
                             <div class="col-lg-6">
                                 <strong class="key-label">Status: </strong> <strong class="text-success">Active</strong>

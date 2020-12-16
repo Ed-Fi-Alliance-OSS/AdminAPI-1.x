@@ -64,9 +64,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
         }
 
         private bool BeWithinApplicationNameMaxLength(EditApplicationModel model, string applicationName, PropertyValidatorContext context)
-        {
-            var persistedName = CloudOdsApplicationName.GetPersistedName(applicationName);
-            var extraCharactersInName = persistedName.Length - ApplicationExtensions.MaximumApplicationNameLength;
+        {            
+            var extraCharactersInName = applicationName.Length - ApplicationExtensions.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)
             {
                 return true;
@@ -74,7 +73,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 
             context.Rule.MessageBuilder = c
                 => $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records." +
-                   $" Consider shortening the name by {extraCharactersInName} characters.";
+                   $" Consider shortening the name by {extraCharactersInName} character(s).";
 
             return false;
         }

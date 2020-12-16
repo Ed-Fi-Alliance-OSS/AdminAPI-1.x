@@ -110,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
             context.Rule.MessageBuilder = c
                 => $"The resulting database name {newInstanceDatabaseName} would be too long for Admin App to set up necessary Application records." +
-                   $" Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by {extraCharactersInPrefix} characters.";
+                   $" Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by {extraCharactersInPrefix} character(s).";
 
             return  false;
         }

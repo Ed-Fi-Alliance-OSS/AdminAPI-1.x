@@ -24,7 +24,6 @@ Import-Module -Name "$PSScriptRoot/database-manager.psm1" -Force
 
 $arguments = @{
     ToolsPath = ".tools"
-    DbDeployVersion = "1.1.0"
     ForPostgreSQL = "postgresql" -eq $config.engine.ToLower()
     Server = $config.databaseServer
     DatabaseName = $config.adminDatabaseName

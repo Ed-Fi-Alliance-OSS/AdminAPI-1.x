@@ -179,7 +179,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             new EditApplicationModelValidator()
-                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 characters.");
+                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
         }
 
         private class TestEditApplicationModel : IEditApplicationModel

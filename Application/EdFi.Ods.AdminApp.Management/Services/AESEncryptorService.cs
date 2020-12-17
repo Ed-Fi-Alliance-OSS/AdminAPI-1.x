@@ -1,24 +1,34 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
+    // ReSharper disable once InconsistentNaming - AES is proper, not Aes
     public class AESEncryptorService : IStringEncryptorService
     {
-        private readonly string _key;
+        private readonly byte[] _key;
+        private readonly string _initializationVector;
 
-        public AESEncryptorService(string key)
+        // ReSharper disable once InconsistentNaming - AES is proper, not Aes
+        public AESEncryptorService(string key, string initializationVector = null)
         {
-            _key = key ?? throw new ArgumentNullException(
-                $"Parameter {nameof(key)} cannot be null.", nameof(key));
+            if (key == null)
+            {
+                throw new ArgumentNullException(
+ $"Parameter {nameof(key)} cannot be null.", nameof(key));
+            }
 
             if (key.Trim().Length == 0)
             {
                 throw new ArgumentException($"Parameter {nameof(key)} cannot be an empty string.", nameof(key));
             }
+
+            _key = GetBytes(key);
+
+            // Null is acceptable here - if value is not passed in then we'll generate a random one.
+            _initializationVector = initializationVector;
         }
 
         public string Encrypt(string value)
@@ -28,7 +38,40 @@ namespace EdFi.Ods.AdminApp.Management.Services
                 throw new ArgumentNullException($"Parameter {nameof(value)} cannot be null.", nameof(value));
             }
 
-            return "b";
+            // Do not extract this to a separate function unless you want to deal
+            // with disposal of the object properly.
+            using var aes = Aes.Create();
+            if (aes == null)
+            {
+                throw new InvalidOperationException("Creation of an AES encryption object failed.");
+            }
+
+            aes.Key = _key;
+
+            var iv = _initializationVector;
+
+            if (iv != null)
+            {
+                aes.IV = GetBytes(iv);
+            }
+            else
+            {
+                aes.GenerateIV();
+                iv = GetString(aes.IV);
+            }
+
+            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+            using var memStream = new MemoryStream();
+            using (var cryptoStream = new CryptoStream(memStream, encryptor, CryptoStreamMode.Write))
+            {
+                cryptoStream.Write(GetBytes(value));
+            }
+
+            var encrypted = GetString(memStream.ToArray());
+            var signature = CalculateHashValue(encrypted);
+
+            return $"{iv}.{encrypted}.{signature}";
         }
 
         public bool TryDecrypt(string value, out string decryptedValue)
@@ -40,38 +83,66 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
             if (value.Trim().Length == 0)
             {
-                throw new ArgumentException($"Parameter {nameof(value)} cannot be an empty string.", nameof(value));
+                throw new ArgumentException(
+                    $"Parameter {nameof(value)} cannot be an empty string.", nameof(value));
             }
 
             var split = value.Split('.');
 
-            if (split.Length != 2)
+            if (split.Length != 3)
             {
-                throw new InvalidOperationException("Unable to decrypt the string because it is not signed properly.");
+                throw new InvalidOperationException(
+                    "Unable to decrypt the string because it is not signed properly.");
             }
 
-            var encrypted = split[0];
-            var signature = split[1];
+            var iv = split[0];
+            var encrypted = split[1];
+            var signature = split[2];
 
-            if (HashValue(encrypted) != signature)
+            if (CalculateHashValue(encrypted) != signature)
             {
                 throw new InvalidOperationException("Signatures do not match.");
             }
 
-            decryptedValue = "a";
-            return false;
+            using var aes = Aes.Create();
+            if (aes == null)
+            {
+                throw new InvalidOperationException("Creation of an AES encryption object failed.");
+            }
+
+            aes.Key = _key;
+            aes.IV = GetBytes(iv);
+
+            var decryptor = aes.CreateDecryptor();
+            var memStream = new MemoryStream(GetBytes(value));
+            using var cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read);
+            using var reader = new StreamReader(cryptoStream);
+
+            decryptedValue =reader.ReadToEnd();
+            return true;
+
+            // TODO: think about what conditions would cause False 
         }
 
-        private string HashValue(string value)
+        private string CalculateHashValue(string value)
         {
-            var encoding = Encoding.UTF8;
-
-            var textBytes = encoding.GetBytes(value);
-            var keyBytes = encoding.GetBytes(_key);
+            var textBytes = GetBytes(value);
+            var keyBytes = _key;
 
             using var hash = new HMACSHA256(keyBytes);
             var hashBytes = hash.ComputeHash(textBytes);
-            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            return GetString(hashBytes);
+        }
+
+        private byte[] GetBytes(string value)
+        {
+            // TODO: do I need to be concerned about spaces and plus sign?
+            return Encoding.ASCII.GetBytes(value);
+        }
+
+        private string GetString(byte[] bytes)
+        {
+            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
         }
     }
 }

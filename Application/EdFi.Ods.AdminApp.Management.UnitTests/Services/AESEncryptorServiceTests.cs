@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices.ComTypes;
 using EdFi.Ods.AdminApp.Management.Services;
 using NUnit.Framework;
 using Shouldly;
@@ -6,9 +7,23 @@ using Shouldly;
 namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
 {
     [TestFixture]
+    // ReSharper disable once InconsistentNaming - AES is proper, not Aes
     public class AESEncryptorServiceTests
     {
-        public const string TestKey = "I am the test key";
+        // TODO: will need to have one test where the IV is calculated at random,
+        // and we won't know what the actual result is.
+
+        // TODO: make sure the key is the right length
+
+        public const string TestKey = "98c1c51317be80fefda9472e61465c06";
+        public const string TestIv = "115d035ef1dd60ba";
+
+        public const string EmptyString = "";
+        public const string EmptyStringEncrypted =
+            "115d035ef1dd60ba.cb7a31011a52fb26b62428593bca05fc.4ee89ac5e034d3b980fe945d1f63e36409d685e64770810b1b0396f12ed4ac9e";
+        public const string EncryptMe = "encrypt me";
+        public const string EncryptMeEncrypted =
+            "115d035ef1dd60ba.f142ab79d72e81412a014a1e1f898a53.13ff7957290bf2469ffb5b1cc36e22c21437e51982a1b4ac2a0bc8eebc7ecc0f";
 
         [TestFixture]
         public class WhenInitializingTheService
@@ -19,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 [Test]
                 public void ThenThrowException()
                 {
-                    Action act = () => new AESEncryptorService(null);
+                    Action act = () => new AESEncryptorService(null, TestIv);
 
                     act.ShouldThrow<ArgumentNullException>();
                 }
@@ -31,9 +46,66 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 [Test]
                 public void ThenThrowException()
                 {
-                    Action act = () => new AESEncryptorService("     ");
+                    Action act = () => new AESEncryptorService("     ", TestIv);
 
                     act.ShouldThrow<ArgumentException>();
+                }
+            }
+
+            [TestFixture]
+            public class GivenNullInitializationVector
+            {
+                [Test]
+                public void ThenThrowException()
+                {
+                    Action act = () => new AESEncryptorService(TestKey, null);
+
+                    act.ShouldThrow<ArgumentNullException>();
+                }
+            }
+
+            [TestFixture]
+            public class GivenEmptyStringInitializationVector
+            {
+                [Test]
+                public void ThenThrowException()
+                {
+                    Action act = () => new AESEncryptorService(TestKey, "     ");
+
+                    act.ShouldThrow<ArgumentException>();
+                }
+            }
+        }
+
+        [TestFixture]
+        public class WhenEncryptingAString
+        {
+
+            [TestFixture]
+            public class GivenNullInput
+            {
+                [Test]
+                public void ThenThrowException()
+                {
+                    Action act = () =>
+                    {
+                        new AESEncryptorService(TestKey, TestIv).Encrypt(null);
+                    };
+
+                    act.ShouldThrow<ArgumentNullException>();
+                }
+            }
+
+            [TestFixture]
+            public class GivenValidInput
+            {
+                [TestCase(EmptyString, EmptyStringEncrypted)]
+                [TestCase(EncryptMe, EncryptMeEncrypted)]
+                public void ThenItShouldEncryptTheValueAndAppendSignature(string input, string expected)
+                {
+                    var result = new AESEncryptorService(TestKey, TestIv).Encrypt(input);
+
+                    result.ShouldBe(expected);
                 }
             }
         }
@@ -49,7 +121,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 {
                     Action act = () =>
                     {
-                        new AESEncryptorService(TestKey).Encrypt(null);
+                        new AESEncryptorService(TestKey, TestIv).TryDecrypt(null, out var decryptedValue);
                     };
 
                     act.ShouldThrow<ArgumentNullException>();
@@ -64,12 +136,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 {
                     Action act = () =>
                     {
-                        new AESEncryptorService("    ").TryDecrypt(
-                            "The actual value here doesn't matter so long as there is no period",
-                            out var decryptedValue);
+                        new AESEncryptorService(TestKey, TestIv).TryDecrypt("     ", out var decryptedValue);
                     };
 
-                    act.ShouldThrow<InvalidOperationException>();
+                    act.ShouldThrow<ArgumentException>();
                 }
             }
 
@@ -81,7 +151,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 {
                     Action act = () =>
                     {
-                        new AESEncryptorService(TestKey).TryDecrypt(
+                        new AESEncryptorService(TestKey, TestIv).TryDecrypt(
                             "The actual value here doesn't matter so long as there is no period",
                             out var decryptedValue);
                     };
@@ -98,7 +168,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 {
                     Action act = () =>
                     {
-                        new AESEncryptorService(TestKey).TryDecrypt(
+                        new AESEncryptorService(TestKey, TestIv).TryDecrypt(
                             "The actual value here doesn't matter so long as.there are.multiple periods",
                             out var decryptedValue);
                     };
@@ -118,7 +188,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                     {
                         Action act = () =>
                         {
-                            new AESEncryptorService(TestKey).TryDecrypt(
+                            new AESEncryptorService(TestKey, TestIv).TryDecrypt(
                                 // missing the padding for base 64
                                 "aW52YWxpZCBzaWduYXR1cmU.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
                                 out var decryptedValue);
@@ -136,7 +206,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                     {
                         Action act = () =>
                         {
-                            new AESEncryptorService(TestKey).TryDecrypt(
+                            new AESEncryptorService(TestKey, TestIv).TryDecrypt(
 
                                 // Made up signature
                                 "aW52YWxpZCBzaWduYXR1cmU=.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
@@ -146,31 +216,18 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                         act.ShouldThrow<InvalidOperationException>();
                     }
                 }
-
+                
                 [TestFixture]
                 public class AndValueMatchesSignature
                 {
-                    private const string Input = "a.b";
-                    private const string Value = "c";
-                    private bool _result;
-                    private string _decryptedValue;
-
-                    [SetUp]
-                    public void Fixture()
+                    [TestCase(EmptyString, EmptyStringEncrypted)]
+                    [TestCase(EncryptMe, EncryptMeEncrypted)]
+                    public void ThenItShouldEncryptTheValueAndAppendSignature(string input, string encrypted)
                     {
-                        _result = new AESEncryptorService(TestKey).TryDecrypt(Input, out _decryptedValue);
-                    }
+                        var result = new AESEncryptorService(TestKey).TryDecrypt(encrypted, out var decrypted);
 
-                    [Test]
-                    public void ThenIsSuccessful()
-                    {
-                        _result.ShouldBeTrue();
-                    }
-
-                    [Test]
-                    public void ThenDecryptsValue()
-                    {
-                        _decryptedValue.ShouldBe(Value);
+                        result.ShouldBeTrue();
+                        decrypted.ShouldBe(input);
                     }
                 }
             }

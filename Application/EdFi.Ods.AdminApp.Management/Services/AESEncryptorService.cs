@@ -25,9 +25,14 @@ namespace EdFi.Ods.AdminApp.Management.Services
                 throw new ArgumentException($"Parameter {nameof(key)} cannot be an empty string.", nameof(key));
             }
 
-            _key = GetBytes(key);
+            _key = Convert.FromBase64String(key);
 
-            // Null is acceptable here - if value is not passed in then we'll generate a random one.
+            // Initialization cannot be an empty string, but null is allowed. Null will be replaced with a random value.
+            if (initializationVector?.Trim().Length == 0)
+            {
+                throw new ArgumentException($"Parameter {nameof(initializationVector)} cannot be an empty string.", nameof(initializationVector));
+            }
+
             _initializationVector = initializationVector;
         }
 
@@ -52,23 +57,22 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
             if (iv != null)
             {
-                aes.IV = GetBytes(iv);
+                aes.IV = Convert.FromBase64String(iv);
             }
             else
             {
                 aes.GenerateIV();
-                iv = GetString(aes.IV);
+                iv = Convert.ToBase64String(aes.IV);
             }
-
-            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
+            
             using var memStream = new MemoryStream();
-            using (var cryptoStream = new CryptoStream(memStream, encryptor, CryptoStreamMode.Write))
+            using (var cryptoStream = new CryptoStream(memStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
             {
-                cryptoStream.Write(GetBytes(value));
+                var b = Encoding.Unicode.GetBytes(value);
+                cryptoStream.Write(b);
             }
 
-            var encrypted = GetString(memStream.ToArray());
+            var encrypted = Convert.ToBase64String(memStream.ToArray());
             var signature = CalculateHashValue(encrypted);
 
             return $"{iv}.{encrypted}.{signature}";
@@ -104,21 +108,30 @@ namespace EdFi.Ods.AdminApp.Management.Services
                 throw new InvalidOperationException("Signatures do not match.");
             }
 
-            using var aes = Aes.Create();
-            if (aes == null)
+            using (var aes = Aes.Create())
             {
-                throw new InvalidOperationException("Creation of an AES encryption object failed.");
+                if (aes == null)
+                {
+                    throw new InvalidOperationException("Creation of an AES encryption object failed.");
+                }
+
+                aes.Key = _key;
+                aes.IV = Convert.FromBase64String(iv);
+                
+                var b = Convert.FromBase64String(encrypted);
+
+                using (var memStream = new MemoryStream())
+                {
+
+                    using (var cryptoStream = new CryptoStream(memStream, aes.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(b, 0, b.Length);
+                    }
+
+                    decryptedValue = Encoding.Unicode.GetString(memStream.ToArray());
+                }
             }
 
-            aes.Key = _key;
-            aes.IV = GetBytes(iv);
-
-            var decryptor = aes.CreateDecryptor();
-            var memStream = new MemoryStream(GetBytes(value));
-            using var cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read);
-            using var reader = new StreamReader(cryptoStream);
-
-            decryptedValue =reader.ReadToEnd();
             return true;
 
             // TODO: think about what conditions would cause False 
@@ -126,23 +139,12 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
         private string CalculateHashValue(string value)
         {
-            var textBytes = GetBytes(value);
+            var textBytes = Encoding.Unicode.GetBytes(value);
             var keyBytes = _key;
 
             using var hash = new HMACSHA256(keyBytes);
             var hashBytes = hash.ComputeHash(textBytes);
-            return GetString(hashBytes);
-        }
-
-        private byte[] GetBytes(string value)
-        {
-            // TODO: do I need to be concerned about spaces and plus sign?
-            return Encoding.ASCII.GetBytes(value);
-        }
-
-        private string GetString(byte[] bytes)
-        {
-            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+            return Convert.ToBase64String(hashBytes);
         }
     }
 }

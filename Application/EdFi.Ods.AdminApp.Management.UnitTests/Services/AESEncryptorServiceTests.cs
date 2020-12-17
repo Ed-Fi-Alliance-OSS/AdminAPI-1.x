@@ -1,5 +1,8 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
+using System.Text;
 using EdFi.Ods.AdminApp.Management.Services;
 using NUnit.Framework;
 using Shouldly;
@@ -15,15 +18,117 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
 
         // TODO: make sure the key is the right length
 
-        public const string TestKey = "98c1c51317be80fefda9472e61465c06";
-        public const string TestIv = "115d035ef1dd60ba";
+        public const string TestKey = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI=";
+        public const string TestIv = "gpkAmCb03SJVbfBF0k798g==";
 
         public const string EmptyString = "";
         public const string EmptyStringEncrypted =
-            "115d035ef1dd60ba.cb7a31011a52fb26b62428593bca05fc.4ee89ac5e034d3b980fe945d1f63e36409d685e64770810b1b0396f12ed4ac9e";
+            "gpkAmCb03SJVbfBF0k798g==.oByW0GY03625pqMhLnYhaA==.+7d9P9AdOgGbUCUut2JccVJm6nipi1CNcocz+fPBFhY=";
         public const string EncryptMe = "encrypt me";
         public const string EncryptMeEncrypted =
-            "115d035ef1dd60ba.f142ab79d72e81412a014a1e1f898a53.13ff7957290bf2469ffb5b1cc36e22c21437e51982a1b4ac2a0bc8eebc7ecc0f";
+            "gpkAmCb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQvo=.KWELi015RE6yNDMctJxALrugYldkEdDTYie6r/f7dQI=";
+
+        [Test]
+        public void Whatever()
+        {
+            string original = EncryptMe;
+
+            var key = Convert.FromBase64String(TestKey);
+            var iv = Convert.FromBase64String(TestIv);
+
+            // Encrypt the string to an array of bytes.
+            byte[] encrypted = EncryptStringToBytes_Aes(original, key, iv);
+
+            // Decrypt the bytes to a string.
+            string roundtrip = DecryptStringFromBytes_Aes(encrypted, key, iv);
+
+            roundtrip.ShouldBe(original);
+
+        }
+        static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        {
+            // Check arguments.
+            if (plainText == null || plainText.Length <= 0)
+                throw new ArgumentNullException("plainText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+            byte[] encrypted;
+
+            // Create an Aes object
+            // with the specified key and IV.
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+
+                // Create an encryptor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption.
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data to the stream.
+                            swEncrypt.Write(plainText);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+
+            // Return the encrypted bytes from the memory stream.
+            return encrypted;
+        }
+
+        static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        {
+            // Check arguments.
+            if (cipherText == null || cipherText.Length <= 0)
+                throw new ArgumentNullException("cipherText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+
+            // Declare the string used to hold
+            // the decrypted text.
+            string plaintext = null;
+
+            // Create an Aes object
+            // with the specified key and IV.
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+
+                // Create a decryptor to perform the stream transform.
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption.
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+
+                            // Read the decrypted bytes from the decrypting stream
+                            // and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+
+            return plaintext;
+        }
+
+
 
         [TestFixture]
         public class WhenInitializingTheService
@@ -56,11 +161,11 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
             public class GivenNullInitializationVector
             {
                 [Test]
-                public void ThenThrowException()
+                public void ThenAcceptIt()
                 {
                     Action act = () => new AESEncryptorService(TestKey, null);
 
-                    act.ShouldThrow<ArgumentNullException>();
+                    act.ShouldNotThrow();
                 }
             }
 
@@ -216,7 +321,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                         act.ShouldThrow<InvalidOperationException>();
                     }
                 }
-                
+
                 [TestFixture]
                 public class AndValueMatchesSignature
                 {

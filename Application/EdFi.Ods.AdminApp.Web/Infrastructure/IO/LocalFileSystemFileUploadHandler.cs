@@ -36,14 +36,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
         public string GetWorkingDirectory(string customDirectory)
         {
-            var parentFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var workingDirectory = $"{parentFolder}\\{customDirectory}";
-            if (string.IsNullOrEmpty(parentFolder) || !Directory.Exists(parentFolder)) return string.Empty;
-            if (!Directory.Exists(workingDirectory))
+            if (!Directory.Exists(customDirectory))
             {
-                Directory.CreateDirectory(workingDirectory);
+                Directory.CreateDirectory(customDirectory);
             }
-            return workingDirectory;
+            return customDirectory;
         }
 
         public string GetUploadFilePath(string directory, string fileName)

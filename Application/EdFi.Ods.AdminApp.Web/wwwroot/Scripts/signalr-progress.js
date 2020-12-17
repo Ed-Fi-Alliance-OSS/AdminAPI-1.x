@@ -37,7 +37,7 @@ $.extend(true, edfiODS, {
                 $progressBar.css("width", errorBarStyle);
 
                 if (percentComplete === 0) {
-                    $progressBar.removeClass("progress-bar-striped active").text("Completed with Error");
+                    $progressBar.removeClass("progress-bar-striped active").text("Unable to process file");
                 }
             }
         },
@@ -90,7 +90,7 @@ $.extend(true, edfiODS, {
             connection.on("UpdateStatus", function (status) {
                 if (status.complete) {
                     connection.invoke("Unsubscribe");
-                    if (status.Error) {
+                    if (status.error) {
                         if (!StringIsNullOrWhitespace(status.errorMessage)) {
                             edfiODS.signalR.setStatusText(status.errorMessage, true);
                         } else {

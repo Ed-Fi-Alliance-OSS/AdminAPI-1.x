@@ -494,7 +494,7 @@ function Invoke-TransformAppSettings {
         $settings.AppSettings.AppStartup = $Config.AppStartUp
         if("OnPrem" -ieq $Config.AppStartup)
         {
-            $settings.AppSettings.Log4NetConfigPath = "log4net\log4net.OnPremisesRelease.config" 
+            $settings.Log4NetCore.Log4NetConfigFileName = "log4net\log4net.OnPremisesRelease.config"
             $settings.AppSettings.DbSetupEnabled = "false"
         }
 

@@ -15,10 +15,6 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
     // ReSharper disable once InconsistentNaming - AES is proper, not Aes
     public class AESEncryptorServiceTests
     {
-        // TODO: will need to have one test where the IV is calculated at random,
-        // and we won't know what the actual result is.
-        // TODO: make sure the key & iv is the right length and is base 64
-
         public const string TestKey = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI=";
         public const string TestKeyWithoutEqualSign = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI";
         public const string TestIv = "gpkAmCb03SJVbfBF0k798g==";
@@ -283,6 +279,25 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                         decrypted.ShouldBe(input);
                     }
                 }
+            }
+        }
+
+        [TestFixture]
+        public class WhenTestingEndToEnd
+        {
+            [Test]
+            public void ThenEncryptDecryptWorkTogetherSuccessfully()
+            {
+                var input = "What’s in a name? A rose by any other name would smell as sweet.";
+
+                var service = new AESEncryptorService(TestKey);
+
+                var encrypted = service.Encrypt(input);
+
+                var result = service.TryDecrypt(encrypted, out string decrypted);
+
+                result.ShouldBeTrue();
+                decrypted.ShouldBe(input);
             }
         }
     }

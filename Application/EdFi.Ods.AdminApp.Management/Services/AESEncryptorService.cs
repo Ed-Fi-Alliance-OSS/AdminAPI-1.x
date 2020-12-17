@@ -10,7 +10,6 @@ using System.Text;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
-    // ReSharper disable once InconsistentNaming - AES is proper, not Aes
     public class AESEncryptorService : IStringEncryptorService
     {
         private const int ExpectedKeyArrayLength = 32;
@@ -23,7 +22,6 @@ namespace EdFi.Ods.AdminApp.Management.Services
         private readonly byte[] _initializationVector;
         private readonly byte[] _key;
 
-        // ReSharper disable once InconsistentNaming - AES is proper, not Aes
         public AESEncryptorService(string key, string initializationVector = null)
         {
             _key = ValidateKey(key);

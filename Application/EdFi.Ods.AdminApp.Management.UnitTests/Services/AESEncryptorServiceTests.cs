@@ -20,14 +20,27 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
         // TODO: make sure the key & iv is the right length and is base 64
 
         public const string TestKey = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI=";
+        public const string TestKeyWithoutEqualSign = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI";
         public const string TestIv = "gpkAmCb03SJVbfBF0k798g==";
+        public const string TestIvWithoutEqual = "gpkAmCb03SJVbfBF0k798g=";
 
         public const string EmptyString = "";
         public const string EmptyStringEncrypted =
-            "gpkAmCb03SJVbfBF0k798g==.oByW0GY03625pqMhLnYhaA==.+7d9P9AdOgGbUCUut2JccVJm6nipi1CNcocz+fPBFhY=";
+            "gpkAmCb03SJVbfBF0k798g==.oByW0GY03625pqMhLnYhaA==.VV3+VeKNqx7G3wncK5hkRk0adh2IQvC1Pv/AjSzpljw=";
         public const string EncryptMe = "encrypt me";
         public const string EncryptMeEncrypted =
-            "gpkAmCb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQvo=.KWELi015RE6yNDMctJxALrugYldkEdDTYie6r/f7dQI=";
+            "gpkAmCb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQvo=.NjnA2fW8eLeb91duEacfniHX8Mdxc8B0Gi1VDcOK6ro=";
+
+        public const string EncryptMeTamperedIv =
+            "hrkAmDb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQvo=.NjnA2fW8eLeb91duEacfniHX8Mdxc8B0Gi1VDcOK6ro=";
+        public const string EncryptMeTamperedIvResigned =
+            "hrkAmDb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQvo=.CgIafIx3LugLec+IDUi4OUokI8qNl9J5ESqI/oIlNsA=";
+        public const string EncryptMeTamperedEncryptedValue =
+            "gpkAmCb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQv==.NjnA2fW8eLeb91duEacfniHX8Mdxc8B0Gi1VDcOK6ro=";
+        public const string EncryptMeTamperedEncryptedValueResigned =
+            "gpkAmCb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQv==.douF1+uirC3PCgrOAAaZokepWH+WEXvZNGvhgzijN9w=";
+        public const string EncryptMeTamperedSignature =
+            "gpkAmCb03SJVbfBF0k798g==.y2QnYoan80w8G8iDWRVxsEJqyqRGqwUwzCiiOH/NQvo=.NjnA2fW8eLeb91duEacfniHX8Mdxc8B0Gi1VDcOK6r==";
 
         [TestFixture]
         public class WhenInitializingTheService
@@ -45,12 +58,16 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
             }
 
             [TestFixture]
-            public class GivenEmptyStringKey
+            public class GivenKeyIsNotAValidValue
             {
-                [Test]
-                public void ThenThrowException()
+                [TestCase("    ")]
+                [TestCase("")]
+                [TestCase("This is not a valid key")]
+                [TestCase(TestKeyWithoutEqualSign)]
+                [TestCase(TestIv)]
+                public void ThenThrowException(string key)
                 {
-                    Action act = () => new AESEncryptorService("     ", TestIv);
+                    Action act = () => new AESEncryptorService(key, TestIv);
 
                     act.ShouldThrow<ArgumentException>();
                 }
@@ -75,6 +92,22 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 public void ThenThrowException()
                 {
                     Action act = () => new AESEncryptorService(TestKey, "     ");
+
+                    act.ShouldThrow<ArgumentException>();
+                }
+            }
+
+            [TestFixture]
+            public class GivenInitializationVectorIsNotAValidValue
+            {
+                [TestCase("    ")]
+                [TestCase("")]
+                [TestCase("This is not a IV")]
+                [TestCase(TestKey)]
+                [TestCase(TestIvWithoutEqual)]
+                public void ThenThrowException(string iv)
+                {
+                    Action act = () => new AESEncryptorService(TestKey, iv);
 
                     act.ShouldThrow<ArgumentException>();
                 }
@@ -170,7 +203,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                     Action act = () =>
                     {
                         new AESEncryptorService(TestKey, TestIv).TryDecrypt(
-                            "The actual value here doesn't matter so long as.there are.multiple periods",
+                            "The actual value here doesn't matter so long as.there are.more.than.two.periods",
                             out var decryptedValue);
                     };
 
@@ -179,24 +212,41 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
             }
 
             [TestFixture]
-            public class GivenSignatureExists
+            public class GivenValidLookingInput
             {
                 [TestFixture]
-                public class AndValueIsNotBase64Encoded
+                public class AndStringHasBeenTamperedWith
+                {
+                    [TestCase(EncryptMeTamperedIv)]
+                    [TestCase(EncryptMeTamperedEncryptedValue)]
+                    [TestCase(EncryptMeTamperedSignature)]
+                    [TestCase(EncryptMeTamperedEncryptedValueResigned)]
+                    public void ThenReturnFalse(string encrypted)
+                    {
+                        var result =
+                            new AESEncryptorService(TestKey).TryDecrypt(encrypted, out var decryptedValue);
+
+                        result.ShouldBeFalse(decryptedValue);
+                    }
+                }
+
+                [TestFixture]
+                public class AndIVHasBeenChangedAndSigned
                 {
                     [Test]
-                    public void ThenThrowException()
+                    public void ThenTheWrongValueIsDecrypted()
                     {
-                        Action act = () =>
-                        {
-                            new AESEncryptorService(TestKey, TestIv).TryDecrypt(
+                        // If someone gets hold of the key and is thus able to re-sign contents then a modified IV
+                        // will cause the decrypted value to be incorrect - but there's no way to know in code.
+                        // Of course if they have the key then they're in the clear anyway! Only preserving
+                        // this test to acknowledge how the mechanism works.
 
-                                // missing the padding for base 64
-                                "aW52YWxpZCBzaWduYXR1cmU.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-                                out var decryptedValue);
-                        };
+                        var result =
+                            new AESEncryptorService(TestKey).TryDecrypt(
+                                EncryptMeTamperedIvResigned, out var decryptedValue);
 
-                        act.ShouldThrow<InvalidOperationException>();
+                        result.ShouldBeTrue();
+                        decryptedValue.ShouldNotBe(EncryptMe);
                     }
                 }
 

@@ -13,40 +13,84 @@ namespace EdFi.Ods.AdminApp.Management.Services
     // ReSharper disable once InconsistentNaming - AES is proper, not Aes
     public class AESEncryptorService : IStringEncryptorService
     {
+        private const int ExpectedKeyArrayLength = 32;
+        private const int ExpectedIvArrayLength = 16;
+        private const string InvalidKey =
+            "Invalid encryption key: must be a 256 bit byte array encoded as a Base64 string";
+        private const string InvalidIV =
+            "Invalid encryption initialization vector: must be a 128 bit byte array encoded as a Base64 string";
+
         private readonly byte[] _initializationVector;
         private readonly byte[] _key;
 
         // ReSharper disable once InconsistentNaming - AES is proper, not Aes
         public AESEncryptorService(string key, string initializationVector = null)
         {
-            if (key == null)
+            _key = ValidateKey(key);
+            _initializationVector = ValidateIV(initializationVector);
+
+            static byte[] ValidateKey(string key1)
             {
-                throw new ArgumentNullException(
-                    $"Parameter {nameof(key)} cannot be null.", nameof(key));
+                if (key1 == null)
+                {
+                    throw new ArgumentNullException(
+                        $"Parameter {nameof(key1)} cannot be null.", nameof(key1));
+                }
+
+                if (key1.Trim().Length == 0)
+                {
+                    throw new ArgumentException(
+                        $"Parameter {nameof(key1)} cannot be an empty string.", nameof(key1));
+                }
+
+                try
+                {
+                    var k = Convert.FromBase64String(key1);
+
+                    if (k.Length != ExpectedKeyArrayLength)
+                    {
+                        throw new ArgumentException(InvalidKey);
+                    }
+
+                    return k;
+                }
+                catch (FormatException)
+                {
+                    throw new ArgumentException(InvalidKey);
+                }
             }
 
-            if (key.Trim().Length == 0)
+            static byte[] ValidateIV(string s)
             {
-                throw new ArgumentException(
-                    $"Parameter {nameof(key)} cannot be an empty string.", nameof(key));
+                // Initialization cannot be an empty string, but null is allowed. Null will be replaced with a random value.
+                if (s == null)
+                {
+                    return null;
+                }
+
+                if (s.Trim().Length == 0)
+                {
+                    throw new ArgumentException(
+                        $"Parameter {nameof(s)} cannot be an empty string.",
+                        nameof(s));
+                }
+
+                try
+                {
+                    var iv = Convert.FromBase64String(s);
+
+                    if (iv.Length != ExpectedIvArrayLength)
+                    {
+                        throw new ArgumentException(InvalidIV);
+                    }
+
+                    return iv;
+                }
+                catch (FormatException)
+                {
+                    throw new ArgumentException(InvalidIV);
+                }
             }
-
-            _key = Convert.FromBase64String(key);
-
-            // Initialization cannot be an empty string, but null is allowed. Null will be replaced with a random value.
-            if (initializationVector == null)
-            {
-                return;
-            }
-
-            if (initializationVector.Trim().Length == 0)
-            {
-                throw new ArgumentException(
-                    $"Parameter {nameof(initializationVector)} cannot be an empty string.",
-                    nameof(initializationVector));
-            }
-
-            _initializationVector = Convert.FromBase64String(initializationVector);
         }
 
         public string Encrypt(string value)
@@ -67,9 +111,11 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
             var iv = Convert.ToBase64String(SetupKeyAndIV(encryptor));
             var encrypted = EncryptValue(encryptor);
-            var signature = CalculateHashValue(encrypted);
 
-            return $"{iv}.{encrypted}.{signature}";
+            var ivPlusEncrypted = $"{iv}.{encrypted}";
+            var signature = CalculateSignature(ivPlusEncrypted);
+
+            return $"{ivPlusEncrypted}.{signature}";
 
             byte[] SetupKeyAndIV(Aes aes)
             {
@@ -118,16 +164,27 @@ namespace EdFi.Ods.AdminApp.Management.Services
             }
 
             var components = ExtractComponents(value);
-            ValidateSignature(components);
-            decryptedValue = Decrypt(components);
 
-            return true;
+            if (SignatureDoesNotMatch(components))
+            {
+                decryptedValue = string.Empty;
+                return false;
+            }
 
-            // TODO: think about what conditions would cause False
-            // Probably just try catch and return false
-            // Must carefully detect Key or IV errors so that we can throw a proper exception rather than returning false
+            try
+            {
+                decryptedValue = Decrypt(components);
+                return true;
+            }
+            catch (CryptographicException)
+            {
+                // If we make it this far then there was some severe tampering. We don't want to
+                // show the end-user anything, so swallow the exception and just return false.
+                decryptedValue = string.Empty;
+                return false;
+            }
 
-            (string iv, string encrypted, string signature) ExtractComponents(string localValue)
+            static (string iv, string encrypted, string signature) ExtractComponents(string localValue)
             {
                 var split = localValue.Split('.');
 
@@ -140,15 +197,12 @@ namespace EdFi.Ods.AdminApp.Management.Services
                 return (split[0], split[1], split[2]);
             }
 
-            void ValidateSignature((string iv, string encrypted, string signature) localComp)
+            bool SignatureDoesNotMatch((string iv, string encrypted, string signature) localComp)
             {
-                if (CalculateHashValue(localComp.encrypted) != localComp.signature)
-                {
-                    throw new InvalidOperationException("Signatures do not match.");
-                }
+                return CalculateSignature($"{localComp.iv}.{localComp.encrypted}") != localComp.signature;
             }
 
-            string Decrypt((string iv, string encrypted, string signature) localComp)
+            string Decrypt((string iv, string encrypted, string _) localComp)
             {
                 using var aes = Aes.Create();
 
@@ -174,7 +228,7 @@ namespace EdFi.Ods.AdminApp.Management.Services
             }
         }
 
-        private string CalculateHashValue(string value)
+        private string CalculateSignature(string value)
         {
             var textBytes = Encoding.Unicode.GetBytes(value);
             var keyBytes = _key;

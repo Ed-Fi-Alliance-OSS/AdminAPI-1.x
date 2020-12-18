@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -6,6 +6,7 @@
 #requires -version 5
 
 $ErrorActionPreference = "Stop"
+Set-Variable DbDeployVersion -option Constant -value "2.0.0"
 
 Import-Module -Name "$PSScriptRoot/connection-strings.psm1"
 
@@ -272,7 +273,7 @@ function Install-EdFiAdminDatabase {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = "1.1.0",
+        $DbDeployVersion = $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -342,7 +343,7 @@ function Install-EdFiODSDatabase {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = "1.1.0",
+        $DbDeployVersion = $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -412,7 +413,7 @@ function Install-EdFiSecurityDatabase {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = "1.1.0",
+        $DbDeployVersion = $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -483,7 +484,7 @@ function Install-AdminAppTables {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = "2.0.0",
+        $DbDeployVersion = $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]
@@ -559,7 +560,7 @@ function Invoke-PrepareDatabasesForTesting {
 
         # EdFi.Db.Deploy tool version to use.
         [string]
-        $DbDeployVersion = "2.0.0",
+        $DbDeployVersion = $DbDeployVersion,
 
         # Ed-Fi NuGet feed for tool download.
         [string]

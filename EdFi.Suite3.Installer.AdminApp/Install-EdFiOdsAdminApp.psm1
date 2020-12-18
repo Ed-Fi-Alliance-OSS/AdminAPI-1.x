@@ -34,7 +34,7 @@ Import-Module -Force $folders.modules.invoke("Application/Install.psm1") -Scope 
 Import-Module -Force $folders.modules.invoke("Application/Uninstall.psm1") -Scope Global
 Import-Module -Force $folders.modules.invoke("Application/Configuration.psm1") -Scope Global
 
-$DbDeployVersion = "1.1.0"
+$DbDeployVersion = "2.0.0"
 
 function Install-EdFiOdsAdminApp {
     <#
@@ -255,7 +255,7 @@ function Install-EdFiOdsAdminApp {
         [switch]
         $NoDuration,
 
-        # App startup will decide admin app startup type. Valid values are OnPrem, Azure. Installer always used in 
+        # App startup will decide admin app startup type. Valid values are OnPrem, Azure. Installer always used in
         # OnPrem mode. So, the default value set to OnPrem
         [String]
         $AppStartUp = "OnPrem"
@@ -299,7 +299,7 @@ function Install-EdFiOdsAdminApp {
     $elapsed = Use-StopWatch {
         $result += Initialize-Configuration -Config $config
         $result += Get-AdminAppPackage -Config $Config
-        $result += Get-DbDeploy -Config $Config      
+        $result += Get-DbDeploy -Config $Config
         $result += Invoke-TransformAppSettings -Config $Config
         $result += Invoke-TransformConnectionStrings -Config $config
         $result += Install-Application -Config $Config
@@ -489,7 +489,7 @@ function Invoke-TransformAppSettings {
         $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
         $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
-        $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'  
+        $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'
         $settings.AppSettings.DatabaseEngine = $config.engine
         $settings.AppSettings.AppStartup = $Config.AppStartUp
         if("OnPrem" -ieq $Config.AppStartup)
@@ -516,7 +516,7 @@ function Invoke-TransformAppSettings {
 
         $EmptyHashTable=@{}
         $mergedSettings = Merge-Hashtables $settings, $EmptyHashTable
-        New-JsonFile $settingsFile $mergedSettings -Overwrite        
+        New-JsonFile $settingsFile $mergedSettings -Overwrite
     }
 }
 
@@ -563,7 +563,7 @@ function Invoke-TransformConnectionStrings {
             ConnectionStrings = @{
                 ProductionOds = $odsconnString
                 Admin = $adminconnString
-                Security = $securityConnString 
+                Security = $securityConnString
             }
         }
 

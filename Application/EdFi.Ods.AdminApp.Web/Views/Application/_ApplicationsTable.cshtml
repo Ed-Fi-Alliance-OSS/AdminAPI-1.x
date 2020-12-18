@@ -45,7 +45,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                         </div>
                         <div class="col-lg-6">
                             <p>
-                                <strong>Profile: </strong>@application.ProfileName
+                                <strong>Profile: </strong>@(application.ProfileName == null ? "None": @application.ProfileName)
                             </p>
                         </div>
                     </div>

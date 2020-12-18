@@ -65,7 +65,7 @@ the TeamCity build configurations.
 4. Adjust AdminApp's `appsettings.SqlServer-SharedInstance.json` by setting the
    `ProductionOds` connection string to point to the
    `EdFi_Ods_Populated_Template` database.\
-   _:warning: Make sure you don't check in these changes._
+   :warning: _Make sure you don't check in these changes._
 5. Run Admin App from Visual Studio.
 
 #### Resetting from Scratch
@@ -90,8 +90,30 @@ the Admin App first time setup process:
 3. Re-run `run-dbup-migrations.ps1` in the AdminApp clone directory to
    re-install the Admin App database support.
 4. Re-start the API.
-5. Start debuging AdminApp.
+5. Start debugging AdminApp.
 
 ### Docker
 
-TODO
+These instructions are for running AdminApp from Visual Studio, connecting to
+the ODS/API running in Docker:
+
+* Generate a 256 bit AES encryption key and paste it into the
+  `appSettings.Docker-SharedInstance.json` file. :warning: _do not commit your
+  modified file into source control_. You can generate a key using a PowerShell
+  script in the `eng` directory:
+
+  ```powershell
+  # From AdminApp clone directory
+  Import-Module ./eng/key-management.psm1
+  New-AESKey
+  ```
+
+* In the connection strings, adjust the default Host, Port, Username, and
+  Password as required for your Docker configuration.
+* In the Docker files directory, create an appropriate `.env` file.
+* Start the ODS/API in Docker using the Docker Compose "headless" file:
+
+  ```powershell
+  # From the Docker clone directory
+  docker-compose -f compose-shared-instance-headless.yml up -d
+  ```

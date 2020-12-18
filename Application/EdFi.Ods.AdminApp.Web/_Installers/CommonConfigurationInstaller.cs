@@ -20,6 +20,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Common.Security;
+using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Security.DataAccess.Contexts;
 using Hangfire;
 using log4net;
@@ -34,16 +35,15 @@ namespace EdFi.Ods.AdminApp.Web._Installers
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(CommonConfigurationInstaller));
 
-        public void Install(IServiceCollection services)
+        public void Install(IServiceCollection services, AppSettings appSettings)
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
             services.AddScoped<ISecurityContext>(x =>
             {
-                var appSettings = x.GetService<IOptions<AppSettings>>();
                 var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
 
-                if (appSettings.Value.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
+                if (appSettings.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
                     return new SqlServerSecurityContext(connectionStrings.Value.Security);
 
                 return new PostgresSecurityContext(connectionStrings.Value.Security);
@@ -51,10 +51,9 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddScoped<IUsersContext>(x =>
             {
-                var appSettings = x.GetService<IOptions<AppSettings>>();
                 var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
 
-                if (appSettings.Value.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
+                if (appSettings.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
                     return new SqlServerUsersContext(connectionStrings.Value.Admin);
 
                 return new PostgresUsersContext(connectionStrings.Value.Admin);
@@ -135,6 +134,16 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             }
 
             services.AddSingleton<CloudOdsUpdateService>();
+
+            if (appSettings.EncryptionProtocol == "AES")
+            {
+                services.AddSingleton<IStringEncryptorService, AESEncryptorService>(
+                    x => new AESEncryptorService(appSettings.EncryptionKey));
+            }
+            else
+            {
+                services.AddSingleton<IStringEncryptorService, DataProtectionAPIEncryptorService>();
+            }
         }
 
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);

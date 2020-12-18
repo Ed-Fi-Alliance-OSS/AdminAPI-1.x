@@ -5,6 +5,7 @@
 
 using System;
 using System.Data.Entity;
+using System.IO;
 using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
@@ -23,10 +24,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using log4net;
+using log4net.Config;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Logging;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -105,9 +107,9 @@ namespace EdFi.Ods.AdminApp.Web
             var appStartup = appSettings.AppStartup;
 
             if (appStartup == "OnPrem")
-                new OnPremInstaller().Install(services);
+                new OnPremInstaller().Install(services, appSettings);
             else if (appStartup == "Azure")
-                new AzureInstaller().Install(services);
+                new AzureInstaller().Install(services, appSettings);
 
 
             services.AddHangfire(configuration => configuration
@@ -132,12 +134,9 @@ namespace EdFi.Ods.AdminApp.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var loggingOptions = Configuration.GetSection("Log4NetCore")
-                .Get<Log4NetProviderOptions>();
-
-            loggerFactory.AddLog4Net(loggingOptions);
+            ConfigureLogging();
 
             if (env.IsProduction())
             {
@@ -169,6 +168,15 @@ namespace EdFi.Ods.AdminApp.Web
                 endpoints.MapHub<ProductionLearningStandardsHub>("/productionLearningStandardsHub");
                 endpoints.MapHub<BulkUploadHub>("/bulkUploadHub");
             });
+        }
+
+        private void ConfigureLogging()
+        {
+            var assembly = typeof(Program).GetTypeInfo().Assembly;
+
+            var configPath = Path.Combine(Path.GetDirectoryName(assembly.Location) ?? string.Empty, Configuration["AppSettings:Log4NetConfigPath"]);
+
+            XmlConfigurator.Configure(LogManager.GetRepository(assembly), new FileInfo(configPath));
         }
 
         public static AppSettings ConfigurationAppSettings { get; set; }

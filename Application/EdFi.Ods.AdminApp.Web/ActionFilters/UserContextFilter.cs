@@ -29,28 +29,15 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
         {
             var userId = filterContext.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            TryQueryUser(userId, out var user);
+            var user = _identity.Users.SingleOrDefault(x => x.Id == userId);
+            if (user == null)
+            {
+                return;
+            }
 
             _userContext.User = user;
-            if (user != null)
-            {
-                var userRoles = _identity.UserRoles.Where(x => x.UserId == user.Id).ToArray();
-                _userContext.Permissions = PopulatePermissions(userRoles);
-            }
-        }
-
-        private bool TryQueryUser(string userId, out AdminAppUser user)
-        {
-            var userLookup = _identity.Users.SingleOrDefault(x => x.Id == userId);
-
-            if (userLookup != null)
-            {
-                user = userLookup;
-                return true;
-            }
-
-            user = null;
-            return false;
+            var userRoles = _identity.UserRoles.Where(x => x.UserId == user.Id).ToArray();
+            _userContext.Permissions = PopulatePermissions(userRoles);
         }
 
         private static Permission[] PopulatePermissions(IEnumerable<IdentityUserRole<string>> userRoles)

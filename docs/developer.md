@@ -2,14 +2,15 @@
 
 ## Development Pre-Requisites
 
-* A functioning local copy of an [Ed-Fi
-  ODS for Suite 3](https://techdocs.ed-fi.org/display/ETKB/Ed-Fi+Operational+Data+Store+and+API)
+* A functioning local copy of an [Ed-Fi ODS for Suite
+  3](https://techdocs.ed-fi.org/display/ETKB/Ed-Fi+Operational+Data+Store+and+API)
   * Currently supported versions: 3.4, 5.0.0
 * Visual Studio 2019 or greater
 * Latest Azure SDK
 * Support for file names longer than 256 characters:
   1. Start the registry editor (regedit.exe)
-  2. Navigate to `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem`
+  2. Navigate to
+     `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem`
   3. Double click LongPathsEnabled
   4. Set to 1 and click OK
 
@@ -44,3 +45,53 @@ arguments.
 
 See [.teamcity/readme.md](../.teamcity/readme.md) for information on how to use
 the TeamCity build configurations.
+
+## Local Debugging with the ODS/API
+
+### From Source Code, using SQL Server
+
+1. Get started with the ODS/API until the point where you are ready to have the
+   ODS/API running in Visual Studio.
+2. Change the ODS/API web.config to run in SharedInstance mode and change the
+   ODS connection string to point to the `EdFi_Ods_Populated_Template` database.
+3. Install the AdminApp database support by running the following command in a
+   PowerShell window:
+
+   ```powershell
+   # From AdminApp clone directory
+   .\eng\run-dbup-migrations.ps1
+   ```
+
+4. Adjust AdminApp's `appsettings.SqlServer-SharedInstance.json` by setting the
+   `ProductionOds` connection string to point to the
+   `EdFi_Ods_Populated_Template` database.\
+   _:warning: Make sure you don't check in these changes._
+5. Run Admin App from Visual Studio.
+
+#### Resetting from Scratch
+
+Instructions for resetting your ODS/API to its initial state in order to test
+the Admin App first time setup process:
+
+1. If the API is running in Visual Studio, stop it.
+2. Reset the Ed-Fi databases:
+   1. Either re-run `initdev`, or
+   2. Run the following commands for a quicker reset:
+
+      ```powershell
+      # From Ed-Fi-ODS-Implementation clone directory
+      # Only need to run the following line if this is a new PowerShell session
+      # .\Initialize-PowershellForDevelopment.ps1 
+      Reset-AdminDatabase
+      Reset-SecurityDatabase
+      Reset-PopulatedTemplate
+      ```
+
+3. Re-run `run-dbup-migrations.ps1` in the AdminApp clone directory to
+   re-install the Admin App database support.
+4. Re-start the API.
+5. Start debuging AdminApp.
+
+### Docker
+
+TODO

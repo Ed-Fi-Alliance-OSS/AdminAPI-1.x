@@ -115,5 +115,5 @@ the ODS/API running in Docker:
 
   ```powershell
   # From the Docker clone directory
-  docker-compose -f compose-shared-instance-headless.yml up -d
+  docker-compose -f compose-shared-instance-for-local-debug.yml up -d
   ```

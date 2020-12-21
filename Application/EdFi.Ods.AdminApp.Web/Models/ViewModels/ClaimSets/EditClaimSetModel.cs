@@ -35,6 +35,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
                 .Must(BeAUniqueName)
                 .WithMessage("A claim set with this name already exists in the database. Please enter a unique name.")
                 .When(NameIsChanged);
+
+            RuleFor(m => m.ClaimSetName)
+                .MaximumLength(255)
+                .WithMessage("The claim set name must be less than 255 characters.");
         }
 
         private bool NameIsChanged(EditClaimSetModel model)

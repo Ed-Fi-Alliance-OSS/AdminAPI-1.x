@@ -28,7 +28,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
             RuleFor(m => m.Name)
                 .MaximumLength(255)
-                .WithMessage("The claim set name must be maximum 255 characters.");
+                .WithMessage("The claim set name must be less than 255 characters.");
         }
 
         private bool BeAUniqueName(string newName)

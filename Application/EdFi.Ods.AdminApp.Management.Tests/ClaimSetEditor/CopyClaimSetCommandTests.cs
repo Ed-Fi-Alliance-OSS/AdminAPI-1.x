@@ -106,5 +106,33 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
             });
         }
+
+        [Test]
+        public void ShouldNotCopyClaimSetIfNameLengthGreaterThan255Characters()
+        {
+            var testApplication = new Application
+            {
+                ApplicationName = $"Test Application {DateTime.Now:O}"
+            };
+            Save(testApplication);
+
+            var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+            Save(testClaimSet);
+
+            var newClaimSet = new CopyClaimSetModel()
+            {
+                Name = "ThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255Characters",
+                OriginalId = testClaimSet.ClaimSetId
+            };
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new CopyClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(newClaimSet);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
+            });
+        }
+
     }
 }

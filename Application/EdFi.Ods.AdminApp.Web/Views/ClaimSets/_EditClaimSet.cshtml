@@ -16,7 +16,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     @Html.Input(x => x.ClaimSetId).Hide()
     <div class="form-group row">
         <div class="col-md-8">
-            @Html.InputBlock(x => x.ClaimSetName)
+            @Html.InputBlock(x => x.ClaimSetName, inputModifier: x => x.Attr("maxlength", 255))
         </div>
         <div class="col-md-4">
             @Html.SaveButton("Update Name")

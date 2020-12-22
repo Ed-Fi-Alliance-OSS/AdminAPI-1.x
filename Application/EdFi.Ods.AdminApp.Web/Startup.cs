@@ -105,9 +105,9 @@ namespace EdFi.Ods.AdminApp.Web
             var appStartup = appSettings.AppStartup;
 
             if (appStartup == "OnPrem")
-                new OnPremInstaller().Install(services);
+                new OnPremInstaller().Install(services, appSettings);
             else if (appStartup == "Azure")
-                new AzureInstaller().Install(services);
+                new AzureInstaller().Install(services, appSettings);
 
 
             services.AddHangfire(configuration => configuration

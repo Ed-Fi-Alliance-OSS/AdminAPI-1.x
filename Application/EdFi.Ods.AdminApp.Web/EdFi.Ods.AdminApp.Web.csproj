@@ -44,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.Docker-SharedInstance.json" CopyToPublishDirectory="Never" />
     <Content Update="appsettings.PostgreSql-DistrictSpecific.json" CopyToPublishDirectory="Never" />
     <Content Update="appsettings.PostgreSql-SharedInstance.json" CopyToPublishDirectory="Never" />
     <Content Update="appsettings.PostgreSql-YearSpecific.json" CopyToPublishDirectory="Never" />

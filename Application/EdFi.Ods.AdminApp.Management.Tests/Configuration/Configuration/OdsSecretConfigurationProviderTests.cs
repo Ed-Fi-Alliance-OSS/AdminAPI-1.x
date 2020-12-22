@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             });
 
             return new OdsSecretConfigurationProvider(
-                new StringEncryptorService(
+                new DataProtectionAPIEncryptorService(
                     new EncryptionConfigurationProviderService(appSettingsAccessor.Object)), database);
         }
 

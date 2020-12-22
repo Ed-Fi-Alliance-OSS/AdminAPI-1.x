@@ -18,8 +18,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
         private const string StringValueForEncryption = "stringValueForEncryption";
         private Mock<IEncryptionConfigurationProviderService> _encryptionConfigurationProviderServiceWithEntropy;
         private Mock<IEncryptionConfigurationProviderService> _encryptionConfigurationProviderServiceWithNoEntropy;
-        private StringEncryptorService _stringEncryptorServiceWithEntropy;
-        private StringEncryptorService _stringEncryptorServiceWithNoEntropy;
+        private DataProtectionAPIEncryptorService _stringEncryptorServiceWithEntropy;
+        private DataProtectionAPIEncryptorService _stringEncryptorServiceWithNoEntropy;
 
         public StringEncryptorServiceTester()
         {
@@ -31,11 +31,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
         {
             _encryptionConfigurationProviderServiceWithEntropy = new Mock<IEncryptionConfigurationProviderService>();
             _encryptionConfigurationProviderServiceWithEntropy.Setup(x => x.GetEntropy()).Returns(_optionalEntropyValue);
-            _stringEncryptorServiceWithEntropy = new StringEncryptorService(_encryptionConfigurationProviderServiceWithEntropy.Object);
+            _stringEncryptorServiceWithEntropy = new DataProtectionAPIEncryptorService(_encryptionConfigurationProviderServiceWithEntropy.Object);
 
             _encryptionConfigurationProviderServiceWithNoEntropy = new Mock<IEncryptionConfigurationProviderService>();
             _encryptionConfigurationProviderServiceWithNoEntropy.Setup(x => x.GetEntropy()).Returns((byte[])null);
-            _stringEncryptorServiceWithNoEntropy = new StringEncryptorService(_encryptionConfigurationProviderServiceWithNoEntropy.Object);
+            _stringEncryptorServiceWithNoEntropy = new DataProtectionAPIEncryptorService(_encryptionConfigurationProviderServiceWithNoEntropy.Object);
         }
 
         [Test]

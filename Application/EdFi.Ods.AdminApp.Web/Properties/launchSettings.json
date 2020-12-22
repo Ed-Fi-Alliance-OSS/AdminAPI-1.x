@@ -51,6 +51,13 @@
                 "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific"
             }
         },
+        "Shared Instance (Docker-Postgres)": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Docker-SharedInstance"
+            }
+        },
 
 
         "EdFi.Ods.AdminApp.Web": {

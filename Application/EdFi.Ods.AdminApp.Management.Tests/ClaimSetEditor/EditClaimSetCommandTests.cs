@@ -91,5 +91,29 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("'Claim Set Name' must not be empty.");
             });
         }
+
+        [Test]
+        public void ShouldNotEditClaimSetIfNameLengthGreaterThan255Characters()
+        {
+            var testApplication = new Application
+            {
+                ApplicationName = $"Test Application {DateTime.Now:O}"
+            };
+            Save(testApplication);
+
+            var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet1", Application = testApplication };
+            Save(testClaimSet);
+
+            var editModel = new EditClaimSetModel { ClaimSetName = "ThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255Characters", ClaimSetId = testClaimSet.ClaimSetId };
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new EditClaimSetModelValidator(securityContext);
+                var validationResults = validator.Validate(editModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
+            });
+        }
+
     }
 }

@@ -325,25 +325,25 @@ var buildChildDropdownRow = function buildChildDropdownRow(parentResourceId) {
     return $row;
 };
 
-$("#add-resource-button").click(function (e) {
+$("#add-resource-button").click(function (e) {        
     e.preventDefault();
-    var dropDownList = $("#ResourceClaimsDropDown")[0];
-    var selectedItem = dropDownList.options[dropDownList.selectedIndex];
-    var optGroup = selectedItem.closest("optgroup").label;
-
-    if (!selectedItem.disabled) {
-        if (optGroup === "Groups") {
-            $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value));
-            $("#resource-claim-table-body").append(buildChildDropdownRow(selectedItem.value));
-            populateChildResourcesForParent(selectedItem.value);
-        } else {
-            $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value, 0, false, true));
-            disableOptionForChildResource(undefined, undefined, selectedItem.value);
+    var dropDownList = $("#ResourceClaimsDropDown")[0];    
+    var selectedItem = dropDownList.options[dropDownList.selectedIndex];    
+    if (selectedItem.closest("optgroup")) {        
+        var optGroup = selectedItem.closest("optgroup").label;
+        if (!selectedItem.disabled) {
+            if (optGroup === "Groups") {
+                $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value));
+                $("#resource-claim-table-body").append(buildChildDropdownRow(selectedItem.value));
+                populateChildResourcesForParent(selectedItem.value);
+            } else {
+                $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value, 0, false, true));
+                disableOptionForChildResource(undefined, undefined, selectedItem.value);
+            }
         }
+        selectedItem.disabled = true;
+        dropDownList.selectedIndex = 0;
     }
-
-    selectedItem.disabled = true;
-    dropDownList.selectedIndex = 0;
 });
 
 var addChildResourceButton = function addChildResourceButton(e) {

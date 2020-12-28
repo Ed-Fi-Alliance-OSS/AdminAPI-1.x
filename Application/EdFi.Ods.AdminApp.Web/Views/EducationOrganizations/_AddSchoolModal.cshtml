@@ -22,14 +22,14 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     @Html.Input(m => m.LocalEducationAgencyId).Id("add-school-lea-id").Hide()
                     @Html.ValidationBlock()
-                    @Html.InputBlock(m => m.SchoolId)
+                    @Html.InputBlock(m => m.SchoolId).AddClass("reset-included")
                     @Html.MultiSelectListBlock(m => m.GradeLevels, Model.GradeLevelOptions, x => new SelectListItem {Text = x.DisplayText, Value = x.Value})
-                    @Html.InputBlock(m => m.Name)
-                    @Html.InputBlock(m => m.StreetNumberName)
-                    @Html.InputBlock(m => m.ApartmentRoomSuiteNumber)
-                    @Html.InputBlock(m => m.City)
+                    @Html.InputBlock(m => m.Name).AddClass("reset-included")
+                    @Html.InputBlock(m => m.StreetNumberName).AddClass("reset-included")
+                    @Html.InputBlock(m => m.ApartmentRoomSuiteNumber).AddClass("reset-included")
+                    @Html.InputBlock(m => m.City).AddClass("reset-included")
                     @Html.SelectListBlock(m => m.State, Model.StateOptions, x => new SelectListItem {Text = x.DisplayText, Value = x.Value})
-                    @Html.InputBlock(m => m.ZipCode)
+                    @Html.InputBlock(m => m.ZipCode).AddClass("reset-included")
                 }
             </div>
             <div class="modal-footer">
@@ -54,13 +54,18 @@ See the LICENSE and NOTICES files in the project root for more information.
             $modal.modal("show");
         });
        
-        $("#add-school-modal").on("show.bs.modal", function () {                  
-            $("#addSchoolFormModal").get(0).reset();
+        $("#add-school-modal").on("show.bs.modal", function () {
+            $(".reset-included input").val('');            
+            $('#State option').prop('selected', function () {
+                return this.defaultSelected;
+            });           
             $(".form-group").removeClass("has-error");
             $(".validationSummary").addClass("hidden");
             $(".multiselect.dropdown-toggle").attr("title", "None");
             $(".multiselect-selected-text").html("None selected");
             $(".multiselect-container.dropdown-menu > li").removeClass("active");
+            $("#addSchoolFormModal input[type='checkbox']").removeAttr("checked");
+            $('#addSchoolFormModal select option').removeAttr('selected');
         });
     });
 </script>

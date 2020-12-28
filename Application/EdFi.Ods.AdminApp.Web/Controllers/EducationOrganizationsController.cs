@@ -63,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var model = _mapper.Map<School>(viewModel);
             model.Id = Guid.Empty.ToString();
             var addResult = (await _odsApiFacadeFactory.Create()).AddSchool(model);
-            return addResult.Success ? JsonSuccess("Organization Added") : JsonError(addResult.ErrorMessage);
+            return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
         }
 
         public async Task<ActionResult> EditLocalEducationAgencyModal(string id)
@@ -154,7 +154,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> DeleteSchool(DeleteEducationOrganizationModel model)
         {
             var deletionResult = (await _odsApiFacadeFactory.Create()).DeleteSchool(model.Id);
-            return deletionResult.Success ? JsonSuccess("Organization Removed") : JsonError(deletionResult.ErrorMessage);
+            return deletionResult.Success ? JsonSuccess("School Removed") : JsonError(deletionResult.ErrorMessage);
         }
     }
 }

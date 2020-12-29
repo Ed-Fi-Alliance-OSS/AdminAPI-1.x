@@ -43,18 +43,18 @@ See the LICENSE and NOTICES files in the project root for more information.
     $(function () {
         $(".delete-lea-link").click(function () {
             var name = $(this).attr("data-name");
-            var id = $(this).attr("data-id");            
+            var id = $(this).attr("data-id");
             ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeleteLocalEducationAgency", "EducationOrganizations")))", false);
         });
 
         $(".delete-school-link").click(function () {
             var name = $(this).attr("data-name");
-            var id = $(this).attr("data-id");            
+            var id = $(this).attr("data-id");
             ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeleteSchool", "EducationOrganizations")))", true);
         });
     });
 
-    function ShowDeleteEdOrgModal(organizationName, organizationId, url, isSchool) {        
+    function ShowDeleteEdOrgModal(organizationName, organizationId, url, isSchool) {
         var $deleteEdOrgModal = $("#delete-edorg-modal");
         $deleteEdOrgModal.find("form").attr("action", url);
         $deleteEdOrgModal.find("#delete-edorg-name").text(organizationName);

@@ -13,9 +13,9 @@
 @{ await Html.RenderPartialAsync("_SettingsGlobalHeader", Model.GlobalSettingsTabEnumerations); }
 
 <div class="row">
-    <div class="col-xs-10">
+    <div class="col-lg-10">
         <div class="tab-content">
-            <div class="tab-pane active" id="global-tab">
+            <div class="tab-pane active col-lg-10" id="claim-set-tab">
                 @{ await Html.RenderPartialAsync("_EditClaimSet", Model.EditClaimSetModel); }
             </div>
         </div>

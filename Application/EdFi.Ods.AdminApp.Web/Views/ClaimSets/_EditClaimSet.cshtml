@@ -19,8 +19,8 @@ See the LICENSE and NOTICES files in the project root for more information.
             @Html.InputBlock(x => x.ClaimSetName, inputModifier: x => x.Attr("maxlength", 255))
         </div>
         <div class="col-md-4">
-            @Html.SaveButton("Update Name")
-        </div>        
+            @Html.SaveButton("Update Name").AddClass("no-ajax")
+        </div>
     </div>
 }
 <h3>Applications</h3>
@@ -60,7 +60,7 @@ else
     });}
 </div>
 <div class="padding-top-5">
-    @Html.Button("Back").AddClass("back-btn back-ajax claimset-back-btn").Data("back-url", Url.Action("ClaimSets", "GlobalSettings"))
+    @Html.ActionLink("Back", "ClaimSets", "GlobalSettings", null, new { @class = "btn btn-primary cta" })
 </div>
 <script type="text/javascript">
     $('#edit-claim-set-form').submit(function (e) {

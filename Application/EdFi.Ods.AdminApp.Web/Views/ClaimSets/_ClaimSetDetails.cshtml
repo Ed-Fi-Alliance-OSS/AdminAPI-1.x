@@ -110,10 +110,10 @@ else
     <div> No resource claims found.</div>
 }
     <div>
-        @Html.Button("Back").AddClass("back-btn back-ajax claimset-back-btn").Data("back-url", Url.Action("ClaimSets", "GlobalSettings"))
+        @Html.ActionLink("Back", "ClaimSets", "GlobalSettings", null, new { @class = "btn btn-primary cta" })
         @if (Model.ClaimSet.IsEditable)
         {
-            @Html.Button("Edit Claim Set").Attr("href", Url.Action("EditClaimSet", "ClaimSets", new { claimSetId = Model.ClaimSet.Id })).AddClass("edit-claimset navigational-ajax").Data("state", "edit").Data("page-url", Url.Action("ClaimSets", "GlobalSettings")).Data("action", "editing the Claim Set")
+            @Html.ActionLink("Edit Claim Set", "EditClaimSet", "ClaimSets", new { claimSetId = Model.ClaimSet.Id }, new { @class = "btn btn-primary cta edit-claimset" })
         }
     </div>
 

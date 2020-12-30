@@ -1,0 +1,23 @@
+@*
+    SPDX-License-Identifier: Apache-2.0
+    Licensed to the Ed-Fi Alliance under one or more agreements.
+    The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+    See the LICENSE and NOTICES files in the project root for more information.
+*@
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetModel
+
+@{
+    ViewBag.Title = "Edit Claim Set";
+}
+
+@{ await Html.RenderPartialAsync("_SettingsGlobalHeader", Model.GlobalSettingsTabEnumerations); }
+
+<div class="row">
+    <div class="col-lg-10">
+        <div class="tab-content">
+            <div class="tab-pane active col-lg-10" id="claim-set-tab">
+                @{ await Html.RenderPartialAsync("_EditClaimSet", Model.EditClaimSetModel); }
+            </div>
+        </div>
+    </div>
+</div>

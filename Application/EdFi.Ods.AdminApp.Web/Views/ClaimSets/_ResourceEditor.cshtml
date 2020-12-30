@@ -128,7 +128,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         @Html.DropDownList("ResourceClaimsDropDown", Model.AllResourceClaims, new { @class = "resource-claim-dropdown" })
     </div>
     <div class="col-md-4">
-        @Html.Button("Add Resource").Attr("type", "button").Id("add-resource-button")
+        @Html.Button("Add Resource").Attr("type", "button").Id("add-resource-button").Attr("disabled", true)
     </div>
 </div>
 
@@ -148,5 +148,12 @@ See the LICENSE and NOTICES files in the project root for more information.
                        }));
     var childResourcesForParentUrl = '@Url.Action("GetSelectListForChildResourceClaims", "ClaimSets")';
     InitializeModalLoaders();
+
+    $("#ResourceClaimsDropDown").change(function () {        
+        $('#add-resource-button').prop("disabled", false);
+    });
+    $("#add-resource-button").click(function () {        
+        $('#add-resource-button').prop("disabled", true);
+    });
 </script>  
 <script type="text/javascript" src="~/bundles/claimset.min.js" asp-append-version="true"></script>

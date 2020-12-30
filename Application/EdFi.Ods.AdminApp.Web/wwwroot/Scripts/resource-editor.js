@@ -290,6 +290,13 @@ var populateChildResourcesForParent = function populateChildResourcesForParent(p
         success: function success(data) {
             $(data).each(function () {
                 var dropdown = $("#child-resource-dropdown-".concat(parentResourceId));
+                var childResourceButton = $('.add-child-resource-button[data-parent-id='+parentResourceId+']');
+                dropdown.change(function () {
+                    childResourceButton.prop("disabled", false);
+                });
+                childResourceButton.click(function () {
+                    childResourceButton.prop("disabled", true);
+                });
                 dropdown[0].selectedIndex = 0;
                 dropdown.append($("<option></option>").val(this.value).html(this.text).attr("disabled", this.disabled));
                 var row = $("td[data-resource-id=".concat(parentResourceId, "]")).parent();
@@ -320,30 +327,30 @@ var claimsToggle = function claimsToggle() {
 };
 
 var buildChildDropdownRow = function buildChildDropdownRow(parentResourceId) {
-    var $row = $(["<tr class=\"child-resource-claim\" data-parent-id='".concat(parentResourceId, "' id='child-dropdown-row-").concat(parentResourceId, "' style=\"display: none\">"), "<td class=\"icon-cell\"></td>", "<td class=\"child-dropdown\"><select id=\"child-resource-dropdown-".concat(parentResourceId, "\" name=\"ChildResourceClaimsDropDown\"></select></td>"), "<td colspan=\"6\"><button type=\"button\" class=\"btn btn-primary cta add-child-resource-button\" data-parent-id=\"".concat(parentResourceId, "\">Add Child Resource</button></td>"), "</tr>"].join("\n"));
+    var $row = $(["<tr class=\"child-resource-claim\" data-parent-id='".concat(parentResourceId, "' id='child-dropdown-row-").concat(parentResourceId, "' style=\"display: none\">"), "<td class=\"icon-cell\"></td>", "<td class=\"child-dropdown\"><select id=\"child-resource-dropdown-".concat(parentResourceId, "\" name=\"ChildResourceClaimsDropDown\"></select></td>"), "<td colspan=\"6\"><button type=\"button\" disabled class=\"btn btn-primary cta add-child-resource-button\" data-parent-id=\"".concat(parentResourceId, "\">Add Child Resource</button></td>"), "</tr>"].join("\n"));
     $row.find(".add-child-resource-button").click(addChildResourceButton);
     return $row;
 };
 
-$("#add-resource-button").click(function (e) {
+$("#add-resource-button").click(function (e) {        
     e.preventDefault();
-    var dropDownList = $("#ResourceClaimsDropDown")[0];
+    var dropDownList = $("#ResourceClaimsDropDown")[0];    
     var selectedItem = dropDownList.options[dropDownList.selectedIndex];
-    var optGroup = selectedItem.closest("optgroup").label;
-
-    if (!selectedItem.disabled) {
-        if (optGroup === "Groups") {
-            $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value));
-            $("#resource-claim-table-body").append(buildChildDropdownRow(selectedItem.value));
-            populateChildResourcesForParent(selectedItem.value);
-        } else {
-            $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value, 0, false, true));
-            disableOptionForChildResource(undefined, undefined, selectedItem.value);
+    if (selectedItem.closest("optgroup")) {        
+        var optGroup = selectedItem.closest("optgroup").label;
+        if (!selectedItem.disabled) {
+            if (optGroup === "Groups") {
+                $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value));
+                $("#resource-claim-table-body").append(buildChildDropdownRow(selectedItem.value));
+                populateChildResourcesForParent(selectedItem.value);
+            } else {
+                $("#resource-claim-table-body").append(buildResourceTableRow(selectedItem.text, selectedItem.value, 0, false, true));
+                disableOptionForChildResource(undefined, undefined, selectedItem.value);
+            }
         }
+        selectedItem.disabled = true;
+        dropDownList.selectedIndex = 0;
     }
-
-    selectedItem.disabled = true;
-    dropDownList.selectedIndex = 0;
 });
 
 var addChildResourceButton = function addChildResourceButton(e) {
@@ -353,14 +360,16 @@ var addChildResourceButton = function addChildResourceButton(e) {
     var dropDownList = row.find("select[name=\"ChildResourceClaimsDropDown\"]")[0];
     var selectedItem = dropDownList.options[dropDownList.selectedIndex];
 
-    if (!selectedItem.disabled) {
-        var newRow = buildResourceTableRow(selectedItem.text, selectedItem.value, row.data("parent-id"), true);
-        newRow.insertBefore(row);
-    }
+    if (selectedItem != undefined) {
+        if (!selectedItem.disabled) {
+            var newRow = buildResourceTableRow(selectedItem.text, selectedItem.value, row.data("parent-id"), true);
+            newRow.insertBefore(row);
+        }
 
-    selectedItem.disabled = true;
-    dropDownList.selectedIndex = 0;
-    disableOptionForMainResource(selectedItem.value);
+        selectedItem.disabled = true;
+        dropDownList.selectedIndex = 0;
+        disableOptionForMainResource(selectedItem.value);
+    }
 };
 
 $(".add-child-resource-button").click(addChildResourceButton);

@@ -87,7 +87,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Assert
             result.ShouldNotBeNull();
-            result.Content.ShouldContain("Organization Added");
+            result.Content.ShouldContain("School Added");
         }
 
         [Test]
@@ -400,7 +400,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Assert
             result.ShouldNotBeNull();
-            result.Content.ShouldContain("Organization Removed");
+            result.Content.ShouldContain("School Removed");
         }
 
         [Test]

@@ -414,7 +414,9 @@ function ClaimSetWarningMessage(shouldTriggerTimer = false) {
         var warningMessageDiv = $("#claim-set-warning-message");
         if (warningMessageDiv != null) {
             warningMessageDiv.show();
-            $("html, body").animate({ scrollTop: warningMessageDiv.offset().top }, "fast");
+            if (warningMessageDiv.offset() != undefined) {
+                $("html, body").animate({ scrollTop: warningMessageDiv.offset().top }, "fast");
+            }
         }
     }
 }

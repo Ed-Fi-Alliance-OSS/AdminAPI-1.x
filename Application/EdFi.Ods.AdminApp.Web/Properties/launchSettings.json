@@ -29,7 +29,6 @@
                 "ASPNETCORE_ENVIRONMENT": "SqlServer-YearSpecific"
             }
         },
-
         "District Specific (Postgres)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
@@ -58,15 +57,53 @@
                 "ASPNETCORE_ENVIRONMENT": "Docker-SharedInstance"
             }
         },
-
-
-        "EdFi.Ods.AdminApp.Web": {
+        "mssql-district": {
             "commandName": "Project",
             "launchBrowser": true,
-            "applicationUrl": "https://localhost:5001;http://localhost:5000",
+            "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-DistrictSpecific"
             }
-        }
+        },
+        "mssql-shared": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:5123;http://localhost:5122",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-SharedInstance"
+            }
+        },
+        "mssql-year": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:5123;http://localhost:5122",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-YearSpecific"
+            }
+        },
+        "pg-district": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:5123;http://localhost:5122",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-DistrictSpecific"
+            }
+        },
+        "pg-shared": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:5123;http://localhost:5122",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-SharedInstance"
+            }
+        },
+        "pg-year": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:5123;http://localhost:5122",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific"
+            }
+        },
     }
 }

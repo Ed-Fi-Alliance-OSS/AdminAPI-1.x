@@ -164,28 +164,37 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult AddClaimSet(AddClaimSetModel model)
         {
-            var id = _addClaimSetCommand.Execute(model);
-            return RedirectToAction("EditClaimSet", "ClaimSets", new {claimSetId = id});
+            var claimSetId = _addClaimSetCommand.Execute(model);
+
+            var editClaimSetModel = GetEditClaimSetModel(claimSetId);
+
+            return PartialView("_EditClaimSet",editClaimSetModel);
         }
 
         public ActionResult EditClaimSet(int claimSetId)
         {
-            var existingClaimSet = _getClaimSetByIdQuery.Execute(claimSetId);
-            var allResourceClaims = _getResourceClaimsQuery.Execute().ToList();
             var model = new ClaimSetModel
             {
-                EditClaimSetModel = new EditClaimSetModel
-                {
-                    ClaimSetName = existingClaimSet.Name,
-                    ClaimSetId = claimSetId,
-                    Applications = _getApplicationsByClaimSetIdQuery.Execute(claimSetId),
-                    ResourceClaims = _getResourcesByClaimSetIdQuery.AllResources(claimSetId),
-                    AllResourceClaims = GetSelectListForResourceClaims(allResourceClaims)
-                },
+                EditClaimSetModel = GetEditClaimSetModel(claimSetId),
                 GlobalSettingsTabEnumerations = _tabDisplayService.GetGlobalSettingsTabDisplay(GlobalSettingsTabEnumeration.ClaimSets)
             };
   
             return View(model);
+        }
+
+        private EditClaimSetModel GetEditClaimSetModel(int claimSetId)
+        {
+            var existingClaimSet = _getClaimSetByIdQuery.Execute(claimSetId);
+            var allResourceClaims = _getResourceClaimsQuery.Execute().ToList();
+
+            return new EditClaimSetModel
+            {
+                ClaimSetName = existingClaimSet.Name,
+                ClaimSetId = claimSetId,
+                Applications = _getApplicationsByClaimSetIdQuery.Execute(claimSetId),
+                ResourceClaims = _getResourcesByClaimSetIdQuery.AllResources(claimSetId),
+                AllResourceClaims = GetSelectListForResourceClaims(allResourceClaims)
+            };
         }
 
         [HttpGet]

@@ -14,13 +14,13 @@ See the LICENSE and NOTICES files in the project root for more information.
     Layout = "~/Views/Shared/_Settings_Global.cshtml";
     ViewBag.Title = "Global | Claim Sets";
 }
-<div id="claim-set-warning-message" class="alert alert-danger margin-top-10" role="alert" hidden>
-    <p>
-        <strong>Please reset IIS or wait <span id="claim-set-warning-time"></span> for the latest claimset changes to take effect.</strong>
-    </p>
-</div>
 <div class="tab-content margin-top-10" id="claims-list">
     <div id="claim-set-tab" class="tab-pane active navigational-index col-lg-8">
+        <div id="claim-set-warning-message" class="alert alert-danger margin-top-10" role="alert" hidden>
+            <p>
+                <strong>Please reset IIS or wait <span id="claim-set-warning-time"></span> for the latest claimset changes to take effect.</strong>
+            </p>
+        </div>
         <div align="right">
             @Html.Button("Add Claim Set").Attr("href", Url.Action("AddClaimSet", "ClaimSets")).AddClass("add-claimset navigational-ajax").Data("state", "add").Data("page-url", Url.Action("ClaimSets", "GlobalSettings")).Data("action", "opening Add Claim Set")
             @Html.Button("Import/Export Claim Set").Attr("href", Url.Action("ImportExportClaimSet", "ClaimSets")).AddClass("import-export-claimset navigational-ajax").Data("state", "import").Data("page-url", Url.Action("ClaimSets", "GlobalSettings")).Data("action", "opening Import/Export Claim Set")
@@ -63,7 +63,6 @@ See the LICENSE and NOTICES files in the project root for more information.
 </div>
 
 <script type="text/javascript">
-    var cacheTimeout = '@CloudOdsAdminAppSettings.Instance.SecurityMetadataCacheTimeoutMinutes';
     $(function () {
         InitializeModalLoaders();
         InitializeNavigationalAjaxButtons();

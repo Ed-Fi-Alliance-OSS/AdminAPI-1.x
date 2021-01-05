@@ -6,7 +6,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Helpers
-@using Microsoft.AspNetCore.Http
+@using EdFi.Ods.AdminApp.Web.Infrastructure
 
 <!DOCTYPE html>
 <html lang="en">
@@ -91,6 +91,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     </footer>
     @RenderSection("Scripts", required: false)
     <script type="text/javascript">
+        var cacheTimeout = '@CloudOdsAdminAppSettings.Instance.SecurityMetadataCacheTimeoutMinutes';
         GlobalInitialize();
     </script>
 </body>

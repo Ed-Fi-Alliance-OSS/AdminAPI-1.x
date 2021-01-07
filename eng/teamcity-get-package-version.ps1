@@ -6,23 +6,48 @@
 # This script helps TeamCity lookup the package version from an artifact that
 # was copied over from an upstream dependency.
 
-# There should only be one file here - the pre-release NuGet package from the upstream build artifacts
-$pkg = Get-ChildItem -Filter "*pre*.nupkg"
+Param(    
+       [string] 
+       $packageType = "Application"     
+)
 
-if (-not $pkg) {
-    throw "No pre-release package found."
+function SetPackageDetails{
+    param (
+        [string]
+        $packageNamePrefix       
+    )
+
+    # There should only be one file here - the pre-release NuGet package from the upstream build artifacts
+    $pkg = Get-ChildItem -Filter "*$packageNamePrefix*pre*.nupkg"
+
+    if (-not $pkg) {
+        throw "No pre-release $packageNamePrefix package found."
+    }
+
+    # Extract the version number
+    $result = $pkg -match "$packageNamePrefix\.(\d)\.(\d)\.(\d)\-pre(\d+)\.nupkg"
+
+    if (-not $result) {
+        throw "$packageNamePrefix package name does not match the expected naming convention."
+    }
+
+    $release = $matches[1]+"."+$matches[2]+"."+$matches[3]+"-pre"+$matches[4]
+
+    Write-Host "##teamcity[setParameter name='nuGet.packageFile' value='$pkg']"
+    Write-Host "##teamcity[setParameter name='nuGet.packageVersion' value='$release']"
+
+    if("Web" -ieq $packageNamePrefix)
+    { 
+        Write-Host "##teamcity[setParameter name='octopus.release' value='$release']"
+        Write-Host "##teamcity[setParameter name='octopus.package' value='$pkg']"
+    }
 }
 
-# Extract the version number
-$result = $pkg -match "Web\.(\d)\.(\d)\.(\d)\-pre(\d+)\.nupkg"
-
-if (-not $result) {
-    throw "Package name does not match the expected naming convention."
+if("Application" -ieq $packageType)
+{ 
+    SetPackageDetails "Web"   
 }
-
-$release = $matches[1]+"."+$matches[2]+"."+$matches[3]+"-pre"+$matches[4]
-
-Write-Host "##teamcity[setParameter name='nuGet.packageFile' value='$pkg']"
-Write-Host "##teamcity[setParameter name='nuGet.packageVersion' value='$release']"
-Write-Host "##teamcity[setParameter name='octopus.release' value='$release']"
-Write-Host "##teamcity[setParameter name='octopus.package' value='$pkg']"
+else 
+{    
+    SetPackageDetails "Database"   
+}

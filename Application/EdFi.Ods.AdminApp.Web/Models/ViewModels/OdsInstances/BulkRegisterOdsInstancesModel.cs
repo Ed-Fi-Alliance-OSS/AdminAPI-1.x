@@ -56,9 +56,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
     public class BulkRegisterOdsInstancesModelValidator : AbstractValidator<BulkRegisterOdsInstancesModel>
     {
         private readonly ILog _logger = LogManager.GetLogger("BulkRegisterOdsInstancesLog");
-        private static AdminAppDbContext _database;
-        private static IDatabaseConnectionProvider _databaseConnectionProvider;
-        private static ApiMode _mode;        
 
         private bool UniquenessRuleFailed { get; set; }
 

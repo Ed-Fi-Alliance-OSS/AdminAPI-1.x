@@ -158,7 +158,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 DependenciesUrl = connectionInformation.DependenciesUrl,
                 ClientKey = config.BulkUploadCredential?.ApiKey ?? string.Empty,
                 ClientSecret = config.BulkUploadCredential?.ApiSecret ?? string.Empty,
-                SchemaPath = $"{schemaBasePath}\\{standardVersion}",
+                SchemaPath = Path.Combine(schemaBasePath,standardVersion),
                 MaxSimultaneousRequests = maxSimultaneousRequests
             };
 

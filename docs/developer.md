@@ -117,3 +117,17 @@ the ODS/API running in Docker:
   # From the Docker clone directory
   docker-compose -f compose-shared-instance-for-local-debug.yml up -d
   ```
+
+### Admin app on Docker
+
+These instructions are for updating the latest files from local, to an existing AdminApp container
+for quick local development testing:
+
+* Specify all the required appsettings values on BuildDockerDevelopment.ps1 on AdminApp clone directory
+* Run following command for quick build and deploy/ copy over the latest files to an existing docker container
+  
+  ```powershell
+  # From AdminApp clone directory
+  .\BuildDockerDevelopment.ps1
+  ```
+  

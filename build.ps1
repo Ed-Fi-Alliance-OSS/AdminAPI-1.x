@@ -24,6 +24,8 @@
         * Package: builds pre-release and release NuGet packages for the Admin
           App web application.
         * Push: uploads a NuGet package to the NuGet feed.
+        * BuildAndDeployToDockerContainer: runs the build operation, update the appsettings.json with provided
+          DockerEnvValues and copy over the latest files to existing AdminApp docker container for testing.
 
     .EXAMPLE
         .\build.ps1 build -Configuration Release -Version "2.0.0" -BuildCounter 45
@@ -48,11 +50,29 @@
 
     .EXAMPLE
         .\build.ps1 push -NuGetApiKey $env:nuget_key
+
+    .EXAMPLE
+       $p = @{
+            ProductionApiUrl = "http://api"
+            AppStartup = "OnPrem"
+            XsdFolder = "/app/Schema"
+            ApiStartupType = "SharedInstance"
+            DatabaseEngine = "PostgreSql"
+            DbSetupEnabled = "false"
+            BulkUploadHashCache = "/app/BulkUploadHashCache/"
+            EncryptionProtocol = "AES"
+            EncryptionKey = "<Generated encryption key>"
+            AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
+            SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"
+            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_Ods;Application Name=EdFi.Ods.AdminApp;"
+            }
+
+        .\build.ps1 -Version "2.1.0" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
 #>
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest")]
+    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "BuildAndDeployToDockerContainer")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -86,7 +106,13 @@ param(
     # applies with the Push command. If not set, then the script looks for a
     # NuGet package corresponding to the provided $Version and $BuildCounter.
     [string]
-    $PackageFile
+    $PackageFile,
+
+    # Environment values for updating the appsettings on existing AdminApp docker container.
+
+    # Only required with the BuildAndDeployToDockerContainer command.
+    [hashtable]
+    $DockerEnvValues
 )
 
 $Env:MSBUILDDISABLENODEREUSE = "1"
@@ -232,7 +258,7 @@ function GetPackagePreleaseVersion {
 
 function BuildPackage {
     RunNuGetPack -PackageVersion $Version
-    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion)   
+    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion)
 }
 
 function PushPackage {
@@ -301,6 +327,48 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
+function UpdateAppSettings {
+    $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
+    $json = (Get-Content -Path $filePath) | ConvertFrom-Json
+    $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
+    $json.AppSettings.AppStartup = $DockerEnvValues["AppStartup"]
+    $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
+    $json.AppSettings.XsdFolder = $DockerEnvValues["XsdFolder"]
+    $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
+    $json.AppSettings.DbSetupEnabled = $DockerEnvValues["DbSetupEnabled"]
+    $json.AppSettings.BulkUploadHashCache = $DockerEnvValues["BulkUploadHashCache"]
+    $json.AppSettings.EncryptionProtocol = $DockerEnvValues["EncryptionProtocol"]
+
+    if ($null -eq $json.AppSettings.EncryptionKey) {
+        $json.AppSettings | Add-Member -NotePropertyName EncryptionKey -NotePropertyValue $DockerEnvValues["EncryptionKey"]
+    }
+    else
+    {
+        $json.AppSettings.EncryptionKey = $DockerEnvValues["EncryptionKey"]
+    }
+
+    $json.ConnectionStrings.Admin = $DockerEnvValues["AdminDB"]
+    $json.ConnectionStrings.Security = $DockerEnvValues["SecurityDB"]
+    $json.ConnectionStrings.ProductionOds = $DockerEnvValues["ProductionOdsDB"]
+    $json.Log4NetCore.Log4NetConfigFileName =  "./log4net.config"
+    $json | ConvertTo-Json | Set-Content $filePath
+}
+
+function CopyLatestFilesToContainer {
+    $source = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/."
+    docker cp $source ed-fi-ods-adminapp:/app
+}
+
+function RestartAdminAppContainer {
+    &docker restart ed-fi-ods-adminapp
+}
+
+function Invoke-DockerDeploy {
+   Invoke-Step { UpdateAppSettings }
+   Invoke-Step { CopyLatestFilesToContainer }
+   Invoke-Step { RestartAdminAppContainer }
+}
+
 Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
@@ -313,7 +381,11 @@ Invoke-Main {
             Invoke-IntegrationTests
         }
         Package { Invoke-BuildPackage }
-        Push { Invoke-PushPackage }      
+        Push { Invoke-PushPackage }
+        BuildAndDeployToDockerContainer {
+            Invoke-Build
+            Invoke-DockerDeploy
+        }
         default { throw "Command '$Command' is not recognized" }
     }
 }

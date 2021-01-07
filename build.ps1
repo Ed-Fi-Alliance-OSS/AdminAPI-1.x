@@ -95,7 +95,7 @@ param(
 
     # Ed-Fi's official NuGet package feed for package download and distribution.
     [string]
-    $EdFiNuGetFeed = "https://www.myget.org/F/ed-fi/api/v3/index.json",
+    $EdFiNuGetFeed = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
 
     # API key for accessing the feed above. Only required with with the Push
     # command.

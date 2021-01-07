@@ -31,7 +31,7 @@ $arguments = @{
     UseIntegratedSecurity = $config.useIntegratedSecurity
     Username = $config.databaseUser
     Password = $config.databasePassword
-    NuGetFeed = "https://www.myget.org/F/ed-fi/api/v3/index.json"
+    NuGetFeed = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json"
 }
 
 Write-Host "Installing the Admin App tables to $($arguments.DatabaseName)" -ForegroundColor Cyan

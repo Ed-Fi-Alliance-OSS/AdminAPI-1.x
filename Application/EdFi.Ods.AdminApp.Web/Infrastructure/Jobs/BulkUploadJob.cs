@@ -22,8 +22,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         private const string WorkflowJobName = "Bulk Upload";
         private readonly BulkImportService _bulkImportService;
 
-        public BulkUploadJob(BulkImportService bulkImportService, IBackgroundJobClient backgroundJobClient, BulkUploadHub bulkUploadHub, IHubContext<BulkUploadHub> bulkUploadHubContext)
-            : base(backgroundJobClient, bulkUploadHub, WorkflowJobName, bulkUploadHubContext)
+        public BulkUploadJob(BulkImportService bulkImportService, IBackgroundJobClient backgroundJobClient, IHubContext<BulkUploadHub> bulkUploadHubContext)
+            : base(backgroundJobClient, WorkflowJobName, bulkUploadHubContext)
         {
             _bulkImportService = bulkImportService;
 

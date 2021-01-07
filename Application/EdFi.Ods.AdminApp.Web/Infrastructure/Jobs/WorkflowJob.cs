@@ -17,17 +17,15 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         where THub: Hubs.EdfiOdsHub<THub>
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(WorkflowJob<,>));
-        private readonly THub _hub;
         private readonly IHubContext<THub> _hubContext;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private static int _runningJobCount = 0;
         private static long _runningJobId = 0;
         public string JobName { get; }
 
-        protected WorkflowJob(IBackgroundJobClient backgroundJobClient, THub hub, string jobName, IHubContext<THub> hubContext)
+        protected WorkflowJob(IBackgroundJobClient backgroundJobClient, string jobName, IHubContext<THub> hubContext)
         {
             _backgroundJobClient = backgroundJobClient;
-            _hub = hub;
             _hubContext = hubContext;
             JobName = jobName;
         }

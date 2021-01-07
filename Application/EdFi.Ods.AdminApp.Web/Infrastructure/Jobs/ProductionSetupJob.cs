@@ -28,10 +28,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         public ProductionSetupJob(
             ICloudOdsProductionLifecycleManagementService productionDatabaseLifecycleManagementService,
-            IGetOdsSqlConfigurationQuery getOdsSqlConfigurationQuery, IBackgroundJobClient backgroundJobClient,
-            ProductionSetupHub productionSetupHub
-            , IHubContext<ProductionSetupHub> productionSetupHubContext)
-            : base(backgroundJobClient, productionSetupHub, WorkflowJobName, productionSetupHubContext)
+            IGetOdsSqlConfigurationQuery getOdsSqlConfigurationQuery, IBackgroundJobClient backgroundJobClient, IHubContext<ProductionSetupHub> productionSetupHubContext)
+            : base(backgroundJobClient, WorkflowJobName, productionSetupHubContext)
         {
             _productionDatabaseLifecycleManagementService = productionDatabaseLifecycleManagementService;
             _getOdsSqlConfigurationQuery = getOdsSqlConfigurationQuery;

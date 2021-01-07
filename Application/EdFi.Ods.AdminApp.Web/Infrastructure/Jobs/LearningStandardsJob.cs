@@ -36,12 +36,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
     {
         public ProductionLearningStandardsJob(
             IBackgroundJobClient backgroundJobClient,
-            ProductionLearningStandardsHub hub,
             ILearningStandardsCorePluginConnector learningStandardsPlugin,
             IOdsSecretConfigurationProvider odsSecretConfigurationProvider,
             IHubContext<ProductionLearningStandardsHub> productionLearningStandardsHubContext
             )
-            : base(backgroundJobClient, hub, learningStandardsPlugin, odsSecretConfigurationProvider, productionLearningStandardsHubContext) { }
+            : base(backgroundJobClient, learningStandardsPlugin, odsSecretConfigurationProvider, productionLearningStandardsHubContext) { }
     }
 
     public abstract class LearningStandardsJob<THub> : WorkflowJob<LearningStandardsJobContext, THub>
@@ -54,11 +53,10 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         protected LearningStandardsJob(
             IBackgroundJobClient backgroundJobClient,
-            THub hub,
             ILearningStandardsCorePluginConnector learningStandardsPlugin,
             IOdsSecretConfigurationProvider odsSecretConfigurationProvider
             , IHubContext<THub> hubContext)
-            : base(backgroundJobClient, hub, LearningStandardsJobName, hubContext)
+            : base(backgroundJobClient, LearningStandardsJobName, hubContext)
         {
             _learningStandardsPlugin = learningStandardsPlugin;
             _odsSecretConfigurationProvider = odsSecretConfigurationProvider;

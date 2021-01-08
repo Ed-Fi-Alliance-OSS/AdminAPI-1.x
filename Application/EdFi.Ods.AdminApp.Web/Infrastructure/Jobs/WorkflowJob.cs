@@ -10,6 +10,7 @@ using EdFi.Ods.AdminApp.Management.Workflow;
 using Hangfire;
 using log4net;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -142,7 +143,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         private async Task SendStatusUpdate(WorkflowStatus operationStatus)
         {
+            _logger.Debug("Broadcasting: " + JsonConvert.SerializeObject(operationStatus));
+
             await _hubContext.Clients.Group(typeof(THub).ToString()).SendAsync("UpdateStatus", operationStatus);
+
+            _logger.Debug("Broadcasting Completed: " + JsonConvert.SerializeObject(operationStatus));
         }
     }
 }

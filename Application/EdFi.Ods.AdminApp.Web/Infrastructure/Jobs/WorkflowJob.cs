@@ -138,10 +138,10 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         protected void OperationStatusUpdated(WorkflowStatus operationStatus)
         {
-            SendStatusUpdate(operationStatus);
+            _backgroundJobClient.Enqueue<WorkflowJob<TContext, THub>>(x => x.SendStatusUpdate(operationStatus));
         }
 
-        private async Task SendStatusUpdate(WorkflowStatus operationStatus)
+        public async Task SendStatusUpdate(WorkflowStatus operationStatus)
         {
             _logger.Debug("Broadcasting: " + JsonConvert.SerializeObject(operationStatus));
 

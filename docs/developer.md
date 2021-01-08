@@ -1,13 +1,27 @@
 # Admin App Developer Instructions
 
+## Contents
+
+* [Development Pre-Requisites](#development-pre-requisites)
+* [Build Script](#build-script)
+* [TeamCity Automation](#teamcity-automation)
+* [Running on Localhost](#running-on-localhost)
+* [Running in Docker](#running-in-docker)
+
 ## Development Pre-Requisites
 
-* A functioning local copy of an [Ed-Fi ODS for Suite
-  3](https://techdocs.ed-fi.org/display/ETKB/Ed-Fi+Operational+Data+Store+and+API)
-  * Currently supported versions: 3.4, 5.0.0
-* Visual Studio 2019 or greater
+* .NET Core 3 SDK
+* Optional: Visual Studio 2019 or greater
 * Latest Azure SDK
-* Support for file names longer than 256 characters:
+* Clone [this
+  repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp) locally
+* To work with the official Ed-Fi Docker solution, also clone the [Docker
+  repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker).
+
+
+:warning: some situations may require changing Windows to handle file names
+longer than 256 characters:
+
   1. Start the registry editor (regedit.exe)
   2. Navigate to
      `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem`
@@ -46,14 +60,30 @@ arguments.
 See [.teamcity/readme.md](../.teamcity/readme.md) for information on how to use
 the TeamCity build configurations.
 
-## Local Debugging with the ODS/API
+## Running on Localhost
 
-### From Source Code, using SQL Server
+To run the ODS/API locally (not in Docker), follow the Getting Started
+instructions for the desired version of the [Operational Data Store (ODS) and
+API](https://techdocs.ed-fi.org/display/ETKB/Ed-Fi+Operational+Data+Store+and+API).
+_NOTE_: the current Admin App code supports ODS/API for Tech Suite 3, version
+3.4, 5.0.1, and 5.1.0
+
+Initially, the ODS/API will be set to run in Sandbox Mode, in which case Admin
+App is not needed. Admin App supports the three "production" operation modes:
+Shared Instance, Year-Specific, and District-Specific. The instructions below
+will aid in running in each of these three modes.
+
+Admin App works with both SQL Server and PostgreSQL. The non-Docker notes
+describe working with SQL Server, whereas the [Docker
+instructions](#running-on-docker) use PostgreSQL.
+
+### Shared Instance
 
 1. Get started with the ODS/API until the point where you are ready to have the
    ODS/API running in Visual Studio.
-2. Change the ODS/API web.config to run in SharedInstance mode and change the
-   ODS connection string to point to the `EdFi_Ods_Populated_Template` database.
+2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
+   SharedInstance mode and change the ODS connection string to use database  
+   `EdFi_Ods_Populated_Template` or a copy thereof.
 3. Install the AdminApp database support by running the following command in a
    PowerShell window:
 
@@ -65,37 +95,71 @@ the TeamCity build configurations.
 4. Adjust AdminApp's `appsettings.SqlServer-SharedInstance.json` by setting the
    `ProductionOds` connection string to point to the
    `EdFi_Ods_Populated_Template` database.\
-   :warning: _Make sure you don't check in these changes._
-5. Run Admin App from Visual Studio.
+   :warning: _Make sure you don't commit this change to source control._
+5. Run Admin App from Visual Studio, choosing either the "Shared Instance (SQL
+   Server)" profile (uses IIS Express) or "mssql-shared" profile (runs the
+   Kestrel built-in web server).
 
-#### Resetting from Scratch
+To reset the databases so that you start from a clean slate, re-run `initdev` and return to step 3 above.
 
-Instructions for resetting your ODS/API to its initial state in order to test
-the Admin App first time setup process:
+### Year-Specific Mode
 
-1. If the API is running in Visual Studio, stop it.
-2. Reset the Ed-Fi databases:
-   1. Either re-run `initdev`, or
-   2. Run the following commands for a quicker reset:
+1. Stop the ODS/API and/or Admin App if running in Visual Studio.
+2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
+   "YearSpecific" mode and change the ODS connection string to point to database
+   `EdFi_Ods_{0}`. At runtime, the software will substitute the correct year for
+   the replacement token `{0}`.
+3. Re-run `initdev` with the following command, changing the years as desired:
 
-      ```powershell
-      # From Ed-Fi-ODS-Implementation clone directory
-      # Only need to run the following line if this is a new PowerShell session
-      # .\Initialize-PowershellForDevelopment.ps1 
-      Reset-AdminDatabase
-      Reset-SecurityDatabase
-      Reset-PopulatedTemplate
-      ```
+   ```powershell
+   initdev -InstallType YearSpecific -OdsTokens '2020;2021'
+   ```
 
-3. Re-run `run-dbup-migrations.ps1` in the AdminApp clone directory to
-   re-install the Admin App database support.
-4. Re-start the API.
-5. Start debugging AdminApp.
+4. Run `run-dbup-migrations.ps1` in the AdminApp clone directory to
+   install the Admin App database support.
+5. Run Admin App from Visual Studio, choosing either the "Year Specific (SQL
+   Server)" profile (uses IIS Express) or "mssql-year" profile (runs the Kestrel
+   built-in web server).
 
-### Docker
+To reset the databases so that you start from a clean slate, return to step 3
+above.
 
-These instructions are for running AdminApp from Visual Studio, connecting to
+### District-Specific Mode
+
+1. Stop the ODS/API and/or Admin App if running in Visual Studio.
+2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
+   "DistrictSpecific" mode and ensure that the ODS connection string points to
+   database `EdFi_Ods_{0}`. At runtime, the software will substitute the correct
+   district name for the replacement token `{0}`.
+3. Re-run `initdev` with the following command:
+
+   ```powershell
+   initdev -InstallType DistrictSpecific -OdsTokens '255901;255902;255903;255904;255905'
+   ```
+
+4. Re-run `run-dbup-migrations.ps1` in the AdminApp clone directory to
+   install the Admin App database support.
+5. Run Admin App from Visual Studio, choosing either the "District Specific (SQL
+   Server)" profile (uses IIS Express) or "mssql-district" profile (runs the
+   Kestrel built-in web server).
+
+To reset the databases so that you start from a clean slate, return to step 3
+above.
+
+## Running in Docker
+
+### Running Only the API in Docker
+
+These instructions are for running AdminApp _from Visual Studio_, connecting to
 the ODS/API running in Docker:
+
+* Follow the [README instructions](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker/blob/main/README.md) for configuring and running the ODS/API in
+  Docker, except you should run the "local debug" compose file instead of the default one, so that you are not starting Admin App itself inside of Docker.
+
+  ```powershell
+  # From the Docker clone directory
+  docker-compose -f compose-shared-instance-for-local-debug.yml up -d
+  ```
 
 * Generate a 256 bit AES encryption key and paste it into the
   `appSettings.Docker-SharedInstance.json` file. :warning: _do not commit your
@@ -108,22 +172,20 @@ the ODS/API running in Docker:
   New-AESKey
   ```
 
-* In the connection strings, adjust the default Host, Port, Username, and
-  Password as required for your Docker configuration.
-* In the Docker files directory, create an appropriate `.env` file.
-* Start the ODS/API in Docker using the Docker Compose "headless" file:
+* In the connection strings for this same file, adjust the default Host, Port,
+  Username, and Password as required for your Docker configuration.
+* Run Admin App, selecting the "Shared Instance (Docker-Postgres)" profile.
 
-  ```powershell
-  # From the Docker clone directory
-  docker-compose -f compose-shared-instance-for-local-debug.yml up -d
-  ```
+### Running Local Build in Docker
 
-### Admin app on Docker
+Whereas the instructions above allow you to run Admin App from Visual Studio,
+pointing to the ODS/API in Docker, the instructions below are for _injecting_
+the locally-built Admin App into a Docker container so that the freshly-compiled
+DLLs are what runs inside of Docker.
 
-These instructions are for updating the latest files from local, to an existing AdminApp container
-for quick local development testing:
-
-* Specify all the required appsettings values on BuildDockerDevelopment.ps1 on AdminApp clone directory
+* Open a PowerShell prompt and change to the AdminApp clone directory.
+* Review and edit, if necessary, the parameters in file
+  `BuildDockerDevelopment.ps1`.
 * Run following command for quick build and deploy/ copy over the latest files to an existing docker container
   
   ```powershell

@@ -74,6 +74,8 @@ $.extend(true, edfiODS, {
             $("#signalr-done-button").parents(".modal").on("hidden.bs.modal", function() {
                 location.reload();
             });
+
+            $("#signalr-progress").data("statusIsFinal", true);
         },
 
         showError: function(errorMessage) {
@@ -109,9 +111,11 @@ $.extend(true, edfiODS, {
                         edfiODS.signalR.showFinalStatus(finalRedirectUrl);
                     }
                 } else {
-                    var percentComplete = status.totalSteps ? Math.max(Math.round((status.currentStep / status.totalSteps) * 100), 1) : 1;
-                    edfiODS.signalR.setProgress(percentComplete, status.error, false);
-                    edfiODS.signalR.setStatusText(status.statusMessage, status.error);
+                    if ($("#signalr-progress").data("statusIsFinal") !== true) {
+                        var percentComplete = status.totalSteps ? Math.max(Math.round((status.currentStep / status.totalSteps) * 100), 1) : 1;
+                        edfiODS.signalR.setProgress(percentComplete, status.error, false);
+                        edfiODS.signalR.setStatusText(status.statusMessage, status.error);
+                    }
                 }
             });
 

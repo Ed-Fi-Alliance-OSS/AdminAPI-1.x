@@ -143,11 +143,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         public async Task SendStatusUpdate(WorkflowStatus operationStatus)
         {
-            _logger.Debug("Broadcasting: " + JsonConvert.SerializeObject(operationStatus));
-
             await _hubContext.Clients.Group(typeof(THub).ToString()).SendAsync("UpdateStatus", operationStatus);
-
-            _logger.Debug("Broadcasting Completed: " + JsonConvert.SerializeObject(operationStatus));
         }
     }
 }

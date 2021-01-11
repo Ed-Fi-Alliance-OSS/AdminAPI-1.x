@@ -8,16 +8,16 @@
 * [Running on Localhost](#running-on-localhost)
 * [Running in Docker](#running-in-docker)
 
+For debugging on Azure, see [CloudODS Debugging](cloudods-debugging.md)
+
 ## Development Pre-Requisites
 
-* .NET Core 3 SDK
+* [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 * Optional: Visual Studio 2019 or greater
-* Latest Azure SDK
 * Clone [this
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp) locally
 * To work with the official Ed-Fi Docker solution, also clone the [Docker
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker).
-
 
 :warning: some situations may require changing Windows to handle file names
 longer than 256 characters:
@@ -30,10 +30,10 @@ longer than 256 characters:
 
 ## Build Script
 
-The PowerShell script `build.ps1` in the root directory contains several options
-to assist in running standard processes from the command line. This script
-assumes that Visual Studio 2019 or newer is installed, providing MSBuild 15 or
-MSBuild 16. Other dependencies tools are downloaded as needed (nuget, nunit).
+The PowerShell script `build.ps1` in the root directory contains functions for
+running standard build operations at the command line . This script assumes that
+.NET Core 3.1 SDK or newer is installed. Other dependencies tools are downloaded
+as needed (nuget, nunit).
 
 Available commands:
 
@@ -92,15 +92,21 @@ instructions](#running-on-docker) use PostgreSQL.
    .\eng\run-dbup-migrations.ps1
    ```
 
+   :warning: you may wish to review the default configuration at the top of this
+   script to ensure that it is appropriate for your situation.
+
 4. Adjust AdminApp's `appsettings.SqlServer-SharedInstance.json` by setting the
    `ProductionOds` connection string to point to the
-   `EdFi_Ods_Populated_Template` database.\
-   :warning: _Make sure you don't commit this change to source control._
+   `EdFi_Ods_Populated_Template` database.
+
+   :warning: Make sure you don't commit this change to source control.
+
 5. Run Admin App from Visual Studio, choosing either the "Shared Instance (SQL
    Server)" profile (uses IIS Express) or "mssql-shared" profile (runs the
    Kestrel built-in web server).
 
-To reset the databases so that you start from a clean slate, re-run `initdev` and return to step 3 above.
+To reset the databases so that you start from a clean slate, re-run `initdev`
+and return to step 3 above.
 
 ### Year-Specific Mode
 
@@ -153,8 +159,11 @@ above.
 These instructions are for running AdminApp _from Visual Studio_, connecting to
 the ODS/API running in Docker:
 
-* Follow the [README instructions](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker/blob/main/README.md) for configuring and running the ODS/API in
-  Docker, except you should run the "local debug" compose file instead of the default one, so that you are not starting Admin App itself inside of Docker.
+* Follow the [README
+  instructions](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker/blob/main/README.md)
+  for configuring and running the ODS/API in Docker, except you should run the
+  "local debug" compose file instead of the default one, so that you are not
+  starting Admin App itself inside of Docker.
 
   ```powershell
   # From the Docker clone directory
@@ -176,17 +185,27 @@ the ODS/API running in Docker:
   Username, and Password as required for your Docker configuration.
 * Run Admin App, selecting the "Shared Instance (Docker-Postgres)" profile.
 
-### Running Local Build in Docker
+### Running a Local Build in Docker
 
 Whereas the instructions above allow you to run Admin App from Visual Studio,
 pointing to the ODS/API in Docker, the instructions below are for _injecting_
 the locally-built Admin App into a Docker container so that the freshly-compiled
 DLLs are what runs inside of Docker.
 
+* Follow the [README
+  instructions](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker/blob/main/README.md)
+  for configuring and running the ODS/API in Docker. This time, you will want to
+  run Docker compose using `compose-shared-instance-env-build.yml`:
+
+  ```bash
+  docker-compose -f compose-shared-instance-env-build.yml up -d
+  ```
+
 * Open a PowerShell prompt and change to the AdminApp clone directory.
 * Review and edit, if necessary, the parameters in file
   `BuildDockerDevelopment.ps1`.
-* Run following command for quick build and deploy/ copy over the latest files to an existing docker container
+* Run following command for quick build and deploy/ copy over the latest files
+  to an existing docker container:
   
   ```powershell
   # From AdminApp clone directory

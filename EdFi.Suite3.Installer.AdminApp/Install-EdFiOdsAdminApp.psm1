@@ -34,7 +34,7 @@ Import-Module -Force $folders.modules.invoke("Application/Install.psm1") -Scope 
 Import-Module -Force $folders.modules.invoke("Application/Uninstall.psm1") -Scope Global
 Import-Module -Force $folders.modules.invoke("Application/Configuration.psm1") -Scope Global
 
-$DbDeployVersion = "2.2.0-b10053"
+$DbDeployVersion = "2.1.0"
 
 function Install-EdFiOdsAdminApp {
     <#

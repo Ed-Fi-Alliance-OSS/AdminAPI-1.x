@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 Push-Location $PackageDirectory
 
 $dependencyVersions = @{
-    AppCommon = "1.1.0-pre1138"
+    AppCommon = "1.2.0-pre1140"
 }
 
 # This is a hack for TeamCity - create empty ODS and Implementation directories so that

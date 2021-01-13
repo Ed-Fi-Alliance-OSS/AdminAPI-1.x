@@ -13,5 +13,7 @@
   <files>
        <file src=".\Artifacts\MsSql\Structure\Admin\**" target="MsSql" />
        <file src=".\Artifacts\PgSql\Structure\Admin\**" target="PgSql" />
+       <file src=".\LICENSE" />
+       <file src=".\NOTICES.md" />
   </files>
 </package>

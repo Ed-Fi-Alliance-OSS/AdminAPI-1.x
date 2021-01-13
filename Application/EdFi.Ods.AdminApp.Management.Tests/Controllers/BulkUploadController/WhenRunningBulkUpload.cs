@@ -106,7 +106,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.BulkUploadController
         }
 
         [Test]
-        public async Task When_Perform_Post_Request_To_BulkFileUpload_With_No_File_Returns_NoContent()
+        public void When_Perform_Post_Request_To_BulkFileUpload_With_No_File_ThrowsException()
         {
             // Arrange
             var model = new BulkFileUploadModel
@@ -114,12 +114,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.BulkUploadController
                     BulkFiles = new List<IFormFile>()
             };
 
-            // Act
-            var result = (NoContentResult)await SystemUnderTest.BulkFileUpload(model);
-
             // Assert
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldBe((int) HttpStatusCode.NoContent);
+            Assert.ThrowsAsync<Exception>(() => SystemUnderTest.BulkFileUpload(model)).Message
+                .Contains("The given file is empty. Please upload a file compatible with the Ed-Fi Data Standard.").ShouldBeTrue();
         }
 
         [Test]

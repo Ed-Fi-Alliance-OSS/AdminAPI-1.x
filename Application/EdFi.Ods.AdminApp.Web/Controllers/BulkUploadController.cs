@@ -96,7 +96,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (!bulkFiles.Any())
             {
-                return NoContent();
+                throw new Exception("The given file is empty. Please upload a file compatible with the Ed-Fi Data Standard.");
             }
 
             if (bulkFiles.Sum(f => f.Length) > BulkFileUploadModel.MaxFileSize)

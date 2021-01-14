@@ -257,6 +257,7 @@ function Install-EdFiOdsAdminApp {
 
         # App startup will decide admin app startup type. Valid values are OnPrem, Azure. Installer always used in
         # OnPrem mode. So, the default value set to OnPrem
+        [ValidateSet("OnPrem", "Azure")]
         [String]
         $AppStartUp = "OnPrem"
     )

@@ -9,6 +9,7 @@
     <copyright>Copyright © 2021, Ed-Fi Alliance, LLC.</copyright>
     <summary>Ed-Fi AdminApp for the ODS</summary>
     <description>Ed-Fi AdminApp for the ODS</description>
+    <license type="expression">Apache-2.0</license>
   </metadata>
   <files>
        <file src="**" />

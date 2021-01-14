@@ -9,6 +9,7 @@
     <copyright>Copyright © 2020, Ed-Fi Alliance, LLC and contributors.</copyright>
     <summary>Application installer modules for the Ed-Fi Admin App application</summary>
     <description>Application installer modules for the Ed-Fi Admin App application</description>
+    <license type="expression">Apache-2.0</license>
   </metadata>
   <files>
     <file src="install.ps1" />
@@ -16,5 +17,7 @@
     <file src="Install-EdFiOdsAdminApp.psm1" />
     <file src="Ed-Fi-ODS/**" />
     <file src="Ed-Fi-ODS-Implementation/**" />
+    <file src="../LICENSE" />
+    <file src="../NOTICES.md" />
   </files>
 </package>

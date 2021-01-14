@@ -10,7 +10,6 @@ using EdFi.Ods.AdminApp.Management.Workflow;
 using Hangfire;
 using log4net;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 {
@@ -138,10 +137,10 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
         protected void OperationStatusUpdated(WorkflowStatus operationStatus)
         {
-            _backgroundJobClient.Enqueue<WorkflowJob<TContext, THub>>(x => x.SendStatusUpdate(operationStatus));
+            SendStatusUpdate(operationStatus).GetAwaiter().GetResult();
         }
 
-        public async Task SendStatusUpdate(WorkflowStatus operationStatus)
+        private async Task SendStatusUpdate(WorkflowStatus operationStatus)
         {
             await _hubContext.Clients.Group(typeof(THub).ToString()).SendAsync("UpdateStatus", operationStatus);
         }

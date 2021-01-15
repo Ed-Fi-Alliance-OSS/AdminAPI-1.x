@@ -24,11 +24,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Property = EdFi.Ods.AdminApp.Web.Infrastructure.Property;
 using Preconditions = EdFi.Common.Preconditions;
 using EdFi.Ods.AdminApp.Management.Api;
+using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
 {
     public static class HtmlHelperExtensions
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(HtmlHelperExtensions));
+
         private static readonly HtmlConventionLibrary HtmlConventionLibrary = OdsAdminHtmlConventionLibrary.CreateHtmlConventionLibrary();
 
         private static IElementGenerator<T> GetGenerator<T>(T model) where T : class
@@ -526,10 +529,19 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
         public static HtmlString OdsApiVersion(this IHtmlHelper helper)
         {
-            var odsApiVersion = InMemoryCache.Instance
-                .GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+            try
+            {
+                var odsApiVersion = InMemoryCache.Instance
+                    .GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
 
-            return !string.IsNullOrEmpty(odsApiVersion.ToString()) ? new HtmlString($"<span>ODS/API Version: {odsApiVersion}</span>") : new HtmlString("");
+                return !string.IsNullOrEmpty(odsApiVersion.ToString()) ? new HtmlString($"<span>ODS/API Version: {odsApiVersion}</span>") : new HtmlString("");
+            }
+            catch (Exception exception)
+            {
+                _logger.Error("Failed to infer ODS / API version. This can happen when the ODS / API is unreachable.", exception);
+
+                return new HtmlString("");
+            }
         }
     }
 }

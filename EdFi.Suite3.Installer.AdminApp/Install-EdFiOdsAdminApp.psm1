@@ -140,6 +140,10 @@ function Install-EdFiOdsAdminApp {
         [string]
         $PackageVersion,
 
+        # NuGet package source. Defaults to "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json".
+        [string]
+        $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
+
         # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
         [string]
         $ToolsPath = "C:\temp\tools",
@@ -272,6 +276,7 @@ function Install-EdFiOdsAdminApp {
         WebApplicationPath = $WebApplicationPath
         PackageName = $PackageName
         PackageVersion = $PackageVersion
+        PackageSource = $PackageSource
         ToolsPath = $ToolsPath
         DownloadPath = $DownloadPath
         WebSitePath = $WebSitePath
@@ -455,6 +460,7 @@ function Get-AdminAppPackage {
             PackageVersion = $Config.PackageVersion
             ToolsPath = $Config.ToolsPath
             OutputDirectory = $Config.DownloadPath
+            PackageSource = $Config.PackageSource
         }
         $packageDir = Get-NugetPackage @parameters
         Test-Error

@@ -7,15 +7,17 @@
 param (
     [string]
     [Parameter(Mandatory=$true)]
-    $PackageDirectory
+    $PackageDirectory,
+
+    [string]
+    $AppCommonVersion = "1.2.0-pre1140",
+
+    [string]
+    $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json"
 )
 $ErrorActionPreference = "Stop"
 
 Push-Location $PackageDirectory
-
-$dependencyVersions = @{
-    AppCommon = "1.2.0-pre1140"
-}
 
 # This is a hack for TeamCity - create empty ODS and Implementation directories so that
 # the path resolver will be satified. When run locally this should have no impact.
@@ -30,8 +32,9 @@ Import-Module -Force $folders.modules.invoke("packaging/nuget-helper.psm1")
 # Download App Common
 $parameters = @{
     PackageName = "EdFi.Installer.AppCommon"
-    PackageVersion = $dependencyVersions.AppCommon
+    PackageVersion = $AppCommonVersion
     ToolsPath = "C:/temp/tools"
+    PackageSource = $PackageSource
 }
 $appCommonDirectory = Get-NugetPackage @parameters
 

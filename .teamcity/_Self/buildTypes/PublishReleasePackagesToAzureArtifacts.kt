@@ -19,8 +19,8 @@ object PublishReleasePackagesToAzureArtifacts : BuildType ({
     option("shouldFailBuildOnAnyErrorMessage", "true")
 
     params {
-        param("nuGet.packageFile", "placeholder")
-        param("nuGet.packageVersion", "placeholder")
+        param("nuGet.packageFile.database", "EdFi.Suite3.ODS.AdminApp.Database.%adminApp.version%.nupkg")
+        param("nuGet.packageFile.web", "EdFi.Suite3.ODS.AdminApp.Web.%adminApp.version%.nupkg")
         param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", "{\"endpointCredentials\": [{\"endpoint\": \"%azureArtifacts.feed.nuget%\",\"username\": \"%azureArtifacts.edFiBuildAgent.userName%\",\"password\": \"%azureArtifacts.edFiBuildAgent.accessToken%\"}]}")
     }
 
@@ -36,7 +36,7 @@ object PublishReleasePackagesToAzureArtifacts : BuildType ({
             scriptMode = script {
                 content = """
                     ${'$'}arguments = @{
-                    	PackageFile = "EdFi.Suite3.ODS.AdminApp.Web.%adminApp.version%.nupkg"
+                    	PackageFile = "%nuGet.packageFile.web%"
                         EdFiNuGetFeed = "%azureArtifacts.feed.nuget%"
                         NuGetApiKey = "%azureArtifacts.edFiBuildAgent.accessToken%"
                     }
@@ -51,7 +51,7 @@ object PublishReleasePackagesToAzureArtifacts : BuildType ({
             scriptMode = script {
                 content = """
                     ${'$'}arguments = @{
-                    	PackageFile = "EdFi.Suite3.ODS.AdminApp.Database.%adminApp.version%.nupkg"
+                    	PackageFile = "%nuGet.packageFile.database%"
                         EdFiNuGetFeed = "%azureArtifacts.feed.nuget%"
                         NuGetApiKey = "%azureArtifacts.edFiBuildAgent.accessToken%"
                     }
@@ -77,7 +77,8 @@ object PublishReleasePackagesToAzureArtifacts : BuildType ({
 
             artifacts {
                 artifactRules = """
-                    +:*%adminApp.version%.nupkg =>
+                    +:%nuGet.packageFile.database% =>
+                    +:%nuGet.packageFile.web% =>
                 """.trimIndent()
             }
         }

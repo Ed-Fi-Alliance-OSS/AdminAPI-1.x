@@ -11,7 +11,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.powerShell
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.finishBuildTrigger
 
 object PublishReleasePackagesToAzureArtifacts : BuildType ({
-    name = "Publish Packages to Azure Artifacts"
+    name = "Publish Release Packages to Azure Artifacts"
     description = "Publishes NuGet packages to the Azure Artifacts"
 
     publishArtifacts = PublishMode.SUCCESSFUL

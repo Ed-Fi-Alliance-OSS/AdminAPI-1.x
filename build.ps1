@@ -54,6 +54,7 @@
     .EXAMPLE
        $p = @{
             ProductionApiUrl = "http://api"
+            ApiExternalUrl = "https://localhost:5001"
             AppStartup = "OnPrem"
             XsdFolder = "/app/Schema"
             ApiStartupType = "SharedInstance"

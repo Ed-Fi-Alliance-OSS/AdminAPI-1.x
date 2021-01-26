@@ -33,6 +33,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public string ProductionApiUrl => AppSettings.ProductionApiUrl;
 
+        public string ApiExternalUrl => AppSettings.ApiExternalUrl;
+
         public bool SystemManagedSqlServer
             => AppSettings.SystemManagedSqlServer == null ||
                bool.TrueString.Equals(

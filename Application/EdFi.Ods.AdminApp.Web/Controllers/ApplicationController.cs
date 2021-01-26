@@ -74,14 +74,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var apiUrl = (await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment())
                 .ApiServerUrl;
 
-            apiUrl = GetApiUrlForDisplay(apiUrl);
-
             var model = new ApplicationsIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Applications),
                 OdsInstance = _instanceContext,
-                ProductionApiUrl = apiUrl
+                DisplayApiUrl = GetApiUrlForDisplay(apiUrl)
             };
 
             return View("Index", model);
@@ -145,15 +143,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name,
                 CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl;
 
-            apiUrl = GetApiUrlForDisplay(apiUrl);
-
             return PartialView(
                 "_ApplicationKeyAndSecretContent", new ApplicationKeyModel
                 {
                     ApplicationName = model.ApplicationName,
                     Key = result.Key,
                     Secret = result.Secret,
-                    ApiUrl = apiUrl
+                    DisplayApiUrl = GetApiUrlForDisplay(apiUrl)
                 });
         }
 
@@ -228,14 +224,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret),
                 _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl;
 
-            apiUrl = GetApiUrlForDisplay(apiUrl);
-
             return PartialView("_ApplicationKeyAndSecretContent", new ApplicationKeyModel
             {
                 ApplicationName = application.ApplicationName,
                 Key = regenerationResult.Key,
                 Secret = regenerationResult.Secret,
-                ApiUrl = apiUrl
+                DisplayApiUrl = GetApiUrlForDisplay(apiUrl)
             });
         }
 

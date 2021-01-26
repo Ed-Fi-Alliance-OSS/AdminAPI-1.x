@@ -68,7 +68,7 @@
             ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_Ods;Application Name=EdFi.Ods.AdminApp;"
             }
 
-        .\build.ps1 -Version "2.1.0" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
+        .\build.ps1 -Version "2.1.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
 #>
 param(
     # Command to execute, defaults to "Build".
@@ -241,7 +241,7 @@ function RunNuGetPack {
 
         [string]
         $nuspecPath
-    )   
+    )
 
     $arguments = @(
         "pack",  $nugetSpecPath,

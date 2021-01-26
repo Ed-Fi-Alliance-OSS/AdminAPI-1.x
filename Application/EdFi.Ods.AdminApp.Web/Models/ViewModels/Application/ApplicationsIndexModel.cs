@@ -9,6 +9,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 {
     public class ApplicationsIndexModel : BaseOdsInstanceSettingsModel
     {
-        public string ProductionApiUrl { get; set; }
+        public string DisplayApiUrl { get; set; }
     }
 }

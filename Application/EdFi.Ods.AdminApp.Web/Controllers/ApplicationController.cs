@@ -71,12 +71,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
+            var apiUrl = (await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment())
+                .ApiServerUrl;
+
             var model = new ApplicationsIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Applications),
                 OdsInstance = _instanceContext,
-                ProductionApiUrl = (await _apiConnectionInformationProvider.GetConnectionInformationForEnvironment()).ApiServerUrl
+                DisplayApiUrl = GetApiUrlForDisplay(apiUrl)
             };
 
             return View("Index", model);
@@ -136,14 +139,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var result = _addApplicationCommand.Execute(model);
 
+            var apiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
+                new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name,
+                CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl;
+
             return PartialView(
                 "_ApplicationKeyAndSecretContent", new ApplicationKeyModel
                 {
                     ApplicationName = model.ApplicationName,
                     Key = result.Key,
                     Secret = result.Secret,
-                    ApiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
-                        new OdsApiCredential(result.Key, result.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
+                    DisplayApiUrl = GetApiUrlForDisplay(apiUrl)
                 });
         }
 
@@ -214,19 +220,29 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var regenerationResult = _regenerateApiClientSecretCommand.Execute(model.ApplicationId);
             var application = regenerationResult.Application;
 
+            var apiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
+                new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret),
+                _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl;
+
             return PartialView("_ApplicationKeyAndSecretContent", new ApplicationKeyModel
             {
                 ApplicationName = application.ApplicationName,
                 Key = regenerationResult.Key,
                 Secret = regenerationResult.Secret,
-                ApiUrl = CloudOdsApiConnectionInformationProvider.GetConnectionInformationForEnvironment(
-                    new OdsApiCredential(regenerationResult.Key, regenerationResult.Secret), _instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode).ApiBaseUrl
+                DisplayApiUrl = GetApiUrlForDisplay(apiUrl)
             });
         }
 
         private List<string> GetClaimSetNames()
         {
             return _getClaimSetNamesQuery.Execute().Except(CloudOdsAdminApp.SystemReservedClaimSets).ToList();
+        }
+
+        private static string GetApiUrlForDisplay(string apiUrl)
+        {
+            return !string.IsNullOrEmpty(CloudOdsAdminAppSettings.Instance.ApiExternalUrl)
+                ? apiUrl.Replace(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, CloudOdsAdminAppSettings.Instance.ApiExternalUrl)
+                : apiUrl;
         }
     }
 }

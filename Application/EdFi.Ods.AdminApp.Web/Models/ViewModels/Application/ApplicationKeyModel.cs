@@ -12,6 +12,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
         public string ApplicationName { get; set; }
         public string Key { get; set; }
         public string Secret { get; set; }
-        public string ApiUrl { get; set; }
+        public string DisplayApiUrl { get; set; }
     }
 }

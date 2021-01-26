@@ -8,8 +8,8 @@
         Script for running the build operation and copy over the latest files to an existing AdminApp docker container for testing.
 
     .DESCRIPTION
-        Script for facilitating the local docker testing with latest changes. Developer can set the required appsettings values and trigger 
-        the build. Once the build done, the apsettings.json will be updated with values provided and 
+        Script for facilitating the local docker testing with latest changes. Developer can set the required appsettings values and trigger
+        the build. Once the build done, the apsettings.json will be updated with values provided and
         latest files will be copied over to an existing AdminApp docker container folder.
 
     .EXAMPLE
@@ -18,6 +18,7 @@
 
 $p = @{
         ProductionApiUrl = "http://api"
+        ApiExternalUrl = "https://localhost:5001"
         AppStartup = "OnPrem"
         XsdFolder = "/app/Schema"
         ApiStartupType = "SharedInstance"
@@ -31,4 +32,4 @@ $p = @{
         ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_Ods;Application Name=EdFi.Ods.AdminApp;"
     }
 
-.\build.ps1 -Version 2.1.0 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
+.\build.ps1 -Version 2.1.1 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer

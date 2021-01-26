@@ -54,6 +54,7 @@
     .EXAMPLE
        $p = @{
             ProductionApiUrl = "http://api"
+            ApiExternalUrl = "https://localhost:5001"
             AppStartup = "OnPrem"
             XsdFolder = "/app/Schema"
             ApiStartupType = "SharedInstance"
@@ -67,7 +68,7 @@
             ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_Ods;Application Name=EdFi.Ods.AdminApp;"
             }
 
-        .\build.ps1 -Version "2.1.0" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
+        .\build.ps1 -Version "2.1.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
 #>
 param(
     # Command to execute, defaults to "Build".
@@ -240,7 +241,7 @@ function RunNuGetPack {
 
         [string]
         $nuspecPath
-    )   
+    )
 
     $arguments = @(
         "pack",  $nugetSpecPath,
@@ -344,6 +345,7 @@ function UpdateAppSettings {
     $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
     $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
+    $json.AppSettings.ApiExternalUrl = $DockerEnvValues["ApiExternalUrl"]
     $json.AppSettings.AppStartup = $DockerEnvValues["AppStartup"]
     $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
     $json.AppSettings.XsdFolder = $DockerEnvValues["XsdFolder"]

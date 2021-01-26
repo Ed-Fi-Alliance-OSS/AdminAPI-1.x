@@ -344,6 +344,7 @@ function UpdateAppSettings {
     $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
     $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
+    $json.AppSettings.ApiExternalUrl = $DockerEnvValues["ApiExternalUrl"]
     $json.AppSettings.AppStartup = $DockerEnvValues["AppStartup"]
     $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
     $json.AppSettings.XsdFolder = $DockerEnvValues["XsdFolder"]

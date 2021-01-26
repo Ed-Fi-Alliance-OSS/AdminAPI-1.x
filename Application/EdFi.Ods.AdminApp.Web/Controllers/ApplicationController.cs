@@ -246,10 +246,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         private static string GetApiUrlForDisplay(string apiUrl)
         {
-            if (!string.IsNullOrEmpty(CloudOdsAdminAppSettings.Instance.ApiExternalUrl))
-                apiUrl = apiUrl.Replace(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, CloudOdsAdminAppSettings.Instance.ApiExternalUrl);
-
-            return apiUrl;
+            return !string.IsNullOrEmpty(CloudOdsAdminAppSettings.Instance.ApiExternalUrl)
+                ? apiUrl.Replace(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, CloudOdsAdminAppSettings.Instance.ApiExternalUrl)
+                : apiUrl;
         }
     }
 }

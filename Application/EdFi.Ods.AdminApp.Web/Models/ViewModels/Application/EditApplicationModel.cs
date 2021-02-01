@@ -48,10 +48,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
                 .Must(BeWithinApplicationNameMaxLength)
                 .When(x => x.ApplicationName != null);
 
-            RuleFor(m => m.ApplicationName)
-                .Must(name => !ApplicationExtensions.IsSystemReservedApplicationName(name))
-                .WithMessage(p => $"'{ p.ApplicationName}' is a reserved name and may not be used. Please choose another name.");
-
             RuleFor(m => m.ClaimSetName)
                 .NotEmpty()
                 .WithMessage("You must choose a Claim Set");

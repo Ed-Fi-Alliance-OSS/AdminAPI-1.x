@@ -51,52 +51,5 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             var sql = $"ALTER DATABASE [{databaseName}] MODIFY (EDITION = '{newPerformanceLevel.Edition}', SERVICE_OBJECTIVE='{newPerformanceLevel.ServiceObjective}')";
             _rawSqlConnectionService.ExecuteDdl(connection, sql);
         }
-
-        /// <summary>
-        /// Waits for a *new* Azure database created via the CopyDatabase method to finish copying and be brought into an ONLINE state
-        /// </summary>
-        public void EnsureCopyDatabaseCompleted(SqlConnection connection, string databaseName, int maxWaitTimeInSeconds = 300)
-        {
-            var copyOperationSql = $"SELECT state_desc FROM sys.dm_operation_status WHERE major_resource_id = '{databaseName}'";
-            var databaseStatusSql = $"SELECT state_desc FROM sys.databases WHERE name = '{databaseName}'";
-
-            var processStart = DateTime.Now;
-            var waitTimeInMilliseconds = 1000;
-
-            while (DateTime.Now.Subtract(processStart).TotalSeconds < maxWaitTimeInSeconds)
-            {
-                using (var dbStatusCommand = new SqlCommand(databaseStatusSql, connection))
-                {
-                    var dbStatus = dbStatusCommand.ExecuteScalar() as string;
-
-                    if (dbStatus != null && dbStatus.Equals("ONLINE", StringComparison.InvariantCultureIgnoreCase))
-                        return;
-
-                    //if we don't find the database in the sys.databases view, it may
-                    //be that the copy operation is not started or has failed, so we'll check
-                    //the operation status view instead
-                    if (dbStatus == null)
-                    {
-                        using (var copyStatusCommand = new SqlCommand(copyOperationSql, connection))
-                        {
-                            var reader = copyStatusCommand.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                var status = reader[0] as string;
-                                if (status != null && status.Equals("FAILED", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    throw new Exception("Database copy operation failed");
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Thread.Sleep(waitTimeInMilliseconds);
-                waitTimeInMilliseconds *= 2;
-            }
-
-            throw new TimeoutException($"Timeout while waiting for '{databaseName}' to finish copying");
-        }
     }
 }

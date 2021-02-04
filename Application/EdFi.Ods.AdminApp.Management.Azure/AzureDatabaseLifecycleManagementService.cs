@@ -71,7 +71,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                                 conn =>
                                 {
                                     _azureDatabaseManagementService.CopyDatabase(conn, templateDatabaseName, tempDbName);
-                                    _azureDatabaseManagementService.EnsureCopyDatabaseCompleted(conn, tempDbName);
                                 },
                             RollBackAction = conn => { },
                             StatusMessage = "Copying template database",

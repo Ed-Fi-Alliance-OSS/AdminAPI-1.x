@@ -7,7 +7,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
 {
     public class OdsInstanceSettingsModel : BaseOdsInstanceSettingsModel
     {
-        public OdsInstanceSetupCompletedModel ProductionSetupCompletedModel { get; set; }
         public LogSettingsModel LogSettingsModel { get; set; }
     }
 }

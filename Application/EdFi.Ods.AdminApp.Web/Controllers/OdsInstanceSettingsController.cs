@@ -19,24 +19,18 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class OdsInstanceSettingsController : ControllerBase
     {
-        private readonly ICachedItems _cachedItems;
         private readonly ICloudOdsSettingsService _cloudOdsSettingsService;
-        private readonly IGetProductionApiProvisioningWarningsQuery _getProductionApiProvisioningWarningsQuery;
         private readonly ITabDisplayService _tabDisplayService;
         private readonly InstanceContext _instanceContext;
         private readonly AppSettings _appSettings;
 
         public OdsInstanceSettingsController(
-              IGetProductionApiProvisioningWarningsQuery getProductionApiProvisioningWarningsQuery
-            , ICachedItems cachedItems
-            , ICloudOdsSettingsService cloudOdsSettingsService
+             ICloudOdsSettingsService cloudOdsSettingsService
             , ITabDisplayService tabDisplayService 
             , InstanceContext instanceContext
             , IOptions<AppSettings> appSettingsAccessor
             )
         {
-            _getProductionApiProvisioningWarningsQuery = getProductionApiProvisioningWarningsQuery;
-            _cachedItems = cachedItems;
             _cloudOdsSettingsService = cloudOdsSettingsService;
             _tabDisplayService = tabDisplayService;
             _instanceContext = instanceContext;
@@ -50,14 +44,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> SetupComplete()
         {
-            var defaultOdsInstance = await _cachedItems.GetDefaultCloudOdsInstance();
-
             var model = new OdsInstanceSettingsModel
             {
-                ProductionSetupCompletedModel = new OdsInstanceSetupCompletedModel
-                {
-                    ProvisioningWarnings = await _getProductionApiProvisioningWarningsQuery.Execute(defaultOdsInstance)
-                },
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Setup)
             };

@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
@@ -11,7 +12,6 @@ using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
-using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using Microsoft.Extensions.Options;
@@ -24,7 +24,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICloudOdsSettingsService _cloudOdsSettingsService;
         private readonly IGetProductionApiProvisioningWarningsQuery _getProductionApiProvisioningWarningsQuery;
         private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
-        private readonly IProductionSetupJob _productionSetupJob;
         private readonly ITabDisplayService _tabDisplayService;
         private readonly InstanceContext _instanceContext;
         private readonly AppSettings _appSettings;
@@ -33,7 +32,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
               IOdsApiFacadeFactory odsApiFacadeFactory
             , IGetProductionApiProvisioningWarningsQuery getProductionApiProvisioningWarningsQuery
             , ICachedItems cachedItems
-            , IProductionSetupJob productionSetupJob
             , ICloudOdsSettingsService cloudOdsSettingsService
             , ITabDisplayService tabDisplayService 
             , InstanceContext instanceContext
@@ -43,7 +41,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _getProductionApiProvisioningWarningsQuery = getProductionApiProvisioningWarningsQuery;
             _cachedItems = cachedItems;
-            _productionSetupJob = productionSetupJob;
             _cloudOdsSettingsService = cloudOdsSettingsService;
             _tabDisplayService = tabDisplayService;
             _instanceContext = instanceContext;
@@ -83,11 +80,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [Obsolete("This action no longer performs any work.")]
         public ActionResult Setup(OdsInstanceSettingsModel model)
         {
-            if (CloudOdsAdminAppSettings.Instance.SystemManagedSqlServer)
-                _productionSetupJob.EnqueueJob(1);
-
             return Ok();
         }
 

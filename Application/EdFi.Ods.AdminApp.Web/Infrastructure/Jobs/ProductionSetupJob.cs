@@ -5,7 +5,6 @@
 
 using System;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using Hangfire;
@@ -22,14 +21,12 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
     public class ProductionSetupJob : WorkflowJob<int, ProductionSetupHub>, IProductionSetupJob
     {
         private const string WorkflowJobName = "Production Setup";
-        private readonly IGetOdsSqlConfigurationQuery _getOdsSqlConfigurationQuery;
         private readonly ILog _logger = LogManager.GetLogger(typeof(ProductionSetupJob));
 
         public ProductionSetupJob(
-            IGetOdsSqlConfigurationQuery getOdsSqlConfigurationQuery, IBackgroundJobClient backgroundJobClient, IHubContext<ProductionSetupHub> productionSetupHubContext)
+            IBackgroundJobClient backgroundJobClient, IHubContext<ProductionSetupHub> productionSetupHubContext)
             : base(backgroundJobClient, WorkflowJobName, productionSetupHubContext)
         {
-            _getOdsSqlConfigurationQuery = getOdsSqlConfigurationQuery;
         }
 
         /// <summary>
@@ -40,8 +37,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
         /// <returns></returns>
         protected override async Task<WorkflowResult> RunJob(int jobContext, IJobCancellationToken jobCancellationToken)
         {
-            var sqlConfig = await _getOdsSqlConfigurationQuery.Execute();
-
             _logger.Info($"User requested {WorkflowJobName} operation 'Interactive SetUp'");
 
             return new WorkflowResult();

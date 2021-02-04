@@ -37,6 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             _cloudOdsDatabaseNameProvider = cloudOdsDatabaseNameProvider;
         }
 
+        [Obsolete("This operation is no longer intended to be reached, and should be phased out.")]
         public WorkflowResult ResetByCopyingTemplate(OdsSqlConfiguration sqlConfiguration, CloudOdsDatabases templateDatabase, CloudOdsDatabases copyToDatabase, CancellationToken cancellationToken)
         {
             AzurePerformanceLevel performanceLevel;

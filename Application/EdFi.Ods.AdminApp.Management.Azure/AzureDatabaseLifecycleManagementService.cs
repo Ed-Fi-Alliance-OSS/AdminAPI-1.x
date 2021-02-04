@@ -101,15 +101,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                     ).ContinueWith(
                         new DdlSqlWorkflowStep
                         {
-                            ExecuteAction =
-                                conn =>
-                                {
-                                    var securityConfiguration =
-                                        _cloudOdsDatabaseSqlServerSecurityConfiguration.GetRuntimeConfiguration(sqlConfiguration)
-                                        .Where(d => d.TargetDatabase == copyToDatabase);
-
-                                    _cloudOdsSqlConfigurator.ApplyConfiguration(sqlConfiguration, securityConfiguration);
-                                },
+                            ExecuteAction = conn => { },
                             RollBackAction = conn => { },
                             StatusMessage = $"Resetting security on {copyToDatabaseName}",
                             RollbackStatusMessage = "",

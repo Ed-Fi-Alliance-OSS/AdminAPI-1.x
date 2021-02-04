@@ -20,7 +20,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton(CloudOdsAzureActiveDirectoryClientInfo.GetActiveDirectoryClientInfoForUser());
 
             services.AddTransient<IGetAzureCloudOdsHostedComponentsQuery, GetAzureCloudOdsHostedComponentsQuery>();
-            services.AddTransient<IGetAzureCloudOdsWebsitePerformanceLevelQuery, GetAzureCloudOdsWebsitePerformanceLevelQuery>();
             services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetAzureCloudOdsApiWebsiteSettingsQuery>();
             services.AddTransient<IAzureSqlSecurityConfigurator, AzureSqlSecurityConfigurator>();
             services.AddTransient<GetAzureCloudOdsHostedInstanceQuery>();

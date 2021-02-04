@@ -31,12 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         {
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
-            azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
-                .ReturnsAsync(AzureWebsitePerformanceLevel.S3);
-
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(
-                azureCloudOdsWebsitePerformanceLevelQuery.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery();
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.ShouldBeEmpty();
@@ -45,13 +40,9 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         [Test]
         public async Task ShouldNotProduceWarningWhenRunningAgainstExpectedAzureSqlTier()
         {
-            var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
-            azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
-                .ReturnsAsync(AzureWebsitePerformanceLevel.S3);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery();
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.ShouldBeEmpty();
@@ -60,13 +51,9 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         [Test]
         public async Task ShouldProduceWarningWhenRunningAgainstLowerThanRecommendedAzureSqlTier()
         {
-            var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
-            azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
-                .ReturnsAsync(AzureWebsitePerformanceLevel.S3);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery();
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.Count().ShouldBe(1);
@@ -76,13 +63,9 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         [Test]
         public async Task ShouldProduceWarningWhenWebsiteLowerThanRecommendedTier()
         {
-            var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
-            azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
-                .ReturnsAsync(AzureWebsitePerformanceLevel.S2);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery();
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.Count().ShouldBe(1);

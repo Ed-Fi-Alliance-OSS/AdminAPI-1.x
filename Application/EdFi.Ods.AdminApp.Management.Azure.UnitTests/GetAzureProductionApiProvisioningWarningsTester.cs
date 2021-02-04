@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -44,12 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
             var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
             mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
 
-            var azureDbManagementService = new Mock<AzureDatabaseManagementService>(mockRawSqlConnection.Object);
-            azureDbManagementService.Setup(x => x.GetDatabasePerformanceLevel(It.IsAny<SqlConnection>(), It.IsAny<string>()))
-                .Returns(new AzureSqlDatabasePerformanceLevel(null, null));
-
             var sut = new GetAzureProductionApiProvisioningWarningsQuery(
-                azureDbManagementService.Object,
                 azureCloudOdsWebsitePerformanceLevelQuery.Object,
                 mockRawSqlConnection.Object,
                 mockCloudOdsDatabaseNameProvider.Object);
@@ -72,13 +67,9 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
             var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
             mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
 
-            var azureDbManagementService = new Mock<AzureDatabaseManagementService>(mockRawSqlConnection.Object);
-            azureDbManagementService.Setup(x => x.GetDatabasePerformanceLevel(It.IsAny<SqlConnection>(), It.IsAny<string>()))
-                .Returns(AzureSqlDatabasePerformanceLevel.P1);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureDbManagementService.Object, azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.ShouldBeEmpty();
@@ -98,13 +89,9 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
             var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
             mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
 
-            var azureDbManagementService = new Mock<AzureDatabaseManagementService>(mockRawSqlConnection.Object);
-            azureDbManagementService.Setup(x => x.GetDatabasePerformanceLevel(It.IsAny<SqlConnection>(), It.IsAny<string>()))
-                .Returns(AzureSqlDatabasePerformanceLevel.S1);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureDbManagementService.Object, azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.Count().ShouldBe(1);
@@ -125,13 +112,9 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
             var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
             mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
 
-            var azureDbManagementService = new Mock<AzureDatabaseManagementService>(mockRawSqlConnection.Object);
-            azureDbManagementService.Setup(x => x.GetDatabasePerformanceLevel(It.IsAny<SqlConnection>(), It.IsAny<string>()))
-                .Returns(AzureSqlDatabasePerformanceLevel.P1);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureDbManagementService.Object, azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.Count().ShouldBe(1);

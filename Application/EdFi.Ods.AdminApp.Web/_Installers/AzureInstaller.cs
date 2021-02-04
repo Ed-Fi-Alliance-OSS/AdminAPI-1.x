@@ -22,7 +22,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IGetAzureCloudOdsHostedComponentsQuery, GetAzureCloudOdsHostedComponentsQuery>();
             services.AddTransient<IGetAzureCloudOdsWebsitePerformanceLevelQuery, GetAzureCloudOdsWebsitePerformanceLevelQuery>();
             services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetAzureCloudOdsApiWebsiteSettingsQuery>();
-            services.AddTransient<AzureDatabaseManagementService>();
             services.AddTransient<IAzureSqlSecurityConfigurator, AzureSqlSecurityConfigurator>();
             services.AddTransient<GetAzureCloudOdsHostedInstanceQuery>();
             services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteAzureOdsPostUpdateSetupCommand>();

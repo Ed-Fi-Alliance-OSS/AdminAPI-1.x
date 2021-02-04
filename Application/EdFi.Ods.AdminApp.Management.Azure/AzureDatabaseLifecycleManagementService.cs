@@ -57,38 +57,11 @@ namespace EdFi.Ods.AdminApp.Management.Azure
 
                 _ddlSqlWorkflowManager = new DdlSqlWorkflowManager(connection, cancellationToken);
 
-                _ddlSqlWorkflowManager.JobStarted += () => OnStatusUpdated(GetStatus());
-                _ddlSqlWorkflowManager.JobCompleted += () => OnStatusUpdated(GetStatus());
-                _ddlSqlWorkflowManager.StepStarted += () => OnStatusUpdated(GetStatus());
-                _ddlSqlWorkflowManager.StepCompleted += () => OnStatusUpdated(GetStatus());
-
                 _ddlSqlWorkflowManager
                     .SetWorkflowName($"Copy Azure database {templateDatabaseName} to {copyToDatabaseName}");
 
                 return _ddlSqlWorkflowManager.Execute();
             }
-        }
-        
-        public WorkflowStatus GetStatus()
-        {
-            if (_ddlSqlWorkflowManager == null)
-            {
-                return new WorkflowStatus
-                {
-                    StatusMessage = "Operation not yet started.",
-                    Complete = false,
-                    CurrentStep = 0,
-                    Error = false,
-                    TotalSteps = 0
-                };
-            }
-
-            return _ddlSqlWorkflowManager.Status;
-        }
-
-        protected virtual void OnStatusUpdated(WorkflowStatus status)
-        {
-            StatusUpdated?.Invoke(status);
         }
     }
 }

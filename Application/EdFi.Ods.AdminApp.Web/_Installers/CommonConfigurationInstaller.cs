@@ -69,14 +69,10 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
 
-            services.AddTransient<ProductionSetupHub>();
             services.AddTransient<BulkUploadHub>();
             services.AddTransient<ProductionLearningStandardsHub>();
             services.AddTransient<BulkImportService>();
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
-
-            services.AddSingleton<IProductionSetupJob, ProductionSetupJob>();
-            services.AddSingleton(x => (WorkflowJob<int, ProductionSetupHub>)x.GetService<IProductionSetupJob>());//Resolve previously queued job.
 
             services.AddSingleton<IBulkUploadJob, BulkUploadJob>();
             services.AddSingleton(x => (WorkflowJob<BulkUploadJobContext, BulkUploadHub>)x.GetService<IBulkUploadJob>());//Resolve previously queued job.

@@ -44,17 +44,12 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             var copyToDatabaseName = _cloudOdsDatabaseNameProvider.GetDatabaseName(copyToDatabase);
             var masterDatabaseName = _cloudOdsDatabaseNameProvider.GetDatabaseName(CloudOdsDatabases.Master);
 
-            using (var connection = _rawSqlConnectionService.GetDatabaseConnectionWithAdminCredentials(sqlConfiguration, copyToDatabaseName))
-            {
-            }
-
-            using (var connection = _rawSqlConnectionService.GetDatabaseConnectionWithAdminCredentials(sqlConfiguration, masterDatabaseName))
             {
                 var now = DateTime.UtcNow;
                 var tempDbName = $"{copyToDatabaseName}_temp_{now:yyyyMMddHHmmss}";
                 var oldDbName = $"{copyToDatabaseName}_old_{now:yyyyMMddHHmmss}";
 
-                _ddlSqlWorkflowManager = new DdlSqlWorkflowManager(connection, cancellationToken);
+                _ddlSqlWorkflowManager = new DdlSqlWorkflowManager(null, cancellationToken);
 
                 _ddlSqlWorkflowManager
                     .SetWorkflowName($"Copy Azure database {templateDatabaseName} to {copyToDatabaseName}");

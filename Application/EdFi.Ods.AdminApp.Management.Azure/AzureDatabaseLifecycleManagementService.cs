@@ -63,77 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                 _ddlSqlWorkflowManager.StepCompleted += () => OnStatusUpdated(GetStatus());
 
                 _ddlSqlWorkflowManager
-                    .SetWorkflowName($"Copy Azure database {templateDatabaseName} to {copyToDatabaseName}")
-                    .StartWith(
-                        new DdlSqlWorkflowStep
-                        {
-                            ExecuteAction = conn => { },
-                            RollBackAction = conn => { },
-                            StatusMessage = "Copying template database",
-                            RollbackStatusMessage = "Removing copy of template database",
-                            FailureMessage = $"Error trying to copy {templateDatabase.DisplayName} to new database",
-                            RollbackFailureMessage = $"Error trying to remove temporary database '{tempDbName}'",
-                        }
-                    ).ContinueWith(
-                        new DdlSqlWorkflowStep
-                        {
-                            ExecuteAction = conn => { },
-                            RollBackAction = conn => { },
-                            StatusMessage = "Renaming old database",
-                            RollbackStatusMessage = "Renaming old database",
-                            FailureMessage =
-                                $"Error trying to rename old {copyToDatabase.DisplayName} database from '{copyToDatabaseName}' to '{oldDbName}' prior to removal",
-                            RollbackFailureMessage =
-                                $"Error trying to rename old {copyToDatabase.DisplayName} database '{oldDbName}' back to '{copyToDatabaseName}'"
-                        }
-                    ).ContinueWith(
-                        new DdlSqlWorkflowStep
-                        {
-                            ExecuteAction = conn => { },
-                            RollBackAction = conn => { },
-                            //worst case there's an extra DB online, but the old database is still online.  nothing to cleanup in this step as we'll delete the temp db further up the chain
-                            StatusMessage = "Renaming copied database",
-                            RollbackStatusMessage = "",
-                            FailureMessage =
-                                $"Error trying to rename new {copyToDatabase.DisplayName} database from '{tempDbName}' to '{copyToDatabaseName}'",
-                            RollbackFailureMessage = ""
-                        }
-                    ).ContinueWith(
-                        new DdlSqlWorkflowStep
-                        {
-                            ExecuteAction = conn => { },
-                            RollBackAction = conn => { },
-                            StatusMessage = $"Resetting security on {copyToDatabaseName}",
-                            RollbackStatusMessage = "",
-                            FailureMessage = $"Error trying to re-create database logins in {copyToDatabaseName}",
-                            RollbackFailureMessage = "",
-                        }
-                    ).ContinueWith(
-                        new DdlSqlWorkflowStep
-                        {
-                            ExecuteAction = conn => { },
-                            RollBackAction = conn => { },
-                            //scale up request failed, nothing to rollback
-                            StatusMessage = "Updating database performance level",
-                            RollbackStatusMessage = "",
-                            FailureMessage =
-                                $"Error trying to scale {copyToDatabase.DisplayName} database to correct performance level",
-                            RollbackFailureMessage = ""
-                        }
-                    ).ContinueWith(
-                        new DdlSqlWorkflowStep
-                        {
-                            ExecuteAction = conn => { },
-                            RollBackAction = conn => { },
-                            FailureMessage =
-                                $"Error trying to remove database {oldDbName}.  You should remove this database manually in the Azure Portal to avoid incurring extra charges.",
-                            StatusMessage = "Deleting old database",
-                            RollbackStatusMessage = "",
-                            RollbackFailureMessage = "",
-                            RollbackPreviousSteps = false
-                            //worst case there's an extra DB online, but the system is still operational, so there's nothing to rollback here
-                        }
-                    );
+                    .SetWorkflowName($"Copy Azure database {templateDatabaseName} to {copyToDatabaseName}");
 
                 return _ddlSqlWorkflowManager.Execute();
             }

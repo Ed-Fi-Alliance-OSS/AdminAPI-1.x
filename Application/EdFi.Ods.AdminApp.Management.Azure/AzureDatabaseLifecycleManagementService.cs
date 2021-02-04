@@ -39,23 +39,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
         [Obsolete("This operation is no longer intended to be reached, and should be phased out.")]
         public WorkflowResult ResetByCopyingTemplate(OdsSqlConfiguration sqlConfiguration, CloudOdsDatabases templateDatabase, CloudOdsDatabases copyToDatabase, CancellationToken cancellationToken)
         {
-            AzurePerformanceLevel performanceLevel;
-            var templateDatabaseName = _cloudOdsDatabaseNameProvider.GetDatabaseName(templateDatabase);
-            var copyToDatabaseName = _cloudOdsDatabaseNameProvider.GetDatabaseName(copyToDatabase);
-            var masterDatabaseName = _cloudOdsDatabaseNameProvider.GetDatabaseName(CloudOdsDatabases.Master);
-
-            {
-                var now = DateTime.UtcNow;
-                var tempDbName = $"{copyToDatabaseName}_temp_{now:yyyyMMddHHmmss}";
-                var oldDbName = $"{copyToDatabaseName}_old_{now:yyyyMMddHHmmss}";
-
-                _ddlSqlWorkflowManager = new DdlSqlWorkflowManager(null, cancellationToken);
-
-                _ddlSqlWorkflowManager
-                    .SetWorkflowName($"Copy Azure database {templateDatabaseName} to {copyToDatabaseName}");
-
-                return _ddlSqlWorkflowManager.Execute();
-            }
+            return null;
         }
     }
 }

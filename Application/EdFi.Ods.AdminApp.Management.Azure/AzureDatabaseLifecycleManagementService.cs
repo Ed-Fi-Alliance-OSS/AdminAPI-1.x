@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApp.Management.Workflow;
 
 namespace EdFi.Ods.AdminApp.Management.Azure
 {
+    [Obsolete("This service is no longer intended to be reached, and should be phased out.")]
     public class AzureDatabaseLifecycleManagementService
     {
         private readonly AzureDatabaseManagementService _azureDatabaseManagementService;
@@ -34,12 +35,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             _cloudOdsDatabaseSqlServerSecurityConfiguration = cloudOdsDatabaseSqlServerSecurityConfiguration;
             _rawSqlConnectionService = rawSqlConnectionService;
             _cloudOdsDatabaseNameProvider = cloudOdsDatabaseNameProvider;
-        }
-
-        [Obsolete("This operation is no longer intended to be reached, and should be phased out.")]
-        public WorkflowResult ResetByCopyingTemplate(OdsSqlConfiguration sqlConfiguration, CloudOdsDatabases templateDatabase, CloudOdsDatabases copyToDatabase, CancellationToken cancellationToken)
-        {
-            return null;
         }
     }
 }

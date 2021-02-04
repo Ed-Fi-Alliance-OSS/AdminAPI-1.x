@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
@@ -23,14 +22,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICachedItems _cachedItems;
         private readonly ICloudOdsSettingsService _cloudOdsSettingsService;
         private readonly IGetProductionApiProvisioningWarningsQuery _getProductionApiProvisioningWarningsQuery;
-        private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly ITabDisplayService _tabDisplayService;
         private readonly InstanceContext _instanceContext;
         private readonly AppSettings _appSettings;
 
         public OdsInstanceSettingsController(
-              IOdsApiFacadeFactory odsApiFacadeFactory
-            , IGetProductionApiProvisioningWarningsQuery getProductionApiProvisioningWarningsQuery
+              IGetProductionApiProvisioningWarningsQuery getProductionApiProvisioningWarningsQuery
             , ICachedItems cachedItems
             , ICloudOdsSettingsService cloudOdsSettingsService
             , ITabDisplayService tabDisplayService 
@@ -38,7 +35,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IOptions<AppSettings> appSettingsAccessor
             )
         {
-            _odsApiFacadeFactory = odsApiFacadeFactory;
             _getProductionApiProvisioningWarningsQuery = getProductionApiProvisioningWarningsQuery;
             _cachedItems = cachedItems;
             _cloudOdsSettingsService = cloudOdsSettingsService;
@@ -49,17 +45,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> Setup()
         {
-            var setupCompleted = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
-
-            if (setupCompleted) return RedirectToAction("SetupComplete");
-
-            var model = new OdsInstanceSettingsModel
-            {
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Setup)
-            };
-
-            return View(model);
+            return RedirectToAction("SetupComplete");
         }
 
         public async Task<ActionResult> SetupComplete()
@@ -77,13 +63,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             };
 
             return View(model);
-        }
-
-        [HttpPost]
-        [Obsolete("This action no longer performs any work.")]
-        public ActionResult Setup(OdsInstanceSettingsModel model)
-        {
-            return Ok();
         }
 
         public async Task<ActionResult> Logging()

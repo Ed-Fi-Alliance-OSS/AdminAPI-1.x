@@ -6,7 +6,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Display.DisplayService;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
@@ -30,7 +29,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IRestartAppServicesCommand, RestartAzureAppServicesCommand>();
             services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateAzureCloudOdsApiWebsiteSettingsCommand>();
             services.AddTransient<IGetProductionApiProvisioningWarningsQuery, GetAzureProductionApiProvisioningWarningsQuery>();
-            services.AddTransient<ICloudOdsProductionLifecycleManagementService, AzureProductionLifecycleManagementService>();
             services.AddTransient<IGetCloudOdsInstanceQuery, GetAzureCloudOdsInstanceQuery>();
             services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration, AzureCloudOdsDatabaseSqlServerSecurityConfiguration>();
             services.AddTransient<IFirstTimeSetupService, AzureFirstTimeSetupService>();

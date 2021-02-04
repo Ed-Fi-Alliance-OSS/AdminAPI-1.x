@@ -3,10 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using Hangfire;
@@ -19,22 +18,18 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
     {
     }
 
+    [Obsolete("This job is no longer intended to be reached, and should be phased out.")]
     public class ProductionSetupJob : WorkflowJob<int, ProductionSetupHub>, IProductionSetupJob
     {
         private const string WorkflowJobName = "Production Setup";
         private readonly IGetOdsSqlConfigurationQuery _getOdsSqlConfigurationQuery;
         private readonly ILog _logger = LogManager.GetLogger(typeof(ProductionSetupJob));
-        private readonly ICloudOdsProductionLifecycleManagementService _productionDatabaseLifecycleManagementService;
 
         public ProductionSetupJob(
-            ICloudOdsProductionLifecycleManagementService productionDatabaseLifecycleManagementService,
             IGetOdsSqlConfigurationQuery getOdsSqlConfigurationQuery, IBackgroundJobClient backgroundJobClient, IHubContext<ProductionSetupHub> productionSetupHubContext)
             : base(backgroundJobClient, WorkflowJobName, productionSetupHubContext)
         {
-            _productionDatabaseLifecycleManagementService = productionDatabaseLifecycleManagementService;
             _getOdsSqlConfigurationQuery = getOdsSqlConfigurationQuery;
-
-            _productionDatabaseLifecycleManagementService.StatusUpdated += OperationStatusUpdated;
         }
 
         /// <summary>
@@ -49,10 +44,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
             _logger.Info($"User requested {WorkflowJobName} operation 'Interactive SetUp'");
 
-            var result = await _productionDatabaseLifecycleManagementService.ResetToMinimal(
-                sqlConfig, jobCancellationToken?.ShutdownToken ?? CancellationToken.None);
-
-            return result;
+            return new WorkflowResult();
         }
     }
 }

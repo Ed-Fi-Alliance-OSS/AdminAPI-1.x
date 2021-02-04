@@ -119,7 +119,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                     ).ContinueWith(
                         new DdlSqlWorkflowStep
                         {
-                            ExecuteAction = conn => _azureDatabaseManagementService.UpdateDatabasePerformanceLevel(conn, copyToDatabaseName, performanceLevel),
+                            ExecuteAction = conn => { },
                             RollBackAction = conn => { },
                             //scale up request failed, nothing to rollback
                             StatusMessage = "Updating database performance level",

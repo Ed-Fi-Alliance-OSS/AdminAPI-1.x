@@ -33,11 +33,5 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                 return new AzurePerformanceLevel(edition, serviceObjective);
             }
         }
-
-        public void UpdateDatabasePerformanceLevel(SqlConnection connection, string databaseName, AzurePerformanceLevel newPerformanceLevel)
-        {
-            var sql = $"ALTER DATABASE [{databaseName}] MODIFY (EDITION = '{newPerformanceLevel.Edition}', SERVICE_OBJECTIVE='{newPerformanceLevel.ServiceObjective}')";
-            _rawSqlConnectionService.ExecuteDdl(connection, sql);
-        }
     }
 }

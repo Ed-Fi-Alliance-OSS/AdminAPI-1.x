@@ -14,23 +14,11 @@ namespace EdFi.Ods.AdminApp.Management.Azure
     [Obsolete("This service is no longer intended to be reached, and should be phased out.")]
     public class AzureProductionLifecycleManagementService : ICloudOdsProductionLifecycleManagementService
     {
-        private readonly AzureDatabaseLifecycleManagementService _azureDatabaseLifecycleManagementService;
         public event WorkflowStatusUpdated StatusUpdated;
 
-        public AzureProductionLifecycleManagementService(AzureDatabaseLifecycleManagementService azureDatabaseLifecycleManagementService)
-        {
-            _azureDatabaseLifecycleManagementService = azureDatabaseLifecycleManagementService;
-            _azureDatabaseLifecycleManagementService.StatusUpdated += OnStatusUpdated;
-        }
-        
         public Task<WorkflowResult> ResetToMinimal(OdsSqlConfiguration sqlConfiguration, CancellationToken cancellationToken)
         {
             return Task.FromResult(new WorkflowResult());
-        }
-
-        private void OnStatusUpdated(WorkflowStatus status)
-        {
-            StatusUpdated?.Invoke(status);
         }
     }
 }

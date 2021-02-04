@@ -6,11 +6,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Settings;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
 using Microsoft.Extensions.Options;
@@ -35,22 +33,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _tabDisplayService = tabDisplayService;
             _instanceContext = instanceContext;
             _appSettings = appSettingsAccessor.Value;
-        }
-
-        public async Task<ActionResult> Setup()
-        {
-            return RedirectToAction("SetupComplete");
-        }
-
-        public async Task<ActionResult> SetupComplete()
-        {
-            var model = new OdsInstanceSettingsModel
-            {
-                OdsInstanceSettingsTabEnumerations =
-                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration.Setup)
-            };
-
-            return View(model);
         }
 
         public async Task<ActionResult> Logging()

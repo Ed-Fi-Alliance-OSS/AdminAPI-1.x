@@ -42,6 +42,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                    AppSettings.SystemManagedSqlServer,
                    StringComparison.InvariantCultureIgnoreCase);
 
+        [Obsolete("This property is no longer used.")]
         public bool DbSetupEnabled => bool.TrueString.Equals(
             AppSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
 

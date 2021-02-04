@@ -46,7 +46,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure
 
             using (var connection = _rawSqlConnectionService.GetDatabaseConnectionWithAdminCredentials(sqlConfiguration, copyToDatabaseName))
             {
-                performanceLevel = _azureDatabaseManagementService.GetDatabasePerformanceLevel(connection, copyToDatabaseName);
             }
 
             using (var connection = _rawSqlConnectionService.GetDatabaseConnectionWithAdminCredentials(sqlConfiguration, masterDatabaseName))

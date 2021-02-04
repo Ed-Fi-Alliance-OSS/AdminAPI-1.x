@@ -15,17 +15,11 @@ namespace EdFi.Ods.AdminApp.Management.Azure
         private readonly AzureWebsitePerformanceLevel _expectedWebsitePerformanceLevel = AzureWebsitePerformanceLevel.S3;
 
         private readonly IGetAzureCloudOdsWebsitePerformanceLevelQuery _getAzureCloudOdsWebsitePerformanceLevelQuery;
-        private readonly IRawSqlConnectionService _rawSqlConnectionService;
-        private readonly ICloudOdsDatabaseNameProvider _cloudOdsDatabaseNameProvider;
 
         public GetAzureProductionApiProvisioningWarningsQuery(
-            IGetAzureCloudOdsWebsitePerformanceLevelQuery getAzureCloudOdsWebsitePerformanceLevelQuery,
-            IRawSqlConnectionService rawSqlConnectionService,
-            ICloudOdsDatabaseNameProvider cloudOdsDatabaseNameProvider)
+            IGetAzureCloudOdsWebsitePerformanceLevelQuery getAzureCloudOdsWebsitePerformanceLevelQuery)
         {
             _getAzureCloudOdsWebsitePerformanceLevelQuery = getAzureCloudOdsWebsitePerformanceLevelQuery;
-            _rawSqlConnectionService = rawSqlConnectionService;
-            _cloudOdsDatabaseNameProvider = cloudOdsDatabaseNameProvider;
         }
 
         [Obsolete("This operation is no longer intended to be reached, and should be phased out.")]
@@ -37,10 +31,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             };
 
             var warnings = new List<string>();
-
-            using (var conn = _rawSqlConnectionService.GetDatabaseConnectionFromConfigFile(_cloudOdsDatabaseNameProvider.GetDatabaseName(CloudOdsDatabases.ProductionOds)))
-            {
-            }
 
             var cloudOdsApiOperationContext = new CloudOdsApiOperationContext(cloudOdsInstance);
             var serverPerformanceLevel = await _getAzureCloudOdsWebsitePerformanceLevelQuery.Execute(cloudOdsApiOperationContext);

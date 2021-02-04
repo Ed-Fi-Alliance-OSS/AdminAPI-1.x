@@ -3,10 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Database;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -33,21 +31,12 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         {
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            mockCloudOdsDatabaseNameProvider.Setup(x => x.GetDatabaseName(It.IsAny<CloudOdsDatabases>()))
-                .Returns(It.IsAny<string>());
-
             var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
             azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
                 .ReturnsAsync(AzureWebsitePerformanceLevel.S3);
 
-            var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
-            mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
-
             var sut = new GetAzureProductionApiProvisioningWarningsQuery(
-                azureCloudOdsWebsitePerformanceLevelQuery.Object,
-                mockRawSqlConnection.Object,
-                mockCloudOdsDatabaseNameProvider.Object);
+                azureCloudOdsWebsitePerformanceLevelQuery.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.ShouldBeEmpty();
@@ -56,20 +45,13 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         [Test]
         public async Task ShouldNotProduceWarningWhenRunningAgainstExpectedAzureSqlTier()
         {
-            var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            mockCloudOdsDatabaseNameProvider.Setup(x => x.GetDatabaseName(It.IsAny<CloudOdsDatabases>()))
-                .Returns(It.IsAny<string>());
-
             var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
             azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
                 .ReturnsAsync(AzureWebsitePerformanceLevel.S3);
 
-            var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
-            mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.ShouldBeEmpty();
@@ -78,20 +60,13 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         [Test]
         public async Task ShouldProduceWarningWhenRunningAgainstLowerThanRecommendedAzureSqlTier()
         {
-            var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            mockCloudOdsDatabaseNameProvider.Setup(x => x.GetDatabaseName(It.IsAny<CloudOdsDatabases>()))
-                .Returns(It.IsAny<string>());
-
             var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
             azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
                 .ReturnsAsync(AzureWebsitePerformanceLevel.S3);
 
-            var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
-            mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.Count().ShouldBe(1);
@@ -101,20 +76,13 @@ namespace EdFi.Ods.AdminApp.Management.Azure.UnitTests
         [Test]
         public async Task ShouldProduceWarningWhenWebsiteLowerThanRecommendedTier()
         {
-            var mockCloudOdsDatabaseNameProvider = new Mock<ICloudOdsDatabaseNameProvider>();
-            mockCloudOdsDatabaseNameProvider.Setup(x => x.GetDatabaseName(It.IsAny<CloudOdsDatabases>()))
-                .Returns(It.IsAny<string>());
-
             var azureCloudOdsWebsitePerformanceLevelQuery = new Mock<IGetAzureCloudOdsWebsitePerformanceLevelQuery>();
             azureCloudOdsWebsitePerformanceLevelQuery.Setup(x => x.Execute(It.IsAny<ICloudOdsOperationContext>()))
                 .ReturnsAsync(AzureWebsitePerformanceLevel.S2);
 
-            var mockRawSqlConnection = new Mock<IRawSqlConnectionService>();
-            mockRawSqlConnection.Setup(x => x.GetDatabaseConnectionFromConfigFile(It.IsAny<string>())).Returns((SqlConnection)null);
-
             var cloudOdsInstance = GetAzureCloudOdsInstance();
 
-            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object, mockRawSqlConnection.Object, mockCloudOdsDatabaseNameProvider.Object);
+            var sut = new GetAzureProductionApiProvisioningWarningsQuery(azureCloudOdsWebsitePerformanceLevelQuery.Object);
             var result = await sut.Execute(cloudOdsInstance);
 
             result.Warnings.Count().ShouldBe(1);

@@ -5,14 +5,11 @@
 
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Helpers;
-using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
     public interface IRawSqlConnectionService
     {
-        SqlConnection GetDatabaseConnectionFromConfigFile(string databaseName);
         string GetConnectionStringWithAdminCredentials(OdsSqlConfiguration configuration, string databaseName);
         Task ExecuteDdlAsync(SqlConnection connection, string sql, int commandTimeout = 300);
         void ExecuteDdl(SqlConnection connection, string sql, int commandTimeout = 300);
@@ -20,32 +17,6 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
     public class RawSqlConnectionService : IRawSqlConnectionService
     {
-        private readonly ConnectionStrings _connectionStrings;
-
-        public RawSqlConnectionService(IOptions<ConnectionStrings> connectionStrings)
-        {
-            _connectionStrings = connectionStrings.Value;
-        }
-
-        public SqlConnection GetDatabaseConnectionFromConfigFile(string databaseName)
-        {
-            var connectionString = GetConnectionStringFromConfigFile(databaseName);
-            return GetDatabaseConnection(connectionString);
-        }
-
-        private string GetConnectionStringFromConfigFile(string databaseName)
-        {
-            return _connectionStrings.GetConnectionStringByName(databaseName);
-        }
-
-        private SqlConnection GetDatabaseConnection(string connectionString)
-        {
-            var connection = new SqlConnection(connectionString);
-            connection.Open();
-
-            return connection;
-        }
-
         public string GetConnectionStringWithAdminCredentials(OdsSqlConfiguration configuration, string databaseName)
         {
             return GetConnectionString(configuration.HostName, databaseName, configuration.AdminCredentials);

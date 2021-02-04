@@ -34,12 +34,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             }
         }
 
-        public void RenameDatabase(SqlConnection connection, string oldName, string newName)
-        {
-            var sql = $"ALTER DATABASE [{oldName}] MODIFY NAME=[{newName}]";
-            _rawSqlConnectionService.ExecuteDdl(connection, sql);
-        }
-
         public void CopyDatabase(SqlConnection connection, string sourceDatabaseName, string destinationDatabaseName)
         {
             var sql = $"CREATE DATABASE [{destinationDatabaseName}] AS COPY OF [{sourceDatabaseName}]";

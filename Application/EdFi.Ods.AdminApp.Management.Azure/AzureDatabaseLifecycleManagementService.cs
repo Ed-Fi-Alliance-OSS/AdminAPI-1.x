@@ -81,8 +81,8 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                     ).ContinueWith(
                         new DdlSqlWorkflowStep
                         {
-                            ExecuteAction = conn => _azureDatabaseManagementService.RenameDatabase(conn, copyToDatabaseName, oldDbName),
-                            RollBackAction = conn => _azureDatabaseManagementService.RenameDatabase(conn, oldDbName, copyToDatabaseName),
+                            ExecuteAction = conn => { },
+                            RollBackAction = conn => { },
                             StatusMessage = "Renaming old database",
                             RollbackStatusMessage = "Renaming old database",
                             FailureMessage =
@@ -93,7 +93,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                     ).ContinueWith(
                         new DdlSqlWorkflowStep
                         {
-                            ExecuteAction = conn => _azureDatabaseManagementService.RenameDatabase(conn, tempDbName, copyToDatabaseName),
+                            ExecuteAction = conn => { },
                             RollBackAction = conn => { },
                             //worst case there's an extra DB online, but the old database is still online.  nothing to cleanup in this step as we'll delete the temp db further up the chain
                             StatusMessage = "Renaming copied database",

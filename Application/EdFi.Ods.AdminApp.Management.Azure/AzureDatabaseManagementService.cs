@@ -34,12 +34,6 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             }
         }
 
-        public void CopyDatabase(SqlConnection connection, string sourceDatabaseName, string destinationDatabaseName)
-        {
-            var sql = $"CREATE DATABASE [{destinationDatabaseName}] AS COPY OF [{sourceDatabaseName}]";
-            _rawSqlConnectionService.ExecuteDdl(connection, sql);
-        }
-
         public void UpdateDatabasePerformanceLevel(SqlConnection connection, string databaseName, AzurePerformanceLevel newPerformanceLevel)
         {
             var sql = $"ALTER DATABASE [{databaseName}] MODIFY (EDITION = '{newPerformanceLevel.Edition}', SERVICE_OBJECTIVE='{newPerformanceLevel.ServiceObjective}')";

@@ -67,11 +67,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                     .StartWith(
                         new DdlSqlWorkflowStep
                         {
-                            ExecuteAction =
-                                conn =>
-                                {
-                                    _azureDatabaseManagementService.CopyDatabase(conn, templateDatabaseName, tempDbName);
-                                },
+                            ExecuteAction = conn => { },
                             RollBackAction = conn => { },
                             StatusMessage = "Copying template database",
                             RollbackStatusMessage = "Removing copy of template database",

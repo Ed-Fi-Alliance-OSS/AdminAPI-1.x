@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Workflow;
 
 namespace EdFi.Ods.AdminApp.Management.Azure
@@ -74,7 +73,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                                     _azureDatabaseManagementService.CopyDatabase(conn, templateDatabaseName, tempDbName);
                                     _azureDatabaseManagementService.EnsureCopyDatabaseCompleted(conn, tempDbName);
                                 },
-                            RollBackAction = conn => _azureDatabaseManagementService.DropDatabase(conn, tempDbName), //delete the extra database copy
+                            RollBackAction = conn => { },
                             StatusMessage = "Copying template database",
                             RollbackStatusMessage = "Removing copy of template database",
                             FailureMessage = $"Error trying to copy {templateDatabase.DisplayName} to new database",
@@ -137,7 +136,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                     ).ContinueWith(
                         new DdlSqlWorkflowStep
                         {
-                            ExecuteAction = conn => _azureDatabaseManagementService.DropDatabase(conn, oldDbName),
+                            ExecuteAction = conn => { },
                             RollBackAction = conn => { },
                             FailureMessage =
                                 $"Error trying to remove database {oldDbName}.  You should remove this database manually in the Azure Portal to avoid incurring extra charges.",

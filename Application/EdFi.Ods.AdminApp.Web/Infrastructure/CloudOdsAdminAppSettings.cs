@@ -36,13 +36,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         public string ApiExternalUrl => AppSettings.ApiExternalUrl;
 
         [Obsolete("This property is no longer used.")]
-        public bool SystemManagedSqlServer
-            => AppSettings.SystemManagedSqlServer == null ||
-               bool.TrueString.Equals(
-                   AppSettings.SystemManagedSqlServer,
-                   StringComparison.InvariantCultureIgnoreCase);
-
-        [Obsolete("This property is no longer used.")]
         public bool DbSetupEnabled => bool.TrueString.Equals(
             AppSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
 

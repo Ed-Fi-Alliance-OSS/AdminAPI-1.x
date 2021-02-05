@@ -59,7 +59,6 @@
             XsdFolder = "/app/Schema"
             ApiStartupType = "SharedInstance"
             DatabaseEngine = "PostgreSql"
-            DbSetupEnabled = "false"
             BulkUploadHashCache = "/app/BulkUploadHashCache/"
             EncryptionProtocol = "AES"
             EncryptionKey = "<Generated encryption key>"
@@ -350,7 +349,6 @@ function UpdateAppSettings {
     $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
     $json.AppSettings.XsdFolder = $DockerEnvValues["XsdFolder"]
     $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
-    $json.AppSettings.DbSetupEnabled = $DockerEnvValues["DbSetupEnabled"]
     $json.AppSettings.BulkUploadHashCache = $DockerEnvValues["BulkUploadHashCache"]
     $json.AppSettings.EncryptionProtocol = $DockerEnvValues["EncryptionProtocol"]
 

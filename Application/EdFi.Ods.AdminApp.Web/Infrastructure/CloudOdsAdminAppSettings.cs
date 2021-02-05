@@ -35,10 +35,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public string ApiExternalUrl => AppSettings.ApiExternalUrl;
 
-        [Obsolete("This property is no longer used.")]
-        public bool DbSetupEnabled => bool.TrueString.Equals(
-            AppSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
-
         public int SecurityMetadataCacheTimeoutMinutes
         {
             get

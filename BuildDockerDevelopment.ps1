@@ -23,7 +23,6 @@ $p = @{
         XsdFolder = "/app/Schema"
         ApiStartupType = "SharedInstance"
         DatabaseEngine = "PostgreSql"
-        DbSetupEnabled = "false"
         BulkUploadHashCache = "/app/BulkUploadHashCache/"
         EncryptionProtocol = "AES"
         EncryptionKey = "<Generated encryption key>"

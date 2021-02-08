@@ -92,7 +92,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddScoped<InstanceContext>();
 
             services.AddTransient<ApplicationConfigurationService>();
-            services.AddTransient<CloudOdsUpdateCheckService>();
 
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
             {

@@ -11,13 +11,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
     public class CloudOdsUpdateService
     {
-        private readonly CloudOdsUpdateCheckService _cloudOdsUpdateCheckService;
-
-        public CloudOdsUpdateService(CloudOdsUpdateCheckService cloudOdsUpdateCheckService)
-        {
-            _cloudOdsUpdateCheckService = cloudOdsUpdateCheckService;
-        }
-
         [Obsolete]
         public async Task<CloudOdsUpdateInfo> GetUpdateInfo()
         {

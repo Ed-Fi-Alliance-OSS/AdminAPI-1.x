@@ -21,11 +21,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
         {
             var homeScreenDisplayList = base.GetHomeScreenDisplays();
 
-            var screenToRemove = homeScreenDisplayList.Single(x =>
-                x.HomeScreen == HomeScreenEnumeration.Updates);
-
-            homeScreenDisplayList.Remove(screenToRemove);
-
             return homeScreenDisplayList;
         }
     }

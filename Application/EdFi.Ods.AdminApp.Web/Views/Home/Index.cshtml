@@ -24,7 +24,6 @@ See the LICENSE and NOTICES files in the project root for more information.
     var SettingsDisplay = Model.HomeScreenDisplays.First(a => a.HomeScreen == HomeScreenEnumeration.Settings);
     var OdsInstancesDisplay = Model.HomeScreenDisplays.First(a => a.HomeScreen == HomeScreenEnumeration.OdsInstances);
     var GlobalDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Global);
-    var UpdatesDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Updates);
 }
 
 @if (User.Identity.IsAuthenticated)
@@ -81,23 +80,6 @@ See the LICENSE and NOTICES files in the project root for more information.
             </a>
         }
 
-        @if (UpdatesDisplay != null)
-        {
-            <a href="@Url.Action("Index", "Update")" class="@GetCssClassName(UpdatesDisplay.IsEnabled)">
-                <div class="col-md-4 col-sm-6 hero-feature">
-                    <div class="border-circular">
-                        <img src="~/Content/images/updates@2x.png" width="200" alt="Updates"/>
-                    </div>
-                    <div class="caption">
-                        <h3>Updates</h3>
-                        @if (Model.UpdateAvailable)
-                        {
-                            <div class="badge update-badge">Update Available</div>
-                        }
-                    </div>
-                </div>
-            </a>
-        }
     </div>
 }
 

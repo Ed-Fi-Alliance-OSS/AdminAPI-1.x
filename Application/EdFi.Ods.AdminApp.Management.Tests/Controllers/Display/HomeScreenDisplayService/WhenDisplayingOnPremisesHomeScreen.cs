@@ -38,11 +38,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Display.HomeScreenDisplayService
         {
             HomeScreenTabAssertions().TabShouldNotBeEnabled(HomeScreenEnumeration.Global);
         }
-
-        [Test]
-        public void Should_display_updates_tab()
-        {
-            HomeScreenTabAssertions().TabShouldNotBeEnabled(HomeScreenEnumeration.Updates);
-        }
     }
 }

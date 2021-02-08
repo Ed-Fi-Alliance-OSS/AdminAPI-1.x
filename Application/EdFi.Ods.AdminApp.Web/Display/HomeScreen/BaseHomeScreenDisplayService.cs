@@ -39,11 +39,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.Global
-                },
-                new HomeScreenDisplay<HomeScreenEnumeration>
-                {
-                    IsEnabled = true,
-                    HomeScreen = HomeScreenEnumeration.Updates
                 }
             };
 

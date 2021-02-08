@@ -15,7 +15,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
 
         public static readonly HomeScreenEnumeration Settings = new HomeScreenEnumeration(1, "Settings");
         public static readonly HomeScreenEnumeration OdsInstances = new HomeScreenEnumeration(2, "ODS Instances");
-        public static readonly HomeScreenEnumeration Updates = new HomeScreenEnumeration(3, "Updates");
         public static readonly HomeScreenEnumeration Global = new HomeScreenEnumeration(4, "Global");
     }
 }

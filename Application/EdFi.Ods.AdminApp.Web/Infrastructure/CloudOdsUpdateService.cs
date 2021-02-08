@@ -6,39 +6,22 @@
 using System;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Web.Helpers;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
     public class CloudOdsUpdateService
     {
-        private readonly ICachedItems _cachedItems;
         private readonly CloudOdsUpdateCheckService _cloudOdsUpdateCheckService;
 
-        public CloudOdsUpdateService(ICachedItems cachedItems, CloudOdsUpdateCheckService cloudOdsUpdateCheckService)
+        public CloudOdsUpdateService(CloudOdsUpdateCheckService cloudOdsUpdateCheckService)
         {
-            _cachedItems = cachedItems;
             _cloudOdsUpdateCheckService = cloudOdsUpdateCheckService;
         }
 
         [Obsolete]
         public async Task<CloudOdsUpdateInfo> GetUpdateInfo()
         {
-            var instance = await _cachedItems.GetDefaultCloudOdsInstance();
-
-            var cloudOdsUpdateInfo = new CloudOdsUpdateInfo
-            {
-                Instance = instance,
-                LatestPublishedVersion = _cachedItems.LatestPublishedOdsVersion?.ToVersion(),
-                CurrentInstanceVersion = instance?.Version?.ToVersion(),
-            };
-
-            cloudOdsUpdateInfo.VersionInformationIsValid =
-                _cloudOdsUpdateCheckService.VersionInformationIsValid(cloudOdsUpdateInfo);
-
-            cloudOdsUpdateInfo.UpdateIsCompatible = _cloudOdsUpdateCheckService.UpdateIsCompatible(cloudOdsUpdateInfo);
-
-            return cloudOdsUpdateInfo;
+            throw new NotImplementedException();
         }
     }
 }

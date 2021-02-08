@@ -65,8 +65,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
 
-            services.AddSingleton<ICachedItems, CachedItems>();
-
             services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
 
             services.AddTransient<BulkUploadHub>();

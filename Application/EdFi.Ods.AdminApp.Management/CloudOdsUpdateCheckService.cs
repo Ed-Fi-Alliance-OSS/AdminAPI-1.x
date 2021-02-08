@@ -9,6 +9,7 @@ namespace EdFi.Ods.AdminApp.Management
 {
     public class CloudOdsUpdateCheckService 
     {
+        [Obsolete]
         public bool VersionInformationIsValid(CloudOdsUpdateInfo cloudOdsUpdateInfo)
         {
             return cloudOdsUpdateInfo.LatestPublishedVersion != null &&
@@ -22,6 +23,7 @@ namespace EdFi.Ods.AdminApp.Management
                    cloudOdsUpdateInfo.CurrentInstanceVersion < cloudOdsUpdateInfo.LatestPublishedVersion;
         }
 
+        [Obsolete]
         public bool UpdateIsCompatible(CloudOdsUpdateInfo cloudOdsUpdateInfo)
         {
             return VersionInformationIsValid(cloudOdsUpdateInfo) &&

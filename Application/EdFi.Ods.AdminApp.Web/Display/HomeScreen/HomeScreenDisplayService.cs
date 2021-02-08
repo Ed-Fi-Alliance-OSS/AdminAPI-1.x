@@ -22,24 +22,28 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
 
         public virtual List<HomeScreenDisplay> GetHomeScreenDisplays()
         {
-            var homeScreenDisplayList = new List<HomeScreenDisplay>
-            {
+            var homeScreenDisplayList = new List<HomeScreenDisplay>();
+
+            homeScreenDisplayList.Add(
                 new HomeScreenDisplay
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.OdsInstances
-                },
+                });
+
+            homeScreenDisplayList.Add(
                 new HomeScreenDisplay
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.Settings
-                },
+                });
+
+            homeScreenDisplayList.Add(
                 new HomeScreenDisplay
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.Global
-                }
-            };
+                });
 
             if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
             {

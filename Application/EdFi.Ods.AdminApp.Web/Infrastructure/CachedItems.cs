@@ -21,23 +21,16 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
     public class CachedItems : ICachedItems
     {
         private readonly IGetCloudOdsInstanceQuery _getCloudOdsInstanceQuery;
-        private readonly IGetLatestPublishedOdsVersionQuery _getLatestPublishedOdsVersionQuery;
 
-        public CachedItems(IGetLatestPublishedOdsVersionQuery getLatestPublishedOdsVersionQuery,
+        public CachedItems(
             IGetCloudOdsInstanceQuery getCloudOdsInstanceQuery)
         {
-            _getLatestPublishedOdsVersionQuery = getLatestPublishedOdsVersionQuery;
             _getCloudOdsInstanceQuery = getCloudOdsInstanceQuery;
         }
 
         public string LatestPublishedOdsVersion
         {
-            get
-            {
-                return InMemoryCache.Instance.GetOrSet(
-                    "LatestPublishedOdsVersion",
-                    () => _getLatestPublishedOdsVersionQuery.Execute());
-            }
+            get => "2.6.0";
         }
 
         [Obsolete]

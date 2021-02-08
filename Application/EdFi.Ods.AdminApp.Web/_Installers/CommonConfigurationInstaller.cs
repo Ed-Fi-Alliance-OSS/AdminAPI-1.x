@@ -21,6 +21,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Common.Security;
 using EdFi.Ods.AdminApp.Management.Services;
+using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Security.DataAccess.Contexts;
 using Hangfire;
 using log4net;
@@ -88,6 +89,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<IHashConfigurationProvider, DefaultHashConfigurationProvider>();
 
             InstallHostingSpecificClasses(services);
+
+            services.AddTransient<IHomeScreenDisplayService, HomeScreenDisplayService>();
 
             services.AddScoped<InstanceContext>();
 

@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 
 namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
 {
-    public class AzureHomeScreenDisplayService : BaseHomeScreenDisplayService
+    public class AzureHomeScreenDisplayService : HomeScreenDisplayService
     {
         public AzureHomeScreenDisplayService(AdminAppUserContext userContext) : base(userContext)
         {

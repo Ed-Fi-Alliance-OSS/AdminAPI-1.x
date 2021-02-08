@@ -12,11 +12,11 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
 {
-    public abstract class BaseHomeScreenDisplayService : IHomeScreenDisplayService
+    public abstract class HomeScreenDisplayService : IHomeScreenDisplayService
     {
         private readonly AdminAppUserContext _userContext;
 
-        protected BaseHomeScreenDisplayService(AdminAppUserContext userContext)
+        protected HomeScreenDisplayService(AdminAppUserContext userContext)
         {
             _userContext = userContext;
         }

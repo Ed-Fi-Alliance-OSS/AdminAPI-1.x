@@ -12,9 +12,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
 {
     public class HomeScreenDisplayAssertions
     {
-        private readonly BaseHomeScreenDisplayService _tabDisplayService;
+        private readonly HomeScreenDisplayService _tabDisplayService;
 
-        public HomeScreenDisplayAssertions(BaseHomeScreenDisplayService tabDisplayService)
+        public HomeScreenDisplayAssertions(HomeScreenDisplayService tabDisplayService)
         {
             _tabDisplayService = tabDisplayService;
         }

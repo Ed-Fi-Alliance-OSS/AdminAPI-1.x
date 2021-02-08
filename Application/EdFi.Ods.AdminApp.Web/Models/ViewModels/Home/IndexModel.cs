@@ -11,6 +11,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Home
     public class IndexModel
     {
         public bool SetupJustCompleted { get; set; }
-        public List<HomeScreenDisplay> HomeScreenDisplays { get; set; }
+        public List<HomeScreenEnumeration> HomeScreenDisplays { get; set; }
     }
 }

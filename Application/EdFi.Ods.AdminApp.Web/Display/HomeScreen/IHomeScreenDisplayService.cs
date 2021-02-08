@@ -9,6 +9,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
 {
     public interface IHomeScreenDisplayService
     {
-        List<HomeScreenDisplay> GetHomeScreenDisplays();
+        List<HomeScreenEnumeration> GetHomeScreenDisplays();
     }
 }

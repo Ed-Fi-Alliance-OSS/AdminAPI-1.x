@@ -19,34 +19,22 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
             _userContext = userContext;
         }
 
-        public List<HomeScreenDisplay> GetHomeScreenDisplays()
+        public List<HomeScreenEnumeration> GetHomeScreenDisplays()
         {
-            var homeScreenDisplayList = new List<HomeScreenDisplay>();
+            var homeScreenDisplayList = new List<HomeScreenEnumeration>();
 
             if (_userContext.Has(Permission.AccessGlobalSettings))
             {
-                homeScreenDisplayList.Add(
-                    new HomeScreenDisplay
-                    {
-                        HomeScreen = HomeScreenEnumeration.Global
-                    });
+                homeScreenDisplayList.Add(HomeScreenEnumeration.Global);
             }
 
             if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
             {
-                homeScreenDisplayList.Add(
-                    new HomeScreenDisplay
-                    {
-                        HomeScreen = HomeScreenEnumeration.OdsInstances
-                    });
+                homeScreenDisplayList.Add(HomeScreenEnumeration.OdsInstances);
             }
             else
             {
-                homeScreenDisplayList.Add(
-                    new HomeScreenDisplay
-                    {
-                        HomeScreen = HomeScreenEnumeration.Settings
-                    });
+                homeScreenDisplayList.Add(HomeScreenEnumeration.Settings);
             }
 
             return homeScreenDisplayList;

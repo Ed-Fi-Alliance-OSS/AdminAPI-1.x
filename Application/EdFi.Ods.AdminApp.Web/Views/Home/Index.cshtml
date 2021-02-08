@@ -10,10 +10,6 @@ See the LICENSE and NOTICES files in the project root for more information.
 
 @{
     ViewBag.Title = "Home Page";
-
-    var SettingsDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Settings);
-    var OdsInstancesDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.OdsInstances);
-    var GlobalDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Global);
 }
 
 @if (User.Identity.IsAuthenticated)
@@ -28,7 +24,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
     <div class="row text-center features-container">
 
-        @if (GlobalDisplay != null)
+        @if (Model.HomeScreenDisplays.Contains(HomeScreenEnumeration.Global))
         {
             <a href="@Url.Action("Vendors", "GlobalSettings")">
                 <div class="col-md-4 col-sm-6 hero-feature">
@@ -42,7 +38,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </a>
         }
 
-        @if (SettingsDisplay != null)
+        @if (Model.HomeScreenDisplays.Contains(HomeScreenEnumeration.Settings))
         {
             <a href="@Url.Action("Index", "Application")">
                 <div class="col-md-4 col-sm-6 hero-feature">
@@ -56,7 +52,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </a>
         }
 
-        @if (OdsInstancesDisplay != null)
+        @if (Model.HomeScreenDisplays.Contains(HomeScreenEnumeration.OdsInstances))
         {
             <a href="@Url.Action("Index", "OdsInstances")">
                 <div class="col-md-4 col-sm-6 hero-feature">

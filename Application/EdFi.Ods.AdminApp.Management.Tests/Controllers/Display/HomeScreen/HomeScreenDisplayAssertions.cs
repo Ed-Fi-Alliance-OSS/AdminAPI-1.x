@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Linq;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using Shouldly;
 
@@ -21,14 +20,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
 
         public void TabShouldBeEnabled(HomeScreenEnumeration tabToVerify)
         {
-            GetHomeScreenTabs().ShouldContain(x => x.HomeScreen == tabToVerify);
+            GetHomeScreenTabs().ShouldContain(tabToVerify);
         }
 
         public void TabShouldNotBeEnabled(HomeScreenEnumeration tabToVerify)
         {
-            GetHomeScreenTabs().ShouldNotContain(x => x.HomeScreen == tabToVerify);
+            GetHomeScreenTabs().ShouldNotContain(tabToVerify);
         }
 
-        private List<HomeScreenDisplay> GetHomeScreenTabs() => _tabDisplayService.GetHomeScreenDisplays();
+        private List<HomeScreenEnumeration> GetHomeScreenTabs() => _tabDisplayService.GetHomeScreenDisplays();
     }
 }

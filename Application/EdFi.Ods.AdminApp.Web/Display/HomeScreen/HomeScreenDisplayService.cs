@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
             _userContext = userContext;
         }
 
-        public virtual List<HomeScreenDisplay> GetHomeScreenDisplays()
+        public List<HomeScreenDisplay> GetHomeScreenDisplays()
         {
             var homeScreenDisplayList = new List<HomeScreenDisplay>();
 
@@ -34,24 +34,23 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                     });
             }
 
-            homeScreenDisplayList.Add(
-                new HomeScreenDisplay
-                {
-                    IsEnabled = true,
-                    HomeScreen = HomeScreenEnumeration.OdsInstances
-                });
-
-            homeScreenDisplayList.Add(
-                new HomeScreenDisplay
-                {
-                    IsEnabled = true,
-                    HomeScreen = HomeScreenEnumeration.Settings
-                });
-
             if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
             {
-                homeScreenDisplayList.Single(x =>
-                    x.HomeScreen == HomeScreenEnumeration.Settings).IsEnabled = false;
+                homeScreenDisplayList.Add(
+                    new HomeScreenDisplay
+                    {
+                        IsEnabled = true,
+                        HomeScreen = HomeScreenEnumeration.OdsInstances
+                    });
+            }
+            else
+            {
+                homeScreenDisplayList.Add(
+                    new HomeScreenDisplay
+                    {
+                        IsEnabled = true,
+                        HomeScreen = HomeScreenEnumeration.Settings
+                    });
             }
 
             return homeScreenDisplayList;

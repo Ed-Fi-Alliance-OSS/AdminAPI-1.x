@@ -20,8 +20,8 @@ See the LICENSE and NOTICES files in the project root for more information.
 @{
     ViewBag.Title = "Home Page";
 
-    var SettingsDisplay = Model.HomeScreenDisplays.First(a => a.HomeScreen == HomeScreenEnumeration.Settings);
-    var OdsInstancesDisplay = Model.HomeScreenDisplays.First(a => a.HomeScreen == HomeScreenEnumeration.OdsInstances);
+    var SettingsDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Settings);
+    var OdsInstancesDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.OdsInstances);
     var GlobalDisplay = Model.HomeScreenDisplays.FirstOrDefault(a => a.HomeScreen == HomeScreenEnumeration.Global);
 }
 
@@ -51,7 +51,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </a>
         }
 
-        @if (!CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
+        @if (SettingsDisplay != null)
         {
             <a href="@Url.Action("Index", "Application")" class="@GetCssClassName(SettingsDisplay.IsEnabled)">
                 <div class="col-md-4 col-sm-6 hero-feature">
@@ -65,7 +65,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </a>
         }
 
-        @if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
+        @if (OdsInstancesDisplay != null)
         {
             <a href="@Url.Action("Index", "OdsInstances")" class="@GetCssClassName(OdsInstancesDisplay.IsEnabled)">
                 <div class="col-md-4 col-sm-6 hero-feature">

@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management;
@@ -12,11 +11,11 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
 {
-    public abstract class HomeScreenDisplayService : IHomeScreenDisplayService
+    public class HomeScreenDisplayService : IHomeScreenDisplayService
     {
         private readonly AdminAppUserContext _userContext;
 
-        protected HomeScreenDisplayService(AdminAppUserContext userContext)
+        public HomeScreenDisplayService(AdminAppUserContext userContext)
         {
             _userContext = userContext;
         }

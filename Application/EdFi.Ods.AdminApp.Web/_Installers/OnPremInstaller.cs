@@ -24,7 +24,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IFirstTimeSetupService, OnPremFirstTimeSetupService>();
             services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration,OnPremOdsDatabaseSqlServerSecurityConfiguration>();
             services.AddTransient<ITabDisplayService, OnPremTabDisplayService>();
-            services.AddTransient<IHomeScreenDisplayService, OnPremHomeScreenDisplayService>();
+            services.AddTransient<IHomeScreenDisplayService, HomeScreenDisplayService>();
             services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteOnPremFirstTimeSetupCommand>();
         }
     }

@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IFirstTimeSetupService, AzureFirstTimeSetupService>();
             services.AddTransient<ICloudOdsDatabaseNameProvider, AzureCloudOdsDatabaseNameProvider>();
             services.AddTransient<ITabDisplayService, AzureTabDisplayService>();
-            services.AddTransient<IHomeScreenDisplayService, AzureHomeScreenDisplayService>();
+            services.AddTransient<IHomeScreenDisplayService, HomeScreenDisplayService>();
             services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteAzureFirstTimeSetupCommand>();
         }
     }

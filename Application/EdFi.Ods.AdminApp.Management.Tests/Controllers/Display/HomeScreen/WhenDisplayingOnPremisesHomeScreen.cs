@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Web.Display.DisplayService;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using NUnit.Framework;
 
@@ -15,7 +14,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
     {
         private static HomeScreenDisplayAssertions HomeScreenTabAssertions(params Permission[] permissions)
         {
-            return new HomeScreenDisplayAssertions(new OnPremHomeScreenDisplayService(new AdminAppUserContext
+            return new HomeScreenDisplayAssertions(new HomeScreenDisplayService(new AdminAppUserContext
             {
                 Permissions = permissions
             }));

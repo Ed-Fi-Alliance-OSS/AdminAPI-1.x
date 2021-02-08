@@ -6,16 +6,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Display.HomeScreen
-@using EdFi.Ods.AdminApp.Web.Infrastructure
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.Home.IndexModel
-
-@functions
-{
-    public string GetCssClassName(bool isEnabled)
-    {
-        return isEnabled ?  "" :  "disabled";
-    }
-}
 
 @{
     ViewBag.Title = "Home Page";
@@ -39,7 +30,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
         @if (GlobalDisplay != null)
         {
-            <a href="@Url.Action("Vendors", "GlobalSettings")" class="@GetCssClassName(GlobalDisplay.IsEnabled)">
+            <a href="@Url.Action("Vendors", "GlobalSettings")">
                 <div class="col-md-4 col-sm-6 hero-feature">
                     <div class="border-circular">
                         <img src="~/Content/images/reports@2x.png" width="200" alt="Global"/>
@@ -53,7 +44,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
         @if (SettingsDisplay != null)
         {
-            <a href="@Url.Action("Index", "Application")" class="@GetCssClassName(SettingsDisplay.IsEnabled)">
+            <a href="@Url.Action("Index", "Application")">
                 <div class="col-md-4 col-sm-6 hero-feature">
                     <div class="border-circular">
                         <img src="~/Content/images/settings@2x.png" width="200" alt="Settings"/>
@@ -67,7 +58,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
         @if (OdsInstancesDisplay != null)
         {
-            <a href="@Url.Action("Index", "OdsInstances")" class="@GetCssClassName(OdsInstancesDisplay.IsEnabled)">
+            <a href="@Url.Action("Index", "OdsInstances")">
                 <div class="col-md-4 col-sm-6 hero-feature">
                     <div class="border-circular">
                         <img src="~/Content/images/settings@2x.png" width="200" alt="Ods Instances"/>

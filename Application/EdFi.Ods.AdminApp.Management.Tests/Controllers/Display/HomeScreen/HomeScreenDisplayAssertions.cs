@@ -21,17 +21,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
 
         public void TabShouldBeEnabled(HomeScreenEnumeration tabToVerify)
         {
-            var azureTabs = GetHomeScreenTabs();
-
-            azureTabs.ShouldContain(x => x.HomeScreen == tabToVerify);
-            azureTabs.Single(x => x.HomeScreen == tabToVerify).IsEnabled.ShouldBeTrue();
+            GetHomeScreenTabs().ShouldContain(x => x.HomeScreen == tabToVerify);
         }
 
         public void TabShouldNotBeEnabled(HomeScreenEnumeration tabToVerify)
         {
-            var azureTabs = GetHomeScreenTabs();
-
-            azureTabs.ShouldNotContain(x => x.HomeScreen == tabToVerify);
+            GetHomeScreenTabs().ShouldNotContain(x => x.HomeScreen == tabToVerify);
         }
 
         private List<HomeScreenDisplay> GetHomeScreenTabs() => _tabDisplayService.GetHomeScreenDisplays();

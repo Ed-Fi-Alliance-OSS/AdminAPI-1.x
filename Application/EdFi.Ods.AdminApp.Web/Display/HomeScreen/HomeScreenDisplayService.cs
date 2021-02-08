@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Linq;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -29,7 +28,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                 homeScreenDisplayList.Add(
                     new HomeScreenDisplay
                     {
-                        IsEnabled = true,
                         HomeScreen = HomeScreenEnumeration.Global
                     });
             }
@@ -39,7 +37,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                 homeScreenDisplayList.Add(
                     new HomeScreenDisplay
                     {
-                        IsEnabled = true,
                         HomeScreen = HomeScreenEnumeration.OdsInstances
                     });
             }
@@ -48,7 +45,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
                 homeScreenDisplayList.Add(
                     new HomeScreenDisplay
                     {
-                        IsEnabled = true,
                         HomeScreen = HomeScreenEnumeration.Settings
                     });
             }

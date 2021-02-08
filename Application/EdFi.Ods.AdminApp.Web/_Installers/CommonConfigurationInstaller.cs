@@ -126,8 +126,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 }
             }
 
-            services.AddSingleton<CloudOdsUpdateService>();
-
             if (appSettings.EncryptionProtocol == "AES")
             {
                 services.AddSingleton<IStringEncryptorService, AESEncryptorService>(

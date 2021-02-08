@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 
 namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
 {
-    public class OnPremHomeScreenDisplayService : BaseHomeScreenDisplayService, IHomeScreenDisplayService
+    public class OnPremHomeScreenDisplayService : BaseHomeScreenDisplayService
     {
         public OnPremHomeScreenDisplayService(AdminAppUserContext userContext) : base(userContext)
         {

@@ -7,6 +7,7 @@ using System;
 
 namespace EdFi.Ods.AdminApp.Management
 {
+    [Obsolete]
     public class CloudOdsUpdateInfo
     {
         public CloudOdsInstance Instance { get; set; }

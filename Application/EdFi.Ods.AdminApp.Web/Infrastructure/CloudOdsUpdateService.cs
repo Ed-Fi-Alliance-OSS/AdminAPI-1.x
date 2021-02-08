@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -34,7 +34,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             cloudOdsUpdateInfo.VersionInformationIsValid =
                 _cloudOdsUpdateCheckService.VersionInformationIsValid(cloudOdsUpdateInfo);
 
-            cloudOdsUpdateInfo.UpdateAvailable = _cloudOdsUpdateCheckService.UpdateAvailable(cloudOdsUpdateInfo);
             cloudOdsUpdateInfo.UpdateIsCompatible = _cloudOdsUpdateCheckService.UpdateIsCompatible(cloudOdsUpdateInfo);
 
             return cloudOdsUpdateInfo;

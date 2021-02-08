@@ -19,28 +19,24 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     [AllowAnonymous, BypassInstanceContextFilter]
     public class HomeController : ControllerBase
     {
-        private readonly CloudOdsUpdateService _cloudOdsUpdateService;
         private readonly IHomeScreenDisplayService _homeScreenDisplayService;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
 
 
-        public HomeController(CloudOdsUpdateService cloudOdsUpdateService, IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
+        public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
         {
-            _cloudOdsUpdateService = cloudOdsUpdateService;
             _homeScreenDisplayService = homeScreenDisplayService;
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
         }
 
-        public async Task<ActionResult> Index(bool setupCompleted = false)
+        public ActionResult Index(bool setupCompleted = false)
         {
             if (setupCompleted && ZeroOdsInstanceRegistrations())
                 return RedirectToAction("RegisterOdsInstance", "OdsInstances");
 
-            var updateInfo = await _cloudOdsUpdateService.GetUpdateInfo();
             var model = new IndexModel
             {
                 SetupJustCompleted = setupCompleted,
-                UpdateAvailable = updateInfo.UpdateAvailable,
                 HomeScreenDisplays = _homeScreenDisplayService.GetHomeScreenDisplays()
             };
 

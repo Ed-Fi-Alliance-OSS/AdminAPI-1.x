@@ -13,7 +13,6 @@ namespace EdFi.Ods.AdminApp.Management
         public Version LatestPublishedVersion { get; set; }
         public Version CurrentInstanceVersion { get; set; }
         public bool VersionInformationIsValid { get; set; }
-        public bool UpdateAvailable { get; set; }
         public bool UpdateIsCompatible { get; set; }
     }
 }

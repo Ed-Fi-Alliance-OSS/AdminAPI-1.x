@@ -8,7 +8,7 @@ using System.Linq;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Display.HomeScreenDisplayService
+namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
 {
     public class HomeScreenDisplayAssertions
     {

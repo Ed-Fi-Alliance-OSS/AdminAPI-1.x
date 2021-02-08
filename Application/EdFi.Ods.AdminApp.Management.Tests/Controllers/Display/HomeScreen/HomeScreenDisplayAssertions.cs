@@ -34,6 +34,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
             azureTabs.ShouldNotContain(x => x.HomeScreen == tabToVerify);
         }
 
-        private List<HomeScreenDisplay<HomeScreenEnumeration>> GetHomeScreenTabs() => _tabDisplayService.GetHomeScreenDisplays();
+        private List<HomeScreenDisplay> GetHomeScreenTabs() => _tabDisplayService.GetHomeScreenDisplays();
     }
 }

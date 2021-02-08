@@ -20,21 +20,21 @@ namespace EdFi.Ods.AdminApp.Web.Display.HomeScreen
             _userContext = userContext;
         }
 
-        public virtual List<HomeScreenDisplay<HomeScreenEnumeration>> GetHomeScreenDisplays()
+        public virtual List<HomeScreenDisplay> GetHomeScreenDisplays()
         {
-            var homeScreenDisplayList = new List<HomeScreenDisplay<HomeScreenEnumeration>>
+            var homeScreenDisplayList = new List<HomeScreenDisplay>
             {
-                new HomeScreenDisplay<HomeScreenEnumeration>
+                new HomeScreenDisplay
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.OdsInstances
                 },
-                new HomeScreenDisplay<HomeScreenEnumeration>
+                new HomeScreenDisplay
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.Settings
                 },
-                new HomeScreenDisplay<HomeScreenEnumeration>
+                new HomeScreenDisplay
                 {
                     IsEnabled = true,
                     HomeScreen = HomeScreenEnumeration.Global

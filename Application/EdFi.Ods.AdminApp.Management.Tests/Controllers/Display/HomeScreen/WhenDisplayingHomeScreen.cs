@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
 {
     [TestFixture]
-    public class WhenDisplayingAzureHomeScreen
+    public class WhenDisplayingHomeScreen
     {
         private static HomeScreenDisplayAssertions HomeScreenTabAssertions(params Permission[] permissions)
         {

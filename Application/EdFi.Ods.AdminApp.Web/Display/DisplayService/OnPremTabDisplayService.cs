@@ -38,12 +38,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.DisplayService
             var tabsToDisable = instanceSettings.Where(x =>
                 x.Tab == OdsInstanceSettingsTabEnumeration.Logging).ToList();
 
-            if (!CloudOdsAdminAppSettings.Instance.DbSetupEnabled)
-            {
-                 tabsToDisable.AddRange(instanceSettings.Where(x =>
-                    x.Tab == OdsInstanceSettingsTabEnumeration.Setup).ToList());
-            }
-
             tabsToDisable.ForEach(tab =>
             {
                 tab.IsEnabled = false;

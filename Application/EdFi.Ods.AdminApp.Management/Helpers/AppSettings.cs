@@ -14,8 +14,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string DefaultOdsInstance { get; set; }
         public string ProductionApiUrl { get; set; }
         public string ApiExternalUrl { get; set; }
-        public string SystemManagedSqlServer { get; set; }
-        public string DbSetupEnabled { get; set; }
         public string SecurityMetadataCacheTimeoutMinutes { get; set; }
         public string ApiStartupType { get; set; }
         public string LocalEducationAgencyTypeValue { get; set; }

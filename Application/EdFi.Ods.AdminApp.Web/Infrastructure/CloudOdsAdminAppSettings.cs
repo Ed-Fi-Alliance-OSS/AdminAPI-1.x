@@ -35,15 +35,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public string ApiExternalUrl => AppSettings.ApiExternalUrl;
 
-        public bool SystemManagedSqlServer
-            => AppSettings.SystemManagedSqlServer == null ||
-               bool.TrueString.Equals(
-                   AppSettings.SystemManagedSqlServer,
-                   StringComparison.InvariantCultureIgnoreCase);
-
-        public bool DbSetupEnabled => bool.TrueString.Equals(
-            AppSettings.DbSetupEnabled, StringComparison.InvariantCultureIgnoreCase);
-
         public int SecurityMetadataCacheTimeoutMinutes
         {
             get

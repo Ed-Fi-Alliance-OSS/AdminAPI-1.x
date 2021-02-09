@@ -17,9 +17,6 @@
     </Content>
 
     <!-- Manually delete these "Content Remove" lines to include each view into the solution.  -->
-    <Content Remove="Views\OdsInstanceSettings\Setup.cshtml" />
-    <Content Remove="Views\OdsInstanceSettings\SetupComplete.cshtml" />
-    <Content Remove="Views\Shared\_SignalRStatus.cshtml" />
     <Content Remove="Views\Update\Index.cshtml" />
   </ItemGroup>
 

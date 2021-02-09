@@ -6,7 +6,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.OnPrem;
-using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Display.DisplayService;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
@@ -20,8 +19,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IGetCloudOdsInstanceQuery, GetOnPremOdsInstanceQuery>();
             services.AddTransient<IGetCloudOdsApiWebsiteSettingsQuery, GetOnPremOdsApiWebsiteSettingsQuery>();
             services.AddTransient<IUpdateCloudOdsApiWebsiteSettingsCommand, UpdateOnPremOdsApiWebsiteSettingsCommand>();
-            services.AddTransient<ICloudOdsProductionLifecycleManagementService, OnPremProductionLifecycleManagementService>();
-            services.AddTransient<IGetProductionApiProvisioningWarningsQuery, GetOnPremProductionApiProvisionWarningQuery>();
             services.AddTransient<ICompleteOdsPostUpdateSetupCommand, CompleteOnPremOdsPostUpdateSetupCommand>();
             services.AddTransient<IRestartAppServicesCommand, RestartOnPremAppServicesCommand>();
             services.AddTransient<IFirstTimeSetupService, OnPremFirstTimeSetupService>();

@@ -502,6 +502,11 @@ function Invoke-TransformAppSettings {
         if("OnPrem" -ieq $Config.AppStartup)
         {
             $settings.Log4NetCore.Log4NetConfigFileName = "log4net\log4net.OnPremisesRelease.config"
+
+            # When installing Admin App 2.1.1 or below, DbSetupEnabled must be set to "false"
+            # for OnPrem installations, to suppress the deprecated Setup tab from being mistakenly
+            # displayed. As soon as this installer is updated to work with a release *after*
+            # Admin App 2.1.1, this line can be safely removed as no longer applicable.
             $settings.AppSettings.DbSetupEnabled = "false"
         }
 

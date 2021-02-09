@@ -16,8 +16,6 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 
-    <!-- Manually delete these "Content Remove" lines to include each view into the solution.  -->
-    <Content Remove="Views\Update\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

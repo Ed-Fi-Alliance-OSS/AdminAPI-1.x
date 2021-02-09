@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.OnPrem;
 using EdFi.Ods.AdminApp.Web.Display.DisplayService;
-using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 
 namespace EdFi.Ods.AdminApp.Web._Installers
@@ -24,7 +23,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<IFirstTimeSetupService, OnPremFirstTimeSetupService>();
             services.AddTransient<ICloudOdsDatabaseSqlServerSecurityConfiguration,OnPremOdsDatabaseSqlServerSecurityConfiguration>();
             services.AddTransient<ITabDisplayService, OnPremTabDisplayService>();
-            services.AddTransient<IHomeScreenDisplayService, OnPremHomeScreenDisplayService>();
             services.AddTransient<ICompleteOdsFirstTimeSetupCommand, CompleteOnPremFirstTimeSetupCommand>();
         }
     }

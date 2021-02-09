@@ -21,6 +21,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Common.Security;
 using EdFi.Ods.AdminApp.Management.Services;
+using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Security.DataAccess.Contexts;
 using Hangfire;
 using log4net;
@@ -65,8 +66,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddTransient<ICloudOdsAdminAppSettingsApiModeProvider, CloudOdsAdminAppSettingsApiModeProvider>();
 
-            services.AddSingleton<ICachedItems, CachedItems>();
-
             services.AddTransient<IOdsApiConnectionInformationProvider, CloudOdsApiConnectionInformationProvider>();
 
             services.AddTransient<BulkUploadHub>();
@@ -91,10 +90,11 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             InstallHostingSpecificClasses(services);
 
+            services.AddTransient<IHomeScreenDisplayService, HomeScreenDisplayService>();
+
             services.AddScoped<InstanceContext>();
 
             services.AddTransient<ApplicationConfigurationService>();
-            services.AddTransient<CloudOdsUpdateCheckService>();
 
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
             {
@@ -128,8 +128,6 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     }
                 }
             }
-
-            services.AddSingleton<CloudOdsUpdateService>();
 
             if (appSettings.EncryptionProtocol == "AES")
             {

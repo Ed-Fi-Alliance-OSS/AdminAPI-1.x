@@ -4,18 +4,17 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Web.Display.DisplayService;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using NUnit.Framework;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Display.HomeScreenDisplayService
+namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.HomeScreen
 {
     [TestFixture]
-    public class WhenDisplayingAzureHomeScreen
+    public class WhenDisplayingHomeScreen
     {
         private static HomeScreenDisplayAssertions HomeScreenTabAssertions(params Permission[] permissions)
         {
-            return new HomeScreenDisplayAssertions(new AzureHomeScreenDisplayService(new AdminAppUserContext
+            return new HomeScreenDisplayAssertions(new HomeScreenDisplayService(new AdminAppUserContext
             {
                 Permissions = permissions
             }));
@@ -37,12 +36,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Display.HomeScreenDisplayService
         public void Should_not_display_global_button()
         {
             HomeScreenTabAssertions().TabShouldNotBeEnabled(HomeScreenEnumeration.Global);
-        }
-
-        [Test]
-        public void Should_display_updates_button()
-        {
-            HomeScreenTabAssertions().TabShouldBeEnabled(HomeScreenEnumeration.Updates);
         }
     }
 }

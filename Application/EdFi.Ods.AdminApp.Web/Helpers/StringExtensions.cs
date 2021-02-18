@@ -42,5 +42,55 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
                 return null;
             }
         }
+
+        public static string GetDescriptorCategoryName(this string descriptorPath)
+        {
+            var descriptorPathParts = DescriptorPathParts(descriptorPath);
+
+            string descriptorName = null;
+
+            if (descriptorPathParts.Length == 2)
+            {
+                var routePrefix = descriptorPathParts[0];
+                var name = descriptorPathParts[1];
+
+                descriptorName = name.Remove(name.Length - 1, 1).CapitalizeFirstLetter();
+
+                if (routePrefix != "ed-fi")
+                    descriptorName = $"{descriptorName} [{routePrefix.CapitalizeFirstLetter()}]";
+            }
+
+            return descriptorName;
+        }
+
+        public static string GetDescriptorCategoryIdentifier(this string descriptorPath)
+        {
+            var descriptorPathParts = DescriptorPathParts(descriptorPath);
+
+            string descriptorId = null;
+
+            if (descriptorPathParts.Length == 2)
+            {
+                var routePrefix = descriptorPathParts[0];
+                var name = descriptorPathParts[1];
+
+                descriptorId = $"{name}-{routePrefix}";
+            }
+
+            return descriptorId;
+        }
+
+        private static string CapitalizeFirstLetter(this string text)
+        {
+            if (text.Length > 0)
+                return char.ToUpper(text[0]) + text.Substring(1);
+            return text;
+        }
+
+        private static string[] DescriptorPathParts(string descriptorPath)
+        {
+            var descriptorPathParts = descriptorPath.TrimStart('/').Split('/', 3);
+            return descriptorPathParts;
+        }
     }
 }

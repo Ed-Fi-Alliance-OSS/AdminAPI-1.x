@@ -92,9 +92,8 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _restClient.GetAllDescriptors();
         }
 
-        public List<Descriptor> GetDescriptorsByName(string descriptorPath)
+        public List<Descriptor> GetDescriptorsByPath(string descriptorPath)
         {
-
             var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(descriptorPath);
 
             var descriptors = new List<Descriptor>();

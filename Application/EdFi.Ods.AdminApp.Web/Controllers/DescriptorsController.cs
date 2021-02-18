@@ -56,7 +56,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> GetDescriptorsFromCategory(string categoryPath)
         {
-            var descriptors = (await _odsApiFacadeFactory.Create()).GetDescriptorsByName(category);
+            var descriptors = (await _odsApiFacadeFactory.Create()).GetDescriptorsByPath(categoryPath);
             return PartialView("_Descriptor", _mapper.Map<List<DescriptorModel>>(descriptors));
         }
     }

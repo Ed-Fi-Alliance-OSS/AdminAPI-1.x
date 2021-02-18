@@ -14,10 +14,10 @@ See the LICENSE and NOTICES files in the project root for more information.
     </div>
 </div>
 
-@foreach (var category in Model.DescriptorCategories)
+@foreach (var categoryPath in Model.DescriptorCategoryPaths)
 {
-    var categoryName = category.GetDescriptorCategoryName();
-    var categoryId = category.GetDescriptorCategoryIdentifier();
+    var categoryName = categoryPath.GetDescriptorCategoryName();
+    var categoryId = categoryPath.GetDescriptorCategoryIdentifier();
 
     if (categoryName != null && categoryId != null)
     {
@@ -30,7 +30,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                     <span class="custom-divider"> |</span>
                     <a href="javascript:void(0)" class="descriptor-panel-toggle" data-target="#descriptor-@(categoryId)"><span class="fa fa-chevron-down caret-custom panel-toggle"></span></a>
                 </div>
-                <div id="descriptor-@(categoryId)" data-category="@category" class="row content collapse panel-loading">
+                <div id="descriptor-@(categoryId)" data-category-path="@categoryPath" class="row content collapse panel-loading">
                     <i class="fa fa-spinner fa-pulse fa-fw"></i>
                 </div>
             </div>
@@ -51,8 +51,8 @@ See the LICENSE and NOTICES files in the project root for more information.
         $toggleLink.addClass("initialized");
 
         if ($panel.hasClass("panel-loading")) {
-            var category = $panel.attr("data-category");
-            var url = "@Html.Raw(Url.Action("GetDescriptorsFromCategoryName", "Descriptors", new { }))" + "?category=" + category;
+            var categoryPath = $panel.attr("data-category-path");
+            var url = "@Html.Raw(Url.Action("GetDescriptorsFromCategory", "Descriptors", new { }))" + "?categoryPath=" + categoryPath;
             $.ajax({
                 url: url,
                 success: function (data) {

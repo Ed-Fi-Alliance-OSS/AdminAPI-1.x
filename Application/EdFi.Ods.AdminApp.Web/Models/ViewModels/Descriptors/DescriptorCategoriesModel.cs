@@ -9,6 +9,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Descriptors
 {
     public class DescriptorCategoriesModel
     {
-        public IReadOnlyList<string> DescriptorCategories { get; set; }
+        public IReadOnlyList<string> DescriptorCategoryPaths { get; set; }
     }
 }

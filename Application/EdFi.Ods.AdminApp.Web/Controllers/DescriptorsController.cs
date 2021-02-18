@@ -48,7 +48,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var model = new DescriptorCategoriesModel
             {
-                DescriptorCategories = (await _odsApiFacadeFactory.Create()).GetAllDescriptors()
+                DescriptorCategoryPaths = (await _odsApiFacadeFactory.Create()).GetAllDescriptors()
             };
 
            return PartialView("_DescriptorCategories", model);

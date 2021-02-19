@@ -7,9 +7,11 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Descriptors;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -46,9 +48,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> DescriptorCategoryList()
         {
+            var descriptorCategoryPaths = (await _odsApiFacadeFactory.Create()).GetAllDescriptors();
+
             var model = new DescriptorCategoriesModel
             {
-                DescriptorCategoryPaths = (await _odsApiFacadeFactory.Create()).GetAllDescriptors()
+                DescriptorCategories = descriptorCategoryPaths.Select(path => new DescriptorCategoriesModel.Category
+                {
+                    Path = path,
+                    Name = path.GetDescriptorCategoryName()
+                }).OrderBy(x => x.Name).ToList()
             };
 
            return PartialView("_DescriptorCategories", model);

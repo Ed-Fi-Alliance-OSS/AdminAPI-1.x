@@ -174,7 +174,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
             {
                 foreach (var descriptorPath in descriptorPaths.Keys)
                 {
-                    descriptorsList.Add(descriptorPath);
+                    //Paths take the form /extension/name, /extension/name/{id}, /extension/name/deletes, etc.
+                    //Here we extract distinct /extension/name.
+                    var resourceParts = descriptorPath.TrimStart('/').Split('/').Take(2).ToArray();
+
+                    if (resourceParts.Length >= 2)
+                        descriptorsList.Add($"/{resourceParts[0]}/{resourceParts[1]}");
                 }
             }
 

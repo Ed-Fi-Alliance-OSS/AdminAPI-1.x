@@ -166,18 +166,24 @@ namespace EdFi.Ods.AdminApp.Management.Api
             var response = _restClient.Execute(request);
             HandleErrorResponse(response);
             var swaggerDocument = JsonConvert.DeserializeObject<JObject>(response.Content);
-            var descriptorsList = swaggerDocument["definitions"].ToObject<Dictionary<string, JObject>>();
+            var descriptorPaths = swaggerDocument["paths"].ToObject<Dictionary<string, JObject>>();
 
-            return descriptorsList.Keys.Where(x => x.StartsWith("edFi_"))
-                .Select(x => CapitalizeFirstLetter(x.Substring("edFi_".Length))).ToList();
+            var descriptorsList = new SortedSet<string>();
 
-            string CapitalizeFirstLetter(string descriptorName)
+            if (descriptorPaths != null)
             {
-                if (descriptorName.Length > 0)
-                    return char.ToUpper(descriptorName[0]) + descriptorName.Substring(1);
+                foreach (var descriptorPath in descriptorPaths.Keys)
+                {
+                    //Paths take the form /extension/name, /extension/name/{id}, /extension/name/deletes, etc.
+                    //Here we extract distinct /extension/name.
+                    var resourceParts = descriptorPath.TrimStart('/').Split('/').Take(2).ToArray();
 
-                return descriptorName;
+                    if (resourceParts.Length >= 2)
+                        descriptorsList.Add($"/{resourceParts[0]}/{resourceParts[1]}");
+                }
             }
+
+            return descriptorsList.ToList();
         }
 
         public OdsApiResult DeleteResource(string elementPath, string id, bool refreshToken = false)

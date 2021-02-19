@@ -19,7 +19,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
         List<SelectOptionModel> GetLocalEducationAgencyCategories();
         List<SelectOptionModel> GetAllGradeLevels();
         IReadOnlyList<string> GetAllDescriptors();
-        List<Descriptor> GetDescriptorsByName(string name);
+        List<Descriptor> GetDescriptorsByPath(string descriptorPath);
         bool DoesApiDataExist();
         bool DoesLearningStandardsDataExist();
         LocalEducationAgency GetLocalEducationAgencyById(string id);

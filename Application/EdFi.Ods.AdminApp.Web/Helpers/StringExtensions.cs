@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -41,6 +41,36 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             {
                 return null;
             }
+        }
+
+        public static string GetDescriptorCategoryName(this string descriptorPath)
+        {
+            var descriptorPathParts = descriptorPath.TrimStart('/').Split('/', 2);
+
+            if (descriptorPathParts.Length == 2)
+            {
+                var routePrefix = descriptorPathParts[0];
+                var name = descriptorPathParts[1];
+
+                if (name.EndsWith("Descriptors"))
+                    name = name.Remove(name.Length - 1, 1);
+
+                var descriptorName = name.CapitalizeFirstLetter();
+
+                if (routePrefix != "ed-fi")
+                    descriptorName = $"{descriptorName} [{routePrefix.CapitalizeFirstLetter()}]";
+
+                return descriptorName;
+            }
+
+            return descriptorPath;
+        }
+
+        private static string CapitalizeFirstLetter(this string text)
+        {
+            if (text.Length > 0)
+                return char.ToUpper(text[0]) + text.Substring(1);
+            return text;
         }
     }
 }

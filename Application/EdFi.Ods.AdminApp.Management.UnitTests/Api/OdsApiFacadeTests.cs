@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -241,7 +241,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         {
             // Arrange
             const string content =
-                "{\r\n  \"swagger\": \"2.0\",\r\n  \"basePath\": \"/v3.1.1/api/data/v3\",\r\n  \"consumes\": [\r\n    \"application/json\"\r\n  ],\r\n  \"definitions\": {\r\n    \"edFi_test1Descriptor\": {\r\n    },\r\n    \"edFi_test2Descriptor\": {\r\n    }\r\n  }\r\n}";
+                "{\r\n  \"swagger\": \"2.0\",\r\n  \"basePath\": \"/v3.1.1/api/data/v3\",\r\n  \"consumes\": [\r\n    \"application/json\"\r\n  ],\r\n  \"definitions\": {\r\n    \"edFi_test1Descriptor\": {\r\n    },\r\n    \"edFi_test2Descriptor\": {\r\n    }\r\n  }, \"paths\": {\r\n    \"/ed-fi/testCategory1Descriptors\": {\r\n    },\r\n   \"/ed-fi/testCategory1Descriptors/{id}\": {\r\n    },\r\n   \"/ed-fi/testCategory1Descriptors/deletes\": {\r\n    },\r\n    \"/ed-fi/testCategory2Descriptors\": {\r\n    },\r\n   \"/ed-fi/testCategory2Descriptors/{id}\": {\r\n    },\r\n   \"/ed-fi/testCategory2Descriptors/deletes\": {\r\n    }\r\n  }\r\n}";
             var mockRestClient = new Mock<IRestClient>();
             mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
             mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
@@ -260,7 +260,9 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.ShouldNotBeNull();
-            result.First().ShouldBe("Test1Descriptor");
+            result.Count.ShouldBe(2);
+            result[0].ShouldBe("/ed-fi/testCategory1Descriptors");
+            result[1].ShouldBe("/ed-fi/testCategory2Descriptors");
         }
 
         [Test]

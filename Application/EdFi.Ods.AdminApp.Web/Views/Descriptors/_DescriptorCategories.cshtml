@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -14,12 +14,14 @@ See the LICENSE and NOTICES files in the project root for more information.
     </div>
 </div>
 
+@{
+    int descriptorCount = 0;
+}
 @foreach (var categoryPath in Model.DescriptorCategoryPaths)
 {
     var categoryName = categoryPath.GetDescriptorCategoryName();
-    var categoryId = categoryPath.GetDescriptorCategoryIdentifier();
 
-    if (categoryName != null && categoryId != null)
+    if (categoryName != null)
     {
         <div class="panel-section">
             <div class="row heading">
@@ -28,13 +30,14 @@ See the LICENSE and NOTICES files in the project root for more information.
                 </div>
                 <div class="col-xs-4 text-right">
                     <span class="custom-divider"> |</span>
-                    <a href="javascript:void(0)" class="descriptor-panel-toggle" data-target="#descriptor-@(categoryId)"><span class="fa fa-chevron-down caret-custom panel-toggle"></span></a>
+                    <a href="javascript:void(0)" class="descriptor-panel-toggle" data-target="#descriptor-@(descriptorCount)"><span class="fa fa-chevron-down caret-custom panel-toggle"></span></a>
                 </div>
-                <div id="descriptor-@(categoryId)" data-category-path="@categoryPath" class="row content collapse panel-loading">
+                <div id="descriptor-@(descriptorCount)" data-category-path="@categoryPath" class="row content collapse panel-loading">
                     <i class="fa fa-spinner fa-pulse fa-fw"></i>
                 </div>
             </div>
         </div>
+        descriptorCount++;
     }
 }
 

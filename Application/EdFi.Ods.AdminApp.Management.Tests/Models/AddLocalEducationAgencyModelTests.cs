@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
             var validator = new AddLocalEducationAgencyModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addLocalEducationAgencyModel, "Local Education Agency Id is already associated with different Education Organization. Please provide different value.");
+            validator.ShouldNotValidate(_addLocalEducationAgencyModel, "This 'Local Education Organization ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

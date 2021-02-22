@@ -110,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
             var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "School Id is already associated with different Education Organization. Please provide different value.");
+            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

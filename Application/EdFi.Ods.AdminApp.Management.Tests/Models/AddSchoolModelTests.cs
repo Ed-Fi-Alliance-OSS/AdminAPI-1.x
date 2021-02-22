@@ -54,14 +54,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             // Arrange
             _addSchoolModel.GradeLevels = new List<string>();
 
-            var existingLeaWithSameId = new LocalEducationAgency
+            var existingLeaWithDifferentId = new LocalEducationAgency
             {
                 EducationOrganizationId = 2
             };
 
             _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
             {
-                existingLeaWithSameId
+                existingLeaWithDifferentId
             });
 
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
@@ -75,14 +75,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         public void ShouldValidateAddSchoolModelWithValidValues()
         {
             // Arrange
-            var existingLeaWithSameId = new LocalEducationAgency
+            var existingLeaWithDifferentId = new LocalEducationAgency
             {
                 EducationOrganizationId = 2
             };
 
             _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
             {
-                existingLeaWithSameId
+                existingLeaWithDifferentId
             });
 
             _mockOdsApiFacadeFactory.Setup(x => x.Create())

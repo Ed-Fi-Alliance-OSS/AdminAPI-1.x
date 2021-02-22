@@ -50,14 +50,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         public void ShouldValidateAddLocalEducationAgencyModelWithValidValues()
         {
             // Arrange
-            var existingSchoolWithSameId = new School
+            var existingSchoolWithDifferentId = new School
             {
                 EducationOrganizationId = 2
             };
 
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(new List<School>
             {
-                existingSchoolWithSameId
+                existingSchoolWithDifferentId
             });
 
             _mockOdsApiFacadeFactory.Setup(x => x.Create())

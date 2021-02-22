@@ -50,9 +50,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         public void ShouldValidateAddLocalEducationAgencyModelWithValidValues()
         {
             // Arrange
-            var existingSchoolWithDifferentId = new School
+            var existingLeaWithDifferentId = new LocalEducationAgency
             {
                 EducationOrganizationId = 2
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
+            {
+                existingLeaWithDifferentId
+            });
+
+            var existingSchoolWithDifferentId = new School
+            {
+                EducationOrganizationId = 3
             };
 
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(new List<School>
@@ -68,9 +78,50 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         }
 
         [Test]
-        public void ShouldNotValidateAddLocalEducationAgencyModelIfPassedWithExistingEdOrgId()
+        public void ShouldNotValidateAddLocalEducationAgencyModelIfPassedWithExistingLeaEdOrgId()
         {
             // Arrange
+            var existingLeaWithSameId = new LocalEducationAgency
+            {
+                EducationOrganizationId = Id
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
+            {
+                existingLeaWithSameId
+            });
+
+            var existingSchoolWithDifferentId = new School
+            {
+                EducationOrganizationId = 2
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(new List<School>
+            {
+                existingSchoolWithDifferentId
+            });
+
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+
+            var validator = new AddLocalEducationAgencyModelValidator(_mockOdsApiFacadeFactory.Object);
+            validator.ShouldNotValidate(_addLocalEducationAgencyModel, "This 'Local Education Organization ID' is already associated with another Education Organization. Please provide a unique value.");
+        }
+
+        [Test]
+        public void ShouldNotValidateAddLocalEducationAgencyModelIfPassedWithExistingSchoolEdOrgId()
+        {
+            // Arrange
+            var existingLeaWithDifferentId = new LocalEducationAgency
+            {
+                EducationOrganizationId = 2
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
+            {
+                existingLeaWithDifferentId
+            });
+
             var existingSchoolWithSameId = new School
             {
                 EducationOrganizationId = Id

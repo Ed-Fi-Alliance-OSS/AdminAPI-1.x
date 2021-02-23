@@ -91,6 +91,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var orignalKey = apiClient.Key;
             var originalSecret = apiClient.Secret;
 
+            //Simulate the automatic hashing performed by using the key/secret on the API.
+            Transaction(usersContext =>
+            {
+                var odsSideApiClient = usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId);
+                odsSideApiClient.Secret = "SIMULATED HASH OF " + originalSecret;
+                odsSideApiClient.SecretIsHashed = true;
+            });
+
             RegenerateApiClientSecretResult result = null;
             Scoped<IUsersContext>(usersContext =>
             {
@@ -102,10 +110,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             
             result.Key.ShouldBe(orignalKey);
             result.Secret.ShouldNotBe(originalSecret);
+            result.Secret.ShouldNotBe("SIMULATED HASH OF " + originalSecret);
             result.Secret.ShouldNotBeEmpty();
 
             updatedApiClient.Key.ShouldBe(result.Key);
             updatedApiClient.Secret.ShouldBe(result.Secret);
+            updatedApiClient.SecretIsHashed.ShouldBe(false);
         }
     }
 }

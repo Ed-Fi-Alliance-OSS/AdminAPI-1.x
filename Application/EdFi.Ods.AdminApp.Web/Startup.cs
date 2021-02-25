@@ -23,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -56,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddControllersWithViews(options =>
                     {
-                        options.Filters.Add(new AuthorizeFilter());
+                        options.Filters.Add(new AuthorizeFilter("UserMustExistPolicy"));
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<JsonValidationFilter>();
                         options.Filters.Add<HandleAjaxErrorAttribute>();
@@ -74,6 +75,17 @@ namespace EdFi.Ods.AdminApp.Web
                                 => memberInfo?
                                     .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
                         });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("UserMustExistPolicy",
+                    policyBuilder =>
+                    {
+                        policyBuilder.AddRequirements(new UserMustExistRequirement());
+                    });
+            });
+
+            services.AddScoped<IAuthorizationHandler, UserMustExistHandler>();
 
             services.Configure<IdentityOptions>(options =>
             {

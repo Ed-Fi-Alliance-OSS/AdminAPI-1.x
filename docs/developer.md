@@ -89,7 +89,8 @@ instructions](#running-on-docker) use PostgreSQL.
 
    ```powershell
    # From AdminApp clone directory
-   .\eng\run-dbup-migrations.ps1
+   cd eng
+   .\run-dbup-migrations.ps1
    ```
 
    :warning: you may wish to review the default configuration at the top of this
@@ -101,7 +102,13 @@ instructions](#running-on-docker) use PostgreSQL.
 
    :warning: Make sure you don't commit this change to source control.
 
-5. Run Admin App from Visual Studio, choosing either the "Shared Instance (SQL
+5. Run the build script and exercise tests to verify your setup:
+
+    ```powershell
+    .\build.ps1 buildandtest
+    ```
+
+6. Run Admin App from Visual Studio, choosing either the "Shared Instance (SQL
    Server)" profile (uses IIS Express) or "mssql-shared" profile (runs the
    Kestrel built-in web server).
 
@@ -121,9 +128,25 @@ and return to step 3 above.
    initdev -InstallType YearSpecific -OdsTokens '2020;2021'
    ```
 
-4. Run `run-dbup-migrations.ps1` in the AdminApp clone directory to
-   install the Admin App database support.
-5. Run Admin App from Visual Studio, choosing either the "Year Specific (SQL
+4. Install the AdminApp database support by running the following command in a
+   PowerShell window:
+
+   ```powershell
+   # From AdminApp clone directory
+   cd eng
+   .\run-dbup-migrations.ps1
+   ```
+
+   :warning: you may wish to review the default configuration at the top of this
+   script to ensure that it is appropriate for your situation.
+
+5. Run the build script and exercise tests to verify your setup:
+
+    ```powershell
+    .\build.ps1 buildandtest
+    ```
+
+6. Run Admin App from Visual Studio, choosing either the "Year Specific (SQL
    Server)" profile (uses IIS Express) or "mssql-year" profile (runs the Kestrel
    built-in web server).
 
@@ -143,9 +166,25 @@ above.
    initdev -InstallType DistrictSpecific -OdsTokens '255901;255902;255903;255904;255905'
    ```
 
-4. Re-run `run-dbup-migrations.ps1` in the AdminApp clone directory to
-   install the Admin App database support.
-5. Run Admin App from Visual Studio, choosing either the "District Specific (SQL
+4. Install the AdminApp database support by running the following command in a
+   PowerShell window:
+
+   ```powershell
+   # From AdminApp clone directory
+   cd eng
+   .\run-dbup-migrations.ps1
+   ```
+
+   :warning: you may wish to review the default configuration at the top of this
+   script to ensure that it is appropriate for your situation.
+
+5. Run the build script and exercise tests to verify your setup:
+
+    ```powershell
+    .\build.ps1 buildandtest
+    ```
+
+6. Run Admin App from Visual Studio, choosing either the "District Specific (SQL
    Server)" profile (uses IIS Express) or "mssql-district" profile (runs the
    Kestrel built-in web server).
 

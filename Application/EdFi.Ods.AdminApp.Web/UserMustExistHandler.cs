@@ -7,7 +7,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.AdminApp.Management.Database.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -16,18 +18,29 @@ namespace EdFi.Ods.AdminApp.Web
     public class UserMustExistHandler : AuthorizationHandler<UserMustExistRequirement>
     {
         private readonly AdminAppIdentityDbContext _identity;
+        private readonly SignInManager<AdminAppUser> _signInManager;
 
-        public UserMustExistHandler(AdminAppIdentityDbContext identity)
-            => _identity = identity;
+        public UserMustExistHandler(AdminAppIdentityDbContext identity, SignInManager<AdminAppUser> signInManager)
+        {
+            _identity = identity;
+            _signInManager = signInManager;
+        }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserMustExistRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserMustExistRequirement requirement)
         {
             var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId != null && _identity.Users.SingleOrDefault(x => x.Id == userId) != null)
-                context.Succeed(requirement);
-
-            return Task.CompletedTask;
+            if (userId != null)
+            {
+                if (_identity.Users.SingleOrDefault(x => x.Id == userId) == null)
+                {
+                    await _signInManager.SignOutAsync();
+                }
+                else
+                {
+                    context.Succeed(requirement);
+                }
+            }
         }
     }
 }

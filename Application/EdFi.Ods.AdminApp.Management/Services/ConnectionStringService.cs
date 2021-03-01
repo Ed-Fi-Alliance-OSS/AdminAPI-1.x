@@ -25,19 +25,32 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
             if (apiMode.SupportsMultipleInstances)
             {
-                if(!connectionString.Contains("{0}"))
+                if (IsTemplate(connectionString))
+                {
+                    connectionString = GetModifiedConnectionString(
+                        connectionString, $"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
+                }
+                else
+                {
                     throw new InvalidOperationException(
                         "The connection string must contain a placeholder {0} for the multi-instance modes to work.");
-
-                connectionString = GetModifiedConnectionString(connectionString, odsInstanceName);
+                }
+            }
+            else if (apiMode == ApiMode.SharedInstance)
+            {
+                if (IsTemplate(connectionString))
+                {
+                    connectionString = GetModifiedConnectionString(connectionString, "Ods");
+                }
             }
 
             return connectionString;
         }
 
-        private static string GetModifiedConnectionString(string connectionString, string odsInstanceName)
-        {
-            return connectionString.Replace("{0}", $"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
-        }
+        private static bool IsTemplate(string connectionString)
+            => connectionString.Contains("{0}");
+
+        private static string GetModifiedConnectionString(string connectionString, string replacement)
+            => connectionString.Replace("{0}", replacement);
     }
 }

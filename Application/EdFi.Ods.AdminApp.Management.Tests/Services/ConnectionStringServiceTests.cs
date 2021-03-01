@@ -17,13 +17,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
         [Test]
         public void SharedInstance()
         {
+            const string DefaultOdsInstanceName = "EdFi ODS";
             const string TypicalDefaultValue = "Data Source=.\\;Initial Catalog=EdFi_Ods;Integrated Security=True";
-            GetConnectionString(TypicalDefaultValue, "EdFi ODS", ApiMode.SharedInstance)
+            const string ArbitraryFixedValue = "Data Source=.\\;Initial Catalog=EdFi_Ods_ArbitraryFixedName;Integrated Security=True";
+
+            GetConnectionString(TypicalDefaultValue, DefaultOdsInstanceName, ApiMode.SharedInstance)
                 .ShouldBe(TypicalDefaultValue);
 
-            const string ArbitraryFixedValue = "Data Source=.\\;Initial Catalog=EdFi_Ods_ArbitraryFixedName;Integrated Security=True";
-            GetConnectionString(ArbitraryFixedValue, "EdFi ODS", ApiMode.SharedInstance)
+            GetConnectionString(ArbitraryFixedValue, DefaultOdsInstanceName, ApiMode.SharedInstance)
                 .ShouldBe(ArbitraryFixedValue);
+
+            GetConnectionString(Template, DefaultOdsInstanceName, ApiMode.SharedInstance)
+                .ShouldBe(TypicalDefaultValue);
         }
 
         [Test]

@@ -82,8 +82,9 @@ instructions](#running-on-docker) use PostgreSQL.
 1. Get started with the ODS/API until the point where you are ready to have the
    ODS/API running in Visual Studio.
 2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
-   SharedInstance mode and change the ODS connection string to use database  
-   `EdFi_Ods_Populated_Template` or a copy thereof.
+   "SharedInstance" mode and ensure that the ODS connection string points to
+   database `EdFi_{0}`. At runtime, the software will substitute "Ods" for
+   the replacement token `{0}`.
 3. Install the AdminApp database support by running the following command in a
    PowerShell window:
 
@@ -96,21 +97,15 @@ instructions](#running-on-docker) use PostgreSQL.
    :warning: you may wish to review the default configuration at the top of this
    script to ensure that it is appropriate for your situation.
 
-4. Adjust AdminApp's `appsettings.SqlServer-SharedInstance.json` by setting the
-   `ProductionOds` connection string to point to the
-   `EdFi_Ods_Populated_Template` database.
-
-   :warning: Make sure you don't commit this change to source control.
-
-5. Run the build script and exercise tests to verify your setup:
+4. Run the build script and exercise tests to verify your setup:
 
     ```powershell
     .\build.ps1 buildandtest
     ```
 
-6. Run Admin App from Visual Studio, choosing either the "Shared Instance (SQL
-   Server)" profile (uses IIS Express) or "mssql-shared" profile (runs the
-   Kestrel built-in web server).
+5. Run Admin App from Visual Studio, choosing either the "Shared Instance (SQL
+   Server)" profile (uses IIS Express) or "mssql-shared" profile (runs the Kestrel
+   built-in web server).
 
 To reset the databases so that you start from a clean slate, re-run `initdev`
 and return to step 3 above.
@@ -119,9 +114,10 @@ and return to step 3 above.
 
 1. Stop the ODS/API and/or Admin App if running in Visual Studio.
 2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
-   "YearSpecific" mode and change the ODS connection string to point to database
-   `EdFi_Ods_{0}`. At runtime, the software will substitute the correct year for
-   the replacement token `{0}`.
+   "YearSpecific" mode and ensure that the ODS connection string points to
+   database `EdFi_{0}`. At runtime, the software will substitute "Ods_yyyy" for
+   the replacement token `{0}`, where "yyyy" is the four digit year of a given
+   year instance database.
 3. Re-run `initdev` with the following command, changing the years as desired:
 
    ```powershell
@@ -158,8 +154,10 @@ above.
 1. Stop the ODS/API and/or Admin App if running in Visual Studio.
 2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
    "DistrictSpecific" mode and ensure that the ODS connection string points to
-   database `EdFi_Ods_{0}`. At runtime, the software will substitute the correct
-   district name for the replacement token `{0}`.
+   database `EdFi_{0}`. At runtime, the software will substitute "Ods_ddddd" for
+   the replacement token `{0}`, where "ddddd" is the numeric identifier of a given
+   district instance database.
+
 3. Re-run `initdev` with the following command:
 
    ```powershell

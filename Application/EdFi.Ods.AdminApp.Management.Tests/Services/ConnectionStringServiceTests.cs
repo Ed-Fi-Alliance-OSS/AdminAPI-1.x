@@ -32,6 +32,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
         }
 
         [Test]
+        public void Sandbox()
+        {
+            // When the ODS/API is configured to use Sandbox mode, the intention is to use the Sandbox Admin
+            // tool *instead* of Admin App. Still, if an Admin App developer ever bothers to explicitly point at
+            // and ODS Database that is in fact a sandbox, the hardcoded connection string should be passed
+            // through and used similar to non-template SharedInstance connection strings.
+
+            const string DefaultOdsInstanceName = "EdFi ODS";
+            var apiKey = Guid.NewGuid().ToString().Replace("-", "");
+
+            var sandboxConnectionString = "Data Source=.\\;Initial Catalog=EdFi_Ods_"+apiKey+";Integrated Security=True";
+
+            GetConnectionString(sandboxConnectionString, DefaultOdsInstanceName, ApiMode.Sandbox)
+                .ShouldBe(sandboxConnectionString);
+        }
+
+        [Test]
         public void YearSpecific()
         {
             GetConnectionString(Template, "EdFi_Ods_2009", ApiMode.YearSpecific)

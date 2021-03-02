@@ -64,7 +64,7 @@
             EncryptionKey = "<Generated encryption key>"
             AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
             SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"
-            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_Ods;Application Name=EdFi.Ods.AdminApp;"
+            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApp;"
             }
 
         .\build.ps1 -Version "2.1.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer

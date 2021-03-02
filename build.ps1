@@ -340,7 +340,7 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
-function UpdateAppSettings {
+function UpdateAppSettingsForDocker {
     $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
     $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
@@ -377,7 +377,7 @@ function RestartAdminAppContainer {
 }
 
 function Invoke-DockerDeploy {
-   Invoke-Step { UpdateAppSettings }
+   Invoke-Step { UpdateAppSettingsForDocker }
    Invoke-Step { CopyLatestFilesToContainer }
    Invoke-Step { RestartAdminAppContainer }
 }

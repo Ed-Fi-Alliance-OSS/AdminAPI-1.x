@@ -64,7 +64,7 @@
             EncryptionKey = "<Generated encryption key>"
             AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
             SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"
-            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_Ods;Application Name=EdFi.Ods.AdminApp;"
+            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApp;"
             }
 
         .\build.ps1 -Version "2.1.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
@@ -340,7 +340,7 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
-function UpdateAppSettings {
+function UpdateAppSettingsForDocker {
     $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
     $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
@@ -377,7 +377,7 @@ function RestartAdminAppContainer {
 }
 
 function Invoke-DockerDeploy {
-   Invoke-Step { UpdateAppSettings }
+   Invoke-Step { UpdateAppSettingsForDocker }
    Invoke-Step { CopyLatestFilesToContainer }
    Invoke-Step { RestartAdminAppContainer }
 }

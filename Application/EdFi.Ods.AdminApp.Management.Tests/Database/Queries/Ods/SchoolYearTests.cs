@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
+using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
 using NUnit.Framework;
 using Shouldly;
@@ -92,7 +93,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
                 .Execute(InstanceName, ApiMode);
 
         private static void SetSchoolYear(short schoolYear)
-            => new SetSchoolYearCommand(TestConnectionProvider)
+            => new SetCurrentSchoolYearCommand(TestConnectionProvider)
                 .Execute(InstanceName, ApiMode, schoolYear);
     }
 }

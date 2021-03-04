@@ -7,13 +7,13 @@ using System.Data;
 using Dapper;
 using EdFi.Ods.AdminApp.Management.Instances;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Ods
+namespace EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears
 {
-    public class SetSchoolYearCommand
+    public class SetCurrentSchoolYearCommand
     {
         private readonly IDatabaseConnectionProvider _databaseConnectionProvider;
 
-        public SetSchoolYearCommand(IDatabaseConnectionProvider databaseConnectionProvider)
+        public SetCurrentSchoolYearCommand(IDatabaseConnectionProvider databaseConnectionProvider)
         {
             _databaseConnectionProvider = databaseConnectionProvider;
         }

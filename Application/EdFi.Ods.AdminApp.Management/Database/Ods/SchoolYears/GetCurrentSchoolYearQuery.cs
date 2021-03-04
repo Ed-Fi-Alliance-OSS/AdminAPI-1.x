@@ -3,37 +3,28 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using Dapper;
 using EdFi.Ods.AdminApp.Management.Instances;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Ods
+namespace EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears
 {
-    public class SchoolYearType
-    {
-        public short SchoolYear { get; set; }
-        public string SchoolYearDescription { get; set; }
-        public bool CurrentSchoolYear { get; set; }
-    }
-
-    public class GetSchoolYearsQuery
+    public class GetCurrentSchoolYearQuery
     {
         private readonly IDatabaseConnectionProvider _databaseConnectionProvider;
 
-        public GetSchoolYearsQuery(IDatabaseConnectionProvider databaseConnectionProvider)
+        public GetCurrentSchoolYearQuery(IDatabaseConnectionProvider databaseConnectionProvider)
         {
             _databaseConnectionProvider = databaseConnectionProvider;
         }
 
-        public IReadOnlyList<SchoolYearType> Execute(string instanceName, ApiMode apiMode)
+        public SchoolYearType Execute(string instanceName, ApiMode apiMode)
         {
             using (var connection = _databaseConnectionProvider.CreateNewConnection(instanceName, apiMode))
             {
-                return connection.Query<SchoolYearType>(
+                return connection.QuerySingleOrDefault<SchoolYearType>(
                     @"SELECT [SchoolYear], [SchoolYearDescription], [CurrentSchoolYear]
                       FROM [edfi].[SchoolYearType]
-                      ORDER BY [SchoolYear]").ToList();
+                      WHERE [CurrentSchoolYear]=1");
             }
         }
     }

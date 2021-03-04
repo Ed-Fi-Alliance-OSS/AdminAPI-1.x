@@ -15,6 +15,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
 {
     public class SchoolYearTests : OdsDataTestBase
     {
+        private const string InstanceName = CloudOdsDatabaseNames.ProductionOds;
+        private static readonly ApiMode ApiMode = ApiMode.SharedInstance;
+
         [Test]
         public void ShouldGetOrderedSchoolYearTypes()
         {
@@ -59,12 +62,37 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
             invalidYear.ShouldThrow<SqlException>().Message.ShouldBe("Specified school year does not exist.");
         }
 
+        [Test]
+        public void ShouldGetCurrentSchoolYearWhenDefined()
+        {
+            GetCurrentSchoolYear().ShouldBe(null);
+
+            GetNewSchoolYear(2000);
+            GetNewSchoolYear(1999);
+            GetNewSchoolYear(2001);
+
+            GetCurrentSchoolYear().ShouldBe(null);
+
+            SetSchoolYear(1999);
+            GetCurrentSchoolYear().ShouldBeSchoolYear(1999, isCurrent: true);
+
+            SetSchoolYear(2000);
+            GetCurrentSchoolYear().ShouldBeSchoolYear(2000, isCurrent: true);
+
+            SetSchoolYear(2001);
+            GetCurrentSchoolYear().ShouldBeSchoolYear(2001, isCurrent: true);
+        }
+
+        private static SchoolYearType GetCurrentSchoolYear()
+            => new GetCurrentSchoolYearQuery(TestConnectionProvider)
+                .Execute(InstanceName, ApiMode);
+
         private static IReadOnlyList<SchoolYearType> GetSchoolYears()
             => new GetSchoolYearsQuery(TestConnectionProvider)
-                .Execute(CloudOdsDatabaseNames.ProductionOds, ApiMode.SharedInstance);
+                .Execute(InstanceName, ApiMode);
 
         private static void SetSchoolYear(short schoolYear)
             => new SetSchoolYearCommand(TestConnectionProvider)
-                .Execute(CloudOdsDatabaseNames.ProductionOds, ApiMode.SharedInstance, schoolYear);
+                .Execute(InstanceName, ApiMode, schoolYear);
     }
 }

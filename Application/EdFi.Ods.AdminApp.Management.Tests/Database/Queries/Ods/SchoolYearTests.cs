@@ -23,18 +23,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
                 .Execute(CloudOdsDatabaseNames.ProductionOds, ApiMode.SharedInstance);
 
             result.Count.ShouldBe(3);
-
-            result[0].SchoolYear.ShouldBe((short)1999);
-            result[0].SchoolYearDescription.ShouldBe("1998-1999");
-            result[0].CurrentSchoolYear.ShouldBe(false);
-
-            result[1].SchoolYear.ShouldBe((short)2000);
-            result[1].SchoolYearDescription.ShouldBe("1999-2000");
-            result[1].CurrentSchoolYear.ShouldBe(false);
-
-            result[2].SchoolYear.ShouldBe((short)2001);
-            result[2].SchoolYearDescription.ShouldBe("2000-2001");
-            result[2].CurrentSchoolYear.ShouldBe(false);
+            result[0].ShouldBeSchoolYear(1999);
+            result[1].ShouldBeSchoolYear(2000);
+            result[2].ShouldBeSchoolYear(2001);
         }
     }
 }

@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Collections.Generic;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Instances;
 using NUnit.Framework;
@@ -19,13 +20,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
             GetNewSchoolYear(1999);
             GetNewSchoolYear(2001);
 
-            var result = new GetSchoolYearsQuery(TestConnectionProvider)
-                .Execute(CloudOdsDatabaseNames.ProductionOds, ApiMode.SharedInstance);
+            var result = GetSchoolYears();
 
-            result.Count.ShouldBe(3);
-            result[0].ShouldBeSchoolYear(1999);
-            result[1].ShouldBeSchoolYear(2000);
-            result[2].ShouldBeSchoolYear(2001);
+            result.ShouldSatisfy(
+                x => x.ShouldBeSchoolYear(1999),
+                x => x.ShouldBeSchoolYear(2000),
+                x => x.ShouldBeSchoolYear(2001));
         }
+
+        private static IReadOnlyList<SchoolYearType> GetSchoolYears()
+            => new GetSchoolYearsQuery(TestConnectionProvider)
+                .Execute(CloudOdsDatabaseNames.ProductionOds, ApiMode.SharedInstance);
     }
 }

@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using FluentValidation;
@@ -50,6 +51,28 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             actual.SchoolYear.ShouldBe(expectedSchoolYear);
             actual.SchoolYearDescription.ShouldBe((expectedSchoolYear - 1) + "-" + expectedSchoolYear);
             actual.CurrentSchoolYear.ShouldBe(isCurrent);
+        }
+
+        public static void ShouldSatisfy<T>(this IEnumerable<T> actual, params Action<T>[] itemExpectations)
+        {
+            var actualItems = actual.ToArray();
+
+            if (actualItems.Length != itemExpectations.Length)
+                throw new Exception(
+                    $"Expected the collection to have {itemExpectations.Length} " +
+                    $"items, but there were {actualItems.Length} items.");
+
+            for (var i = 0; i < actualItems.Length; i++)
+            {
+                try
+                {
+                    itemExpectations[i](actualItems[i]);
+                }
+                catch (Exception failure)
+                {
+                    throw new Exception($"Assertion failed for item at position [{i}].", failure);
+                }
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 @using EdFi.Ods.AdminApp.Web.Helpers
 @using EdFi.Ods.AdminApp.Web.Infrastructure
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
+@using EdFi.Ods.AdminApp.Management.Api.Models
 @model BaseOdsInstanceSettingsModel
 
 @{
@@ -19,10 +20,37 @@ See the LICENSE and NOTICES files in the project root for more information.
     @if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
     {
         <div class="col-xs-6">
-            <h2 title="@(Model.OdsInstance?.Name)">@(Model.OdsInstance?.Description)</h2>
+            <h2 title="@(Model.OdsInstance?.Name)">
+                @(Model.OdsInstance?.Description)
+                <small>
+                    @if (@Model.OdsInstance?.SchoolYearDescription != null)
+                    {
+                        @Model.OdsInstance?.SchoolYearDescription
+                    }
+                    else
+                    {
+                        @:Configure School Year
+                    }
+                </small>
+            </h2>
         </div>
         <div class="col-xs-3 col-xs-offset-3">
             @Html.Button("Back to ODS Instances").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances"))
+        </div>
+    }
+    else
+    {
+        <div class="col-xs-6">
+            <h2>
+                @if (@Model.OdsInstance?.SchoolYearDescription != null)
+                {
+                    @:School Year @Model.OdsInstance?.SchoolYearDescription
+                }
+                else
+                {
+                    @:Configure School Year
+                }
+            </h2>
         </div>
     }
 </div>

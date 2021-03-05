@@ -220,6 +220,25 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             selectTag.Append(optionTag);
         }
 
+        public static HtmlTag SelectListBlock<T>(this IHtmlHelper<T> helper,
+            Expression<Func<T, object>> expression, IReadOnlyList<SelectListItem> options)
+            where T : class
+        {
+            var model = helper.ViewData.Model;
+            var value = expression.Compile()(model);
+            var valueLiteral = value?.ToString();
+
+            return helper.SelectListBlock(
+                expression, options, x => new SelectListItem
+                {
+                    Disabled = x.Disabled,
+                    Group = x.Group,
+                    Selected = x.Selected || valueLiteral == x.Value,
+                    Text = x.Text,
+                    Value = x.Value
+                });
+        }
+
         public static HtmlTag SelectListBlock<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, IEnumerable<TR> options, Func<TR, SelectListItem> selectListItemBuilder, string helpTooltipText = null, bool includeBlankOption = false) where T: class
         {
             var selectList = SelectList(helper, expression, options, selectListItemBuilder, includeBlankOption);

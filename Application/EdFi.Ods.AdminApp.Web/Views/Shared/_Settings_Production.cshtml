@@ -8,7 +8,6 @@ See the LICENSE and NOTICES files in the project root for more information.
 @using EdFi.Ods.AdminApp.Web.Helpers
 @using EdFi.Ods.AdminApp.Web.Infrastructure
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
-@using EdFi.Ods.AdminApp.Management.Api.Models
 @model BaseOdsInstanceSettingsModel
 
 @{
@@ -31,6 +30,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                     {
                         @:Configure School Year
                     }
+                    <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears")"> <span class="fa fa-pencil action-icons"></span></a>
                 </small>
             </h2>
         </div>
@@ -50,6 +50,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     @:Configure School Year
                 }
+                <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears")"> <span class="fa fa-pencil action-icons"></span></a>
             </h2>
         </div>
     }

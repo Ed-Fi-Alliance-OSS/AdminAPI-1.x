@@ -7,6 +7,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.SchoolYears;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -35,17 +36,29 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return Json(_getSchoolYears.Execute(_instanceContext.Name, ApiMode));
         }
 
-        public ActionResult Current()
+        public ActionResult Edit()
         {
-            return Json(_getCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode));
+            var currentSchoolYear = _getCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode)?.SchoolYear;
+            var schoolYears = _getSchoolYears.Execute(_instanceContext.Name, ApiMode);
+
+            return PartialView(
+                new EditSchoolYearModel
+                {
+                    SchoolYear = currentSchoolYear,
+                    SchoolYears = schoolYears
+                        .ToSelectListItems(
+                            "Select School Year",
+                            x => x.SchoolYear.ToString(),
+                            x => x.SchoolYearDescription)
+                });
         }
 
         [HttpPost]
-        public ActionResult Current(short schoolYear, string schoolYearDescription)
+        public ActionResult Edit(EditSchoolYearModel model)
         {
-            _setCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode, schoolYear);
+            _setCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode, model.SchoolYear.Value);
 
-            return JsonSuccess("School Year set to " + schoolYearDescription);
+            return JsonSuccess("School Year Saved");
         }
 
         private static ApiMode ApiMode => CloudOdsAdminAppSettings.Instance.Mode;

@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
-using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -15,38 +14,30 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 {
     public class SchoolYearsController : ControllerBase
     {
-        private readonly InstanceContext _instanceContext;
         private readonly GetSchoolYearsQuery _getSchoolYears;
         private readonly GetCurrentSchoolYearQuery _getCurrentSchoolYear;
         private readonly ISetCurrentSchoolYearCommand _setCurrentSchoolYear;
 
         public SchoolYearsController(
-            InstanceContext instanceContext,
             GetSchoolYearsQuery getSchoolYears,
             GetCurrentSchoolYearQuery getCurrentSchoolYear,
             ISetCurrentSchoolYearCommand setCurrentSchoolYear)
         {
-            _instanceContext = instanceContext;
             _getSchoolYears = getSchoolYears;
             _getCurrentSchoolYear = getCurrentSchoolYear;
             _setCurrentSchoolYear = setCurrentSchoolYear;
         }
 
-        public ActionResult Index()
+        public ActionResult Edit(string instanceName)
         {
-            return Json(_getSchoolYears.Execute(_instanceContext.Name, ApiMode));
-        }
-
-        public ActionResult Edit()
-        {
-            var currentSchoolYear = _getCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode)?.SchoolYear;
-            var schoolYears = _getSchoolYears.Execute(_instanceContext.Name, ApiMode);
+            var currentSchoolYear = _getCurrentSchoolYear.Execute(instanceName, ApiMode)?.SchoolYear;
+            var schoolYears = _getSchoolYears.Execute(instanceName, ApiMode);
 
             string warning = null;
 
             if (ApiMode == ApiMode.YearSpecific)
             {
-                var instanceYear = _instanceContext.Name.ExtractNumericInstanceSuffix();
+                var instanceYear = instanceName.ExtractNumericInstanceSuffix();
                 var expectedSchoolYear = schoolYears.SingleOrDefault(x => x.SchoolYear == instanceYear);
 
                 var recommendation =
@@ -75,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult Edit(EditSchoolYearModel model)
         {
-            _setCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode, model.SchoolYear.Value);
+            _setCurrentSchoolYear.Execute(model.InstanceName, ApiMode, model.SchoolYear.Value);
 
             return JsonSuccess("School Year Saved");
         }

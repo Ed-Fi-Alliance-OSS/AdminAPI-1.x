@@ -25,6 +25,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 @using (Html.BeginForm("Edit", "SchoolYears"))
                 {
                     @Html.ValidationBlock()
+                    @Html.HiddenFor(m => m.InstanceName)
                     @Html.SelectListBlock(m => m.SchoolYear, Model.SchoolYears)
                 }
             </div>

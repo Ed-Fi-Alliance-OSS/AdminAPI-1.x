@@ -30,7 +30,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                     {
                         @:Configure School Year
                     }
-                    <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears")"> <span class="fa fa-pencil action-icons"></span></a>
+                    <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=Model.OdsInstance?.Name})"> <span class="fa fa-pencil action-icons"></span></a>
                 </small>
             </h2>
         </div>
@@ -50,7 +50,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     @:Configure School Year
                 }
-                <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears")"> <span class="fa fa-pencil action-icons"></span></a>
+                <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=Model.OdsInstance?.Name})"> <span class="fa fa-pencil action-icons"></span></a>
             </h2>
         </div>
     }

@@ -7,6 +7,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.SchoolYears
     public class EditSchoolYearModel
     {
         public string Warning { get; set; }
+        public string InstanceName { get; set; }
         public short? SchoolYear { get; set; }
         public IReadOnlyList<SelectListItem> SchoolYears { get; set; }
     }

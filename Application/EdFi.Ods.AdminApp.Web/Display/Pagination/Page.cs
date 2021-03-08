@@ -1,26 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EdFi.Ods.AdminApp.Web.Display.Pagination
 {
     public class Page<T>
     {
-        private readonly Func<int, int, IEnumerable<T>> GetApiRecords;
+        private readonly Func<int, int, Task<IEnumerable<T>>> GetApiRecords;
 
         public static readonly int DefaultPageSize = 20;
 
-        public Page(Func<int, int, IEnumerable<T>> getApiRecords)
+        public Page(Func<int, int, Task<IEnumerable<T>>> getApiRecords)
         {
             GetApiRecords = getApiRecords;
         }
 
-        public static PagedList<T> Fetch(Func<int, int, IEnumerable<T>> getApiRecords, int pageNumber)
+        public static PagedList<T> Fetch(Func<int, int, Task<IEnumerable<T>>> getApiRecords, int pageNumber)
         {
             return Fetch(getApiRecords, pageNumber, DefaultPageSize);
         }
 
-        public static PagedList<T> Fetch(Func<int, int, IEnumerable<T>> getApiRecords, int pageNumber, int pageSize)
+        public static PagedList<T> Fetch(Func<int, int, Task<IEnumerable<T>>> getApiRecords, int pageNumber, int pageSize)
         {
             var service = new Page<T>(getApiRecords);
 
@@ -38,12 +39,12 @@ namespace EdFi.Ods.AdminApp.Web.Display.Pagination
 
             var recordsToOffset = (humanPageNumber - 1) * pageSize;
 
-            var records = GetApiRecords(recordsToOffset, pageSize + 1);
+            var records = GetApiRecords(recordsToOffset, pageSize + 1).Result.ToList();
 
             return new PagedList<T>
             {
                 PageNumber = humanPageNumber,
-                NextPageHasResults = records.Count() > pageSize,
+                NextPageHasResults = records.Count > pageSize,
                 Items = records.Take(pageSize)
             };
         }

@@ -46,6 +46,7 @@ function GlobalInitialize() {
     SetupPanelToggle();
     LoadAsyncActions();
     ClaimSetWarningMessage();
+    AttachDefaultPagingBehavior();
 }
 
 function ReinitializeForModal() {
@@ -465,3 +466,19 @@ function UpdateWarningTimer() {
     }
 
 };
+
+var replacePagedContent = function (event) {
+    event.preventDefault();
+
+    var $btn = $(this),
+        url = $btn.attr('href');
+
+    $.ajax(url).done(function (data) {
+        $btn.closest('.ajax-content').html(data);
+    });
+};
+
+function AttachDefaultPagingBehavior() {
+    $(document).on('click', '.navigate-previous-page', replacePagedContent);
+    $(document).on('click', '.navigate-next-page', replacePagedContent);
+};   

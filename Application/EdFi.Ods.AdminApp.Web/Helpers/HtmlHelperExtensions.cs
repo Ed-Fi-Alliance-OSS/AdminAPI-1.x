@@ -554,9 +554,10 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
             var contentWrapper = new HtmlTag("ul");
             contentWrapper.AddClass("pagination");
-            contentWrapper.Append(previousLink);
-            contentWrapper.Append(pageNumber);
-            contentWrapper.Append(nextLink);
+
+            if (previousLink != null) contentWrapper.Append(previousLink);
+            if (pageNumber != null) contentWrapper.Append(pageNumber);
+            if (nextLink != null) contentWrapper.Append(nextLink);
 
             var paginationNav = new HtmlTag("nav");
             paginationNav.Append(contentWrapper);

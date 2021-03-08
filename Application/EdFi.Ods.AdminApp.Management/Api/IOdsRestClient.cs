@@ -10,6 +10,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
     public interface IOdsRestClient
     {
         IReadOnlyList<T> GetAll<T>(string elementPath) where T : class;
+        IReadOnlyList<T> GetAll<T>(string elementPath, int offset, int limit) where T : class;
         T GetById<T>(string elementPath, string id) where T : class;
         OdsApiResult PostResource<T>(T resource, string elementPath, bool refreshToken = false);
         OdsApiResult PutResource<T>(T resource, string elementPath, string id, bool refreshToken = false);

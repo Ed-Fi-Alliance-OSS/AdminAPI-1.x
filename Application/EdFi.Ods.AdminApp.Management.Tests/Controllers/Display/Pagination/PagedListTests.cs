@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using NUnit.Framework;
 using Shouldly;
@@ -12,11 +13,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
     {
         private static IEnumerable<object> ListOfObjects => new object[100];
 
+        private static Task<IEnumerable<object>> GetListOfObjects()
+        {
+            return Task.Run(() => ListOfObjects);
+        }
+
         private static PagedList<object> FetchPagedObjects(int pageNumber) =>
-            Page<object>.Fetch((offset, size) => ListOfObjects.Skip(offset).Take(size), pageNumber);
+            Page<object>.Fetch(async (offset, size) => (await GetListOfObjects()).Skip(offset).Take(size), pageNumber);
 
         private static PagedList<object> FetchPagedObjects(int pageNumber, int pageSize) =>
-            Page<object>.Fetch((offset, size) => ListOfObjects.Skip(offset).Take(size), pageNumber, pageSize);
+            Page<object>.Fetch(async (offset, size) => (await GetListOfObjects()).Skip(offset).Take(size), pageNumber, pageSize);
 
         [Test]
         public void ShouldReturnHumanPageNumber()
@@ -43,18 +49,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
             const int pageNumber = 0;
             const int configuredPageSize = 30;
 
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(async (offset, size) =>
             {
                 offset.ShouldBe(0);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, pageNumber);
 
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(
+                async (offset, size) =>
             {
                 offset.ShouldBe(0);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, pageNumber, configuredPageSize);
         }
 
@@ -64,49 +71,49 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
             var pageNumber = 2;
             const int configuredPageSize = 25;
 
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(async (offset, size) =>
             {
                 offset.ShouldBe(Page<object>.DefaultPageSize);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, pageNumber);
 
             pageNumber = 10;
 
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(async (offset, size) =>
             {
                 offset.ShouldBe(180);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, pageNumber);
 
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(async (offset, size) =>
             {
                 var calculatedOffSet = (pageNumber - 1) * configuredPageSize;
 
                 offset.ShouldBe(calculatedOffSet);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, pageNumber, configuredPageSize);
         }
 
         [Test]
         public void ShouldRequestOneAdditionalRecord()
         {
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(async (offset, size) =>
             {
                 size.ShouldBe(Page<object>.DefaultPageSize + 1);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, 0);
 
             const int configuredPageSize = 50;
 
-            Page<object>.Fetch((offset, size) =>
+            Page<object>.Fetch(async (offset, size) =>
             {
                 size.ShouldBe(51);
 
-                return ListOfObjects;
+                return await GetListOfObjects();
             }, 0, configuredPageSize);
         }
 

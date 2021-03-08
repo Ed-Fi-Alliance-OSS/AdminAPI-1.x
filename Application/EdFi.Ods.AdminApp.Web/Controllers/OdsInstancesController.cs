@@ -16,6 +16,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using System.Security.Claims;
+using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using Microsoft.AspNetCore.Http;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -28,24 +29,25 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IGetOdsInstanceRegistrationsByUserIdQuery _getOdsInstanceRegistrationsByUserIdQuery;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
         private readonly AdminAppUserContext _userContext;
-        private readonly IMapper _mapper;
         private readonly BulkRegisterOdsInstancesCommand _bulkRegisterOdsInstancesCommand;
+        private readonly GetCurrentSchoolYearQuery _getCurrentSchoolYear;
 
-        public OdsInstancesController(IMapper mapper
-            , RegisterOdsInstanceCommand registerOdsInstanceCommand
+        public OdsInstancesController(
+              RegisterOdsInstanceCommand registerOdsInstanceCommand
             , DeregisterOdsInstanceCommand deregisterOdsInstanceCommand
             , IGetOdsInstanceRegistrationsByUserIdQuery getOdsInstanceRegistrationsByUserIdQuery
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
             , AdminAppUserContext userContext
-            , BulkRegisterOdsInstancesCommand bulkRegisterOdsInstancesCommand)
+            , BulkRegisterOdsInstancesCommand bulkRegisterOdsInstancesCommand
+           ,  GetCurrentSchoolYearQuery getCurrentSchoolYear)
         {
-            _mapper = mapper;
             _registerOdsInstanceCommand = registerOdsInstanceCommand;
             _deregisterOdsInstanceCommand = deregisterOdsInstanceCommand;
             _getOdsInstanceRegistrationsByUserIdQuery = getOdsInstanceRegistrationsByUserIdQuery;
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
             _userContext = userContext;
             _bulkRegisterOdsInstancesCommand = bulkRegisterOdsInstancesCommand;
+            _getCurrentSchoolYear = getCurrentSchoolYear;
         }
 
         public ViewResult Index()
@@ -56,7 +58,18 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var model = new IndexModel
             {
                 UserContext = _userContext,
-                OdsInstances = _mapper.Map<List<OdsInstanceModel>>(instances)
+                OdsInstances =
+                    instances.Select(
+                        x => new OdsInstanceModel
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Description = x.Description,
+                            SchoolYearDescription =
+                                _getCurrentSchoolYear
+                                    .Execute(x.Name, CloudOdsAdminAppSettings.Instance.Mode)
+                                    ?.SchoolYearDescription ?? "Not Set"
+                        }).ToList()
             };
 
             return View(model);

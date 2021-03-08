@@ -43,6 +43,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                         <th scope="col">@odsInstanceNumericSuffix</th>
                         <th scope="col">Instance Name</th>
                         <th scope="col">Description</th>
+                        <th scope="col">School Year</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -54,6 +55,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                 <th scope="row"><a class="instance-settings" href="@Url.Action("ActivateOdsInstance", "OdsInstances", new {instanceId = instance.Id})">@instance.Name.ExtractNumericInstanceSuffix().ToString()</a></th>
                                 <td>@instance.Name</td>
                                 <td>@instance.Description</td>
+                                <td>
+                                    @instance.SchoolYearDescription
+                                    <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=instance.Name})"> <span class="fa fa-pencil action-icons"></span></a>
+                                </td>
                                 @if (Model.UserContext.Has(Permission.AccessGlobalSettings))
                                 {
                                     <td>

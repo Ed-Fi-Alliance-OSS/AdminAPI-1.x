@@ -17,13 +17,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly InstanceContext _instanceContext;
         private readonly GetSchoolYearsQuery _getSchoolYears;
         private readonly GetCurrentSchoolYearQuery _getCurrentSchoolYear;
-        private readonly SetCurrentSchoolYearCommand _setCurrentSchoolYear;
+        private readonly ISetCurrentSchoolYearCommand _setCurrentSchoolYear;
 
         public SchoolYearsController(
             InstanceContext instanceContext,
             GetSchoolYearsQuery getSchoolYears,
             GetCurrentSchoolYearQuery getCurrentSchoolYear,
-            SetCurrentSchoolYearCommand setCurrentSchoolYear)
+            ISetCurrentSchoolYearCommand setCurrentSchoolYear)
         {
             _instanceContext = instanceContext;
             _getSchoolYears = getSchoolYears;

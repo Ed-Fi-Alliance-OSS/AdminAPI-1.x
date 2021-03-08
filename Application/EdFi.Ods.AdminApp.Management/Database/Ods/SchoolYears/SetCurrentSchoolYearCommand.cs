@@ -9,7 +9,12 @@ using EdFi.Ods.AdminApp.Management.Instances;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears
 {
-    public class SetCurrentSchoolYearCommand
+    public interface ISetCurrentSchoolYearCommand
+    {
+        void Execute(string instanceName, ApiMode apiMode, short schoolYear);
+    }
+
+    public class SetCurrentSchoolYearCommand : ISetCurrentSchoolYearCommand
     {
         private readonly IDatabaseConnectionProvider _databaseConnectionProvider;
 

@@ -16,4 +16,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
 @Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
 
-@Html.ActionAjax(Url.Action("EducationOrganizationList", "EducationOrganizations", new { }), 500, "Retrieving organization data...")
+<div class="ajax-content">
+    @Html.ActionAjax(Url.Action("EducationOrganizationList", "EducationOrganizations", new { pageNumber = 1 }), 500, "Retrieving organization data...")
+</div>
+

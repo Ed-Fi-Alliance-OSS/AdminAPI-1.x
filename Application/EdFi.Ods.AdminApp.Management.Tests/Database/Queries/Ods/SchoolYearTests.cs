@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using EdFi.Ods.AdminApp.Management.Database.Ods;
+using Dapper;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
 using NUnit.Framework;
@@ -82,6 +82,34 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
 
             SetSchoolYear(2001);
             GetCurrentSchoolYear().ShouldBeSchoolYear(2001, isCurrent: true);
+        }
+
+        [Test]
+        public void ShouldGetNoCurrentSchoolYearWhenAmbiguous()
+        {
+            // Under normal circumstances, 1 or 0 rows in the edfi.SchoolYearType
+            // table will be marked as current. However, we should not use a
+            // strict SingleOrDefault behavior when fetching the current year.
+            // If we did, users would experience an exception when we would
+            // rather give them the opportunity to fix their year setting.
+            // So, when the table is ambiguous, we expect null, the same
+            // as when there are zero records marked as current.
+
+            GetNewSchoolYear(2000);
+            GetNewSchoolYear(1999);
+            GetNewSchoolYear(2001);
+            GetCurrentSchoolYear().ShouldBe(null);
+
+            // Create an ambiguous, meaningless selection of multiple years.
+            using (var connection = TestConnectionProvider.CreateNewConnection(InstanceName, ApiMode))
+                connection.Execute(@"UPDATE [edfi].[SchoolYearType] SET [CurrentSchoolYear]=1");
+
+            // Rather than throwing, the user should experience this as no valid selection.
+            GetCurrentSchoolYear().ShouldBe(null);
+
+            // Users can correct the problem by selecting a year.
+            SetSchoolYear(2000);
+            GetCurrentSchoolYear().ShouldBeSchoolYear(2000, isCurrent: true);
         }
 
         private static SchoolYearType GetCurrentSchoolYear()

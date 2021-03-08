@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using Dapper;
 using EdFi.Ods.AdminApp.Management.Instances;
 
@@ -21,10 +22,15 @@ namespace EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears
         {
             using (var connection = _databaseConnectionProvider.CreateNewConnection(instanceName, apiMode))
             {
-                return connection.QuerySingleOrDefault<SchoolYearType>(
+                var current = connection.Query<SchoolYearType>(
                     @"SELECT [SchoolYear], [SchoolYearDescription], [CurrentSchoolYear]
                       FROM [edfi].[SchoolYearType]
-                      WHERE [CurrentSchoolYear]=1");
+                      WHERE [CurrentSchoolYear]=1").ToList();
+
+                if (current.Count != 1)
+                    return null;
+
+                return current.Single();
             }
         }
     }

@@ -428,7 +428,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     {
                         new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object,true)
                             .ShouldNotValidate(newInstance,
-                                $"Could not connect to an ODS instance database for this school year({odsInstanceNumericSuffix}).");
+                                $"Could not connect to an ODS instance database for this school year ({odsInstanceNumericSuffix}).");
                     });
                 }
         }
@@ -461,7 +461,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                                 _connectionProvider.Object, true)
                             .ShouldNotValidate(
                                 newInstance,
-                                "An instance for this Education Organization / District Id(8787877) already exists.");
+                                "An instance for this Education Organization / District Id (8787877) already exists.");
                     });
                 }
         }
@@ -494,7 +494,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                                 database, _apiModeProvider.Object, _databaseValidationService.Object,
                                 _connectionProvider.Object, true)
                             .ShouldNotValidate(newInstance,
-                                $"An instance with this description(Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
+                                $"An instance with this description (Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
                     });
             }
         }

@@ -15,7 +15,13 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Set Current School Year</h4>
             </div>
-            <div class="modal-body center-block text-center">
+            <div class="modal-body center-block">
+                @if (Model.Warning != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>@Model.Warning</p>
+                    </div>
+                }
                 @using (Html.BeginForm("Edit", "SchoolYears"))
                 {
                     @Html.ValidationBlock()

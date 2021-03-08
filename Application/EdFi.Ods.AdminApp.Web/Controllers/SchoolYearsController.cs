@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -41,9 +42,27 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var currentSchoolYear = _getCurrentSchoolYear.Execute(_instanceContext.Name, ApiMode)?.SchoolYear;
             var schoolYears = _getSchoolYears.Execute(_instanceContext.Name, ApiMode);
 
+            string warning = null;
+
+            if (ApiMode == ApiMode.YearSpecific)
+            {
+                var instanceYear = _instanceContext.Name.ExtractNumericInstanceSuffix();
+                var expectedSchoolYear = schoolYears.SingleOrDefault(x => x.SchoolYear == instanceYear);
+
+                var recommendation =
+                    expectedSchoolYear == null
+                        ? $"{instanceYear - 1}-{instanceYear}"
+                        : expectedSchoolYear.SchoolYearDescription;
+
+                warning = "The ODS / API is in Year-Specific mode. It is " +
+                          "strongly recommended that this instance be set " +
+                          $"to school year {recommendation}.";
+            }
+
             return PartialView(
                 new EditSchoolYearModel
                 {
+                    Warning = warning,
                     SchoolYear = currentSchoolYear,
                     SchoolYears = schoolYears
                         .ToSelectListItems(

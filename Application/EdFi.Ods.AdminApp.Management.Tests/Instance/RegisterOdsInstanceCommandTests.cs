@@ -56,7 +56,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             var apiMode = ApiMode.DistrictSpecific;
 
             ResetOdsInstanceRegistrations();
-            var instanceName = "TestInstance_23456";
+            var instanceName = "EdFi_Ods_23456";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 
@@ -104,7 +104,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             var apiMode = ApiMode.YearSpecific;
 
             ResetOdsInstanceRegistrations();
-            var instanceName = "TestInstance_2022";
+            var instanceName = "EdFi_Ods_2022";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 
@@ -140,7 +140,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 addedInstance.Name.ShouldBe(instanceName);
                 addedInstance.Description.ShouldBe(newInstance.Description);
 
-                _setCurrentSchoolYear.Verify(x => x.Execute("TestInstance_2022", apiMode, 2022), Times.Once);
+                _setCurrentSchoolYear.Verify(x => x.Execute("EdFi_Ods_2022", apiMode, 2022), Times.Once);
                 _setCurrentSchoolYear.VerifyNoOtherCalls();
             }
         }
@@ -568,7 +568,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
 
-            var instanceName = "TestInstance_7878787";
+            var instanceName = "EdFi_Ods_7878787";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))
@@ -599,7 +599,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
 
-            var instanceName = "TestInstance_2020";
+            var instanceName = "EdFi_Ods_2020";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))

@@ -475,6 +475,7 @@ var replacePagedContent = function (event) {
 
     $.ajax(url).done(function (data) {
         $btn.closest('.ajax-content').html(data);
+        GlobalInitialize();
     });
 };
 

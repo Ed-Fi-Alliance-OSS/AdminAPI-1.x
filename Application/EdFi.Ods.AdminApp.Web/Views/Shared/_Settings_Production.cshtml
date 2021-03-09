@@ -19,20 +19,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     @if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
     {
         <div class="col-xs-6">
-            <h2 title="@(Model.OdsInstance?.Name)">
-                @(Model.OdsInstance?.Description)
-                <small>
-                    @if (@Model.OdsInstance?.SchoolYearDescription != null)
-                    {
-                        @Model.OdsInstance?.SchoolYearDescription
-                    }
-                    else
-                    {
-                        @:Configure School Year
-                    }
-                    <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=Model.OdsInstance?.Name})"> <span class="fa fa-pencil action-icons"></span></a>
-                </small>
-            </h2>
+            <h2 title="@(Model.OdsInstance?.Name)">@(Model.OdsInstance?.Description)</h2>
         </div>
         <div class="col-xs-3 col-xs-offset-3">
             @Html.Button("Back to ODS Instances").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances"))
@@ -40,19 +27,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     }
     else
     {
-        <div class="col-xs-6">
-            <h2>
-                @if (@Model.OdsInstance?.SchoolYearDescription != null)
-                {
-                    @:School Year @Model.OdsInstance?.SchoolYearDescription
-                }
-                else
-                {
-                    @:Configure School Year
-                }
-                <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=Model.OdsInstance?.Name})"> <span class="fa fa-pencil action-icons"></span></a>
-            </h2>
-        </div>
+        @await Component.InvokeAsync("SingleInstanceCurrentYear")
     }
 </div>
 

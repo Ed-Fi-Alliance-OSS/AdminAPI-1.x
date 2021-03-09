@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,16 +21,13 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
         private readonly InstanceContext _instanceContext;
         private readonly AdminAppDbContext _adminAppDbContext;
         private readonly AdminAppIdentityDbContext _adminAppIdentityDbContext;
-        private readonly GetCurrentSchoolYearQuery _getCurrentSchoolYear;
 
         public InstanceContextFilter(InstanceContext instanceContext, AdminAppDbContext adminAppDbContext,
-            AdminAppIdentityDbContext adminAppIdentityDbContext,
-            GetCurrentSchoolYearQuery getCurrentSchoolYear)
+            AdminAppIdentityDbContext adminAppIdentityDbContext)
         {
             _instanceContext = instanceContext;
             _adminAppDbContext = adminAppDbContext;
             _adminAppIdentityDbContext = adminAppIdentityDbContext;
-            _getCurrentSchoolYear = getCurrentSchoolYear;
         }
 
         public void OnAuthorization(AuthorizationFilterContext filterContext)
@@ -64,9 +60,6 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
             _instanceContext.Id = instance.Id;
             _instanceContext.Name = instance.Name;
             _instanceContext.Description = instance.Description;
-
-            var schoolYear = _getCurrentSchoolYear.Execute(instance.Name, CloudOdsAdminAppSettings.Instance.Mode);
-            _instanceContext.SchoolYearDescription = schoolYear?.SchoolYearDescription;
         }
 
         private OdsInstanceRegistration GetQueryInstanceRegistration()

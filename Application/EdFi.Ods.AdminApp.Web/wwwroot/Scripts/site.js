@@ -215,7 +215,8 @@ function InitializeSelectLists() {
         $('select[multiple="multiple"]').multiselect({
             numberDisplayed: 2,
             enableCaseInsensitiveFiltering: true,
-            filterPlaceholder: 'Search'
+            filterPlaceholder: 'Search',
+            maxHeight: 500
         });
     });
 }

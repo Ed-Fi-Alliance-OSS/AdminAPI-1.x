@@ -216,7 +216,10 @@ function InitializeSelectLists() {
             numberDisplayed: 2,
             enableCaseInsensitiveFiltering: true,
             filterPlaceholder: 'Search',
-            maxHeight: 500
+            maxHeight: 500,
+            onDropdownHide: function () {
+                $('button.multiselect-clear-filter').click();
+            }
         });
     });
 }

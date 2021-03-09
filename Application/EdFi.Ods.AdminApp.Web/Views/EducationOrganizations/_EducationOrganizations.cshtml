@@ -74,12 +74,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     </div>
 }
 
-@{
-    var previousUrl = Url.Action("EducationOrganizationList", "EducationOrganizations", new { pageNumber = Model.LocalEducationAgenciesPageNumber - 1 });
-    var nextUrl = Url.Action("EducationOrganizationList", "EducationOrganizations", new { pageNumber = Model.LocalEducationAgenciesPageNumber + 1 });
-}
-
-@Html.PagingControl(previousUrl, nextUrl, Model.LocalEducationAgencies)
+@Html.PagingControl(Url.Action("EducationOrganizationList", "EducationOrganizations", null, ViewContext.HttpContext.Request.Scheme), Model.LocalEducationAgenciesPageNumber, Model.LocalEducationAgencies)
 
 @{ await Html.RenderPartialAsync("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
 @{ await Html.RenderPartialAsync("_AddLocalEducationAgencyModal", Model.AddLocalEducationAgencyModel); }

@@ -26,6 +26,7 @@ using Preconditions = EdFi.Common.Preconditions;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using log4net;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
 {
@@ -545,18 +546,21 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             }
         }
 
-        public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string previousUrl,
-            string nextUrl, PagedList<T> pagedContent, string behaviorOverrideName = null)
+        public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string url,
+            int pageNumber, PagedList<T> pagedContent, string behaviorOverrideName = null)
         {
+            var previousUrl = new Uri(QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber - 1).ToString())).ToString();
+            var nextUrl = new Uri(QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber + 1).ToString())).ToString();
+
             var previousLink = PreviousButton(previousUrl, pagedContent, behaviorOverrideName);
             var nextLink = NextButton(nextUrl, pagedContent, behaviorOverrideName);
-            var pageNumber = PageNumber(pagedContent, previousLink, nextLink);
+            var pageNumberItem = PageNumber(pagedContent, previousLink, nextLink);
 
             var contentWrapper = new HtmlTag("ul");
             contentWrapper.AddClass("pagination");
 
             if (previousLink != null) contentWrapper.Append(previousLink);
-            if (pageNumber != null) contentWrapper.Append(pageNumber);
+            if (pageNumberItem != null) contentWrapper.Append(pageNumberItem);
             if (nextLink != null) contentWrapper.Append(nextLink);
 
             var paginationNav = new HtmlTag("nav");

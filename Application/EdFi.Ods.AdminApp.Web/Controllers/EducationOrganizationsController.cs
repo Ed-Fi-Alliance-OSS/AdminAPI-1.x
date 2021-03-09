@@ -116,7 +116,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var schools = api.GetAllSchools();
 
             var localEducationAgencies =
-                Page<LocalEducationAgency>.Fetch(GetLocalEducationAgencies, pageNumber);
+                await Page<LocalEducationAgency>.Fetch(GetLocalEducationAgencies, pageNumber);
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
@@ -148,7 +148,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_EducationOrganizations", model);
         }
 
-        private async Task<IEnumerable<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)
+        private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)
         {
             var api = await _odsApiFacadeFactory.Create();
             var localEducationAgencies = api.GetLocalEducationAgenciesByPage(offset, Page<LocalEducationAgency>.DefaultPageSize);

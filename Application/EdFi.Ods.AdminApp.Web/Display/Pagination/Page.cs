@@ -7,28 +7,25 @@ namespace EdFi.Ods.AdminApp.Web.Display.Pagination
 {
     public class Page<T>
     {
-        private readonly Func<int, int, Task<IEnumerable<T>>> GetApiRecords;
+        private readonly Func<int, int, Task<IReadOnlyList<T>>> GetApiRecords;
 
         public static readonly int DefaultPageSize = 20;
 
-        public Page(Func<int, int, Task<IEnumerable<T>>> getApiRecords)
+        public Page(Func<int, int, Task<IReadOnlyList<T>>> getApiRecords)
         {
             GetApiRecords = getApiRecords;
         }
 
-        public static PagedList<T> Fetch(Func<int, int, Task<IEnumerable<T>>> getApiRecords, int pageNumber)
-        {
-            return Fetch(getApiRecords, pageNumber, DefaultPageSize);
-        }
+        public static async Task<PagedList<T>> Fetch(Func<int, int, Task<IReadOnlyList<T>>> getApiRecords, int pageNumber) => await Fetch(getApiRecords, pageNumber, DefaultPageSize);
 
-        public static PagedList<T> Fetch(Func<int, int, Task<IEnumerable<T>>> getApiRecords, int pageNumber, int pageSize)
+        public static async Task<PagedList<T>> Fetch(Func<int, int, Task<IReadOnlyList<T>>> getApiRecords, int pageNumber, int pageSize)
         {
             var service = new Page<T>(getApiRecords);
 
-            return service.PagedList(pageNumber, pageSize);
+            return await service.PagedListAsync(pageNumber, pageSize);
         }
 
-        private PagedList<T> PagedList(int pageNumber, int pageSize)
+        private async Task<PagedList<T>> PagedListAsync(int pageNumber, int pageSize)
         {
             if (pageSize >= 100)
             {
@@ -39,13 +36,13 @@ namespace EdFi.Ods.AdminApp.Web.Display.Pagination
 
             var recordsToOffset = (humanPageNumber - 1) * pageSize;
 
-            var records = GetApiRecords(recordsToOffset, pageSize + 1).Result.ToList();
+            var records = await GetApiRecords(recordsToOffset, pageSize + 1);
 
             return new PagedList<T>
             {
                 PageNumber = humanPageNumber,
-                NextPageHasResults = records.Count > pageSize,
-                Items = records.Take(pageSize)
+                NextPageHasResults = records.Count() > pageSize,
+                Items = records.Take(pageSize).ToList()
             };
         }
     }
@@ -54,6 +51,6 @@ namespace EdFi.Ods.AdminApp.Web.Display.Pagination
     {
         public int PageNumber { get; set; }
         public bool NextPageHasResults { get; set; }
-        public IEnumerable<T> Items { get; set; }
+        public IReadOnlyList<T> Items { get; set; }
     }
 }

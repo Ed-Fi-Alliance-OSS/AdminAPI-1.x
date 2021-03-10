@@ -69,7 +69,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             var request = OdsRequest(elementPath);
             request.AddParameter("offset", offset);
-            request.AddParameter("limit", limit + 1);
+            request.AddParameter("limit", limit);
 
             var responseList = new List<T>();
             List<T> pageItems;

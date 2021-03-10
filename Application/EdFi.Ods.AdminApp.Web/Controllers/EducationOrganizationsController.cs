@@ -151,7 +151,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)
         {
             var api = await _odsApiFacadeFactory.Create();
-            var localEducationAgencies = api.GetLocalEducationAgenciesByPage(offset, Page<LocalEducationAgency>.DefaultPageSize);
+            var localEducationAgencies = api.GetLocalEducationAgenciesByPage(offset, limit);
             return localEducationAgencies;
         }
 

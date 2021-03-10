@@ -277,12 +277,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return RedirectToAction("EditClaimSet", "ClaimSets", new { claimSetId = model.ClaimSetId });
         }
 
-        public ActionResult ImportExportClaimSet()
+        public ActionResult ImportClaimSet()
         {
-            return PartialView("_ImportExportClaimSet", new ClaimSetFileImportModel());
+            return PartialView("_ImportClaimSet", new ClaimSetFileImportModel());
         }
 
-        public ActionResult ExportClaimSetIndex()
+        public ActionResult ExportClaimSet()
         {
             var claimSets = _getClaimSetsByApplicationNameQuery.Execute(CloudOdsAdminApp.SecurityContextApplicationName);
             return PartialView("_ExportClaimSet", new ClaimSetFileExportModel()

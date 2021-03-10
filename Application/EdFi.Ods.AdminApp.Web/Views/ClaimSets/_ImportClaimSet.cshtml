@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -8,7 +8,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 @using EdFi.Ods.AdminApp.Web.Helpers
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileImportModel
 
-<h3>Import/Export Claim Set</h3>
+<h3>Import Claim Set</h3>
 @using (Html.BeginForm("FileImport", "ClaimSets", FormMethod.Post, new { @id = "import-claim-set-form", enctype = "multipart/form-data"}))
 {
 @Html.AntiForgeryToken()
@@ -22,9 +22,6 @@ See the LICENSE and NOTICES files in the project root for more information.
     </div>
 </div>
 }
-<div class="padding-15 col-lg-offset-6">
-    @Html.Button("Export Claimsets").Attr("href", Url.Action("ExportClaimSetIndex", "ClaimSets")).AddClass("navigational-ajax").Data("state", "edit").Data("page-url", Url.Action("ClaimSets", "GlobalSettings")).Data("action", "exporting Claim Sets")
-</div>
 <div class="padding-top-5">
     @Html.Button("Back").AddClass("back-btn back-ajax claimset-back-btn").Data("back-url", Url.Action("ClaimSets", "GlobalSettings"))
 </div>

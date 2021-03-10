@@ -15,7 +15,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 
         private static Task<IReadOnlyList<object>> GetListOfObjects()
         {
-            return Task.Run(() => ListOfObjects);
+            return Task.FromResult(ListOfObjects);
         }
 
         private static async Task<PagedList<object>> FetchPagedObjects(int pageNumber) =>
@@ -72,49 +72,49 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
             const int configuredPageSize = 25;
 
             await Page<object>.FetchAsync(async (offset, size) =>
-             {
-                 offset.ShouldBe(Page<object>.DefaultPageSize);
+            {
+                offset.ShouldBe(Page<object>.DefaultPageSize);
 
-                 return await GetListOfObjects();
-             }, pageNumber);
+                return await GetListOfObjects();
+            }, pageNumber);
 
             pageNumber = 10;
 
             await Page<object>.FetchAsync(async (offset, size) =>
-             {
-                 offset.ShouldBe(180);
+            {
+                offset.ShouldBe(180);
 
-                 return await GetListOfObjects();
-             }, pageNumber);
+                return await GetListOfObjects();
+            }, pageNumber);
 
             await Page<object>.FetchAsync(async (offset, size) =>
-             {
-                 var calculatedOffSet = (pageNumber - 1) * configuredPageSize;
+            {
+                var calculatedOffSet = (pageNumber - 1) * configuredPageSize;
 
-                 offset.ShouldBe(calculatedOffSet);
+                offset.ShouldBe(calculatedOffSet);
 
-                 return await GetListOfObjects();
-             }, pageNumber, configuredPageSize);
+                return await GetListOfObjects();
+            }, pageNumber, configuredPageSize);
         }
 
         [Test]
         public async Task ShouldRequestOneAdditionalRecordAsync()
         {
             await Page<object>.FetchAsync(async (offset, size) =>
-             {
-                 size.ShouldBe(Page<object>.DefaultPageSize + 1);
+            {
+                size.ShouldBe(Page<object>.DefaultPageSize + 1);
 
-                 return await GetListOfObjects();
-             }, 0);
+                return await GetListOfObjects();
+            }, 0);
 
             const int ConfiguredPageSize = 50;
 
             await Page<object>.FetchAsync(async (offset, size) =>
-             {
-                 size.ShouldBe(51);
+            {
+                size.ShouldBe(51);
 
-                 return await GetListOfObjects();
-             }, 0, ConfiguredPageSize);
+                return await GetListOfObjects();
+            }, 0, ConfiguredPageSize);
         }
 
         [Test]

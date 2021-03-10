@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using NUnit.Framework;
 using Shouldly;
@@ -134,7 +133,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 
             var pagedObjects = FetchPagedObjects(pageNumber, configuredPageSize);
 
-            pagedObjects.Items.Count().ShouldBe(configuredPageSize);
+            pagedObjects.Items.Count.ShouldBe(configuredPageSize);
         }
 
         [Test]

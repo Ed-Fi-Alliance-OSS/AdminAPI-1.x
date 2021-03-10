@@ -296,7 +296,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             const string localEducationAgencyCategoryValue = "Namespace#School";
 
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(schools);
-            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize)).Returns(leas);
+            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())

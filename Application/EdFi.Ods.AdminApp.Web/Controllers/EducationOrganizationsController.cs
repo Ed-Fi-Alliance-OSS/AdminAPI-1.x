@@ -116,7 +116,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var schools = api.GetAllSchools();
 
             var localEducationAgencies =
-                await Page<LocalEducationAgency>.Fetch(GetLocalEducationAgencies, pageNumber);
+                await Page<LocalEducationAgency>.FetchAsync(GetLocalEducationAgencies, pageNumber);
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 

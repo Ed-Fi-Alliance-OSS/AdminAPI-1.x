@@ -19,10 +19,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
         }
 
         private static async Task<PagedList<object>> FetchPagedObjects(int pageNumber) =>
-            await Page<object>.Fetch(async (offset, size) => (await GetListOfObjects()).Skip(offset).Take(size).ToList(), pageNumber);
+            await Page<object>.FetchAsync(async (offset, size) => (await GetListOfObjects()).Skip(offset).Take(size).ToList(), pageNumber);
 
         private static async Task<PagedList<object>> FetchPagedObjects(int pageNumber, int pageSize) =>
-            await Page<object>.Fetch(async (offset, size) => (await GetListOfObjects()).Skip(offset).Take(size).ToList(), pageNumber, pageSize);
+            await Page<object>.FetchAsync(async (offset, size) => (await GetListOfObjects()).Skip(offset).Take(size).ToList(), pageNumber, pageSize);
 
         [Test]
         public async Task ShouldReturnHumanPageNumber()
@@ -49,14 +49,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
             const int pageNumber = 0;
             const int configuredPageSize = 30;
 
-            await Page<object>.Fetch(async (offset, size) =>
+            await Page<object>.FetchAsync(async (offset, size) =>
             {
                 offset.ShouldBe(0);
 
                 return await GetListOfObjects();
             }, pageNumber);
 
-            await Page<object>.Fetch(
+            await Page<object>.FetchAsync(
                 async (offset, size) =>
             {
                 offset.ShouldBe(0);
@@ -71,7 +71,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
             var pageNumber = 2;
             const int configuredPageSize = 25;
 
-            await Page<object>.Fetch(async (offset, size) =>
+            await Page<object>.FetchAsync(async (offset, size) =>
              {
                  offset.ShouldBe(Page<object>.DefaultPageSize);
 
@@ -80,14 +80,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 
             pageNumber = 10;
 
-            await Page<object>.Fetch(async (offset, size) =>
+            await Page<object>.FetchAsync(async (offset, size) =>
              {
                  offset.ShouldBe(180);
 
                  return await GetListOfObjects();
              }, pageNumber);
 
-            await Page<object>.Fetch(async (offset, size) =>
+            await Page<object>.FetchAsync(async (offset, size) =>
              {
                  var calculatedOffSet = (pageNumber - 1) * configuredPageSize;
 
@@ -100,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
         [Test]
         public async Task ShouldRequestOneAdditionalRecordAsync()
         {
-            await Page<object>.Fetch(async (offset, size) =>
+            await Page<object>.FetchAsync(async (offset, size) =>
              {
                  size.ShouldBe(Page<object>.DefaultPageSize + 1);
 
@@ -109,7 +109,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 
             const int ConfiguredPageSize = 50;
 
-            await Page<object>.Fetch(async (offset, size) =>
+            await Page<object>.FetchAsync(async (offset, size) =>
              {
                  size.ShouldBe(51);
 

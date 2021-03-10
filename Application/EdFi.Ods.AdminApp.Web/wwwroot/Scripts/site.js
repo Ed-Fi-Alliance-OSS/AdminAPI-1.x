@@ -213,7 +213,13 @@ function InitializeModalLoaders() {
 function InitializeSelectLists() {
     $(document).ready(function () {
         $('select[multiple="multiple"]').multiselect({
-            numberDisplayed: 2
+            numberDisplayed: 2,
+            enableCaseInsensitiveFiltering: true,
+            filterPlaceholder: 'Search',
+            maxHeight: 500,
+            onDropdownHide: function () {
+                $('button.multiselect-clear-filter').click();
+            }
         });
     });
 }

@@ -25,7 +25,9 @@ See the LICENSE and NOTICES files in the project root for more information.
                     <span class="fa fa-clipboard"></span><span>Production API URL: </span><strong>@Model.DisplayApiUrl</strong>
                 </a>
             </div>
-            @Html.ActionAjax(Url.Action("ApplicationList", "Application", new { }), 250, "Warming up Production API....")
+            <div class="ajax-content">
+                @Html.ActionAjax(Url.Action("ApplicationList", "Application", new { pageNumber = 1}), 250, "Warming up Production API....")
+            </div>
         }
     </div>
 </div>

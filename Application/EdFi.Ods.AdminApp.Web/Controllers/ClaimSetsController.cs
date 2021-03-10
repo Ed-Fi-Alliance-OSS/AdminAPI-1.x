@@ -277,9 +277,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return RedirectToAction("EditClaimSet", "ClaimSets", new { claimSetId = model.ClaimSetId });
         }
 
-        public ActionResult ImportExportClaimSet()
+        public ActionResult ImportClaimSet()
         {
-            return PartialView("_ImportExportClaimSet", new ClaimSetFileImportModel());
+            return PartialView("_ImportClaimSet", new ClaimSetFileImportModel());
         }
 
         public ActionResult ExportClaimSetIndex()

@@ -12,12 +12,12 @@ namespace EdFi.Ods.AdminApp.Web.Display.Pagination
 
         public static readonly int DefaultPageSize = 20;
 
-        public Page(Func<int, int, Task<IReadOnlyList<T>>> getApiRecordsAsync)
+        private Page(Func<int, int, Task<IReadOnlyList<T>>> getApiRecordsAsync)
         {
             GetApiRecordsAsync = getApiRecordsAsync;
         }
 
-        public Page(Func<int, int, IReadOnlyList<T>> getApiRecords)
+        private Page(Func<int, int, IReadOnlyList<T>> getApiRecords)
         {
             GetApiRecords = getApiRecords;
         }

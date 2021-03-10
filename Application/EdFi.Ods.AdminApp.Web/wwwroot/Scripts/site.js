@@ -455,7 +455,7 @@ function UpdateWarningTimer() {
             setTimeout(UpdateWarningTimer, 1000);
         }
     } else {
-        $("#claim-set-warning-message").find("p").html("<strong>Please restart the ODS / API for the latest claimset changes to take effect.</strong>");
+        $("#claim-set-warning-message").find("p").html("<strong>Please restart the ODS / API for the latest claim set changes to take effect.</strong>");
     }
 
 };

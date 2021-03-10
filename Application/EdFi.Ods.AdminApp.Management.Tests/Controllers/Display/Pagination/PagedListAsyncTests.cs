@@ -9,7 +9,7 @@ using Shouldly;
 namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 {
     [TestFixture]
-    public class PagedListTests
+    public class PagedListAsyncTests
     {
         private static IReadOnlyList<object> ListOfObjects => new object[100];
 

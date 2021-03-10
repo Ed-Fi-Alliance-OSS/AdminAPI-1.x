@@ -480,6 +480,9 @@ var replacePagedContent = function (event) {
 };
 
 function AttachDefaultPagingBehavior() {
-    $(document).on('click', '.navigate-previous-page', replacePagedContent);
-    $(document).on('click', '.navigate-next-page', replacePagedContent);
+    $('.navigate-previous-page').off("click");
+    $('.navigate-previous-page').on("click", replacePagedContent);
+
+    $('.navigate-next-page').off("click");
+    $('.navigate-next-page').on("click", replacePagedContent);
 };   

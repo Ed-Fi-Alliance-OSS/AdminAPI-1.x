@@ -547,13 +547,13 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
         }
 
         public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string url,
-            int pageNumber, PagedList<T> pagedContent, string behaviorOverrideName = null)
+            int pageNumber, PagedList<T> pagedContent)
         {
             var previousUrl = new Uri(QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber - 1).ToString())).ToString();
             var nextUrl = new Uri(QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber + 1).ToString())).ToString();
 
-            var previousLink = PreviousButton(previousUrl, pagedContent, behaviorOverrideName);
-            var nextLink = NextButton(nextUrl, pagedContent, behaviorOverrideName);
+            var previousLink = PreviousButton(previousUrl, pagedContent);
+            var nextLink = NextButton(nextUrl, pagedContent);
             var pageNumberItem = PageNumber(pagedContent, previousLink, nextLink);
 
             var contentWrapper = new HtmlTag("ul");
@@ -585,7 +585,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return listItem;
         }
 
-        private static HtmlTag NextButton<T>(string nextUrl, PagedList<T> pagedContent, string behaviorOverrideName)
+        private static HtmlTag NextButton<T>(string nextUrl, PagedList<T> pagedContent)
         {
             if (!pagedContent.NextPageHasResults)
                 return null;
@@ -594,7 +594,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
             nextLink.Attr("href", nextUrl);
             nextLink.Attr("aria-label", "Next");
-            nextLink.AddClass("navigate-next-page" + (behaviorOverrideName == null ? null : "-" + behaviorOverrideName));
+            nextLink.AddClass("navigate-next-page");
 
             var symbolSpan = new HtmlTag("span");
             symbolSpan.Attr("aria-hidden", "true");
@@ -608,7 +608,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return listItem;
         }
 
-        private static HtmlTag PreviousButton<T>(string previousUrl, PagedList<T> pagedContent, string behaviorOverrideName)
+        private static HtmlTag PreviousButton<T>(string previousUrl, PagedList<T> pagedContent)
         {
             if (pagedContent.PageNumber <= 1)
                 return null;
@@ -617,7 +617,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
             previousLink.Attr("href", previousUrl);
             previousLink.Attr("aria-label", "Previous");
-            previousLink.AddClass("navigate-previous-page" + (behaviorOverrideName == null ? null : "-" + behaviorOverrideName));
+            previousLink.AddClass("navigate-previous-page");
 
             var symbolSpan = new HtmlTag("span");
             symbolSpan.Attr("aria-hidden", "true");

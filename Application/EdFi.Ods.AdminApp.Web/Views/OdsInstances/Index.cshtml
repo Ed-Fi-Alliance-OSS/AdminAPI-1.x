@@ -57,7 +57,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                                 <td>@instance.Description</td>
                                 <td>
                                     @instance.SchoolYearDescription
-                                    <a class="loads-ajax-modal" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=instance.Name})"> <span class="fa fa-pencil action-icons"></span></a>
+                                    <a class="loads-ajax-modal" data-toggle="tooltip" title="Set Current School Year" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=instance.Name})"> <span class="fa fa-pencil action-icons"></span></a>
                                 </td>
                                 @if (Model.UserContext.Has(Permission.AccessGlobalSettings))
                                 {

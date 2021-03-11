@@ -3,8 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using Dapper;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -60,7 +60,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
                 x => x.ShouldBeSchoolYear(2001, isCurrent: true));
 
             Action invalidYear = () => SetSchoolYear(-1234);
-            invalidYear.ShouldThrow<SqlException>().Message.ShouldBe("Specified school year does not exist.");
+            invalidYear.ShouldThrow<Exception>().Message.ShouldBe("School year -1234 does not exist.");
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
 
             // Create an ambiguous, meaningless selection of multiple years.
             using (var connection = TestConnectionProvider.CreateNewConnection(InstanceName, ApiMode))
-                connection.Execute(@"UPDATE [edfi].[SchoolYearType] SET [CurrentSchoolYear]=1");
+                connection.Execute(@"UPDATE edfi.SchoolYearType SET CurrentSchoolYear='true'");
 
             // Rather than throwing, the user should experience this as no valid selection.
             GetCurrentSchoolYear().ShouldBe(null);

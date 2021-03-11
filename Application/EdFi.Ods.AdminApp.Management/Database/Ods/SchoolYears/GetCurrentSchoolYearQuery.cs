@@ -23,9 +23,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears
             using (var connection = _databaseConnectionProvider.CreateNewConnection(instanceName, apiMode))
             {
                 var current = connection.Query<SchoolYearType>(
-                    @"SELECT [SchoolYear], [SchoolYearDescription], [CurrentSchoolYear]
-                      FROM [edfi].[SchoolYearType]
-                      WHERE [CurrentSchoolYear]=1").ToList();
+                    @"SELECT SchoolYear, SchoolYearDescription, CurrentSchoolYear
+                      FROM edfi.SchoolYearType
+                      WHERE CurrentSchoolYear = @CurrentSchoolYear", new { CurrentSchoolYear = true }).ToList();
 
                 if (current.Count != 1)
                     return null;

@@ -24,9 +24,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears
             using (var connection = _databaseConnectionProvider.CreateNewConnection(instanceName, apiMode))
             {
                 return connection.Query<SchoolYearType>(
-                    @"SELECT [SchoolYear], [SchoolYearDescription], [CurrentSchoolYear]
-                      FROM [edfi].[SchoolYearType]
-                      ORDER BY [SchoolYear]").ToList();
+                    @"SELECT SchoolYear, SchoolYearDescription, CurrentSchoolYear
+                      FROM edfi.SchoolYearType
+                      ORDER BY SchoolYear").ToList();
             }
         }
     }

@@ -62,8 +62,47 @@ var editResource = function editResource(e) {
     updateCheckbox(row, "read");
     updateCheckbox(row, "update");
     updateCheckbox(row, "delete");
+    disableForEdit(row);
     row.find("a.edit-resource").replaceWith('<a class="edit-resource-check"> <span class="fa fa-check action-icons"></span></a>');
     row.find(".edit-resource-check").click(saveEditedResource);
+};
+
+var enableCellsForRow = function (editRow, cells) {
+    $.each(cells, function (index, value) {
+        editRow.find('td.' + value).removeClass("disabled");
+    });
+};
+
+var disableForEdit = function(editRow) {
+    $("#resource-claim-table-body td").addClass("disabled");
+
+    AddTooltip($("a.edit-resource"), "You can only edit after saving the highlighted row");
+    AddTooltip($("a.edit-auth-strategy"),
+        "You can only override authorization strategy after saving the highlighted row");
+    AddTooltip($("a.claims-toggle"), "You can only edit after saving the highlighted row");
+    AddTooltip($("a.add-child-resource-button"), "You can only add a child after saving the highlighted row");
+
+    enableCellsForRow(editRow,
+        [
+            "read-action-cell", "create-action-cell", "update-action-cell", "delete-action-cell",
+            "edit-resource-button", "resource-label"
+        ]);
+
+    RemoveTooltips([editRow.find("a.edit-resource")]);
+
+    $("td.delete-resource-button").removeClass("disabled");
+
+    $("select.resource-claim-dropdown").attr("disabled", "disabled");
+    $("td.child-dropdown>select").attr("disabled", "disabled");
+};
+
+var enableAfterEdit = function () {
+    $("#resource-claim-table-body td").removeClass("disabled");
+
+    RemoveTooltips([$("a.edit-auth-strategy"), $("a.claims-toggle"), $("a.add-child-resource-button")]);
+
+    $("select.resource-claim-dropdown").attr("disabled", false);
+    $("td.child-dropdown>select").attr("disabled", false);
 };
 
 var addAntiForgeryToken = function addAntiForgeryToken(data) {
@@ -183,10 +222,11 @@ var saveEditedResource = function saveEditedResource() {
                 resourceModel.resourceName = resourceName;
                 resourceModel.resourceId = resourceId;
                 row.find("a.delete-resource").replaceWith("<a class=\"loads-ajax-modal\" data-url=".concat(getDeleteResourceModalUrl(resourceModel), "> <span class=\"fa fa-trash-o action-icons\"></span></a>"));
-                row.find("a.override-auth-strategy").replaceWith("<a class=\"loads-ajax-modal\" data-url=".concat(getAuthOverrideModalUrl(resourceModel), "> <span class=\"fa fa-info-circle action-icons\"></span></a>"));
+                row.find("a.override-auth-strategy").replaceWith("<a class=\"loads-ajax-modal edit-auth-strategy\" data-url=".concat(getAuthOverrideModalUrl(resourceModel), "> <span class=\"fa fa-info-circle action-icons\"></span></a>"));
                 InitializeModalLoaders();
             }
 
+            enableAfterEdit();
             disableOptionForChildResource(undefined, undefined, resourceId);
             disableAlreadyAddedResources();
             ClaimSetToastrMessage("".concat(resourceName, " edited successfully"), true);

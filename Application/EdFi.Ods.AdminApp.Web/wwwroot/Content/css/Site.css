@@ -797,6 +797,22 @@ table.table-left-border th {
     border-bottom: 1px solid #D0D0D0;
 }
 
+td.disabled {
+    opacity: 0.4;
+}
+
+td.disabled a:hover {
+    cursor: default;
+}
+
+td.disabled a:active {
+    pointer-events: none;
+}
+
+a.edit-resource {
+    cursor: pointer;
+}
+
 .icon-pack, .icon-pack-app {
     padding-top: 10px;
     padding-right: 10px;

@@ -49,13 +49,13 @@ See the LICENSE and NOTICES files in the project root for more information.
                         <td class="delete-action-cell">
                             @Html.CheckBoxSquare(resourceClaim.Delete, "delete")
                         </td>
-                        <td>
+                        <td class="edit-resource-button">
                             <a class="edit-resource"> <span class="fa fa-pencil action-icons"></span></a>
                         </td>
                         <td>
-                            <a class="loads-ajax-modal" data-url="@Url.Action("AuthStrategyModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = resourceClaim.Id})"> <span class="fa fa-info-circle action-icons"></span></a>
+                            <a class="loads-ajax-modal edit-auth-strategy" data-url="@Url.Action("AuthStrategyModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = resourceClaim.Id})"> <span class="fa fa-info-circle action-icons"></span></a>
                         </td>
-                        <td>
+                        <td class="delete-resource-button">
                             <a class="loads-ajax-modal" data-url="@Url.Action("DeleteResourceOnClaimSetModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = resourceClaim.Id, claimSetName = Model.ClaimSetName, resourceName = resourceClaim.Name})"> <span class="fa fa-trash-o action-icons"></span></a>
                         </td>
                     </tr>
@@ -79,13 +79,13 @@ See the LICENSE and NOTICES files in the project root for more information.
                             <td class="delete-action-cell">
                                 @Html.CheckBoxSquare(childResourceClaim.Delete, "delete")
                             </td>
-                            <td>
+                            <td class="edit-resource-button">
                                 <a class="edit-resource"> <span class="fa fa-pencil action-icons"></span></a>
                             </td>
                             <td>
-                                <a class="loads-ajax-modal" data-url="@Url.Action("AuthStrategyModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = childResourceClaim.Id})"> <span class="fa fa-info-circle action-icons"></span></a>
+                                <a class="loads-ajax-modal edit-auth-strategy" data-url="@Url.Action("AuthStrategyModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = childResourceClaim.Id})"> <span class="fa fa-info-circle action-icons"></span></a>
                             </td>
-                            <td>
+                            <td class="delete-resource-button">
                                 <a class="loads-ajax-modal" data-url="@Url.Action("DeleteResourceOnClaimSetModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = childResourceClaim.Id, claimSetName = Model.ClaimSetName, resourceName = childResourceClaim.Name})"> <span class="fa fa-trash-o action-icons"></span></a>
                             </td>
                         </tr>

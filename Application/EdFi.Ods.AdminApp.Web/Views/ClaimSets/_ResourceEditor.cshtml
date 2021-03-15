@@ -55,8 +55,8 @@ See the LICENSE and NOTICES files in the project root for more information.
                         <td>
                             <a class="loads-ajax-modal edit-auth-strategy" data-url="@Url.Action("AuthStrategyModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = resourceClaim.Id})"> <span class="fa fa-info-circle action-icons"></span></a>
                         </td>
-                        <td class="delete-resource-button">
-                            <a class="loads-ajax-modal" data-url="@Url.Action("DeleteResourceOnClaimSetModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = resourceClaim.Id, claimSetName = Model.ClaimSetName, resourceName = resourceClaim.Name})"> <span class="fa fa-trash-o action-icons"></span></a>
+                        <td>
+                            <a class="loads-ajax-modal delete-resource-claim" data-url="@Url.Action("DeleteResourceOnClaimSetModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = resourceClaim.Id, claimSetName = Model.ClaimSetName, resourceName = resourceClaim.Name})"> <span class="fa fa-trash-o action-icons"></span></a>
                         </td>
                     </tr>
 
@@ -85,8 +85,8 @@ See the LICENSE and NOTICES files in the project root for more information.
                             <td>
                                 <a class="loads-ajax-modal edit-auth-strategy" data-url="@Url.Action("AuthStrategyModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = childResourceClaim.Id})"> <span class="fa fa-info-circle action-icons"></span></a>
                             </td>
-                            <td class="delete-resource-button">
-                                <a class="loads-ajax-modal" data-url="@Url.Action("DeleteResourceOnClaimSetModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = childResourceClaim.Id, claimSetName = Model.ClaimSetName, resourceName = childResourceClaim.Name})"> <span class="fa fa-trash-o action-icons"></span></a>
+                            <td>
+                                <a class="loads-ajax-modal delete-resource-claim" data-url="@Url.Action("DeleteResourceOnClaimSetModal","ClaimSets", new {claimSetId = Model.ClaimSetId, resourceClaimId = childResourceClaim.Id, claimSetName = Model.ClaimSetName, resourceName = childResourceClaim.Name})"> <span class="fa fa-trash-o action-icons"></span></a>
                             </td>
                         </tr>
                     }

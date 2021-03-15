@@ -10,26 +10,27 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.powerShell
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
-object BuildAdminAppInstaller : BuildType {
-    init {
-        name = "Build Admin App Installer Package"
+object BuildAdminAppInstaller : BuildType ({
+    name = "EdFi.Suite3.Installer.AdminApp"
+    description = "PowerShell deployment orchestration for the Admin App."
 
-        artifactRules = "%project.directory%/*.nupkg"
-        publishArtifacts = PublishMode.SUCCESSFUL
-        buildNumberPattern = "%version%"
+    artifactRules = "**/EdFi.Suite3.Installer.AdminApp*.nupkg"
 
-        option("shouldFailBuildOnAnyErrorMessage", "true")
+    params {
+        param("github.organization", "Ed-Fi-Alliance-OSS")
+        param("project.directory", """Ed-Fi-ODS-AdminApp\%project.name%""")
+        param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", """{"endpointCredentials": [{"endpoint": "%azureArtifacts.feed.nuget%","username": "%azureArtifacts.edFiBuildAgent.userName%","password": "%azureArtifacts.edFiBuildAgent.accessToken%"}]}""")
+    }
 
-        params {
-            param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", "{\"endpointCredentials\": [{\"endpoint\": \"%azureArtifacts.feed.nuget%\",\"username\": \"%azureArtifacts.edFiBuildAgent.userName%\",\"password\": \"%azureArtifacts.edFiBuildAgent.accessToken%\"}]}")
-            param("project.directory", "Ed-Fi-ODS-Implementation/scripts/NuGet/%project.name%")
-            param("project.name", "%system.teamcity.buildConfName%")
-            param("project.shouldPublishPreRelease", "true")
-        }
+    vcs {
+        root(EdFiOdsAdminApp, "+:. => Ed-Fi-ODS-AdminApp")
+    }
 
-        steps {
+    steps {
         powerShell {
             name = "Build Pre-release and release, publish pre-release package"
+            id = "PackageAndPublishInstallerLibrary_PackPreRelease"
+            formatStderrAsError = true
             workingDir = "%project.directory%"
             scriptMode = script {
                 content = """
@@ -46,5 +47,4 @@ object BuildAdminAppInstaller : BuildType {
             }
         }
     }
-    }
-}
+})

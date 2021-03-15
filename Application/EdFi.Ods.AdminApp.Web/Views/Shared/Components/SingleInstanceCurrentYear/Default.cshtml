@@ -1,0 +1,15 @@
+@model EdFi.Ods.AdminApp.Web.Controllers.SingleInstanceCurrentYearViewComponent.Model
+
+<div class="col-xs-6">
+    <h2>
+        @if (Model.SchoolYearDescription != null)
+        {
+            @:School Year @Model.SchoolYearDescription
+        }
+        else
+        {
+            @:Configure School Year
+        }
+        <a class="loads-ajax-modal" data-toggle="tooltip" title="Set School Year" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=Model.InstanceName})"> <span class="fa fa-pencil action-icons"></span></a>
+    </h2>
+</div>

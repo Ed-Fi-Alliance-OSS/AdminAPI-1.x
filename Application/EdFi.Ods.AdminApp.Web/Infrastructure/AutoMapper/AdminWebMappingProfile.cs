@@ -92,8 +92,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
 
             CreateMap<AdminAppUser, UserModel>()
                 .ForMember(dst => dst.UserId, opt => opt.MapFrom(src => src.Id));
-
-            CreateMap<OdsInstanceRegistration, OdsInstanceModel>();
         }
     }
 }

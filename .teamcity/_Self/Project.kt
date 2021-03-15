@@ -28,4 +28,5 @@ object AdminAppProject : Project({
     buildType(_self.buildTypes.Deploy)
     buildType(_self.buildTypes.PublishPackagesToAzureArtifacts)
     buildType(_self.buildTypes.PublishReleasePackagesToAzureArtifacts)
+    buildType(_self.buildTypes.BuildAdminAppInstaller)
 })

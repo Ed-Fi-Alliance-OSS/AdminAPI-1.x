@@ -79,6 +79,8 @@ var disableForEdit = function(editRow) {
     AddTooltip($("a.edit-resource"), "You can only edit after saving the highlighted row");
     AddTooltip($("a.edit-auth-strategy"),
         "You can only override authorization strategy after saving the highlighted row");
+    AddTooltip($("a.delete-resource-claim"),
+        "You can only delete a resource claim after saving the highlighted row");
     AddTooltip($("a.claims-toggle"), "You can only edit after saving the highlighted row");
     AddTooltip($("a.add-child-resource-button"), "You can only add a child after saving the highlighted row");
 
@@ -90,8 +92,6 @@ var disableForEdit = function(editRow) {
 
     RemoveTooltips([editRow.find("a.edit-resource")]);
 
-    $("td.delete-resource-button").removeClass("disabled");
-
     $("select.resource-claim-dropdown").attr("disabled", "disabled");
     $("td.child-dropdown>select").attr("disabled", "disabled");
 };
@@ -99,7 +99,7 @@ var disableForEdit = function(editRow) {
 var enableAfterEdit = function () {
     $("#resource-claim-table-body td").removeClass("disabled");
 
-    RemoveTooltips([$("a.edit-auth-strategy"), $("a.claims-toggle"), $("a.add-child-resource-button")]);
+    RemoveTooltips([$("a.edit-auth-strategy"), $("a.delete-resource-claim"), $("a.claims-toggle"), $("a.add-child-resource-button")]);
 
     $("select.resource-claim-dropdown").attr("disabled", false);
     $("td.child-dropdown>select").attr("disabled", false);

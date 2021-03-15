@@ -71,13 +71,13 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Must(BeAUniqueInstanceName)
                 .When(x => x.NumericSuffix != null)
                 .WithMessage(
-                    x => $"An instance for this {beUniqueValidationMsg}{(validationMessageWithDetails ? $"({x.NumericSuffix})":"")} already exists.");
+                    x => $"An instance for this {beUniqueValidationMsg}{(validationMessageWithDetails ? $" ({x.NumericSuffix})":"")} already exists.");
 
             RuleFor(m => m.NumericSuffix)
                 .Must(BeValidOdsInstanceDatabase)
                 .When(x => x.NumericSuffix != null)
                 .WithMessage(
-                    x => $"Could not connect to an ODS instance database for this {beUniqueValidationMsg}{(validationMessageWithDetails ? $"({x.NumericSuffix})":"")}.");
+                    x => $"Could not connect to an ODS instance database for this {beUniqueValidationMsg}{(validationMessageWithDetails ? $" ({x.NumericSuffix})":"")}.");
 
             RuleFor(m => m.Description).NotEmpty();
 
@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Must(BeAUniqueInstanceDescription)
                 .When(x => x.Description != null)
                 .WithMessage(
-                    x => $"An instance with this description{(validationMessageWithDetails ? $"({beUniqueValidationMsg}: {x.NumericSuffix}, Description: {x.Description})":"")} already exists.");
+                    x => $"An instance with this description{(validationMessageWithDetails ? $" ({beUniqueValidationMsg}: {x.NumericSuffix}, Description: {x.Description})":"")} already exists.");
         }
 
         private static bool BeValidOdsInstanceDatabase(int? newInstanceNumericSuffix)

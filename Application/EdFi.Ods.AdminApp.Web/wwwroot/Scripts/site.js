@@ -465,3 +465,14 @@ function UpdateWarningTimer() {
     }
 
 };
+
+function AddTooltip(element, tooltipMessage) {
+    element.attr("data-toggle", "tooltip");
+    element.attr("title", tooltipMessage);
+};
+
+function RemoveTooltips(elements) {
+    $.each(elements, function (index, element) {
+        element.removeAttr("data-toggle").removeAttr("title");
+    });
+};

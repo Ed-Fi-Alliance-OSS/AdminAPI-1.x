@@ -221,7 +221,7 @@ var saveEditedResource = function saveEditedResource() {
                 var resourceModel = claimSetInfo;
                 resourceModel.resourceName = resourceName;
                 resourceModel.resourceId = resourceId;
-                row.find("a.delete-resource").replaceWith("<a class=\"loads-ajax-modal\" data-url=".concat(getDeleteResourceModalUrl(resourceModel), "> <span class=\"fa fa-trash-o action-icons\"></span></a>"));
+                row.find("a.delete-resource").replaceWith("<a class=\"loads-ajax-modal delete-resource-claim\" data-url=".concat(getDeleteResourceModalUrl(resourceModel), "> <span class=\"fa fa-trash-o action-icons\"></span></a>"));
                 row.find("a.override-auth-strategy").replaceWith("<a class=\"loads-ajax-modal edit-auth-strategy\" data-url=".concat(getAuthOverrideModalUrl(resourceModel), "> <span class=\"fa fa-info-circle action-icons\"></span></a>"));
                 InitializeModalLoaders();
             }

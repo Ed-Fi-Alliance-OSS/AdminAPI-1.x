@@ -546,9 +546,9 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             }
         }
 
-        public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string url,
-            int pageNumber, PagedList<T> pagedContent)
+        public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string url, PagedList<T> pagedContent)
         {
+            var pageNumber = pagedContent.PageNumber;
             var previousUrl = QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber - 1).ToString());
             var nextUrl = QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber + 1).ToString());
 

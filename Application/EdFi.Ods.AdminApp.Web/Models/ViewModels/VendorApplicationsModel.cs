@@ -10,7 +10,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 {
     public class VendorApplicationsIndexModel
     {
-        public int VendorPageNumber { get; set; }
         public PagedList<VendorApplicationsModel> Vendors { get; set; }
     }
 

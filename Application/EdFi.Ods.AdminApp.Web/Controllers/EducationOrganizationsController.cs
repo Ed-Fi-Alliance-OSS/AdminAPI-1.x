@@ -123,7 +123,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var model = new EducationOrganizationViewModel
             {
                 Schools = schools,
-                LocalEducationAgenciesPageNumber = pageNumber,
                 LocalEducationAgencies = localEducationAgencies,
                 ShouldAllowMultipleDistricts = CloudOdsAdminAppSettings.Instance.Mode != ApiMode.DistrictSpecific,
                 AddSchoolModel = new AddSchoolModel

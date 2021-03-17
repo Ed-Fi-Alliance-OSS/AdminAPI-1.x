@@ -13,7 +13,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
     public class EducationOrganizationViewModel
     {
         public List<School> Schools { get; set; }
-        public int LocalEducationAgenciesPageNumber { get; set; }
         public PagedList<LocalEducationAgency> LocalEducationAgencies { get; set; }
         public bool ShouldAllowMultipleDistricts { get; set; }
         public AddSchoolModel AddSchoolModel { get; set; }

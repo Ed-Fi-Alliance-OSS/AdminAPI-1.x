@@ -95,7 +95,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var vendorsIndexModel = new VendorApplicationsIndexModel
             {
-                VendorPageNumber = pageNumber,
                 Vendors = Page<VendorApplicationsModel>.Fetch(VendorsApplicationsModel, pageNumber)
             };
 

@@ -21,4 +21,4 @@ See the LICENSE and NOTICES files in the project root for more information.
     await Html.RenderPartialAsync("_ApplicationsByVendor", vendorApplicationModel);
 }
 
-@Html.PagingControl(Url.Action("ApplicationList","Application", null, ViewContext.HttpContext.Request.Scheme), Model.VendorPageNumber, Model.Vendors)
+@Html.PagingControl(Url.Action("ApplicationList","Application", null, ViewContext.HttpContext.Request.Scheme), Model.Vendors)

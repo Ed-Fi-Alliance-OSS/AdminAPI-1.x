@@ -13,15 +13,18 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.finishBuildTrigger
 object Deploy : BuildType ({
     name = "Deploy"
     description = "Creates a release in Octopus Deploy and triggers its deployment to the test server"
+    
+    //Pausing this build since there's an issue that will be addresses in an upcoming ticket
+    paused = true
+    
     type = BuildTypeSettings.Type.DEPLOYMENT
 
     params {
         param("octopus.package", "placeholder")
         param("octopus.environment", "Integration")
-        param("nuGet.packageFile", "placeholder")
-        param("octopus.channel", "Suite3")
+        param("octopus.channel", "SharedInstance v5.1.x")
         param("octopus.release", "placeholder")
-        param("octopus.project", "Admin App")
+        param("octopus.project", "Suite 3 Admin App")
     }
 
     vcs {
@@ -29,14 +32,6 @@ object Deploy : BuildType ({
     }
 
     steps {
-        powerShell {
-            name = "Lookup Package Name and Version"
-            formatStderrAsError = true
-            executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
-            scriptMode = file {
-                path = """eng\teamcity-get-package-version.ps1"""
-            }
-        }
         step {
             name = "Publish Package to Octopus"
             type = "octopus.push.package"
@@ -63,24 +58,19 @@ object Deploy : BuildType ({
 
     triggers {
         finishBuildTrigger {
-            buildType = "${BuildBranch.id}"
-        }
-    }
-
-    features {
-        swabra {
-            forceCleanCheckout = true
+            buildType = "${BuildAdminAppInstaller.id}"
         }
     }
 
     dependencies {
-        dependency(BuildBranch) {
+        dependency(BuildAdminAppInstaller) {
             snapshot {
             }
 
             artifacts {
+                cleanDestination = true
                 artifactRules = """
-                    +:*pre*.nupkg =>
+                    +:Ed-Fi-ODS-AdminApp\EdFi.Suite3.Installer.AdminApp\*pre*.nupkg =>
                 """.trimIndent()
             }
         }

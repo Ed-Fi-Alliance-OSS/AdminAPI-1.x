@@ -10,6 +10,18 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.*
 object AdminAppProject : Project({
     description = "Build configurations managed through the Admin App repository"
 
+    params {
+        param("build.feature.freeDiskSpace", "2gb")
+        param("git.branch.default", "main")
+        param("git.branch.specification", """
+            +:refs/heads/(*)
+            +:refs/(pull/*)/merge
+        """.trimIndent())
+        param("teamcity.ui.settings.readOnly","true")
+    }
+
     subProject(web.AdminAppWebProject)
     subProject(installers.AdminAppInstallerProject)
+
+    vcsRoot(_self.vcsRoots.EdFiOdsImplementation)
 })

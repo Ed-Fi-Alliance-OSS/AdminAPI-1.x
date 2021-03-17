@@ -3,7 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-package lib
+package installers
 
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 
@@ -13,14 +13,8 @@ object AdminAppInstallerProject : Project({
     description = "ODS Admin App Installer Build Configurations"
 
     params {
-        param("build.feature.freeDiskSpace", "2gb")
-        param("git.branch.default", "main")
-        param("git.branch.specification", """
-            +:refs/heads/(*)
-            +:refs/(pull/*)/merge
-        """.trimIndent())
-        param("teamcity.ui.settings.readOnly","true")
-        param("adminApp.version", "2.2.0")
+        param("adminAppInstaller.version", "2.2.0")
+        param("version.preReleaseLabel", "pre")
     }
 
     buildType(_self.buildTypes.BuildAdminAppInstaller)

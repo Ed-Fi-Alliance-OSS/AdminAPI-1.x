@@ -20,7 +20,7 @@ var buildResourceTableRow = function buildResourceTableRow(resourceName, resourc
         iconCell = '  <td class="icon-cell"><a class="claims-toggle"><span class="fa fa-chevron-down caret-custom"></span></a></td>';
     }
 
-    var $tableRow = $([rowString, iconCell, resourceCell, '  <td class="read-action-cell"><label><input type="checkbox" class="hide read-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '  <td class="create-action-cell"><label><input type="checkbox" class="hide create-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '  <td class="update-action-cell"><label><input type="checkbox" class="hide update-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '  <td class="delete-action-cell"><label><input type="checkbox" class="hide delete-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', "  <td>".concat(editCell, "</td>"), '  <td><a class="override-auth-strategy" hidden> <span class="fa fa-info-circle action-icons"></span></a></td>', '  <td><a class="delete-resource"> <span class="fa fa-trash-o action-icons"></span></a></td>', "</tr>"].join("\n"));
+    var $tableRow = $([rowString, iconCell, resourceCell, '  <td class="read-action-cell"><label><input type="checkbox" class="hide read-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '  <td class="create-action-cell"><label><input type="checkbox" class="hide create-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '  <td class="update-action-cell"><label><input type="checkbox" class="hide update-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '  <td class="delete-action-cell"><label><input type="checkbox" class="hide delete-checkbox"><i class="fa fa-fw fa-check-square"></i></label></td>', '<td class="edit-resource-button">'.concat(editCell, "</td>"), '  <td><a class="override-auth-strategy" hidden> <span class="fa fa-info-circle action-icons"></span></a></td>', '  <td><a class="delete-resource"> <span class="fa fa-trash-o action-icons"></span></a></td>', "</tr>"].join("\n"));
     $tableRow.find(".edit-resource-check").click(saveEditedResource);
     $tableRow.find(".delete-resource").click(deleteResource);
     $tableRow.find(".claims-toggle").click(claimsToggle);
@@ -62,8 +62,47 @@ var editResource = function editResource(e) {
     updateCheckbox(row, "read");
     updateCheckbox(row, "update");
     updateCheckbox(row, "delete");
+    disableForEdit(row);
     row.find("a.edit-resource").replaceWith('<a class="edit-resource-check"> <span class="fa fa-check action-icons"></span></a>');
     row.find(".edit-resource-check").click(saveEditedResource);
+};
+
+var enableCellsForRow = function (editRow, cells) {
+    $.each(cells, function (index, value) {
+        editRow.find('td.' + value).removeClass("disabled");
+    });
+};
+
+var disableForEdit = function(editRow) {
+    $("#resource-claim-table-body td").addClass("disabled");
+
+    AddTooltip($("a.edit-resource"), "You can only edit after saving the highlighted row");
+    AddTooltip($("a.edit-auth-strategy"),
+        "You can only override authorization strategy after saving the highlighted row");
+    AddTooltip($("a.delete-resource-claim"),
+        "You can only delete a resource claim after saving the highlighted row");
+    AddTooltip($("a.claims-toggle"), "You can only edit after saving the highlighted row");
+    AddTooltip($("a.add-child-resource-button"), "You can only add a child after saving the highlighted row");
+
+    enableCellsForRow(editRow,
+        [
+            "read-action-cell", "create-action-cell", "update-action-cell", "delete-action-cell",
+            "edit-resource-button", "resource-label"
+        ]);
+
+    RemoveTooltips([editRow.find("a.edit-resource")]);
+
+    $("select.resource-claim-dropdown").attr("disabled", "disabled");
+    $("td.child-dropdown>select").attr("disabled", "disabled");
+};
+
+var enableAfterEdit = function () {
+    $("#resource-claim-table-body td").removeClass("disabled");
+
+    RemoveTooltips([$("a.edit-auth-strategy"), $("a.delete-resource-claim"), $("a.claims-toggle"), $("a.add-child-resource-button")]);
+
+    $("select.resource-claim-dropdown").attr("disabled", false);
+    $("td.child-dropdown>select").attr("disabled", false);
 };
 
 var addAntiForgeryToken = function addAntiForgeryToken(data) {
@@ -182,11 +221,12 @@ var saveEditedResource = function saveEditedResource() {
                 var resourceModel = claimSetInfo;
                 resourceModel.resourceName = resourceName;
                 resourceModel.resourceId = resourceId;
-                row.find("a.delete-resource").replaceWith("<a class=\"loads-ajax-modal\" data-url=".concat(getDeleteResourceModalUrl(resourceModel), "> <span class=\"fa fa-trash-o action-icons\"></span></a>"));
-                row.find("a.override-auth-strategy").replaceWith("<a class=\"loads-ajax-modal\" data-url=".concat(getAuthOverrideModalUrl(resourceModel), "> <span class=\"fa fa-info-circle action-icons\"></span></a>"));
+                row.find("a.delete-resource").replaceWith("<a class=\"loads-ajax-modal delete-resource-claim\" data-url=".concat(getDeleteResourceModalUrl(resourceModel), "> <span class=\"fa fa-trash-o action-icons\"></span></a>"));
+                row.find("a.override-auth-strategy").replaceWith("<a class=\"loads-ajax-modal edit-auth-strategy\" data-url=".concat(getAuthOverrideModalUrl(resourceModel), "> <span class=\"fa fa-info-circle action-icons\"></span></a>"));
                 InitializeModalLoaders();
             }
 
+            enableAfterEdit();
             disableOptionForChildResource(undefined, undefined, resourceId);
             disableAlreadyAddedResources();
             ClaimSetToastrMessage("".concat(resourceName, " edited successfully"), true);

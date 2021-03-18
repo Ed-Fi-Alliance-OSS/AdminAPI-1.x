@@ -25,6 +25,10 @@ See the LICENSE and NOTICES files in the project root for more information.
             @Html.Button("Back to ODS Instances").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances"))
         </div>
     }
+    else
+    {
+        @await Component.InvokeAsync("SingleInstanceCurrentYear")
+    }
 </div>
 
 <div class="row">

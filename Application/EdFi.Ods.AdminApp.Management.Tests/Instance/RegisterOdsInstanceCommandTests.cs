@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;
+using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
@@ -35,6 +36,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         private Mock<IDatabaseValidationService> _databaseValidationService;
         private Mock<ICloudOdsAdminAppSettingsApiModeProvider> _apiModeProvider;
         private Mock<IDatabaseConnectionProvider> _connectionProvider;
+        private Mock<ISetCurrentSchoolYearCommand> _setCurrentSchoolYear;
+
 
         [SetUp]
         public void Init()
@@ -44,19 +47,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             _apiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
             _connectionProvider =  new Mock<IDatabaseConnectionProvider>();
+            _setCurrentSchoolYear = new Mock<ISetCurrentSchoolYearCommand>();
         }
 
         [Test]
-        public async Task ShouldRegisterOdsInstance()
+        public async Task ShouldRegisterDistrictSpecificOdsInstance()
         {
+            var apiMode = ApiMode.DistrictSpecific;
+
             ResetOdsInstanceRegistrations();
-            var instanceName = "TestInstance_23456";
+            var instanceName = "EdFi_Ods_23456";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 
             using (var connection = GetDatabaseConnection(instanceName))
             {
-                _connectionProvider.Setup(x => x.CreateNewConnection(23456, ApiMode.DistrictSpecific))
+                _connectionProvider.Setup(x => x.CreateNewConnection(23456, apiMode))
                     .Returns(connection);
 
                 var newInstance = new RegisterOdsInstanceModel
@@ -71,10 +77,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 {
                     return await ScopedAsync<AdminAppDbContext, int>(async database =>
                     {
-                        var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database);
+                        var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database, apiMode);
 
-                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity);
-                        return await command.Execute(newInstance, ApiMode.DistrictSpecific, testUsername, new CloudOdsClaimSet());
+                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity, _setCurrentSchoolYear.Object);
+                        return await command.Execute(newInstance, apiMode, testUsername, new CloudOdsClaimSet());
                     });
                 });
 
@@ -85,6 +91,57 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 secretConfiguration.EncryptedData.ShouldBe(encryptedSecretConfigValue);
                 addedInstance.Name.ShouldBe(instanceName);
                 addedInstance.Description.ShouldBe(newInstance.Description);
+
+                _setCurrentSchoolYear.Verify(
+                    x => x.Execute(It.IsAny<string>(), It.IsAny<ApiMode>(), It.IsAny<short>()),
+                    Times.Never());
+            }
+        }
+
+        [Test]
+        public async Task ShouldRegisterYearSpecificOdsInstance()
+        {
+            var apiMode = ApiMode.YearSpecific;
+
+            ResetOdsInstanceRegistrations();
+            var instanceName = "EdFi_Ods_2022";
+            const string description = "Test Description";
+            var encryptedSecretConfigValue = "Encrypted string";
+
+            using (var connection = GetDatabaseConnection(instanceName))
+            {
+                _connectionProvider.Setup(x => x.CreateNewConnection(2022, apiMode))
+                    .Returns(connection);
+
+                var newInstance = new RegisterOdsInstanceModel
+                {
+                    NumericSuffix = 2022,
+                    Description = description
+                };
+
+                var testUsername = UserTestSetup.SetupUsers(1).Single().Id;
+
+                int newInstanceId = await ScopedAsync<AdminAppIdentityDbContext, int>(async identity =>
+                {
+                    return await ScopedAsync<AdminAppDbContext, int>(async database =>
+                    {
+                        var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database, apiMode);
+
+                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity, _setCurrentSchoolYear.Object);
+                        return await command.Execute(newInstance, apiMode, testUsername, new CloudOdsClaimSet());
+                    });
+                });
+
+                var addedInstance = Query<OdsInstanceRegistration>(newInstanceId);
+                var secretConfiguration = Transaction(database =>
+                    database.SecretConfigurations.FirstOrDefault(x => x.OdsInstanceRegistrationId == newInstanceId));
+                secretConfiguration.ShouldNotBeNull();
+                secretConfiguration.EncryptedData.ShouldBe(encryptedSecretConfigValue);
+                addedInstance.Name.ShouldBe(instanceName);
+                addedInstance.Description.ShouldBe(newInstance.Description);
+
+                _setCurrentSchoolYear.Verify(x => x.Execute("EdFi_Ods_2022", apiMode, 2022), Times.Once);
+                _setCurrentSchoolYear.VerifyNoOtherCalls();
             }
         }
 
@@ -107,7 +164,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         }
 
         private OdsInstanceFirstTimeSetupService GetOdsInstanceFirstTimeSetupService(string encryptedSecretConfigValue,
-            string instanceName, AdminAppDbContext database)
+            string instanceName, AdminAppDbContext database, ApiMode apiMode)
         {
             var appSettings = new Mock<IOptions<AppSettings>>();
             appSettings.Setup(x => x.Value).Returns(new AppSettings());
@@ -121,7 +178,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             var mockReportViewsSetUp = new Mock<IReportViewsSetUp>();
             var mockUsersContext = new Mock<IUsersContext>();
             mockFirstTimeSetupService.Setup(x => x.CreateAdminAppInAdminDatabase(It.IsAny<string>(), instanceName,
-                It.IsAny<string>(), ApiMode.DistrictSpecific)).ReturnsAsync(new ApplicationCreateResult());
+                It.IsAny<string>(), apiMode)).ReturnsAsync(new ApplicationCreateResult());
             var odsInstanceFirstTimeSetupService = new OdsInstanceFirstTimeSetupService(odsSecretConfigurationProvider,
                 mockFirstTimeSetupService.Object, mockUsersContext.Object, mockReportViewsSetUp.Object, database, options);
             return odsInstanceFirstTimeSetupService;
@@ -371,7 +428,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     {
                         new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object,true)
                             .ShouldNotValidate(newInstance,
-                                $"Could not connect to an ODS instance database for this school year({odsInstanceNumericSuffix}).");
+                                $"Could not connect to an ODS instance database for this school year ({odsInstanceNumericSuffix}).");
                     });
                 }
         }
@@ -404,7 +461,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                                 _connectionProvider.Object, true)
                             .ShouldNotValidate(
                                 newInstance,
-                                "An instance for this Education Organization / District Id(8787877) already exists.");
+                                "An instance for this Education Organization / District Id (8787877) already exists.");
                     });
                 }
         }
@@ -437,7 +494,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                                 database, _apiModeProvider.Object, _databaseValidationService.Object,
                                 _connectionProvider.Object, true)
                             .ShouldNotValidate(newInstance,
-                                $"An instance with this description(Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
+                                $"An instance with this description (Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
                     });
             }
         }
@@ -511,7 +568,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
 
-            var instanceName = "TestInstance_7878787";
+            var instanceName = "EdFi_Ods_7878787";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))
@@ -542,7 +599,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
 
-            var instanceName = "TestInstance_2020";
+            var instanceName = "EdFi_Ods_2020";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))

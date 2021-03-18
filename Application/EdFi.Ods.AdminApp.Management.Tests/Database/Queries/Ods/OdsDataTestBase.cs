@@ -389,7 +389,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
                            ,@Date)
                 ", new {StudentUsi = studentUsi,
                     SchoolId = schoolId,
-                    SchoolYear = GetNewSchoolYearId(),
+                    SchoolYear = GetNewSchoolYear(),
                     Date = DateTime.Now,
                     EntryGradeLevelDescriptorId = GetNewGradeLevelDescriptorId(),
                     Id = Guid.NewGuid()
@@ -397,11 +397,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
             }
         }
 
-        private static short GetNewSchoolYearId()
+        protected static short GetNewSchoolYear(short? year = null)
         {
             using (var sqlConnection = TestConnectionProvider.CreateNewConnection(null))
             {
-                var schoolYearId = sqlConnection.Query<short>("SELECT ISNULL(MAX(SchoolYear),0) + 1 FROM edfi.SchoolYearType").Single();
+                var schoolYear = year ?? sqlConnection.Query<short>("SELECT ISNULL(MAX(SchoolYear),1990) + 1 FROM edfi.SchoolYearType").Single();
                 sqlConnection.Execute(@"
                     INSERT INTO edfi.SchoolYearType
                                (SchoolYear
@@ -412,20 +412,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries.Ods
                                ,CreateDate)
                          VALUES
                                (@SchoolYearId
-                               ,'n/a'
+                               ,@SchoolYearDescription
                                ,@IsCurrent
                                ,@Id
                                ,@Date
                                ,@Date)
                     ", 
                     new {
-                        SchoolYearId = schoolYearId,
+                        SchoolYearId = schoolYear,
+                        SchoolYearDescription = $"{schoolYear-1}-{schoolYear}",
                         IsCurrent = false,
                         Id = Guid.NewGuid(),
                         Date = DateTime.Now
                     });
 
-                return schoolYearId;
+                return schoolYear;
             }
         }
 

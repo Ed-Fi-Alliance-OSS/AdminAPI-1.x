@@ -467,6 +467,7 @@ function UpdateWarningTimer() {
 
 };
 
+<<<<<<< HEAD
 var replacePagedContent = function (event) {
     event.preventDefault();
 
@@ -486,3 +487,14 @@ function AttachDefaultPagingBehavior() {
     $('.navigate-next-page').off("click");
     $('.navigate-next-page').on("click", replacePagedContent);
 };   
+
+function AddTooltip(element, tooltipMessage) {
+    element.attr("data-toggle", "tooltip");
+    element.attr("title", tooltipMessage);
+};
+
+function RemoveTooltips(elements) {
+    $.each(elements, function (index, element) {
+        element.removeAttr("data-toggle").removeAttr("title");
+    });
+};

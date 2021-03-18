@@ -40,5 +40,56 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
                 vendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("http://testvendor.net");
             });
         }
+
+        [Test]
+        public void Should_retreive_vendors_with_offset_and_limit()
+        {
+            var vendors = new Vendor[5];
+
+            for (var vendorIndex = 0; vendorIndex < 5; vendorIndex++)
+            {
+                vendors[vendorIndex] = new Vendor
+                {
+                    VendorName = $"test vendor {vendorIndex+1}",
+                    VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } }
+                };
+            }
+
+            Save(vendors);
+
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new GetVendorsQuery(usersContext);
+
+                var offset = 0;
+                var limit = 2;
+
+                var vendorsAfterOffset = command.Execute(offset, limit);
+
+                vendorsAfterOffset.ShouldNotBeEmpty();
+                vendorsAfterOffset.Count.ShouldBe(2);
+
+                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 1");
+                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
+
+                offset = 2;
+
+                vendorsAfterOffset = command.Execute(offset, limit);
+
+                vendorsAfterOffset.ShouldNotBeEmpty();
+                vendorsAfterOffset.Count.ShouldBe(2);
+
+                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 3");
+                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 4");
+                offset = 4;
+
+                vendorsAfterOffset = command.Execute(offset, limit);
+
+                vendorsAfterOffset.ShouldNotBeEmpty();
+                vendorsAfterOffset.Count.ShouldBe(1);
+
+                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 5");
+            });
+        }
     }
 }

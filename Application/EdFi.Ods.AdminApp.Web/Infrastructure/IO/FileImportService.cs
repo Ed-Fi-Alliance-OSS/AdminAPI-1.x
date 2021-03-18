@@ -37,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
             if (xsdDirectoryExistWithFiles)
             {
-                _configuration["AdminAppSchemaAlreadyDownloaded"] = "true";
+                _configuration["ForceMetadata"] = "false";
             }
 
             var result = LoadProcess.ValidateXmlFile(_configuration, UnsupportedInterchanges).GetAwaiter()
@@ -48,7 +48,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
         public int Execute()
         {
-            _configuration["AdminAppSchemaAlreadyDownloaded"] = "true";
+            _configuration["ForceMetadata"] = "false";
             _configuration["OdsApi:OAuthUrl"] = Path.Combine(_configuration["OdsApi:OAuthUrl"], "oauth/token");
             var result = LoadProcess.Run(_configuration).GetAwaiter().GetResult();
             return result;

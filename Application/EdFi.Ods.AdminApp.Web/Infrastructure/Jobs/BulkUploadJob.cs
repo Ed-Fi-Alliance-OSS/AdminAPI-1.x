@@ -38,6 +38,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
 
     public class BulkUploadJobContext
     {
+        public string ApiServerUrl { get; set; }
         public string DataDirectoryFullPath { get; set; }
         public BulkLoadValidationResult ValidationResult { get; set; }
         public int OdsInstanceId { get; set; }

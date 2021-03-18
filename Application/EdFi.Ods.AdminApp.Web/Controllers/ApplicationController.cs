@@ -88,7 +88,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> ApplicationList(int pageNumber)
         {
-            var vendors = _getVendorsQuery.Execute().Where(v => !v.IsSystemReservedVendor()).ToList();
+            var vendors = _getVendorsQuery.Execute().ToList();
 
             var edOrgs = (await _odsApiFacadeFactory.Create())
                 .GetAllEducationOrganizations(_mapper);

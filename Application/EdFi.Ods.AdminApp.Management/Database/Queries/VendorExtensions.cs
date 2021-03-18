@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
     public static class VendorExtensions
     {
-        private static readonly string[] ReservedNames =
+        public static readonly string[] ReservedNames =
         {
             CloudOdsAdminApp.VendorName,
             CloudsOdsAcademicBenchmarksConnectApp.VendorName,

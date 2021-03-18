@@ -69,8 +69,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult Vendors()
         {
             var vendors = _getVendorsQuery
-                .Execute()
-                .Where(v => !v.IsSystemReservedVendor());
+                .Execute();
 
             var model = new GlobalSettingsModel
             {

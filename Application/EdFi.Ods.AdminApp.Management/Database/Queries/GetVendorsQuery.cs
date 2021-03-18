@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
 
         public List<Vendor> Execute()
         {
-            return _context.Vendors.OrderBy(v => v.VendorName).ToList();
+            return _context.Vendors.OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
         }
     }
 }

@@ -59,7 +59,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             configuration["OdsApi:DependenciesUrl"] = bulkUploadJobContext.DependenciesUrl;
             configuration["ValidateSchema"] = "false";
             configuration["ForceMetadata"] = "true";
-            configuration["AdminAppSchemaAlreadyDownloaded"] = "false";
 
             return configuration;
         }

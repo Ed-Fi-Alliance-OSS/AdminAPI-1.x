@@ -88,8 +88,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public async Task<ActionResult> ApplicationList(int pageNumber)
         {
-            var vendors = _getVendorsQuery.Execute().ToList();
-
             var edOrgs = (await _odsApiFacadeFactory.Create())
                 .GetAllEducationOrganizations(_mapper);
 
@@ -102,6 +100,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             List<VendorApplicationsModel> VendorsApplicationsModel(int offset, int limit)
             {
+                var vendors = _getVendorsQuery.Execute(offset, limit).ToList();
+
                 var vendorsApplicationsModel = _mapper.Map<List<VendorApplicationsModel>>(
                     vendors, opts => opts.WithEducationOrganizations(edOrgs));
 
@@ -113,7 +113,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     }
                 }
 
-                return vendorsApplicationsModel.Skip(offset).Take(limit).ToList();
+                return vendorsApplicationsModel;
             }
         }
 

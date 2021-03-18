@@ -169,7 +169,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
                 if (jobContext.ValidationResult != null && !jobContext.ValidationResult.Valid)
                 {
-                    throw new Exception("Error while validating");
+                    throw new Exception("Validation failed");
                 }
             }
             catch (Exception ex)

@@ -464,10 +464,8 @@ function UpdateWarningTimer() {
     } else {
         $("#claim-set-warning-message").find("p").html("<strong>Please restart the ODS / API for the latest claim set changes to take effect.</strong>");
     }
-
 };
 
-<<<<<<< HEAD
 var replacePagedContent = function (event) {
     event.preventDefault();
 

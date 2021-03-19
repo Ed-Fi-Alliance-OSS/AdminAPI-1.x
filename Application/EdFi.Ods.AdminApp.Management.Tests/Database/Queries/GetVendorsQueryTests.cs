@@ -18,7 +18,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
     public class GetVendorsQueryTests : PlatformUsersContextTestBase
     {
         [Test]
-        public void Should_retreive_vendors()
+        public void Should_retrieve_vendors()
         {
             var newVendor = new Vendor
             {
@@ -42,7 +42,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
         }
 
         [Test]
-        public void Should_retreive_vendors_with_offset_and_limit()
+        public void Should_retrieve_vendors_with_offset_and_limit()
         {
             var vendors = new Vendor[5];
 

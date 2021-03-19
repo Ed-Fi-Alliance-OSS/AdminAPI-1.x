@@ -7,18 +7,10 @@ See the LICENSE and NOTICES files in the project root for more information.
 
 @using EdFi.Ods.AdminApp.Management.Database.Models
 @using EdFi.Ods.AdminApp.Management.Instances
-@using EdFi.Ods.AdminApp.Web.Infrastructure
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances.IndexModel
 @{
     ViewBag.Title = "Ods Instances | Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    var odsInstanceNumericSuffix = "District / EdOrg Id";
-
-    if (CloudOdsAdminAppSettings.Instance.Mode == ApiMode.YearSpecific)
-    {
-        odsInstanceNumericSuffix = "School Year";
-    }
 }
 <div class="row">
     <div class="col-xs-12">
@@ -40,10 +32,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">@odsInstanceNumericSuffix</th>
-                        <th scope="col">Instance Name</th>
+                        <th scope="col">Instance</th>
+                        <th scope="col">Database</th>
                         <th scope="col">Description</th>
-                        <th scope="col">School Year</th>
+                        <th scope="col">Set School Year</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>

@@ -22,15 +22,15 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
             _tokenRetriever = new TokenRetriever(new OdsApiConnectionInformation(instanceName, CloudOdsAdminAppSettings.Instance.Mode)
             {
-                OAuthUrl = _configuration["OdsApi:OAuthUrl"],
-                ClientKey = _configuration["OdsApi:Key"],
-                ClientSecret = _configuration["OdsApi:Secret"]
+                OAuthUrl = _configuration.GetValue<string>("OdsApi:OAuthUrl"),
+                ClientKey = _configuration.GetValue<string>("OdsApi:Key"),
+                ClientSecret = _configuration.GetValue<string>("OdsApi:Secret")
             });
         }
 
         public BulkLoadValidationResult Validate()
         {
-            var xsdFolderPath = _configuration["Folders:Xsd"];
+            var xsdFolderPath = _configuration.GetValue<string>("Folders:Xsd");
 
             var xsdDirectoryExistWithFiles =
                 Directory.Exists(xsdFolderPath) && Directory.GetFiles(xsdFolderPath).Length > 0;

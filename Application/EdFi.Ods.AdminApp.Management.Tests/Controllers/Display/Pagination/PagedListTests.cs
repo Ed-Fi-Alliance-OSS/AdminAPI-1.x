@@ -80,7 +80,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 
             Page<object>.Fetch((offset, size) =>
             {
-                offset.ShouldBe(180);
+                offset.ShouldBe(90);
 
                 return ListOfObjects;
             }, pageNumber);

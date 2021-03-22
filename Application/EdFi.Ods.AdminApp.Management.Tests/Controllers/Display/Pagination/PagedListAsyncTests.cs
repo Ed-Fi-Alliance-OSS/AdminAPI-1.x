@@ -87,7 +87,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.Display.Pagination
 
             await Page<object>.FetchAsync(async (offset, size) =>
             {
-                offset.ShouldBe(180);
+                offset.ShouldBe(90);
 
                 return await GetListOfObjects();
             }, pageNumber);

@@ -29,6 +29,10 @@ See the LICENSE and NOTICES files in the project root for more information.
             }
             @if (Model.OdsInstances.Any())
             {
+                @if (TempData["VendorApplications"] != null)
+                {
+                    <div class="alert alert-info text-center">An ODS Instance must be selected before you can define an Application.</div>
+                }
                 <table class="table">
                     <thead>
                     <tr>
@@ -66,7 +70,14 @@ See the LICENSE and NOTICES files in the project root for more information.
             {
                 if (Model.UserContext.Has(Permission.AccessGlobalSettings))
                 {
-                    <div class="alert alert-info margin-top-10 text-center">No instances registered with the Admin App. Please register a new instance.</div>
+                    @if (TempData["VendorApplications"] != null)
+                    {
+                        <div class="alert alert-info margin-top-10 text-center">An ODS Instance is required to define an Application, but none have been configured yet. Register an ODS Instance and then select it to define your Application.</div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info margin-top-10 text-center">No instances registered with the Admin App. Please register a new instance.</div>
+                    }
                 }
                 else
                 {

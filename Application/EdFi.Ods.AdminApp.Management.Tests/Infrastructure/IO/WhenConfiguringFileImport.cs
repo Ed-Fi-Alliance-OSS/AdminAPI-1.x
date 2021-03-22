@@ -6,7 +6,10 @@
 using System;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
+using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Shouldly;
 
@@ -23,225 +26,229 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure.IO
             ClientSecret = "secret"
         };
 
+        private readonly BulkUploadJobContext _bulkUploadJobContext = new BulkUploadJobContext();
+        private readonly FileImportConfiguration _fileImportConfiguration = new FileImportConfiguration();
+        private const string Expected = "abc";
+
+        [SetUp]
+        public void SetUp()
+        {
+            _bulkUploadJobContext.ApiBaseUrl = _connectionInfo.ApiBaseUrl;
+            _bulkUploadJobContext.ClientKey = _connectionInfo.ClientKey;
+            _bulkUploadJobContext.ClientSecret = _connectionInfo.ClientSecret;
+            _bulkUploadJobContext.OauthUrl = _connectionInfo.OAuthUrl;
+            _bulkUploadJobContext.MetadataUrl = _connectionInfo.MetadataUrl;
+            _bulkUploadJobContext.DependenciesUrl = _connectionInfo.DependenciesUrl;
+        }
+
         [Test]
         public void GivenNullConnectionInfo_ThenThrowArgumentNullException()
         {
             Should.Throw<ArgumentNullException>(() =>
             {
-                var _ = new FileImportConfiguration(string.Empty, string.Empty);
+                _fileImportConfiguration.SetConfiguration(new BulkUploadJobContext(), string.Empty);
             });
         }
 
         [Test]
         public void GivenConnectionInfo_ThenOauthKeyPropertyShouldReturnClientKey()
         {
-            const string expected = "abc";
-            _connectionInfo.ClientKey = expected;
+            _connectionInfo.ClientKey = Expected;
+            _bulkUploadJobContext.ClientKey = _connectionInfo.ClientKey;
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .OauthKey
-                .ShouldBe(expected);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)
+                ["OdsApi:Key"].ShouldBe(Expected);
         }
 
         [Test]
         public void GivenConnectionInfo_ThenOauthSecretPropertyShouldReturnClientSecret()
         {
-            const string expected = "abc";
-            _connectionInfo.ClientSecret = expected;
+            _connectionInfo.ClientSecret = Expected;
+            _bulkUploadJobContext.ClientSecret = _connectionInfo.ClientSecret;
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .OauthSecret
-                .ShouldBe(expected);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:Secret"]
+                .ShouldBe(Expected);
         }
 
         [Test]
         public void GivenConnectionInfo_ThenOauthUrlPropertyShouldReturnOAuthUrl()
         {
-            const string expected = "abc";
-            _connectionInfo.OAuthUrl = expected;
+            _connectionInfo.OAuthUrl = Expected;
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .OauthUrl
-                .ShouldBe(expected);
+            _bulkUploadJobContext.OauthUrl = _connectionInfo.OAuthUrl;
+
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:OAuthUrl"]
+                .ShouldBe(Expected);
         }
 
         [Test]
         public void GivenDataDirectoryFullPathConstructorArg_ThenDataFolderPropertyShouldTakeThatValue()
         {
-            const string expected = "abc";
+            _bulkUploadJobContext.DataDirectoryFullPath = Expected;
 
-            new FileImportConfiguration(expected, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .DataFolder
-                .ShouldBe(expected);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["Folders:Data"]
+                .ShouldBe(Expected);
         }
 
         [Test]
         public void GivenWorkingFolderPathConstructorArg_ThenWorkingFolderPropertyShouldTakeThatValue()
         {
-            const string expected = "abc";
-
-            new FileImportConfiguration(string.Empty, expected, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .WorkingFolder
-                .ShouldBe(expected);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, Expected)["Folders:Working"]
+                .ShouldBe(Expected);
         }
 
         [Test]
         public void GivenMaxSimultaneousRequestsConstructorArg_ThenAllThrottlingPropertiesShouldTakeThatValue()
         {
-            const int expected = 13;
+            const int ExpectedValue = 13;
+            _bulkUploadJobContext.MaxSimultaneousRequests = ExpectedValue;
 
-            var configuration = new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl,
-                maxSimultaneousRequests: expected);
-
-            configuration.TaskCapacity.ShouldBe(expected);
-            configuration.ConnectionLimit.ShouldBe(expected);
-            configuration.MaxSimultaneousRequests.ShouldBe(expected);
+            var configuration = _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, Expected);
+            configuration.GetValue<int>("Concurrency:ConnectionLimit").ShouldBe(ExpectedValue);
+            configuration.GetValue<int>("Concurrency:MaxSimultaneousApiRequests").ShouldBe(ExpectedValue);
+            configuration.GetValue<int>("Concurrency:TaskCapacity").ShouldBe(ExpectedValue);
         }
 
         [Test]
         public void GivenConnectionInfo_ThenMetadataUrlPropertyReturnMetadataUrl()
         {
-            const string apiServerUrl = "http://abc";
-            const string oauthUrl = "http://abc";
-            const string expected = "http://abc/metadata";
+            const string ApiServerUrl = "http://abc";
+            const string OauthUrl = "http://abc";
+            const string ExpectedUrl = "http://abc/metadata";
 
             _connectionInfo = new OdsApiConnectionInformation("Ods Instance", ApiMode.Sandbox)
             {
-                ApiServerUrl = apiServerUrl,
-                OAuthUrl = oauthUrl,
+                ApiServerUrl = ApiServerUrl,
+                OAuthUrl = OauthUrl,
                 ClientKey = "key",
                 ClientSecret = "secret"
             };
+            _bulkUploadJobContext.MetadataUrl = _connectionInfo.MetadataUrl;
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .MetadataUrl
-                .ShouldBe(expected);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:MetadataUrl"]
+                .ShouldBe(ExpectedUrl);
         }
 
         [Test]
         public void GivenConnectionInfoIsUsingYearSpecificMode_ThenMetadataUrlShouldBeBaseUrlPlusMetadataRoutePlusYear()
         {
-            const string apiServerUrl = "http://abc";
-            const string oauthUrl = "http://abc";
-            const string expected = "http://abc/metadata/123";
+            const string ApiServerUrl = "http://abc";
+            const string OauthUrl = "http://abc";
+            const string ExpectedUrl = "http://abc/metadata/123";
 
             _connectionInfo = new OdsApiConnectionInformation("Ed_Fi_Ods_123", ApiMode.YearSpecific)
             {
-                ApiServerUrl = apiServerUrl,
-                OAuthUrl = oauthUrl,
+                ApiServerUrl = ApiServerUrl,
+                OAuthUrl = OauthUrl,
                 ClientKey = "key",
                 ClientSecret = "secret"
             };
+            _bulkUploadJobContext.MetadataUrl = _connectionInfo.MetadataUrl;
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .MetadataUrl
-                .ShouldBe(expected);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:MetadataUrl"]
+                .ShouldBe(ExpectedUrl);
         }
 
         [Test]
         public void GivenConnectionInformation_ThenApiUrlShouldBeTheCompleteUrlWithVersionNumber()
         {
-            const string apiServerUrl = "abc";
-            const string oauthUrl = "abc";
-            const string expected = "abc/data/v3/";
+            const string ApiServerUrl = "abc";
+            const string OauthUrl = "abc";
+            const string ExpectedUrl = "abc/data/v3/";
 
             _connectionInfo = new OdsApiConnectionInformation("Ods Instance", ApiMode.Sandbox)
             {
-                ApiServerUrl = apiServerUrl,
-                OAuthUrl = oauthUrl,
+                ApiServerUrl = ApiServerUrl,
+                OAuthUrl = OauthUrl,
                 ClientKey = "key",
                 ClientSecret = "secret"
             };
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .ApiUrl
-                .ShouldBe(expected);
+            _bulkUploadJobContext.ApiBaseUrl = _connectionInfo.ApiBaseUrl;
+
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:ApiUrl"]
+                .ShouldBe(ExpectedUrl);
         }
 
         [Test]
         public void GivenConnectionInformationIsUsingYearSpecificMode_ThenSchoolYearShouldReturnTheYearSpecificSchoolYear()
         {
-            const int year = 1234;
+             int? year = 1234;
+             Startup.ConfigurationAppSettings.ApiStartupType = "YearSpecific";
+            _bulkUploadJobContext.OdsInstanceName = "Ed_Fi_Ods_1234";
 
-            _connectionInfo = new OdsApiConnectionInformation("Ed_Fi_Ods_1234", ApiMode.YearSpecific)
-            {
-                ApiServerUrl = "abc",
-                OAuthUrl = "abc",
-                ClientKey = "key",
-                ClientSecret = "secret"
-            };
-
-            new FileImportConfiguration(string.Empty, string.Empty, year, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .SchoolYear
-                .ShouldBe(year);
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:SchoolYear"]
+                .ShouldBe(year.ToString());
         }
 
         [Test]
-        public void GivenConnectionInformationIsNotUsingYearSpecificMode_ThenSchoolYearShouldReturnNull()
+        public void GivenConnectionInformationIsNotUsingYearSpecificMode_ThenSchoolYearShouldReturnEmpty()
         {
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .SchoolYear
-                .ShouldBeNull();
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:SchoolYear"]
+                .ShouldBe(string.Empty);
         }
 
         [Test]
         public void GivenConnectionInfo_ThenDependenciesUrlShouldBeTheCompleteUrlWithExpectedSegments()
         {
-            const string apiServerUrl = "http://abc";
-            const string oauthUrl = "http://abc";
-            const string expected = "http://abc/metadata/data/v3/dependencies";
+            const string ApiServerUrl = "http://abc";
+            const string OauthUrl = "http://abc";
+            const string ExpectedUrl = "http://abc/metadata/data/v3/dependencies";
 
             _connectionInfo = new OdsApiConnectionInformation("Ods Instance", ApiMode.Sandbox)
             {
-                ApiServerUrl = apiServerUrl,
-                OAuthUrl = oauthUrl,
+                ApiServerUrl = ApiServerUrl,
+                OAuthUrl = OauthUrl,
                 ClientKey = "key",
                 ClientSecret = "secret"
             };
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .DependenciesUrl
-                .ShouldBe(expected);
+            _bulkUploadJobContext.DependenciesUrl = _connectionInfo.DependenciesUrl;
+
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:DependenciesUrl"]
+                .ShouldBe(ExpectedUrl);
         }
 
         [Test]
         public void GivenConnectionInfoIsNotUsingYearSpecificMode_ThenDependenciesUrlShouldNotContainYear()
         {
-            const string apiServerUrl = "http://abc";
-            const string oauthUrl = "http://abc";
-            const string expected = "http://abc/metadata/data/v3/dependencies";
+            const string ApiServerUrl = "http://abc";
+            const string OauthUrl = "http://abc";
+            const string ExpectedUrl = "http://abc/metadata/data/v3/dependencies";
 
             _connectionInfo = new OdsApiConnectionInformation("Ods Instance", ApiMode.Sandbox)
             {
-                ApiServerUrl = apiServerUrl,
-                OAuthUrl = oauthUrl,
+                ApiServerUrl = ApiServerUrl,
+                OAuthUrl = OauthUrl,
                 ClientKey = "key",
                 ClientSecret = "secret"
             };
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .DependenciesUrl
-                .ShouldBe(expected);
+            _bulkUploadJobContext.DependenciesUrl = _connectionInfo.DependenciesUrl;
+
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:DependenciesUrl"]
+                .ShouldBe(ExpectedUrl);
         }
 
         [Test]
         public void GivenConnectionInfoIsUsingYearSpecificMode_ThenDependenciesUrlShouldContainYear()
         {
-            const string apiServerUrl = "http://abc";
-            const string oauthUrl = "http://abc";
-            const string expected = "http://abc/metadata/data/v3/2019/dependencies";
+            const string ApiServerUrl = "http://abc";
+            const string OauthUrl = "http://abc";
+            const string ExpectedUrl = "http://abc/metadata/data/v3/2019/dependencies";
 
             _connectionInfo = new OdsApiConnectionInformation("Ed_Fi_Ods_2019", ApiMode.YearSpecific)
             {
-                ApiServerUrl = apiServerUrl,
-                OAuthUrl = oauthUrl,
+                ApiServerUrl = ApiServerUrl,
+                OAuthUrl = OauthUrl,
                 ClientKey = "key",
                 ClientSecret = "secret"
             };
 
-            new FileImportConfiguration(string.Empty, string.Empty, null, _connectionInfo.ApiBaseUrl, _connectionInfo.ClientKey, _connectionInfo.ClientSecret, _connectionInfo.OAuthUrl, _connectionInfo.MetadataUrl, _connectionInfo.DependenciesUrl)
-                .DependenciesUrl
-                .ShouldBe(expected);
+            _bulkUploadJobContext.DependenciesUrl = _connectionInfo.DependenciesUrl;
+
+            _fileImportConfiguration.SetConfiguration(_bulkUploadJobContext, string.Empty)["OdsApi:DependenciesUrl"]
+                .ShouldBe(ExpectedUrl);
         }
     }
 }

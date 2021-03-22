@@ -168,7 +168,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult DefineApplications()
         {
-            TempData["VendorApplications"] = "VendorApplications";
+            TempData["IsVendorApplications"] = true;
             return RedirectToAction("Index", "OdsInstances");
         }
 

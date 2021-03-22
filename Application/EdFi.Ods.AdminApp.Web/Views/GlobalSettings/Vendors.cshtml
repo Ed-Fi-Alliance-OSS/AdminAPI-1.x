@@ -36,10 +36,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 
                     if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
                     {
-                        // Take the user to the instance selection screen, trusting that they will
-                        // then land on the Applications tab for that instance.
-
-                        applicationsUrl = Url.Action("Index", "OdsInstances");
+                        applicationsUrl = Url.Action("DefineApplications", "GlobalSettings");
                     }
 
                     <a class="btn btn-primary cta" href="@applicationsUrl">Define Applications</a>

@@ -4,9 +4,15 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using EdFi.Ods.AdminApp.Web.Display.Pagination;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 {
+    public class VendorApplicationsIndexModel
+    {
+        public PagedList<VendorApplicationsModel> Vendors { get; set; }
+    }
+
     public class VendorApplicationsModel
     {
         public int VendorId { get; set; }

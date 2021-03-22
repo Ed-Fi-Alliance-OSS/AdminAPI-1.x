@@ -5,6 +5,7 @@
 
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using System.Collections.Generic;
+using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
@@ -12,7 +13,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
     public class EducationOrganizationViewModel
     {
         public List<School> Schools { get; set; }
-        public List<LocalEducationAgency> LocalEducationAgencies { get; set; }
+        public PagedList<LocalEducationAgency> LocalEducationAgencies { get; set; }
         public bool ShouldAllowMultipleDistricts { get; set; }
         public AddSchoolModel AddSchoolModel { get; set; }
         public AddLocalEducationAgencyModel AddLocalEducationAgencyModel { get; set; }

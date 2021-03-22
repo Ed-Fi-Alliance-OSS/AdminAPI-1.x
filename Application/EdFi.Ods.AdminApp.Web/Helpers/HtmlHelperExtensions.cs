@@ -24,7 +24,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Property = EdFi.Ods.AdminApp.Web.Infrastructure.Property;
 using Preconditions = EdFi.Common.Preconditions;
 using EdFi.Ods.AdminApp.Management.Api;
+using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using log4net;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
 {
@@ -561,6 +563,91 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
 
                 return new HtmlString("");
             }
+        }
+
+        public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string url, PagedList<T> pagedContent)
+        {
+            var pageNumber = pagedContent.PageNumber;
+            var previousUrl = QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber - 1).ToString());
+            var nextUrl = QueryHelpers.AddQueryString(url, "pageNumber", (pageNumber + 1).ToString());
+
+            var previousLink = PreviousButton(previousUrl, pagedContent);
+            var nextLink = NextButton(nextUrl, pagedContent);
+            var pageNumberItem = PageNumber(pagedContent, previousLink, nextLink);
+
+            var contentWrapper = new HtmlTag("ul");
+            contentWrapper.AddClass("pagination");
+
+            if (previousLink != null) contentWrapper.Append(previousLink);
+            if (pageNumberItem != null) contentWrapper.Append(pageNumberItem);
+            if (nextLink != null) contentWrapper.Append(nextLink);
+
+            var paginationNav = new HtmlTag("nav");
+            paginationNav.Append(contentWrapper);
+            paginationNav.Attr("aria-label", "Page navigation");
+
+            return new HtmlString(paginationNav.ToString());
+        }
+
+        private static HtmlTag PageNumber<T>(PagedList<T> pagedContent, HtmlTag previousLink, HtmlTag nextLink)
+        {
+            if (previousLink == null && nextLink == null)
+                return null;
+
+            var pageNumber = new HtmlTag("span");
+
+            pageNumber.Text(" " + pagedContent.PageNumber + " ");
+
+            var listItem = new HtmlTag("li");
+            listItem.Append(pageNumber);
+
+            return listItem;
+        }
+
+        private static HtmlTag NextButton<T>(string nextUrl, PagedList<T> pagedContent)
+        {
+            if (!pagedContent.NextPageHasResults)
+                return null;
+
+            var nextLink = new HtmlTag("a");
+
+            nextLink.Attr("href", nextUrl);
+            nextLink.Attr("aria-label", "Next");
+            nextLink.AddClass("navigate-next-page");
+
+            var symbolSpan = new HtmlTag("span");
+            symbolSpan.Attr("aria-hidden", "true");
+            symbolSpan.AppendHtml("&raquo;");
+
+            nextLink.Append(symbolSpan);
+
+            var listItem = new HtmlTag("li");
+            listItem.Append(nextLink);
+
+            return listItem;
+        }
+
+        private static HtmlTag PreviousButton<T>(string previousUrl, PagedList<T> pagedContent)
+        {
+            if (pagedContent.PageNumber <= 1)
+                return null;
+
+            var previousLink = new HtmlTag("a");
+
+            previousLink.Attr("href", previousUrl);
+            previousLink.Attr("aria-label", "Previous");
+            previousLink.AddClass("navigate-previous-page");
+
+            var symbolSpan = new HtmlTag("span");
+            symbolSpan.Attr("aria-hidden", "true");
+            symbolSpan.AppendHtml("&laquo;");
+
+            previousLink.Append(symbolSpan);
+
+            var listItem = new HtmlTag("li");
+            listItem.Append(previousLink);
+
+            return listItem;
         }
     }
 }

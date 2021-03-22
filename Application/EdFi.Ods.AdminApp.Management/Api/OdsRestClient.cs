@@ -5,15 +5,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using Flurl;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using RestSharp.Extensions;
 
 namespace EdFi.Ods.AdminApp.Management.Api
 {
@@ -66,6 +63,24 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
                 throw new Exception(response.ErrorMessage);
             }
+        }
+
+        public IReadOnlyList<T> GetAll<T>(string elementPath, int offset, int limit = 50) where T : class
+        {
+            var request = OdsRequest(elementPath);
+            request.AddParameter("offset", offset);
+            request.AddParameter("limit", limit);
+
+            var responseList = new List<T>();
+            List<T> pageItems;
+
+            var restResponse = _restClient.Execute(request);
+            HandleErrorResponse(restResponse);
+
+            pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
+            responseList.AddRange(pageItems);
+
+            return responseList; 
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath) where T : class

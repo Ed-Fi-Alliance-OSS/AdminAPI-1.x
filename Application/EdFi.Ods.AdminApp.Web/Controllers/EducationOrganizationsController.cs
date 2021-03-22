@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 
@@ -108,11 +110,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return editResult.Success ? JsonSuccess("School Updated") : JsonError(editResult.ErrorMessage);
         }
 
-        public async Task<ActionResult> EducationOrganizationList()
+        public async Task<ActionResult> EducationOrganizationList(int pageNumber)
         {
             var api = await _odsApiFacadeFactory.Create();
             var schools = api.GetAllSchools();
-            var localEducationAgencies = api.GetAllLocalEducationAgencies();
+
+            var localEducationAgencies =
+                await Page<LocalEducationAgency>.FetchAsync(GetLocalEducationAgencies, pageNumber);
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
@@ -141,6 +145,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             }
 
             return PartialView("_EducationOrganizations", model);
+        }
+
+        private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var localEducationAgencies = api.GetLocalEducationAgenciesByPage(offset, limit);
+            return localEducationAgencies;
         }
 
         [HttpPost]

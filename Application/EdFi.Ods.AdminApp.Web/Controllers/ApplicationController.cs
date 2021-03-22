@@ -13,6 +13,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -85,24 +86,35 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View("Index", model);
         }
 
-        public async Task<ActionResult> ApplicationList()
+        public async Task<ActionResult> ApplicationList(int pageNumber)
         {
-            var vendors = _getVendorsQuery.Execute().Where(v => !v.IsSystemReservedVendor()).ToList();
-
             var edOrgs = (await _odsApiFacadeFactory.Create())
                 .GetAllEducationOrganizations(_mapper);
 
-            var vendorsApplicationsModel = _mapper.Map<List<VendorApplicationsModel>>(
-                vendors, opts => opts.WithEducationOrganizations(edOrgs));
-
-            if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
+            var vendorsIndexModel = new VendorApplicationsIndexModel
             {
-                foreach (var model in vendorsApplicationsModel)
+                Vendors = Page<VendorApplicationsModel>.Fetch(VendorsApplicationsModel, pageNumber)
+            };
+
+            return PartialView("_Applications", vendorsIndexModel);
+
+            List<VendorApplicationsModel> VendorsApplicationsModel(int offset, int limit)
+            {
+                var vendors = _getVendorsQuery.Execute(offset, limit).ToList();
+
+                var vendorsApplicationsModel = _mapper.Map<List<VendorApplicationsModel>>(
+                    vendors, opts => opts.WithEducationOrganizations(edOrgs));
+
+                if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
                 {
-                    FilterInstanceSpecificApplications(model);
+                    foreach (var model in vendorsApplicationsModel)
+                    {
+                        FilterInstanceSpecificApplications(model);
+                    }
                 }
+
+                return vendorsApplicationsModel;
             }
-            return PartialView("_Applications", vendorsApplicationsModel);
         }
 
         private void FilterInstanceSpecificApplications(VendorApplicationsModel vendor)

@@ -44,6 +44,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _mapper.Map<List<Models.LocalEducationAgency>>(response);
         }
 
+        public List<Models.LocalEducationAgency> GetLocalEducationAgenciesByPage(int offset, int limit)
+        {
+            var response = _restClient.GetAll<LocalEducationAgency>(ResourcePaths.LocalEducationAgencies, offset, limit);
+            return _mapper.Map<List<Models.LocalEducationAgency>>(response);
+        }
+
         public List<SelectOptionModel> GetAllGradeLevels()
         {
             var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.GradeLevelDescriptors);

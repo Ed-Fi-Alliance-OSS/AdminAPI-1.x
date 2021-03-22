@@ -6,7 +6,8 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
-@model IEnumerable<EdFi.Ods.AdminApp.Web.Models.ViewModels.VendorApplicationsModel>
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.VendorApplicationsIndexModel
 
 @{
     ViewBag.Title = "Production | Applications";
@@ -15,7 +16,9 @@ See the LICENSE and NOTICES files in the project root for more information.
 @{ await Html.RenderPartialAsync("_DeleteVendorApplicationModal", new DeleteApplicationModel()); }
 @{ await Html.RenderPartialAsync("_RegenerateApplicationSecretModal", new RegenerateSecretModel()); }
 
-@foreach (var vendorApplicationModel in Model)
+@foreach (var vendorApplicationModel in Model.Vendors.Items)
 {
     await Html.RenderPartialAsync("_ApplicationsByVendor", vendorApplicationModel);
 }
+
+@Html.PagingControl(Url.Action("ApplicationList","Application"), Model.Vendors)

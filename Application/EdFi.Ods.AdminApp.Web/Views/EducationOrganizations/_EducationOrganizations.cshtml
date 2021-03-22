@@ -1,4 +1,4 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -6,6 +6,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 *@
 
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
+@using EdFi.Ods.AdminApp.Web.Helpers
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizationViewModel
 
 <div class="row margin-bottom">
@@ -13,7 +14,7 @@ See the LICENSE and NOTICES files in the project root for more information.
         <h6>Education Organizations</h6>
     </div>
 
-    @if (!Model.LocalEducationAgencies.Any() || Model.ShouldAllowMultipleDistricts)
+    @if (!Model.LocalEducationAgencies.Items.Any() || Model.ShouldAllowMultipleDistricts)
     {
         <div class="col-lg-6 text-right">
             <button class="cta" data-toggle="modal" data-target="#add-lea-modal">
@@ -23,7 +24,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     }
 </div>
 
-@foreach (var localEducationAgency in Model.LocalEducationAgencies)
+@foreach (var localEducationAgency in Model.LocalEducationAgencies.Items)
 {
     var schools = Model.Schools.Where(x => x.LocalEducationAgencyId == localEducationAgency.EducationOrganizationId).ToList();
 
@@ -72,6 +73,8 @@ See the LICENSE and NOTICES files in the project root for more information.
         </div>
     </div>
 }
+
+@Html.PagingControl(Url.Action("EducationOrganizationList", "EducationOrganizations"), Model.LocalEducationAgencies)
 
 @{ await Html.RenderPartialAsync("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
 @{ await Html.RenderPartialAsync("_AddLocalEducationAgencyModal", Model.AddLocalEducationAgencyModel); }

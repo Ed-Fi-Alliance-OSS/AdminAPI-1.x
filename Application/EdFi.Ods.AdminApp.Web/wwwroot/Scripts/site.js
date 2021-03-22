@@ -46,6 +46,7 @@ function GlobalInitialize() {
     SetupPanelToggle();
     LoadAsyncActions();
     ClaimSetWarningMessage();
+    AttachDefaultPagingBehavior();
 }
 
 function ReinitializeForModal() {
@@ -463,8 +464,27 @@ function UpdateWarningTimer() {
     } else {
         $("#claim-set-warning-message").find("p").html("<strong>Please restart the ODS / API for the latest claim set changes to take effect.</strong>");
     }
-
 };
+
+var replacePagedContent = function (event) {
+    event.preventDefault();
+
+    var $btn = $(this),
+        url = $btn.attr('href');
+
+    $.ajax(url).done(function (data) {
+        $btn.closest('.ajax-content').html(data);
+        GlobalInitialize();
+    });
+};
+
+function AttachDefaultPagingBehavior() {
+    $('.navigate-previous-page').off("click");
+    $('.navigate-previous-page').on("click", replacePagedContent);
+
+    $('.navigate-next-page').off("click");
+    $('.navigate-next-page').on("click", replacePagedContent);
+};   
 
 function AddTooltip(element, tooltipMessage) {
     element.attr("data-toggle", "tooltip");

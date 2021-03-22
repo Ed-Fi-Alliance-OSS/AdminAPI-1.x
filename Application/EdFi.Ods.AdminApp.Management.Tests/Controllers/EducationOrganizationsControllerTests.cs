@@ -11,6 +11,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Web.Controllers;
+using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
@@ -295,7 +296,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             const string localEducationAgencyCategoryValue = "Namespace#School";
 
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(schools);
-            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(leas);
+            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
@@ -307,14 +308,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
-            var result = _controller.EducationOrganizationList().Result as PartialViewResult;
+            var result = _controller.EducationOrganizationList(1).Result as PartialViewResult;
 
             // Assert
             result.ShouldNotBeNull();
             var model = (EducationOrganizationViewModel)result.ViewData.Model;
             model.ShouldNotBeNull();
             model.Schools.Count.ShouldBeGreaterThan(0);
-            model.LocalEducationAgencies.Count.ShouldBeGreaterThan(0);
+            model.LocalEducationAgencies.Items.Count().ShouldBeGreaterThan(0);
 
             var addSchoolModel = model.AddSchoolModel;
             addSchoolModel.ShouldNotBeNull();

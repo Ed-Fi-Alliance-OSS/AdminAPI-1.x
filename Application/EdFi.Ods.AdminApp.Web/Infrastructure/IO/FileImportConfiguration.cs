@@ -4,26 +4,14 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Memory;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
-    public class FileImportConfiguration: LoadTools.BulkLoadClient.Application.Configuration
+    public class FileImportConfiguration
     {
-        public FileImportConfiguration(string dataDirectoryFullPath,
-            string workingFolderPath, int? schoolYear = null, string apiBaseUrl = null, string clientKey = null,
-            string clientSecret = null, string oauthUrl = null, string metadataUrl = null,
-            string dependenciesUrl = null, string schemaPath = null, int maxSimultaneousRequests = 20)
-        {
-            Require(apiBaseUrl);
-            Require(clientKey);
-            Require(clientSecret);
-            Require(oauthUrl);
-            Require(metadataUrl);
-            Require(dependenciesUrl);
-
-            SetConfiguration(dataDirectoryFullPath, workingFolderPath, apiBaseUrl, clientKey, clientSecret, oauthUrl, metadataUrl, dependenciesUrl, schoolYear, schemaPath, maxSimultaneousRequests);
-        }
-
         private void Require(string connectionInformationArgument)
         {
             if (string.IsNullOrEmpty(connectionInformationArgument))
@@ -32,24 +20,53 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             }
         }
 
-        private void SetConfiguration(string dataDirectoryFullPath, string workingFolderPath, string apiBaseUrl, string clientKey, string clientSecret, string oauthUrl, string metadataUrl, string dependenciesUrl, int? schoolYear, string schemaPath,
-            int maxSimultaneousRequests)
+        public IConfiguration SetConfiguration(BulkUploadJobContext bulkUploadJobContext, string workingFolderPath)
         {
-            DataFolder = dataDirectoryFullPath;
-            WorkingFolder = workingFolderPath;
-            ApiUrl = apiBaseUrl + "/";
-            OauthKey = clientKey;
-            OauthSecret = clientSecret;
-            OauthUrl = oauthUrl;
-            MetadataUrl = metadataUrl;
-            XsdFolder = schemaPath;
-            InterchangeOrderFolder = schemaPath;
-            Retries = 3;
-            SchoolYear = schoolYear;
-            ConnectionLimit = maxSimultaneousRequests;
-            TaskCapacity = maxSimultaneousRequests;
-            MaxSimultaneousRequests = maxSimultaneousRequests;
-            DependenciesUrl = dependenciesUrl;
+            Require(bulkUploadJobContext.ApiBaseUrl);
+            Require(bulkUploadJobContext.ClientKey);
+            Require(bulkUploadJobContext.ClientSecret);
+            Require(bulkUploadJobContext.OauthUrl);
+            Require(bulkUploadJobContext.MetadataUrl);
+            Require(bulkUploadJobContext.DependenciesUrl);
+
+            var builder = new ConfigurationBuilder();
+            var configuration =
+                builder.Add(new BulkUploadConfigurationSource())
+                    .Build(); 
+
+            configuration["OdsApi:Url"] = bulkUploadJobContext.ApiServerUrl;
+            configuration["Folders:Data"] = bulkUploadJobContext.DataDirectoryFullPath;
+            configuration["Folders:Working"] = workingFolderPath;
+            configuration["OdsApi:ApiUrl"] = bulkUploadJobContext.ApiBaseUrl + "/";
+            configuration["OdsApi:Key"] = bulkUploadJobContext.ClientKey;
+            configuration["OdsApi:Secret"] = bulkUploadJobContext.ClientSecret;
+            configuration["OdsApi:OAuthUrl"] = bulkUploadJobContext.OauthUrl;
+            configuration["OdsApi:MetadataUrl"] = bulkUploadJobContext.MetadataUrl;
+            configuration["Folders:Xsd"] = bulkUploadJobContext.SchemaPath;
+            configuration["Folders:Interchange"] = bulkUploadJobContext.SchemaPath;
+            configuration["Concurrency:MaxRetries"] = "3";
+            configuration["OdsApi:SchoolYear"] = bulkUploadJobContext.SchoolYear.ToString();
+
+            configuration["Concurrency:ConnectionLimit"] =
+                bulkUploadJobContext.MaxSimultaneousRequests.ToString();
+
+            configuration["Concurrency:MaxSimultaneousApiRequests"] =
+                bulkUploadJobContext.MaxSimultaneousRequests.ToString();
+
+            configuration["Concurrency:TaskCapacity"] =
+                bulkUploadJobContext.MaxSimultaneousRequests.ToString();
+
+            configuration["OdsApi:DependenciesUrl"] = bulkUploadJobContext.DependenciesUrl;
+            configuration["ValidateSchema"] = "false";
+            configuration["ForceMetadata"] = "true";
+
+            return configuration;
         }
+    }
+
+    public class BulkUploadConfigurationSource : IConfigurationSource
+    {
+        public IConfigurationProvider Build(IConfigurationBuilder builder)
+            => new MemoryConfigurationProvider(new MemoryConfigurationSource());
     }
 }

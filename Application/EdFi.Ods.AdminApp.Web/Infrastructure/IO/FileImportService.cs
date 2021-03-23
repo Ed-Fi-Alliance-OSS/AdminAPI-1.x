@@ -3,44 +3,54 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
+using System.IO;
 using EdFi.LoadTools.BulkLoadClient;
 using EdFi.Ods.AdminApp.Management.Api;
+using Microsoft.Extensions.Configuration;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
     public class FileImportService
     {
-        private readonly FileImportConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly ITokenRetriever _tokenRetriever;
         private static readonly string[] UnsupportedInterchanges = {"InterchangeDescriptors"};
 
-        public FileImportService(FileImportConfiguration configuration, string instanceName)
+        public FileImportService(IConfiguration configuration, string instanceName)
         {
             _configuration = configuration;
+
             _tokenRetriever = new TokenRetriever(new OdsApiConnectionInformation(instanceName, CloudOdsAdminAppSettings.Instance.Mode)
             {
-                OAuthUrl = configuration.OauthUrl,
-                ClientKey = configuration.OauthKey,
-                ClientSecret = configuration.OauthSecret
+                OAuthUrl = _configuration.GetValue<string>("OdsApi:OAuthUrl"),
+                ClientKey = _configuration.GetValue<string>("OdsApi:Key"),
+                ClientSecret = _configuration.GetValue<string>("OdsApi:Secret")
             });
         }
 
         public BulkLoadValidationResult Validate()
         {
-            try
+            var xsdFolderPath = _configuration.GetValue<string>("Folders:Xsd");
+
+            var xsdDirectoryExistWithFiles =
+                Directory.Exists(xsdFolderPath) && Directory.GetFiles(xsdFolderPath).Length > 0;
+
+            if (xsdDirectoryExistWithFiles)
             {
-                return LoadProcess.ValidateXmlFile(_configuration, UnsupportedInterchanges); 
+                _configuration["ForceMetadata"] = "false";
             }
-            catch (Exception ex)
-            {
-                return new BulkLoadValidationResult($"An error occured during file validation: {ex.Message}");
-            }
+
+            var result = LoadProcess.ValidateXmlFile(_configuration, UnsupportedInterchanges).GetAwaiter()
+                .GetResult();
+
+            return result;
         }
 
         public int Execute()
         {
-            var result = LoadProcess.Run(_configuration);
+            _configuration["ForceMetadata"] = "false";
+            _configuration["OdsApi:OAuthUrl"] = Path.Combine(_configuration["OdsApi:OAuthUrl"], "oauth/token");
+            var result = LoadProcess.Run(_configuration).GetAwaiter().GetResult();
             return result;
         }
 

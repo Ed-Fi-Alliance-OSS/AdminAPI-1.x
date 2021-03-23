@@ -6,7 +6,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 
@@ -28,13 +27,19 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             try
             {
                 var globalBulkUploadFolder = CloudOdsAdminAppSettings.AppSettings.BulkUploadHashCache;
-                var instanceBulkUploadFolder = $"{globalBulkUploadFolder}\\{bulkUploadJobContext.OdsInstanceId}";
+
+                var instanceBulkUploadFolder =
+                    $"{globalBulkUploadFolder}\\{bulkUploadJobContext.OdsInstanceId}";
 
                 var workingFolderPath =
                     _fileUploadHandler.GetWorkingDirectory(instanceBulkUploadFolder);
 
-                var fileImportConfig = GetFileImportConfig(bulkUploadJobContext, workingFolderPath);
-                var fileImportService = new FileImportService(fileImportConfig, bulkUploadJobContext.OdsInstanceName);
+                var fileImportConfig = new FileImportConfiguration().SetConfiguration(
+                    bulkUploadJobContext, workingFolderPath);
+
+                var fileImportService = new FileImportService(
+                    fileImportConfig, bulkUploadJobContext.OdsInstanceName);
+
                 var workflowManager = SetupWorkflowManager(bulkUploadJobContext, fileImportService);
                 return workflowManager.Execute();
             }
@@ -145,22 +150,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
             }
         }
 
-        private static FileImportConfiguration GetFileImportConfig(BulkUploadJobContext bulkUploadJobContext, string workingFolderPath)
-        {
-            return new FileImportConfiguration(
-                bulkUploadJobContext.DataDirectoryFullPath,
-                workingFolderPath,
-                bulkUploadJobContext.SchoolYear,
-                apiBaseUrl: bulkUploadJobContext.ApiBaseUrl,
-                clientKey: bulkUploadJobContext.ClientKey,
-                clientSecret: bulkUploadJobContext.ClientSecret,
-                oauthUrl: bulkUploadJobContext.OauthUrl,
-                metadataUrl: bulkUploadJobContext.MetadataUrl,
-                dependenciesUrl: bulkUploadJobContext.DependenciesUrl,
-                schemaPath: bulkUploadJobContext.SchemaPath,
-                maxSimultaneousRequests: bulkUploadJobContext.MaxSimultaneousRequests);
-        }
-
         public void CleanUp(BulkUploadJobContext jobContext)
         {
             var uploadFolder = jobContext?.DataDirectoryFullPath;
@@ -173,7 +162,19 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
         private void ValidateBulkDataXml(BulkUploadJobContext jobContext, FileImportService fileImportService)
         {
-            jobContext.ValidationResult = fileImportService.Validate();
+            try
+            {
+                jobContext.ValidationResult = fileImportService.Validate();
+
+                if (jobContext.ValidationResult != null && !jobContext.ValidationResult.Valid)
+                {
+                    throw new Exception("Validation failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred during file validation: {ex.Message}");
+            }
         }
 
         public WorkflowStatus GetStatus(BulkUploadJobContext bulkUploadJobContext, BulkUploadWorkflowManager workflowManager)

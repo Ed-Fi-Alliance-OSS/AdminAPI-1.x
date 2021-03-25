@@ -6,12 +6,14 @@
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.SchoolYears;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
+    [BypassInstanceContextFilter]
     public class SchoolYearsController : ControllerBase
     {
         private readonly GetSchoolYearsQuery _getSchoolYears;

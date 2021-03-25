@@ -56,6 +56,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 new EditSchoolYearModel
                 {
                     Warning = warning,
+                    InstanceName = instanceName,
                     SchoolYear = currentSchoolYear,
                     SchoolYears = schoolYears
                         .ToSelectListItems(

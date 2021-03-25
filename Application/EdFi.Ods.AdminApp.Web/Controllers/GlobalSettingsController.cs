@@ -166,6 +166,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return RedirectToActionJson<GlobalSettingsController>(x => x.Vendors(), "Vendor updated successfully");
         }
 
+        public ActionResult DefineApplications()
+        {
+            TempData["IsVendorApplications"] = true;
+            return RedirectToAction("Index", "OdsInstances");
+        }
+
         public async Task<ActionResult> AdvancedSettings()
         {
             var currentSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);

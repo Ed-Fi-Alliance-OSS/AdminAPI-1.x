@@ -174,36 +174,19 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
             }
 
             [TestFixture]
-            public class GivenValueWithoutSignature
+            public class GivenInvalidInput
             {
+                [TestCase("The actual value here doesn't matter so long as.there are.more.than.two.periods")]
+                [TestCase("The actual value here doesn't matter so long as there is no period")]
                 [Test]
-                public void ThenThrowException()
+                public void ThenReturnGivenInputValue(string inputValue)
                 {
-                    Action act = () =>
-                    {
-                        new AESEncryptorService(TestKey, TestIv).TryDecrypt(
-                            "The actual value here doesn't matter so long as there is no period",
-                            out var decryptedValue);
-                    };
+                    var result = new AESEncryptorService(TestKey, TestIv).TryDecrypt(
+                        inputValue,
+                        out var decryptedValue);
 
-                    act.ShouldThrow<InvalidOperationException>();
-                }
-            }
-
-            [TestFixture]
-            public class GivenTooManyPeriods
-            {
-                [Test]
-                public void ThenThrowException()
-                {
-                    Action act = () =>
-                    {
-                        new AESEncryptorService(TestKey, TestIv).TryDecrypt(
-                            "The actual value here doesn't matter so long as.there are.more.than.two.periods",
-                            out var decryptedValue);
-                    };
-
-                    act.ShouldThrow<InvalidOperationException>();
+                    result.ShouldBeFalse();
+                    decryptedValue.ShouldBe(inputValue);
                 }
             }
 
@@ -250,18 +233,16 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Services
                 public class AndValueDoesNotMatchSignature
                 {
                     [Test]
-                    public void ThenThrowException()
+                    public void ThenReturnGivenInputValue()
                     {
-                        Action act = () =>
-                        {
-                            new AESEncryptorService(TestKey, TestIv).TryDecrypt(
-
-                                // Made up signature
-                                "aW52YWxpZCBzaWduYXR1cmU=.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        var inputValue = "aW52YWxpZCBzaWduYXR1cmU=.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+                      
+                        var result = new AESEncryptorService(TestKey, TestIv).TryDecrypt(
+                               // Made up signature
+                                inputValue,
                                 out var decryptedValue);
-                        };
-
-                        act.ShouldThrow<InvalidOperationException>();
+                        result.ShouldBeFalse();
+                        decryptedValue.ShouldBe(inputValue);
                     }
                 }
 

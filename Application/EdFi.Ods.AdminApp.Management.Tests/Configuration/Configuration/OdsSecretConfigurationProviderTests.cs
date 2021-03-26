@@ -29,10 +29,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             {
                 appSettingsAccessor.Setup(x => x.Value).Returns(appSettings.Value);
             });
-
+            const string TestKey = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI=";
             return new OdsSecretConfigurationProvider(
-                new DataProtectionAPIEncryptorService(
-                    new EncryptionConfigurationProviderService(appSettingsAccessor.Object)), database);
+                new AESEncryptorService(TestKey), database);
         }
 
         private async Task<OdsSqlConfiguration> GetSqlConfiguration()
@@ -78,7 +77,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         [Test]
         public async Task ShouldRetrieveUnencryptedSecretConfiguration_SingleInstance()
         {
-            const string jsonConfiguration =
+            const string JsonConfiguration =
                 "{\"ProductionApiKeyAndSecret\":{\"Key\":\"productionKey\",\"Secret\":\"productionSecret\"}," +
                 "\"BulkUploadCredential\":{\"ApiKey\":\"bulkKey\",\"ApiSecret\":\"bulkSecret\"}," +
                 "\"LearningStandardsCredential\":null," +
@@ -91,7 +90,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             odsInstanceRegistration.ShouldNotBeNull();
 
-            AddSecretConfiguration(jsonConfiguration, odsInstanceRegistration.Id);
+            AddSecretConfiguration(JsonConfiguration, odsInstanceRegistration.Id);
 
             var secretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
 
@@ -106,12 +105,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         [Test]
         public async Task ShouldRetrieveUnencryptedSecretConfiguration_MultiInstance()
         {
-            const string jsonConfiguration1 =
+            const string JsonConfiguration1 =
                 "{\"ProductionApiKeyAndSecret\":{\"Key\":\"productionKey1\",\"Secret\":\"productionSecret1\"}," +
                 "\"BulkUploadCredential\":{\"ApiKey\":\"bulkKey1\",\"ApiSecret\":\"bulkSecret1\"}," +
                 "\"LearningStandardsCredential\":null," +
                 "\"ProductionAcademicBenchmarkApiClientKeyAndSecret\":null}";
-            const string jsonConfiguration2 =
+            const string JsonConfiguration2 =
                 "{\"ProductionApiKeyAndSecret\":{\"Key\":\"productionKey2\",\"Secret\":\"productionSecret2\"}," +
                 "\"BulkUploadCredential\":{\"ApiKey\":\"bulkKey2\",\"ApiSecret\":\"bulkSecret2\"}," +
                 "\"LearningStandardsCredential\":null," +
@@ -125,7 +124,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             odsInstanceRegistration1.ShouldNotBeNull();
             odsInstanceRegistration2.ShouldNotBeNull();
 
-            AddSecretConfiguration(jsonConfiguration1, odsInstanceRegistration1.Id);
+            AddSecretConfiguration(JsonConfiguration1, odsInstanceRegistration1.Id);
 
             var secretConfigurationForInstance1 =
                 await GetSecretConfiguration(odsInstanceRegistration1.Id);
@@ -137,7 +136,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             secretConfigurationForInstance1.LearningStandardsCredential.ShouldBe(null);
             secretConfigurationForInstance1.ProductionAcademicBenchmarkApiClientKeyAndSecret.ShouldBe(null);
 
-            AddSecretConfiguration(jsonConfiguration2, odsInstanceRegistration2.Id);
+            AddSecretConfiguration(JsonConfiguration2, odsInstanceRegistration2.Id);
             var secretConfigurationForInstance2 =
                 await GetSecretConfiguration(odsInstanceRegistration2.Id);
 

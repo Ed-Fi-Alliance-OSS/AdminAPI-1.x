@@ -25,7 +25,6 @@ $p = @{
         DatabaseEngine = "PostgreSql"
         BulkUploadHashCache = "/app/BulkUploadHashCache/"
         PathBase = "adminapp"
-        EncryptionProtocol = "AES"
         EncryptionKey = "<Generated encryption key>"
         AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
         SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"

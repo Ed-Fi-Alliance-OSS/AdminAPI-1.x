@@ -131,15 +131,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                 }
             }
 
-            if (appSettings.EncryptionProtocol == "AES")
-            {
-                services.AddSingleton<IStringEncryptorService, AESEncryptorService>(
+            services.AddSingleton<IStringEncryptorService, AESEncryptorService>(
                     x => new AESEncryptorService(appSettings.EncryptionKey));
-            }
-            else
-            {
-                services.AddSingleton<IStringEncryptorService, DataProtectionAPIEncryptorService>();
-            }
         }
 
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);

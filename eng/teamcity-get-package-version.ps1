@@ -7,11 +7,11 @@
 # was copied over from an upstream dependency.
 
 Param(    
-       [string] 
-       $packageType = "Application"     
+    [string] 
+    $packageType = "Application"     
 )
 
-function SetPackageDetails{
+function SetPackageDetails {
     param (
         [string]
         $packageNamePrefix       
@@ -31,23 +31,20 @@ function SetPackageDetails{
         throw "$packageNamePrefix package name does not match the expected naming convention."
     }
 
-    $release = $matches[1]+"."+$matches[2]+"."+$matches[3]+"-pre"+$matches[4]
+    $release = $matches[1] + "." + $matches[2] + "." + $matches[3] + "-pre" + $matches[4]
 
     Write-Host "##teamcity[setParameter name='nuGet.packageFile' value='$pkg']"
     Write-Host "##teamcity[setParameter name='nuGet.packageVersion' value='$release']"
 
-    if("Web" -ieq $packageNamePrefix)
-    { 
+    if ("Web" -ieq $packageNamePrefix) { 
         Write-Host "##teamcity[setParameter name='octopus.release' value='$release']"
         Write-Host "##teamcity[setParameter name='octopus.package' value='$pkg']"
     }
 }
 
-if("Application" -ieq $packageType)
-{ 
+if ("Application" -ieq $packageType) { 
     SetPackageDetails "Web"   
 }
-else 
-{    
+else {    
     SetPackageDetails "Database"   
 }

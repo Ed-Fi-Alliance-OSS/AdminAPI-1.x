@@ -14,17 +14,15 @@ object Deploy : BuildType ({
     name = "Deploy"
     description = "Creates a release in Octopus Deploy and triggers its deployment to the test server"
     
-    //Pausing this build since there's an issue that will be addresses in an upcoming ticket
-    paused = true
-    
     type = BuildTypeSettings.Type.DEPLOYMENT
 
     params {
-        param("octopus.package", "placeholder")
         param("octopus.environment", "Integration")
         param("octopus.channel", "SharedInstance v5.1.x")
-        param("octopus.release", "placeholder")
         param("octopus.project", "Suite 3 Admin App")
+        param("octopus.package", "placeholder")
+        param("octopus.packageVersion", "placeholder")
+        param("octopus.release", "%octopus.packageVersion%-shared510")
     }
 
     vcs {
@@ -32,6 +30,18 @@ object Deploy : BuildType ({
     }
 
     steps {
+        powerShell {
+            name = "Setting octopus parameters"
+            formatStderrAsError = true
+            scriptMode = script {
+                content = """
+                    Write-Host "##teamcity[setParameter name='octopus.package' value='$(Get-ChildItem -Filter "*Installer.AdminApp*")']"
+                    Write-Host "##teamcity[setParameter name='octopus.packageVersion' value='$( Get-ChildItem -Filter "*Installer.AdminApp*" |% {  
+                            ${'$'}result = ${'$'}${'_'}.Name -match '(\d)\.(\d)\.(\d)(\-pre(\d+))?' 
+                            ${'$'}matches[0] })']"
+                 """
+            }
+        }
         step {
             name = "Publish Package to Octopus"
             type = "octopus.push.package"
@@ -44,7 +54,7 @@ object Deploy : BuildType ({
         step {
             name = "Create and Deploy Release"
             type = "octopus.create.release"
-            param("octopus_additionalcommandlinearguments", """--variable="ForceFirstTimeSetup:false" --packageVersion=%octopus.release% --deploymenttimeout=%octopus.deployTimeout%""")
+            param("octopus_additionalcommandlinearguments", """-v="AdminAppReleaseVersion:%adminAppInstaller.version%" -v="AdminAppReleaseVersion:%adminAppWeb.version%" --packageVersion=%octopus.packageVersion% --deploymenttimeout=%octopus.deployTimeout%""")
             param("octopus_channel_name", "%octopus.channel%")
             param("octopus_version", "3.0+")
             param("octopus_host", "%octopus.server%")

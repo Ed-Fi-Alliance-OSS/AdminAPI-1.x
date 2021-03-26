@@ -13,8 +13,9 @@ object AdminAppInstallerProject : Project({
     description = "ODS Admin App Installer Build Configurations"
 
     params {
+        param("project.name", "EdFi.Suite3.Installer.AdminApp")
         param("adminAppInstaller.version", "2.2.0")
-        param("version.preReleaseLabel", "pre")
+        param("adminAppWeb.version", "2.2.0-pre0008")
     }
 
     buildType(_self.buildTypes.BuildAdminAppInstaller)

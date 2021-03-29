@@ -165,7 +165,7 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
             if (SignatureDoesNotMatch(components))
             {
-                decryptedValue = value;
+                decryptedValue = string.Empty;
                 return false;
             }
 
@@ -186,9 +186,13 @@ namespace EdFi.Ods.AdminApp.Management.Services
             {
                 var split = localValue.Split('.');
 
-                return split.Length != 3
-                    ? (string.Empty, localValue, string.Empty)
-                    : (split[0], split[1], split[2]);
+                if (split.Length != 3)
+                {
+                    throw new InvalidOperationException(
+                        "Unable to decrypt the string because it is not signed properly.");
+                }
+
+                return (split[0], split[1], split[2]);
             }
 
             bool SignatureDoesNotMatch((string iv, string encrypted, string signature) localComp)

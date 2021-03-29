@@ -74,14 +74,15 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task<OdsSqlConfiguration> ReadSqlConfigurations()
         {
-            var rawValue = (await _database.AzureSqlConfigurations.SingleOrDefaultAsync())?.Configurations;
+            var sqlConfigurations = await _database.AzureSqlConfigurations.SingleOrDefaultAsync();
+            var rawValue = sqlConfigurations?.Configurations;
 
             if (rawValue == null)
             {
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<OdsSqlConfiguration>(
+            return JsonConvert.DeserializeObject<OdsSqlConfiguration>(!sqlConfigurations.IsEncrypted ? rawValue :
                 _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
                     ? unencryptedValue
                     : rawValue, GetSerializerSettings());
@@ -89,15 +90,16 @@ namespace EdFi.Ods.AdminApp.Management
 
         private async Task<OdsSecretConfiguration> ReadSecretConfigurations(int? instanceRegistrationId)
         {
-            var rawValue = (await _database.SecretConfigurations.SingleOrDefaultAsync(x =>
-                x.OdsInstanceRegistrationId == instanceRegistrationId))?.EncryptedData;
+            var secretConfiguration = await _database.SecretConfigurations.SingleOrDefaultAsync(
+                x => x.OdsInstanceRegistrationId == instanceRegistrationId);
+            var rawValue = secretConfiguration?.EncryptedData;
 
             if (rawValue == null)
             {
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<OdsSecretConfiguration>(
+            return JsonConvert.DeserializeObject<OdsSecretConfiguration>(!secretConfiguration.IsEncrypted ? rawValue :
                 _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
                     ? unencryptedValue
                     : rawValue, GetSerializerSettings());
@@ -113,9 +115,12 @@ namespace EdFi.Ods.AdminApp.Management
                     x.OdsInstanceRegistrationId == instanceRegistrationId);
             if (secretConfiguration == null)
                 _database.SecretConfigurations.Add(new SecretConfiguration
-                    {EncryptedData = encryptedValue, OdsInstanceRegistrationId = instanceRegistrationId});
+                    {EncryptedData = encryptedValue, OdsInstanceRegistrationId = instanceRegistrationId, IsEncrypted = true});
             else
+            {
                 secretConfiguration.EncryptedData = encryptedValue;
+                secretConfiguration.IsEncrypted = true;
+            }
 
             await _database.SaveChangesAsync();
         }
@@ -128,9 +133,12 @@ namespace EdFi.Ods.AdminApp.Management
             var sqlConfiguration = await _database.AzureSqlConfigurations.SingleOrDefaultAsync();
             if (sqlConfiguration == null)
                 _database.AzureSqlConfigurations.Add(new AzureSqlConfiguration
-                { Configurations = encryptedValue });
+                { Configurations = encryptedValue, IsEncrypted = true});
             else
+            {
                 sqlConfiguration.Configurations = encryptedValue;
+                sqlConfiguration.IsEncrypted = true;
+            }
 
             await _database.SaveChangesAsync();
         }

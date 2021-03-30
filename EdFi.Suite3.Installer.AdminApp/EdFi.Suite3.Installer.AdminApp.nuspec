@@ -19,5 +19,6 @@
     <file src="Ed-Fi-ODS-Implementation/**" />
     <file src="../LICENSE" />
     <file src="../NOTICES.md" />
+    <file src="../eng/key-management.psm1" />
   </files>
 </package>

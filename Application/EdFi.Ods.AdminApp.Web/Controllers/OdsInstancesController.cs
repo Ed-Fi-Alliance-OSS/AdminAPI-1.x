@@ -3,10 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
@@ -31,6 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly AdminAppUserContext _userContext;
         private readonly BulkRegisterOdsInstancesCommand _bulkRegisterOdsInstancesCommand;
         private readonly GetCurrentSchoolYearQuery _getCurrentSchoolYear;
+        private readonly ITelemetry _telemetry;
 
         public OdsInstancesController(
               RegisterOdsInstanceCommand registerOdsInstanceCommand
@@ -39,7 +38,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
             , AdminAppUserContext userContext
             , BulkRegisterOdsInstancesCommand bulkRegisterOdsInstancesCommand
-           ,  GetCurrentSchoolYearQuery getCurrentSchoolYear)
+            , GetCurrentSchoolYearQuery getCurrentSchoolYear
+            , ITelemetry telemetry)
         {
             _registerOdsInstanceCommand = registerOdsInstanceCommand;
             _deregisterOdsInstanceCommand = deregisterOdsInstanceCommand;
@@ -48,6 +48,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _userContext = userContext;
             _bulkRegisterOdsInstancesCommand = bulkRegisterOdsInstancesCommand;
             _getCurrentSchoolYear = getCurrentSchoolYear;
+            _telemetry = telemetry;
         }
 
         public ViewResult Index()
@@ -85,6 +86,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [PermissionRequired(Permission.AccessGlobalSettings)]
         public async Task<ActionResult> RegisterOdsInstance(RegisterOdsInstanceModel model)
         {
+            await _telemetry.Event("Register ODS Instance");
+
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             await _registerOdsInstanceCommand.Execute(model,

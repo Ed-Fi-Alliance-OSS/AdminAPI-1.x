@@ -27,7 +27,7 @@ namespace EdFi.Ods.AdminApp.Management
             _appSettings = appSettingsAccessor.Value;
             _measurementId = _appSettings.GoogleAnalyticsMeasurementId;
 
-            _internalVersion = Version.InternalVersion;
+            _internalVersion = Version.InformationalVersion;
 
             _environment = new SimpleTrackerEnvironment(
                 OSVersion.Platform.ToString(),

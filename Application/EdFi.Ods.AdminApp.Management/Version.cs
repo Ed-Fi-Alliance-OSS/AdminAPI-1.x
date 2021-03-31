@@ -4,7 +4,7 @@ namespace EdFi.Ods.AdminApp.Management
 {
     public static class Version
     {
-        public static string InternalVersion =>
+        public static string InformationalVersion =>
             Assembly
                 .GetExecutingAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;

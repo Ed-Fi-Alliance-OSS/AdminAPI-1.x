@@ -94,6 +94,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddScoped<InstanceContext>();
 
+            services.AddScoped<ITelemetry, Telemetry>();
+
             services.AddTransient<ApplicationConfigurationService>();
 
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())

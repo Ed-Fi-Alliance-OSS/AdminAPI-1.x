@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
@@ -68,6 +69,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             var secretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
 
+            var record = GetSecretConfigurationRecord(odsInstanceRegistration.Id);
+            record.IsEncrypted.ShouldBe(false);
+            record.EncryptedData.ShouldBe(JsonConfiguration);
+
             secretConfiguration.ProductionApiKeyAndSecret.Key.ShouldBe("productionKey");
             secretConfiguration.ProductionApiKeyAndSecret.Secret.ShouldBe("productionSecret");
             secretConfiguration.BulkUploadCredential.ApiKey.ShouldBe("bulkKey");
@@ -103,6 +108,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             var secretConfigurationForInstance1 =
                 await GetSecretConfiguration(odsInstanceRegistration1.Id);
 
+            var record = GetSecretConfigurationRecord(odsInstanceRegistration1.Id);
+            record.IsEncrypted.ShouldBe(false);
+            record.EncryptedData.ShouldBe(JsonConfiguration1);
+
             secretConfigurationForInstance1.ProductionApiKeyAndSecret.Key.ShouldBe("productionKey1");
             secretConfigurationForInstance1.ProductionApiKeyAndSecret.Secret.ShouldBe("productionSecret1");
             secretConfigurationForInstance1.BulkUploadCredential.ApiKey.ShouldBe("bulkKey1");
@@ -113,6 +122,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             AddSecretConfiguration(JsonConfiguration2, odsInstanceRegistration2.Id);
             var secretConfigurationForInstance2 =
                 await GetSecretConfiguration(odsInstanceRegistration2.Id);
+
+            record = GetSecretConfigurationRecord(odsInstanceRegistration2.Id);
+            record.IsEncrypted.ShouldBe(false);
+            record.EncryptedData.ShouldBe(JsonConfiguration2);
 
             secretConfigurationForInstance2.ProductionApiKeyAndSecret.Key.ShouldBe("productionKey2");
             secretConfigurationForInstance2.ProductionApiKeyAndSecret.Secret.ShouldBe("productionSecret2");
@@ -158,6 +171,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             await SetSecretConfiguration(secretConfiguration, odsInstanceRegistration.Id);
             var createdSecretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
 
+            var record = GetSecretConfigurationRecord(odsInstanceRegistration.Id);
+            record.IsEncrypted.ShouldBe(true);
+            record.EncryptedData.ShouldEndWith("=");
+
             createdSecretConfiguration.ProductionApiKeyAndSecret.Key.ShouldBe(productionApiKey);
             createdSecretConfiguration.ProductionApiKeyAndSecret.Secret.ShouldBe(productionApiSecret);
             createdSecretConfiguration.BulkUploadCredential.ShouldBe(null);
@@ -167,6 +184,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             await SetSecretConfiguration(editSecretConfiguration, odsInstanceRegistration.Id);
 
             var editedSecretConfiguration = await GetSecretConfiguration(odsInstanceRegistration.Id);
+
+            record = GetSecretConfigurationRecord(odsInstanceRegistration.Id);
+            record.IsEncrypted.ShouldBe(true);
+            record.EncryptedData.ShouldEndWith("=");
 
             editedSecretConfiguration.ProductionApiKeyAndSecret.Key.ShouldBe(newProductionApiKey);
             editedSecretConfiguration.ProductionApiKeyAndSecret.Secret.ShouldBe(newProductionApiSecret);
@@ -222,6 +243,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             // Verify the secret configuration for instance 2
             var createdSecretConfigurationForInstance2 = await GetSecretConfiguration(odsInstanceRegistration2.Id);
+            var record = GetSecretConfigurationRecord(odsInstanceRegistration2.Id);
+            record.IsEncrypted.ShouldBe(true);
+            record.EncryptedData.ShouldEndWith("=");
             createdSecretConfigurationForInstance2.ProductionApiKeyAndSecret.Key.ShouldBe(productionApiKey);
             createdSecretConfigurationForInstance2.ProductionApiKeyAndSecret.Secret.ShouldBe(productionApiSecret);
             createdSecretConfigurationForInstance2.BulkUploadCredential.ShouldBe(null);
@@ -230,6 +254,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
             // Verify the edited secret configuration for instance 1
             var editedSecretConfigurationForInstance1 = await GetSecretConfiguration(odsInstanceRegistration1.Id);
+            record = GetSecretConfigurationRecord(odsInstanceRegistration1.Id);
+            record.IsEncrypted.ShouldBe(true);
+            record.EncryptedData.ShouldEndWith("=");
             editedSecretConfigurationForInstance1.ProductionApiKeyAndSecret.Key.ShouldBe(newProductionApiKey);
             editedSecretConfigurationForInstance1.ProductionApiKeyAndSecret.Secret.ShouldBe(newProductionApiSecret);
             editedSecretConfigurationForInstance1.BulkUploadCredential.ShouldBe(null);
@@ -259,7 +286,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             ClearSqlConfigurationCache();
             EnsureOneSqlConfiguration(jsonConfiguration);
 
+            var initialRecord = GetAzureSqlConfigurationRecord();
+            initialRecord.IsEncrypted.ShouldBe(false);
+            initialRecord.Configurations.ShouldBe(jsonConfiguration);
+
             var sqlConfiguration = await GetSqlConfiguration();
+
+            var recordUponSelfEncryptingRead = GetAzureSqlConfigurationRecord();
+            recordUponSelfEncryptingRead.IsEncrypted.ShouldBe(true);
+            recordUponSelfEncryptingRead.Configurations.ShouldNotBe(jsonConfiguration);
+            recordUponSelfEncryptingRead.Configurations.ShouldEndWith("=");
 
             sqlConfiguration.HostName.ShouldBe("localhost");
             sqlConfiguration.AdminCredentials.UserName.ShouldBe("adminUser");
@@ -292,14 +328,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             });
         }
 
-        private void AddSecretConfiguration(string jsonConfiguration, int odsInstanceRegistrationId)
+        private void AddSecretConfiguration(string jsonConfigurationPlainText, int odsInstanceRegistrationId)
         {
             Scoped<AdminAppDbContext>(database =>
             {
                 database.SecretConfigurations.Add(
                     new SecretConfiguration
                     {
-                        EncryptedData = jsonConfiguration, OdsInstanceRegistrationId = odsInstanceRegistrationId
+                        EncryptedData = jsonConfigurationPlainText,
+                        OdsInstanceRegistrationId = odsInstanceRegistrationId,
+                        IsEncrypted = false
                     });
 
                 database.SaveChanges();
@@ -321,14 +359,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             return createdOdsInstanceRegistration;
         }
 
-        private void EnsureOneSqlConfiguration(string jsonConfiguration)
+        private void EnsureOneSqlConfiguration(string jsonConfigurationPlainText)
         {
             EnsureZeroSqlConfigurations();
 
             Scoped<AdminAppDbContext>(database =>
             {
                 database.AzureSqlConfigurations.Add(
-                    new AzureSqlConfiguration {Configurations = jsonConfiguration});
+                    new AzureSqlConfiguration
+                    {
+                        Configurations = jsonConfigurationPlainText,
+                        IsEncrypted = false
+                    });
 
                 database.SaveChanges();
             });
@@ -347,5 +389,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         {
             _cache.Remove("OdsSqlConfiguration");
         }
+
+        private static SecretConfiguration GetSecretConfigurationRecord(int odsInstanceRegistrationId)
+            => Query(db => db.SecretConfigurations.Single(x => x.OdsInstanceRegistrationId == odsInstanceRegistrationId));
+
+        private static AzureSqlConfiguration GetAzureSqlConfigurationRecord()
+            => Query(db => db.AzureSqlConfigurations.Single());
     }
 }

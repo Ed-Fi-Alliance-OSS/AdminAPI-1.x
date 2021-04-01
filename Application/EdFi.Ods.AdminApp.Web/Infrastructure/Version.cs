@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace EdFi.Ods.AdminApp.Management
+namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
     public static class Version
     {

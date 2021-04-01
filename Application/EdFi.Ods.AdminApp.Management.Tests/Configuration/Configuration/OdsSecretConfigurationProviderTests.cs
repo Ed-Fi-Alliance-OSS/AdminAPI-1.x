@@ -9,10 +9,6 @@ using System.Runtime.Caching;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Management.Helpers;
-using EdFi.Ods.AdminApp.Management.Services;
-using Microsoft.Extensions.Options;
-using Moq;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -21,44 +17,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
     public class OdsSecretConfigurationProviderTests : AdminAppDataTestBase
     {
-        private static OdsSecretConfigurationProvider OdsSecretConfigurationProvider(AdminAppDbContext database)
+        private static async Task<OdsSqlConfiguration> GetSqlConfiguration()
         {
-
-            var appSettingsAccessor = new Mock<IOptions<AppSettings>>();
-            Scoped<IOptions<AppSettings>>(appSettings =>
-            {
-                appSettingsAccessor.Setup(x => x.Value).Returns(appSettings.Value);
-            });
-            const string TestKey = "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI=";
-            return new OdsSecretConfigurationProvider(
-                new AESEncryptorService(TestKey), database);
+            return await ScopedAsync<IOdsSecretConfigurationProvider, OdsSqlConfiguration>(
+                async provider => await provider.GetSqlConfiguration());
         }
 
-        private async Task<OdsSqlConfiguration> GetSqlConfiguration()
+        private static async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
         {
-            return await ScopedAsync<AdminAppDbContext, OdsSqlConfiguration>(async database =>
-            {
-                var provider = OdsSecretConfigurationProvider(database);
-                return await provider.GetSqlConfiguration();
-            });
+            return await ScopedAsync<IOdsSecretConfigurationProvider, OdsSecretConfiguration>(
+                async provider => await provider.GetSecretConfiguration(instanceRegistrationId));
         }
 
-        private async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
+        private static async Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId = null)
         {
-            return await ScopedAsync<AdminAppDbContext, OdsSecretConfiguration>(async database =>
-            {
-                var provider = OdsSecretConfigurationProvider(database);
-                return await provider.GetSecretConfiguration(instanceRegistrationId);
-            });
-        }
-
-        private async Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? instanceRegistrationId = null)
-        {
-            await ScopedAsync<AdminAppDbContext>(async database =>
-            {
-                var provider = OdsSecretConfigurationProvider(database);
-                await provider.SetSecretConfiguration(configuration, instanceRegistrationId);
-            });
+            await ScopedAsync<IOdsSecretConfigurationProvider>(
+                async provider => await provider.SetSecretConfiguration(configuration, instanceRegistrationId));
         }
 
         private readonly ObjectCache _cache = MemoryCache.Default;

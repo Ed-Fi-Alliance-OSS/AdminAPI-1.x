@@ -94,7 +94,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddScoped<InstanceContext>();
 
-            services.AddScoped<ITelemetry, Telemetry>();
+            services.AddTransient<ITelemetry, Telemetry>();
 
             services.AddTransient<ApplicationConfigurationService>();
 

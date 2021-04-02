@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -350,6 +350,7 @@ function UpdateAppSettingsForDocker {
     $json.AppSettings.XsdFolder = $DockerEnvValues["XsdFolder"]
     $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
     $json.AppSettings.BulkUploadHashCache = $DockerEnvValues["BulkUploadHashCache"]
+    $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
     $json.AppSettings.EncryptionProtocol = $DockerEnvValues["EncryptionProtocol"]
 
     if ($null -eq $json.AppSettings.EncryptionKey) {

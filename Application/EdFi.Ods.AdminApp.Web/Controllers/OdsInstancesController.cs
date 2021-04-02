@@ -51,6 +51,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _telemetry = telemetry;
         }
 
+        [AddTelemetry("Ods Instances Index", true)]
         public ViewResult Index()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -84,10 +85,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [PermissionRequired(Permission.AccessGlobalSettings)]
+        [AddTelemetry("Register ODS Instance")]
         public async Task<ActionResult> RegisterOdsInstance(RegisterOdsInstanceModel model)
         {
-            await _telemetry.Event("Register ODS Instance");
-
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             await _registerOdsInstanceCommand.Execute(model,
@@ -104,6 +104,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [PermissionRequired(Permission.AccessGlobalSettings)]
+        [AddTelemetry("Bulk Register ODS Instances")]
         public async Task<ActionResult> BulkRegisterOdsInstances(BulkRegisterOdsInstancesModel model)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -120,6 +121,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 $"Successful instance registrations: {successCount}. Failed instance registrations: {failCount}. Skipped instance registrations: {skippedCount}. Please refer to log file for further details.");
         }
 
+        [AddTelemetry("Activate ODS Instance")]
         public ActionResult ActivateOdsInstance(string instanceId)
         {
             Response.Cookies.Append("Instance", instanceId, new CookieOptions());
@@ -142,6 +144,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [PermissionRequired(Permission.AccessGlobalSettings)]
+        [AddTelemetry("Deregister ODS Instance")]
         public ActionResult DeregisterOdsInstance(DeregisterOdsInstanceModel model)
         {
             _deregisterOdsInstanceCommand.Execute(model);

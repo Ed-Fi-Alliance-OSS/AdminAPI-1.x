@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Web;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
@@ -16,6 +17,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 .ConfigureServices((context, services) =>
                 {
                     // Test-specific IoC modifications here.
+                    services.AddTransient<ITelemetry, StubTelemetry>();
                 })
                 .Build()
                 .Services;

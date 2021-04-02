@@ -11,10 +11,16 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
     [AttributeUsage(AttributeTargets.Method)]
     public class AddTelemetryAttribute : TypeFilterAttribute
     {
-        public AddTelemetryAttribute(string action, bool isView = false)
+        public AddTelemetryAttribute(string action, TelemetryType type = TelemetryType.Event)
             : base(typeof(AddTelemetryFilter))
         {
-            Arguments = new object[] { action, isView };
+            Arguments = new object[] { action, type };
         }
+    }
+
+    public enum TelemetryType
+    {
+        Event,
+        View
     }
 }

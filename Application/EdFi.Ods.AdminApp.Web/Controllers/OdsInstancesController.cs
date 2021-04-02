@@ -51,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _telemetry = telemetry;
         }
 
-        [AddTelemetry("Ods Instances Index", true)]
+        [AddTelemetry("Ods Instances Index", TelemetryType.View)]
         public ViewResult Index()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

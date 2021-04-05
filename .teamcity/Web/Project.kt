@@ -12,10 +12,6 @@ object AdminAppWebProject : Project({
     id = RelativeId("AdminAppWeb")
     description = "ODS Admin App Build Configurations"
 
-    params {
-        param("adminApp.version", "2.2.0")
-    }
-
     template(_self.templates.BuildAndTestTemplate)
 
     buildType(_self.buildTypes.BuildBranch)

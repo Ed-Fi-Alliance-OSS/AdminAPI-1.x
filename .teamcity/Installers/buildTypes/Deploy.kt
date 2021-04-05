@@ -17,6 +17,7 @@ object Deploy : BuildType ({
     type = BuildTypeSettings.Type.DEPLOYMENT
 
     params {
+        param("adminAppWeb.version", "%adminApp.version%")
         param("octopus.environment", "Integration")
         param("octopus.channel", "SharedInstance v5.1.x")
         param("octopus.project", "Suite 3 Admin App")
@@ -54,7 +55,7 @@ object Deploy : BuildType ({
         step {
             name = "Create and Deploy Release"
             type = "octopus.create.release"
-            param("octopus_additionalcommandlinearguments", """-v="AdminAppReleaseVersion:%adminAppInstaller.version%" -v="AdminAppReleaseVersion:%adminAppWeb.version%" --packageVersion=%octopus.packageVersion% --deploymenttimeout=%octopus.deployTimeout%""")
+            param("octopus_additionalcommandlinearguments", """-v="AdminAppReleaseVersion:%adminApp.version%" -v="AdminAppVersion:%adminAppWeb.version%" --packageVersion=%octopus.packageVersion% --deploymenttimeout=%octopus.deployTimeout%""")
             param("octopus_channel_name", "%octopus.channel%")
             param("octopus_version", "3.0+")
             param("octopus_host", "%octopus.server%")

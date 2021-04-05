@@ -19,7 +19,6 @@ object BuildAdminAppInstaller : BuildType ({
     artifactRules = "**/EdFi.Suite3.Installer.AdminApp*.nupkg"
 
     params {
-        param("version.preReleaseLabel", "pre")
         param("github.organization", "Ed-Fi-Alliance-OSS")
         param("project.directory", """Ed-Fi-ODS-AdminApp\%project.name%""")
         param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", """{"endpointCredentials": [{"endpoint": "%azureArtifacts.feed.nuget%","username": "%azureArtifacts.edFiBuildAgent.userName%","password": "%azureArtifacts.edFiBuildAgent.accessToken%"}]}""")
@@ -40,7 +39,7 @@ object BuildAdminAppInstaller : BuildType ({
             scriptMode = script {
                 content = """
                     ${'$'}parameters = @{
-                        SemanticVersion = "%adminAppInstaller.version%"
+                        SemanticVersion = "%adminApp.version%"
                         BuildCounter = "%build.counter%"
                         PreReleaseLabel = "%version.preReleaseLabel%"
                         Publish = [System.Convert]::ToBoolean("%project.shouldPublishPreRelease%")

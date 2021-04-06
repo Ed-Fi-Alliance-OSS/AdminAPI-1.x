@@ -16,7 +16,7 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 {
     public class AddTelemetryFilter : IAsyncActionFilter
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(SetupController));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(AddTelemetryFilter));
 
         private readonly string _action;
         private readonly TelemetryType _type;

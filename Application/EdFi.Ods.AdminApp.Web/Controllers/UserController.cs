@@ -75,6 +75,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Add User")]
         public async Task<ActionResult> AddUser(AddUserModel model)
         {
             if (!ModelState.IsValid)
@@ -113,6 +114,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Edit User")]
         public async Task<ActionResult> EditUser(EditUserModel model)
         {
             if (!ModelState.IsValid)
@@ -164,6 +166,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Edit Ods Instance Registrations For User")]
         public ActionResult EditOdsInstanceRegistrationsForUser(EditOdsInstanceRegistrationForUserModel model)
         {
             if (!ModelState.IsValid)
@@ -193,6 +196,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Edit User Role")]
         public ActionResult EditUserRole(EditUserRoleModel model)
         {
             if (!ModelState.IsValid)
@@ -217,6 +221,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Delete User")]
         public ActionResult DeleteUser(DeleteUserModel model)
         {
             _deleteUserCommand.Execute(model);

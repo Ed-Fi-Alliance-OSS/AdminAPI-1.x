@@ -26,12 +26,14 @@ namespace EdFi.Ods.AdminApp.Management.Database
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("adminapp");
             modelBuilder.ApplyDatabaseServerSpecificConventions(_appSettings.Value.DatabaseEngine);
+            modelBuilder.Entity<DatabaseVersion>().HasNoKey();
         }
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
         public DbSet<SecretConfiguration> SecretConfigurations { get; set; }
         public DbSet<AzureSqlConfiguration> AzureSqlConfigurations { get; set; }
         public DbSet<OdsInstanceRegistration> OdsInstanceRegistrations { get; set; }
+        public DbSet<DatabaseVersion> DatabaseVersionView { get; set; }
 
         public TEntity EnsureSingle<TEntity>() where TEntity : Entity, new()
         {

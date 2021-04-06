@@ -66,6 +66,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _appSettings = appSettingsAccessor.Value;
         }
 
+        [AddTelemetry("Global Settings > Vendors", TelemetryType.View)]
         public ActionResult Vendors()
         {
             var vendors = _getVendorsQuery
@@ -85,6 +86,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
+        [AddTelemetry("Global Settings > Claim Sets", TelemetryType.View)]
         public ActionResult ClaimSets()
         {
             var model = new GlobalSettingsModel
@@ -101,6 +103,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
+        [AddTelemetry("Global Settings > Users", TelemetryType.View)]
         public ActionResult Users()
         {
             var users = _getAdminAppUsersQuery.Execute();
@@ -120,6 +123,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Add Vendor")]
         public ActionResult AddVendor(AddVendorModel model)
         {
             _addVendorCommand.Execute(model);
@@ -127,6 +131,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Delete Vendor")]
         public ActionResult DeleteVendor(DeleteVendorModel model)
         {
             var vendor = _getVendorByIdQuery.Execute(model.VendorId);
@@ -148,6 +153,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Edit Vendor")]
         public ActionResult EditVendor(EditVendorModel model)
         {
             var vendor = _getVendorByIdQuery.Execute(model.VendorId);
@@ -172,6 +178,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return RedirectToAction("Index", "OdsInstances");
         }
 
+        [AddTelemetry("Global Settings > Advanced Settings", TelemetryType.View)]
         public async Task<ActionResult> AdvancedSettings()
         {
             var currentSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
@@ -191,6 +198,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Update Advanced Settings")]
         public async Task<ActionResult> UpdateAdvancedSettings(GlobalSettingsModel model)
         {
             var instanceSettings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);
@@ -204,6 +212,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Update Log Settings")]
         public async Task<ActionResult> UpdateLogSettings(int logLevel)
         {
             var parsedLogLevel = LogLevel.FromInt32(logLevel);

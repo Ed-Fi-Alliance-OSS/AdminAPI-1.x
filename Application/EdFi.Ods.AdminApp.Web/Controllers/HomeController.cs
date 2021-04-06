@@ -29,6 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
         }
 
+        [AddTelemetry("Home Index", TelemetryType.View)]
         public ActionResult Index(bool setupCompleted = false)
         {
             if (setupCompleted && ZeroOdsInstanceRegistrations())
@@ -43,6 +44,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
+        [AddTelemetry("Post Setup", TelemetryType.View)]
         public ActionResult PostSetup(bool setupCompleted = false)
         {
             if (setupCompleted)

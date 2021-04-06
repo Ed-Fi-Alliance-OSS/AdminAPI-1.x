@@ -147,6 +147,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Copy Claim Set")]
         public ActionResult CopyClaimSet(CopyClaimSetModel model)
         {
             _copyClaimSetCommand.Execute(model);
@@ -162,6 +163,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Add Claim Set")]
         public ActionResult AddClaimSet(AddClaimSetModel model)
         {
             var claimSetId = _addClaimSetCommand.Execute(model);
@@ -213,6 +215,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Edit Claim Set")]
         public ActionResult EditClaimSet(EditClaimSetModel model)
         {
             _editClaimSetCommand.Execute(model);
@@ -220,6 +223,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Edit Resource on Claim Set")]
         public ActionResult EditResourceOnClaimSet(EditClaimSetResourceModel model)
         {
             _editResourceOnClaimSetCommand.Execute(model);
@@ -227,6 +231,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Override Auth Strategies On Resource")]
         public ActionResult OverrideAuthStrategiesOnResource(OverrideDefaultAuthorizationStrategyModel model)
         {
             _overrideDefaultAuthorizationStrategyCommand.Execute(model);
@@ -234,6 +239,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Reset Auth Strategies On Resource")]
         public ActionResult ResetAuthStrategiesOnResource(ResetToDefaultAuthStrategyModel model)
         {
             _resetToDefaultAuthStrategyCommand.Execute(model);
@@ -256,6 +262,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Delete Claim Set")]
         public ActionResult DeleteClaimSet(DeleteClaimSetModel model)
         {
             _deleteClaimSetCommand.Execute(model);
@@ -271,6 +278,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Delete Resource on Claim Set")]
         public ActionResult DeleteResourceOnClaimSet(DeleteClaimSetResourceModel model)
         {
             _deleteResourceOnClaimSetCommand.Execute(model);
@@ -292,6 +300,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Claim Set Import")]
         public ActionResult FileImport(ClaimSetFileImportModel claimSetFileImportModel)
         {
             _claimSetFileImportCommand.Execute(claimSetFileImportModel.AsSharingModel());
@@ -299,6 +308,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Claim Set Export")]
         public ActionResult FileExport(ClaimSetFileExportModel claimSetFileExportModel)
         {
             var exports = _claimSetFileExportCommand.Execute(claimSetFileExportModel);

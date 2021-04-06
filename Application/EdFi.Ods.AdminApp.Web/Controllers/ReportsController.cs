@@ -7,6 +7,7 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using System.Linq;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -50,6 +51,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _tabDisplayService = tabDisplayService;
         }
 
+        [AddTelemetry("Reports Index", TelemetryType.View)]
         public ActionResult SelectDistrict(int id = 0)
         {
             var districtOptions = _getAllLocalEducationAgenciesQuery
@@ -71,6 +73,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_SelectDistrict", reportsModel);
         }
 
+        [AddTelemetry("Reports > Total Enrollment", TelemetryType.View)]
         public ActionResult TotalEnrollment(int id)
         {
             var reportsModel = GetReportModel();
@@ -79,6 +82,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_TotalEnrollment", reportsModel);
         }
 
+        [AddTelemetry("Reports > Schools By School Type", TelemetryType.View)]
         public ActionResult SchoolsBySchoolType(int id)
         {
             var reportsModel = GetReportModel();
@@ -87,6 +91,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_SchoolsBySchoolType", reportsModel);
         }
 
+        [AddTelemetry("Reports > Enrollment By Gender", TelemetryType.View)]
         public ActionResult EnrollmentByGender(int id)
         {
             var reportsModel = GetReportModel();
@@ -95,6 +100,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_EnrollmentByGender", reportsModel);
         }
 
+        [AddTelemetry("Reports > Enrollment By Race", TelemetryType.View)]
         public ActionResult EnrollmentByRace(int id)
         {
             var reportsModel = GetReportModel();
@@ -103,6 +109,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_EnrollmentByRace", reportsModel);
         }
 
+        [AddTelemetry("Reports > Enrollment By Ethnicity", TelemetryType.View)]
         public ActionResult EnrollmentByEthnicity(int id)
         {
             var reportsModel = GetReportModel();
@@ -111,6 +118,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_EnrollmentByEthnicity", reportsModel);
         }
 
+        [AddTelemetry("Reports > Students By Program", TelemetryType.View)]
         public ActionResult StudentsByProgram(int id)
         {
             var reportsModel = GetReportModel();
@@ -119,6 +127,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_StudentsByProgram", reportsModel);
         }
 
+        [AddTelemetry("Reports > Students By Attribute", TelemetryType.View)]
         public ActionResult StudentsByAttribute(int id)
         {
             var reportsModel = GetReportModel();

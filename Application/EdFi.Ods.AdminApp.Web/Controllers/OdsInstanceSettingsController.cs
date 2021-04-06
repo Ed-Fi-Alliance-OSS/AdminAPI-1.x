@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Settings;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings;
@@ -35,6 +36,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _appSettings = appSettingsAccessor.Value;
         }
 
+        [AddTelemetry("ODS Instance Settings > Logging", TelemetryType.View)]
         public async Task<ActionResult> Logging()
         {
             var settings = await _cloudOdsSettingsService.GetSettings(_appSettings.DefaultOdsInstance);

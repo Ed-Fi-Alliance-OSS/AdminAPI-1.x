@@ -3,10 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.User;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
@@ -39,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
             , AdminAppUserContext userContext
             , BulkRegisterOdsInstancesCommand bulkRegisterOdsInstancesCommand
-           ,  GetCurrentSchoolYearQuery getCurrentSchoolYear)
+            , GetCurrentSchoolYearQuery getCurrentSchoolYear)
         {
             _registerOdsInstanceCommand = registerOdsInstanceCommand;
             _deregisterOdsInstanceCommand = deregisterOdsInstanceCommand;
@@ -50,6 +48,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getCurrentSchoolYear = getCurrentSchoolYear;
         }
 
+        [AddTelemetry("Ods Instances Index", TelemetryType.View)]
         public ViewResult Index()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -83,6 +82,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [PermissionRequired(Permission.AccessGlobalSettings)]
+        [AddTelemetry("Register ODS Instance")]
         public async Task<ActionResult> RegisterOdsInstance(RegisterOdsInstanceModel model)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -101,6 +101,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [PermissionRequired(Permission.AccessGlobalSettings)]
+        [AddTelemetry("Bulk Register ODS Instances")]
         public async Task<ActionResult> BulkRegisterOdsInstances(BulkRegisterOdsInstancesModel model)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -117,6 +118,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 $"Successful instance registrations: {successCount}. Failed instance registrations: {failCount}. Skipped instance registrations: {skippedCount}. Please refer to log file for further details.");
         }
 
+        [AddTelemetry("Activate ODS Instance")]
         public ActionResult ActivateOdsInstance(string instanceId)
         {
             Response.Cookies.Append("Instance", instanceId, new CookieOptions());
@@ -139,6 +141,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [PermissionRequired(Permission.AccessGlobalSettings)]
+        [AddTelemetry("Deregister ODS Instance")]
         public ActionResult DeregisterOdsInstance(DeregisterOdsInstanceModel model)
         {
             _deregisterOdsInstanceCommand.Execute(model);

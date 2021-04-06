@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Instances;
+using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
@@ -52,6 +53,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
         }
 
+        [AddTelemetry("Learning Standards Index", TelemetryType.View)]
         public async Task<ActionResult> Index()
         {
             var odsApiFacade = await _odsApiFacadeFactory.Create();
@@ -88,6 +90,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Run Learning Standards")]
         public async Task<ActionResult> LearningStandards(LearningStandardsModel model)
         {
             await _learningStandardsSetupCommand.Execute(
@@ -104,6 +107,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Update Learning Standards")]
         public async Task<ActionResult> UpdateLearningStandards()
         {
             await RunLearningStandardsJob();
@@ -133,6 +137,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Reset Learning Standards")]
         public async Task<ActionResult> ResetLearningStandards()
         {
             await _resetLearningStandards.Execute();

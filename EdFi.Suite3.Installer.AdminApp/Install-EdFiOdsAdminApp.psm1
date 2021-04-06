@@ -500,7 +500,10 @@ function Invoke-TransformAppSettings {
         $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'
         $settings.AppSettings.DatabaseEngine = $config.engine
         $settings.AppSettings.AppStartup = $Config.AppStartUp
-        $settings.AppSettings.EncryptionKey = New-AESKey
+        if(!$settings.AppSettings.EncryptionKey)
+        {
+            $settings.AppSettings.EncryptionKey = New-AESKey
+        }
         if("OnPrem" -ieq $Config.AppStartup)
         {
             $settings.Log4NetCore.Log4NetConfigFileName = "log4net\log4net.OnPremisesRelease.config"

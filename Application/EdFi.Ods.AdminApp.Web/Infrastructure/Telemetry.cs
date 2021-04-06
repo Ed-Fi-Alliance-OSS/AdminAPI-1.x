@@ -27,7 +27,6 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
     {
         private readonly AdminAppUserContext _userContext;
         private readonly AdminAppDbContext _database;
-        private readonly AppSettings _appSettings;
         private const string NotSet = "(not set)";
 
         private readonly string _measurementId;
@@ -38,8 +37,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         {
             _userContext = userContext;
             _database = database;
-            _appSettings = appSettingsAccessor.Value;
-            _measurementId = _appSettings.GoogleAnalyticsMeasurementId;
+            var appSettings = appSettingsAccessor.Value;
+            _measurementId = appSettings.GoogleAnalyticsMeasurementId;
 
             _informationalVersion = Version.InformationalVersion;
 

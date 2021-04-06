@@ -29,7 +29,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly AdminAppUserContext _userContext;
         private readonly BulkRegisterOdsInstancesCommand _bulkRegisterOdsInstancesCommand;
         private readonly GetCurrentSchoolYearQuery _getCurrentSchoolYear;
-        private readonly ITelemetry _telemetry;
 
         public OdsInstancesController(
               RegisterOdsInstanceCommand registerOdsInstanceCommand
@@ -38,8 +37,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery
             , AdminAppUserContext userContext
             , BulkRegisterOdsInstancesCommand bulkRegisterOdsInstancesCommand
-            , GetCurrentSchoolYearQuery getCurrentSchoolYear
-            , ITelemetry telemetry)
+            , GetCurrentSchoolYearQuery getCurrentSchoolYear)
         {
             _registerOdsInstanceCommand = registerOdsInstanceCommand;
             _deregisterOdsInstanceCommand = deregisterOdsInstanceCommand;
@@ -48,7 +46,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _userContext = userContext;
             _bulkRegisterOdsInstancesCommand = bulkRegisterOdsInstancesCommand;
             _getCurrentSchoolYear = getCurrentSchoolYear;
-            _telemetry = telemetry;
         }
 
         [AddTelemetry("Ods Instances Index", TelemetryType.View)]

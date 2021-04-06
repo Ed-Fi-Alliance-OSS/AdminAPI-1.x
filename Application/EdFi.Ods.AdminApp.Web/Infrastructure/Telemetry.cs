@@ -58,8 +58,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             var databaseVersion = InMemoryCache.Instance
                 .GetOrSet("DatabaseVersion", DatabaseVersion);
 
-            var userName = InMemoryCache.Instance
-                .GetOrSet("UserName", () => _userContext.User.UserName);
+            var userName = _userContext?.User?.UserName;
 
             var customDimensions = new Dictionary<int, string>
             {

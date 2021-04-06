@@ -3,8 +3,5 @@
 -- The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 -- See the LICENSE and NOTICES files in the project root for more information.
 
-ALTER TABLE adminapp.AzureSqlConfigurations
-ADD IsEncrypted BOOLEAN NOT NULL DEFAULT false;
-
 ALTER TABLE adminapp.SecretConfigurations
 ADD IsEncrypted BOOLEAN NOT NULL DEFAULT false;

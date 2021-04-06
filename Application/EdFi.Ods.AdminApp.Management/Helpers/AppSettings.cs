@@ -34,7 +34,5 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
 
         public bool EnableProductImprovement { get; set; }
         public string GoogleAnalyticsMeasurementId { get; set; }
-
-        public string PathBase { get; set; }
     }
 }

@@ -12,49 +12,56 @@
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "SqlServer-DistrictSpecific"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-DistrictSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "Shared Instance (SQL Server)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "SqlServer-SharedInstance"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-SharedInstance",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "Year Specific (SQL Server)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "SqlServer-YearSpecific"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-YearSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "District Specific (Postgres)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "PostgreSql-DistrictSpecific"
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-DistrictSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "Shared Instance (Postgres)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "PostgreSql-SharedInstance"
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-SharedInstance",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "Year Specific (Postgres)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific"
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "Shared Instance (Docker-Postgres)": {
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Docker-SharedInstance"
+                "ASPNETCORE_ENVIRONMENT": "Docker-SharedInstance",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "mssql-district": {
@@ -62,7 +69,8 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "SqlServer-DistrictSpecific"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-DistrictSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "mssql-shared": {
@@ -70,7 +78,8 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "SqlServer-SharedInstance"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-SharedInstance",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "mssql-year": {
@@ -78,7 +87,8 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "SqlServer-YearSpecific"
+                "ASPNETCORE_ENVIRONMENT": "SqlServer-YearSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "pg-district": {
@@ -86,7 +96,8 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "PostgreSql-DistrictSpecific"
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-DistrictSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "pg-shared": {
@@ -94,7 +105,8 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "PostgreSql-SharedInstance"
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-SharedInstance",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
         "pg-year": {
@@ -102,7 +114,8 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5123;http://localhost:5122",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific"
+                "ASPNETCORE_ENVIRONMENT": "PostgreSql-YearSpecific",
+                "AppSettings:GoogleAnalyticsMeasurementId": "UA-65907370-11"
             }
         },
     }

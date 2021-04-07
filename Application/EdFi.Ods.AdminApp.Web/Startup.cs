@@ -149,6 +149,12 @@ namespace EdFi.Ods.AdminApp.Web
             var loggingOptions = Configuration.GetSection("Log4NetCore")
                 .Get<Log4NetProviderOptions>();
 
+            var pathBase = Configuration.GetValue<string>("AppSettings:PathBase");
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                app.UsePathBase("/" + pathBase.Trim('/'));
+            }
+
             loggerFactory.AddLog4Net(loggingOptions);
 
             if (env.IsProduction())

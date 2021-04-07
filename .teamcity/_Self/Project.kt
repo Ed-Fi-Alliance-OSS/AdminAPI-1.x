@@ -8,7 +8,7 @@ package _self
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 
 object AdminAppProject : Project({
-    description = "ODS Admin App Build Configurations"
+    description = "Build configurations managed through the Admin App repository"
 
     params {
         param("build.feature.freeDiskSpace", "2gb")
@@ -21,11 +21,8 @@ object AdminAppProject : Project({
         param("adminApp.version", "2.2.0")
     }
 
-    template(_self.templates.BuildAndTestTemplate)
+    subProject(web.AdminAppWebProject)
+    subProject(installers.AdminAppInstallerProject)
 
-    buildType(_self.buildTypes.BuildBranch)
-    buildType(_self.buildTypes.BuildPullRequests)
-    buildType(_self.buildTypes.Deploy)
-    buildType(_self.buildTypes.PublishPackagesToAzureArtifacts)
-    buildType(_self.buildTypes.PublishReleasePackagesToAzureArtifacts)
+    vcsRoot(_self.vcsRoots.EdFiOdsImplementation)
 })

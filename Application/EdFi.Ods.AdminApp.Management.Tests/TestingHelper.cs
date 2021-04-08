@@ -17,7 +17,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
     public static class TestingHelper
     {
-        public static TResult Query<TResult>(Func<DbContext, TResult> query)
+        public static TResult Query<TResult>(Func<AdminAppDbContext, TResult> query)
         {
             TResult result = default(TResult);
 

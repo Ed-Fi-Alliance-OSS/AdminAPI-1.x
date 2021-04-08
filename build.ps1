@@ -60,7 +60,6 @@
             ApiStartupType = "SharedInstance"
             DatabaseEngine = "PostgreSql"
             BulkUploadHashCache = "/app/BulkUploadHashCache/"
-            EncryptionProtocol = "AES"
             EncryptionKey = "<Generated encryption key>"
             AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
             SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"
@@ -351,7 +350,6 @@ function UpdateAppSettingsForDocker {
     $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
     $json.AppSettings.BulkUploadHashCache = $DockerEnvValues["BulkUploadHashCache"]
     $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
-    $json.AppSettings.EncryptionProtocol = $DockerEnvValues["EncryptionProtocol"]
 
     if ($null -eq $json.AppSettings.EncryptionKey) {
         $json.AppSettings | Add-Member -NotePropertyName EncryptionKey -NotePropertyValue $DockerEnvValues["EncryptionKey"]

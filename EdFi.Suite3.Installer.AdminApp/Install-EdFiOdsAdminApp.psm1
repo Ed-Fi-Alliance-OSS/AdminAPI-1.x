@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -17,6 +17,7 @@ function Set-TlsVersion {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
 }
 
+Import-Module "$PSScriptRoot/key-management.psm1"
 $env:PathResolverRepositoryOverride = "Ed-Fi-Ods;Ed-Fi-ODS-Implementation;"
 Import-Module -Force -Scope Global "$PSScriptRoot/Ed-Fi-ODS-Implementation/logistics/scripts/modules/path-resolver.psm1"
 
@@ -499,6 +500,10 @@ function Invoke-TransformAppSettings {
         $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'
         $settings.AppSettings.DatabaseEngine = $config.engine
         $settings.AppSettings.AppStartup = $Config.AppStartUp
+        if(!$settings.AppSettings.EncryptionKey)
+        {
+            $settings.AppSettings.EncryptionKey = New-AESKey
+        }
         if("OnPrem" -ieq $Config.AppStartup)
         {
             $settings.Log4NetCore.Log4NetConfigFileName = "log4net\log4net.OnPremisesRelease.config"

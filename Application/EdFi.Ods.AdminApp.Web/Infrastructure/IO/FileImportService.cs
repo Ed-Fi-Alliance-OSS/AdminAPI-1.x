@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -7,18 +7,21 @@ using System.IO;
 using EdFi.LoadTools.BulkLoadClient;
 using EdFi.Ods.AdminApp.Management.Api;
 using Microsoft.Extensions.Configuration;
+using OdsVersion = System.Version;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 {
     public class FileImportService
     {
         private readonly IConfiguration _configuration;
+        private readonly IInferOdsApiVersion _inferOdsApiVersion;
         private readonly ITokenRetriever _tokenRetriever;
         private static readonly string[] UnsupportedInterchanges = {"InterchangeDescriptors"};
 
-        public FileImportService(IConfiguration configuration, string instanceName)
+        public FileImportService(IConfiguration configuration, string instanceName, IInferOdsApiVersion inferOdsApiVersion)
         {
             _configuration = configuration;
+            _inferOdsApiVersion = inferOdsApiVersion;
 
             _tokenRetriever = new TokenRetriever(new OdsApiConnectionInformation(instanceName, CloudOdsAdminAppSettings.Instance.Mode)
             {
@@ -34,12 +37,16 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
             var xsdDirectoryExistWithFiles =
                 Directory.Exists(xsdFolderPath) && Directory.GetFiles(xsdFolderPath).Length > 0;
-
+            var odsVersion = new OdsVersion(_inferOdsApiVersion.Version(_configuration.GetValue<string>("OdsApi:Url")));
+            var requiredVersion = new OdsVersion("5.1.0");
+            if(odsVersion < requiredVersion)
+            {
+                _configuration["OdsApi:Url"] = string.Empty;
+            }
             if (xsdDirectoryExistWithFiles)
             {
                 _configuration["ForceMetadata"] = "false";
             }
-
             var result = LoadProcess.ValidateXmlFile(_configuration, UnsupportedInterchanges).GetAwaiter()
                 .GetResult();
 

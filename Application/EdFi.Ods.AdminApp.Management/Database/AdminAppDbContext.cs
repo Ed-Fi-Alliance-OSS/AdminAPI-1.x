@@ -34,6 +34,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
         public DbSet<AzureSqlConfiguration> AzureSqlConfigurations { get; set; }
         public DbSet<OdsInstanceRegistration> OdsInstanceRegistrations { get; set; }
         public DbSet<DatabaseVersion> DatabaseVersionView { get; set; }
+        public DbSet<XmlKey> XmlKeys { get; set; }
 
         public TEntity EnsureSingle<TEntity>() where TEntity : Entity, new()
         {

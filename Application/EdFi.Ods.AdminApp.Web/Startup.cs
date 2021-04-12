@@ -24,10 +24,13 @@ using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -75,6 +78,15 @@ namespace EdFi.Ods.AdminApp.Web
                                 => memberInfo?
                                     .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
                         });
+
+            services.AddSingleton<IXmlRepository, DataProtectionRepository>();
+            services.AddDataProtection().Services.AddSingleton<IConfigureOptions<KeyManagementOptions>>(service =>
+            {
+                return new ConfigureOptions<KeyManagementOptions>(options =>
+                {
+                    options.XmlRepository = service.GetService<IXmlRepository>() ?? throw new InvalidOperationException();
+                });
+            });
 
             services.AddAuthorization(options =>
             {

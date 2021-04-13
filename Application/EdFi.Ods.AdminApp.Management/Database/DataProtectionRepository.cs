@@ -22,19 +22,19 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
         public IReadOnlyCollection<XElement> GetAllElements()
         {
-            return _adminAppDbContext.XmlKeys
-                .Select(x => XElement.Parse(x.KeyXmlContent))
+            return _adminAppDbContext.DataProtectionKeys
+                .Select(x => XElement.Parse(x.XmlData))
                 .ToList();
         }
 
         public void StoreElement(XElement element, string friendlyName)
         {
-            var key = new XmlKey
+            var key = new DataProtectionKey
             {
-                KeyXmlContent = element.ToString(SaveOptions.DisableFormatting)
+                XmlData = element.ToString(SaveOptions.DisableFormatting)
             };
 
-            _adminAppDbContext.XmlKeys.Add(key);
+            _adminAppDbContext.DataProtectionKeys.Add(key);
             _adminAppDbContext.SaveChanges();
         }
     }

@@ -5,8 +5,8 @@
 
 namespace EdFi.Ods.AdminApp.Management.Database.Models
 {
-    public class XmlKey : Entity
+    public class DataProtectionKey : Entity
     {
-        public string KeyXmlContent { get; set; }
+        public string XmlData { get; set; }
     }
 }

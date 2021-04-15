@@ -5,7 +5,7 @@
 
 CREATE TABLE adminapp.DataProtectionKeys (
     Id INT NOT NULL IDENTITY,
-    XmlData NVARCHAR(MAX) NOT NULL,
+    FriendlyName NVARCHAR(MAX) NULL,
+    Xml NVARCHAR(MAX) NULL,
     CONSTRAINT PK_DataProtectionKeys PRIMARY KEY CLUSTERED (Id)
 )
-

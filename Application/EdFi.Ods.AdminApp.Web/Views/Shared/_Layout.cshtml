@@ -31,37 +31,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     <script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/Scripts/lodash.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/bundles/site.min.js" asp-append-version="true"></script>
-    @if (CloudOdsAdminAppSettings.Instance.EnableProductImprovement)
-    {
-        if (string.IsNullOrEmpty(CloudOdsAdminAppSettings.Instance.GoogleAnalyticsMeasurementId))
-        {
-            <!--
-            Product Improvement features have been enabled, but
-            the expected Measurement ID is missing, so Google
-            Analytics tracking cannot be included in this page.
-            -->
-        }
-        else
-        {
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=@CloudOdsAdminAppSettings.Instance.GoogleAnalyticsMeasurementId"></script>
-            <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-
-                gtag('config', '@CloudOdsAdminAppSettings.Instance.GoogleAnalyticsMeasurementId');
-            </script>
-        }
-    }
-    else
-    {
-        <!--
-        Product Improvement features have not been enabled. Google
-        Analytics tracking has NOT been included in this page.
-        Product Improvement can be enabled using the EnableProductImprovement setting in appsettings.json.
-        -->
-    }
+    @await Component.InvokeAsync("Tracker")
 </head>
 <body>
     <div id="dynamic-modal-container"></div>
@@ -88,14 +58,19 @@ See the LICENSE and NOTICES files in the project root for more information.
         @Html.Hidden("toast", Html.Encode(TempData["ToastMessage"]), new { data_type = TempData["ToastType"] })
     }
     <div class="container body-content">
-        <div class="row">
+        <div class="row margin-right-30">
             @if (User.Identity.IsAuthenticated)
             {
-                <div class="col-md-1 col-md-offset-11 nav-links">
+                <div class="col-md-1 col-md-offset-10 nav-links">
                     <a href="@Url.Action("Index", "Home")" class="text-nowrap">
                         <span class="fa fa-home"></span><strong>Home</strong>
                     </a>
                 </div>
+                 <div class="col-md-1 nav-links">
+                     <a href="@Url.Action("EditConfiguration", "ProductImprovement")" class="text-nowrap">
+                         <span class="fa fa-cog"></span><strong>Configuration</strong>
+                     </a>
+                 </div>
             }
         </div>
         <section>

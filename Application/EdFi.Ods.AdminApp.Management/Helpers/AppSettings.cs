@@ -28,7 +28,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string Log4NetConfigPath { get; set; }
         public string EncryptionKey { get; set; }
 
-        public bool EnableProductImprovement { get; set; }
         public string GoogleAnalyticsMeasurementId { get; set; }
     }
 }

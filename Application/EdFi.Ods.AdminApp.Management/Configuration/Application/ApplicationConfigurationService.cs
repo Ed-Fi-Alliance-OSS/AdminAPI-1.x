@@ -35,7 +35,20 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
         {
             var config = _database.EnsureSingle<ApplicationConfiguration>();
             config.FirstTimeSetUpCompleted = setUpCompleted;
+            config.EnableProductImprovement = true;
            _database.SaveChanges();
+        }
+
+        public bool IsProductImprovementEnabled()
+        {
+            return _database.EnsureSingle<ApplicationConfiguration>().EnableProductImprovement;
+        }
+
+        public void EnableProductImprovement(bool enableProductImprovement)
+        {
+            var config = _database.EnsureSingle<ApplicationConfiguration>();
+            config.EnableProductImprovement = enableProductImprovement;
+            _database.SaveChanges();
         }
 
         private bool AnyUsersExist()

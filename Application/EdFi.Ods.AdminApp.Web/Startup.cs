@@ -24,13 +24,11 @@ using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -53,6 +51,7 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddDbContext<AdminAppDbContext>(ConfigureForAdminDatabase);
             services.AddDbContext<AdminAppIdentityDbContext>(ConfigureForAdminDatabase);
+            services.AddDbContext<AdminAppDataProtectionKeysDbContext>(ConfigureForAdminDatabase);
 
             services.AddIdentity<AdminAppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AdminAppIdentityDbContext>()
@@ -79,15 +78,6 @@ namespace EdFi.Ods.AdminApp.Web
                                     .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
                         });
 
-            services.AddSingleton<IXmlRepository, DataProtectionRepository>();
-            services.AddDataProtection().Services.AddSingleton<IConfigureOptions<KeyManagementOptions>>(service =>
-            {
-                return new ConfigureOptions<KeyManagementOptions>(options =>
-                {
-                    options.XmlRepository = service.GetService<IXmlRepository>() ?? throw new InvalidOperationException();
-                });
-            });
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("UserMustExistPolicy",
@@ -110,6 +100,8 @@ namespace EdFi.Ods.AdminApp.Web
                 options.LogoutPath = "/Identity/LogOut";
                 options.AccessDeniedPath = "/Identity/Login";
             });
+
+            services.AddDataProtection().PersistKeysToDbContext<AdminAppDataProtectionKeysDbContext>();
 
             services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
 

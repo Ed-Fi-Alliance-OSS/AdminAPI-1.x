@@ -1,4 +1,4 @@
-﻿
+
 html {
     position: relative;
     min-height: 100% !important;
@@ -126,6 +126,10 @@ h8 {
 
 .margin-right-10 {
     margin-right: 10px;
+}
+
+.margin-right-30 {
+    margin-right: 30px;
 }
 
 .margin-left-10 {

@@ -88,14 +88,19 @@ See the LICENSE and NOTICES files in the project root for more information.
         @Html.Hidden("toast", Html.Encode(TempData["ToastMessage"]), new { data_type = TempData["ToastType"] })
     }
     <div class="container body-content">
-        <div class="row">
+        <div class="row margin-right-30">
             @if (User.Identity.IsAuthenticated)
             {
-                <div class="col-md-1 col-md-offset-11 nav-links">
+                <div class="col-md-1 col-md-offset-10 nav-links">
                     <a href="@Url.Action("Index", "Home")" class="text-nowrap">
                         <span class="fa fa-home"></span><strong>Home</strong>
                     </a>
                 </div>
+                 <div class="col-md-1 nav-links">
+                     <a href="@Url.Action("EditConfiguration", "ProductImprovement")" class="text-nowrap">
+                         <span class="fa fa-cog"></span><strong>Configuration</strong>
+                     </a>
+                 </div>
             }
         </div>
         <section>

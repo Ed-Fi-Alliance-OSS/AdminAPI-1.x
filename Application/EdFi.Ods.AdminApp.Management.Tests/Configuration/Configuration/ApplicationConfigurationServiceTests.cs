@@ -22,10 +22,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             EnsureZeroApplicationConfiguration();
             AllowUserRegistrations().ShouldBe(true);
 
-            EnsureOneApplicationConfiguration(allowRegistration: true);
+            EnsureOneApplicationConfiguration(allowRegistration: true, enableProductImprovement: false);
             AllowUserRegistrations().ShouldBe(true);
 
-            EnsureOneApplicationConfiguration(allowRegistration: false);
+            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false);
             AllowUserRegistrations().ShouldBe(true);
         }
 
@@ -45,11 +45,27 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         {
             EnsureOneUser();
 
-            EnsureOneApplicationConfiguration(allowRegistration: true);
+            EnsureOneApplicationConfiguration(allowRegistration: true, enableProductImprovement: false);
             AllowUserRegistrations().ShouldBe(true);
 
-            EnsureOneApplicationConfiguration(allowRegistration: false);
+            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false);
             AllowUserRegistrations().ShouldBe(false);
+        }
+
+        [Test]
+        public void ShouldViewAndSaveEnableProductImprovement()
+        {
+            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false);
+            IsProductImprovementEnabled().ShouldBe(false);
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            EnableProductImprovement(enableProductImprovement: true);
+            IsProductImprovementEnabled().ShouldBe(true);
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            EnableProductImprovement(enableProductImprovement: false);
+            IsProductImprovementEnabled().ShouldBe(false);
+            Count<ApplicationConfiguration>().ShouldBe(1);
         }
 
         private bool AllowUserRegistrations()
@@ -67,17 +83,46 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             });
         }
 
+        private bool IsProductImprovementEnabled()
+        {
+            return Transaction(database =>
+            {
+                bool enableProductImprovement = false;
+
+                Scoped<AdminAppIdentityDbContext>(identity =>
+                {
+                    enableProductImprovement = new ApplicationConfigurationService(database, identity)
+                        .IsProductImprovementEnabled();
+                });
+
+                return enableProductImprovement;
+            });
+        }
+
+        private void EnableProductImprovement(bool enableProductImprovement)
+        {
+            Transaction(database =>
+            {
+                Scoped<AdminAppIdentityDbContext>(identity =>
+                {
+                    new ApplicationConfigurationService(database, identity).EnableProductImprovement(
+                        enableProductImprovement);
+                });
+            });
+        }
+
         private void EnsureZeroApplicationConfiguration()
         {
             DeleteAll<ApplicationConfiguration>();
         }
 
-        private void EnsureOneApplicationConfiguration(bool allowRegistration)
+        private void EnsureOneApplicationConfiguration(bool allowRegistration, bool enableProductImprovement)
         {
             Transaction(database =>
             {
                 var config = database.EnsureSingle<ApplicationConfiguration>();
                 config.AllowUserRegistration = allowRegistration;
+                config.EnableProductImprovement = enableProductImprovement;
             });
         }
 

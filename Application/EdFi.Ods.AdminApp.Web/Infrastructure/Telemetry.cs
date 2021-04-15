@@ -12,6 +12,8 @@ using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using GoogleAnalyticsTracker.Simple;
+using log4net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using static System.Environment;
@@ -25,18 +27,22 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
     public class Telemetry : ITelemetry
     {
+        private readonly ILog _logger = LogManager.GetLogger(typeof(Telemetry));
+
         private readonly AdminAppUserContext _userContext;
         private readonly AdminAppDbContext _database;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private const string NotSet = "(not set)";
 
         private readonly string _measurementId;
         private readonly string _informationalVersion;
         private readonly SimpleTrackerEnvironment _environment;
 
-        public Telemetry(IOptions<AppSettings> appSettingsAccessor, AdminAppUserContext userContext, AdminAppDbContext database)
+        public Telemetry(IOptions<AppSettings> appSettingsAccessor, AdminAppUserContext userContext, AdminAppDbContext database, IHttpContextAccessor httpContextAccessor)
         {
             _userContext = userContext;
             _database = database;
+            _httpContextAccessor = httpContextAccessor;
             var appSettings = appSettingsAccessor.Value;
             _measurementId = appSettings.GoogleAnalyticsMeasurementId;
 
@@ -52,20 +58,34 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         public async Task Event(string category, string action, string label)
         {
             //NOTE: Custom Dimension numbers are meaningful, but defined within Google Analytics.
-            var odsApiVersion = InMemoryCache.Instance
-                .GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+            string odsApiVersion = null;
+            try
+            {
+                odsApiVersion = InMemoryCache.Instance.GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(
+                            CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Google Analytics Telemetry failed for ODS API version", e);
+            }
 
             var databaseVersion = InMemoryCache.Instance
                 .GetOrSet("DatabaseVersion", DatabaseVersion);
 
             var userName = _userContext?.User?.UserName;
+            string domainName = null;
+            if(userName != null && userName.Contains('@'))
+                domainName = userName.Split('@',2)[1];
+
+            var hostName = _httpContextAccessor.HttpContext.Request.Host.Value;
 
             var customDimensions = new Dictionary<int, string>
             {
                 [1] = ExplicitWhenNotSet(_informationalVersion),
                 [2] = ExplicitWhenNotSet(odsApiVersion),
                 [3] = ExplicitWhenNotSet(databaseVersion),
-                [4] = ExplicitWhenNotSet(userName)
+                [4] = ExplicitWhenNotSet(domainName),
+                [5] = ExplicitWhenNotSet(hostName)
             };
 
             using (var tracker = new SimpleTracker(_measurementId, _environment))

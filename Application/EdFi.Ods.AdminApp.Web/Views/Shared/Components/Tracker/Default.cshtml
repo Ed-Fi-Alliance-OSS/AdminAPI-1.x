@@ -1,0 +1,50 @@
+@*
+    SPDX-License-Identifier: Apache-2.0
+    Licensed to the Ed-Fi Alliance under one or more agreements.
+    The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+    See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@model EdFi.Ods.AdminApp.Web.Controllers.TrackerViewComponent.Model
+
+@if (Model.EnableProductImprovement)
+{
+    if (string.IsNullOrEmpty(Model.MeasurementId))
+    {
+        <!--
+        Product Improvement features have been enabled, but
+        the expected Measurement ID is missing, so Google
+        Analytics tracking cannot be included in this page.
+        -->
+    }
+    else
+    {
+        <!-- JIRA Issue Form -->
+        if (User.Identity.IsAuthenticated)
+        {
+            <script type="text/javascript" src="https://tracker.ed-fi.org/s/d41d8cd98f00b204e9800998ecf8427e-CDN/-tj527j/813005/3ad399048078631c2c5b4387b70d54b7/2.2.4.7/_/download/batch/com.atlassian.plugins.jquery:jquery/com.atlassian.plugins.jquery:jquery.js?collectorId=aa18dc62"></script>
+            <script type="text/javascript" src="https://tracker.ed-fi.org/s/98b15f3c46711049bf955cbe6cde3f01-T/-tj527j/813005/3ad399048078631c2c5b4387b70d54b7/4.0.4/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=aa18dc62"></script>
+        }
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=@Model.MeasurementId"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', '@Model.MeasurementId',
+                {
+                    'user_id': '@Model.UserId'
+                });
+        </script>
+    }
+}
+else
+{
+    <!--
+    Product Improvement features have not been enabled. Google
+    Analytics tracking has NOT been included in this page.
+    Product Improvement can be enabled using the EnableProductImprovement setting in appsettings.json.
+    -->
+}

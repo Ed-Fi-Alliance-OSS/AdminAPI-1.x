@@ -31,37 +31,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     <script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/Scripts/lodash.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/bundles/site.min.js" asp-append-version="true"></script>
-    @if (CloudOdsAdminAppSettings.Instance.EnableProductImprovement)
-    {
-        if (string.IsNullOrEmpty(CloudOdsAdminAppSettings.Instance.GoogleAnalyticsMeasurementId))
-        {
-            <!--
-            Product Improvement features have been enabled, but
-            the expected Measurement ID is missing, so Google
-            Analytics tracking cannot be included in this page.
-            -->
-        }
-        else
-        {
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=@CloudOdsAdminAppSettings.Instance.GoogleAnalyticsMeasurementId"></script>
-            <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-
-                gtag('config', '@CloudOdsAdminAppSettings.Instance.GoogleAnalyticsMeasurementId');
-            </script>
-        }
-    }
-    else
-    {
-        <!--
-        Product Improvement features have not been enabled. Google
-        Analytics tracking has NOT been included in this page.
-        Product Improvement can be enabled using the EnableProductImprovement setting in appsettings.json.
-        -->
-    }
+    @await Component.InvokeAsync("Tracker")
 </head>
 <body>
     <div id="dynamic-modal-container"></div>

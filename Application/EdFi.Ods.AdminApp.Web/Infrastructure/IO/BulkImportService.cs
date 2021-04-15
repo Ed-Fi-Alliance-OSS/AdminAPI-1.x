@@ -6,6 +6,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Workflow;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 
@@ -14,10 +15,12 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
     public class BulkImportService
     {
         private readonly IFileUploadHandler _fileUploadHandler;
+        private readonly IInferOdsApiVersion _inferOdsApiVersion;
 
-        public BulkImportService(IFileUploadHandler fileUploadHandler)
+        public BulkImportService(IFileUploadHandler fileUploadHandler, IInferOdsApiVersion inferOdsApiVersion)
         {
             _fileUploadHandler = fileUploadHandler;
+            _inferOdsApiVersion = inferOdsApiVersion;
         }
 
         public event WorkflowStatusUpdated StatusUpdated;
@@ -38,7 +41,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
                     bulkUploadJobContext, workingFolderPath);
 
                 var fileImportService = new FileImportService(
-                    fileImportConfig, bulkUploadJobContext.OdsInstanceName);
+                    fileImportConfig, bulkUploadJobContext.OdsInstanceName, _inferOdsApiVersion);
 
                 var workflowManager = SetupWorkflowManager(bulkUploadJobContext, fileImportService);
                 return workflowManager.Execute();

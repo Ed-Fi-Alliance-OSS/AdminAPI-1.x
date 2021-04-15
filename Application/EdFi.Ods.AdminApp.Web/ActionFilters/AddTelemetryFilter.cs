@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using EdFi.Ods.AdminApp.Web.Controllers;
@@ -21,19 +22,21 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
         private readonly string _action;
         private readonly TelemetryType _type;
         private readonly ITelemetry _telemetry;
+        private readonly ApplicationConfigurationService _applicationConfigurationService;
         private readonly AppSettings _appSettings;
 
-        public AddTelemetryFilter(string action, TelemetryType type, ITelemetry telemetry, IOptions<AppSettings> appSettingsAccessor)
+        public AddTelemetryFilter(string action, TelemetryType type, ITelemetry telemetry, IOptions<AppSettings> appSettingsAccessor, ApplicationConfigurationService applicationConfigurationService)
         {
             _action = action;
             _type = type;
             _telemetry = telemetry;
+            _applicationConfigurationService = applicationConfigurationService;
             _appSettings = appSettingsAccessor.Value;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
         {
-            if (_appSettings.EnableProductImprovement && !string.IsNullOrEmpty(_appSettings.GoogleAnalyticsMeasurementId))
+            if (_applicationConfigurationService.IsProductImprovementEnabled() && !string.IsNullOrEmpty(_appSettings.GoogleAnalyticsMeasurementId))
             {
                 try
                 {

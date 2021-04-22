@@ -26,6 +26,7 @@
         * Push: uploads a NuGet package to the NuGet feed.
         * BuildAndDeployToDockerContainer: runs the build operation, update the appsettings.json with provided
           DockerEnvValues and copy over the latest files to existing AdminApp docker container for testing.
+        * PopulateGoogleAnalyticsAppSettings: update the appsettings.json with provided GoogleAnalyticsMeasurementId.
 
     .EXAMPLE
         .\build.ps1 build -Configuration Release -Version "2.0.0" -BuildCounter 45
@@ -71,7 +72,7 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "PackageDatabaseScripts", "BuildAndDeployToDockerContainer")]
+    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "PackageDatabaseScripts", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -111,7 +112,11 @@ param(
 
     # Only required with the BuildAndDeployToDockerContainer command.
     [hashtable]
-    $DockerEnvValues
+    $DockerEnvValues,
+
+    # Only required with the PopulateGoogleAnalyticsAppSettings command.
+    [string]
+    $GoogleAnalyticsMeasurementId
 )
 
 $Env:MSBUILDDISABLENODEREUSE = "1"
@@ -339,6 +344,13 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
+function Update-AppSettingsToAddGoogleAnalyticsMeasurementId {
+    $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
+    $json = (Get-Content -Path $filePath) | ConvertFrom-Json
+    $json.AppSettings.GoogleAnalyticsMeasurementId = $GoogleAnalyticsMeasurementId
+    $json | ConvertTo-Json | Set-Content $filePath
+}
+
 function UpdateAppSettingsForDocker {
     $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
@@ -398,6 +410,9 @@ Invoke-Main {
         BuildAndDeployToDockerContainer {
             Invoke-Build
             Invoke-DockerDeploy
+        }
+        PopulateGoogleAnalyticsAppSettings {
+            Update-AppSettingsToAddGoogleAnalyticsMeasurementId
         }
         default { throw "Command '$Command' is not recognized" }
     }

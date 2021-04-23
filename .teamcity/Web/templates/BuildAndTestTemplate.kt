@@ -32,6 +32,16 @@ object BuildAndTestTemplate : Template({
                 """.trimIndent()
             }
         }
+        powerShell {
+            name = "Populate Google Analytics AppSettings"
+            formatStderrAsError = true
+            executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
+            scriptMode = script {
+                content = """
+                    .\build.ps1 -Command PopulateGoogleAnalyticsAppSettings -GoogleAnalyticsMeasurementId "%adminApp.googleAnalyticsMeasurementId%"
+                """.trimIndent()
+            }
+        }
         // Note: there are no artifact rules on this template, so that the NuGet packages
         // will *not* be kept for pull requests. Artifact rules *are* applied on the
         // BuildBranch build type.

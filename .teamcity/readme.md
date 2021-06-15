@@ -15,6 +15,16 @@ version: `2019.2.2`):
     git.branch.default = main
     git.branch.specification = +:refs/heads/(*)
                                +:(refs/pull/*/head)
+
+    # Only necessary for the Admin App Installer project
+    octopus.deployTimeout = 00:30:00  (or lower number of minutes if you prefer)
+    octopus.server = <base URL for your Octopus Deploy server>
+
+    # Used by both the Web and Installer projects when publishing or deploying    
+    azureArtifacts.eedFiBuildAgent.accessToken = <get access token from the Azure Artifacts>
+    azureArtifacts.edFiBuildAgent.userName = <the actual user name in Azure Artifacts>
+    azureArtifacts.feed.nuget = <NuGet feed URL>
+
     ```
 
     If pull from an organization, use that organization's name. Else use own
@@ -26,9 +36,7 @@ version: `2019.2.2`):
     * Fetch Url: `https://github.com/%github.organization%/Ed-Fi-ODS-AdminApp`
     * Default Branch: `%git.branch.default%`
     * Branch Specification: `%git.branch.specification%`
-    * Authentication method: `password`
-    * Username: `%github.username%`
-    * Password: `%github.accessToken%`
+    * Authentication method: `anonymous`
 1. Create a sub-project named "ODS AdminApp - Kotlin"
 1. Turn on Versioned Settings:
     * Synchronization enabled: `true`

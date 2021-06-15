@@ -13,7 +13,11 @@ For debugging on Azure, see [CloudODS Debugging](cloudods-debugging.md)
 ## Development Pre-Requisites
 
 * [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-* Optional: Visual Studio 2019 or greater
+* Either:
+  * [Visual Studio 2019](https://visualstudio.microsoft.com/downloads), or
+  * [Visual Studio 2019 Build
+    Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
+    (install the ".NET Build Tools" component)
 * Clone [this
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp) locally
 * To work with the official Ed-Fi Docker solution, also clone the [Docker

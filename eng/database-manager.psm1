@@ -77,7 +77,7 @@ function Install-EdFiDbDeploy {
     $toolName = "EdFi.Db.Deploy"
 
     New-Item -Path $ToolsPath -Type Directory -Force | Out-Null
-    
+
     $exePath = "$ToolsPath/$toolName.exe"
 
     if (Test-Path $exePath) {
@@ -91,9 +91,9 @@ function Install-EdFiDbDeploy {
             &dotnet tool uninstall $toolPackageName --tool-path $ToolsPath | Out-Host
         }
     }
-    
+
     Write-Host "Installing $toolPackageName version $Version in $ToolsPath"
-    &dotnet tool install $toolPackageName --version $Version --tool-path $ToolsPath | Out-Host
+    &dotnet tool install $toolPackageName --version $Version --tool-path $ToolsPath --add-source $NuGetFeed | Out-Host
 
     if ($LASTEXITCODE -ne 0) {
         throw "Install of EdFi.Db.Deploy failed."
@@ -205,13 +205,13 @@ function Install-EdFiDatabase {
         [Parameter(Mandatory=$true)]
         $FilePaths
     )
-    
+
     $arguments = @{
-        ToolsPath = $ToolsPath 
-        Version = $DbDeployVersion 
+        ToolsPath = $ToolsPath
+        Version = $DbDeployVersion
         NuGetFeed = $NuGetFeed
     }
-    
+
     $dbDeployExe = Install-EdFiDbDeploy @arguments
 
     $arguments = @{
@@ -476,7 +476,7 @@ function Install-EdFiSecurityDatabase {
     Install-EdFiDatabase @arguments
 }
 
-function Install-AdminAppTables {    
+function Install-AdminAppTables {
     param  (
         # Directory path for storing downloaded tools.
         [string]
@@ -571,7 +571,7 @@ function Invoke-PrepareDatabasesForTesting {
 
         [int]
         $DbPort = 1433,
-        
+
         [Switch]
         $UseIntegratedSecurity,
 

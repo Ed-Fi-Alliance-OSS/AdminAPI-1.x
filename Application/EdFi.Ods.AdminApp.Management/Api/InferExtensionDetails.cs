@@ -28,7 +28,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                     if (dataModel["name"].ToString().ToUpper() == "TPDM")
                         return true;
 
-                throw new Exception("The TPDM extension status could not be determined for this ODS/API instance.");
+                return false;
             }
         }
     }

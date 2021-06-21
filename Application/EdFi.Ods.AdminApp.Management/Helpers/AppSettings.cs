@@ -17,6 +17,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string SecurityMetadataCacheTimeoutMinutes { get; set; }
         public string ApiStartupType { get; set; }
         public string LocalEducationAgencyTypeValue { get; set; }
+        public string PostSecondaryInstitutionTypeValue { get; set; }
         public string SchoolTypeValue { get; set; }
         public string BulkUploadHashCache { get; set; }
         public string IdaAADInstance { get; set; }

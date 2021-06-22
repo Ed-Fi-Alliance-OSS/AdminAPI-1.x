@@ -174,16 +174,13 @@ var highlightFields = function (response) {
 
 var showSummary = function (response, $validationSummary) {
     $validationSummary.empty();
-    window.console.log("_.flatten...");
     var verboseErrors = _.flatten(_.map(response, "Errors"));
     var errors = [];
 
-    window.console.log("_.reject...");
     var nonNullErrors = _.reject(verboseErrors, function (error) {
         return error.ErrorMessage.indexOf("must not be empty") > -1;
     });
 
-    window.console.log("_.each... (A)");
     _.each(nonNullErrors, function (error) {
         errors.push(error.ErrorMessage);
     });
@@ -195,7 +192,6 @@ var showSummary = function (response, $validationSummary) {
     var $ul = $("<ul></ul>");
     $validationSummary.append($ul);
 
-    window.console.log("_.each... (B)");
     _.each(errors, function (error) {
         var $li = $("<li></li>").text(error);
         $li.appendTo($ul);

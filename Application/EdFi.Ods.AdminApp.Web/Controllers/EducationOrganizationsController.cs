@@ -41,8 +41,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _inferExtensionDetails = inferExtensionDetails;
         }
 
-        [AddTelemetry("Education Organizations Index", TelemetryType.View)]
-        public ActionResult Index()
+        [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
+        public ActionResult LocalEducationAgencies()
         {
             var model = new EducationOrganizationsIndexModel
             {
@@ -54,10 +54,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Mode = EducationOrganizationsMode.LocalEducationAgencies
             };
 
-            return View(model);
+            return View("Index", model);
         }
 
-        [AddTelemetry("Post-Secondary Institutions", TelemetryType.View)]
+        [AddTelemetry("Post-Secondary Institutions Index", TelemetryType.View)]
         public ActionResult PostSecondaryInstitutions()
         {
             var model = new EducationOrganizationsIndexModel

@@ -28,17 +28,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
-        private readonly IInferExtensionDetails _inferExtensionDetails;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
-            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService
-            , IInferExtensionDetails inferExtensionDetails)
+            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
             _instanceContext = instanceContext;
             _tabDisplayService = tabDisplayService;
-            _inferExtensionDetails = inferExtensionDetails;
         }
 
         [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
@@ -50,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
                 OdsInstance = _instanceContext,
-                TpdmEnabled = _inferExtensionDetails.TpdmExtensionEnabled(CloudOdsAdminAppSettings.Instance.ProductionApiUrl),
+                TpdmEnabled = TpdmEnabled(),
                 Mode = EducationOrganizationsMode.LocalEducationAgencies
             };
 
@@ -66,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
                 OdsInstance = _instanceContext,
-                TpdmEnabled = true,
+                TpdmEnabled = TpdmEnabled(),
                 Mode = EducationOrganizationsMode.PostSecondaryInstitutions
             };
 
@@ -195,6 +192,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var deletionResult = (await _odsApiFacadeFactory.Create()).DeleteSchool(model.Id);
             return deletionResult.Success ? JsonSuccess("School Removed") : JsonError(deletionResult.ErrorMessage);
+        }
+
+        private static bool TpdmEnabled()
+        {
+            return InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionEnabled", () =>
+                    new InferExtensionDetails().TpdmExtensionEnabled(
+                        CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
         }
     }
 }

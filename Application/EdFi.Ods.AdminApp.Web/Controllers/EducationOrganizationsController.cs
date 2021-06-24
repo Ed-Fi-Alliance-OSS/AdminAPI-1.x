@@ -28,14 +28,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
+        private readonly IInferExtensionDetails _inferExtensionDetails;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
-            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService)
+            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService
+            , IInferExtensionDetails inferExtensionDetails)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
             _instanceContext = instanceContext;
             _tabDisplayService = tabDisplayService;
+            _inferExtensionDetails = inferExtensionDetails;
         }
 
         [AddTelemetry("Education Organizations Index", TelemetryType.View)]
@@ -46,10 +49,28 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
-                OdsInstance = _instanceContext
+                OdsInstance = _instanceContext,
+                TpdmEnabled = _inferExtensionDetails.TpdmExtensionEnabled(CloudOdsAdminAppSettings.Instance.ProductionApiUrl),
+                Mode = EducationOrganizationsMode.LocalEducationAgencies
             };
 
             return View(model);
+        }
+
+        [AddTelemetry("Post-Secondary Institutions", TelemetryType.View)]
+        public ActionResult PostSecondaryInstitutions()
+        {
+            var model = new EducationOrganizationsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
+                        .EducationOrganizations),
+                OdsInstance = _instanceContext,
+                TpdmEnabled = true,
+                Mode = EducationOrganizationsMode.PostSecondaryInstitutions
+            };
+
+            return View("Index", model);
         }
 
         [HttpPost]

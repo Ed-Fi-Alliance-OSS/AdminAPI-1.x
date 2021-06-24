@@ -9,5 +9,13 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 {
     public class EducationOrganizationsIndexModel : BaseOdsInstanceSettingsModel
     {
+        public bool TpdmEnabled { get; set; }
+        public EducationOrganizationsMode Mode { get; set; }
+    }
+
+    public enum EducationOrganizationsMode
+    {
+        LocalEducationAgencies,
+        PostSecondaryInstitutions
     }
 }

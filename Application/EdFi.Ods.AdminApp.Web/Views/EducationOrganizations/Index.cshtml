@@ -12,11 +12,52 @@ See the LICENSE and NOTICES files in the project root for more information.
 @{
     Layout = "~/Views/Shared/_Settings_Production.cshtml";
     ViewBag.Title = "Ods Instance | Education Organizations";
+    var leaMode = Model.Mode == EducationOrganizationsMode.LocalEducationAgencies;
 }
 
 @Html.NavPills(Url, Model.OdsInstanceSettingsTabEnumerations)
 
-<div class="ajax-content">
-    @Html.ActionAjax(Url.Action("EducationOrganizationList", "EducationOrganizations", new { pageNumber = 1 }), 500, "Retrieving organization data...")
-</div>
+@if (Model.TpdmEnabled)
+{
+    <div class="row margin-bottom-40">
+        <div class="col-md-12 text-center">
+            <span class="radio-inline-container">
+                <label class="radio-inline-label">
+                    <input id="goToLocalEducationAgencies" type="radio" name="educationOrganizationToggle" class="form-control radio-inline" @(leaMode ? "checked" : "")>
+                    Local Education Agencies
+                </label>
+            </span>
+            <span class="radio-inline-container">
+                <label class="radio-inline-label">
+                    <input id="goToPostSecondaryInstitutions" type="radio" name="educationOrganizationToggle" class="form-control radio-inline" @(leaMode ? "" : "checked")>
+                    Post-Secondary Institutions
+                </label>
+            </span>
+        </div>
+    </div>
 
+    if (leaMode)
+    {
+        <script type="text/javascript">
+            $(function () {
+                $("#goToPostSecondaryInstitutions").on('click', function() {
+                    window.location = '@Url.Action("PostSecondaryInstitutions", "EducationOrganizations")';
+                });
+            });
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            $(function () {
+                $("#goToLocalEducationAgencies").on('click', function() {
+                    window.location = '@Url.Action("LocalEducationAgencies", "EducationOrganizations")';
+                });
+            });
+        </script>
+    }
+}
+
+<div class="ajax-content">
+    @Html.ActionAjax(Url.Action("EducationOrganizationList", "EducationOrganizations", new { pageNumber = 1 }), 200, "Retrieving organization data...")
+</div>

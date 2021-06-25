@@ -38,18 +38,36 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _tabDisplayService = tabDisplayService;
         }
 
-        [AddTelemetry("Education Organizations Index", TelemetryType.View)]
-        public ActionResult Index()
+        [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
+        public ActionResult LocalEducationAgencies()
         {
             var model = new EducationOrganizationsIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
-                OdsInstance = _instanceContext
+                OdsInstance = _instanceContext,
+                TpdmEnabled = TpdmEnabled(),
+                Mode = EducationOrganizationsMode.LocalEducationAgencies
             };
 
-            return View(model);
+            return View("Index", model);
+        }
+
+        [AddTelemetry("Post-Secondary Institutions Index", TelemetryType.View)]
+        public ActionResult PostSecondaryInstitutions()
+        {
+            var model = new EducationOrganizationsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
+                        .EducationOrganizations),
+                OdsInstance = _instanceContext,
+                TpdmEnabled = TpdmEnabled(),
+                Mode = EducationOrganizationsMode.PostSecondaryInstitutions
+            };
+
+            return View("Index", model);
         }
 
         [HttpPost]
@@ -174,6 +192,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var deletionResult = (await _odsApiFacadeFactory.Create()).DeleteSchool(model.Id);
             return deletionResult.Success ? JsonSuccess("School Removed") : JsonError(deletionResult.ErrorMessage);
+        }
+
+        private static bool TpdmEnabled()
+        {
+            return InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionEnabled", () =>
+                    new InferExtensionDetails().TpdmExtensionEnabled(
+                        CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
         }
     }
 }

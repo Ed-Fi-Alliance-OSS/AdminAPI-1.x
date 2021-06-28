@@ -278,7 +278,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
-        public void When_Perform_Get_Request_To_EducationOrganizationList_Return_Education_Organization_List()
+        public void When_Perform_Get_Request_To_LocalEducationAgencyList_Return_Education_Organization_List()
         {
             // Arrange
             var schools = new List<School>

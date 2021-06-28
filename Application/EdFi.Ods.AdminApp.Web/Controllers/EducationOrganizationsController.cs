@@ -168,7 +168,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 model.AddLocalEducationAgencyModel.LocalEducationAgencyId = OdsInstanceIdentityHelper.GetIdentityValue(_instanceContext.Name);
             }
 
-            return PartialView("_EducationOrganizations", model);
+            return PartialView("_LocalEducationAgencies", model);
         }
 
         private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)

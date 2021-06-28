@@ -308,7 +308,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
-            var result = _controller.EducationOrganizationList(1).Result as PartialViewResult;
+            var result = _controller.LocalEducationAgencyList(1).Result as PartialViewResult;
 
             // Assert
             result.ShouldNotBeNull();

@@ -14,5 +14,12 @@ namespace EdFi.Ods.AdminApp.Management.Api.Common
         public const string LocalEducationAgencyById = "/ed-fi/localEducationAgencies/{id}";
         public const string SchoolById = "/ed-fi/schools/{id}";
         public const string StateAbbreviationDescriptors = "/ed-fi/stateAbbreviationDescriptors";
+        public const string PostSecondaryInstitutions = "/ed-fi/postSecondaryInstitutions";
+        public const string PostSecondaryInstitutionById = "/ed-fi/postSecondaryInstitutions/{id}";
+        public const string PostSecondaryInstitutionLevelDescriptors = "/ed-fi/postSecondaryInstitutionLevelDescriptors";
+        public const string AdministrativeFundingControlDescriptors = "/ed-fi/administrativeFundingControlDescriptors";
+
+        public const string AccreditationStatusDescriptors = "/tpdm/accreditationStatusDescriptors";
+        public const string FederalLocaleCodeDescriptors = "/tpdm/federalLocaleCodeDescriptors";
     }
 }

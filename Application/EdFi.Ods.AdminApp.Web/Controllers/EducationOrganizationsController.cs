@@ -144,7 +144,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
-            var model = new EducationOrganizationViewModel
+            var model = new LocalEducationAgencyViewModel
             {
                 Schools = schools,
                 LocalEducationAgencies = localEducationAgencies,

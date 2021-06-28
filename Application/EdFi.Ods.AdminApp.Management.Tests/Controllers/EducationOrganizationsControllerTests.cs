@@ -312,7 +312,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Assert
             result.ShouldNotBeNull();
-            var model = (EducationOrganizationViewModel)result.ViewData.Model;
+            var model = (LocalEducationAgencyViewModel)result.ViewData.Model;
             model.ShouldNotBeNull();
             model.Schools.Count.ShouldBeGreaterThan(0);
             model.LocalEducationAgencies.Items.Count().ShouldBeGreaterThan(0);

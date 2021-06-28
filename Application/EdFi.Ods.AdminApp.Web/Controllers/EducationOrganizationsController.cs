@@ -134,7 +134,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return editResult.Success ? JsonSuccess("School Updated") : JsonError(editResult.ErrorMessage);
         }
 
-        public async Task<ActionResult> EducationOrganizationList(int pageNumber)
+        public async Task<ActionResult> LocalEducationAgencyList(int pageNumber)
         {
             var api = await _odsApiFacadeFactory.Create();
             var schools = api.GetAllSchools();
@@ -144,7 +144,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
-            var model = new EducationOrganizationViewModel
+            var model = new LocalEducationAgencyViewModel
             {
                 Schools = schools,
                 LocalEducationAgencies = localEducationAgencies,
@@ -168,7 +168,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 model.AddLocalEducationAgencyModel.LocalEducationAgencyId = OdsInstanceIdentityHelper.GetIdentityValue(_instanceContext.Name);
             }
 
-            return PartialView("_EducationOrganizations", model);
+            return PartialView("_LocalEducationAgencies", model);
         }
 
         private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)

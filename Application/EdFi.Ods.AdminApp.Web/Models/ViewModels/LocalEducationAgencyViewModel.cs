@@ -10,7 +10,7 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 {
-    public class EducationOrganizationViewModel
+    public class LocalEducationAgencyViewModel
     {
         public List<School> Schools { get; set; }
         public PagedList<LocalEducationAgency> LocalEducationAgencies { get; set; }

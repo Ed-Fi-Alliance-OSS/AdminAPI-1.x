@@ -278,7 +278,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
-        public void When_Perform_Get_Request_To_EducationOrganizationList_Return_Education_Organization_List()
+        public void When_Perform_Get_Request_To_LocalEducationAgencyList_Return_Education_Organization_List()
         {
             // Arrange
             var schools = new List<School>
@@ -308,11 +308,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
 
             // Act
-            var result = _controller.EducationOrganizationList(1).Result as PartialViewResult;
+            var result = _controller.LocalEducationAgencyList(1).Result as PartialViewResult;
 
             // Assert
             result.ShouldNotBeNull();
-            var model = (EducationOrganizationViewModel)result.ViewData.Model;
+            var model = (LocalEducationAgencyViewModel)result.ViewData.Model;
             model.ShouldNotBeNull();
             model.Schools.Count.ShouldBeGreaterThan(0);
             model.LocalEducationAgencies.Items.Count().ShouldBeGreaterThan(0);

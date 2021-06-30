@@ -54,6 +54,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         private bool BeUniqueId(int? id)
         {
             return id != null
+                   && _apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
                    && _apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
                    && _apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
         }

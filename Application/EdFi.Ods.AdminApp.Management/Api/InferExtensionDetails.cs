@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Net;
+using EdFi.Ods.AdminApp.Management.Services;
 using Newtonsoft.Json.Linq;
 
 namespace EdFi.Ods.AdminApp.Management.Api
@@ -16,20 +16,26 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
     public class InferExtensionDetails : IInferExtensionDetails
     {
+        private readonly ISimpleGetRequest _getRequest;
+
+        public InferExtensionDetails(ISimpleGetRequest getRequest) => _getRequest = getRequest;
+
         public bool TpdmExtensionEnabled(string apiServerUrl)
         {
-            using (var client = new WebClient())
+            var response = JToken.Parse(_getRequest.DownloadString(apiServerUrl));
+
+            if (response["dataModels"] is JArray dataModels)
             {
-                var rawApis = client.DownloadString(apiServerUrl);
-
-                var response = JToken.Parse(rawApis);
-
-                foreach (var dataModel in response["dataModels"])
-                    if (dataModel["name"].ToString().ToUpper() == "TPDM")
-                        return true;
-
-                return false;
+                foreach (var dataModel in dataModels)
+                {
+                    if (dataModel is JObject && dataModel["name"] is JValue nameToken)
+                        if (nameToken.ToString().ToUpper() == "TPDM")
+                            if (dataModel["version"] is JValue versionToken)
+                                return new Version(versionToken.ToString()) >= new Version("1.0.0");
+                }
             }
+
+            return false;
         }
     }
 }

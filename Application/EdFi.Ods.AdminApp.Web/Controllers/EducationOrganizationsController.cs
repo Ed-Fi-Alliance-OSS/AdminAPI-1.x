@@ -28,14 +28,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
+        private readonly IInferExtensionDetails _inferExtensionDetails;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
-            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService)
+            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService
+            , IInferExtensionDetails inferExtensionDetails)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
             _instanceContext = instanceContext;
             _tabDisplayService = tabDisplayService;
+            _inferExtensionDetails = inferExtensionDetails;
         }
 
         [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
@@ -256,11 +259,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return deletionResult.Success ? JsonSuccess("School Removed") : JsonError(deletionResult.ErrorMessage);
         }
 
-        private static bool TpdmEnabled()
+        private bool TpdmEnabled()
         {
             return InMemoryCache.Instance.GetOrSet(
                 "TpdmExtensionEnabled", () =>
-                    new InferExtensionDetails().TpdmExtensionEnabled(
+                    _inferExtensionDetails.TpdmExtensionEnabled(
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
         }
     }

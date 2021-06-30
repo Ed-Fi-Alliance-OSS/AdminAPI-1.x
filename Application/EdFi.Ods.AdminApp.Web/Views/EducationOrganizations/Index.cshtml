@@ -45,6 +45,9 @@ See the LICENSE and NOTICES files in the project root for more information.
                 });
             });
         </script>
+        <div class="ajax-content">
+            @Html.ActionAjax(Url.Action("LocalEducationAgencyList", "EducationOrganizations", new { pageNumber = 1 }), 200, "Retrieving organization data...")
+        </div>
     }
     else
     {
@@ -55,9 +58,14 @@ See the LICENSE and NOTICES files in the project root for more information.
                 });
             });
         </script>
+        <div class="ajax-content">
+            @Html.ActionAjax(Url.Action("PostSecondaryInstitutionsList", "EducationOrganizations", new { pageNumber = 1 }), 200, "Retrieving organization data...")
+        </div>
     }
 }
-
-<div class="ajax-content">
-    @Html.ActionAjax(Url.Action("LocalEducationAgencyList", "EducationOrganizations", new { pageNumber = 1 }), 200, "Retrieving organization data...")
-</div>
+else
+{
+    <div class="ajax-content">
+        @Html.ActionAjax(Url.Action("LocalEducationAgencyList", "EducationOrganizations", new { pageNumber = 1 }), 200, "Retrieving organization data...")
+    </div>
+}

@@ -54,6 +54,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
 
             CreateMap<EducationOrganization, EducationOrganizationModel>();
             CreateMap<LocalEducationAgency, EducationOrganizationModel>();
+            CreateMap<PostSecondaryInstitution, EducationOrganizationModel>();
             CreateMap<School, EducationOrganizationModel>();
 
             CreateMap<AddLocalEducationAgencyModel, LocalEducationAgency>()
@@ -61,10 +62,22 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.LocalEducationAgencyId))
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.LocalEducationAgency));
 
+            CreateMap<AddPostSecondaryInstitutionModel, PostSecondaryInstitution>()
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.PostSecondaryInstitutionId))
+                .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.PostSecondaryInstitution))
+                .ForMember(dst => dst.LocalEducationAgencyId, opt => opt.Ignore());
+
             CreateMap<AddSchoolModel, School>()
                 .ForMember(dst => dst.Id, opt => opt.Ignore())
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.SchoolType));
+
+            CreateMap<AddPsiSchoolModel, PsiSchool>()
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
+                .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.SchoolType))
+                .ForMember(dst => dst.ImprovingSchool, opt => opt.Ignore());
 
             CreateMap<LocalEducationAgency, EditLocalEducationAgencyModel>()
                 .ForMember(dst => dst.LocalEducationAgencyCategoryTypeOptions, opt => opt.Ignore())

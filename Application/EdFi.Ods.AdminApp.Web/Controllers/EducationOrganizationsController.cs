@@ -81,12 +81,32 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Add Post Secondary Institution")]
+        public async Task<ActionResult> AddPostSecondaryInstitution(AddPostSecondaryInstitutionModel viewModel)
+        {
+            var model = _mapper.Map<PostSecondaryInstitution>(viewModel);
+            model.Id = Guid.Empty.ToString();
+            var addResult = (await _odsApiFacadeFactory.Create()).AddPostSecondaryInstitution(model);
+            return addResult.Success ? JsonSuccess("Post Secondary Institution Added") : JsonError(addResult.ErrorMessage);
+        }
+
+        [HttpPost]
         [AddTelemetry("Add School")]
         public async Task<ActionResult> AddSchool(AddSchoolModel viewModel)
         {
             var model = _mapper.Map<School>(viewModel);
             model.Id = Guid.Empty.ToString();
             var addResult = (await _odsApiFacadeFactory.Create()).AddSchool(model);
+            return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Add Post Secondary Institution School")]
+        public async Task<ActionResult> AddPsiSchool(AddPsiSchoolModel viewModel)
+        {
+            var model = _mapper.Map<PsiSchool>(viewModel);
+            model.Id = Guid.Empty.ToString();
+            var addResult = (await _odsApiFacadeFactory.Create()).AddPsiSchool(model);
             return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
         }
 
@@ -171,11 +191,53 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return PartialView("_LocalEducationAgencies", model);
         }
 
+        public async Task<ActionResult> PostSecondaryInstitutionsList(int pageNumber)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var schools = api.GetAllPsiSchools();
+
+            var postSecondaryInstitutions =
+                await Page<PostSecondaryInstitution>.FetchAsync(GetPostSecondaryInstitutions, pageNumber);
+
+            var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
+
+            var model = new PostSecondaryInstitutionViewModel
+            {
+                Schools = schools,
+                PostSecondaryInstitutions = postSecondaryInstitutions,
+                ShouldAllowMultipleDistricts = CloudOdsAdminAppSettings.Instance.Mode != ApiMode.DistrictSpecific,
+                AddPsiSchoolModel = new AddPsiSchoolModel
+                {
+                    GradeLevelOptions = api.GetAllGradeLevels(),
+                    StateOptions = api.GetAllStateAbbreviations(),
+                    FederalLocaleCodeOptions = api.GetFederalLocaleCodes(),
+                    AccreditationStatusOptions = api.GetAccreditationStatusOptions(),
+                    RequiredApiDataExist = requiredApiDataExist
+                },
+                AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
+                {
+                    PostSecondaryInstitutionLevelOptions = api.GetPostSecondaryInstitutionLevels(),
+                    AdministrativeFundingControlOptions = api.GetAdministrativeFundingControls(),
+                    StateOptions = api.GetAllStateAbbreviations(),
+                    RequiredApiDataExist = requiredApiDataExist
+                }
+            };
+
+            return PartialView("_PostSecondaryInstitutions", model);
+        }
+
         private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)
         {
             var api = await _odsApiFacadeFactory.Create();
             var localEducationAgencies = api.GetLocalEducationAgenciesByPage(offset, limit);
             return localEducationAgencies;
+        }
+
+        private async Task<IReadOnlyList<PostSecondaryInstitution>> GetPostSecondaryInstitutions(int offset, int limit)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var postSecondaryInstitutions = api.GetPostSecondaryInstitutionsByPage(offset, limit);
+            return postSecondaryInstitutions;
         }
 
         [HttpPost]

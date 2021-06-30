@@ -36,6 +36,18 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
         }
     }
 
+    public class PostSecondaryInstitutionAddressResolver : IValueResolver<PostSecondaryInstitution, EdFiPostSecondaryInstitution, List<EdFiEducationOrganizationAddress>>
+    {
+        public List<EdFiEducationOrganizationAddress> Resolve(PostSecondaryInstitution source,
+            EdFiPostSecondaryInstitution destination, List<EdFiEducationOrganizationAddress> destMember,
+            ResolutionContext context)
+        {
+            var addressList = EducationOrganizationAddressResolver.ReplaceFirstAddressInList(source, destMember);
+            destMember?.Clear(); // by default, automapper combines the source list with the destination list. we want to replace the destination list instead
+            return addressList;
+        }
+    }
+
     public static class EducationOrganizationAddressResolver
     {
         public static List<EdFiEducationOrganizationAddress> ReplaceFirstAddressInList(EducationOrganization source,

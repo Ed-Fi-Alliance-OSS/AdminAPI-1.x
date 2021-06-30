@@ -32,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public bool RequiredApiDataExist { get; set; }
     }
 
-    public class AddSchoolModelValidator : AbstractValidator<AddSchoolModel>
+    public class AddSchoolModelValidator<T> : AbstractValidator<T> where T : AddSchoolModel   
     {
         private readonly IOdsApiFacade _apiFacade;
 
@@ -55,6 +55,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         private bool BeUniqueId(int? id)
         {
             return id != null
+                   && _apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
                    && _apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
                    && _apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
         }

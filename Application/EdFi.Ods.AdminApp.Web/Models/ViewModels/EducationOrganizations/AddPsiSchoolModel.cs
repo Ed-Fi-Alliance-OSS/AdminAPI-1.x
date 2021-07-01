@@ -19,7 +19,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public List<SelectOptionModel> FederalLocaleCodeOptions { get; set; }
     }
 
-    public class AddPsiSchoolModelValidator : AddSchoolModelValidator<AddPsiSchoolModel>
+    public class AddPsiSchoolModelValidator : AddSchoolModelValidatorBase<AddPsiSchoolModel>
     {
         public AddPsiSchoolModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
             : base(odsApiFacadeFactory) {

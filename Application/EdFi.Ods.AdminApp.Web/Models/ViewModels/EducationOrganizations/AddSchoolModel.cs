@@ -32,11 +32,19 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public bool RequiredApiDataExist { get; set; }
     }
 
-    public class AddSchoolModelValidator<T> : AbstractValidator<T> where T : AddSchoolModel   
+    public class AddSchoolModelValidator : AddSchoolModelValidatorBase<AddSchoolModel>
+    {
+        public AddSchoolModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
+            : base(odsApiFacadeFactory)
+        {
+        }
+    }
+
+    public abstract class AddSchoolModelValidatorBase<T> : AbstractValidator<T> where T : AddSchoolModel   
     {
         private readonly IOdsApiFacade _apiFacade;
 
-        public AddSchoolModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
+        protected AddSchoolModelValidatorBase(IOdsApiFacadeFactory odsApiFacadeFactory)
         {
            
             _apiFacade =  odsApiFacadeFactory.Create().GetAwaiter().GetResult();

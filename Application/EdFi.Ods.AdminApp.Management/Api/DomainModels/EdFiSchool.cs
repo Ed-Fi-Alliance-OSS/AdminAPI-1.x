@@ -30,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.DomainModels
             SchoolId = schoolId.IsRequired(nameof(schoolId), resourceName);
             NameOfInstitution = nameOfInstitution.IsRequired(nameof(nameOfInstitution), resourceName);
             LocalEducationAgencyReference = localEducationAgencyReference;
-            Ext = ext;
+            _ext = ext;
         }
 
         public string Id { get; }
@@ -40,6 +40,6 @@ namespace EdFi.Ods.AdminApp.Management.Api.DomainModels
         public List<EdFiEducationOrganizationAddress> Addresses { get; }
         public List<EdFiSchoolGradeLevel> GradeLevels { get; }
         public List<EdFiEducationOrganizationCategory> EducationOrganizationCategories { get; }
-        public SchoolExtensions Ext { get; set; }
+        public SchoolExtensions _ext { get; set; }
     }
 }

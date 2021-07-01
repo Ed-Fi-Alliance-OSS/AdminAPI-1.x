@@ -7,7 +7,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using EdFi.Ods.AdminApp.Management.Api.DomainModels;
 using LocalEducationAgency = EdFi.Ods.AdminApp.Management.Api.Models.LocalEducationAgency;
-
+using PostSecondaryInstitution = EdFi.Ods.AdminApp.Management.Api.Models.PostSecondaryInstitution;
 using School = EdFi.Ods.AdminApp.Management.Api.Models.School;
 
 namespace EdFi.Ods.AdminApp.Management.Api.Automapper
@@ -25,6 +25,15 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
     public class LocalEducationAgencyCategoryResolver : IValueResolver<LocalEducationAgency, EdFiLocalEducationAgency, List<EdFiEducationOrganizationCategory>>
     {
         public List<EdFiEducationOrganizationCategory> Resolve(LocalEducationAgency source, EdFiLocalEducationAgency destination, List<EdFiEducationOrganizationCategory> destMember, ResolutionContext context)
+        {
+            destMember?.Clear(); // by default, automapper combines the source list with the destination list. we want to replace the destination list instead
+            return EducationOrganizationCategoryResolver.GetNewEducationCategory(source.EducationOrganizationCategory);
+        }
+    }
+
+    public class PostSecondaryInstitutionCategoryResolver : IValueResolver<PostSecondaryInstitution, EdFiPostSecondaryInstitution, List<EdFiEducationOrganizationCategory>>
+    {
+        public List<EdFiEducationOrganizationCategory> Resolve(PostSecondaryInstitution source, EdFiPostSecondaryInstitution destination, List<EdFiEducationOrganizationCategory> destMember, ResolutionContext context)
         {
             destMember?.Clear(); // by default, automapper combines the source list with the destination list. we want to replace the destination list instead
             return EducationOrganizationCategoryResolver.GetNewEducationCategory(source.EducationOrganizationCategory);
@@ -50,6 +59,11 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
         }
 
         public static List<EdFiEducationOrganizationCategory> Resolve(School source, ResolutionContext context)
+        {
+            return GetNewEducationCategory(source.EducationOrganizationCategory);
+        }
+
+        public static List<EdFiEducationOrganizationCategory> Resolve(PostSecondaryInstitution source, ResolutionContext context)
         {
             return GetNewEducationCategory(source.EducationOrganizationCategory);
         }

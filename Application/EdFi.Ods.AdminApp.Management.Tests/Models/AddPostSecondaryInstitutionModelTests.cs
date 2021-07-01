@@ -14,11 +14,11 @@ using NUnit.Framework;
 namespace EdFi.Ods.AdminApp.Management.Tests.Models
 {
     [TestFixture]
-    public class AddSchoolModelTests
+    public class AddPostSecondaryInstitutionModelTests
     {
         private Mock<IOdsApiFacade> _mockOdsApiFacade;
         private Mock<IOdsApiFacadeFactory> _mockOdsApiFacadeFactory;
-        private AddSchoolModel _addSchoolModel;
+        private AddPostSecondaryInstitutionModel _addPostSecondaryInstitutionModel;
         private const int Id = 1;
 
         [SetUp]
@@ -26,73 +26,28 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         {
             _mockOdsApiFacadeFactory = new Mock<IOdsApiFacadeFactory>();
             _mockOdsApiFacade = new Mock<IOdsApiFacade>();
-           
-            _addSchoolModel = new AddSchoolModel
+
+            _addPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
             {
-                SchoolId = Id,
-                Name = "TestSchool",
+                PostSecondaryInstitutionId = Id,
+                Name = "TestPsi",
                 StreetNumberName = "1209",
                 City = "City",
                 State = "State",
-                ZipCode = "78979",
-                GradeLevels = new List<string>
-                    { "First Grade" }
+                ZipCode = "78979"
             };
         }
 
         [Test]
-        public void ShouldNotValidateAddSchoolModelIfSchoolIdIsEmpty()
+        public void ShouldNotValidateAddPostSecondaryInstitutionModelIfPostSecondaryInstitutionIdIsEmpty()
         {
-            _addSchoolModel.SchoolId = null;
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "'School ID' must not be empty.");
+            _addPostSecondaryInstitutionModel.PostSecondaryInstitutionId = null;
+            var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "'Post Secondary Institution ID' must not be empty.");
         }
 
         [Test]
-        public void ShouldNotValidateAddSchoolModelIfGradeLevelsListIsEmpty()
-        {
-            // Arrange
-            _addSchoolModel.GradeLevels = new List<string>();
-
-            var existingLeaWithDifferentId = new LocalEducationAgency
-            {
-                EducationOrganizationId = 2
-            };
-
-            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
-            {
-                existingLeaWithDifferentId
-            });
-
-            var existingSchoolWithDifferentId = new School
-            {
-                EducationOrganizationId = 3
-            };
-
-            _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(new List<School>
-            {
-                existingSchoolWithDifferentId
-            });
-
-            var existingPsiWithDifferentId = new PostSecondaryInstitution
-            {
-                EducationOrganizationId = 4
-            };
-
-            _mockOdsApiFacade.Setup(x => x.GetAllPostSecondaryInstitutions()).Returns(new List<PostSecondaryInstitution>
-            {
-                existingPsiWithDifferentId
-            });
-
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "You must choose at least one grade level");
-        }
-
-        [Test]
-        public void ShouldValidateAddSchoolModelWithValidValues()
+        public void ShouldValidateAddPostSecondaryInstitutionModelWithValidValues()
         {
             // Arrange
             var existingLeaWithDifferentId = new LocalEducationAgency
@@ -128,53 +83,53 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldValidate(_addSchoolModel);
+            var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
+            validator.ShouldValidate(_addPostSecondaryInstitutionModel);
         }
 
         [Test]
-        public void ShouldNotValidateAddSchoolModelIfPassedWithExistingLeaEdOrgId()
+        public void ShouldNotValidateAddPostSecondaryInstitutionModelIfPassedWithExistingPsiEdOrgId()
         {
             // Arrange
-            var existingLeaWithSameId = new LocalEducationAgency
+            var existingLeaWithDifferentId = new LocalEducationAgency
+            {
+                EducationOrganizationId = 4
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
+            {
+                existingLeaWithDifferentId
+            });
+
+            var existingSchoolWithDifferentId = new School
+            {
+                EducationOrganizationId = 2
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(new List<School>
+            {
+                existingSchoolWithDifferentId
+            });
+
+            var existingPsiWithSameId = new PostSecondaryInstitution
             {
                 EducationOrganizationId = Id
             };
 
-            _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
-            {
-                existingLeaWithSameId
-            });
-
-            var existingSchoolWithDifferentId = new School
-            {
-                EducationOrganizationId = 2
-            };
-
-            _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(new List<School>
-            {
-                existingSchoolWithDifferentId
-            });
-
-            var existingPsiWithDifferentId = new PostSecondaryInstitution
-            {
-                EducationOrganizationId = 4
-            };
-
             _mockOdsApiFacade.Setup(x => x.GetAllPostSecondaryInstitutions()).Returns(new List<PostSecondaryInstitution>
             {
-                existingPsiWithDifferentId
+                existingPsiWithSameId
             });
 
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
         [Test]
-        public void ShouldNotValidateAddSchoolModelIfPassedWithExistingSchoolEdOrgId()
+        public void ShouldNotValidateAddPostSecondaryInstitutionModelIfPassedWithExistingSchoolEdOrgId()
         {
             // Arrange
             var existingLeaWithDifferentId = new LocalEducationAgency
@@ -210,22 +165,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
         [Test]
-        public void ShouldNotValidateAddSchoolModelIfPassedWithExistingPsiEdOrgId()
+        public void ShouldNotValidateAddPostSecondaryInstitutionModelIfPassedWithExistingLeaEdOrgId()
         {
             // Arrange
-            var existingLeaWithDifferentId = new LocalEducationAgency
+            var existingLeaWithSameId = new LocalEducationAgency
             {
-                EducationOrganizationId = 2
+                EducationOrganizationId = Id
             };
 
             _mockOdsApiFacade.Setup(x => x.GetAllLocalEducationAgencies()).Returns(new List<LocalEducationAgency>
             {
-                existingLeaWithDifferentId
+                existingLeaWithSameId
             });
 
             var existingSchoolWithDifferentId = new School
@@ -238,21 +193,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 existingSchoolWithDifferentId
             });
 
-            var existingPsiWithSameId = new PostSecondaryInstitution
+            var existingPsiWithDifferentId = new PostSecondaryInstitution
             {
-                EducationOrganizationId = Id
+                EducationOrganizationId = 4
             };
 
             _mockOdsApiFacade.Setup(x => x.GetAllPostSecondaryInstitutions()).Returns(new List<PostSecondaryInstitution>
             {
-                existingPsiWithSameId
+                existingPsiWithDifferentId
             });
 
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

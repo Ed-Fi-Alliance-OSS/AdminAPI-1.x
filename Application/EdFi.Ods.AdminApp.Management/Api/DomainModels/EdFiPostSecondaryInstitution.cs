@@ -25,8 +25,8 @@ namespace EdFi.Ods.AdminApp.Management.Api.DomainModels
             Addresses = addresses.IsRequired(nameof(Addresses), resourceName);
             Categories = categories.IsRequired(nameof(Categories), resourceName);
             PostSecondaryInstitutionId = postSecondaryInstitutionId.IsRequired(nameof(postSecondaryInstitutionId), resourceName);
-            PostSecondaryInstitutionLevelDescriptor = postSecondaryInstitutionLevelDescriptor.IsRequired(nameof(PostSecondaryInstitutionLevelDescriptor), resourceName);
-            AdministrativeFundingControlDescriptor = administrativeFundingControlDescriptor.IsRequired(nameof(AdministrativeFundingControlDescriptor), resourceName);
+            PostSecondaryInstitutionLevelDescriptor = postSecondaryInstitutionLevelDescriptor.MaxLength(306, nameof(postSecondaryInstitutionLevelDescriptor), GetType().Name);
+            AdministrativeFundingControlDescriptor = administrativeFundingControlDescriptor.MaxLength(306, nameof(administrativeFundingControlDescriptor), GetType().Name);
             NameOfInstitution = nameOfInstitution.IsRequired(nameof(NameOfInstitution), resourceName);
         }
 

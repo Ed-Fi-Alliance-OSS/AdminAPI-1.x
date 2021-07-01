@@ -70,6 +70,31 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
+        public void When_Perform_Post_Request_To_AddPostSecondaryInstitution_Return_Expected_Success_response()
+        {
+            // Arrange
+            var addPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
+            {
+                City = "city"
+            };
+
+            _mockMapper.Setup(x => x.Map<PostSecondaryInstitution>(It.IsAny<AddPostSecondaryInstitutionModel>()))
+                .Returns(new PostSecondaryInstitution());
+            _mockOdsApiFacade.Setup(x => x.AddPostSecondaryInstitution(It.IsAny<PostSecondaryInstitution>())).Returns(new OdsApiResult());
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.AddPostSecondaryInstitution(addPostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain("Post Secondary Institution Added");
+        }
+
+        [Test]
         public void When_Perform_Post_Request_To_AddSchool_Return_Expected_Success_response()
         {
             // Arrange
@@ -88,6 +113,31 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Act
             var result = _controller.AddSchool(addSchoolModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain("School Added");
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_AddPsiSchool_Return_Expected_Success_response()
+        {
+            // Arrange
+            var addPsiSchoolModel = new AddPsiSchoolModel
+            {
+                City = "city"
+            };
+
+            _mockMapper.Setup(x => x.Map<PsiSchool>(It.IsAny<AddPsiSchoolModel>()))
+                .Returns(new PsiSchool());
+            _mockOdsApiFacade.Setup(x => x.AddPsiSchool(It.IsAny<PsiSchool>())).Returns(new OdsApiResult());
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.AddPsiSchool(addPsiSchoolModel).Result as ContentResult;
 
             // Assert
             result.ShouldNotBeNull();
@@ -293,6 +343,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 new LocalEducationAgency()
             };
+
+            var psis = new List<PostSecondaryInstitution>
+            {
+                new PostSecondaryInstitution()
+            };
             const string gradeLevel = "FirstGrade";
             const string value = "Namespace#FirstGrade";
             const string localEducationAgencyCategory = "School";
@@ -300,6 +355,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
+            _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionsByPage(0, Page<PostSecondaryInstitution>.DefaultPageSize + 1)).Returns(psis);
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
@@ -331,6 +387,75 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             addLocalEducationAgencyModel.LocalEducationAgencyCategoryTypeOptions.Count.ShouldBe(1);
             addLocalEducationAgencyModel.LocalEducationAgencyCategoryTypeOptions.Single().DisplayText.ShouldBe(localEducationAgencyCategory);
             addLocalEducationAgencyModel.LocalEducationAgencyCategoryTypeOptions.Single().Value.ShouldBe(localEducationAgencyCategoryValue);
+        }
+
+        [Test]
+        public void When_Perform_Get_Request_To_PostSecondaryInstitutionsList_Return_Post_Secondary_Institutions_List()
+        {
+            // Arrange
+            var schools = new List<PsiSchool>
+            {
+                new PsiSchool()
+            };
+
+            var leas = new List<LocalEducationAgency>
+            {
+                new LocalEducationAgency()
+            };
+
+            var psis = new List<PostSecondaryInstitution>
+            {
+                new PostSecondaryInstitution()
+            };
+            const string gradeLevel = "FirstGrade";
+            const string value = "Namespace#FirstGrade";
+            const string postSecondaryInstitutionLevel = "Four or more years";
+            const string postSecondaryInstitutionLevelValue = "Namespace#Four or more years";
+            const string administrativeFundingControl = "Private School";
+            const string administrativeFundingControlValue = "Namespace#Private School";
+
+            _mockOdsApiFacade.Setup(x => x.GetAllPsiSchools()).Returns(schools);
+            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
+            _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionsByPage(0, Page<PostSecondaryInstitution>.DefaultPageSize + 1)).Returns(psis);
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
+                .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
+            _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionLevels())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = postSecondaryInstitutionLevel, Value = postSecondaryInstitutionLevelValue}});
+            _mockOdsApiFacade.Setup(x => x.GetAdministrativeFundingControls())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = administrativeFundingControl, Value = administrativeFundingControlValue}});
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.PostSecondaryInstitutionsList(1).Result as PartialViewResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            var model = (PostSecondaryInstitutionViewModel)result.ViewData.Model;
+            model.ShouldNotBeNull();
+            model.Schools.Count.ShouldBeGreaterThan(0);
+            model.PostSecondaryInstitutions.Items.Count().ShouldBeGreaterThan(0);
+
+            var addSchoolModel = model.AddPsiSchoolModel;
+            addSchoolModel.ShouldNotBeNull();
+            addSchoolModel.GradeLevelOptions.Count.ShouldBe(1);
+            addSchoolModel.GradeLevelOptions.Single().DisplayText.ShouldBe(gradeLevel);
+            addSchoolModel.GradeLevelOptions.Single().Value.ShouldBe(value);
+
+            var addPostSecondaryInstitutionModel = model.AddPostSecondaryInstitutionModel;
+            addPostSecondaryInstitutionModel.ShouldNotBeNull();
+            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Count.ShouldBe(2);
+            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Count.ShouldBe(2);
+            var postSecondaryInstitutionLevelOption = addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Single(x => x.Value != null);
+            postSecondaryInstitutionLevelOption.DisplayText.ShouldBe(postSecondaryInstitutionLevel);
+            postSecondaryInstitutionLevelOption.Value.ShouldBe(postSecondaryInstitutionLevelValue);
+            var administrativeFundingControlOption = addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Single(x => x.Value != null);
+            administrativeFundingControlOption.DisplayText.ShouldBe(administrativeFundingControl);
+            administrativeFundingControlOption.Value.ShouldBe(administrativeFundingControlValue);
         }
 
         [Test]

@@ -35,7 +35,7 @@ See the LICENSE and NOTICES files in the project root for more information.
             </div>
 
             <div class="col-lg-6 text-right">
-                <a href="javascript:void(0)" class="loads-ajax-modal" data-url="@Url.Action("EditLocalEducationAgencyModal", "EducationOrganizations", new {id = postSecondaryInstitution.Id})"> <span class="fa fa-pencil action-icons"></span></a>
+                <a href="javascript:void(0)" class="loads-ajax-modal" data-url="@Url.Action("EditPostSecondaryInstitutionModal", "EducationOrganizations", new {id = postSecondaryInstitution.Id})"> <span class="fa fa-pencil action-icons"></span></a>
                 @if (!schools.Any())
                 {
                     <a href="javascript:void(0)" class="delete-psi-link" data-id="@postSecondaryInstitution.Id" data-name="@postSecondaryInstitution.Name"> <span class="fa fa-trash-o action-icons"></span></a>

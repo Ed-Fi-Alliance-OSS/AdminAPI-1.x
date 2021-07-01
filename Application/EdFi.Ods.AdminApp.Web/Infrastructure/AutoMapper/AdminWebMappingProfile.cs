@@ -105,7 +105,19 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
             CreateMap<EditSchoolModel, School>()
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.SchoolType));
-                
+
+            CreateMap<PsiSchool, EditPsiSchoolModel>()
+                .ForMember(dst => dst.SchoolId, opt => opt.MapFrom(src => src.EducationOrganizationId))
+                .ForMember(dst => dst.GradeLevelOptions, opt => opt.Ignore())
+                .ForMember(dst => dst.StateOptions, opt => opt.Ignore())
+                .ForMember(dst => dst.AccreditationStatusOptions, opt => opt.Ignore())
+                .ForMember(dst => dst.FederalLocaleCodeOptions, opt => opt.Ignore());
+
+            CreateMap<EditPsiSchoolModel, PsiSchool>()
+                .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
+                .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.SchoolType))
+                .ForMember(dst => dst.ImprovingSchool, opt => opt.Ignore());
+
             CreateMap<Descriptor, DescriptorModel>();
 
             CreateMap<AuthorizationStrategy, Management.ClaimSetEditor.AuthorizationStrategy>()

@@ -30,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public List<SelectOptionModel> StateOptions { get; set; }
     }
 
-    public class EditSchoolModelValidator : AbstractValidator<EditSchoolModel>
+    public class EditSchoolModelValidator<T> : AbstractValidator<T> where T : EditSchoolModel
     {
         public EditSchoolModelValidator()
         {

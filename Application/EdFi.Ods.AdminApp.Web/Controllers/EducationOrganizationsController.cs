@@ -219,8 +219,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 },
                 AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
                 {
-                    PostSecondaryInstitutionLevelOptions = api.GetPostSecondaryInstitutionLevels(),
-                    AdministrativeFundingControlOptions = api.GetAdministrativeFundingControls(),
+                    PostSecondaryInstitutionLevelOptions = BuildListWithEmptyOption(api.GetPostSecondaryInstitutionLevels),
+                    AdministrativeFundingControlOptions = BuildListWithEmptyOption(api.GetAdministrativeFundingControls),
                     StateOptions = api.GetAllStateAbbreviations(),
                     RequiredApiDataExist = requiredApiDataExist
                 }
@@ -265,6 +265,20 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 "TpdmExtensionEnabled", () =>
                     _inferExtensionDetails.TpdmExtensionEnabled(
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+        }
+
+        private List<SelectOptionModel> BuildListWithEmptyOption(Func<List<SelectOptionModel>> getSelectOptionList)
+        {
+            var selectOptionList = new List<SelectOptionModel>
+            {
+                new SelectOptionModel
+                {
+                    DisplayText = "",
+                    Value = null
+                }
+            };
+            selectOptionList.AddRange(getSelectOptionList.Invoke());
+            return selectOptionList;
         }
     }
 }

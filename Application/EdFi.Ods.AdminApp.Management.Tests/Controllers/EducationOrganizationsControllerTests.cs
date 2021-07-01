@@ -84,7 +84,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
 
             // Act
             var result = _controller.AddPostSecondaryInstitution(addPostSecondaryInstitutionModel).Result as ContentResult;
@@ -134,7 +134,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
 
             // Act
             var result = _controller.AddPsiSchool(addPsiSchoolModel).Result as ContentResult;
@@ -428,7 +428,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 .Returns(new List<SelectOptionModel>
                     {new SelectOptionModel {DisplayText = administrativeFundingControl, Value = administrativeFundingControlValue}});
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
 
             // Act
             var result = _controller.PostSecondaryInstitutionsList(1).Result as PartialViewResult;
@@ -448,12 +448,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             var addPostSecondaryInstitutionModel = model.AddPostSecondaryInstitutionModel;
             addPostSecondaryInstitutionModel.ShouldNotBeNull();
-            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Count.ShouldBe(1);
-            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Count.ShouldBe(1);
-            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Single().DisplayText.ShouldBe(postSecondaryInstitutionLevel);
-            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Single().Value.ShouldBe(postSecondaryInstitutionLevelValue);
-            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Single().DisplayText.ShouldBe(administrativeFundingControl);
-            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Single().Value.ShouldBe(administrativeFundingControlValue);
+            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Count.ShouldBe(2);
+            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Count.ShouldBe(2);
+            var postSecondaryInstitutionLevelOption = addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Single(x => x.Value != null);
+            postSecondaryInstitutionLevelOption.DisplayText.ShouldBe(postSecondaryInstitutionLevel);
+            postSecondaryInstitutionLevelOption.Value.ShouldBe(postSecondaryInstitutionLevelValue);
+            var administrativeFundingControlOption = addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Single(x => x.Value != null);
+            administrativeFundingControlOption.DisplayText.ShouldBe(administrativeFundingControl);
+            administrativeFundingControlOption.Value.ShouldBe(administrativeFundingControlValue);
         }
 
         [Test]

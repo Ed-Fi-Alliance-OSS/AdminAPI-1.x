@@ -276,6 +276,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Delete Post Secondary Institution")]
+        public async Task<ActionResult> DeletePostSecondaryInstitution(DeleteEducationOrganizationModel model)
+        {
+            var deletionResult = (await _odsApiFacadeFactory.Create()).DeletePostSecondaryInstitution(model.Id);
+            return deletionResult.Success ? JsonSuccess("Post Secondary Institution Removed") : JsonError(deletionResult.ErrorMessage);
+        }
+
+        [HttpPost]
         [AddTelemetry("Delete School")]
         public async Task<ActionResult> DeleteSchool(DeleteEducationOrganizationModel model)
         {

@@ -514,6 +514,56 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
+        public void When_Perform_Post_Request_To_DeletePostSecondaryInstitution_Return_Success_Response()
+        {
+            // Arrange
+            var deletePostSecondaryInstitutionModel = new DeleteEducationOrganizationModel
+            {
+                Id = "id"
+            };
+        
+            _mockOdsApiFacade.Setup(x => x.DeletePostSecondaryInstitution(It.IsAny<string>()))
+                .Returns(new OdsApiResult());
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.DeletePostSecondaryInstitution(deletePostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain("Post Secondary Institution Removed");
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_DeletePostSecondaryInstitution_Return_Error_Response()
+        {
+            // Arrange
+            var error = "error";
+            var deletePostSecondaryInstitutionModel = new DeleteEducationOrganizationModel
+            {
+                Id = "id"
+            };
+            var apiResult = new OdsApiResult { ErrorMessage = error };
+         
+            _mockOdsApiFacade.Setup(x => x.DeletePostSecondaryInstitution(It.IsAny<string>()))
+                .Returns(apiResult);
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.DeletePostSecondaryInstitution(deletePostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain(error);
+        }
+
+        [Test]
         public void When_Perform_Post_Request_To_DeleteLocalEducationAgency_Return_Success_Response()
         {
             // Arrange

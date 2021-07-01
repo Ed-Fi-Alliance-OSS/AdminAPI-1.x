@@ -334,6 +334,63 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
+        public void When_Perform_Get_Request_To_EditPsiSchoolModal_Return_PartialView_With_Expected_Model()
+        {
+            // Arrange
+            const string gradeLevel = "FirstGrade";
+            var value = "Namespace#FirstGrade";
+            var schoolId = "id";
+            var name = "school";
+            const string accreditationStatus = "Test Accreditation Status";
+            const string accreditationStatusValue = "Namespace#Test Accreditation Status";
+            const string federalLocaleCode = "Test Federal Locale Code";
+            const string federalLocaleCodeValue = "Namespace#Test Federal Locale Code";
+
+            var editPsiSchoolModel = new EditPsiSchoolModel
+            {
+                Name = name
+            };
+
+            _mockOdsApiFacade.Setup(x => x.GetPsiSchoolById(schoolId))
+                .Returns(new PsiSchool());
+            _mockMapper.Setup(x => x.Map<EditPsiSchoolModel>(It.IsAny<PsiSchool>()))
+                .Returns(editPsiSchoolModel);
+            _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
+                .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _mockOdsApiFacade.Setup(x => x.GetAccreditationStatusOptions())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = accreditationStatus, Value = accreditationStatusValue}});
+            _mockOdsApiFacade.Setup(x => x.GetFederalLocaleCodes())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = federalLocaleCode, Value = federalLocaleCodeValue}});
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.EditPsiSchoolModal(schoolId).Result as PartialViewResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            var model = (EditPsiSchoolModel)result.ViewData.Model;
+            model.ShouldNotBeNull();
+            model.GradeLevelOptions.Count.ShouldBeGreaterThan(0);
+            model.GradeLevelOptions.First().DisplayText.ShouldBe(gradeLevel);
+            model.GradeLevelOptions.First().Value.ShouldBe(value);
+            model.Name.ShouldMatch(name);
+
+            model.AccreditationStatusOptions.Count.ShouldBeGreaterThan(0);
+            model.FederalLocaleCodeOptions.Count.ShouldBeGreaterThan(0);
+            var accreditationStatusOption = model.AccreditationStatusOptions.Single(x => x.Value != null);
+            accreditationStatusOption.DisplayText.ShouldBe(accreditationStatus);
+            accreditationStatusOption.Value.ShouldBe(accreditationStatusValue);
+            var federalLocaleCodeOption = model.FederalLocaleCodeOptions.Single(x => x.Value != null);
+            federalLocaleCodeOption.DisplayText.ShouldBe(federalLocaleCode);
+            federalLocaleCodeOption.Value.ShouldBe(federalLocaleCodeValue);
+        }
+
+        [Test]
         public void When_Perform_Post_Request_To_EditSchool_Return_Success_Response()
         {
             // Arrange
@@ -379,6 +436,58 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Act
             var result = _controller.EditSchool(editSchoolModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain(error);
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_EditPsiSchool_Return_Success_Response()
+        {
+            // Arrange
+            var editPsiSchoolModel = new EditPsiSchoolModel
+            {
+                City = "city"
+            };
+
+            _mockMapper.Setup(x => x.Map<PsiSchool>(It.IsAny<EditPsiSchoolModel>()))
+                .Returns(new PsiSchool());
+            _mockOdsApiFacade.Setup(x => x.EditPsiSchool(It.IsAny<PsiSchool>())).Returns(new OdsApiResult());
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.EditPsiSchool(editPsiSchoolModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain("School Updated");
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_EditPsiSchool_Return_Error_Response()
+        {
+            // Arrange
+            var error = "error";
+            var editPsiSchoolModel = new EditPsiSchoolModel
+            {
+                City = "city"
+            };
+            var apiResult = new OdsApiResult { ErrorMessage = error };
+
+            _mockMapper.Setup(x => x.Map<PsiSchool>(It.IsAny<EditPsiSchoolModel>()))
+                .Returns(new PsiSchool());
+            _mockOdsApiFacade.Setup(x => x.EditPsiSchool(It.IsAny<PsiSchool>())).Returns(apiResult);
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.EditPsiSchool(editPsiSchoolModel).Result as ContentResult;
 
             // Assert
             result.ShouldNotBeNull();

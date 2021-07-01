@@ -44,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
         public static HtmlTag Input<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class
         {
             var generator = GetGenerator(helper.ViewData.Model);
-            return generator.InputFor(expression);
+            return generator.InputFor(expression).Id(Guid.NewGuid().ToString());
         }
 
         public static HtmlTag FileInputBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression) where T : class

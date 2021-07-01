@@ -28,7 +28,9 @@ namespace EdFi.Ods.AdminApp.Management.Api
         LocalEducationAgency GetLocalEducationAgencyById(string id);
         OdsApiResult EditLocalEducationAgency(LocalEducationAgency editedLocalEducationAgency);
         School GetSchoolById(string id);
+        PsiSchool GetPsiSchoolById(string id);
         OdsApiResult EditSchool(School editedSchool);
+        OdsApiResult EditPsiSchool(PsiSchool model);
         List<SelectOptionModel> GetAllStateAbbreviations();
         List<SelectOptionModel> GetPostSecondaryInstitutionLevels();
         List<SelectOptionModel> GetAdministrativeFundingControls();

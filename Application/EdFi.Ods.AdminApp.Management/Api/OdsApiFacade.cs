@@ -199,7 +199,19 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _mapper.Map<Models.School>(school);
         }
 
+        public Models.PsiSchool GetPsiSchoolById(string id)
+        {
+            var school = _restClient.GetById<School>(ResourcePaths.SchoolById, id);
+            return _mapper.Map<Models.PsiSchool>(school);
+        }
+
         public OdsApiResult EditSchool(Models.School model)
+        {
+            var request = _mapper.Map<School>(model);
+            return _restClient.PutResource(request, ResourcePaths.Schools, request.Id);
+        }
+
+        public OdsApiResult EditPsiSchool(Models.PsiSchool model)
         {
             var request = _mapper.Map<School>(model);
             return _restClient.PutResource(request, ResourcePaths.Schools, request.Id);

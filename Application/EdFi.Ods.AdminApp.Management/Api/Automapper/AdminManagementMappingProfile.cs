@@ -36,7 +36,12 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
                 .ForMember(dst => dst.LocalEducationAgencyId, opt => opt.Ignore())
                 .ForMember(dst => dst.PostSecondaryInstitutionId, opt => opt.MapFrom(src => src._ext == null
-                    ? null : src._ext != null && src._ext.TPDM != null && src._ext.TPDM.PostSecondaryInstitutionReference == null ? null : src._ext.TPDM.PostSecondaryInstitutionReference.PostSecondaryInstitutionId))
+                    ? null
+                    : src._ext != null && src._ext.TPDM == null
+                        ? null
+                        : src._ext != null && src._ext.TPDM != null && src._ext.TPDM.PostSecondaryInstitutionReference == null
+                            ? null
+                            : src._ext.TPDM.PostSecondaryInstitutionReference.PostSecondaryInstitutionId))
                 .ForMember(dst => dst.StreetNumberName, opt => opt.MapFrom(src => src.Addresses != null && src.Addresses.Any() ? src.Addresses.First().StreetNumberName : null))
                 .ForMember(dst => dst.ApartmentRoomSuiteNumber, opt => opt.MapFrom(src => src.Addresses != null && src.Addresses.Any() ? src.Addresses.First().ApartmentRoomSuiteNumber : null))
                 .ForMember(dst => dst.State, opt => opt.MapFrom(src => src.Addresses != null && src.Addresses.Any() ? src.Addresses.First().StateAbbreviationDescriptor : null))

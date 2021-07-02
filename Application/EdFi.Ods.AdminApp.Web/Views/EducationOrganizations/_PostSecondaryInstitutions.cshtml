@@ -75,7 +75,7 @@ See the LICENSE and NOTICES files in the project root for more information.
 }
 
 
-@Html.PagingControl(Url.Action("PostSecondaryInstitutions", "EducationOrganizations"), Model.PostSecondaryInstitutions)
+@Html.PagingControl(Url.Action("PostSecondaryInstitutionsList", "EducationOrganizations"), Model.PostSecondaryInstitutions)
 
 @{ await Html.RenderPartialAsync("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
 @{ await Html.RenderPartialAsync("_AddPostSecondaryInstitutionModal", Model.AddPostSecondaryInstitutionModel); }

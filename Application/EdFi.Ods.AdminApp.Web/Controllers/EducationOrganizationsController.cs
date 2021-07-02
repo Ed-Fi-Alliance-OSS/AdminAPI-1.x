@@ -181,6 +181,32 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return editResult.Success ? JsonSuccess("School Updated") : JsonError(editResult.ErrorMessage);
         }
 
+        public async Task<ActionResult> EditPsiSchoolModal(string id)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var psiSchool = api.GetPsiSchoolById(id);
+            var gradeLevelOptions = api.GetAllGradeLevels();
+            var stateOptions = api.GetAllStateAbbreviations();
+            var federalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes);
+            var accreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions);
+
+            var model = _mapper.Map<EditPsiSchoolModel>(psiSchool);
+            model.GradeLevelOptions = gradeLevelOptions;
+            model.StateOptions = stateOptions;
+            model.FederalLocaleCodeOptions = federalLocaleCodeOptions;
+            model.AccreditationStatusOptions = accreditationStatusOptions;
+
+            return PartialView("_EditPsiSchoolModal", model);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Edit Post Secondary Institution School")]
+        public async Task<ActionResult> EditPsiSchool(EditPsiSchoolModel model)
+        {
+            var editResult = (await _odsApiFacadeFactory.Create()).EditPsiSchool(_mapper.Map<PsiSchool>(model));
+            return editResult.Success ? JsonSuccess("School Updated") : JsonError(editResult.ErrorMessage);
+        }
+
         public async Task<ActionResult> LocalEducationAgencyList(int pageNumber)
         {
             var api = await _odsApiFacadeFactory.Create();
@@ -237,8 +263,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     GradeLevelOptions = api.GetAllGradeLevels(),
                     StateOptions = api.GetAllStateAbbreviations(),
-                    FederalLocaleCodeOptions = api.GetFederalLocaleCodes(),
-                    AccreditationStatusOptions = api.GetAccreditationStatusOptions(),
+                    FederalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes),
+                    AccreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions),
                     RequiredApiDataExist = requiredApiDataExist
                 },
                 AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel

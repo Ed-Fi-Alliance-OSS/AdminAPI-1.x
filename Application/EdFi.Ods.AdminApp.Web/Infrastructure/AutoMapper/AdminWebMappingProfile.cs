@@ -116,7 +116,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
             CreateMap<EditPsiSchoolModel, PsiSchool>()
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.SchoolId))
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.SchoolType))
-                .ForMember(dst => dst.ImprovingSchool, opt => opt.Ignore());
+                .ForMember(dst => dst.ImprovingSchool, opt => opt.Ignore())
+                .ForMember(dst => dst.LocalEducationAgencyId, opt => opt.Ignore());
 
             CreateMap<Descriptor, DescriptorModel>();
 

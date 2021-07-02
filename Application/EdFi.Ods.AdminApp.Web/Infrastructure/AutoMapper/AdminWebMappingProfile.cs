@@ -87,6 +87,16 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.LocalEducationAgencyId))
                 .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.LocalEducationAgency));
 
+            CreateMap<PostSecondaryInstitution, EditPostSecondaryInstitutionModel>()
+                .ForMember(dst => dst.PostSecondaryInstitutionLevelOptions, opt => opt.Ignore())
+                .ForMember(dst => dst.AdministrativeFundingControlOptions, opt => opt.Ignore())
+                .ForMember(dst => dst.StateOptions, opt => opt.Ignore());
+
+            CreateMap<EditPostSecondaryInstitutionModel, PostSecondaryInstitution>()
+                .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.PostSecondaryInstitutionId))
+                .ForMember(dst => dst.EducationOrganizationCategory, opt => opt.MapFrom(src => EducationOrganizationTypes.Instance.PostSecondaryInstitution))
+                .ForMember(dst => dst.LocalEducationAgencyId, opt => opt.Ignore());
+
             CreateMap<School, EditSchoolModel>()
                 .ForMember(dst => dst.SchoolId, opt => opt.MapFrom(src => src.EducationOrganizationId))
                 .ForMember(dst => dst.GradeLevelOptions, opt => opt.Ignore())

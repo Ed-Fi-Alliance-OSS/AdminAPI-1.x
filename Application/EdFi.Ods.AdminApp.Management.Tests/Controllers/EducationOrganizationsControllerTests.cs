@@ -241,6 +241,61 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         }
 
         [Test]
+        public void When_Perform_Post_Request_To_EditPostSecondaryInstitution_Return_Success_Response()
+        {
+            // Arrange
+            var editPostSecondaryInstitutionModel = new EditPostSecondaryInstitutionModel
+            {
+                City = "city"
+            };
+
+            _mockMapper.Setup(x => x.Map<PostSecondaryInstitution>(It.IsAny<EditPostSecondaryInstitutionModel>()))
+                .Returns(new PostSecondaryInstitution());
+            _mockOdsApiFacade.Setup(x => x.EditPostSecondaryInstitution(It.IsAny<PostSecondaryInstitution>()))
+                .Returns(new OdsApiResult());
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.EditPostSecondaryInstitution(editPostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain("Post Secondary Institution Updated");
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_EditPostSecondaryInstitution_Return_Error_Response()
+        {
+            // Arrange
+            const string error = "error";
+            var editPostSecondaryInstitutionModel = new EditPostSecondaryInstitutionModel
+            {
+                City = "city"
+            };
+
+            var apiResult = new OdsApiResult { ErrorMessage = error };
+
+            _mockMapper.Setup(x => x.Map<PostSecondaryInstitution>(It.IsAny<EditPostSecondaryInstitutionModel>()))
+                .Returns(new PostSecondaryInstitution());
+            _mockOdsApiFacade.Setup(x => x.EditPostSecondaryInstitution(It.IsAny<PostSecondaryInstitution>()))
+                .Returns(apiResult);
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.EditPostSecondaryInstitution(editPostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain(error);
+        }
+
+        [Test]
         public void When_Perform_Get_Request_To_EditSchoolModal_Return_PartialView_With_Expected_Model()
         {
             // Arrange
@@ -456,6 +511,56 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             var administrativeFundingControlOption = addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Single(x => x.Value != null);
             administrativeFundingControlOption.DisplayText.ShouldBe(administrativeFundingControl);
             administrativeFundingControlOption.Value.ShouldBe(administrativeFundingControlValue);
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_DeletePostSecondaryInstitution_Return_Success_Response()
+        {
+            // Arrange
+            var deletePostSecondaryInstitutionModel = new DeleteEducationOrganizationModel
+            {
+                Id = "id"
+            };
+        
+            _mockOdsApiFacade.Setup(x => x.DeletePostSecondaryInstitution(It.IsAny<string>()))
+                .Returns(new OdsApiResult());
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.DeletePostSecondaryInstitution(deletePostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain("Post Secondary Institution Removed");
+        }
+
+        [Test]
+        public void When_Perform_Post_Request_To_DeletePostSecondaryInstitution_Return_Error_Response()
+        {
+            // Arrange
+            var error = "error";
+            var deletePostSecondaryInstitutionModel = new DeleteEducationOrganizationModel
+            {
+                Id = "id"
+            };
+            var apiResult = new OdsApiResult { ErrorMessage = error };
+         
+            _mockOdsApiFacade.Setup(x => x.DeletePostSecondaryInstitution(It.IsAny<string>()))
+                .Returns(apiResult);
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+
+            // Act
+            var result = _controller.DeletePostSecondaryInstitution(deletePostSecondaryInstitutionModel).Result as ContentResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Content.ShouldContain(error);
         }
 
         [Test]

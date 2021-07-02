@@ -135,6 +135,30 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return editResult.Success ? JsonSuccess("Organization Updated") : JsonError(editResult.ErrorMessage);
         }
 
+        public async Task<ActionResult> EditPostSecondaryInstitutionModal(string id)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var postSecondaryInstitution = api.GetPostSecondaryInstitutionById(id);
+            var postSecondaryInstitutionLevelOptions = BuildListWithEmptyOption(api.GetPostSecondaryInstitutionLevels);
+            var administrativeFundingControlOptions = BuildListWithEmptyOption(api.GetAdministrativeFundingControls);
+            var stateOptions = api.GetAllStateAbbreviations();
+
+            var model = _mapper.Map<EditPostSecondaryInstitutionModel>(postSecondaryInstitution);
+            model.PostSecondaryInstitutionLevelOptions = postSecondaryInstitutionLevelOptions;
+            model.AdministrativeFundingControlOptions = administrativeFundingControlOptions;
+            model.StateOptions = stateOptions;
+
+            return PartialView("_EditPostSecondaryInstitutionModal", model);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Edit Post Secondary Institution")]
+        public async Task<ActionResult> EditPostSecondaryInstitution(EditPostSecondaryInstitutionModel model)
+        {
+            var editResult = (await _odsApiFacadeFactory.Create()).EditPostSecondaryInstitution(_mapper.Map<PostSecondaryInstitution>(model));
+            return editResult.Success ? JsonSuccess("Post Secondary Institution Updated") : JsonError(editResult.ErrorMessage);
+        }
+
         public async Task<ActionResult> EditSchoolModal(string id)
         {
             var api = await _odsApiFacadeFactory.Create();
@@ -249,6 +273,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var deletionResult = (await _odsApiFacadeFactory.Create()).DeleteLocalEducationAgency(model.Id);
             return deletionResult.Success ? JsonSuccess("Organization Removed") : JsonError(deletionResult.ErrorMessage);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Delete Post Secondary Institution")]
+        public async Task<ActionResult> DeletePostSecondaryInstitution(DeleteEducationOrganizationModel model)
+        {
+            var deletionResult = (await _odsApiFacadeFactory.Create()).DeletePostSecondaryInstitution(model.Id);
+            return deletionResult.Success ? JsonSuccess("Post Secondary Institution Removed") : JsonError(deletionResult.ErrorMessage);
         }
 
         [HttpPost]

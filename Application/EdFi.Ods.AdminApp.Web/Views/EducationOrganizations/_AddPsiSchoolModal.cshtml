@@ -30,11 +30,11 @@ See the LICENSE and NOTICES files in the project root for more information.
                 @Html.InputBlock(m => m.City).AddClass("reset-included")
                 @Html.SelectListBlock(m => m.State, Model.StateOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
                 @Html.InputBlock(m => m.ZipCode).AddClass("reset-included")
-                if (Model.AccreditationStatusOptions.Any())
+                if (Model.AccreditationStatusOptions.Count > 1)
                 {
                     @Html.SelectListBlock(m => m.AccreditationStatus, Model.AccreditationStatusOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
                 }
-                if (Model.FederalLocaleCodeOptions.Any())
+                if (Model.FederalLocaleCodeOptions.Count > 1)
                 {
                     @Html.SelectListBlock(m => m.FederalLocaleCode, Model.FederalLocaleCodeOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
                 }

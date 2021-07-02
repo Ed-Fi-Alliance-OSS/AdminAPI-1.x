@@ -577,6 +577,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             const string postSecondaryInstitutionLevelValue = "Namespace#Four or more years";
             const string administrativeFundingControl = "Private School";
             const string administrativeFundingControlValue = "Namespace#Private School";
+            const string accreditationStatus = "Test Accreditation Status";
+            const string accreditationStatusValue = "Namespace#Test Accreditation Status";
+            const string federalLocaleCode = "Test Federal Locale Code";
+            const string federalLocaleCodeValue = "Namespace#Test Federal Locale Code";
 
             _mockOdsApiFacade.Setup(x => x.GetAllPsiSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
@@ -591,6 +595,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacade.Setup(x => x.GetAdministrativeFundingControls())
                 .Returns(new List<SelectOptionModel>
                     {new SelectOptionModel {DisplayText = administrativeFundingControl, Value = administrativeFundingControlValue}});
+            _mockOdsApiFacade.Setup(x => x.GetAccreditationStatusOptions())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = accreditationStatus, Value = accreditationStatusValue}});
+            _mockOdsApiFacade.Setup(x => x.GetFederalLocaleCodes())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = federalLocaleCode, Value = federalLocaleCodeValue}});
             _controller =
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
 
@@ -612,8 +622,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             var addPostSecondaryInstitutionModel = model.AddPostSecondaryInstitutionModel;
             addPostSecondaryInstitutionModel.ShouldNotBeNull();
-            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Count.ShouldBe(2);
-            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Count.ShouldBe(2);
+            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Count.ShouldBeGreaterThan(0);
+            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Count.ShouldBeGreaterThan(0);
             var postSecondaryInstitutionLevelOption = addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Single(x => x.Value != null);
             postSecondaryInstitutionLevelOption.DisplayText.ShouldBe(postSecondaryInstitutionLevel);
             postSecondaryInstitutionLevelOption.Value.ShouldBe(postSecondaryInstitutionLevelValue);

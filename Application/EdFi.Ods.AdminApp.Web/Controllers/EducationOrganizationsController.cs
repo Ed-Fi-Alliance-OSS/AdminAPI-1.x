@@ -187,8 +187,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var psiSchool = api.GetPsiSchoolById(id);
             var gradeLevelOptions = api.GetAllGradeLevels();
             var stateOptions = api.GetAllStateAbbreviations();
-            var federalLocaleCodeOptions = api.GetFederalLocaleCodes();
-            var accreditationStatusOptions = api.GetAccreditationStatusOptions();
+            var federalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes);
+            var accreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions);
 
             var model = _mapper.Map<EditPsiSchoolModel>(psiSchool);
             model.GradeLevelOptions = gradeLevelOptions;
@@ -263,8 +263,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     GradeLevelOptions = api.GetAllGradeLevels(),
                     StateOptions = api.GetAllStateAbbreviations(),
-                    FederalLocaleCodeOptions = api.GetFederalLocaleCodes(),
-                    AccreditationStatusOptions = api.GetAccreditationStatusOptions(),
+                    FederalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes),
+                    AccreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions),
                     RequiredApiDataExist = requiredApiDataExist
                 },
                 AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel

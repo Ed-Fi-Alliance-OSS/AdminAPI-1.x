@@ -16,7 +16,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <h4 class="modal-title">Edit Post Secondary Institution</h4>
             </div>
             <div class="modal-body center-block text-center">
-                @using (Html.BeginForm("EditPostSecondaryInstitution", "EducationOrganizations", new { id = "editPostSecondaryFormModal" }))
+                @using (Html.BeginForm("EditPostSecondaryInstitution", "EducationOrganizations"))
                 {
                     @Html.Input(m => m.Id).Hide()
                     @Html.Input(m => m.PostSecondaryInstitutionId).Hide()

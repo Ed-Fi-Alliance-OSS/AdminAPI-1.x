@@ -17,6 +17,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public List<SelectOptionModel> FederalLocaleCodeOptions { get; set; }
     }
 
-    public class EditPsiSchoolModelValidator : EditSchoolModelValidator<EditPsiSchoolModel>
+    public class EditPsiSchoolModelValidator : EditSchoolModelValidatorBase<EditPsiSchoolModel>
     { }
 }

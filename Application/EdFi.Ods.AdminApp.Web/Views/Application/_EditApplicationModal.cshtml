@@ -24,20 +24,41 @@ See the LICENSE and NOTICES files in the project root for more information.
                     @Html.Input(m => m.VendorId).Hide()
                     @Html.Input(m => m.ApplicationId).Hide()
                     @Html.InputBlock(m => m.ApplicationName, "Application Name", "Name that identifies this application")
+
                     <div class="row">
                         <div class="col-xs-4 text-right">
                             @Html.Label("Education Organization Type:")
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-6 margin-bottom-10">
                             @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.LocalEducationAgency)
-                            @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.School)
                         </div>
                         <div class="col-xs-2">
                             @Html.ToolTip("An application may only access one type of education organization at a time - either LEAs or schools.")
                         </div>
                     </div>
 
+                    @if (Model.TpdmEnabled)
+                    {
+                        <div class="row">
+                            <div class="col-xs-6 col-xs-offset-4 margin-bottom-10">
+                                @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.PostSecondaryInstitution)
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-xs-6 col-xs-offset-4 margin-bottom-10">
+                            @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.School)
+                        </div>
+                    </div>
+
                     @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.LocalEducationAgencies, cs => new SelectListItem { Selected = Model.EducationOrganizationIds.Contains(cs.EducationOrganizationId), Text = cs.Name, Value = cs.EducationOrganizationId.ToString() }, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.LocalEducationAgency.Value).HideUnless(Model.EducationOrganizationType == ApplicationEducationOrganizationType.LocalEducationAgency)
+
+                    @if (Model.TpdmEnabled)
+                    {
+                        @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.PostSecondaryInstitutions, cs => new SelectListItem { Selected = Model.EducationOrganizationIds.Contains(cs.EducationOrganizationId), Text = cs.Name, Value = cs.EducationOrganizationId.ToString() }, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.PostSecondaryInstitution.Value).HideUnless(Model.EducationOrganizationType == ApplicationEducationOrganizationType.PostSecondaryInstitution)
+                    }
+
                     @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.Schools, cs => new SelectListItem { Selected = Model.EducationOrganizationIds.Contains(cs.EducationOrganizationId), Text = cs.Name, Value = cs.EducationOrganizationId.ToString() }, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.School.Value).HideUnless(Model.EducationOrganizationType == ApplicationEducationOrganizationType.School)
 
                     @Html.SelectListBlock(m => m.ClaimSetName, Model.ClaimSetNames, cs => new SelectListItem {Selected = Model.ClaimSetName == cs, Text = cs, Value = cs}, "Claims define the actions this application is allowed to perform")

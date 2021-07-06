@@ -46,15 +46,35 @@ See the LICENSE and NOTICES files in the project root for more information.
                             </div>
                             <div class="col-xs-6 margin-bottom-10">
                                 @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.LocalEducationAgency)
-                                @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.School)
                             </div>
                             <div class="col-xs-2">
                                 @Html.ToolTip("An application may only access one type of education organization at a time - either LEAs or schools.")
                             </div>
                         </div>
 
-                        @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.LocalEducationAgencies, cs => new SelectListItem {Selected = false, Text = cs.Name, Value = cs.EducationOrganizationId.ToString()}, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.LocalEducationAgency.Value).Hide()
-                        @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.Schools, cs => new SelectListItem {Selected = false, Text = cs.Name, Value = cs.EducationOrganizationId.ToString()}, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.School.Value).Hide()
+                        @if (Model.TpdmEnabled)
+                        {
+                            <div class="row">
+                                <div class="col-xs-6 col-xs-offset-4 margin-bottom-10">
+                                    @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.PostSecondaryInstitution)
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-xs-6 col-xs-offset-4 margin-bottom-10">
+                                @Html.InlineRadioButton(x => x.EducationOrganizationType, ApplicationEducationOrganizationType.School)
+                            </div>
+                        </div>
+
+                        @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.LocalEducationAgencies, cs => new SelectListItem { Selected = false, Text = cs.Name, Value = cs.EducationOrganizationId.ToString() }, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.LocalEducationAgency.Value).Hide()
+
+                        @if (Model.TpdmEnabled)
+                        {
+                            @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.PostSecondaryInstitutions, cs => new SelectListItem { Selected = false, Text = cs.Name, Value = cs.EducationOrganizationId.ToString() }, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.PostSecondaryInstitution.Value).Hide()
+                        }
+
+                        @Html.MultiSelectListBlock(m => m.EducationOrganizationIds, Model.Schools, cs => new SelectListItem { Selected = false, Text = cs.Name, Value = cs.EducationOrganizationId.ToString() }, "Denotes which EdOrgs this application can access").Data("edorg-type", ApplicationEducationOrganizationType.School.Value).Hide()
 
                         @Html.SelectListBlock(m => m.ClaimSetName, Model.ClaimSetNames, cs => new SelectListItem {Selected = false, Text = cs, Value = cs}, "Claims define the actions this application is allowed to perform")
 

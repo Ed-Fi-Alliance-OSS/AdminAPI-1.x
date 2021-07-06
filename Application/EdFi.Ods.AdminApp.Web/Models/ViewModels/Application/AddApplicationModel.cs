@@ -32,14 +32,17 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
         public List<string> ClaimSetNames { get; set; }
         public List<ProfileModel> Profiles { get; set; } 
         public List<LocalEducationAgency> LocalEducationAgencies { get; set; }
+        public List<PostSecondaryInstitution> PostSecondaryInstitutions { get; set; }
         public List<School> Schools { get; set; }
         public ApplicationEducationOrganizationType EducationOrganizationType { get; set; }
+        public bool TpdmEnabled { get; set; }
     }
 
     public class ApplicationEducationOrganizationType : Enumeration<ApplicationEducationOrganizationType>
     {
         public static ApplicationEducationOrganizationType LocalEducationAgency = new ApplicationEducationOrganizationType(1, "Local Education Agency");
         public static ApplicationEducationOrganizationType School = new ApplicationEducationOrganizationType(2, "School");
+        public static ApplicationEducationOrganizationType PostSecondaryInstitution = new ApplicationEducationOrganizationType(3, "Post Secondary Institution");
 
         public ApplicationEducationOrganizationType(int value, string displayName) : base(value, displayName)
         {

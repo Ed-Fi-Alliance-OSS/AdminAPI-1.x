@@ -16,6 +16,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
         public static List<EducationOrganizationModel> GetAllEducationOrganizations(this IOdsApiFacade odsApiFacade, IMapper mapper)
         {
             return odsApiFacade.GetAllLocalEducationAgencies().Select(mapper.Map<EducationOrganizationModel>)
+                    .Union(odsApiFacade.GetAllPostSecondaryInstitutions().Select(mapper.Map<EducationOrganizationModel>))
                     .Union(odsApiFacade.GetAllSchools().Select(mapper.Map<EducationOrganizationModel>))
                     .ToList();
         }

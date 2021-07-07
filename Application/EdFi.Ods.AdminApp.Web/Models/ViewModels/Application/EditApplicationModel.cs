@@ -34,8 +34,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
         public List<string> ClaimSetNames { get; set; }
         public List<ProfileModel> Profiles { get; set; }
         public List<LocalEducationAgency> LocalEducationAgencies { get; set; }
+        public List<PostSecondaryInstitution> PostSecondaryInstitutions { get; set; }
         public List<School> Schools { get; set; }
         public ApplicationEducationOrganizationType EducationOrganizationType { get; set; }
+        public bool TpdmEnabled { get; set; }
     }
 
     public class EditApplicationModelValidator : AbstractValidator<EditApplicationModel>

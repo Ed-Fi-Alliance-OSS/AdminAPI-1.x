@@ -16,7 +16,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Add Application to Vendor</h4>
             </div>
-            @if (!Model.LocalEducationAgencies.Any() && !Model.LocalEducationAgencies.Any())
+            @if (!Model.LocalEducationAgencies.Any() && !Model.PostSecondaryInstitutions.Any() && !Model.Schools.Any())
             {
                 <div class="modal-body">
                     <div class="row">

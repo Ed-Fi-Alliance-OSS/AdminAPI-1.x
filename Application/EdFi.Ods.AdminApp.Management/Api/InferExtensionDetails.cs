@@ -11,7 +11,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 {
     public interface IInferExtensionDetails
     {
-        bool TpdmExtensionEnabled(string apiServerUrl);
+        string TpdmExtensionVersion(string apiServerUrl);
     }
 
     public class InferExtensionDetails : IInferExtensionDetails
@@ -20,7 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         public InferExtensionDetails(ISimpleGetRequest getRequest) => _getRequest = getRequest;
 
-        public bool TpdmExtensionEnabled(string apiServerUrl)
+        public string TpdmExtensionVersion(string apiServerUrl)
         {
             var response = JToken.Parse(_getRequest.DownloadString(apiServerUrl));
 
@@ -31,11 +31,16 @@ namespace EdFi.Ods.AdminApp.Management.Api
                     if (dataModel is JObject && dataModel["name"] is JValue nameToken)
                         if (nameToken.ToString().ToUpper() == "TPDM")
                             if (dataModel["version"] is JValue versionToken)
-                                return new Version(versionToken.ToString()) >= new Version("1.0.0");
+                            {
+                                var version = versionToken.ToString();
+
+                                if (new Version(version) >= new Version("1.0.0"))
+                                    return version;
+                            }
                 }
             }
 
-            return false;
+            return "";
         }
     }
 }

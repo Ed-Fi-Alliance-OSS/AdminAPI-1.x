@@ -55,64 +55,64 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             }";
         }
 
-        private static bool TpdmExtensionEnabled(string dataModel, string version)
+        private static string TpdmExtensionVersion(string dataModel, string version)
         {
             var rootDocument = ExampleOdsRootDocument(dataModel, version);
 
-            return TpdmExtensionEnabled(rootDocument);
+            return TpdmExtensionVersion(rootDocument);
         }
 
-        private static bool TpdmExtensionEnabled(string rootDocument)
+        private static string TpdmExtensionVersion(string rootDocument)
         {
             var getRootDocument = new StubGetRequest(OdsRootUri, rootDocument);
 
             var extensionDetails = new InferExtensionDetails(getRootDocument);
 
-            return extensionDetails.TpdmExtensionEnabled(OdsRootUri);
+            return extensionDetails.TpdmExtensionVersion(OdsRootUri);
         }
 
         [Test]
         public void CanDetectWhenTpdmModuleIsNotPresent()
         {
-            TpdmExtensionEnabled("GrandBend", "1.0.0").ShouldBeFalse();
+            TpdmExtensionVersion("GrandBend", "1.0.0").ShouldBe("");
         }
 
         [Test]
         public void CanDetectWhenTpdmModuleIsPresentAtExactlyMinimumSupportedVersion()
         {
-            TpdmExtensionEnabled("TPDM", "1.0.0").ShouldBeTrue();
+            TpdmExtensionVersion("TPDM", "1.0.0").ShouldBe("1.0.0");
         }
 
         [Test]
         public void CanDetectWhenTpdmModuleIsPresentAndNewerThanMinimumSupportedVersion()
         {
-            TpdmExtensionEnabled("TPDM", "1.0.1").ShouldBeTrue();
-            TpdmExtensionEnabled("TPDM", "1.1.0").ShouldBeTrue();
-            TpdmExtensionEnabled("TPDM", "9.8.7").ShouldBeTrue();
+            TpdmExtensionVersion("TPDM", "1.0.1").ShouldBe("1.0.1");
+            TpdmExtensionVersion("TPDM", "1.1.0").ShouldBe("1.1.0");
+            TpdmExtensionVersion("TPDM", "9.8.7").ShouldBe("9.8.7");
         }
 
         [Test]
         public void CanDetectWhenTpdmModuleIsPresentButInsufficientVersionToSupport()
         {
-            TpdmExtensionEnabled("TPDM", "0.999.999").ShouldBeFalse();
-            TpdmExtensionEnabled("TPDM", "0.8.0").ShouldBeFalse();
+            TpdmExtensionVersion("TPDM", "0.999.999").ShouldBe("");
+            TpdmExtensionVersion("TPDM", "0.8.0").ShouldBe("");
         }
 
         [Test]
         public void CanDetectWhenTpdmModuleIsUsingCaseInsensitiveModuleNameComparisons()
         {
-            TpdmExtensionEnabled("tPdM", "1.0.0").ShouldBeTrue();
+            TpdmExtensionVersion("tPdM", "1.0.0").ShouldBe("1.0.0");
         }
 
         [Test]
         public void DegradesGracefullyForMalformedOdsRootDocument()
         {
-            TpdmExtensionEnabled("{}").ShouldBeFalse(); //Missing expected key.
-            TpdmExtensionEnabled(@"{""dataModels"":5}").ShouldBeFalse(); //Expected key has unexpected simple value.
-            TpdmExtensionEnabled(@"{""dataModels"":{""A"": 1}}").ShouldBeFalse(); //Expected key has unexpeted object value.
-            TpdmExtensionEnabled(@"{""dataModels"":[1]}").ShouldBeFalse(); //Expected key has expected array but unexpected item type.
-            TpdmExtensionEnabled(@"{""dataModels"":[{""name"": ""TPDM""}]}").ShouldBeFalse(); //Expected array lacks expected name.
-            TpdmExtensionEnabled(@"{""dataModels"":[{""version"": ""1.0.0""}]}").ShouldBeFalse(); //Expected array lacks expected version.
+            TpdmExtensionVersion("{}").ShouldBe(""); //Missing expected key.
+            TpdmExtensionVersion(@"{""dataModels"":5}").ShouldBe(""); //Expected key has unexpected simple value.
+            TpdmExtensionVersion(@"{""dataModels"":{""A"": 1}}").ShouldBe(""); //Expected key has unexpeted object value.
+            TpdmExtensionVersion(@"{""dataModels"":[1]}").ShouldBe(""); //Expected key has expected array but unexpected item type.
+            TpdmExtensionVersion(@"{""dataModels"":[{""name"": ""TPDM""}]}").ShouldBe(""); //Expected array lacks expected name.
+            TpdmExtensionVersion(@"{""dataModels"":[{""version"": ""1.0.0""}]}").ShouldBe(""); //Expected array lacks expected version.
         }
     }
 }

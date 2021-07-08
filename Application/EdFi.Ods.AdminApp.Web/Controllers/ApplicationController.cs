@@ -276,10 +276,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         private bool TpdmEnabled()
         {
-            return InMemoryCache.Instance.GetOrSet(
-                "TpdmExtensionEnabled", () =>
-                    _inferExtensionDetails.TpdmExtensionEnabled(
+            var version = InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionVersion", () =>
+                    _inferExtensionDetails.TpdmExtensionVersion(
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+
+            return !string.IsNullOrEmpty(version);
         }
     }
 }

@@ -548,23 +548,6 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return label;
         }
 
-        public static HtmlString OdsApiVersion(this IHtmlHelper helper)
-        {
-            try
-            {
-                var odsApiVersion = InMemoryCache.Instance
-                    .GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
-
-                return !string.IsNullOrEmpty(odsApiVersion.ToString()) ? new HtmlString($"<span>ODS/API Version: {odsApiVersion}</span>") : new HtmlString("");
-            }
-            catch (Exception exception)
-            {
-                _logger.Error("Failed to infer ODS / API version. This can happen when the ODS / API is unreachable.", exception);
-
-                return new HtmlString("");
-            }
-        }
-
         public static HtmlString PagingControl<TModel, T>(this IHtmlHelper<TModel> helper, string url, PagedList<T> pagedContent)
         {
             var pageNumber = pagedContent.PageNumber;

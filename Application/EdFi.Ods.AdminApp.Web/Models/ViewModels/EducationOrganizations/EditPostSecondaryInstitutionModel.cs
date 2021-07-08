@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -10,11 +10,11 @@ using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 {
-    public class EditSchoolModel
+    public class EditPostSecondaryInstitutionModel
     {
         public string Id { get; set; }
-        public int SchoolId { get; set; }
-        public int LocalEducationAgencyId { get; set; }
+        [Display(Name = "Post-Secondary Institution ID")]
+        public int? PostSecondaryInstitutionId { get; set; }
         [Display(Name = "Name of Institution")]
         public string Name { get; set; }
         [Display(Name = "Address")]
@@ -25,24 +25,23 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public string State { get; set; }
         public string ZipCode { get; set; }
 
-        public List<string> GradeLevels { get; set; }
-        public List<SelectOptionModel> GradeLevelOptions { get; set; }
+        [Display(Name = "Post-Secondary Institution Level")]
+        public string PostSecondaryInstitutionLevel { get; set; }
+        public string AdministrativeFundingControl { get; set; }
+        public List<SelectOptionModel> PostSecondaryInstitutionLevelOptions { get; set; }
+        public List<SelectOptionModel> AdministrativeFundingControlOptions { get; set; }
         public List<SelectOptionModel> StateOptions { get; set; }
     }
 
-    public class EditSchoolModelValidator : EditSchoolModelValidatorBase<EditSchoolModel>
-    { }
-
-    public abstract class EditSchoolModelValidatorBase<T> : AbstractValidator<T> where T : EditSchoolModel
+    public class EditPostSecondaryInstitutionModelValidator : AbstractValidator<EditPostSecondaryInstitutionModel>
     {
-        protected EditSchoolModelValidatorBase()
+        public EditPostSecondaryInstitutionModelValidator()
         {
-            RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.StreetNumberName).NotEmpty();
-            RuleFor(x => x.City).NotEmpty();
-            RuleFor(x => x.State).NotEmpty();
-            RuleFor(x => x.ZipCode).NotEmpty();
-            RuleFor(x => x.GradeLevels).Must(x => x != null && x.Count > 0).WithMessage("You must choose at least one grade level");
+            RuleFor(m => m.Name).NotEmpty();
+            RuleFor(m => m.StreetNumberName).NotEmpty();
+            RuleFor(m => m.State).NotEmpty();
+            RuleFor(m => m.City).NotEmpty();
+            RuleFor(m => m.ZipCode).NotEmpty();
         }
     }
 }

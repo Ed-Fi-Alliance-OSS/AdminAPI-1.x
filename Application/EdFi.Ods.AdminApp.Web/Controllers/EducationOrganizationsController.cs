@@ -28,28 +28,49 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
+        private readonly IInferExtensionDetails _inferExtensionDetails;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
-            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService)
+            , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService
+            , IInferExtensionDetails inferExtensionDetails)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
             _instanceContext = instanceContext;
             _tabDisplayService = tabDisplayService;
+            _inferExtensionDetails = inferExtensionDetails;
         }
 
-        [AddTelemetry("Education Organizations Index", TelemetryType.View)]
-        public ActionResult Index()
+        [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
+        public ActionResult LocalEducationAgencies()
         {
             var model = new EducationOrganizationsIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
-                OdsInstance = _instanceContext
+                OdsInstance = _instanceContext,
+                TpdmEnabled = TpdmEnabled(),
+                Mode = EducationOrganizationsMode.LocalEducationAgencies
             };
 
-            return View(model);
+            return View("Index", model);
+        }
+
+        [AddTelemetry("Post-Secondary Institutions Index", TelemetryType.View)]
+        public ActionResult PostSecondaryInstitutions()
+        {
+            var model = new EducationOrganizationsIndexModel
+            {
+                OdsInstanceSettingsTabEnumerations =
+                    _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
+                        .EducationOrganizations),
+                OdsInstance = _instanceContext,
+                TpdmEnabled = TpdmEnabled(),
+                Mode = EducationOrganizationsMode.PostSecondaryInstitutions
+            };
+
+            return View("Index", model);
         }
 
         [HttpPost]
@@ -63,12 +84,32 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Add Post-Secondary Institution")]
+        public async Task<ActionResult> AddPostSecondaryInstitution(AddPostSecondaryInstitutionModel viewModel)
+        {
+            var model = _mapper.Map<PostSecondaryInstitution>(viewModel);
+            model.Id = Guid.Empty.ToString();
+            var addResult = (await _odsApiFacadeFactory.Create()).AddPostSecondaryInstitution(model);
+            return addResult.Success ? JsonSuccess("Post-Secondary Institution Added") : JsonError(addResult.ErrorMessage);
+        }
+
+        [HttpPost]
         [AddTelemetry("Add School")]
         public async Task<ActionResult> AddSchool(AddSchoolModel viewModel)
         {
             var model = _mapper.Map<School>(viewModel);
             model.Id = Guid.Empty.ToString();
             var addResult = (await _odsApiFacadeFactory.Create()).AddSchool(model);
+            return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Add Post-Secondary Institution School")]
+        public async Task<ActionResult> AddPsiSchool(AddPsiSchoolModel viewModel)
+        {
+            var model = _mapper.Map<PsiSchool>(viewModel);
+            model.Id = Guid.Empty.ToString();
+            var addResult = (await _odsApiFacadeFactory.Create()).AddPsiSchool(model);
             return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
         }
 
@@ -94,6 +135,30 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return editResult.Success ? JsonSuccess("Organization Updated") : JsonError(editResult.ErrorMessage);
         }
 
+        public async Task<ActionResult> EditPostSecondaryInstitutionModal(string id)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var postSecondaryInstitution = api.GetPostSecondaryInstitutionById(id);
+            var postSecondaryInstitutionLevelOptions = BuildListWithEmptyOption(api.GetPostSecondaryInstitutionLevels);
+            var administrativeFundingControlOptions = BuildListWithEmptyOption(api.GetAdministrativeFundingControls);
+            var stateOptions = api.GetAllStateAbbreviations();
+
+            var model = _mapper.Map<EditPostSecondaryInstitutionModel>(postSecondaryInstitution);
+            model.PostSecondaryInstitutionLevelOptions = postSecondaryInstitutionLevelOptions;
+            model.AdministrativeFundingControlOptions = administrativeFundingControlOptions;
+            model.StateOptions = stateOptions;
+
+            return PartialView("_EditPostSecondaryInstitutionModal", model);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Edit Post-Secondary Institution")]
+        public async Task<ActionResult> EditPostSecondaryInstitution(EditPostSecondaryInstitutionModel model)
+        {
+            var editResult = (await _odsApiFacadeFactory.Create()).EditPostSecondaryInstitution(_mapper.Map<PostSecondaryInstitution>(model));
+            return editResult.Success ? JsonSuccess("Post-Secondary Institution Updated") : JsonError(editResult.ErrorMessage);
+        }
+
         public async Task<ActionResult> EditSchoolModal(string id)
         {
             var api = await _odsApiFacadeFactory.Create();
@@ -116,7 +181,33 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return editResult.Success ? JsonSuccess("School Updated") : JsonError(editResult.ErrorMessage);
         }
 
-        public async Task<ActionResult> EducationOrganizationList(int pageNumber)
+        public async Task<ActionResult> EditPsiSchoolModal(string id)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var psiSchool = api.GetPsiSchoolById(id);
+            var gradeLevelOptions = api.GetAllGradeLevels();
+            var stateOptions = api.GetAllStateAbbreviations();
+            var federalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes);
+            var accreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions);
+
+            var model = _mapper.Map<EditPsiSchoolModel>(psiSchool);
+            model.GradeLevelOptions = gradeLevelOptions;
+            model.StateOptions = stateOptions;
+            model.FederalLocaleCodeOptions = federalLocaleCodeOptions;
+            model.AccreditationStatusOptions = accreditationStatusOptions;
+
+            return PartialView("_EditPsiSchoolModal", model);
+        }
+
+        [HttpPost]
+        [AddTelemetry("Edit Post-Secondary Institution School")]
+        public async Task<ActionResult> EditPsiSchool(EditPsiSchoolModel model)
+        {
+            var editResult = (await _odsApiFacadeFactory.Create()).EditPsiSchool(_mapper.Map<PsiSchool>(model));
+            return editResult.Success ? JsonSuccess("School Updated") : JsonError(editResult.ErrorMessage);
+        }
+
+        public async Task<ActionResult> LocalEducationAgencyList(int pageNumber)
         {
             var api = await _odsApiFacadeFactory.Create();
             var schools = api.GetAllSchools();
@@ -126,7 +217,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 
-            var model = new EducationOrganizationViewModel
+            var model = new LocalEducationAgencyViewModel
             {
                 Schools = schools,
                 LocalEducationAgencies = localEducationAgencies,
@@ -150,7 +241,41 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 model.AddLocalEducationAgencyModel.LocalEducationAgencyId = OdsInstanceIdentityHelper.GetIdentityValue(_instanceContext.Name);
             }
 
-            return PartialView("_EducationOrganizations", model);
+            return PartialView("_LocalEducationAgencies", model);
+        }
+
+        public async Task<ActionResult> PostSecondaryInstitutionsList(int pageNumber)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var schools = api.GetAllPsiSchools();
+
+            var postSecondaryInstitutions =
+                await Page<PostSecondaryInstitution>.FetchAsync(GetPostSecondaryInstitutions, pageNumber);
+
+            var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
+
+            var model = new PostSecondaryInstitutionViewModel
+            {
+                Schools = schools,
+                PostSecondaryInstitutions = postSecondaryInstitutions,
+                AddPsiSchoolModel = new AddPsiSchoolModel
+                {
+                    GradeLevelOptions = api.GetAllGradeLevels(),
+                    StateOptions = api.GetAllStateAbbreviations(),
+                    FederalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes),
+                    AccreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions),
+                    RequiredApiDataExist = requiredApiDataExist
+                },
+                AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
+                {
+                    PostSecondaryInstitutionLevelOptions = BuildListWithEmptyOption(api.GetPostSecondaryInstitutionLevels),
+                    AdministrativeFundingControlOptions = BuildListWithEmptyOption(api.GetAdministrativeFundingControls),
+                    StateOptions = api.GetAllStateAbbreviations(),
+                    RequiredApiDataExist = requiredApiDataExist
+                }
+            };
+
+            return PartialView("_PostSecondaryInstitutions", model);
         }
 
         private async Task<IReadOnlyList<LocalEducationAgency>> GetLocalEducationAgencies(int offset, int limit)
@@ -158,6 +283,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var api = await _odsApiFacadeFactory.Create();
             var localEducationAgencies = api.GetLocalEducationAgenciesByPage(offset, limit);
             return localEducationAgencies;
+        }
+
+        private async Task<IReadOnlyList<PostSecondaryInstitution>> GetPostSecondaryInstitutions(int offset, int limit)
+        {
+            var api = await _odsApiFacadeFactory.Create();
+            var postSecondaryInstitutions = api.GetPostSecondaryInstitutionsByPage(offset, limit);
+            return postSecondaryInstitutions;
         }
 
         [HttpPost]
@@ -169,11 +301,43 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
+        [AddTelemetry("Delete Post-Secondary Institution")]
+        public async Task<ActionResult> DeletePostSecondaryInstitution(DeleteEducationOrganizationModel model)
+        {
+            var deletionResult = (await _odsApiFacadeFactory.Create()).DeletePostSecondaryInstitution(model.Id);
+            return deletionResult.Success ? JsonSuccess("Post-Secondary Institution Removed") : JsonError(deletionResult.ErrorMessage);
+        }
+
+        [HttpPost]
         [AddTelemetry("Delete School")]
         public async Task<ActionResult> DeleteSchool(DeleteEducationOrganizationModel model)
         {
             var deletionResult = (await _odsApiFacadeFactory.Create()).DeleteSchool(model.Id);
             return deletionResult.Success ? JsonSuccess("School Removed") : JsonError(deletionResult.ErrorMessage);
+        }
+
+        private bool TpdmEnabled()
+        {
+            var version = InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionVersion", () =>
+                    _inferExtensionDetails.TpdmExtensionVersion(
+                        CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+
+            return !string.IsNullOrEmpty(version);
+        }
+
+        private List<SelectOptionModel> BuildListWithEmptyOption(Func<List<SelectOptionModel>> getSelectOptionList)
+        {
+            var selectOptionList = new List<SelectOptionModel>
+            {
+                new SelectOptionModel
+                {
+                    DisplayText = "",
+                    Value = null
+                }
+            };
+            selectOptionList.AddRange(getSelectOptionList.Invoke());
+            return selectOptionList;
         }
     }
 }

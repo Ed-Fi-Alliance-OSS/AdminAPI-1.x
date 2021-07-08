@@ -44,25 +44,37 @@ See the LICENSE and NOTICES files in the project root for more information.
         $(".delete-lea-link").click(function () {
             var name = $(this).attr("data-name");
             var id = $(this).attr("data-id");
-            ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeleteLocalEducationAgency", "EducationOrganizations")))", false);
+            ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeleteLocalEducationAgency", "EducationOrganizations")))", 'LEA');
+        });
+
+        $(".delete-psi-link").click(function () {
+            var name = $(this).attr("data-name");
+            var id = $(this).attr("data-id");
+            ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeletePostSecondaryInstitution", "EducationOrganizations")))", 'PSI');
         });
 
         $(".delete-school-link").click(function () {
             var name = $(this).attr("data-name");
             var id = $(this).attr("data-id");
-            ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeleteSchool", "EducationOrganizations")))", true);
+            ShowDeleteEdOrgModal(name, id, "@(Html.Raw(Url.Action("DeleteSchool", "EducationOrganizations")))", 'School');
         });
     });
 
-    function ShowDeleteEdOrgModal(organizationName, organizationId, url, isSchool) {
+    function ShowDeleteEdOrgModal(organizationName, organizationId, url, organizationType) {
         var $deleteEdOrgModal = $("#delete-edorg-modal");
         $deleteEdOrgModal.find("form").attr("action", url);
         $deleteEdOrgModal.find("#delete-edorg-name").text(organizationName);
         $deleteEdOrgModal.find("#delete-edorg-id").val(organizationId);
-        if (isSchool) {
-            $deleteEdOrgModal.find("#delete-modal-title").text("Delete School");
-        } else {
-            $deleteEdOrgModal.find("#delete-modal-title").text("Delete Local Education Agency");
+        switch (organizationType) {
+            case 'LEA':
+                $deleteEdOrgModal.find("#delete-modal-title").text("Delete Local Education Agency");
+                break;
+            case 'PSI':
+                $deleteEdOrgModal.find("#delete-modal-title").text("Delete Post-Secondary Institution");
+                break;
+            case 'School':
+                $deleteEdOrgModal.find("#delete-modal-title").text("Delete School");
+                break;
         }
         $deleteEdOrgModal.modal("show");
     }

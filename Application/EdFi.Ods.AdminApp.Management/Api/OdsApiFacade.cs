@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApp.Management.Api.Common;
 using EdFi.Ods.AdminApp.Management.Api.Descriptors;
 using LocalEducationAgency = EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiLocalEducationAgency;
 using School = EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiSchool;
+using PostSecondaryInstitution = EdFi.Ods.AdminApp.Management.Api.DomainModels.EdFiPostSecondaryInstitution;
 
 namespace EdFi.Ods.AdminApp.Management.Api
 {
@@ -31,9 +32,43 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _mapper.Map<List<Models.School>>(response);
         }
 
+        public List<Models.PsiSchool> GetAllPsiSchools()
+        {
+            var response = _restClient.GetAll<School>(ResourcePaths.Schools);
+            return _mapper.Map<List<Models.PsiSchool>>(response);
+        }
+
         public List<SelectOptionModel> GetLocalEducationAgencyCategories()
         {
             var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.LocalEducationAgencyCategoryDescriptors);
+            return response.Select(x => BuildDescriptorSelectOptionModel(x.Namespace, x.CodeValue, x.Description))
+                .ToList();
+        }
+
+        public List<SelectOptionModel> GetPostSecondaryInstitutionLevels()
+        {
+            var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.PostSecondaryInstitutionLevelDescriptors);
+            return response.Select(x => BuildDescriptorSelectOptionModel(x.Namespace, x.CodeValue, x.Description))
+                .ToList();
+        }
+
+        public List<SelectOptionModel> GetAdministrativeFundingControls()
+        {
+            var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.AdministrativeFundingControlDescriptors);
+            return response.Select(x => BuildDescriptorSelectOptionModel(x.Namespace, x.CodeValue, x.Description))
+                .ToList();
+        }
+
+        public List<SelectOptionModel> GetAccreditationStatusOptions()
+        {
+            var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.AccreditationStatusDescriptors);
+            return response.Select(x => BuildDescriptorSelectOptionModel(x.Namespace, x.CodeValue, x.Description))
+                .ToList();
+        }
+
+        public List<SelectOptionModel> GetFederalLocaleCodes()
+        {
+            var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.FederalLocaleCodeDescriptors);
             return response.Select(x => BuildDescriptorSelectOptionModel(x.Namespace, x.CodeValue, x.Description))
                 .ToList();
         }
@@ -44,10 +79,22 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _mapper.Map<List<Models.LocalEducationAgency>>(response);
         }
 
+        public List<Models.PostSecondaryInstitution> GetAllPostSecondaryInstitutions()
+        {
+            var response = _restClient.GetAll<PostSecondaryInstitution>(ResourcePaths.PostSecondaryInstitutions);
+            return _mapper.Map<List<Models.PostSecondaryInstitution>>(response);
+        }
+
         public List<Models.LocalEducationAgency> GetLocalEducationAgenciesByPage(int offset, int limit)
         {
             var response = _restClient.GetAll<LocalEducationAgency>(ResourcePaths.LocalEducationAgencies, offset, limit);
             return _mapper.Map<List<Models.LocalEducationAgency>>(response);
+        }
+
+        public List<Models.PostSecondaryInstitution> GetPostSecondaryInstitutionsByPage(int offset, int limit)
+        {
+            var response = _restClient.GetAll<PostSecondaryInstitution>(ResourcePaths.PostSecondaryInstitutions, offset, limit);
+            return _mapper.Map<List<Models.PostSecondaryInstitution>>(response);
         }
 
         public List<SelectOptionModel> GetAllGradeLevels()
@@ -64,11 +111,31 @@ namespace EdFi.Ods.AdminApp.Management.Api
              return _restClient.PostResource(request, ResourcePaths.LocalEducationAgencies);
         }
 
+        public OdsApiResult AddPostSecondaryInstitution(Models.PostSecondaryInstitution newPostSecondaryInstitution)
+        {
+            var request = _mapper.Map<PostSecondaryInstitution>(newPostSecondaryInstitution);
+            return _restClient.PostResource(request, ResourcePaths.PostSecondaryInstitutions);
+        }
+
+
         public Models.LocalEducationAgency GetLocalEducationAgencyById(string id)
         {
             var localEducationAgency =
                 _restClient.GetById<LocalEducationAgency>(ResourcePaths.LocalEducationAgencyById, id);
             return _mapper.Map<Models.LocalEducationAgency>(localEducationAgency);
+        }
+
+        public Models.PostSecondaryInstitution GetPostSecondaryInstitutionById(string id)
+        {
+            var postSecondaryInstitution =
+                _restClient.GetById<PostSecondaryInstitution>(ResourcePaths.PostSecondaryInstitutionById, id);
+            return _mapper.Map<Models.PostSecondaryInstitution>(postSecondaryInstitution);
+        }
+
+        public OdsApiResult EditPostSecondaryInstitution(Models.PostSecondaryInstitution model)
+        {
+            var request = _mapper.Map<PostSecondaryInstitution>(model);
+            return _restClient.PutResource(request, ResourcePaths.PostSecondaryInstitutions, request.Id);
         }
 
         public OdsApiResult EditLocalEducationAgency(Models.LocalEducationAgency model)
@@ -82,12 +149,23 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _restClient.DeleteResource(ResourcePaths.LocalEducationAgencyById, id);
         }
 
+        public OdsApiResult DeletePostSecondaryInstitution(string id)
+        {
+            return _restClient.DeleteResource(ResourcePaths.PostSecondaryInstitutionById, id);
+        }
+
         public OdsApiResult DeleteSchool(string id)
         {
             return _restClient.DeleteResource(ResourcePaths.SchoolById, id);
         }
 
         public OdsApiResult AddSchool(Models.School newSchool)
+        {
+            var request = _mapper.Map<School>(newSchool);
+            return _restClient.PostResource(request, ResourcePaths.Schools);
+        }
+
+        public OdsApiResult AddPsiSchool(Models.PsiSchool newSchool)
         {
             var request = _mapper.Map<School>(newSchool);
             return _restClient.PostResource(request, ResourcePaths.Schools);
@@ -121,7 +199,19 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _mapper.Map<Models.School>(school);
         }
 
+        public Models.PsiSchool GetPsiSchoolById(string id)
+        {
+            var school = _restClient.GetById<School>(ResourcePaths.SchoolById, id);
+            return _mapper.Map<Models.PsiSchool>(school);
+        }
+
         public OdsApiResult EditSchool(Models.School model)
+        {
+            var request = _mapper.Map<School>(model);
+            return _restClient.PutResource(request, ResourcePaths.Schools, request.Id);
+        }
+
+        public OdsApiResult EditPsiSchool(Models.PsiSchool model)
         {
             var request = _mapper.Map<School>(model);
             return _restClient.PutResource(request, ResourcePaths.Schools, request.Id);

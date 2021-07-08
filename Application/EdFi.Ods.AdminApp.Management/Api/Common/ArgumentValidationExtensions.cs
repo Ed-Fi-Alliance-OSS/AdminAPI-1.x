@@ -16,5 +16,13 @@ namespace EdFi.Ods.AdminApp.Management.Api.Common
 
             return o;
         }
+
+        public static string MaxLength(this string o, int maxLength, string paramName, string resource)
+        {
+            if (o != null && o.Length > maxLength)
+                throw new ArgumentValidationException($"Invalid value for {paramName} on {resource}, length must be less than {maxLength}");
+
+            return o;
+        }
     }
 }

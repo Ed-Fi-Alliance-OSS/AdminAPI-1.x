@@ -11,11 +11,10 @@ using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 {
-    public class AddSchoolModel
+    public class AddPostSecondaryInstitutionModel
     {
-        public int? LocalEducationAgencyId { get; set; }
-        [Display(Name = "School ID")]
-        public int? SchoolId { get; set; }
+        [Display(Name = "Post-Secondary Institution ID")]
+        public int? PostSecondaryInstitutionId { get; set; }
         [Display(Name = "Name of Institution")]
         public string Name { get; set; }
         [Display(Name = "Address")]
@@ -26,38 +25,31 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public string State { get; set; }
         public string ZipCode { get; set; }
 
-        public List<string> GradeLevels { get; set; }
-        public List<SelectOptionModel> GradeLevelOptions { get; set; }
+        [Display(Name = "Post-Secondary Institution Level")]
+        public string PostSecondaryInstitutionLevel { get; set; }
+        public string AdministrativeFundingControl { get; set; }
+        public List<SelectOptionModel> PostSecondaryInstitutionLevelOptions { get; set; }
+        public List<SelectOptionModel> AdministrativeFundingControlOptions { get; set; }
         public List<SelectOptionModel> StateOptions { get; set; }
         public bool RequiredApiDataExist { get; set; }
     }
 
-    public class AddSchoolModelValidator : AddSchoolModelValidatorBase<AddSchoolModel>
-    {
-        public AddSchoolModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
-            : base(odsApiFacadeFactory)
-        {
-        }
-    }
-
-    public abstract class AddSchoolModelValidatorBase<T> : AbstractValidator<T> where T : AddSchoolModel   
+    public class AddPostSecondaryInstitutionModelValidator : AbstractValidator<AddPostSecondaryInstitutionModel>
     {
         private readonly IOdsApiFacade _apiFacade;
 
-        protected AddSchoolModelValidatorBase(IOdsApiFacadeFactory odsApiFacadeFactory)
+        public AddPostSecondaryInstitutionModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
         {
-           
-            _apiFacade =  odsApiFacadeFactory.Create().GetAwaiter().GetResult();
-            RuleFor(x => x.SchoolId).NotEmpty();
-            RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.StreetNumberName).NotEmpty();
-            RuleFor(x => x.City).NotEmpty();
-            RuleFor(x => x.State).NotEmpty();
-            RuleFor(x => x.ZipCode).NotEmpty();
-            RuleFor(x => x.GradeLevels).Must(x => x != null && x.Count > 0).WithMessage("You must choose at least one grade level");
-            RuleFor(x => x.SchoolId)
-                .Must(BeUniqueId).When(x => x.SchoolId != null)
-                .WithMessage("This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            _apiFacade = odsApiFacadeFactory.Create().GetAwaiter().GetResult();
+            RuleFor(m => m.PostSecondaryInstitutionId).NotEmpty();
+            RuleFor(m => m.Name).NotEmpty();
+            RuleFor(m => m.StreetNumberName).NotEmpty();
+            RuleFor(m => m.State).NotEmpty();
+            RuleFor(m => m.City).NotEmpty();
+            RuleFor(m => m.ZipCode).NotEmpty();
+            RuleFor(m => m.PostSecondaryInstitutionId)
+                .Must(BeUniqueId).When(m => m.PostSecondaryInstitutionId != null)
+                .WithMessage("This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
         private bool BeUniqueId(int? id)

@@ -18,6 +18,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public static EducationOrganizationTypes Instance = _instance.Value;
         public string LocalEducationAgency => CloudOdsAdminAppSettings.AppSettings.LocalEducationAgencyTypeValue;
+        public string PostSecondaryInstitution => CloudOdsAdminAppSettings.AppSettings.PostSecondaryInstitutionTypeValue;
         public string SchoolType => CloudOdsAdminAppSettings.AppSettings.SchoolTypeValue;
     }
 }

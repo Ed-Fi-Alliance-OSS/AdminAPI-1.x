@@ -1,0 +1,79 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations.AddPsiSchoolModel
+
+<div id="add-psi-school-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPsiSchoolModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add School</h4>
+            </div>
+        @if (Model.RequiredApiDataExist)
+        {
+        <div class="modal-body center-block text-center">
+            @using (Html.BeginForm("AddPsiSchool", "EducationOrganizations", FormMethod.Post, new { id = "addPsiSchoolFormModal" }))
+            {
+                @Html.Input(m => m.PostSecondaryInstitutionId).Id("add-school-psi-id").Hide()
+                @Html.ValidationBlock()
+                @Html.InputBlock(m => m.SchoolId).AddClass("reset-included")
+                @Html.MultiSelectListBlock(m => m.GradeLevels, Model.GradeLevelOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
+                @Html.InputBlock(m => m.Name).AddClass("reset-included")
+                @Html.InputBlock(m => m.StreetNumberName).AddClass("reset-included")
+                @Html.InputBlock(m => m.ApartmentRoomSuiteNumber).AddClass("reset-included")
+                @Html.InputBlock(m => m.City).AddClass("reset-included")
+                @Html.SelectListBlock(m => m.State, Model.StateOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
+                @Html.InputBlock(m => m.ZipCode).AddClass("reset-included")
+                if (Model.AccreditationStatusOptions.Count > 1)
+                {
+                    @Html.SelectListBlock(m => m.AccreditationStatus, Model.AccreditationStatusOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
+                }
+                if (Model.FederalLocaleCodeOptions.Count > 1)
+                {
+                    @Html.SelectListBlock(m => m.FederalLocaleCode, Model.FederalLocaleCodeOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value })
+                }
+            }
+        </div>
+            <div class="modal-footer">
+                @Html.CancelModalButton()
+                @Html.SaveButton("Add").AppendSpinner("add-psi-spinner")
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_MissingData")
+        }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $(".add-psi-school-button").click(function () {
+            var $modal = $("#add-psi-school-modal");
+            var psiId = $(this).attr("data-psi-id");
+            $modal.find("#add-school-psi-id").val(psiId);
+            $modal.modal("show");
+        });
+       
+        $("#add-psi-school-modal").on("show.bs.modal", function () {
+            $(".reset-included input").val('');            
+            $('#State option').prop('selected', function () {
+                return this.defaultSelected;
+            });           
+            $(".form-group").removeClass("has-error");
+            $(".validationSummary").addClass("hidden");
+            $(".multiselect.dropdown-toggle").attr("title", "None");
+            $(".multiselect-selected-text").html("None selected");
+            $(".multiselect-container.dropdown-menu > li").removeClass("active");
+            $("#addPsiSchoolFormModal input[type='checkbox']").removeAttr("checked");
+            $('#addPsiSchoolFormModal select option').removeAttr('selected');
+        });
+    });
+</script>

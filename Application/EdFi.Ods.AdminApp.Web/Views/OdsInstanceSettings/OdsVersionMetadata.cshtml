@@ -1,0 +1,15 @@
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings.OdsVersionMetadataViewModel
+
+@if (Model.HasOdsApiVersion)
+{
+    <div class="row">
+        <div class="text-right application-version col-lg-12 margin-top-10">ODS/API Version: @Model.OdsApiVersion</div>
+    </div>
+}
+
+@if (Model.HasTpdmVersion)
+{
+    <div class="row">
+        <div class="text-right application-version col-lg-12 margin-top-10">TPDM Version: @Model.TpdmVersion</div>
+    </div>
+}

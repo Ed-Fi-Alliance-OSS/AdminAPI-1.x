@@ -19,12 +19,13 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         {
         } 
 
-        public T GetOrSet<T>(string cacheKey, Func<T> getItemCallback, int expirationInMinutes = 1440) where T : class
+        public T GetOrSet<T>(string cacheKey, Func<T> getItemCallback, int expirationInMinutes = 1440)
         {
-            var item = MemoryCache.Default.Get(cacheKey) as T;
-            if (item != null) return item;
+            var obj = MemoryCache.Default.Get(cacheKey);
+            if (obj is T typedItem)
+                return typedItem;
 
-            item = getItemCallback();
+            var item = getItemCallback();
             MemoryCache.Default.Add(cacheKey, item, DateTime.Now.AddMinutes(expirationInMinutes));
             return item;
         }

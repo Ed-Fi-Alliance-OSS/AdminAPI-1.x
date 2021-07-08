@@ -39,6 +39,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ITabDisplayService _tabDisplayService;
         private readonly IOdsApiConnectionInformationProvider _apiConnectionInformationProvider;
         private readonly IGetVendorsQuery _getVendorsQuery;
+        private readonly IInferExtensionDetails _inferExtensionDetails;
 
         public ApplicationController(IMapper mapper
             , IDeleteApplicationCommand deleteApplicationCommand
@@ -53,7 +54,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , InstanceContext instanceContext
             , ITabDisplayService tabDisplayService
             , IOdsApiConnectionInformationProvider apiConnectionInformationProvider
-            , IGetVendorsQuery getVendorsQuery)
+            , IGetVendorsQuery getVendorsQuery
+            , IInferExtensionDetails inferExtensionDetails)
         {
             _mapper = mapper;
             _deleteApplicationCommand = deleteApplicationCommand;
@@ -69,6 +71,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _tabDisplayService = tabDisplayService;
             _apiConnectionInformationProvider = apiConnectionInformationProvider;
             _getVendorsQuery = getVendorsQuery;
+            _inferExtensionDetails = inferExtensionDetails;
         }
 
         [AddTelemetry("Application Index", TelemetryType.View)]
@@ -132,6 +135,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var vendor = _getVendorByIdQuery.Execute(vendorId);
             var apiFacade = await _odsApiFacadeFactory.Create();
             var leas = apiFacade.GetAllLocalEducationAgencies().ToList();
+            var psis = apiFacade.GetAllPostSecondaryInstitutions().ToList();
             var schools = apiFacade.GetAllSchools().ToList();
             var profiles = _mapper.Map<List<ProfileModel>>(_getProfilesQuery.Execute());
 
@@ -140,9 +144,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 VendorId = vendorId,
                 VendorName = vendor.VendorName,
                 LocalEducationAgencies = leas,
+                PostSecondaryInstitutions = psis,
                 Schools = schools,
                 ClaimSetNames = GetClaimSetNames(),
-                Profiles = profiles
+                Profiles = profiles,
+                TpdmEnabled = TpdmEnabled()
             };
 
             return PartialView("_AddApplicationModal", model);
@@ -188,6 +194,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var application = _getApplicationByIdQuery.Execute(applicationId);
             var apiFacade = await _odsApiFacadeFactory.Create();
             var leas = apiFacade.GetAllLocalEducationAgencies().ToList();
+            var psis = apiFacade.GetAllPostSecondaryInstitutions().ToList();
             var schools = apiFacade.GetAllSchools().ToList();
             var profiles = _mapper.Map<List<ProfileModel>>(_getProfilesQuery.Execute());
 
@@ -196,7 +203,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             var edOrgType = schools.Any(x => educationOrganizationIds.Contains(x.EducationOrganizationId))
                 ? ApplicationEducationOrganizationType.School
-                : ApplicationEducationOrganizationType.LocalEducationAgency;
+                : psis.Any(x => educationOrganizationIds.Contains(x.EducationOrganizationId))
+                    ? ApplicationEducationOrganizationType.PostSecondaryInstitution
+                    : ApplicationEducationOrganizationType.LocalEducationAgency ;
 
             var model = new EditApplicationViewModel
             {
@@ -206,11 +215,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 ClaimSetNames = GetClaimSetNames(),
                 EducationOrganizationIds = application.ApplicationEducationOrganizations.Select(x => x.EducationOrganizationId),
                 LocalEducationAgencies = leas,
+                PostSecondaryInstitutions = psis,
                 Schools = schools,
                 ProfileId = application.Profiles.FirstOrDefault()?.ProfileId ?? 0,
                 Profiles = profiles,
                 VendorId = application.Vendor.VendorId,
-                EducationOrganizationType = edOrgType
+                EducationOrganizationType = edOrgType,
+                TpdmEnabled = TpdmEnabled()
             };
 
             return PartialView("_EditApplicationModal", model);
@@ -261,6 +272,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return !string.IsNullOrEmpty(CloudOdsAdminAppSettings.Instance.ApiExternalUrl)
                 ? apiUrl.Replace(CloudOdsAdminAppSettings.Instance.ProductionApiUrl, CloudOdsAdminAppSettings.Instance.ApiExternalUrl)
                 : apiUrl;
+        }
+
+        private bool TpdmEnabled()
+        {
+            var version = InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionVersion", () =>
+                    _inferExtensionDetails.TpdmExtensionVersion(
+                        CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+
+            return !string.IsNullOrEmpty(version);
         }
     }
 }

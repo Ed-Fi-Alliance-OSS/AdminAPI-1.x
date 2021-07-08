@@ -14,7 +14,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
     {
         public List<PsiSchool> Schools { get; set; }
         public PagedList<PostSecondaryInstitution> PostSecondaryInstitutions { get; set; }
-        public bool ShouldAllowMultipleDistricts { get; set; }
         public AddPsiSchoolModel AddPsiSchoolModel { get; set; }
         public AddPostSecondaryInstitutionModel AddPostSecondaryInstitutionModel { get; set; }
     }

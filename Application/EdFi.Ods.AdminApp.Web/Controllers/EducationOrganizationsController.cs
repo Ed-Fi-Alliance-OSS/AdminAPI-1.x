@@ -258,7 +258,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             {
                 Schools = schools,
                 PostSecondaryInstitutions = postSecondaryInstitutions,
-                ShouldAllowMultipleDistricts = CloudOdsAdminAppSettings.Instance.Mode != ApiMode.DistrictSpecific,
                 AddPsiSchoolModel = new AddPsiSchoolModel
                 {
                     GradeLevelOptions = api.GetAllGradeLevels(),

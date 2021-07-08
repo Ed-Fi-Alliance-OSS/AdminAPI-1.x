@@ -23,14 +23,7 @@
                 @using (Html.BeginForm("AddPostSecondaryInstitution", "EducationOrganizations", FormMethod.Post, new { id = "addPostSecondaryFormModal" }))
                 {
                     @Html.ValidationBlock()
-                    if (CloudOdsAdminAppSettings.Instance.Mode == ApiMode.DistrictSpecific)
-                    {
-                        @Html.InputBlock(m => m.PostSecondaryInstitutionId, inputModifier:x => x.Attr("readonly", "readonly"))
-                    }
-                    else
-                    {
-                        @Html.InputBlock(m => m.PostSecondaryInstitutionId)
-                    }
+                    @Html.InputBlock(m => m.PostSecondaryInstitutionId)
                     @Html.SelectListBlock(m => m.PostSecondaryInstitutionLevel, Model.PostSecondaryInstitutionLevelOptions, x => new SelectListItem {Text = x.DisplayText, Value = x.Value})
                     @Html.SelectListBlock(m => m.AdministrativeFundingControl, Model.AdministrativeFundingControlOptions, x => new SelectListItem {Text = x.DisplayText, Value = x.Value})
                     @Html.InputBlock(m => m.Name)

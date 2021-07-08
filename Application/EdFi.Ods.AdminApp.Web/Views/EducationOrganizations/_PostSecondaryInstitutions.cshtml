@@ -14,14 +14,11 @@ See the LICENSE and NOTICES files in the project root for more information.
         <h6>Education Organizations</h6>
     </div>
 
-    @if (!Model.PostSecondaryInstitutions.Items.Any() || Model.ShouldAllowMultipleDistricts)
-    {
-        <div class="col-lg-6 text-right">
-            <button class="cta" data-toggle="modal" data-target="#add-psi-modal">
-                Add Post-Secondary Institution
-            </button>
-        </div>
-    }
+    <div class="col-lg-6 text-right">
+        <button class="cta" data-toggle="modal" data-target="#add-psi-modal">
+            Add Post-Secondary Institution
+        </button>
+    </div>
 </div>
 
 @foreach (var postSecondaryInstitution in Model.PostSecondaryInstitutions.Items)

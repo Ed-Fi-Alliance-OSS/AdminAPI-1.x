@@ -42,7 +42,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
     {
         public static ApplicationEducationOrganizationType LocalEducationAgency = new ApplicationEducationOrganizationType(1, "Local Education Agency");
         public static ApplicationEducationOrganizationType School = new ApplicationEducationOrganizationType(2, "School");
-        public static ApplicationEducationOrganizationType PostSecondaryInstitution = new ApplicationEducationOrganizationType(3, "Post Secondary Institution");
+        public static ApplicationEducationOrganizationType PostSecondaryInstitution = new ApplicationEducationOrganizationType(3, "Post-Secondary Institution");
 
         public ApplicationEducationOrganizationType(int value, string displayName) : base(value, displayName)
         {

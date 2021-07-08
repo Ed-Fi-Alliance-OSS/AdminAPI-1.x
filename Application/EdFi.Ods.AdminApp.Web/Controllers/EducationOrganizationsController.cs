@@ -84,13 +84,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        [AddTelemetry("Add Post Secondary Institution")]
+        [AddTelemetry("Add Post-Secondary Institution")]
         public async Task<ActionResult> AddPostSecondaryInstitution(AddPostSecondaryInstitutionModel viewModel)
         {
             var model = _mapper.Map<PostSecondaryInstitution>(viewModel);
             model.Id = Guid.Empty.ToString();
             var addResult = (await _odsApiFacadeFactory.Create()).AddPostSecondaryInstitution(model);
-            return addResult.Success ? JsonSuccess("Post Secondary Institution Added") : JsonError(addResult.ErrorMessage);
+            return addResult.Success ? JsonSuccess("Post-Secondary Institution Added") : JsonError(addResult.ErrorMessage);
         }
 
         [HttpPost]
@@ -104,7 +104,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        [AddTelemetry("Add Post Secondary Institution School")]
+        [AddTelemetry("Add Post-Secondary Institution School")]
         public async Task<ActionResult> AddPsiSchool(AddPsiSchoolModel viewModel)
         {
             var model = _mapper.Map<PsiSchool>(viewModel);
@@ -152,11 +152,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        [AddTelemetry("Edit Post Secondary Institution")]
+        [AddTelemetry("Edit Post-Secondary Institution")]
         public async Task<ActionResult> EditPostSecondaryInstitution(EditPostSecondaryInstitutionModel model)
         {
             var editResult = (await _odsApiFacadeFactory.Create()).EditPostSecondaryInstitution(_mapper.Map<PostSecondaryInstitution>(model));
-            return editResult.Success ? JsonSuccess("Post Secondary Institution Updated") : JsonError(editResult.ErrorMessage);
+            return editResult.Success ? JsonSuccess("Post-Secondary Institution Updated") : JsonError(editResult.ErrorMessage);
         }
 
         public async Task<ActionResult> EditSchoolModal(string id)
@@ -200,7 +200,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        [AddTelemetry("Edit Post Secondary Institution School")]
+        [AddTelemetry("Edit Post-Secondary Institution School")]
         public async Task<ActionResult> EditPsiSchool(EditPsiSchoolModel model)
         {
             var editResult = (await _odsApiFacadeFactory.Create()).EditPsiSchool(_mapper.Map<PsiSchool>(model));
@@ -302,11 +302,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        [AddTelemetry("Delete Post Secondary Institution")]
+        [AddTelemetry("Delete Post-Secondary Institution")]
         public async Task<ActionResult> DeletePostSecondaryInstitution(DeleteEducationOrganizationModel model)
         {
             var deletionResult = (await _odsApiFacadeFactory.Create()).DeletePostSecondaryInstitution(model.Id);
-            return deletionResult.Success ? JsonSuccess("Post Secondary Institution Removed") : JsonError(deletionResult.ErrorMessage);
+            return deletionResult.Success ? JsonSuccess("Post-Secondary Institution Removed") : JsonError(deletionResult.ErrorMessage);
         }
 
         [HttpPost]

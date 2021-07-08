@@ -43,7 +43,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         {
             _addPostSecondaryInstitutionModel.PostSecondaryInstitutionId = null;
             var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "'Post Secondary Institution ID' must not be empty.");
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "'Post-Secondary Institution ID' must not be empty.");
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
             var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
             var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
         [Test]
@@ -207,7 +207,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 .Returns(Task.FromResult(_mockOdsApiFacade.Object));
 
             var validator = new AddPostSecondaryInstitutionModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
+            validator.ShouldNotValidate(_addPostSecondaryInstitutionModel, "This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

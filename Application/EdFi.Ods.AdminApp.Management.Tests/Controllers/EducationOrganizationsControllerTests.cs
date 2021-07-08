@@ -91,7 +91,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Assert
             result.ShouldNotBeNull();
-            result.Content.ShouldContain("Post Secondary Institution Added");
+            result.Content.ShouldContain("Post-Secondary Institution Added");
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Assert
             result.ShouldNotBeNull();
-            result.Content.ShouldContain("Post Secondary Institution Updated");
+            result.Content.ShouldContain("Post-Secondary Institution Updated");
         }
 
         [Test]
@@ -653,7 +653,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             // Assert
             result.ShouldNotBeNull();
-            result.Content.ShouldContain("Post Secondary Institution Removed");
+            result.Content.ShouldContain("Post-Secondary Institution Removed");
         }
 
         [Test]

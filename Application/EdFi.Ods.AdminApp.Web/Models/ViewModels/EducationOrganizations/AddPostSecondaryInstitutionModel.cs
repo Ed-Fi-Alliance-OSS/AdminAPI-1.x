@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 {
     public class AddPostSecondaryInstitutionModel
     {
-        [Display(Name = "Post Secondary Institution ID")]
+        [Display(Name = "Post-Secondary Institution ID")]
         public int? PostSecondaryInstitutionId { get; set; }
         [Display(Name = "Name of Institution")]
         public string Name { get; set; }
@@ -25,6 +25,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
         public string State { get; set; }
         public string ZipCode { get; set; }
 
+        [Display(Name = "Post-Secondary Institution Level")]
         public string PostSecondaryInstitutionLevel { get; set; }
         public string AdministrativeFundingControl { get; set; }
         public List<SelectOptionModel> PostSecondaryInstitutionLevelOptions { get; set; }
@@ -48,7 +49,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
             RuleFor(m => m.ZipCode).NotEmpty();
             RuleFor(m => m.PostSecondaryInstitutionId)
                 .Must(BeUniqueId).When(m => m.PostSecondaryInstitutionId != null)
-                .WithMessage("This 'Post Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
+                .WithMessage("This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
         private bool BeUniqueId(int? id)

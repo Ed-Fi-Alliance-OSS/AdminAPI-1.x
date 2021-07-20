@@ -45,15 +45,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
             RuleFor(m => m.City).NotEmpty();
             RuleFor(m => m.ZipCode).NotEmpty();
             RuleFor(m => m.LocalEducationAgencyId)
-                .Must(i => ProposedEducationOrganizationIdIsNotInUse(i.Value, apiFacade)).When(m => m.LocalEducationAgencyId != null)
+                .Must(i => EducationOrganizationValidationHelper.ProposedEducationOrganizationIdIsNotInUse(i.Value, apiFacade)).When(m => m.LocalEducationAgencyId != null)
                 .WithMessage("This 'Local Education Organization ID' is already associated with another Education Organization. Please provide a unique value.");
-        }
-
-        public static bool ProposedEducationOrganizationIdIsNotInUse(int id, IOdsApiFacade apiFacade)
-        {
-            return apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
-                   && apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
-                   && apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
         }
     }
 }

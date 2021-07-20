@@ -48,16 +48,16 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
             RuleFor(m => m.City).NotEmpty();
             RuleFor(m => m.ZipCode).NotEmpty();
             RuleFor(m => m.PostSecondaryInstitutionId)
-                .Must(BeUniqueId).When(m => m.PostSecondaryInstitutionId != null)
+                .Must(i => BeUniqueId(i, _apiFacade)).When(m => m.PostSecondaryInstitutionId != null)
                 .WithMessage("This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
-        private bool BeUniqueId(int? id)
+        public static bool BeUniqueId(int? id, IOdsApiFacade apiFacade)
         {
             return id != null
-                   && _apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
-                   && _apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
-                   && _apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
+                   && apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
+                   && apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
+                   && apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
         }
     }
 }

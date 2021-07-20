@@ -56,16 +56,16 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
             RuleFor(x => x.ZipCode).NotEmpty();
             RuleFor(x => x.GradeLevels).Must(x => x != null && x.Count > 0).WithMessage("You must choose at least one grade level");
             RuleFor(x => x.SchoolId)
-                .Must(BeUniqueId).When(x => x.SchoolId != null)
+                .Must(i => BeUniqueId(i, _apiFacade)).When(x => x.SchoolId != null)
                 .WithMessage("This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
-        private bool BeUniqueId(int? id)
+        public static bool BeUniqueId(int? id, IOdsApiFacade apiFacade)
         {
             return id != null
-                   && _apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
-                   && _apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
-                   && _apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
+                   && apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null
+                   && apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null
+                   && apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
         }
     }
 }

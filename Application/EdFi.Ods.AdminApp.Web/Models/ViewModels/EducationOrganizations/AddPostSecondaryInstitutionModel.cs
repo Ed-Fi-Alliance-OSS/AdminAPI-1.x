@@ -6,7 +6,6 @@
 using FluentValidation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
@@ -36,18 +35,14 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 
     public class AddPostSecondaryInstitutionModelValidator : AbstractValidator<AddPostSecondaryInstitutionModel>
     {
-        public AddPostSecondaryInstitutionModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
+        public AddPostSecondaryInstitutionModelValidator()
         {
-            var apiFacade = odsApiFacadeFactory.Create().GetAwaiter().GetResult();
             RuleFor(m => m.PostSecondaryInstitutionId).NotEmpty();
             RuleFor(m => m.Name).NotEmpty();
             RuleFor(m => m.StreetNumberName).NotEmpty();
             RuleFor(m => m.State).NotEmpty();
             RuleFor(m => m.City).NotEmpty();
             RuleFor(m => m.ZipCode).NotEmpty();
-            RuleFor(m => m.PostSecondaryInstitutionId)
-                .Must(i => EducationOrganizationValidationHelper.ProposedEducationOrganizationIdIsNotInUse(i.Value, apiFacade)).When(m => m.PostSecondaryInstitutionId != null)
-                .WithMessage("This 'Post-Secondary Institution ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

@@ -6,7 +6,6 @@
 using FluentValidation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
@@ -35,18 +34,14 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 
     public class AddLocalEducationAgencyModelValidator : AbstractValidator<AddLocalEducationAgencyModel>
     {
-        public AddLocalEducationAgencyModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
+        public AddLocalEducationAgencyModelValidator()
         {
-            var apiFacade = odsApiFacadeFactory.Create().GetAwaiter().GetResult();
             RuleFor(m => m.LocalEducationAgencyId).NotEmpty();
             RuleFor(m => m.Name).NotEmpty();
             RuleFor(m => m.StreetNumberName).NotEmpty();
             RuleFor(m => m.State).NotEmpty();
             RuleFor(m => m.City).NotEmpty();
             RuleFor(m => m.ZipCode).NotEmpty();
-            RuleFor(m => m.LocalEducationAgencyId)
-                .Must(i => EducationOrganizationValidationHelper.ProposedEducationOrganizationIdIsNotInUse(i.Value, apiFacade)).When(m => m.LocalEducationAgencyId != null)
-                .WithMessage("This 'Local Education Organization ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

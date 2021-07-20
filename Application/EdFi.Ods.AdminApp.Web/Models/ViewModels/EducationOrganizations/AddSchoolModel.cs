@@ -6,7 +6,6 @@
 using FluentValidation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
@@ -34,17 +33,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 
     public class AddSchoolModelValidator : AddSchoolModelValidatorBase<AddSchoolModel>
     {
-        public AddSchoolModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
-            : base(odsApiFacadeFactory)
-        {
-        }
     }
 
     public abstract class AddSchoolModelValidatorBase<T> : AbstractValidator<T> where T : AddSchoolModel   
     {
-        protected AddSchoolModelValidatorBase(IOdsApiFacadeFactory odsApiFacadeFactory)
+        protected AddSchoolModelValidatorBase()
         {
-            var apiFacade = odsApiFacadeFactory.Create().GetAwaiter().GetResult();
             RuleFor(x => x.SchoolId).NotEmpty();
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.StreetNumberName).NotEmpty();
@@ -52,9 +46,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
             RuleFor(x => x.State).NotEmpty();
             RuleFor(x => x.ZipCode).NotEmpty();
             RuleFor(x => x.GradeLevels).Must(x => x != null && x.Count > 0).WithMessage("You must choose at least one grade level");
-            RuleFor(x => x.SchoolId)
-                .Must(i => EducationOrganizationValidationHelper.ProposedEducationOrganizationIdIsNotInUse(i.Value, apiFacade)).When(x => x.SchoolId != null)
-                .WithMessage("This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
         }
     }
 }

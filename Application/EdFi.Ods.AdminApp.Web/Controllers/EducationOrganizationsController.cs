@@ -19,6 +19,8 @@ using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
+using Newtonsoft.Json;
+using static EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations.EducationOrganizationValidationHelper;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -79,6 +81,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var apiFacade = await _odsApiFacadeFactory.Create();
 
+            var leaId = viewModel.LocalEducationAgencyId;
+
+            if (leaId != null)
+            {
+                if (!ProposedEducationOrganizationIdIsNotInUse(leaId.Value, apiFacade))
+                    return ValidationFailureResult(
+                        "LocalEducationAgencyId",
+                        "This 'Local Education Organization ID' is already associated with " +
+                        "another Education Organization. Please provide a unique value.");
+            }
+
             var model = _mapper.Map<LocalEducationAgency>(viewModel);
             model.Id = Guid.Empty.ToString();
             var addResult = apiFacade.AddLocalEducationAgency(model);
@@ -90,6 +103,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> AddPostSecondaryInstitution(AddPostSecondaryInstitutionModel viewModel)
         {
             var apiFacade = await _odsApiFacadeFactory.Create();
+
+            var psiId = viewModel.PostSecondaryInstitutionId;
+
+            if (psiId != null)
+            {
+                if (!ProposedEducationOrganizationIdIsNotInUse(psiId.Value, apiFacade))
+                    return ValidationFailureResult(
+                        "PostSecondaryInstitutionId",
+                        "This 'Post-Secondary Institution ID' is already associated with " +
+                        "another Education Organization. Please provide a unique value.");
+            }
 
             var model = _mapper.Map<PostSecondaryInstitution>(viewModel);
             model.Id = Guid.Empty.ToString();
@@ -103,6 +127,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var apiFacade = await _odsApiFacadeFactory.Create();
 
+            var schoolId = viewModel.SchoolId;
+
+            if (schoolId != null)
+            {
+                if (!ProposedEducationOrganizationIdIsNotInUse(schoolId.Value, apiFacade))
+                    return ValidationFailureResult(
+                            "SchoolId",
+                            "This 'School ID' is already associated with another " +
+                            "Education Organization. Please provide a unique value.");
+            }
+
             var model = _mapper.Map<School>(viewModel);
             model.Id = Guid.Empty.ToString();
             var addResult = apiFacade.AddSchool(model);
@@ -114,6 +149,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> AddPsiSchool(AddPsiSchoolModel viewModel)
         {
             var apiFacade = await _odsApiFacadeFactory.Create();
+
+            var schoolId = viewModel.SchoolId;
+
+            if (schoolId != null)
+            {
+                if (!ProposedEducationOrganizationIdIsNotInUse(schoolId.Value, apiFacade))
+                    return ValidationFailureResult(
+                        "SchoolId",
+                        "This 'School ID' is already associated with another " +
+                        "Education Organization. Please provide a unique value.");
+            }
 
             var model = _mapper.Map<PsiSchool>(viewModel);
             model.Id = Guid.Empty.ToString();
@@ -346,6 +392,20 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             };
             selectOptionList.AddRange(getSelectOptionList.Invoke());
             return selectOptionList;
+        }
+
+        private ActionResult ValidationFailureResult(string modelStateKey, string errorMessage)
+        {
+            ModelState.AddModelError(modelStateKey, errorMessage);
+
+            return new ContentResult
+            {
+                Content = JsonConvert.SerializeObject(
+                    ModelState,
+                    new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}),
+                ContentType = "application/json",
+                StatusCode = 400
+            };
         }
     }
 }

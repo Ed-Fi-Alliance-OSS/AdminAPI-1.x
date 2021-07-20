@@ -82,8 +82,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             validator.ShouldValidate(_addLocalEducationAgencyModel);
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeTrue();
+                .ProposedEducationOrganizationIdIsInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeFalse();
         }
 
         [Test]
@@ -121,8 +121,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -160,8 +160,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -199,8 +199,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addLocalEducationAgencyModel.LocalEducationAgencyId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
     }
 }

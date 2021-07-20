@@ -83,8 +83,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             validator.ShouldValidate(_addPostSecondaryInstitutionModel);
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeTrue();
+                .ProposedEducationOrganizationIdIsInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeFalse();
         }
 
         [Test]
@@ -122,8 +122,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -161,8 +161,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -200,8 +200,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addPostSecondaryInstitutionModel.PostSecondaryInstitutionId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
     }
 }

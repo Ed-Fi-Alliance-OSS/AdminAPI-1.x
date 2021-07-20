@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (leaId != null)
             {
-                if (!ProposedEducationOrganizationIdIsNotInUse(leaId.Value, apiFacade))
+                if (ProposedEducationOrganizationIdIsInUse(leaId.Value, apiFacade))
                     return ValidationFailureResult(
                         "LocalEducationAgencyId",
                         "This 'Local Education Organization ID' is already associated with " +
@@ -108,7 +108,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (psiId != null)
             {
-                if (!ProposedEducationOrganizationIdIsNotInUse(psiId.Value, apiFacade))
+                if (ProposedEducationOrganizationIdIsInUse(psiId.Value, apiFacade))
                     return ValidationFailureResult(
                         "PostSecondaryInstitutionId",
                         "This 'Post-Secondary Institution ID' is already associated with " +
@@ -131,7 +131,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (schoolId != null)
             {
-                if (!ProposedEducationOrganizationIdIsNotInUse(schoolId.Value, apiFacade))
+                if (ProposedEducationOrganizationIdIsInUse(schoolId.Value, apiFacade))
                     return ValidationFailureResult(
                             "SchoolId",
                             "This 'School ID' is already associated with another " +
@@ -154,7 +154,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (schoolId != null)
             {
-                if (!ProposedEducationOrganizationIdIsNotInUse(schoolId.Value, apiFacade))
+                if (ProposedEducationOrganizationIdIsInUse(schoolId.Value, apiFacade))
                     return ValidationFailureResult(
                         "SchoolId",
                         "This 'School ID' is already associated with another " +

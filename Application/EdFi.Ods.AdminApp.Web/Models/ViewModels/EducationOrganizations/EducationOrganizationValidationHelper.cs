@@ -9,11 +9,11 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 {
     public class EducationOrganizationValidationHelper
     {
-        public static bool ProposedEducationOrganizationIdIsNotInUse(int id, IOdsApiFacade apiFacade)
+        public static bool ProposedEducationOrganizationIdIsInUse(int id, IOdsApiFacade apiFacade)
         {
-            return apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null &&
-                   apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) == null &&
-                   apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) == null;
+            return apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) != null ||
+                   apiFacade.GetAllLocalEducationAgencies().Find(x => x.EducationOrganizationId == id) != null ||
+                   apiFacade.GetAllSchools().Find(x => x.EducationOrganizationId == id) != null;
         }
     }
 }

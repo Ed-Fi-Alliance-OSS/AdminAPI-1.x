@@ -124,8 +124,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             validator.ShouldValidate(_addSchoolModel);
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeTrue();
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeFalse();
         }
 
         [Test]
@@ -163,8 +163,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -202,8 +202,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -241,8 +241,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
             });
 
             EducationOrganizationValidationHelper
-                .ProposedEducationOrganizationIdIsNotInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
-                .ShouldBeFalse();
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
     }
 }

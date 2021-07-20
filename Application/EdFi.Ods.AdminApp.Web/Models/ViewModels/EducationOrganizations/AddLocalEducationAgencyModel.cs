@@ -45,11 +45,11 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
             RuleFor(m => m.City).NotEmpty();
             RuleFor(m => m.ZipCode).NotEmpty();
             RuleFor(m => m.LocalEducationAgencyId)
-                .Must(i => BeUniqueId(i, apiFacade)).When(m => m.LocalEducationAgencyId != null)
+                .Must(i => ProposedEducationOrganizationIdIsNotInUse(i, apiFacade)).When(m => m.LocalEducationAgencyId != null)
                 .WithMessage("This 'Local Education Organization ID' is already associated with another Education Organization. Please provide a unique value.");
         }
 
-        public static bool BeUniqueId(int? id, IOdsApiFacade apiFacade)
+        public static bool ProposedEducationOrganizationIdIsNotInUse(int? id, IOdsApiFacade apiFacade)
         {
             return id != null
                    && apiFacade.GetAllPostSecondaryInstitutions().Find(x => x.EducationOrganizationId == id) == null

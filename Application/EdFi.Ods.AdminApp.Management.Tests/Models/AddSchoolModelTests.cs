@@ -4,12 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Models
 {
@@ -17,14 +17,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
     public class AddSchoolModelTests
     {
         private Mock<IOdsApiFacade> _mockOdsApiFacade;
-        private Mock<IOdsApiFacadeFactory> _mockOdsApiFacadeFactory;
         private AddSchoolModel _addSchoolModel;
         private const int Id = 1;
 
         [SetUp]
         public void Init()
         {
-            _mockOdsApiFacadeFactory = new Mock<IOdsApiFacadeFactory>();
             _mockOdsApiFacade = new Mock<IOdsApiFacade>();
            
             _addSchoolModel = new AddSchoolModel
@@ -44,7 +42,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
         public void ShouldNotValidateAddSchoolModelIfSchoolIdIsEmpty()
         {
             _addSchoolModel.SchoolId = null;
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
+            var validator = new AddSchoolModelValidator();
             validator.ShouldNotValidate(_addSchoolModel, "'School ID' must not be empty.");
         }
 
@@ -84,10 +82,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 existingPsiWithDifferentId
             });
 
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
+            var validator = new AddSchoolModelValidator();
             validator.ShouldNotValidate(_addSchoolModel, "You must choose at least one grade level");
         }
 
@@ -125,11 +120,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 existingPsiWithDifferentId
             });
 
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
+            var validator = new AddSchoolModelValidator();
             validator.ShouldValidate(_addSchoolModel);
+
+            EducationOrganizationValidationHelper
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeFalse();
         }
 
         [Test]
@@ -166,11 +162,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 existingPsiWithDifferentId
             });
 
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            EducationOrganizationValidationHelper
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -207,11 +201,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 existingPsiWithDifferentId
             });
 
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            EducationOrganizationValidationHelper
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -248,11 +240,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Models
                 existingPsiWithSameId
             });
 
-            _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
-
-            var validator = new AddSchoolModelValidator(_mockOdsApiFacadeFactory.Object);
-            validator.ShouldNotValidate(_addSchoolModel, "This 'School ID' is already associated with another Education Organization. Please provide a unique value.");
+            EducationOrganizationValidationHelper
+                .ProposedEducationOrganizationIdIsInUse(_addSchoolModel.SchoolId.Value, _mockOdsApiFacade.Object)
+                .ShouldBeTrue();
         }
     }
 }

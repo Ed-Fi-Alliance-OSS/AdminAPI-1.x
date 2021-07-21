@@ -19,6 +19,8 @@ using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.Pagination;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
+using Newtonsoft.Json;
+using static EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations.EducationOrganizationValidationHelper;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -77,9 +79,22 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Add Local Education Agency")]
         public async Task<ActionResult> AddLocalEducationAgency(AddLocalEducationAgencyModel viewModel)
         {
+            var apiFacade = await _odsApiFacadeFactory.Create();
+
+            var leaId = viewModel.LocalEducationAgencyId;
+
+            if (leaId != null)
+            {
+                if (ProposedEducationOrganizationIdIsInUse(leaId.Value, apiFacade))
+                    return ValidationFailureResult(
+                        "LocalEducationAgencyId",
+                        "This 'Local Education Organization ID' is already associated with " +
+                        "another Education Organization. Please provide a unique value.");
+            }
+
             var model = _mapper.Map<LocalEducationAgency>(viewModel);
             model.Id = Guid.Empty.ToString();
-            var addResult = (await _odsApiFacadeFactory.Create()).AddLocalEducationAgency(model);
+            var addResult = apiFacade.AddLocalEducationAgency(model);
             return addResult.Success ? JsonSuccess("Organization Added") : JsonError(addResult.ErrorMessage);
         }
 
@@ -87,9 +102,22 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Add Post-Secondary Institution")]
         public async Task<ActionResult> AddPostSecondaryInstitution(AddPostSecondaryInstitutionModel viewModel)
         {
+            var apiFacade = await _odsApiFacadeFactory.Create();
+
+            var psiId = viewModel.PostSecondaryInstitutionId;
+
+            if (psiId != null)
+            {
+                if (ProposedEducationOrganizationIdIsInUse(psiId.Value, apiFacade))
+                    return ValidationFailureResult(
+                        "PostSecondaryInstitutionId",
+                        "This 'Post-Secondary Institution ID' is already associated with " +
+                        "another Education Organization. Please provide a unique value.");
+            }
+
             var model = _mapper.Map<PostSecondaryInstitution>(viewModel);
             model.Id = Guid.Empty.ToString();
-            var addResult = (await _odsApiFacadeFactory.Create()).AddPostSecondaryInstitution(model);
+            var addResult = apiFacade.AddPostSecondaryInstitution(model);
             return addResult.Success ? JsonSuccess("Post-Secondary Institution Added") : JsonError(addResult.ErrorMessage);
         }
 
@@ -97,9 +125,22 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Add School")]
         public async Task<ActionResult> AddSchool(AddSchoolModel viewModel)
         {
+            var apiFacade = await _odsApiFacadeFactory.Create();
+
+            var schoolId = viewModel.SchoolId;
+
+            if (schoolId != null)
+            {
+                if (ProposedEducationOrganizationIdIsInUse(schoolId.Value, apiFacade))
+                    return ValidationFailureResult(
+                            "SchoolId",
+                            "This 'School ID' is already associated with another " +
+                            "Education Organization. Please provide a unique value.");
+            }
+
             var model = _mapper.Map<School>(viewModel);
             model.Id = Guid.Empty.ToString();
-            var addResult = (await _odsApiFacadeFactory.Create()).AddSchool(model);
+            var addResult = apiFacade.AddSchool(model);
             return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
         }
 
@@ -107,9 +148,22 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Add Post-Secondary Institution School")]
         public async Task<ActionResult> AddPsiSchool(AddPsiSchoolModel viewModel)
         {
+            var apiFacade = await _odsApiFacadeFactory.Create();
+
+            var schoolId = viewModel.SchoolId;
+
+            if (schoolId != null)
+            {
+                if (ProposedEducationOrganizationIdIsInUse(schoolId.Value, apiFacade))
+                    return ValidationFailureResult(
+                        "SchoolId",
+                        "This 'School ID' is already associated with another " +
+                        "Education Organization. Please provide a unique value.");
+            }
+
             var model = _mapper.Map<PsiSchool>(viewModel);
             model.Id = Guid.Empty.ToString();
-            var addResult = (await _odsApiFacadeFactory.Create()).AddPsiSchool(model);
+            var addResult = apiFacade.AddPsiSchool(model);
             return addResult.Success ? JsonSuccess("School Added") : JsonError(addResult.ErrorMessage);
         }
 
@@ -338,6 +392,20 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             };
             selectOptionList.AddRange(getSelectOptionList.Invoke());
             return selectOptionList;
+        }
+
+        private ActionResult ValidationFailureResult(string modelStateKey, string errorMessage)
+        {
+            ModelState.AddModelError(modelStateKey, errorMessage);
+
+            return new ContentResult
+            {
+                Content = JsonConvert.SerializeObject(
+                    ModelState,
+                    new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}),
+                ContentType = "application/json",
+                StatusCode = 400
+            };
         }
     }
 }

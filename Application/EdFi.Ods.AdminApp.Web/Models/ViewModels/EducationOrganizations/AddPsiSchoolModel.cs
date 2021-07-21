@@ -4,8 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using FluentValidation;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
@@ -21,8 +19,5 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
 
     public class AddPsiSchoolModelValidator : AddSchoolModelValidatorBase<AddPsiSchoolModel>
     {
-        public AddPsiSchoolModelValidator(IOdsApiFacadeFactory odsApiFacadeFactory)
-            : base(odsApiFacadeFactory) {
-        }
     }
 }

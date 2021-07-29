@@ -27,14 +27,28 @@ See the LICENSE and NOTICES files in the project root for more information.
             <div class="col-lg-12">
                 <div id="app-details-@(application.ApplicationId)" class="collapse in application">
                     <div class="row">
-                        <div class="col-lg-12">
-                            <p>
+                        <div class="col-lg-12 margin-bottom-10">
+                            <span>
                                 <strong>Education Organizations: </strong>
-                                @foreach (var edOrg in application.EducationOrganizations)
-                                {
-                                    <span class="tag label label-info tag-custom tag-modal">@edOrg.Name</span>
-                                }
-                            </p>
+                            </span>
+                            @if (application.EducationOrganizations.Count <= 5)
+                            {
+                                <ul class="app-ed-org-list">
+                                    @foreach (var edOrg in application.EducationOrganizations)
+                                    {
+                                        <li>@edOrg.Name</li>
+                                    }
+                                </ul>
+                            } else
+                            {
+                                <ul class="app-ed-org-list">
+                                    @foreach (var edOrg in application.EducationOrganizations.GetRange(0, 5))
+                                    {
+                                        <li>@edOrg.Name</li>
+                                    }
+                                </ul>
+                                <span class="tag label label-info tag-custom">+ @(application.EducationOrganizations.Count - 5) more</span>
+                            }
                         </div>
                     </div>
                     <div class="row">

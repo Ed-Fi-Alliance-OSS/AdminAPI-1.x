@@ -569,6 +569,25 @@ th, td {
     padding-right: 15px;
 }
 
+.app-ed-org-list {
+    display: inline;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.app-ed-org-list li {
+    display: inline;
+}
+
+.app-ed-org-list li:after {
+    content: ", ";
+}
+
+.app-ed-org-list li:last-child:after {
+    content: "";
+}
+
 .modal-title {
     font-family: 'Open Sans Light';
     font-size: 28px;

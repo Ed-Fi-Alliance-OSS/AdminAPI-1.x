@@ -16,5 +16,6 @@ namespace EdFi.Ods.AdminApp.Management.Api
         OdsApiResult PutResource<T>(T resource, string elementPath, string id, bool refreshToken = false);
         IReadOnlyList<string> GetAllDescriptors();
         OdsApiResult DeleteResource(string elementPath, string id, bool refreshToken = false);
+        IReadOnlyList<T> GetSchoolsByParentEdOrgId<T>(string elementPath, int edOrgId) where T : class;
     }
 }

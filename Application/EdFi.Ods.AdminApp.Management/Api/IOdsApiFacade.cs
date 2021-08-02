@@ -12,6 +12,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
     {
         List<School> GetAllSchools();
         List<PsiSchool> GetAllPsiSchools();
+        List<School> GetSchoolsByLeaIds(IEnumerable<int> leaIds);
         List<LocalEducationAgency> GetAllLocalEducationAgencies();
         List<LocalEducationAgency> GetLocalEducationAgenciesByPage(int offset = 0, int limit = 50);
         OdsApiResult DeleteLocalEducationAgency(string id);

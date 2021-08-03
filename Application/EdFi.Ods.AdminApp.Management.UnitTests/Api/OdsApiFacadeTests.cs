@@ -114,7 +114,11 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
                 new EdFiLocalEducationAgencyReference(LocalEducationAgencyId));
 
             var mockOdsRestClient = new Mock<IOdsRestClient>();
-            mockOdsRestClient.Setup(x => x.GetSchoolsByParentEdOrgId<EdFiSchool>(ResourcePaths.Schools, LocalEducationAgencyId)).Returns(new List<EdFiSchool>
+            var filters = new Dictionary<string, object>
+            {
+                {"localEducationAgencyId", LocalEducationAgencyId}
+            };
+            mockOdsRestClient.Setup(x => x.GetAll<EdFiSchool>(ResourcePaths.Schools, filters)).Returns(new List<EdFiSchool>
             {
                 edfiSchool
             });

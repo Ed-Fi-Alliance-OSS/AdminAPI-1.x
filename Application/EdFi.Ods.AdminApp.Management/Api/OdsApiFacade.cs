@@ -44,7 +44,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             foreach (var leaId in leaIds)
             {
-                response.AddRange(_restClient.GetSchoolsByParentEdOrgId<School>(ResourcePaths.Schools, leaId));
+                var filters = new Dictionary<string, object>
+                {
+                    {"localEducationAgencyId", leaId}
+                };
+
+                response.AddRange(_restClient.GetAll<School>(ResourcePaths.Schools, filters));
             }
 
             return _mapper.Map<List<Models.School>>(response);

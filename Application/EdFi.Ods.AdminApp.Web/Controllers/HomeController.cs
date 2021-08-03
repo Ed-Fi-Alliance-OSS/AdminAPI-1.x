@@ -45,9 +45,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [AddTelemetry("Post Setup", TelemetryType.View)]
-        public ActionResult PostSetup(bool setupCompleted = false)
+        public ActionResult PostSetup(bool setupCompleted = false, bool isRestartRequired = false)
         {
-            if (setupCompleted)
+            if (setupCompleted && isRestartRequired)
             {
                 return View();
             }

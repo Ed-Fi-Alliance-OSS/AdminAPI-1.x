@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
@@ -14,10 +15,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     public class ProductImprovementController : ControllerBase
     {
         private readonly ApplicationConfigurationService _applicationConfigurationService;
+        private readonly ClaimSetCheckService _claimSetCheckService;
 
-        public ProductImprovementController(ApplicationConfigurationService applicationConfigurationService)
+        public ProductImprovementController(ApplicationConfigurationService applicationConfigurationService, ClaimSetCheckService claimSetCheckService)
         {
             _applicationConfigurationService = applicationConfigurationService;
+            _claimSetCheckService = claimSetCheckService;
         }
 
         public ActionResult EditConfiguration()
@@ -49,7 +52,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult EnableProductImprovementFirstTimeSetup(ProductImprovementModel model)
         {
             _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement);
-            return RedirectToAction("PostSetup", "Home", new {setupCompleted = true});
+            var isRestartRequired = _claimSetCheckService.IsRestartRequired();
+            return RedirectToAction("PostSetup", "Home", new {setupCompleted = true, isRestartRequired});
         }
     }
 }

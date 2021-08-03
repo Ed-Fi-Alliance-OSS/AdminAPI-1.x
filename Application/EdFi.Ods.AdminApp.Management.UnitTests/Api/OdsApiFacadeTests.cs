@@ -32,6 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         private School _school;
         private const string SchoolId = "id";
         private const string SchoolName = "TestSchool";
+        private const int LocalEducationAgencyId = 123;
 
         [SetUp]
         public void Init()
@@ -99,6 +100,61 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             //Act
             var ex = Assert.Throws<Exception>(() => _facade.GetAllSchools());
+
+            // Assert
+            Assert.AreEqual(errorMessage, ex.Message);
+        }
+
+        [Test]
+        public void Should_GetSchoolsByParentEdOrgId_returns_expected_schools_list()
+        {
+            // Arrange
+            var edfiSchool = new EdFiSchool("id", "TestSchool", 1234, new List<EdFiEducationOrganizationAddress>(),
+                new List<EdFiEducationOrganizationCategory>(), new List<EdFiSchoolGradeLevel>(),
+                new EdFiLocalEducationAgencyReference(LocalEducationAgencyId));
+
+            var mockOdsRestClient = new Mock<IOdsRestClient>();
+            var filters = new Dictionary<string, object>
+            {
+                {"localEducationAgencyId", LocalEducationAgencyId}
+            };
+            mockOdsRestClient.Setup(x => x.GetAll<EdFiSchool>(ResourcePaths.Schools, filters)).Returns(new List<EdFiSchool>
+            {
+                edfiSchool
+            });
+
+            _facade = new OdsApiFacade(_mapper, mockOdsRestClient.Object);
+
+            //Act
+            var result = _facade.GetSchoolsByLeaIds(new List<int> { LocalEducationAgencyId });
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Count.ShouldBeGreaterThan(0);
+            result.First().Name.ShouldBe("TestSchool");
+        }
+
+        [Test]
+        public void Should_GetSchoolsByParentEdOrgId_returns_exception_when_api_returns_not_ok_response()
+        {
+            // Arrange
+            const string errorMessage = "not found error";
+
+            var mockRestClient = new Mock<IRestClient>();
+            mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
+            mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
+            { StatusCode = HttpStatusCode.NotFound, ErrorMessage = errorMessage });
+
+            var mockTokenRetriever = new Mock<ITokenRetriever>();
+            mockTokenRetriever.Setup(x => x.ObtainNewBearerToken()).Returns("Token");
+
+            var mockOdsRestClient =
+                new OdsRestClient(_connectionInformation, mockRestClient.Object, mockTokenRetriever.Object);
+
+            _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
+
+            //Act
+            var ex = Assert.Throws<Exception>(() => _facade.GetSchoolsByLeaIds(new List<int> { LocalEducationAgencyId }));
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);

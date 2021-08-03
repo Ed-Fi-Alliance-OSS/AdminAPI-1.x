@@ -38,6 +38,23 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return _mapper.Map<List<Models.PsiSchool>>(response);
         }
 
+        public List<Models.School> GetSchoolsByLeaIds(IEnumerable<int> leaIds)
+        {
+            var response = new List<School>();
+
+            foreach (var leaId in leaIds)
+            {
+                var filters = new Dictionary<string, object>
+                {
+                    {"localEducationAgencyId", leaId}
+                };
+
+                response.AddRange(_restClient.GetAll<School>(ResourcePaths.Schools, filters));
+            }
+
+            return _mapper.Map<List<Models.School>>(response);
+        }
+
         public List<SelectOptionModel> GetLocalEducationAgencyCategories()
         {
             var response = _restClient.GetAll<DomainModels.EdFiDescriptor>(ResourcePaths.LocalEducationAgencyCategoryDescriptors);

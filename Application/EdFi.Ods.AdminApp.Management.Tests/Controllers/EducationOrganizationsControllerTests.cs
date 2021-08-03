@@ -498,6 +498,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         public void When_Perform_Get_Request_To_LocalEducationAgencyList_Return_Education_Organization_List()
         {
             // Arrange
+            var lea = new LocalEducationAgency();
+
             var schools = new List<School>
             {
                 new School()
@@ -505,7 +507,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 
             var leas = new List<LocalEducationAgency>
             {
-                new LocalEducationAgency()
+                lea
             };
 
             var psis = new List<PostSecondaryInstitution>
@@ -517,7 +519,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             const string localEducationAgencyCategory = "School";
             const string localEducationAgencyCategoryValue = "Namespace#School";
 
-            _mockOdsApiFacade.Setup(x => x.GetAllSchools()).Returns(schools);
+            _mockOdsApiFacade.Setup(x => x.GetSchoolsByLeaIds(new List<int>(){lea.EducationOrganizationId})).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
             _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionsByPage(0, Page<PostSecondaryInstitution>.DefaultPageSize + 1)).Returns(psis);
             _mockOdsApiFacadeFactory.Setup(x => x.Create())

@@ -111,6 +111,39 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return responseList; 
         }
 
+        public IReadOnlyList<T> GetAll<T>(string elementPath, Dictionary<string, object> filters) where T : class
+        {
+            var offset = 0;
+            const int limit = 50;
+
+            var request = OdsRequest(elementPath);
+            request.AddParameter("offset", offset);
+            request.AddParameter("limit", limit);
+
+            foreach (var (key, value) in filters)
+            {
+                request.AddParameter(key, value);
+            }
+
+            var responseList = new List<T>();
+            List<T> pageItems;
+
+            do
+            {
+                var restResponse = _restClient.Execute(request);
+                HandleErrorResponse(restResponse);
+
+                pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
+                responseList.AddRange(pageItems);
+
+                offset += limit;
+                request.Parameters.Single(x => x.Name == "offset").Value = offset;
+            }
+            while (pageItems.Count >= limit);
+
+            return responseList;
+        }
+
         public T GetById<T>(string elementPath, string id) where T : class
         {
             var request = OdsRequest(elementPath);

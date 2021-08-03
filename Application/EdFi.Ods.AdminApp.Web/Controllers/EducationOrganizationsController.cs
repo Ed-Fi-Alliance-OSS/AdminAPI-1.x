@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api;
@@ -264,10 +265,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public async Task<ActionResult> LocalEducationAgencyList(int pageNumber)
         {
             var api = await _odsApiFacadeFactory.Create();
-            var schools = api.GetAllSchools();
-
+            
             var localEducationAgencies =
                 await Page<LocalEducationAgency>.FetchAsync(GetLocalEducationAgencies, pageNumber);
+
+            var schools = api.GetSchoolsByLeaIds(
+                localEducationAgencies.Items.Select(x => x.EducationOrganizationId));
 
             var requiredApiDataExist = (await _odsApiFacadeFactory.Create()).DoesApiDataExist();
 

@@ -111,7 +111,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return responseList; 
         }
 
-        public IReadOnlyList<T> GetSchoolsByParentEdOrgId<T>(string elementPath, int edOrgId) where T : class
+        public IReadOnlyList<T> GetAll<T>(string elementPath, Dictionary<string, object> filters) where T : class
         {
             var offset = 0;
             const int limit = 50;
@@ -119,7 +119,11 @@ namespace EdFi.Ods.AdminApp.Management.Api
             var request = OdsRequest(elementPath);
             request.AddParameter("offset", offset);
             request.AddParameter("limit", limit);
-            request.AddParameter("localEducationAgencyId", edOrgId);
+
+            foreach (var (key, value) in filters)
+            {
+                request.AddParameter(key, value);
+            }
 
             var responseList = new List<T>();
             List<T> pageItems;

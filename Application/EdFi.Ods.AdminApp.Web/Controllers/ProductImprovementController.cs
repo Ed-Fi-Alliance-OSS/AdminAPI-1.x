@@ -15,12 +15,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     public class ProductImprovementController : ControllerBase
     {
         private readonly ApplicationConfigurationService _applicationConfigurationService;
-        private readonly ClaimSetCheckService _claimSetCheckService;
 
-        public ProductImprovementController(ApplicationConfigurationService applicationConfigurationService, ClaimSetCheckService claimSetCheckService)
+        public ProductImprovementController(ApplicationConfigurationService applicationConfigurationService)
         {
             _applicationConfigurationService = applicationConfigurationService;
-            _claimSetCheckService = claimSetCheckService;
         }
 
         public ActionResult EditConfiguration()
@@ -52,8 +50,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult EnableProductImprovementFirstTimeSetup(ProductImprovementModel model)
         {
             _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement);
-            var isRestartRequired = _claimSetCheckService.IsRestartRequired();
-            return RedirectToAction("PostSetup", "Home", new {setupCompleted = true, isRestartRequired});
+            return RedirectToAction("PostSetup", "Home", new {setupCompleted = true});
         }
     }
 }

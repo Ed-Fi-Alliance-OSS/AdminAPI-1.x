@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Azure;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -16,6 +17,7 @@ using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Security.DataAccess.Contexts;
 using Moq;
 using NUnit.Framework;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 {
@@ -72,6 +74,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
         
+            var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
 
             var command = new CompleteAzureFirstTimeSetupCommand(
                 mockUsersContext.Object,
@@ -85,7 +88,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockFirstTimeSetupService.Object,
                 mockRestartAppServicesCommand.Object,
                 mockAssessmentVendorAdjustment.Object,
-                mockLearningStandardsSetup.Object);
+                mockLearningStandardsSetup.Object,
+                mockClaimSetCheckService.Object);
 
             await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
 
@@ -145,6 +149,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
 
+            var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
+            mockClaimSetCheckService.Setup(a => a.RequiredClaimSetsExist()).Returns(false);
+
             var command = new CompleteAzureFirstTimeSetupCommand(
                 mockUsersContext.Object,
                 mockSqlConfigurator.Object,
@@ -157,7 +164,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockFirstTimeSetupService.Object,
                 mockRestartAppServicesCommand.Object,
                 mockAssessmentVendorAdjustment.Object,
-                mockLearningStandardsSetup.Object);
+                mockLearningStandardsSetup.Object,
+                mockClaimSetCheckService.Object);
 
             await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
 

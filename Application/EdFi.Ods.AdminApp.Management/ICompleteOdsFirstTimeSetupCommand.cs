@@ -14,6 +14,6 @@ namespace EdFi.Ods.AdminApp.Management
     {
         Action ExtraDatabaseInitializationAction { get; set; }
 
-        Task Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode mode);
+        Task<bool> Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode mode);
     }
 }

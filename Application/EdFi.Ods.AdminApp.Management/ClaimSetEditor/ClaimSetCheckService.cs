@@ -8,7 +8,12 @@ using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
-    public class ClaimSetCheckService
+    public interface IClaimSetCheckService
+    {
+        bool RequiredClaimSetsExist();
+    }
+
+    public class ClaimSetCheckService : IClaimSetCheckService
     {
         private readonly ISecurityContext _securityContext;
 
@@ -17,9 +22,9 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             _securityContext = securityContext;
         }
 
-        public bool IsRestartRequired()
+        public bool RequiredClaimSetsExist()
         {
-            return !ClaimSetExists("AB Connect") || !ClaimSetExists("Ed-Fi ODS Admin App");
+            return ClaimSetExists(CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet) && ClaimSetExists(CloudOdsAdminApp.InternalAdminAppClaimSet);
 
             bool ClaimSetExists(string claimSetName)
             {

@@ -16,7 +16,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
     public class ClaimSetCheckServiceTests : SecurityDataTestBase
     {
         [Test]
-        public void ShouldNotRestartIfRequiredClaimSetsExist()
+        public void ShouldReturnTrueIfRequiredClaimSetsExist()
         {
             var testApplication = new Application
             {
@@ -24,21 +24,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            var testAbConnectClaimSet = new ClaimSet { ClaimSetName = "AB Connect", Application = testApplication };
+            var testAbConnectClaimSet = new ClaimSet { ClaimSetName = CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet, Application = testApplication };
             Save(testAbConnectClaimSet);
 
-            var testAdminAppClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi ODS Admin App", Application = testApplication };
+            var testAdminAppClaimSet = new ClaimSet { ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet, Application = testApplication };
             Save(testAdminAppClaimSet);
 
-            Scoped<ClaimSetCheckService>(service =>
+            Scoped<IClaimSetCheckService>(service =>
             {
-                var result = service.IsRestartRequired();
-                result.ShouldBeFalse();
+                var result = service.RequiredClaimSetsExist();
+                result.ShouldBeTrue();
             });
         }
 
         [Test]
-        public void ShouldRestartIfRequiredClaimSetsDoNotExist()
+        public void ShouldReturnFalseIfRequiredClaimSetsDoNotExist()
         {
             var testApplication = new Application
             {
@@ -46,10 +46,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            Scoped<ClaimSetCheckService>(service =>
+            Scoped<IClaimSetCheckService>(service =>
             {
-                var result = service.IsRestartRequired();
-                result.ShouldBeTrue();
+                var result = service.RequiredClaimSetsExist();
+                result.ShouldBeFalse();
             });
         }
     }

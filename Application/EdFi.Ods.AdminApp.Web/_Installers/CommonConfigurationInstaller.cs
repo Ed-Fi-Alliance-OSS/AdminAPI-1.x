@@ -99,7 +99,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddTransient<ApplicationConfigurationService>();
 
-            services.AddTransient<ClaimSetCheckService>();
+            services.AddTransient<IClaimSetCheckService, ClaimSetCheckService>();
 
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
             {

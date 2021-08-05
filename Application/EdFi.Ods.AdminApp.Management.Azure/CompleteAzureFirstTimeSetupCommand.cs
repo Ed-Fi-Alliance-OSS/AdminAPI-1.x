@@ -3,17 +3,17 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database.Models;
-using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Security.DataAccess.Contexts;
+using Action = System.Action;
 
 namespace EdFi.Ods.AdminApp.Management.Azure
 {
@@ -31,6 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
         private readonly IRestartAppServicesCommand _restartAppServicesCommand;
         private readonly IAssessmentVendorAdjustment _assessmentVendorAdjustment;
         private readonly ILearningStandardsSetup _learningStandardsSetup;
+        private readonly IClaimSetCheckService _claimSetCheckService;
 
         public Action ExtraDatabaseInitializationAction { get; set; }
 
@@ -46,11 +47,13 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             IOdsInstanceFirstTimeSetupService odsInstanceFirstTimeSetupService,
             IRestartAppServicesCommand restartAppServicesCommand,
             IAssessmentVendorAdjustment assessmentVendorAdjustment,
-            ILearningStandardsSetup learningStandardsSetup)
+            ILearningStandardsSetup learningStandardsSetup,
+            IClaimSetCheckService claimSetCheckService)
         {
             _restartAppServicesCommand = restartAppServicesCommand;
             _assessmentVendorAdjustment = assessmentVendorAdjustment;
             _learningStandardsSetup = learningStandardsSetup;
+            _claimSetCheckService = claimSetCheckService;
             _usersContext = usersContext;
             _cloudOdsSqlConfigurator = cloudOdsSqlConfigurator;
             _securityContext = securityContext;
@@ -62,11 +65,12 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             _odsInstanceFirstTimeSetupService = odsInstanceFirstTimeSetupService;
         }
         
-        public async Task Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode apiMode)
+        public async Task<bool> Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode apiMode)
         {
             var odsSqlConfiguration = await _odsSecretConfigurationProvider.GetSqlConfiguration();
             var cloudOdsInstance = await _getCloudOdsInstanceQuery.Execute(odsInstanceName);
             var firstTimeSetupConfiguration = await GetFirstTimeSetupConfiguration(cloudOdsInstance, claimSet, odsSqlConfiguration);
+            var restartRequired = false;
 
             SetupAndRuntimeConfigurations(firstTimeSetupConfiguration);
 
@@ -80,13 +84,21 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                 await _odsInstanceFirstTimeSetupService.CompleteSetup(defaultOdsInstance, claimSet, apiMode);
             }
 
-            CreateClaimSetForAdminApp(firstTimeSetupConfiguration.ClaimSet);
 
-            ApplyAdditionalClaimSetModifications();
+            if (!_claimSetCheckService.RequiredClaimSetsExist())
+            {
+                CreateClaimSetForAdminApp(firstTimeSetupConfiguration.ClaimSet);
+
+                ApplyAdditionalClaimSetModifications();
+
+                restartRequired = true;
+            }
 
             await _usersContext.SaveChangesAsync();
             await _securityContext.SaveChangesAsync();
             await _restartAppServicesCommand.Execute(new CloudOdsApiOperationContext(cloudOdsInstance));
+
+            return restartRequired;
         }
 
         private void SetupAndRuntimeConfigurations(OdsFirstTimeSetupConfiguration firstTimeSetupConfiguration)

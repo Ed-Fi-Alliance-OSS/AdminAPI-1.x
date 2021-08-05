@@ -20,6 +20,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.IO;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Common.Security;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Security.DataAccess.Contexts;
@@ -97,6 +98,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddTransient<ITelemetry, Telemetry>();
 
             services.AddTransient<ApplicationConfigurationService>();
+
+            services.AddTransient<IClaimSetCheckService, ClaimSetCheckService>();
 
             foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
             {

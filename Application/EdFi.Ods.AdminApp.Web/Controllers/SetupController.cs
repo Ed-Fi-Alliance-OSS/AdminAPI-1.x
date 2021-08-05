@@ -61,7 +61,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 //setup command gives us the access to run the schema init here.
                 _completeOdsFirstTimeSetupCommand.ExtraDatabaseInitializationAction = HangFireInstance.RemoveAllScheduledJobs;
 
-                await _completeOdsFirstTimeSetupCommand.Execute(_appSettings.DefaultOdsInstance, CloudOdsAdminAppClaimSetConfiguration.Default, CloudOdsAdminAppSettings.Instance.Mode);
+                var restartRequired = await _completeOdsFirstTimeSetupCommand.Execute(_appSettings.DefaultOdsInstance, CloudOdsAdminAppClaimSetConfiguration.Default, CloudOdsAdminAppSettings.Instance.Mode);
+
+                Response.Cookies.Append("RestartRequired", restartRequired.ToString());
             });
         }
         

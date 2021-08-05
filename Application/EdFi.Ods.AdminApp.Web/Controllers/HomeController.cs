@@ -3,9 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -47,7 +45,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Post Setup", TelemetryType.View)]
         public ActionResult PostSetup(bool setupCompleted = false)
         {
-            if (setupCompleted)
+            bool.TryParse(Request.Cookies["RestartRequired"], out var isRestartRequired);
+            Response.Cookies.Delete("RestartRequired");
+
+            if (setupCompleted && isRestartRequired)
             {
                 return View();
             }

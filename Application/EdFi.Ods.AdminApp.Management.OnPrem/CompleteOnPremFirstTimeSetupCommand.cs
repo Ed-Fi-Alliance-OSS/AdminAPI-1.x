@@ -3,14 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Security.DataAccess.Contexts;
+using Action = System.Action;
 
 namespace EdFi.Ods.AdminApp.Management.OnPrem
 {
@@ -22,6 +23,7 @@ namespace EdFi.Ods.AdminApp.Management.OnPrem
         private readonly IOdsInstanceFirstTimeSetupService _firstTimeSetupService;
         private readonly IAssessmentVendorAdjustment _assessmentVendorAdjustment;
         private readonly ILearningStandardsSetup _learningStandardsSetup;
+        private readonly IClaimSetCheckService _claimSetCheckService;
 
         public Action ExtraDatabaseInitializationAction { get; set; }
 
@@ -31,19 +33,22 @@ namespace EdFi.Ods.AdminApp.Management.OnPrem
             ICloudOdsClaimSetConfigurator cloudOdsClaimSetConfigurator,
             IOdsInstanceFirstTimeSetupService firstTimeSetupService,
             IAssessmentVendorAdjustment assessmentVendorAdjustment,
-            ILearningStandardsSetup learningStandardsSetup)
+            ILearningStandardsSetup learningStandardsSetup,
+            IClaimSetCheckService claimSetCheckService)
         {
             _assessmentVendorAdjustment = assessmentVendorAdjustment;
             _learningStandardsSetup = learningStandardsSetup;
+            _claimSetCheckService = claimSetCheckService;
             _usersContext = usersContext;
             _securityContext = securityContext;
             _cloudOdsClaimSetConfigurator = cloudOdsClaimSetConfigurator;
             _firstTimeSetupService = firstTimeSetupService;
         }
 
-        public async Task Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode apiMode)
+        public async Task<bool> Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode apiMode)
         {
             ExtraDatabaseInitializationAction?.Invoke();
+            var restartRequired = false;
 
             if (apiMode.SupportsSingleInstance)
             {
@@ -55,12 +60,19 @@ namespace EdFi.Ods.AdminApp.Management.OnPrem
                 await _firstTimeSetupService.CompleteSetup(defaultOdsInstance, claimSet, apiMode);
             }
 
-            CreateClaimSetForAdminApp(claimSet);
+            if (!_claimSetCheckService.RequiredClaimSetsExist())
+            {
+                CreateClaimSetForAdminApp(claimSet);
 
-            ApplyAdditionalClaimSetModifications();
+                ApplyAdditionalClaimSetModifications();
 
+                restartRequired = true;
+            }
+            
             await _usersContext.SaveChangesAsync();
             await _securityContext.SaveChangesAsync();
+
+            return restartRequired;
         }
 
         private void CreateClaimSetForAdminApp(CloudOdsClaimSet cloudOdsClaimSet)

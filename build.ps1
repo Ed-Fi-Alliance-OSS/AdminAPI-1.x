@@ -72,7 +72,7 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "PackageDatabaseScripts", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings")]
+    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "PackageDatabaseScripts", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -116,7 +116,12 @@ param(
 
     # Only required with the PopulateGoogleAnalyticsAppSettings command.
     [string]
-    $GoogleAnalyticsMeasurementId
+    $GoogleAnalyticsMeasurementId,
+
+    # Only required with the Run command.
+    [string]
+    [ValidateSet("mssql-district", "mssql-shared", "mssql-year", "pg-district", "pg-shared", "pg-year")]
+    $LaunchProfile
 )
 
 $Env:MSBUILDDISABLENODEREUSE = "1"
@@ -301,6 +306,18 @@ function Invoke-Build {
     Invoke-Step { Compile }
 }
 
+function Invoke-Run {
+    Write-Host "Running Admin App" -ForegroundColor Cyan
+
+    $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApp.Web"
+
+    if ([string]::IsNullOrEmpty($LaunchProfile)) {
+        Write-Host "LaunchProfile parameter is required for running Admin App. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'" -ForegroundColor Red
+    } else {
+        Invoke-Execute { dotnet run --project $projectFilePath --launch-profile $LaunchProfile }
+    }
+}
+
 function Invoke-Clean {
     Invoke-Step { Clean }
 }
@@ -397,6 +414,7 @@ Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }
+        Run { Invoke-Run }
         UnitTest { Invoke-UnitTests }
         IntegrationTest { Invoke-IntegrationTests }
         BuildAndTest {

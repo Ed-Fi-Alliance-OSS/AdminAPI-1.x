@@ -72,7 +72,7 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "PackageDatabaseScripts", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings")]
+    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "Push", "BuildAndTest", "PackageDatabaseScripts", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
     $Command = "Build",
 
     # Assembly and package version number. The current package number is
@@ -116,7 +116,12 @@ param(
 
     # Only required with the PopulateGoogleAnalyticsAppSettings command.
     [string]
-    $GoogleAnalyticsMeasurementId
+    $GoogleAnalyticsMeasurementId,
+
+    # Only required with the Run command.
+    [string]
+    [ValidateSet("mssql-district", "mssql-shared", "mssql-year", "pg-district", "pg-shared", "pg-year")]
+    $LaunchProfile
 )
 
 $Env:MSBUILDDISABLENODEREUSE = "1"
@@ -257,6 +262,17 @@ function RunNuGetPack {
     &$script:nugetExe @arguments
 }
 
+function NewDevCertificate {
+    Invoke-Command { dotnet dev-certs https -c }
+    if ($lastexitcode) {
+        Write-Host "Generating a new Dev Certificate" -ForegroundColor Magenta
+        Invoke-Execute { dotnet dev-certs https --clean }
+        Invoke-Execute { dotnet dev-certs https -t }
+    } else {
+        Write-Host "Dev Certificate already exists" -ForegroundColor Magenta
+    }
+}
+
 function GetPackagePreleaseVersion {
     return "$Version-pre$($BuildCounter.PadLeft(4,'0'))"
 }
@@ -299,6 +315,20 @@ function Invoke-Build {
     Invoke-Step { Restore }
     Invoke-Step { AssemblyInfo }
     Invoke-Step { Compile }
+}
+
+function Invoke-Run {
+    Write-Host "Running Admin App" -ForegroundColor Cyan
+
+    Invoke-Step { NewDevCertificate }
+
+    $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApp.Web"
+
+    if ([string]::IsNullOrEmpty($LaunchProfile)) {
+        Write-Host "LaunchProfile parameter is required for running Admin App. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'" -ForegroundColor Red
+    } else {
+        Invoke-Execute { dotnet run --project $projectFilePath --launch-profile $LaunchProfile }
+    }
 }
 
 function Invoke-Clean {
@@ -397,6 +427,7 @@ Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }
+        Run { Invoke-Run }
         UnitTest { Invoke-UnitTests }
         IntegrationTest { Invoke-IntegrationTests }
         BuildAndTest {

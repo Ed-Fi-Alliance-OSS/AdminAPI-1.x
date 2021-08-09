@@ -262,6 +262,17 @@ function RunNuGetPack {
     &$script:nugetExe @arguments
 }
 
+function NewDevCertificate {
+    Invoke-Command { dotnet dev-certs https -c }
+    if ($lastexitcode) {
+        Write-Host "Generating a new Dev Certificate" -ForegroundColor Magenta
+        Invoke-Execute { dotnet dev-certs https --clean }
+        Invoke-Execute { dotnet dev-certs https -t }
+    } else {
+        Write-Host "Dev Certificate already exists" -ForegroundColor Magenta
+    }
+}
+
 function GetPackagePreleaseVersion {
     return "$Version-pre$($BuildCounter.PadLeft(4,'0'))"
 }
@@ -308,6 +319,8 @@ function Invoke-Build {
 
 function Invoke-Run {
     Write-Host "Running Admin App" -ForegroundColor Cyan
+
+    Invoke-Step { NewDevCertificate }
 
     $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApp.Web"
 

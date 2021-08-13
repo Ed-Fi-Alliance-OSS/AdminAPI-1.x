@@ -53,7 +53,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { setupCompleted });
         }
 
         public ActionResult Error()

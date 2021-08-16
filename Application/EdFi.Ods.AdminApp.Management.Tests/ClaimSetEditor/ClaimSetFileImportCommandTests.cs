@@ -230,7 +230,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 var validator = new ClaimSetFileImportModelValidator(securityContext);
                 var validationResults = validator.Validate(importModel);
                 validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("Invalid file extension. Only json files are allowed.");
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("Invalid file extension. Only '*.json' files are allowed.");
             });
         }
 

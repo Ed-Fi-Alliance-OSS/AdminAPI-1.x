@@ -44,9 +44,9 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
                         {
                             var validator = new SharingModelValidator(securityContext, context.PropertyName);
 
-                            if (Path.GetExtension(model.ImportFile.FileName)?.Substring(1) != "json")
+                            if (Path.GetExtension(model.ImportFile.FileName)?.ToLower() != ".json")
                             {
-                                context.AddFailure("Invalid file extension. Only json files are allowed.");
+                                context.AddFailure("Invalid file extension. Only '*.json' files are allowed.");
                             }
                             else
                             {

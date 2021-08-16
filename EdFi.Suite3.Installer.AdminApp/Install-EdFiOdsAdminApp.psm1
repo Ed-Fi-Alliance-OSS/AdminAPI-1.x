@@ -18,22 +18,21 @@ function Set-TlsVersion {
 }
 
 Import-Module "$PSScriptRoot/key-management.psm1"
-$env:PathResolverRepositoryOverride = "Ed-Fi-Ods;Ed-Fi-ODS-Implementation;"
-Import-Module -Force -Scope Global "$PSScriptRoot/Ed-Fi-ODS-Implementation/logistics/scripts/modules/path-resolver.psm1"
 
-Import-Module -Force $folders.modules.invoke("Environment/Prerequisites.psm1") -Scope Global
+$appCommonDirectory = "$PSScriptRoot/AppCommon"
+Import-Module -Force "$appCommonDirectory/Environment/Prerequisites.psm1" -Scope Global
 Set-TlsVersion
 Install-DotNetCore "C:\temp\tools"
 
-Import-Module -Force -Scope Global $folders.modules.invoke("utility/hashtable.psm1")
-Import-Module -Force $folders.modules.invoke("packaging/nuget-helper.psm1")
-Import-Module -Force $folders.modules.invoke("tasks/TaskHelper.psm1")
-Import-Module -Force $folders.modules.invoke("tools/ToolsHelper.psm1")
+Import-Module -Force "$appCommonDirectory/Utility/hashtable.psm1" -Scope Global
+Import-Module -Force "$appCommonDirectory/Utility/nuget-helper.psm1"
+Import-Module -Force "$appCommonDirectory/Utility/TaskHelper.psm1"
+Import-Module -Force "$appCommonDirectory/Utility/ToolsHelper.psm1"
 
 # Import the following with global scope so that they are available inside of script blocks
-Import-Module -Force $folders.modules.invoke("Application/Install.psm1") -Scope Global
-Import-Module -Force $folders.modules.invoke("Application/Uninstall.psm1") -Scope Global
-Import-Module -Force $folders.modules.invoke("Application/Configuration.psm1") -Scope Global
+Import-Module -Force "$appCommonDirectory/Application/Install.psm1" -Scope Global
+Import-Module -Force "$appCommonDirectory/Application/Uninstall.psm1" -Scope Global
+Import-Module -Force "$appCommonDirectory/Application/Configuration.psm1" -Scope Global
 
 $DbDeployVersion = "2.1.0"
 

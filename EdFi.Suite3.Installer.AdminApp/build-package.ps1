@@ -32,7 +32,9 @@ Invoke-Expression "$PSScriptRoot/prep-installer-package.ps1 $PSScriptRoot"
 
 $verbose = $PSCmdlet.MyInvocation.BoundParameters["Verbose"]
 
-Import-Module "$PSScriptRoot/../../Ed-Fi-ODS-Implementation/logistics/scripts/modules/packaging/create-package.psm1" -Force
+$appCommonUtilityDirectory = "$PSScriptRoot/AppCommon/Utility"
+
+Import-Module "$appCommonUtilityDirectory/create-package.psm1" -Force
 
 $parameters = @{
     PackageDefinitionFile = Resolve-Path "$PSScriptRoot/EdFi.Suite3.Installer.AdminApp.nuspec"

@@ -39,9 +39,11 @@ See the LICENSE and NOTICES files in the project root for more information.
             if (sessionStorage.getItem("LatestDatabaseChangeTimestamp") != null) {
                 $("#claim-set-warning-message").show();
             }
+            form[0].reset();
         };
         var errorAdditionalBehavior = function () {
             ClaimSetToastrMessage("There was an error while importing the Claimset");
+            form[0].reset();
         };
         var ajaxRequestData = {
             form: $(this),

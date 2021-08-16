@@ -215,6 +215,25 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
         }
 
+        [Test]
+        public void ShouldNotImportIfImportFileHasAnInvalidExtension()
+        {
+            var importModel = new ClaimSetFileImportModel();
+
+            var importFile = new Mock<IFormFile>();
+
+            importFile.Setup(f => f.FileName).Returns("testfile.xml");
+            importModel.ImportFile = importFile.Object;
+
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var validationResults = validator.Validate(importModel);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("Invalid file extension. Only '*.json' files are allowed.");
+            });
+        }
+
         private static ClaimSetFileImportModel GetImportModel(string testJson)
         {
             var byteArray = Encoding.UTF8.GetBytes(testJson);

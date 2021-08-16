@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -42,7 +43,15 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
                         .SafeCustom((model, context) =>
                         {
                             var validator = new SharingModelValidator(securityContext, context.PropertyName);
-                            context.AddFailures(validator.Validate(model.AsSharingModel()));
+
+                            if (Path.GetExtension(model.ImportFile.FileName)?.ToLower() != ".json")
+                            {
+                                context.AddFailure("Invalid file extension. Only '*.json' files are allowed.");
+                            }
+                            else
+                            {
+                                context.AddFailures(validator.Validate(model.AsSharingModel()));
+                            }
                         });
                 });
             }

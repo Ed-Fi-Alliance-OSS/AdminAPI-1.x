@@ -10,7 +10,7 @@ param (
     $PackageDirectory,
 
     [string]
-    $AppCommonVersion = "1.4.0",
+    $AppCommonVersion = "1.4.0-pre1183",
 
     [string]
     $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json"
@@ -19,15 +19,7 @@ $ErrorActionPreference = "Stop"
 
 Push-Location $PackageDirectory
 
-# This is a hack for TeamCity - create empty ODS and Implementation directories so that
-# the path resolver will be satified. When run locally this should have no impact.
-$edFiRepoContainer = "$PackageDirectory/../.."
-New-Item -ItemType Directory -Path "$edFiRepoContainer/Ed-Fi-ODS" -Force | Out-Null
-New-Item -ItemType Directory -Path "$edFiRepoContainer/Ed-Fi-ODS-Implementation" -Force | Out-Null
-
-$env:PathResolverRepositoryOverride = "Ed-Fi-Ods;Ed-Fi-ODS-Implementation;"
-Import-Module -Force -Scope Global "$edFiRepoContainer/Ed-Fi-ODS-Implementation/logistics/scripts/modules/path-resolver.psm1"
-Import-Module -Force $folders.modules.invoke("packaging/nuget-helper.psm1")
+Import-Module -Force "$PSScriptRoot/nuget-helper.psm1"
 
 # Download App Common
 $parameters = @{
@@ -38,25 +30,19 @@ $parameters = @{
 }
 $appCommonDirectory = Get-NugetPackage @parameters
 
-# Copy Ed-Fi-XYZ folders from App Common folder to current
-@(
-    "Ed-Fi-ODS"
-    "Ed-Fi-ODS-Implementation"
-) | ForEach-Object {
-    Copy-Item -Recurse -Path $appCommonDirectory/$_ -Destination $PackageDirectory -Force
-}
 
-# Move AppCommon's modules into Ed-Fi-ODS-Implementation so that they are discoverable with pathresolver
+# Move AppCommon's modules to a local AppCommon directory
 @(
     "Application"
     "Environment"
     "IIS"
+    "Utility"
 ) | ForEach-Object {
     $parameters = @{
         Recurse = $true
         Force = $true
         Path = "$appCommonDirectory/$_"
-        Destination = "$PackageDirectory/Ed-Fi-ODS-Implementation/logistics/scripts/modules"
+        Destination = "$PackageDirectory/AppCommon/$_"
     }
     Copy-Item @parameters
 }

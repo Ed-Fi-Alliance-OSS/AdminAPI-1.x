@@ -9,9 +9,10 @@ Param(
     $Scenario
 )
 
+Copy-Item -Path "$PSScriptRoot/../eng/key-management.psm1" -Destination "$PSScriptRoot/key-management.psm1"
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
-$PackageVersion = '2.1.0'
+$PackageVersion = '2.2.1'
 
 function Invoke-InstallSqlServer {
 

@@ -4,4 +4,4 @@
 -- See the LICENSE and NOTICES files in the project root for more information.
 
 ALTER TABLE adminapp.ApplicationConfigurations
-ADD ProductRegistrationId VARCHAR(255) NOT NULL DEFAULT '';
+ADD ProductRegistrationId VARCHAR(255) NULL DEFAULT '';

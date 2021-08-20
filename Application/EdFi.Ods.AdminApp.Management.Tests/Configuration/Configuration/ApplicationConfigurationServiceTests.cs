@@ -80,6 +80,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             EnableProductImprovement(enableProductImprovement: false, productRegistrationId: "");
             IsProductImprovementEnabled().ShouldBe((false, ""));
             Count<ApplicationConfiguration>().ShouldBe(1);
+
+            const string NullPersistedAsEmptyString = null;
+            EnableProductImprovement(enableProductImprovement: false, productRegistrationId: NullPersistedAsEmptyString);
+            IsProductImprovementEnabled().ShouldBe((false, ""));
+            Count<ApplicationConfiguration>().ShouldBe(1);
         }
 
         private bool AllowUserRegistrations()

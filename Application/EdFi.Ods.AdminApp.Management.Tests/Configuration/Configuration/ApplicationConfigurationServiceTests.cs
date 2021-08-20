@@ -69,6 +69,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             IsProductImprovementEnabled().ShouldBe((true, productRegistrationId));
             Count<ApplicationConfiguration>().ShouldBe(1);
 
+            productRegistrationId = Guid.NewGuid().ToString();
+            EnableProductImprovement(enableProductImprovement: true, productRegistrationId: "   " + productRegistrationId + "   ");
+            IsProductImprovementEnabled().ShouldBe((true, productRegistrationId));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
             // Although the product registration id would go unused upon disabling product improvement,
             // we still persist the value independently. This way, the user does not need to redetermine
             // their id if they later wish to enable product improvement again.

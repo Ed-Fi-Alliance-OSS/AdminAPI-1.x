@@ -8,5 +8,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
     public class ProductImprovementModel
     {
         public bool EnableProductImprovement { get; set; }
+
+        public string ProductRegistrationId { get; set; }
     }
 }

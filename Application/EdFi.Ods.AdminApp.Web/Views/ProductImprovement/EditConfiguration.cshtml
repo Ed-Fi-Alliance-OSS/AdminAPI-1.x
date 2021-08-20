@@ -35,12 +35,8 @@
                 {
                     @Html.ValidationSummary("", new { @class = "alert alert-danger" })
                 }
-                <div class="row form-group">
-                    <div class="col-xs-12">
-                        @Html.CheckBoxFor(x => x.EnableProductImprovement)
-                        @Html.Label("Enable Product Improvement")
-                    </div>
-                </div>
+                @Html.InputBlock(x => x.EnableProductImprovement)
+                @Html.InputBlock(x => x.ProductRegistrationId)
                 <div class="row form-group text-center">
                     <div class="col-xs-offset-4 col-xs-6">
                         @Html.ActionLink("Back", "Index", "Home", null, new { @class = "btn btn-primary cta" })

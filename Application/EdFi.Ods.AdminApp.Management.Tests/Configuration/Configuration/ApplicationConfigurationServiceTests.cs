@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
@@ -22,10 +23,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             EnsureZeroApplicationConfiguration();
             AllowUserRegistrations().ShouldBe(true);
 
-            EnsureOneApplicationConfiguration(allowRegistration: true, enableProductImprovement: false);
+            EnsureOneApplicationConfiguration(allowRegistration: true, enableProductImprovement: false, productRegistrationId: "");
             AllowUserRegistrations().ShouldBe(true);
 
-            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false);
+            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false, productRegistrationId: "");
             AllowUserRegistrations().ShouldBe(true);
         }
 
@@ -45,26 +46,39 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
         {
             EnsureOneUser();
 
-            EnsureOneApplicationConfiguration(allowRegistration: true, enableProductImprovement: false);
+            EnsureOneApplicationConfiguration(allowRegistration: true, enableProductImprovement: false, productRegistrationId: "");
             AllowUserRegistrations().ShouldBe(true);
 
-            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false);
+            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false, productRegistrationId: "");
             AllowUserRegistrations().ShouldBe(false);
         }
 
         [Test]
-        public void ShouldViewAndSaveEnableProductImprovement()
+        public void ShouldViewAndSaveEnableProductImprovementWithOptionalProductRegistrationId()
         {
-            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false);
-            IsProductImprovementEnabled().ShouldBe(false);
+            EnsureOneApplicationConfiguration(allowRegistration: false, enableProductImprovement: false, productRegistrationId: "");
+            IsProductImprovementEnabled().ShouldBe((false, ""));
             Count<ApplicationConfiguration>().ShouldBe(1);
 
-            EnableProductImprovement(enableProductImprovement: true);
-            IsProductImprovementEnabled().ShouldBe(true);
+            EnableProductImprovement(enableProductImprovement: true, productRegistrationId: "");
+            IsProductImprovementEnabled().ShouldBe((true, ""));
             Count<ApplicationConfiguration>().ShouldBe(1);
 
-            EnableProductImprovement(enableProductImprovement: false);
-            IsProductImprovementEnabled().ShouldBe(false);
+            var productRegistrationId = Guid.NewGuid().ToString();
+            EnableProductImprovement(enableProductImprovement: true, productRegistrationId: productRegistrationId);
+            IsProductImprovementEnabled().ShouldBe((true, productRegistrationId));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            // Although the product registration id would go unused upon disabling product improvement,
+            // we still persist the value independently. This way, the user does not need to redetermine
+            // their id if they later wish to enable product improvement again.
+            productRegistrationId = Guid.NewGuid().ToString();
+            EnableProductImprovement(enableProductImprovement: false, productRegistrationId: productRegistrationId);
+            IsProductImprovementEnabled().ShouldBe((false, productRegistrationId));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            EnableProductImprovement(enableProductImprovement: false, productRegistrationId: "");
+            IsProductImprovementEnabled().ShouldBe((false, ""));
             Count<ApplicationConfiguration>().ShouldBe(1);
         }
 
@@ -83,30 +97,31 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             });
         }
 
-        private bool IsProductImprovementEnabled()
+        private (bool, string) IsProductImprovementEnabled()
         {
             return Transaction(database =>
             {
                 bool enableProductImprovement = false;
+                string productRegistrationId = "";
 
                 Scoped<AdminAppIdentityDbContext>(identity =>
                 {
                     enableProductImprovement = new ApplicationConfigurationService(database, identity)
-                        .IsProductImprovementEnabled();
+                        .IsProductImprovementEnabled(out productRegistrationId);
                 });
 
-                return enableProductImprovement;
+                return (enableProductImprovement, productRegistrationId);
             });
         }
 
-        private void EnableProductImprovement(bool enableProductImprovement)
+        private void EnableProductImprovement(bool enableProductImprovement, string productRegistrationId)
         {
             Transaction(database =>
             {
                 Scoped<AdminAppIdentityDbContext>(identity =>
                 {
                     new ApplicationConfigurationService(database, identity).EnableProductImprovement(
-                        enableProductImprovement);
+                        enableProductImprovement, productRegistrationId);
                 });
             });
         }
@@ -116,13 +131,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             DeleteAll<ApplicationConfiguration>();
         }
 
-        private void EnsureOneApplicationConfiguration(bool allowRegistration, bool enableProductImprovement)
+        private void EnsureOneApplicationConfiguration(bool allowRegistration, bool enableProductImprovement, string productRegistrationId)
         {
             Transaction(database =>
             {
                 var config = database.EnsureSingle<ApplicationConfiguration>();
                 config.AllowUserRegistration = allowRegistration;
                 config.EnableProductImprovement = enableProductImprovement;
+                config.ProductRegistrationId = productRegistrationId;
             });
         }
 

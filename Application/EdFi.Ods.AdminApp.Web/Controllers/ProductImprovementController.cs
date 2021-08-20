@@ -25,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var model = new ProductImprovementModel
             {
-                EnableProductImprovement = _applicationConfigurationService.IsProductImprovementEnabled()
+                EnableProductImprovement = _applicationConfigurationService.IsProductImprovementEnabled(out _)
             };
             return View(model);
         }
@@ -33,7 +33,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult EditConfiguration(ProductImprovementModel model)
         {
-            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement);
+            var temporaryEmptyProductImprovementId = "";
+            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement, temporaryEmptyProductImprovementId);
             return RedirectToAction("Index", "Home");
         }
 
@@ -41,7 +42,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         {
             var model = new ProductImprovementModel
             {
-                EnableProductImprovement = _applicationConfigurationService.IsProductImprovementEnabled()
+                EnableProductImprovement = _applicationConfigurationService.IsProductImprovementEnabled(out _)
             };
             return View(model);
         }
@@ -49,7 +50,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [HttpPost]
         public ActionResult EnableProductImprovementFirstTimeSetup(ProductImprovementModel model)
         {
-            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement);
+            var temporaryEmptyProductRegistrationId = "";
+            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement, temporaryEmptyProductRegistrationId);
             return RedirectToAction("PostSetup", "Home", new {setupCompleted = true});
         }
     }

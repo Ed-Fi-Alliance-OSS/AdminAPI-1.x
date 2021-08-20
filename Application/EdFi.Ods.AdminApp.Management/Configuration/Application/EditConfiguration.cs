@@ -44,6 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
             public void Execute(Command request)
             {
                 var config = _database.EnsureSingle<ApplicationConfiguration>();
+                config.ProductRegistrationId ??= "";
 
                 config.AllowUserRegistration = request.AllowUserRegistration;
 

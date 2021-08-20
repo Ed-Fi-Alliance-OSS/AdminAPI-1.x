@@ -36,7 +36,9 @@
                     @Html.ValidationSummary("", new { @class = "alert alert-danger" })
                 }
                 @Html.InputBlock(x => x.EnableProductImprovement)
-                @Html.InputBlock(x => x.ProductRegistrationId)
+                <div id="ProductRegistrationIdWrapper">
+                    @Html.InputBlock(x => x.ProductRegistrationId)
+                </div>
                 <div class="row form-group">
                     <div class="col-xs-12">
                         @Html.SaveButton("Proceed").AddClass("no-ajax").RemoveClass("cta")
@@ -46,3 +48,17 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function ($) {
+            var isInitiallyChecked = $('#EnableProductImprovement').is(":checked");
+            $('#ProductRegistrationIdWrapper').toggle(isInitiallyChecked);
+
+            $('#EnableProductImprovement').change(function (e) {
+                $('#ProductRegistrationIdWrapper').slideToggle();
+            });
+        });
+    </script>
+}

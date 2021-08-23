@@ -3,10 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.ComponentModel.DataAnnotations;
+
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
 {
     public class ProductImprovementModel
     {
         public bool EnableProductImprovement { get; set; }
+
+        [Display(Name = "Product Registration ID")]
+        public string ProductRegistrationId { get; set; }
     }
 }

@@ -41,13 +41,24 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
 
         public bool IsProductImprovementEnabled()
         {
-            return _database.EnsureSingle<ApplicationConfiguration>().EnableProductImprovement;
+            return IsProductImprovementEnabled(out _);
         }
 
-        public void EnableProductImprovement(bool enableProductImprovement)
+        public bool IsProductImprovementEnabled(out string productRegistrationId)
+        {
+            var config = _database.EnsureSingle<ApplicationConfiguration>();
+            var enableProductImprovement = config.EnableProductImprovement;
+
+            productRegistrationId = config.ProductRegistrationId;
+
+            return enableProductImprovement;
+        }
+
+        public void EnableProductImprovement(bool enableProductImprovement, string productRegistrationId)
         {
             var config = _database.EnsureSingle<ApplicationConfiguration>();
             config.EnableProductImprovement = enableProductImprovement;
+            config.ProductRegistrationId = (productRegistrationId ?? "").Trim();
             _database.SaveChanges();
         }
 

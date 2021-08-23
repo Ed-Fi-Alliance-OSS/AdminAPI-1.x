@@ -35,11 +35,9 @@
                 {
                     @Html.ValidationSummary("", new { @class = "alert alert-danger" })
                 }
-                <div class="row form-group">
-                    <div class="col-xs-12">
-                        @Html.CheckBoxFor(x => x.EnableProductImprovement)
-                        @Html.Label("Enable Product Improvement")
-                    </div>
+                @Html.InputBlock(x => x.EnableProductImprovement)
+                <div id="ProductRegistrationIdWrapper">
+                    @Html.InputBlock(x => x.ProductRegistrationId)
                 </div>
                 <div class="row form-group">
                     <div class="col-xs-12">
@@ -50,3 +48,17 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function ($) {
+            var isInitiallyChecked = $('#EnableProductImprovement').is(":checked");
+            $('#ProductRegistrationIdWrapper').toggle(isInitiallyChecked);
+
+            $('#EnableProductImprovement').change(function (e) {
+                $('#ProductRegistrationIdWrapper').slideToggle();
+            });
+        });
+    </script>
+}

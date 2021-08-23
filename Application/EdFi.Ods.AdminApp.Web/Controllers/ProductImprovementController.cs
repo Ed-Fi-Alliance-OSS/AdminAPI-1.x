@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
@@ -23,34 +22,43 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult EditConfiguration()
         {
-            var model = new ProductImprovementModel
-            {
-                EnableProductImprovement = _applicationConfigurationService.IsProductImprovementEnabled()
-            };
-            return View(model);
+            return View(GetProductImprovementModel());
         }
 
         [HttpPost]
         public ActionResult EditConfiguration(ProductImprovementModel model)
         {
-            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement);
+            SaveProductImprovementModel(model);
             return RedirectToAction("Index", "Home");
         }
 
         public ActionResult EnableProductImprovementFirstTimeSetup()
         {
-            var model = new ProductImprovementModel
-            {
-                EnableProductImprovement = _applicationConfigurationService.IsProductImprovementEnabled()
-            };
-            return View(model);
+            return View(GetProductImprovementModel());
         }
 
         [HttpPost]
         public ActionResult EnableProductImprovementFirstTimeSetup(ProductImprovementModel model)
         {
-            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement);
+            SaveProductImprovementModel(model);
             return RedirectToAction("PostSetup", "Home", new {setupCompleted = true});
+        }
+
+        private ProductImprovementModel GetProductImprovementModel()
+        {
+            var enableProductImprovement =
+                _applicationConfigurationService.IsProductImprovementEnabled(out var productRegistrationId);
+
+            return new ProductImprovementModel
+            {
+                EnableProductImprovement = enableProductImprovement,
+                ProductRegistrationId = productRegistrationId
+            };
+        }
+
+        private void SaveProductImprovementModel(ProductImprovementModel model)
+        {
+            _applicationConfigurationService.EnableProductImprovement(model.EnableProductImprovement, model.ProductRegistrationId);
         }
     }
 }

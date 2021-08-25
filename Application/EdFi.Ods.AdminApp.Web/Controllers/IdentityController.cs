@@ -31,10 +31,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly RegisterCommand _registerCommand;
         private readonly EditUserRoleCommand _editUserRoleCommand;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
+        private readonly IProductRegistration _productRegistration;
 
         public IdentityController(ApplicationConfigurationService applicationConfiguration, RegisterCommand registerCommand, EditUserRoleCommand editUserRoleCommand, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery,
             SignInManager<AdminAppUser> signInManager,
-            UserManager<AdminAppUser> userManager)
+            UserManager<AdminAppUser> userManager,
+            IProductRegistration productRegistration)
         {
             _applicationConfiguration = applicationConfiguration;
             _registerCommand = registerCommand;
@@ -42,6 +44,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
             _signInManager = signInManager;
             _userManager = userManager;
+            _productRegistration = productRegistration;
         }
 
         [AllowAnonymous]
@@ -73,6 +76,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (result.Succeeded)
             {
+                await _productRegistration.NotifyWhenEnabled();
+
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)

@@ -7,10 +7,10 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using log4net;
 using Microsoft.AspNetCore.Http;
@@ -23,14 +23,13 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
     public interface IProductRegistration
     {
-        Task NotifyWhenEnabled();
+        Task NotifyWhenEnabled(AdminAppUser user);
     }
 
     public class ProductRegistration : IProductRegistration
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ProductRegistration));
 
-        private readonly AdminAppUserContext _userContext;
         private readonly AdminAppDbContext _database;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ApplicationConfigurationService _applicationConfigurationService;
@@ -40,12 +39,10 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         public ProductRegistration(
             IOptions<AppSettings> appSettingsAccessor,
-            AdminAppUserContext userContext,
             AdminAppDbContext database,
             IHttpContextAccessor httpContextAccessor,
             ApplicationConfigurationService applicationConfigurationService)
         {
-            _userContext = userContext;
             _database = database;
             _httpContextAccessor = httpContextAccessor;
             _applicationConfigurationService = applicationConfigurationService;
@@ -55,7 +52,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             _productRegistrationUrl = appSettings.ProductRegistrationUrl;
         }
 
-        public async Task NotifyWhenEnabled()
+        public async Task NotifyWhenEnabled(AdminAppUser user)
         {
             try
             {
@@ -65,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
                 if (productImprovementEnabled && productRegistrationUrlAvailable && productRegistrationIdAvailable)
                 {
-                    await Notify(BuildProductRegistrationModel(productRegistrationId));
+                    await Notify(BuildProductRegistrationModel(productRegistrationId, user));
                 }
             }
             catch (Exception exception)
@@ -108,7 +105,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
         }
 
-        private ProductRegistrationModel BuildProductRegistrationModel(string productRegistrationId)
+        private ProductRegistrationModel BuildProductRegistrationModel(string productRegistrationId, AdminAppUser user)
         {
             var singleOdsApiConnection = new ProductRegistrationModel.OdsApiConnection
             {
@@ -129,8 +126,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                 OsVersion = OsVersion(),
                 DatabaseVersion = DatabaseVersion(),
                 HostName = HostName(),
-                UserId = _userContext?.User?.Id ?? "",
-                UserName = _userContext?.User?.UserName ?? "",
+                UserId = user?.Id ?? "",
+                UserName = user?.UserName ?? "",
                 UtcTimeStamp = DateTime.UtcNow
             };
         }

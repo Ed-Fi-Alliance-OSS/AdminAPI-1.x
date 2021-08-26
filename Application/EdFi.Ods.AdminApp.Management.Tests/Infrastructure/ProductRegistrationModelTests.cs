@@ -23,8 +23,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure
             var model = new ProductRegistrationModel
             {
                 ProductRegistrationId = "0031cc17-0fe7-4a98-92d8-179065ff35ea",
-                OdsApiVersion = "5.2",
-                OdsApiMode = "YearSpecific",
+
+                OdsApiConnections = new[]
+                {
+                    new ProductRegistrationModel.OdsApiConnection()
+                    {
+                        OdsApiVersion = "5.2",
+                        OdsApiMode = "YearSpecific",
+                    }
+                },
+                
                 ProductVersion = "2.2.1",
                 OsVersion = "Windows 95",
                 DatabaseVersion = "Microsoft SQL Server 2019 (RTM-GDR) (KB4583458) - 15.0.2080.9 (X64)   Nov  6 2020 16:50:01   Copyright (C) 2019 Microsoft Corporation  Developer Edition (64-bit) on Windows 10 Pro 10.0 <X64> (Build 19042: ) ",
@@ -36,8 +44,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure
 
             model.Serialize().ShouldBe(@"{
   ""ProductRegistrationId"": ""0031cc17-0fe7-4a98-92d8-179065ff35ea"",
-  ""OdsApiVersion"": ""5.2"",
-  ""OdsApiMode"": ""YearSpecific"",
+  ""OdsApiConnections"": [
+    {
+      ""OdsApiVersion"": ""5.2"",
+      ""OdsApiMode"": ""YearSpecific""
+    }
+  ],
   ""ProductType"": ""Admin App"",
   ""ProductVersion"": ""2.2.1"",
   ""OSVersion"": ""Windows 95"",

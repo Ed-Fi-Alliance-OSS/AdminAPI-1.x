@@ -110,11 +110,21 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         private ProductRegistrationModel BuildProductRegistrationModel(string productRegistrationId)
         {
+            var singleOdsApiConnection = new ProductRegistrationModel.OdsApiConnection
+            {
+                OdsApiVersion = OdsApiVersion(),
+                OdsApiMode = _odsApiMode
+            };
+
             return new ProductRegistrationModel
             {
                 ProductRegistrationId = productRegistrationId,
-                OdsApiVersion = OdsApiVersion(),
-                OdsApiMode = _odsApiMode,
+
+                // Naturally Admin App always has 1 connection. This property supports an array
+                // in case other Ed-Fi applications need to report multiple connections using the
+                // same JSON model.
+                OdsApiConnections = new[] { singleOdsApiConnection },
+
                 ProductVersion = ProductVersion(),
                 OsVersion = OsVersion(),
                 DatabaseVersion = DatabaseVersion(),

@@ -10,11 +10,16 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 {
     public class ProductRegistrationModel
     {
+        /*
+         * IMPORTANT: Because this model corresponds with the external product registration
+         *            endpoint, changes here could easily break data collection. This model
+         *            may also be used by other Ed-Fi applications, so apply model changes
+         *            with great care.
+         */
+
         public string ProductRegistrationId { get; set; }
 
-        public string OdsApiVersion { get; set; }
-
-        public string OdsApiMode { get; set; }
+        public OdsApiConnection[] OdsApiConnections { get; set; }
 
         public string ProductType => "Admin App";
 
@@ -34,5 +39,12 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         public DateTime UtcTimeStamp { get; set; }
 
         public string Serialize() => JsonConvert.SerializeObject(this, Formatting.Indented);
+
+        public class OdsApiConnection
+        {
+            public string OdsApiVersion { get; set; }
+
+            public string OdsApiMode { get; set; }
+        }
     }
 }

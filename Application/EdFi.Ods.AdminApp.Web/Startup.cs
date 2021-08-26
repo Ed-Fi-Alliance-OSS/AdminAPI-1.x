@@ -26,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -200,6 +201,9 @@ namespace EdFi.Ods.AdminApp.Web
 
                             var body = await reader.ReadToEndAsync();
 
+                            var logger = LogManager.GetLogger(typeof(Startup));
+                            logger.Debug($"Development Product Registration Sink Received Message: {Environment.NewLine}{body}");
+                            
                             var model = JsonConvert.DeserializeObject<ProductRegistrationModel>(body);
 
                             context.Response.StatusCode = (int)HttpStatusCode.OK;

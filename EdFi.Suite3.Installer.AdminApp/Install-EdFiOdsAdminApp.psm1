@@ -303,6 +303,7 @@ function Install-EdFiOdsAdminApp {
     }
 
     $elapsed = Use-StopWatch {
+        $result += Invoke-InstallationPreCheck -Config $Config
         $result += Initialize-Configuration -Config $config
         $result += Get-AdminAppPackage -Config $Config
         $result += Get-DbDeploy -Config $Config
@@ -446,7 +447,7 @@ function Upgrade-EdFiOdsAdminApp {
     }
 
     $elapsed = Use-StopWatch {
-        $result += Invoke-ApplicationUpgarde -Config $Config
+        $result += Invoke-ApplicationUpgrade -Config $Config
         $result += Get-AdminAppPackage -Config $Config
         $result += Get-DbDeploy -Config $Config
         $result += Invoke-TransferAppsettings -Config $Config
@@ -545,7 +546,57 @@ function Uninstall-EdFiOdsAdminApp {
     }
 }
 
-function Invoke-ApplicationUpgarde {
+
+function Invoke-InstallationPreCheck{
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $existingWebSiteName = $Config.WebsiteName
+        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        $existingAdminAppApplication = get-webapplication $Config.WebApplicationName
+
+        if($webSite -AND $existingAdminAppApplication)
+        {
+            $existingApplicationPath = ($existingAdminAppApplication).PhysicalPath
+            $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
+            $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
+            if($isVersionCompatible)
+            {
+                Write-Host "Found the compatible version($versionString) of Admin App exists." -ForegroundColor Green
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation or enter 'n' to stop the installation and do the
+                upgrade( Note: On upgrade all appsettings and connection
+                string values will be copied over from existing application folder) using upgrade.ps1"
+                if($confirmation -ieq 'y')
+                {
+                    $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
+                    if(Test-Path -Path $appsettingsFile)
+                    {
+                        Write-Host "Copying the encryption key from existing appsettings.json file at $appsettingsFile"
+                        $appSettings = Get-Content $appsettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+                        $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
+                    }
+                }
+                else
+                {
+                    Write-Warning "Exiting the installation."
+                    exit
+                }
+            }
+            else
+            {
+                Write-Warning "Found that existing version($versionString) of Admin App is not compatible with 2.2 and later.
+                Please make sure to have updated EdFi_Admin database."
+            }
+        }
+    }
+}
+
+function Invoke-ApplicationUpgrade {
     [CmdletBinding()]
     param (
         [hashtable]
@@ -554,30 +605,49 @@ function Invoke-ApplicationUpgarde {
     )
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
 
-        Write-Host "Taking application files back up."
         $existingWebSiteName = $Config.WebsiteName
         $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
         if($null -eq $webSite)
         {
             Write-Warning "Unable to find $existingWebSiteName on IIS."
-            $customWebSiteName = Read-Host -Prompt "If Ed-Fi website hosted with custom name, please enter the custom website name or please use install.ps1
-            for installing the Ed-Fi website."
-            $existingWebSiteName =  $customWebSiteName
+            $customWebSiteName = Read-Host -Prompt "If Ed-Fi website hosted with custom name, please enter the custom website name or
+            please suspend upgrade process and use install.ps1
+            for installing Ed-Fi web site if it is not installed already"
+            $customWebSite = get-website | where-object { $_.name -eq $customWebSiteName }
+            if($null -eq $customWebSite)
+            {
+                throw "Unable to find $customWebSite on IIS. Please use install.ps1 for installing Ed-Fi website."
+            }
+            $existingWebSiteName =  $customWebSite
         }
-        Stop-IISSite -Name $existingWebSiteName
-
         $existingAdminAppApplication = get-webapplication $Config.WebApplicationName
         if($null -eq $existingAdminAppApplication)
         {
             Write-Warning "Unable to find $existingAdminAppApplication on IIS."
-            $customApplicationName = Read-Host -Prompt "If Admin App web application hosted with custom name, please enter the custom application name"
-            $existingAdminAppApplication =  $customApplicationName
+            $customApplicationName = Read-Host -Prompt "If Admin App web application hosted with custom name, please enter the custom application name or
+            please suspend upgrade process and use install.ps1 for installing AdminApp web application if it is not installed already"
+            $customAdminAppApplication = get-webapplication $customApplicationName
+            if($null -eq $customAdminAppApplication)
+            {
+                throw "Unable to find $customAdminAppApplication on IIS. Please use install.ps1 for installing AdminApp web application."
+            }
+            $existingAdminAppApplication =  $customAdminAppApplication
         }
+
         $existingApplicationPath = ($existingAdminAppApplication).PhysicalPath
+        $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
+        $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
+        if(-not $isVersionCompatible)
+        {
+            throw "Upgrade Admin app option not supported on existing version $versionString. Only supported from version 2.2 onwards.
+            Please consider installing Admin App using install.ps1, and make sure that comaptible EdFi_data"
+        }
+
+        Write-Host "Stopping the $existingWebSiteName before taking application files back up."
+        Stop-IISSite -Name $existingWebSiteName
         Write-Host "Taking back up on existing application folder $existingApplicationPath"
-        $existingApplicationVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
-        $date = Get-Date -Format d.MM.yyyy
-        $backupApplicationFolderName = "AdminApp-$existingApplicationVersion-$date"
+        $date = Get-Date -Format dd.MM.yyyy
+        $backupApplicationFolderName = "AdminApp-$versionString-$date"
         $basePath = (get-item $existingApplicationPath).parent.FullName
         $destinationBackupPath = "$basePath\$backupApplicationFolderName\"
 
@@ -615,6 +685,22 @@ function Invoke-ApplicationUpgarde {
     }
 }
 
+function IsExistingApplicationVersionCompatible{
+    param (
+        [String] $versionString
+    )
+    $requiredMajor = 2
+    $requiredMinor = 2
+    $existingApplicationVersion = [System.Version]::Parse($versionString)
+
+    if($existingApplicationVersion.Major -lt $requiredMajor -OR
+    ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
+    {
+        return $false
+    }
+    return $true
+}
+
 function Invoke-TransferAppsettings {
     [CmdletBinding()]
     param (
@@ -625,15 +711,13 @@ function Invoke-TransferAppsettings {
 
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
 
-        Write-Host $Config.ApplicationBackupPath
-        Write-Host $Config.WebConfigLocation
-        #Write-Host $Config.ApplicationBackupPath
 
         $backUpPath = $Config.ApplicationBackupPath
+        Write-Warning "The following appsettings will be copied over from existing application: "
         $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'AppStartup', 'EncryptionKey', 'Log4NetConfigFileName')
-
-        #Write-Warning "Following app settings values will be copied from existing appsettings ($backUpPath)."
-        Write-Host $appSettings | format-list
+        foreach ($property in $appSettings) {
+            $property;
+        }
         $oldSettingsFile =  Join-Path $backUpPath "appsettings.json"
         $oldSettings = Get-Content $oldSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
 
@@ -782,9 +866,15 @@ function Invoke-TransformAppSettings {
         $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'
         $settings.AppSettings.DatabaseEngine = $config.engine
         $settings.AppSettings.AppStartup = $Config.AppStartUp
+
         if(!$settings.AppSettings.EncryptionKey)
         {
-            $settings.AppSettings.EncryptionKey = New-AESKey
+            $encryptionKey = New-AESKey
+            if($Config.ContainsKey("EncryptionKey") -AND $Config.EncryptionKey)
+            {
+                $encryptionKey = $Config.EncryptionKey
+            }
+            $settings.AppSettings.EncryptionKey = $encryptionKey
         }
         if("OnPrem" -ieq $Config.AppStartup)
         {

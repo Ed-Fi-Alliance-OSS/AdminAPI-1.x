@@ -139,7 +139,14 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
         private string HostName()
         {
-            return Try(() => _httpContextAccessor.HttpContext.Request.Host.Value);
+            return Try(() =>
+            {
+                var requestHost = _httpContextAccessor.HttpContext.Request.Host;
+
+                return requestHost.HasValue
+                    ? requestHost.Host
+                    : null;
+            });
         }
 
         private static string ProductVersion()

@@ -101,7 +101,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                     "The product registration POST failed. This may happen if the product registration service " +
                     "is temporarily unavailable or blocked on your network. This notice is merely informational " +
                     "and does not limit Admin App functionality. The attempted POST returned with status code " +
-                    $"{response.StatusCode} ({response.StatusDescription})");
+                    $"{(int)response.StatusCode} ({response.StatusDescription}).");
             }
         }
 

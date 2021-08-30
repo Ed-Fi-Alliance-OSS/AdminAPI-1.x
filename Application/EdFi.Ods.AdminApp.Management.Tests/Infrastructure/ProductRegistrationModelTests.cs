@@ -31,6 +31,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure
                     {
                         OdsApiVersion = "5.2",
                         OdsApiMode = "YearSpecific",
+                        InstanceCount = 5
                     }
                 },
                 
@@ -49,7 +50,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Infrastructure
                     .AppendLine(@"  ""OdsApiConnections"": [")
                     .AppendLine(@"    {")
                     .AppendLine(@"      ""OdsApiVersion"": ""5.2"",")
-                    .AppendLine(@"      ""OdsApiMode"": ""YearSpecific""")
+                    .AppendLine(@"      ""OdsApiMode"": ""YearSpecific"",")
+                    .AppendLine(@"      ""InstanceCount"": 5")
                     .AppendLine(@"    }")
                     .AppendLine(@"  ],")
                     .AppendLine(@"  ""ProductType"": ""Admin App"",")

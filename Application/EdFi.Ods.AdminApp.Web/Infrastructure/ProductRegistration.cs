@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Ods.AdminApp.Management.Instances;
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         private readonly AdminAppDbContext _database;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ApplicationConfigurationService _applicationConfigurationService;
+        private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
 
         private readonly string _odsApiMode;
         private readonly string _productRegistrationUrl;
@@ -41,11 +43,13 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             IOptions<AppSettings> appSettingsAccessor,
             AdminAppDbContext database,
             IHttpContextAccessor httpContextAccessor,
-            ApplicationConfigurationService applicationConfigurationService)
+            ApplicationConfigurationService applicationConfigurationService,
+            IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
         {
             _database = database;
             _httpContextAccessor = httpContextAccessor;
             _applicationConfigurationService = applicationConfigurationService;
+            _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
 
             var appSettings = appSettingsAccessor.Value;
             _odsApiMode = appSettings.ApiStartupType;
@@ -110,7 +114,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             var singleOdsApiConnection = new ProductRegistrationModel.OdsApiConnection
             {
                 OdsApiVersion = OdsApiVersion(),
-                OdsApiMode = _odsApiMode
+                OdsApiMode = _odsApiMode,
+                InstanceCount = InstanceCount()
             };
 
             return new ProductRegistrationModel
@@ -151,6 +156,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl)));
         }
 
+        private int? InstanceCount()
+        {
+            return Try(() => _getOdsInstanceRegistrationsQuery.ExecuteCount());
+        }
+
         private static string OsVersion()
         {
             return Try(() => OSVersion.VersionString);
@@ -183,6 +193,21 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
 
             return value ?? "";
+        }
+
+        private static int? Try(Func<int> getValue, [CallerMemberName] string caller = null)
+        {
+            try
+            {
+                return getValue();
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"Could not determine '{caller}' when submitting product registration. " +
+                              "This notice is merely diagnostic and does not limit Admin App functionality.", exception);
+            }
+
+            return null;
         }
     }
 }

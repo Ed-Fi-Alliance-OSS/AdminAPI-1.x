@@ -45,6 +45,8 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             public string OdsApiVersion { get; set; }
 
             public string OdsApiMode { get; set; }
+
+            public int? InstanceCount { get; set; }
         }
     }
 }

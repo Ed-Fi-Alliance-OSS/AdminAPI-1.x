@@ -146,11 +146,11 @@ function Install-EdFiOdsAdminApp {
 
         # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
         [string]
-        $ToolsPath = "C:\temp\tools",
+        $ToolsPath = "$PSScriptRoot/tools",
 
-        # Path for storing downloaded packages
+        # Path for storing downloaded packages. Default: "./downloads".
         [string]
-        $DownloadPath = "C:\temp\downloads",
+        $DownloadPath = "$PSScriptRoot/downloads",
 
         # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
         [string]
@@ -359,11 +359,11 @@ function Upgrade-EdFiOdsAdminApp {
 
         # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
         [string]
-        $ToolsPath = "C:\temp\tools",
+        $ToolsPath = "$PSScriptRoot/tools",
 
-        # Path for storing downloaded packages
+        # Path for storing downloaded packages. Default: "./downloads".
         [string]
-        $DownloadPath = "C:\temp\downloads",
+        $DownloadPath = "$PSScriptRoot/downloads",
 
         # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
         [string]
@@ -569,7 +569,7 @@ function Invoke-InstallationPreCheck{
             {
                 Write-Host "Found the compatible version($versionString) of Admin App exists." -ForegroundColor Green
                 $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation or enter 'n' to stop the installation and do the
-                upgrade( Note: On upgrade all appsettings and connection
+                upgrade( Note: On upgrade - all the appsettings and connection
                 string values will be copied over from existing application folder) using upgrade.ps1"
                 if($confirmation -ieq 'y')
                 {
@@ -591,6 +591,7 @@ function Invoke-InstallationPreCheck{
             {
                 Write-Warning "Found that existing version($versionString) of Admin App is not compatible with 2.2 and later.
                 Please make sure to have updated EdFi_Admin database."
+                exit
             }
         }
     }
@@ -640,7 +641,7 @@ function Invoke-ApplicationUpgrade {
         if(-not $isVersionCompatible)
         {
             throw "Upgrade Admin app option not supported on existing version $versionString. Only supported from version 2.2 onwards.
-            Please consider installing Admin App using install.ps1, and make sure that comaptible EdFi_data"
+            Please consider installing Admin App using install.ps1, and make sure to have compatible EdFi_Admin database."
         }
 
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."

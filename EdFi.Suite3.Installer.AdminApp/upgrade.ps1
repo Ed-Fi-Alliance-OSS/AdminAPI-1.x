@@ -6,7 +6,7 @@
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
 $p = @{
-    ToolsPath = "C:/temp/tools"
+    ToolsPath = "$PSScriptRoot/tools"
     PackageVersion = '2.2.1'
 }
 

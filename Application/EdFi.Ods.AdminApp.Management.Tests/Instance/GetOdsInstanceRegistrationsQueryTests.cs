@@ -33,6 +33,24 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             results.Select(x => x.Name).ShouldBe(testInstances.Select(x => x.Name));
         }
 
+        [TestCase(1)]
+        [TestCase(5)]
+        public void ShouldGetAdminAppOdsInstanceCount(int instanceCount)
+        {
+            ResetOdsInstanceRegistrations();
+
+            SetupOdsInstanceRegistrations(instanceCount).OrderBy(x => x.Name).ToList();
+
+            var result = Transaction(database =>
+            {
+                var command = new GetOdsInstanceRegistrationsQuery(database);
+
+                return command.ExecuteCount();
+            });
+
+            result.ShouldBe(instanceCount);
+        }
+
         [Test]
         public void ShouldGetAdminAppOdsInstanceById()
         {

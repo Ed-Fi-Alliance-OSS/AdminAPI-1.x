@@ -3,9 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -14,10 +17,17 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     public class ProductImprovementController : ControllerBase
     {
         private readonly ApplicationConfigurationService _applicationConfigurationService;
-
-        public ProductImprovementController(ApplicationConfigurationService applicationConfigurationService)
+        private readonly IProductRegistration _productRegistration;
+        private readonly AdminAppUserContext _userContext;
+        
+        public ProductImprovementController(
+            ApplicationConfigurationService applicationConfigurationService,
+            IProductRegistration productRegistration,
+            AdminAppUserContext userContext)
         {
             _applicationConfigurationService = applicationConfigurationService;
+            _productRegistration = productRegistration;
+            _userContext = userContext;
         }
 
         public ActionResult EditConfiguration()
@@ -26,9 +36,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditConfiguration(ProductImprovementModel model)
+        public async Task<ActionResult> EditConfiguration(ProductImprovementModel model)
         {
             SaveProductImprovementModel(model);
+            await _productRegistration.NotifyWhenEnabled(_userContext.User);
             return RedirectToAction("Index", "Home");
         }
 
@@ -38,9 +49,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult EnableProductImprovementFirstTimeSetup(ProductImprovementModel model)
+        public async Task<ActionResult> EnableProductImprovementFirstTimeSetup(ProductImprovementModel model)
         {
             SaveProductImprovementModel(model);
+            await _productRegistration.NotifyWhenEnabled(_userContext.User);
             return RedirectToAction("PostSetup", "Home", new {setupCompleted = true});
         }
 

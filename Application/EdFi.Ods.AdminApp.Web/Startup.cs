@@ -5,6 +5,8 @@
 
 using System;
 using System.Data.Entity;
+using System.IO;
+using System.Net;
 using System.Reflection;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
@@ -14,6 +16,7 @@ using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Hubs;
+using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,12 +26,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -185,6 +191,29 @@ namespace EdFi.Ods.AdminApp.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<ProductionLearningStandardsHub>("/productionLearningStandardsHub");
                 endpoints.MapHub<BulkUploadHub>("/bulkUploadHub");
+
+                if (!env.IsProduction())
+                {
+                    endpoints.MapPost(
+                        "/development-product-registration-sink", async context =>
+                        {
+                            using var reader = new StreamReader(context.Request.Body);
+
+                            var body = await reader.ReadToEndAsync();
+
+                            var logger = LogManager.GetLogger(typeof(Startup));
+                            logger.Debug($"Development Product Registration Sink Received Message: {Environment.NewLine}{body}");
+                            
+                            var model = JsonConvert.DeserializeObject<ProductRegistrationModel>(body);
+
+                            context.Response.StatusCode = (int)HttpStatusCode.OK;
+
+                            await context.Response.WriteAsync(
+                                "Development Product Registration Sink received registration " +
+                                $"notification with ProductRegistrationId {model.ProductRegistrationId}. " +
+                                "This notification will NOT be reported to the Production registration endpoint.");
+                        });
+                }
             });
         }
 

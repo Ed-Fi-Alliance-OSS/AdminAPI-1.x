@@ -30,5 +30,6 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string EncryptionKey { get; set; }
 
         public string GoogleAnalyticsMeasurementId { get; set; }
+        public string ProductRegistrationUrl { get; set; }
     }
 }

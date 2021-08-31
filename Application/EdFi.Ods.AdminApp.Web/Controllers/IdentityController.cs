@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
+using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Identity;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -19,6 +20,7 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Identity;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.User;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -31,10 +33,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly RegisterCommand _registerCommand;
         private readonly EditUserRoleCommand _editUserRoleCommand;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
-
+        private readonly IProductRegistration _productRegistration;
+        private readonly AdminAppIdentityDbContext _identity;
+        
         public IdentityController(ApplicationConfigurationService applicationConfiguration, RegisterCommand registerCommand, EditUserRoleCommand editUserRoleCommand, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery,
             SignInManager<AdminAppUser> signInManager,
-            UserManager<AdminAppUser> userManager)
+            UserManager<AdminAppUser> userManager,
+            IProductRegistration productRegistration,
+            AdminAppIdentityDbContext identity)
         {
             _applicationConfiguration = applicationConfiguration;
             _registerCommand = registerCommand;
@@ -42,6 +48,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
             _signInManager = signInManager;
             _userManager = userManager;
+            _productRegistration = productRegistration;
+            _identity = identity;
         }
 
         [AllowAnonymous]
@@ -73,6 +81,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (result.Succeeded)
             {
+                var user = await _identity.Users.SingleOrDefaultAsync(x => x.UserName == model.Email);
+                
+                await _productRegistration.NotifyWhenEnabled(user);
+
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)

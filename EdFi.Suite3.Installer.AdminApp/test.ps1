@@ -94,7 +94,7 @@ function Invoke-Install-WithCustomSettings{
         Version = $version
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
-        WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp-Custom"
+        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
         WebApplicationName = "AdminApp-Custom"
     }
     Invoke-InstallApplication @p
@@ -123,7 +123,6 @@ function Invoke-Upgrade-InCompatibleVersion{
 }
 
 function Invoke-Upgrade-WithCustomSettings{
-    Invoke-Uninstall
 
     $existingApplicationVersion = '2.2.0'
     $version = '2.3.0-pre0003'
@@ -133,7 +132,7 @@ function Invoke-Upgrade-WithCustomSettings{
         Version = $existingApplicationVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
-        WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp-Custom"
+        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
         WebApplicationName = "AdminApp-Custom"
     }
     Invoke-InstallApplication @p

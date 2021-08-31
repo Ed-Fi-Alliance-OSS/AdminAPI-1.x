@@ -567,7 +567,7 @@ function Invoke-InstallationPreCheck{
             $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
             if($isVersionCompatible)
             {
-                Write-Host "Found the compatible version($versionString) of Admin App exists." -ForegroundColor Green
+                Write-Host "Found compatible version($versionString) of Admin App exists." -ForegroundColor Green
                 $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation or enter 'n' to stop the installation and do the
                 upgrade( Note: On upgrade - all the appsettings and connection
                 string values will be copied over from existing application folder) using upgrade.ps1"
@@ -619,12 +619,16 @@ function Invoke-ApplicationUpgrade {
             {
                 throw "Unable to find $customWebSite on IIS. Please use install.ps1 for installing Ed-Fi website."
             }
-            $existingWebSiteName =  $customWebSite
+            $webSite = $customWebSite
+            $existingWebSiteName =  $customWebSiteName
         }
-        $existingAdminAppApplication = get-webapplication $Config.WebApplicationName
-        if($null -eq $existingAdminAppApplication)
+        $existingWebSitePath = ($webSite).PhysicalPath
+
+        $existingAppName = $Config.WebApplicationName
+        $existingAdminApp = get-webapplication $existingAppName
+        if($null -eq $existingAdminApp)
         {
-            Write-Warning "Unable to find $existingAdminAppApplication on IIS."
+            Write-Warning "Unable to find $existingAppName on IIS."
             $customApplicationName = Read-Host -Prompt "If Admin App web application hosted with custom name, please enter the custom application name or
             please suspend upgrade process and use install.ps1 for installing AdminApp web application if it is not installed already"
             $customAdminAppApplication = get-webapplication $customApplicationName
@@ -632,10 +636,12 @@ function Invoke-ApplicationUpgrade {
             {
                 throw "Unable to find $customAdminAppApplication on IIS. Please use install.ps1 for installing AdminApp web application."
             }
-            $existingAdminAppApplication =  $customAdminAppApplication
+            $existingAdminApp =  $customAdminAppApplication
+            $existingAppName = $customApplicationName
         }
 
-        $existingApplicationPath = ($existingAdminAppApplication).PhysicalPath
+
+        $existingApplicationPath = ($existingAdminApp).PhysicalPath
         $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
         $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
         if(-not $isVersionCompatible)
@@ -647,8 +653,8 @@ function Invoke-ApplicationUpgrade {
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."
         Stop-IISSite -Name $existingWebSiteName
         Write-Host "Taking back up on existing application folder $existingApplicationPath"
-        $date = Get-Date -Format dd.MM.yyyy
-        $backupApplicationFolderName = "AdminApp-$versionString-$date"
+        $date = Get-Date -Format MM.dd.yyyy-hh.mm
+        $backupApplicationFolderName = "$existingAppName-$versionString-$date"
         $basePath = (get-item $existingApplicationPath).parent.FullName
         $destinationBackupPath = "$basePath\$backupApplicationFolderName\"
 
@@ -674,12 +680,16 @@ function Invoke-ApplicationUpgrade {
         Write-Host "Completed application files back up on $destinationBackupPath"
 
         $Config.ApplicationBackupPath = $destinationBackupPath
+        $Config.WebApplicationName = $existingAppName
+        $Config.WebApplicationPath = $existingApplicationPath
+        $Config.WebSiteName = $existingWebSiteName
+        $Config.WebSitePath = $existingWebSitePath
 
         $parameters = @{
             ToolsPath = $Config.ToolsPath
-            WebApplicationPath = $Config.WebApplicationPath
-            WebApplicationName = $Config.WebApplicationName
-            WebSiteName = $Config.WebSiteName
+            WebApplicationPath = $existingApplicationPath
+            WebApplicationName = $existingAppName
+            WebSiteName = $existingWebSiteName
             NoDuration = $Config.NoDuration
         }
         Uninstall-EdFiOdsAdminApp @parameters

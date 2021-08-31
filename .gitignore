@@ -62,6 +62,7 @@ libs.codegen/
 
 #EdFi.Installer.AdminApp Files
 EdFi.Suite3.Installer.AdminApp/downloads
+EdFi.Suite3.Installer.AdminApp/tools
 EdFi.Suite3.Installer.AdminApp/AppCommon
 EdFi.Suite3.Installer.AdminApp/key-management.psm1
 

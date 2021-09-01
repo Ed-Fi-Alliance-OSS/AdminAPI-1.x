@@ -137,7 +137,14 @@ function Invoke-Upgrade-WithCustomSettings{
     }
     Invoke-InstallApplication @p
 
-    Upgrade-EdFiOdsAdminApp -PackageVersion $version
+    $upgradeParam =  $p = @{
+        PackageVersion = $version
+        WebSiteName = "Ed-Fi-Custom"
+        WebSitePath = "c:\inetpub\Ed-Fi-Custom"
+        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationName = "AdminApp-Custom"
+    }
+    Upgrade-EdFiOdsAdminApp @upgradeParam
 }
 
 function Invoke-InstallMultiInstanceSqlServer {

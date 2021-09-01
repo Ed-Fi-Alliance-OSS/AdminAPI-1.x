@@ -13,7 +13,6 @@ using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using log4net;
@@ -90,30 +89,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 await setupAction();
                 _applicationConfigurationService.UpdateFirstTimeSetUpStatus(true);
                 _logger.Info("Setup process completed");
-                if (CloudOdsAdminAppSettings.Instance.Mode.SupportsSingleInstance)
-                {
-                    await WarmupApiServer();
-                }
-                _logger.Info("API warmup complete");
                 return SetupSucess();
             }
             catch (Exception e)
             {
                 _logger.Error("Setup failed", e);
                 return SetupFailure(e);
-            }
-        }
-
-        private async Task WarmupApiServer()
-        {
-            _logger.Info("Setup: Warming up API");
-            try
-            {
-                (await _odsApiFacadeFactory.Create()).WarmUp();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Setup: API Warmup Failed", ex);
             }
         }
 

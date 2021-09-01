@@ -2,11 +2,18 @@
 
 ## Contents
 
-* [Development Pre-Requisites](#development-pre-requisites)
-* [Build Script](#build-script)
-* [TeamCity Automation](#teamcity-automation)
-* [Running on Localhost](#running-on-localhost)
-* [Running in Docker](#running-in-docker)
+- [Admin App Developer Instructions](#admin-app-developer-instructions)
+  - [Contents](#contents)
+  - [Development Pre-Requisites](#development-pre-requisites)
+  - [Build Script](#build-script)
+  - [TeamCity Automation](#teamcity-automation)
+  - [Running on Localhost](#running-on-localhost)
+    - [Shared Instance](#shared-instance)
+    - [Year-Specific Mode](#year-specific-mode)
+    - [District-Specific Mode](#district-specific-mode)
+  - [Running in Docker](#running-in-docker)
+    - [Running Only the API in Docker](#running-only-the-api-in-docker)
+    - [Running a Local Build in Docker](#running-a-local-build-in-docker)
 
 For debugging on Azure, see [CloudODS Debugging](cloudods-debugging.md)
 
@@ -55,6 +62,9 @@ Available commands:
 * `.\build.ps1 package` builds pre-release and release NuGet packages for the
   Admin App web application.
 * `.\build.ps1 push` uploads a NuGet package to the NuGet feed.
+* `.\build.ps1 run` launches the Admin App from the build script. The LaunchProfile
+  parameter is required for running Admin App. Valid values include 'mssql-district'
+  , 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'
 
 Review the parameters at the top of `build.ps1` for additional command line
 arguments.

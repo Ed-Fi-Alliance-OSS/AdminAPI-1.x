@@ -660,7 +660,7 @@ function Invoke-ApplicationUpgrade {
         Stop-IISSite -Name $existingWebSiteName
 
         Write-Host "Taking back up on existing application folder $existingApplicationPath"
-        $date = Get-Date -Format MM.dd.yyyy-hh.mm
+        $date = Get-Date -Format yyyy-MM-dd-hh-mm
         $backupApplicationFolderName = "$existingAppName-$versionString-$date"
         $basePath = (get-item $existingApplicationPath).parent.FullName
         $destinationBackupPath = "$basePath\$backupApplicationFolderName\"

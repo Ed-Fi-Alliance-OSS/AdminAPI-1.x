@@ -13,6 +13,9 @@ Copy-Item -Path "$PSScriptRoot/../eng/key-management.psm1" -Destination "$PSScri
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
 $PackageVersion = '2.2.1'
+$existingCompatibleVersion = '2.2.0'
+$existingInCompatibleVersion = '2.1.0'
+$newVersion = '2.3.0-pre0003'
 
 function Invoke-InstallSqlServer {
 
@@ -62,36 +65,25 @@ function Invoke-InstallApplication{
 
 function Invoke-Install-CompatibleVersion {
 
-    $existingApplicationVersion = '2.2.0'
-    $version = '2.3.0-pre0003'
-
-    Invoke-InstallApplication $existingApplicationVersion
+    Invoke-InstallApplication $existingCompatibleVersion
 
     # Install newer version
-    Invoke-InstallApplication $version
+    Invoke-InstallApplication $newVersion
 }
 
 function Invoke-Install-InCompatibleVersion {
 
-    $existingApplicationVersion = '2.1.0'
-    $version = '2.3.0-pre0003'
-
-    Invoke-InstallApplication $existingApplicationVersion
+    Invoke-InstallApplication $existingInCompatibleVersion
 
     # Install newer version
-    Invoke-InstallApplication $version
+    Invoke-InstallApplication $newVersion
 }
 
 function Invoke-Install-WithCustomSettings{
 
-    $existingApplicationVersion = '2.1.0'
-    $version = '2.3.0-pre0003'
-
-    Invoke-InstallApplication $existingApplicationVersion
-
     # Install with custom web site and web application names
     $p = @{
-        Version = $version
+        Version = $newVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
         WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
@@ -102,34 +94,26 @@ function Invoke-Install-WithCustomSettings{
 
 function Invoke-Upgrade-CompatibleVersion{
 
-    $existingApplicationVersion = '2.2.0'
-    $version = '2.3.0-pre0003'
-
-    Invoke-InstallApplication $existingApplicationVersion
+    Invoke-InstallApplication $existingCompatibleVersion
 
     # Upgrade to newer version
-    Upgrade-EdFiOdsAdminApp -PackageVersion $version
+    Upgrade-EdFiOdsAdminApp -PackageVersion $newVersion
 
 }
 
 function Invoke-Upgrade-InCompatibleVersion{
-    $existingApplicationVersion = '2.1.0'
-    $version = '2.3.0-pre0003'
 
-    Invoke-InstallApplication $existingApplicationVersion
+    Invoke-InstallApplication $existingInCompatibleVersion
 
     # Upgrade to newer version
-    Upgrade-EdFiOdsAdminApp -PackageVersion $version
+    Upgrade-EdFiOdsAdminApp -PackageVersion $newVersion
 }
 
 function Invoke-Upgrade-WithCustomSettings{
 
-    $existingApplicationVersion = '2.2.0'
-    $version = '2.3.0-pre0003'
-
     # Install with custom web site and web application names
     $p = @{
-        Version = $existingApplicationVersion
+        Version = $existingCompatibleVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
         WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
@@ -138,7 +122,7 @@ function Invoke-Upgrade-WithCustomSettings{
     Invoke-InstallApplication @p
 
     $upgradeParam =  $p = @{
-        PackageVersion = $version
+        PackageVersion = $newVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
         WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"

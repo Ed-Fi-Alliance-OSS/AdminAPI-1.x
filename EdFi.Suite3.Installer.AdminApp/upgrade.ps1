@@ -5,6 +5,15 @@
 
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
+<#
+Admin App will be upgraded to provided version. Appsettings values and connection strings will be copied over from existing Admin App application.
+
+.EXAMPLE
+    $p = @{
+    ToolsPath = "$PSScriptRoot/tools"
+    PackageVersion = '2.2.1' }
+#>
+
 $p = @{
     ToolsPath = "$PSScriptRoot/tools"
     PackageVersion = '2.2.1'

@@ -565,7 +565,7 @@ function Invoke-InstallationPreCheck{
             $existingApplicationPath = ($existingAdminAppApplication).PhysicalPath
             if(!$existingApplicationPath)
             {
-                 # In case of existingApplicationPath is empty, then generating application physical path by combining site physical path and application path
+                # In case of existingApplicationPath is empty, then generating application physical path by combining site physical path and application path
                 $sitePath = $webSite.PhysicalPath
                 $appPath = $existingAdminAppApplication.path.trimstart('/')
                 $existingApplicationPath = "$sitePath\$appPath"
@@ -574,14 +574,14 @@ function Invoke-InstallationPreCheck{
             $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
             if($isVersionCompatible)
             {
-                Write-Host "Found compatible version($versionString) of Admin App exists." -ForegroundColor Green
-                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation or enter 'n' to stop the installation and do the upgrade( Note: On upgrade - all the appsettings and connection string values will be copied over from existing application folder) using upgrade.ps1"
+                Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
                 if($confirmation -ieq 'y')
                 {
                     $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
                     if(Test-Path -Path $appsettingsFile)
                     {
-                        Write-Host "Copying the encryption key from existing appsettings.json file at $appsettingsFile"
+                        Write-Host "To ensure your existing ODS / API Key and Secret values will continue to work, your existing encryption key is being copied forward from the appsettings.json file at $appsettingsFile"
                         $appSettings = Get-Content $appsettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
                         $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
                     }
@@ -594,7 +594,7 @@ function Invoke-InstallationPreCheck{
             }
             else
             {
-                Write-Warning "Found that existing version($versionString) of Admin App is not compatible with 2.2 and later. Please refer https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
                 exit
             }
         }
@@ -615,7 +615,7 @@ function Invoke-ApplicationUpgrade {
         if($null -eq $webSite)
         {
             Write-Warning "Unable to find $existingWebSiteName on IIS."
-            $customWebSiteName = Read-Host -Prompt "If Ed-Fi website hosted with custom name, please enter the custom website name"
+            $customWebSiteName = Read-Host -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
             $customWebSite = get-website | where-object { $_.name -eq $customWebSiteName }
             if($null -eq $customWebSite)
             {
@@ -631,7 +631,7 @@ function Invoke-ApplicationUpgrade {
         if($null -eq $existingAdminApp)
         {
             Write-Warning "Unable to find $existingAppName on IIS."
-            $customApplicationName = Read-Host -Prompt "If Admin App web application hosted with custom name, please enter the custom application name"
+            $customApplicationName = Read-Host -Prompt "If you previously installed AdminApp with a custom name, please enter that custom name"
             $customAdminAppApplication = get-webapplication $customApplicationName
             if($null -eq $customAdminAppApplication)
             {
@@ -653,7 +653,7 @@ function Invoke-ApplicationUpgrade {
         $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
         if(-not $isVersionCompatible)
         {
-            throw "Upgrade Admin app option not supported on existing version $versionString. Only supported from version 2.2+. Please refer https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+            throw "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
         }
 
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."
@@ -732,7 +732,7 @@ function Invoke-TransferAppsettings {
 
         $backUpPath = $Config.ApplicationBackupPath
         Write-Warning "The following appsettings will be copied over from existing application: "
-        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'AppStartup', 'EncryptionKey', 'Log4NetConfigFileName')
+        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'AppStartup', 'EncryptionKey', 'ApiStartupType', 'ApiExternalUrl', 'XsdFolder', 'PathBase', 'Log4NetConfigFileName')
         foreach ($property in $appSettings) {
            Write-Host $property;
         }
@@ -747,6 +747,10 @@ function Invoke-TransferAppsettings {
         $newSettings.AppSettings.DatabaseEngine = $oldSettings.AppSettings.DatabaseEngine
         $newSettings.AppSettings.AppStartup = $oldSettings.AppSettings.AppStartup
         $newSettings.AppSettings.EncryptionKey = $oldSettings.AppSettings.EncryptionKey
+        $newSettings.AppSettings.ApiStartupType = $oldSettings.AppSettings.ApiStartupType
+        $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
+        $newSettings.AppSettings.XsdFolder = $oldSettings.AppSettings.XsdFolder
+        $newSettings.AppSettings.PathBase = $oldSettings.AppSettings.PathBase
         $newSettings.Log4NetCore.Log4NetConfigFileName = $oldSettings.Log4NetCore.Log4NetConfigFileName
 
         $EmptyHashTable=@{}

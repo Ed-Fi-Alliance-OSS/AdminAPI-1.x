@@ -9,11 +9,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using log4net;
@@ -28,19 +26,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
       
         private readonly ICompleteOdsFirstTimeSetupCommand _completeOdsFirstTimeSetupCommand;
         private readonly ICompleteOdsPostUpdateSetupCommand _completeOdsPostUpdateSetupCommand;
-        private readonly IOdsApiFacadeFactory _odsApiFacadeFactory;
         private readonly ApplicationConfigurationService _applicationConfigurationService;
         private readonly AppSettings _appSettings;
 
         public SetupController(ICompleteOdsFirstTimeSetupCommand completeOdsFirstTimeSetupCommand
             , ICompleteOdsPostUpdateSetupCommand completeOdsPostUpdateSetupCommand
-            , IOdsApiFacadeFactory odsApiFacadeFactory
             , ApplicationConfigurationService applicationConfigurationService
             , IOptions<AppSettings> appSettingsAccessor)
         {
             _completeOdsFirstTimeSetupCommand = completeOdsFirstTimeSetupCommand;
             _completeOdsPostUpdateSetupCommand = completeOdsPostUpdateSetupCommand;
-            _odsApiFacadeFactory = odsApiFacadeFactory;
             _applicationConfigurationService = applicationConfigurationService;
             _appSettings = appSettingsAccessor.Value;
         }
@@ -90,30 +85,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 await setupAction();
                 _applicationConfigurationService.UpdateFirstTimeSetUpStatus(true);
                 _logger.Info("Setup process completed");
-                if (CloudOdsAdminAppSettings.Instance.Mode.SupportsSingleInstance)
-                {
-                    await WarmupApiServer();
-                }
-                _logger.Info("API warmup complete");
                 return SetupSucess();
             }
             catch (Exception e)
             {
                 _logger.Error("Setup failed", e);
                 return SetupFailure(e);
-            }
-        }
-
-        private async Task WarmupApiServer()
-        {
-            _logger.Info("Setup: Warming up API");
-            try
-            {
-                (await _odsApiFacadeFactory.Create()).WarmUp();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Setup: API Warmup Failed", ex);
             }
         }
 

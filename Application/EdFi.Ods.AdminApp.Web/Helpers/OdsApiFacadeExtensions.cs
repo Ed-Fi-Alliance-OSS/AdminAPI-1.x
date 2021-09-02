@@ -20,11 +20,5 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
                     .Union(odsApiFacade.GetAllSchools().Select(mapper.Map<EducationOrganizationModel>))
                     .ToList();
         }
-
-        public static void WarmUp(this IOdsApiFacade odsApiFacade)
-        {
-            odsApiFacade.GetAllLocalEducationAgencies();
-            odsApiFacade.GetAllGradeLevels();
-        }
     }
 }

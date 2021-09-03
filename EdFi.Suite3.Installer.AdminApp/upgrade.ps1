@@ -11,12 +11,12 @@ Your existing appsettings.json config values and connection strings will be copi
 
 .EXAMPLE
     $p = @{
-    ToolsPath = "$PSScriptRoot/tools"
+    ToolsPath = "C:/temp/tools"
     PackageVersion = '2.2.1' }
 #>
 
 $p = @{
-    ToolsPath = "$PSScriptRoot/tools"
+    ToolsPath = "C:/temp/tools"
     PackageVersion = '2.2.1'
 }
 

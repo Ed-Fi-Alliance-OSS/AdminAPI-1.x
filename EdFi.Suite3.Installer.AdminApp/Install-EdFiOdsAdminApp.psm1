@@ -144,13 +144,13 @@ function Install-EdFiOdsAdminApp {
         [string]
         $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
 
-        # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
+        # Path for storing installation tools, e.g. nuget.exe. Default: "C:\temp\tools".
         [string]
-        $ToolsPath = "$PSScriptRoot/tools",
+        $ToolsPath = "C:\temp\tools",
 
-        # Path for storing downloaded packages. Default: "./downloads".
+        # Path for storing downloaded packages
         [string]
-        $DownloadPath = "$PSScriptRoot/downloads",
+        $DownloadPath = "C:\temp\downloads",
 
         # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
         [string]
@@ -357,13 +357,13 @@ function Upgrade-EdFiOdsAdminApp {
         [string]
         $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
 
-        # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
+        # Path for storing installation tools, e.g. nuget.exe. Default: "C:\temp\tools".
         [string]
-        $ToolsPath = "$PSScriptRoot/tools",
+        $ToolsPath = "C:\temp\tools",
 
-        # Path for storing downloaded packages. Default: "./downloads".
+        # Path for storing downloaded packages
         [string]
-        $DownloadPath = "$PSScriptRoot/downloads",
+        $DownloadPath = "C:\temp\downloads",
 
         # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
         [string]

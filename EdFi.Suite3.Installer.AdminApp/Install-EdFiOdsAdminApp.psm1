@@ -562,17 +562,9 @@ function Invoke-InstallationPreCheck{
 
         if($webSite -AND $existingAdminAppApplication)
         {
-            $existingApplicationPath = ($existingAdminAppApplication).PhysicalPath
-            if(!$existingApplicationPath)
-            {
-                # In case of existingApplicationPath is empty, then generating application physical path by combining site physical path and application path
-                $sitePath = $webSite.PhysicalPath
-                $appPath = $existingAdminAppApplication.path.trimstart('/')
-                $existingApplicationPath = "$sitePath\$appPath"
-            }
-            $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
-            $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
-            if($isVersionCompatible)
+            $sitePath = $webSite.PhysicalPath
+            $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
+            if($compatibleVersionIsInstalled)
             {
                 Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
                 $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
@@ -641,17 +633,8 @@ function Invoke-ApplicationUpgrade {
             $existingAppName = $customApplicationName
         }
 
-        $existingApplicationPath = ($existingAdminApp).PhysicalPath
-        if(!$existingApplicationPath)
-        {
-            # In case of existingApplicationPath is empty, then generating application physical path by combining site physical path and application path
-            $appPath = $existingAdminApp.path.trimstart('/')
-            $existingApplicationPath = "$existingWebSitePath\$appPath"
-        }
-
-        $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
-        $isVersionCompatible = IsExistingApplicationVersionCompatible $versionString
-        if(-not $isVersionCompatible)
+        $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
+        if(-not $compatibleVersionIsInstalled)
         {
             throw "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
         }
@@ -703,10 +686,17 @@ function Invoke-ApplicationUpgrade {
     }
 }
 
-function IsExistingApplicationVersionCompatible{
-    param (
-        [String] $versionString
-    )
+function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
+
+    $existingApplicationPath = ($existingAdminApp).PhysicalPath
+    if(!$existingApplicationPath)
+    {
+        # In case of existingApplicationPath is empty, then generating application physical path by combining site physical path and application path
+        $appPath = $existingAdminApp.path.trimstart('/')
+        $existingApplicationPath = "$webSitePath\$appPath"
+    }
+    $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
+
     $requiredMajor = 2
     $requiredMinor = 2
     $existingApplicationVersion = [System.Version]::Parse($versionString)
@@ -714,9 +704,13 @@ function IsExistingApplicationVersionCompatible{
     if($existingApplicationVersion.Major -lt $requiredMajor -OR
     ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
     {
-        return $false
+        $compatibleVersionIsInstalled  = $false
     }
-    return $true
+    else {
+        $compatibleVersionIsInstalled =$true
+    }
+
+    return $existingApplicationPath, $versionString, $compatibleVersionIsInstalled
 }
 
 function Invoke-TransferAppsettings {
@@ -891,10 +885,12 @@ function Invoke-TransformAppSettings {
 
         if(!$settings.AppSettings.EncryptionKey)
         {
-            $encryptionKey = New-AESKey
             if($Config.ContainsKey("EncryptionKey") -AND $Config.EncryptionKey)
             {
                 $encryptionKey = $Config.EncryptionKey
+            }
+            else {
+                $encryptionKey = New-AESKey
             }
             $settings.AppSettings.EncryptionKey = $encryptionKey
         }

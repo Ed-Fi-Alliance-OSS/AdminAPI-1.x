@@ -13,6 +13,9 @@ Copy-Item -Path "$PSScriptRoot/../eng/key-management.psm1" -Destination "$PSScri
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
 $PackageVersion = '2.2.1'
+$existingCompatibleVersion = '2.2.0'
+$existingInCompatibleVersion = '2.1.0'
+$newVersion = '2.3.0-pre0003'
 
 function Invoke-InstallSqlServer {
 
@@ -30,6 +33,102 @@ function Invoke-InstallSqlServer {
     }
 
     Install-EdFiOdsAdminApp @p
+}
+
+function Invoke-InstallApplication{
+    param(
+        [string] $Version,
+        [string] $WebSiteName = "Ed-Fi",
+        [string] $WebSitePath = "c:\inetpub\Ed-Fi",
+        [string] $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+        [string] $WebApplicationName = "AdminApp"
+    )
+
+    $dbConnectionInfo = @{
+        Server = "(local)"
+        Engine = "SqlServer"
+        UseIntegratedSecurity=$true
+    }
+
+    $p = @{
+        ToolsPath = "C:/temp/tools"
+        DbConnectionInfo = $dbConnectionInfo
+        OdsApiUrl = "http://example-web-api.com/WebApi"
+        PackageVersion = $Version
+        WebSiteName = $WebSiteName
+        WebSitePath = $WebSitePath
+        WebApplicationPath = $WebApplicationPath
+        WebApplicationName = $WebApplicationName
+    }
+    Install-EdFiOdsAdminApp @p
+}
+
+function Invoke-Install-CompatibleVersion {
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Install newer version
+    Invoke-InstallApplication $newVersion
+}
+
+function Invoke-Install-InCompatibleVersion {
+
+    Invoke-InstallApplication $existingInCompatibleVersion
+
+    # Install newer version
+    Invoke-InstallApplication $newVersion
+}
+
+function Invoke-Install-WithCustomSettings{
+
+    # Install with custom web site and web application names
+    $p = @{
+        Version = $newVersion
+        WebSiteName = "Ed-Fi-Custom"
+        WebSitePath = "c:\inetpub\Ed-Fi-Custom"
+        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationName = "AdminApp-Custom"
+    }
+    Invoke-InstallApplication @p
+}
+
+function Invoke-Upgrade-CompatibleVersion{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to newer version
+    Upgrade-EdFiOdsAdminApp -PackageVersion $newVersion
+
+}
+
+function Invoke-Upgrade-InCompatibleVersion{
+
+    Invoke-InstallApplication $existingInCompatibleVersion
+
+    # Upgrade to newer version
+    Upgrade-EdFiOdsAdminApp -PackageVersion $newVersion
+}
+
+function Invoke-Upgrade-WithCustomSettings{
+
+    # Install with custom web site and web application names
+    $p = @{
+        Version = $existingCompatibleVersion
+        WebSiteName = "Ed-Fi-Custom"
+        WebSitePath = "c:\inetpub\Ed-Fi-Custom"
+        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationName = "AdminApp-Custom"
+    }
+    Invoke-InstallApplication @p
+
+    $upgradeParam =  $p = @{
+        PackageVersion = $newVersion
+        WebSiteName = "Ed-Fi-Custom"
+        WebSitePath = "c:\inetpub\Ed-Fi-Custom"
+        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationName = "AdminApp-Custom"
+    }
+    Upgrade-EdFiOdsAdminApp @upgradeParam
 }
 
 function Invoke-InstallMultiInstanceSqlServer {
@@ -112,14 +211,26 @@ try {
         "InstallSqlMultiInstance" { Invoke-InstallMultiInstanceSqlServer }
         "InstallPostgres" { Invoke-InstallPostgres }
         "InstallPostgresMultiInstance" { Invoke-InstallMultiInstancePostgres }
+        "Install-CompatibleVersion" { Invoke-Install-CompatibleVersion }
+        "Install-InCompatibleVersion" { Invoke-Install-InCompatibleVersion }
+        "Install-WithCustomSettings" { Invoke-Install-WithCustomSettings }
+        "Upgrade-CompatibleVersion" { Invoke-Upgrade-CompatibleVersion }
+        "Upgrade-InCompatibleVersion" { Invoke-Upgrade-InCompatibleVersion }
+        "Upgrade-ApplicationWithCustomSettings" { Invoke-Upgrade-WithCustomSettings }
         "Uninstall" { Invoke-Uninstall }
-        default { 
+        default {
             Write-Host "Valid test scenarios are: "
             Write-Host "    InstallSql"
             Write-Host "    InstallSqlMultiInstance"
             Write-Host "    InstallPostgres"
             Write-Host "    InstallPostgresMultiInstance"
             Write-Host "    Uninstall"
+            Write-Host "    Install-CompatibleVersion"
+            Write-Host "    Install-InCompatibleVersion"
+            Write-Host "    Install-WithCustomSettings"
+            Write-Host "    Upgrade-CompatibleVersion"
+            Write-Host "    Upgrade-InCompatibleVersion"
+            Write-Host "    Upgrade-ApplicationWithCustomSettings"
         }
     }
 }

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: Apache-2.0
+﻿# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -144,7 +144,7 @@ function Install-EdFiOdsAdminApp {
         [string]
         $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
 
-        # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
+        # Path for storing installation tools, e.g. nuget.exe. Default: "C:\temp\tools".
         [string]
         $ToolsPath = "C:\temp\tools",
 
@@ -303,6 +303,7 @@ function Install-EdFiOdsAdminApp {
     }
 
     $elapsed = Use-StopWatch {
+        $result += Invoke-InstallationPreCheck -Config $Config
         $result += Initialize-Configuration -Config $config
         $result += Get-AdminAppPackage -Config $Config
         $result += Get-DbDeploy -Config $Config
@@ -323,6 +324,149 @@ function Install-EdFiOdsAdminApp {
         $result | Format-Table
     }
 }
+
+function Upgrade-EdFiOdsAdminApp {
+    <#
+    .SYNOPSIS
+        Upgrade the Ed-Fi ODS/API AdminApp application in IIS.
+
+    .DESCRIPTION
+        Upgrades and configures the Ed-Fi ODS/API AdminApp application in IIS running in Windows 10 or
+        Windows Server 2016+. Admin App will be upgraded and reside under "Ed-Fi" website in IIS.
+        Appsettings values and connection strings will be copied over from existing Admin App application.
+        Invokes dbup migrations for updating the EdFi_Admin database accordingly.
+    .EXAMPLE
+        PS c:\> $parameters = @{
+            PackageVersion = '2.2.1'
+        }
+        PS c:\> Upgrade-EdFiOdsAdminApp @parameters
+
+        Upgrades Admin App to specified version and preseve the appsettings values and connection strings from existing application.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
+    param (
+        # NuGet package name. Default: EdFi.ODS.AdminApp.Web.
+        [string]
+        $PackageName = "EdFi.Suite3.ODS.AdminApp.Web",
+
+        # NuGet package version. If not set, will retrieve the latest full release package.
+        [string]
+        $PackageVersion,
+
+        # NuGet package source. Defaults to "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json".
+        [string]
+        $PackageSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
+
+        # Path for storing installation tools, e.g. nuget.exe. Default: "C:\temp\tools".
+        [string]
+        $ToolsPath = "C:\temp\tools",
+
+        # Path for storing downloaded packages
+        [string]
+        $DownloadPath = "C:\temp\downloads",
+
+        # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
+        [string]
+        $WebSitePath = "c:\inetpub\Ed-Fi",
+
+        # Web site name. Default: "Ed-Fi".
+        [string]
+        $WebsiteName = "Ed-Fi",
+
+        # Web site port number. Default: 443.
+        [int]
+        $WebSitePort = 443,
+
+        # Path for the web application. Default: "c:\inetpub\Ed-Fi\AdminApp".
+        [string]
+        $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+
+        # Web application name. Default: "AdminApp".
+        [string]
+        $WebApplicationName = "AdminApp",
+
+        # TLS certificiate thumbprint, optional. When not set, a self-signed certificate will be created.
+        [string]
+        $CertThumbprint,
+
+        # Install Credentials: User
+        [Parameter(ParameterSetName="InstallCredentials")]
+        [string]
+        $InstallCredentialsUser,
+
+        # Install Credentials: Password
+        [Parameter(ParameterSetName="InstallCredentials")]
+        [string]
+        $InstallCredentialsPassword,
+
+        # Install Credentials: UseIntegratedSecurity setting
+        [Parameter(ParameterSetName="InstallCredentials")]
+        [switch]
+        $InstallCredentialsUseIntegratedSecurity,
+
+        # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
+        # either UseIntegratedSecurity or Username and Password (Password can be skipped
+        # for PostgreSQL when using pgconf file). Optionally can include Port and
+        # DatabaseName.
+        [hashtable]
+        [Parameter(Mandatory=$true, ParameterSetName="InstallCredentials")]
+        $AdminDbConnectionInfo,
+
+        # Database Config
+        [switch]
+        $NoDuration
+    )
+
+    Write-InvocationInfo $MyInvocation
+
+    Clear-Error
+
+    $result = @()
+
+    $Config = @{
+        WebApplicationPath = $WebApplicationPath
+        PackageName = $PackageName
+        PackageVersion = $PackageVersion
+        PackageSource = $PackageSource
+        DatabaseInstallCredentials = @{
+            DatabaseUser = $InstallCredentialsUser
+            DatabasePassword = $InstallCredentialsPassword
+            UseIntegratedSecurity = $InstallCredentialsUseIntegratedSecurity
+        }
+        ToolsPath = $ToolsPath
+        DownloadPath = $DownloadPath
+        WebSitePath = $WebSitePath
+        WebSiteName = $WebsiteName
+        WebSitePort = $WebsitePort
+        CertThumbprint = $CertThumbprint
+        WebApplicationName = $WebApplicationName
+        NoDuration = $NoDuration
+        AppStartUp = $AppStartUp
+        ApplicationInstallType = "Upgrade"
+        AdminDbConnectionInfo = $AdminDbConnectionInfo
+    }
+
+    $elapsed = Use-StopWatch {
+        $result += Invoke-ApplicationUpgrade -Config $Config
+        $result += Get-AdminAppPackage -Config $Config
+        $result += Get-DbDeploy -Config $Config
+        $result += Invoke-TransferAppsettings -Config $Config
+        $result += Invoke-TransferConnectionStrings -Config $Config
+        $result += Install-Application -Config $Config
+        $result += Invoke-DbUpScripts -Config $Config
+
+        $result
+    }
+
+    Test-Error
+
+    if (-not $NoDuration) {
+        $result += New-TaskResult -name "-" -duration "-"
+        $result += New-TaskResult -name $MyInvocation.MyCommand.Name -duration $elapsed.format
+        $result | Format-Table
+    }
+}
+
 
 function Uninstall-EdFiOdsAdminApp {
     <#
@@ -399,6 +543,245 @@ function Uninstall-EdFiOdsAdminApp {
         $result += New-TaskResult -name "-" -duration "-"
         $result += New-TaskResult -name $MyInvocation.MyCommand.Name -duration $elapsed.format
         $result | Format-Table
+    }
+}
+
+
+function Invoke-InstallationPreCheck{
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $existingWebSiteName = $Config.WebsiteName
+        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        $existingAdminAppApplication = get-webapplication $Config.WebApplicationName
+
+        if($webSite -AND $existingAdminAppApplication)
+        {
+            $sitePath = $webSite.PhysicalPath
+            $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
+            if($compatibleVersionIsInstalled)
+            {
+                Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
+                if($confirmation -ieq 'y')
+                {
+                    $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
+                    if(Test-Path -Path $appsettingsFile)
+                    {
+                        Write-Host "To ensure your existing ODS / API Key and Secret values will continue to work, your existing encryption key is being copied forward from the appsettings.json file at $appsettingsFile"
+                        $appSettings = Get-Content $appsettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+                        $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
+                    }
+                }
+                else
+                {
+                    Write-Warning "Exiting the installation."
+                    exit
+                }
+            }
+            else
+            {
+                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+                exit
+            }
+        }
+    }
+}
+
+function Invoke-ApplicationUpgrade {
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+
+        $existingWebSiteName = $Config.WebsiteName
+        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        if($null -eq $webSite)
+        {
+            Write-Warning "Unable to find $existingWebSiteName on IIS."
+            $customWebSiteName = Read-Host -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
+            $customWebSite = get-website | where-object { $_.name -eq $customWebSiteName }
+            if($null -eq $customWebSite)
+            {
+                throw "Unable to find $customWebSite on IIS. Please use install.ps1 for installing Ed-Fi website."
+            }
+            $webSite = $customWebSite
+            $existingWebSiteName =  $customWebSiteName
+        }
+        $existingWebSitePath = ($webSite).PhysicalPath
+
+        $existingAppName = $Config.WebApplicationName
+        $existingAdminApp = get-webapplication $existingAppName
+        if($null -eq $existingAdminApp)
+        {
+            Write-Warning "Unable to find $existingAppName on IIS."
+            $customApplicationName = Read-Host -Prompt "If you previously installed AdminApp with a custom name, please enter that custom name"
+            $customAdminAppApplication = get-webapplication $customApplicationName
+            if($null -eq $customAdminAppApplication)
+            {
+                throw "Unable to find $customAdminAppApplication on IIS. Please use install.ps1 for installing AdminApp web application."
+            }
+            $existingAdminApp =  $customAdminAppApplication
+            $existingAppName = $customApplicationName
+        }
+
+        $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
+        if(-not $compatibleVersionIsInstalled)
+        {
+            throw "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+        }
+
+        Write-Host "Stopping the $existingWebSiteName before taking application files back up."
+        Stop-IISSite -Name $existingWebSiteName
+
+        Write-Host "Taking back up on existing application folder $existingApplicationPath"
+        $date = Get-Date -Format yyyy-MM-dd-hh-mm
+        $backupApplicationFolderName = "$existingAppName-$versionString-$date"
+        $basePath = (get-item $existingApplicationPath).parent.FullName
+        $destinationBackupPath = "$basePath\$backupApplicationFolderName\"
+
+        if(Test-Path -Path $destinationBackupPath)
+        {
+            Write-Warning "Back up folder already exists $destinationBackupPath."
+            $overwriteConfirmation = Read-Host -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
+            if($overwriteConfirmation -ieq 'y')
+            {
+                Get-ChildItem -Path  $destinationBackupPath -Force -Recurse | Remove-Item -force -recurse
+            }
+            else {
+                $newDirectory = Read-Host -Prompt "Please enter back up folder name"
+                $destinationBackupPath = "$basePath\$newDirectory\"
+                New-Item -ItemType directory -Path $destinationBackupPath
+            }
+        }
+        else {
+            New-Item -ItemType directory -Path $destinationBackupPath
+        }
+
+        Copy-Item -Path "$existingApplicationPath\*" -Destination $destinationBackupPath  -Recurse
+        Write-Host "Completed application files back up on $destinationBackupPath"
+
+        $Config.ApplicationBackupPath = $destinationBackupPath
+        $Config.WebApplicationName = $existingAppName
+        $Config.WebApplicationPath = $existingApplicationPath
+        $Config.WebSiteName = $existingWebSiteName
+        $Config.WebSitePath = $existingWebSitePath
+
+        $parameters = @{
+            ToolsPath = $Config.ToolsPath
+            WebApplicationPath = $existingApplicationPath
+            WebApplicationName = $existingAppName
+            WebSiteName = $existingWebSiteName
+            NoDuration = $Config.NoDuration
+        }
+        Uninstall-EdFiOdsAdminApp @parameters
+    }
+}
+
+function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
+
+    $existingApplicationPath = ($existingAdminApp).PhysicalPath
+    if(!$existingApplicationPath)
+    {
+        # In case of existingApplicationPath is empty, then generating application physical path by combining site physical path and application path
+        $appPath = $existingAdminApp.path.trimstart('/')
+        $existingApplicationPath = "$webSitePath\$appPath"
+    }
+    $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
+
+    $requiredMajor = 2
+    $requiredMinor = 2
+    $existingApplicationVersion = [System.Version]::Parse($versionString)
+
+    if($existingApplicationVersion.Major -lt $requiredMajor -OR
+    ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
+    {
+        $compatibleVersionIsInstalled  = $false
+    }
+    else {
+        $compatibleVersionIsInstalled =$true
+    }
+
+    return $existingApplicationPath, $versionString, $compatibleVersionIsInstalled
+}
+
+function Invoke-TransferAppsettings {
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+
+
+        $backUpPath = $Config.ApplicationBackupPath
+        Write-Warning "The following appsettings will be copied over from existing application: "
+        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'AppStartup', 'EncryptionKey', 'ApiStartupType', 'ApiExternalUrl', 'XsdFolder', 'PathBase', 'Log4NetConfigFileName')
+        foreach ($property in $appSettings) {
+           Write-Host $property;
+        }
+        $oldSettingsFile =  Join-Path $backUpPath "appsettings.json"
+        $oldSettings = Get-Content $oldSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $newSettingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $newSettings.AppSettings.ProductionApiUrl = $oldSettings.AppSettings.ProductionApiUrl
+        $newSettings.AppSettings.SecurityMetadataCacheTimeoutMinutes = $oldSettings.AppSettings.SecurityMetadataCacheTimeoutMinutes
+        $newSettings.AppSettings.DatabaseEngine = $oldSettings.AppSettings.DatabaseEngine
+        $newSettings.AppSettings.AppStartup = $oldSettings.AppSettings.AppStartup
+        $newSettings.AppSettings.EncryptionKey = $oldSettings.AppSettings.EncryptionKey
+        $newSettings.AppSettings.ApiStartupType = $oldSettings.AppSettings.ApiStartupType
+        $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
+        $newSettings.AppSettings.XsdFolder = $oldSettings.AppSettings.XsdFolder
+        $newSettings.AppSettings.PathBase = $oldSettings.AppSettings.PathBase
+        $newSettings.Log4NetCore.Log4NetConfigFileName = $oldSettings.Log4NetCore.Log4NetConfigFileName
+
+        $EmptyHashTable=@{}
+        $mergedSettings = Merge-Hashtables $newSettings, $EmptyHashTable
+        New-JsonFile $newSettingsFile $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-TransferConnectionStrings{
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $backUpPath = $Config.ApplicationBackupPath
+        Write-Warning "Connection strings will be copied over from existing appsettings ($backUpPath)."
+        $oldSettingsFile =  Join-Path $backUpPath "appsettings.json"
+        $oldSettings = Get-Content $oldSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $newSettingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $connectionstrings = @{
+            ConnectionStrings = @{
+                ProductionOds = $oldSettings.ConnectionStrings.ProductionOds
+                Admin = $oldSettings.ConnectionStrings.Admin
+                Security = $oldSettings.ConnectionStrings.Security
+            }
+        }
+
+        $Config.AdminConnectionString = $oldSettings.ConnectionStrings.Admin
+        $Config.engine = $oldSettings.AppSettings.DatabaseEngine
+        $mergedSettings = Merge-Hashtables $newSettings, $connectionstrings
+        New-JsonFile $newSettingsFile  $mergedSettings -Overwrite
     }
 }
 
@@ -499,9 +882,17 @@ function Invoke-TransformAppSettings {
         $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'
         $settings.AppSettings.DatabaseEngine = $config.engine
         $settings.AppSettings.AppStartup = $Config.AppStartUp
+
         if(!$settings.AppSettings.EncryptionKey)
         {
-            $settings.AppSettings.EncryptionKey = New-AESKey
+            if($Config.ContainsKey("EncryptionKey") -AND $Config.EncryptionKey)
+            {
+                $encryptionKey = $Config.EncryptionKey
+            }
+            else {
+                $encryptionKey = New-AESKey
+            }
+            $settings.AppSettings.EncryptionKey = $encryptionKey
         }
         if("OnPrem" -ieq $Config.AppStartup)
         {
@@ -606,6 +997,13 @@ function Get-AdminInstallConnectionString {
         $adminDbConnectionInfo.Username = $dbInstallCredentials.DatabaseUser
         $adminDbConnectionInfo.Password = $dbInstallCredentials.DatabasePassword
     }
+    else
+    {
+        if($Config.ApplicationInstallType -ieq "Upgrade" -and $Config.AdminConnectionString)
+        {
+            return $Config.AdminConnectionString
+        }
+    }
 
     return New-ConnectionString $adminDbConnectionInfo
 }
@@ -687,4 +1085,4 @@ function Create-SqlLogins {
     }
 }
 
-Export-ModuleMember -Function Install-EdFiOdsAdminApp, Uninstall-EdFiOdsAdminApp
+Export-ModuleMember -Function Install-EdFiOdsAdminApp, Uninstall-EdFiOdsAdminApp, Upgrade-EdFiOdsAdminApp

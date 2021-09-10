@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using EdFi.Admin.LearningStandards.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
@@ -30,6 +31,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ITabDisplayService _tabDisplayService;
         private readonly InstanceContext _instanceContext;
         private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
+        private readonly ILearningStandardsCorePluginConnector _learningStandardsPlugin;
 
         public LearningStandardsController(IOdsApiFacadeFactory odsApiFacadeFactory
             , ITabDisplayService tabDisplayService
@@ -40,6 +42,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IOdsApiConnectionInformationProvider apiConnectionInformationProvider
             , InstanceContext instanceContext
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
+            , ILearningStandardsCorePluginConnector learningStandardsPlugin
             )
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
@@ -51,6 +54,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _apiConnectionInformationProvider = apiConnectionInformationProvider;
             _instanceContext = instanceContext;
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
+            _learningStandardsPlugin = learningStandardsPlugin;
         }
 
         [AddTelemetry("Learning Standards Index", TelemetryType.View)]
@@ -91,8 +95,22 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [AddTelemetry("Run Learning Standards")]
-        public async Task<ActionResult> LearningStandards(LearningStandardsModel model)
+        public async Task<ActionResult> LearningStandards(LearningStandardsViewModel model)
         {
+            var learningStandardsModel = new LearningStandardsModel
+            {
+                ApiKey = model.ApiKey,
+                ApiSecret = model.ApiSecret
+            };
+
+            var validator = new LearningStandardsModelValidator(_apiConnectionInformationProvider, _odsSecretConfigurationProvider, _learningStandardsPlugin, _cloudOdsAdminAppSettingsApiModeProvider, _instanceContext);
+            var result = await validator.ValidateAsync(learningStandardsModel);
+            
+            if (!result.IsValid)
+            {
+                return BadRequest();
+            }
+
             await _learningStandardsSetupCommand.Execute(
                 new AcademicBenchmarkConfig
                 {

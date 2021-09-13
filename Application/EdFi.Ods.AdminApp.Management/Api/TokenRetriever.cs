@@ -45,6 +45,8 @@ namespace EdFi.Ods.AdminApp.Management.Api
             {
                 case HttpStatusCode.OK:
                     break;
+                case HttpStatusCode.NotFound:
+                    throw new AuthenticationException($"Unable to retrieve an access token: API not found. Please verify the address ({_connectionInformation.OAuthUrl}) is configured correctly.");
                 default:
                     throw new AuthenticationException("Unable to retrieve an access token. Error message: " + bearerTokenResponse.ErrorMessage);
             }

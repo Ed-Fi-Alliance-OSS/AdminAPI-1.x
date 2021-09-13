@@ -40,10 +40,13 @@ namespace EdFi.Ods.AdminApp.Management.Api
             bearerTokenRequest.AddParameter("Grant_type", "client_credentials");
 
             var bearerTokenResponse = oauthClient.Execute<BearerTokenResponse>(bearerTokenRequest);
-            if (bearerTokenResponse.StatusCode != HttpStatusCode.OK)
+
+            switch (bearerTokenResponse.StatusCode)
             {
-                throw new AuthenticationException("Unable to retrieve an access token. Error message: " +
-                                                  bearerTokenResponse.ErrorMessage);
+                case HttpStatusCode.OK:
+                    break;
+                default:
+                    throw new AuthenticationException("Unable to retrieve an access token. Error message: " + bearerTokenResponse.ErrorMessage);
             }
 
             if (bearerTokenResponse.Data.Error != null || bearerTokenResponse.Data.TokenType != "bearer")

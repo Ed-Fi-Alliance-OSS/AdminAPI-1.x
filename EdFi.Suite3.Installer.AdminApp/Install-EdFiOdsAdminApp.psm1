@@ -454,6 +454,7 @@ function Upgrade-EdFiOdsAdminApp {
         $result += Invoke-TransferConnectionStrings -Config $Config
         $result += Install-Application -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
+        $result += Invoke-StartWebSite $Config.WebSiteName $Config.WebSitePort
 
         $result
     }
@@ -782,6 +783,39 @@ function Invoke-TransferConnectionStrings{
         $Config.engine = $oldSettings.AppSettings.DatabaseEngine
         $mergedSettings = Merge-Hashtables $newSettings, $connectionstrings
         New-JsonFile $newSettingsFile  $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-StartWebSite($webSiteName, $portNumber){
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $webSite = get-website | where-object { $_.name -eq $webSiteName -and $_.State -eq 'Stopped'}
+        if($webSite)
+        {
+            $Websites = Get-ChildItem IIS:\Sites
+            foreach ($Site in $Websites)
+            {
+                if($Site.Name -ne $webSiteName -and $Site.State -eq 'Started')
+                {
+                    $webBinding = Get-WebBinding -Port $portNumber -Name $Site.Name -Protocol 'HTTPS'
+                    if($webBinding)
+                    {
+                        $webSiteUsingSamePort = $true
+                        break
+                    }
+                }
+            }
+
+            if(-not $webSiteUsingSamePort)
+            {
+                Write-Host "Starting $webSiteName."
+                Start-IISSite -Name $webSiteName
+            }
+            else
+            {
+                Write-Warning "Can not start the website: $webSiteName. Since, the same port: $portNumber is in use."
+            }
+        }
     }
 }
 

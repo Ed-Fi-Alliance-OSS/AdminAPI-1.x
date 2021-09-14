@@ -655,7 +655,7 @@ function Invoke-ApplicationUpgrade {
             $overwriteConfirmation = Read-Host -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
             if($overwriteConfirmation -ieq 'y')
             {
-                Get-ChildItem -Path  $destinationBackupPath -Force -Recurse | Remove-Item -force -recurse
+                Get-ChildItem -Path $destinationBackupPath -Force -Recurse | Sort-Object -Property FullName -Descending | Remove-Item
             }
             else {
                 $newDirectory = Read-Host -Prompt "Please enter back up folder name"

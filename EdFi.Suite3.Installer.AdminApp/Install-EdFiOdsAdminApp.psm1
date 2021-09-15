@@ -310,7 +310,7 @@ function Install-EdFiOdsAdminApp {
         $result += Invoke-TransformAppSettings -Config $Config
         $result += Invoke-TransformConnectionStrings -Config $config
         $result += Install-Application -Config $Config
-        $result += Create-SqlLogins -Config $Config
+        $result += Set-SqlLogins -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
 
         $result
@@ -325,7 +325,7 @@ function Install-EdFiOdsAdminApp {
     }
 }
 
-function Upgrade-EdFiOdsAdminApp {
+function Update-EdFiOdsAdminApp {
     <#
     .SYNOPSIS
         Upgrade the Ed-Fi ODS/API AdminApp application in IIS.
@@ -454,6 +454,7 @@ function Upgrade-EdFiOdsAdminApp {
         $result += Invoke-TransferConnectionStrings -Config $Config
         $result += Install-Application -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
+        $result += Invoke-StartWebSite $Config.WebSiteName $Config.WebSitePort
 
         $result
     }
@@ -557,7 +558,7 @@ function Invoke-InstallationPreCheck{
 
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
         $existingWebSiteName = $Config.WebsiteName
-        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        $webSite = Get-Website | Where-Object { $_.name -eq $existingWebSiteName }
         $existingAdminAppApplication = get-webapplication $Config.WebApplicationName
 
         if($webSite -AND $existingAdminAppApplication)
@@ -603,12 +604,12 @@ function Invoke-ApplicationUpgrade {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
 
         $existingWebSiteName = $Config.WebsiteName
-        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        $webSite = Get-Website | Where-Object { $_.name -eq $existingWebSiteName }
         if($null -eq $webSite)
         {
             Write-Warning "Unable to find $existingWebSiteName on IIS."
             $customWebSiteName = Read-Host -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
-            $customWebSite = get-website | where-object { $_.name -eq $customWebSiteName }
+            $customWebSite = Get-Website | Where-Object { $_.name -eq $customWebSiteName }
             if($null -eq $customWebSite)
             {
                 throw "Unable to find $customWebSite on IIS. Please use install.ps1 for installing Ed-Fi website."
@@ -654,7 +655,7 @@ function Invoke-ApplicationUpgrade {
             $overwriteConfirmation = Read-Host -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
             if($overwriteConfirmation -ieq 'y')
             {
-                Get-ChildItem -Path  $destinationBackupPath -Force -Recurse | Remove-Item -force -recurse
+                Get-ChildItem -Path $destinationBackupPath -Force -Recurse | Sort-Object -Property FullName -Descending | Remove-Item
             }
             else {
                 $newDirectory = Read-Host -Prompt "Please enter back up folder name"
@@ -782,6 +783,39 @@ function Invoke-TransferConnectionStrings{
         $Config.engine = $oldSettings.AppSettings.DatabaseEngine
         $mergedSettings = Merge-Hashtables $newSettings, $connectionstrings
         New-JsonFile $newSettingsFile  $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-StartWebSite($webSiteName, $portNumber){
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $webSite = Get-Website | Where-Object { $_.name -eq $webSiteName -and $_.State -eq 'Stopped'}
+        if($webSite)
+        {
+            $Websites = Get-ChildItem IIS:\Sites
+            foreach ($Site in $Websites)
+            {
+                if($Site.Name -ne $webSiteName -and $Site.State -eq 'Started')
+                {
+                    $webBinding = Get-WebBinding -Port $portNumber -Name $Site.Name -Protocol 'HTTPS'
+                    if($webBinding)
+                    {
+                        $webSiteUsingSamePort = $true
+                        break
+                    }
+                }
+            }
+
+            if(-not $webSiteUsingSamePort)
+            {
+                Write-Host "Starting $webSiteName."
+                Start-IISSite -Name $webSiteName
+            }
+            else
+            {
+                Write-Warning "Can not start the website: $webSiteName. Since, the same port: $portNumber is in use."
+            }
+        }
     }
 }
 
@@ -1062,7 +1096,7 @@ function Install-Application {
     }
 }
 
-function Create-SqlLogins {
+function Set-SqlLogins {
     [CmdletBinding()]
     param (
         [hashtable]
@@ -1085,4 +1119,4 @@ function Create-SqlLogins {
     }
 }
 
-Export-ModuleMember -Function Install-EdFiOdsAdminApp, Uninstall-EdFiOdsAdminApp, Upgrade-EdFiOdsAdminApp
+Export-ModuleMember -Function Install-EdFiOdsAdminApp, Uninstall-EdFiOdsAdminApp, Update-EdFiOdsAdminApp

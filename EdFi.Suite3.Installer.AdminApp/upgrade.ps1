@@ -20,5 +20,5 @@ $p = @{
     PackageVersion = '2.2.1'
 }
 
-Upgrade-EdFiOdsAdminApp @p
+Update-EdFiOdsAdminApp @p
 

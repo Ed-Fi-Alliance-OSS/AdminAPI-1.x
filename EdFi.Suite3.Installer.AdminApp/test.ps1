@@ -97,7 +97,7 @@ function Invoke-Upgrade-CompatibleVersion{
     Invoke-InstallApplication $existingCompatibleVersion
 
     # Upgrade to newer version
-    Upgrade-EdFiOdsAdminApp -PackageVersion $newVersion
+    Update-EdFiOdsAdminApp -PackageVersion $newVersion
 
 }
 
@@ -106,7 +106,7 @@ function Invoke-Upgrade-InCompatibleVersion{
     Invoke-InstallApplication $existingInCompatibleVersion
 
     # Upgrade to newer version
-    Upgrade-EdFiOdsAdminApp -PackageVersion $newVersion
+    Update-EdFiOdsAdminApp -PackageVersion $newVersion
 }
 
 function Invoke-Upgrade-WithCustomSettings{
@@ -128,7 +128,7 @@ function Invoke-Upgrade-WithCustomSettings{
         WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
         WebApplicationName = "AdminApp-Custom"
     }
-    Upgrade-EdFiOdsAdminApp @upgradeParam
+    Update-EdFiOdsAdminApp @upgradeParam
 }
 
 function Invoke-InstallMultiInstanceSqlServer {

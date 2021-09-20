@@ -68,7 +68,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 case 0:
                     throw new TokenRetrieverException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 case HttpStatusCode.NotFound:
-                    throw new TokenRetrieverException("Unable to connect to API: API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new TokenRetrieverException("API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 case HttpStatusCode.ServiceUnavailable:
                     throw new TokenRetrieverException("API Service is unavailable. Please verify the API ({0}) hosting configuration is correct.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 default:

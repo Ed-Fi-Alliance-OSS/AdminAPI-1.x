@@ -36,19 +36,19 @@ namespace EdFi.Ods.AdminApp.Management.Api
             {
                 return GetBearerToken(oauthClient);
             }
-            catch (AuthenticationException)
+            catch (TokenRetrieverException)
             {
                 throw;
             }
             catch (JsonException exception)
             {
-                throw FormatException(
+                throw new TokenRetrieverException(
                     "Unexpected response format from API. Please verify the address ({0}) is configured correctly.",
                     exception.Message, exception, _connectionInformation.OAuthUrl);
             }
             catch (Exception exception)
             {
-                throw FormatException("Unexpected error while connecting to API.", exception.Message, exception);
+                throw new TokenRetrieverException("Unexpected error while connecting to API.", exception.Message, exception);
             }
         }
 
@@ -66,28 +66,31 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 case HttpStatusCode.OK:
                     break;
                 case 0:
-                    throw FormatException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new TokenRetrieverException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 case HttpStatusCode.NotFound:
-                    throw FormatException("Unable to connect to API: API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new TokenRetrieverException("Unable to connect to API: API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 case HttpStatusCode.ServiceUnavailable:
-                    throw FormatException("API Service is unavailable. Please verify the API ({0}) hosting configuration is correct.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new TokenRetrieverException("API Service is unavailable. Please verify the API ({0}) hosting configuration is correct.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 default:
-                    throw FormatException("Unexpected response from API.", bearerTokenResponse.ErrorMessage, null);
+                    throw new TokenRetrieverException("Unexpected response from API.", bearerTokenResponse.ErrorMessage, null);
             }
 
             if (bearerTokenResponse.Data.Error != null || bearerTokenResponse.Data.TokenType != "bearer")
             {
-                throw new AuthenticationException(
-                    "Unable to retrieve an access token. Please verify that your application secret is correct.");
+                throw new TokenRetrieverException("Please verify that your application secret is correct.", "", null);
             }
 
             return bearerTokenResponse.Data.AccessToken;
         }
 
-        private AuthenticationException FormatException(string helpText, string error, Exception innerException, params object[] formatArgs)
+        private class TokenRetrieverException : AuthenticationException
         {
-            var message = string.Format("Unable to retrieve an access token. " + helpText + " Error message: " + error, formatArgs);
-            return new AuthenticationException(message, innerException);
+            public TokenRetrieverException() { }
+
+            public TokenRetrieverException(string helpText, string error, Exception innerException, params object[] formatArgs)
+            : base(string.Format("Unable to retrieve an access token. " + helpText + " Error message: " + error, formatArgs)
+            , innerException)
+            { }
         }
     }
 

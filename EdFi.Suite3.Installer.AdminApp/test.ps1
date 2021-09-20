@@ -40,7 +40,7 @@ function Invoke-InstallApplication{
         [string] $Version,
         [string] $WebSiteName = "Ed-Fi",
         [string] $WebSitePath = "c:\inetpub\Ed-Fi",
-        [string] $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+        [string] $WebApplicationDirectory = "AdminApp",
         [string] $WebApplicationName = "AdminApp"
     )
 
@@ -57,7 +57,7 @@ function Invoke-InstallApplication{
         PackageVersion = $Version
         WebSiteName = $WebSiteName
         WebSitePath = $WebSitePath
-        WebApplicationPath = $WebApplicationPath
+        WebApplicationDirectory = $WebApplicationDirectory
         WebApplicationName = $WebApplicationName
     }
     Install-EdFiOdsAdminApp @p
@@ -86,7 +86,7 @@ function Invoke-Install-WithCustomSettings{
         Version = $newVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
-        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationDirectory = "AdminApp-Custom"
         WebApplicationName = "AdminApp-Custom"
     }
     Invoke-InstallApplication @p
@@ -116,7 +116,7 @@ function Invoke-Upgrade-WithCustomSettings{
         Version = $existingCompatibleVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
-        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationDirectory = "AdminApp-Custom"
         WebApplicationName = "AdminApp-Custom"
     }
     Invoke-InstallApplication @p
@@ -125,7 +125,7 @@ function Invoke-Upgrade-WithCustomSettings{
         PackageVersion = $newVersion
         WebSiteName = "Ed-Fi-Custom"
         WebSitePath = "c:\inetpub\Ed-Fi-Custom"
-        WebApplicationPath = "C:\inetpub\Ed-Fi-Custom\AdminApp-Custom"
+        WebApplicationDirectory = "AdminApp-Custom"
         WebApplicationName = "AdminApp-Custom"
     }
     Update-EdFiOdsAdminApp @upgradeParam

@@ -88,7 +88,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             public TokenRetrieverException() { }
 
             public TokenRetrieverException(string helpText, string error, Exception innerException, params object[] formatArgs)
-            : base(string.Format("Unable to retrieve an access token. " + helpText + " Error message: " + error, formatArgs)
+            : base(string.Format("Unable to retrieve an access token. " + helpText + (string.IsNullOrWhiteSpace(error) ? "" : " Error message: " + error), formatArgs)
             , innerException)
             { }
         }

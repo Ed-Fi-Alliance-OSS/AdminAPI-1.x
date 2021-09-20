@@ -370,7 +370,7 @@ function LoadAsyncActions() {
             error: function (jqXhr) {
                 var errorMessage = "The following error occurred while loading page content: ";
                 if (!StringIsNullOrWhitespace(jqXhr.responseText)) {
-                    errorMessage = errorMessage + jqXhr.responseText + ". ";
+                    errorMessage = errorMessage + "<b>" + jqXhr.responseText + " .</b>";
                 }
 
                 if (jqXhr.status > 0) {
@@ -380,7 +380,7 @@ function LoadAsyncActions() {
                 }
 
                 if (!StringIsNullOrWhitespace(customErrorMessage)) {
-                    errorMessage = errorMessage + ". <br/><b>" + customErrorMessage + "</b>";
+                    errorMessage = errorMessage + ". <br/><br/>" + customErrorMessage;
                 }
 
                 $target.html("<em class='text-danger'>" + errorMessage + "</em>");

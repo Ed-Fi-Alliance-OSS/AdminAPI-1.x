@@ -501,7 +501,7 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             spinnerTag.Append(new HtmlTag("i").AddClasses("fa", "fa-spinner", "fa-pulse", "fa-fw"));
 
             var errorMessage = "Restarting the ODS / API is known to solve issues with first time setup or previously cached information, and may help resolve this issue on its own." +
-                               " Please try restarting the ODS / API now and reload this to see if this same error occurs." +
+                               " Please verify the configuration and try restarting the ODS / API. Then, reload this to see if this same error occurs." +
                                " If the error persists, please check the application logs and then feel to schedule a ticket via <a href='https://tracker.ed-fi.org/projects/EDFI/issues'>Ed-Fi Tracker</a>" +
                                " or visit <a href='https://techdocs.ed-fi.org/display/ADMIN'>Admin App documentation</a> for more information.";
 

@@ -137,7 +137,7 @@ $supportedApiVersions = @(
     },
     @{
         OdsPackageName = "EdFi.Suite3.RestApi.Databases"
-        OdsVersion = "5.2.14406"
+        OdsVersion = "5.3.659"
         Prerelease = $false
     }
 )

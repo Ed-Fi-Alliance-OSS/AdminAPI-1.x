@@ -6,6 +6,7 @@
 using System;
 using System.Net;
 using System.Security.Authentication;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace EdFi.Ods.AdminApp.Management.Api
@@ -30,7 +31,17 @@ namespace EdFi.Ods.AdminApp.Management.Api
         public string ObtainNewBearerToken()
         {
             var oauthClient = new RestClient(_connectionInformation.OAuthUrl);
-            return GetBearerToken(oauthClient);
+
+            try
+            {
+                return GetBearerToken(oauthClient);
+            }
+            catch (JsonException exception)
+            {
+                throw FormatException(
+                    "Unexpected response format from API. Please verify the address ({0}) is configured correctly.",
+                    exception.Message, exception, _connectionInformation.OAuthUrl);
+            }
         }
 
         private string GetBearerToken(IRestClient oauthClient)

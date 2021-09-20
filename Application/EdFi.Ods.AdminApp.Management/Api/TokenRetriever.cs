@@ -36,6 +36,10 @@ namespace EdFi.Ods.AdminApp.Management.Api
             {
                 return GetBearerToken(oauthClient);
             }
+            catch (AuthenticationException)
+            {
+                throw;
+            }
             catch (JsonException exception)
             {
                 throw FormatException(

@@ -368,7 +368,7 @@ function LoadAsyncActions() {
                 $target.html(data);
             },
             error: function (jqXhr) {
-                var errorMessage = "The following error occurred while loading page content: ";
+                var errorMessage = "The following error occurred while loading page content: <br/><br/>";
                 if (!StringIsNullOrWhitespace(jqXhr.responseText)) {
                     errorMessage = errorMessage + "<b>" + jqXhr.responseText + " .</b>";
                 }

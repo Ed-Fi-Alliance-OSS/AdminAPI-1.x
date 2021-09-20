@@ -42,6 +42,10 @@ namespace EdFi.Ods.AdminApp.Management.Api
                     "Unexpected response format from API. Please verify the address ({0}) is configured correctly.",
                     exception.Message, exception, _connectionInformation.OAuthUrl);
             }
+            catch (Exception exception)
+            {
+                throw FormatException("Unexpected error while connecting to API.", exception.Message, exception);
+            }
         }
 
         private string GetBearerToken(IRestClient oauthClient)

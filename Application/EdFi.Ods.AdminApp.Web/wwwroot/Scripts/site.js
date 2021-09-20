@@ -370,11 +370,11 @@ function LoadAsyncActions() {
             error: function (jqXhr) {
                 var errorMessage = "The following error occurred while loading page content: <br/><br/>";
                 if (!StringIsNullOrWhitespace(jqXhr.responseText)) {
-                    errorMessage = errorMessage + "<b>" + jqXhr.responseText + " .</b>";
+                    errorMessage = errorMessage + "<b>" + jqXhr.responseText + "</b>";
                 }
 
                 if (jqXhr.status > 0) {
-                    errorMessage = errorMessage + "Status " + jqXhr.status;
+                    errorMessage = errorMessage + " Status " + jqXhr.status;
                 } else {
                     errorMessage = errorMessage + "No response from server";
                 }

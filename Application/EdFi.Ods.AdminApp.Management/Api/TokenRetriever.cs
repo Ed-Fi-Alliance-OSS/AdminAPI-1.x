@@ -83,7 +83,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return bearerTokenResponse.Data.AccessToken;
         }
 
-        private class TokenRetrieverException : AuthenticationException
+        internal class TokenRetrieverException : AuthenticationException
         {
             public TokenRetrieverException() { }
 

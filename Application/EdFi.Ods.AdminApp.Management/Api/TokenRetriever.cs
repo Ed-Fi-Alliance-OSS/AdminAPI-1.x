@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Net;
 using System.Security.Authentication;
 using RestSharp;
@@ -46,11 +47,11 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 case HttpStatusCode.OK:
                     break;
                 case 0:
-                    throw new AuthenticationException($"Unable to retrieve an access token: Unable to connect to API. Please verify the ODS API ({_connectionInformation.ApiServerUrl}) is running.");
+                    throw FormatException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 case HttpStatusCode.NotFound:
-                    throw new AuthenticationException($"Unable to retrieve an access token: API not found. Please verify the address ({_connectionInformation.OAuthUrl}) is configured correctly.");
+                    throw FormatException("Unable to connect to API: API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 default:
-                    throw new AuthenticationException("Unable to retrieve an access token. Error message: " + bearerTokenResponse.ErrorMessage);
+                    throw FormatException("Unexpected response from API.", bearerTokenResponse.ErrorMessage, null);
             }
 
             if (bearerTokenResponse.Data.Error != null || bearerTokenResponse.Data.TokenType != "bearer")
@@ -60,6 +61,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
             }
 
             return bearerTokenResponse.Data.AccessToken;
+        }
+
+        private AuthenticationException FormatException(string helpText, string error, Exception innerException, params object[] formatArgs)
+        {
+            var message = string.Format("Unable to retrieve an access token. " + helpText + " Error message: " + error, formatArgs);
+            return new AuthenticationException(message, innerException);
         }
     }
 

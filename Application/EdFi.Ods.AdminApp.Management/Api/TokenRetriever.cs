@@ -50,6 +50,8 @@ namespace EdFi.Ods.AdminApp.Management.Api
                     throw FormatException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 case HttpStatusCode.NotFound:
                     throw FormatException("Unable to connect to API: API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                case HttpStatusCode.ServiceUnavailable:
+                    throw FormatException("API Service is unavailable. Please verify the API ({0}) hosting configuration is correct.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
                 default:
                     throw FormatException("Unexpected response from API.", bearerTokenResponse.ErrorMessage, null);
             }

@@ -819,6 +819,22 @@ function Invoke-StartWebSite($webSiteName, $portNumber){
     }
 }
 
+function Invoke-ResetIIS {
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $default = 'n'
+        Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
+        $confirmation = Read-Host -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+        if (!$confirmation) { $confirmation = $default}
+        if ($confirmation -ieq 'y') {
+            & {iisreset}
+        }
+        else {
+            Write-Warning "Exiting the uninstall/upgrade process."
+            exit
+        }
+    }
+}
+
 function Initialize-Configuration {
     [CmdletBinding()]
     param (

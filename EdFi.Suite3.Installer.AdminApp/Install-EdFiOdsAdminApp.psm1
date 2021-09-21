@@ -164,9 +164,9 @@ function Install-EdFiOdsAdminApp {
         [int]
         $WebSitePort = 443,
 
-        # Path for the web application. Default: "c:\inetpub\Ed-Fi\AdminApp".
+        # Directory for the web application. Default: "AdminApp".
         [string]
-        $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+        $WebApplicationDirectory = "AdminApp",
 
         # Web application name. Default: "AdminApp".
         [string]
@@ -273,7 +273,7 @@ function Install-EdFiOdsAdminApp {
     $result = @()
 
     $Config = @{
-        WebApplicationPath = $WebApplicationPath
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationDirectory)
         PackageName = $PackageName
         PackageVersion = $PackageVersion
         PackageSource = $PackageSource
@@ -377,9 +377,9 @@ function Update-EdFiOdsAdminApp {
         [int]
         $WebSitePort = 443,
 
-        # Path for the web application. Default: "c:\inetpub\Ed-Fi\AdminApp".
+        # Directory for the web application. Default: "AdminApp".
         [string]
-        $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+        $WebApplicationDirectory = "AdminApp",
 
         # Web application name. Default: "AdminApp".
         [string]
@@ -424,7 +424,7 @@ function Update-EdFiOdsAdminApp {
     $result = @()
 
     $Config = @{
-        WebApplicationPath = $WebApplicationPath
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationDirectory)
         PackageName = $PackageName
         PackageVersion = $PackageVersion
         PackageSource = $PackageSource

@@ -3,8 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Net;
 using System.Security.Authentication;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace EdFi.Ods.AdminApp.Management.Api
@@ -29,7 +31,25 @@ namespace EdFi.Ods.AdminApp.Management.Api
         public string ObtainNewBearerToken()
         {
             var oauthClient = new RestClient(_connectionInformation.OAuthUrl);
-            return GetBearerToken(oauthClient);
+
+            try
+            {
+                return GetBearerToken(oauthClient);
+            }
+            catch (TokenRetrieverException)
+            {
+                throw;
+            }
+            catch (JsonException exception)
+            {
+                throw new TokenRetrieverException(
+                    "Unexpected response format from API. Please verify the address ({0}) is configured correctly.",
+                    exception.Message, exception, _connectionInformation.OAuthUrl);
+            }
+            catch (Exception exception)
+            {
+                throw new TokenRetrieverException("Unexpected error while connecting to API.", exception.Message, exception);
+            }
         }
 
         private string GetBearerToken(IRestClient oauthClient)
@@ -40,19 +60,37 @@ namespace EdFi.Ods.AdminApp.Management.Api
             bearerTokenRequest.AddParameter("Grant_type", "client_credentials");
 
             var bearerTokenResponse = oauthClient.Execute<BearerTokenResponse>(bearerTokenRequest);
-            if (bearerTokenResponse.StatusCode != HttpStatusCode.OK)
+
+            switch (bearerTokenResponse.StatusCode)
             {
-                throw new AuthenticationException("Unable to retrieve an access token. Error message: " +
-                                                  bearerTokenResponse.ErrorMessage);
+                case HttpStatusCode.OK:
+                    break;
+                case 0:
+                    throw new TokenRetrieverException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                case HttpStatusCode.NotFound:
+                    throw new TokenRetrieverException("API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                case HttpStatusCode.ServiceUnavailable:
+                    throw new TokenRetrieverException("API Service is unavailable. Please verify the API ({0}) hosting configuration is correct.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                default:
+                    throw new TokenRetrieverException("Unexpected response from API.", bearerTokenResponse.ErrorMessage, null);
             }
 
             if (bearerTokenResponse.Data.Error != null || bearerTokenResponse.Data.TokenType != "bearer")
             {
-                throw new AuthenticationException(
-                    "Unable to retrieve an access token. Please verify that your application secret is correct.");
+                throw new TokenRetrieverException("Please verify that your application secret is correct.", "", null);
             }
 
             return bearerTokenResponse.Data.AccessToken;
+        }
+
+        internal class TokenRetrieverException : AuthenticationException
+        {
+            public TokenRetrieverException() { }
+
+            public TokenRetrieverException(string helpText, string error, Exception innerException, params object[] formatArgs)
+            : base(string.Format("Unable to retrieve an access token. " + helpText + (string.IsNullOrWhiteSpace(error) ? "" : " Error message: " + error), formatArgs)
+            , innerException)
+            { }
         }
     }
 

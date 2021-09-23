@@ -447,6 +447,7 @@ function Update-EdFiOdsAdminApp {
     }
 
     $elapsed = Use-StopWatch {
+        $result += Invoke-ResetIIS
         $result += Invoke-ApplicationUpgrade -Config $Config
         $result += Get-AdminAppPackage -Config $Config
         $result += Get-DbDeploy -Config $Config
@@ -527,13 +528,10 @@ function Uninstall-EdFiOdsAdminApp {
     $result = @()
 
     $elapsed = Use-StopWatch {
-        $parameters = @{
-            WebApplicationPath = $config.WebApplicationPath
-            WebApplicationName = $config.WebApplicationName
-            WebSiteName = $config.WebSiteName
-        }
 
-        Uninstall-EdFiApplicationFromIIS @parameters
+        Invoke-ResetIIS
+
+        UninstallAdminApp $config
 
         $result
     }
@@ -545,6 +543,17 @@ function Uninstall-EdFiOdsAdminApp {
         $result += New-TaskResult -name $MyInvocation.MyCommand.Name -duration $elapsed.format
         $result | Format-Table
     }
+}
+
+function UninstallAdminApp($config)
+{
+    $parameters = @{
+        WebApplicationPath = $config.WebApplicationPath
+        WebApplicationName = $config.WebApplicationName
+        WebSiteName = $config.WebSiteName
+    }
+
+    Uninstall-EdFiApplicationFromIIS @parameters
 }
 
 
@@ -677,13 +686,11 @@ function Invoke-ApplicationUpgrade {
         $Config.WebSitePath = $existingWebSitePath
 
         $parameters = @{
-            ToolsPath = $Config.ToolsPath
             WebApplicationPath = $existingApplicationPath
             WebApplicationName = $existingAppName
             WebSiteName = $existingWebSiteName
-            NoDuration = $Config.NoDuration
         }
-        Uninstall-EdFiOdsAdminApp @parameters
+        UninstallAdminApp $parameters
     }
 }
 
@@ -815,6 +822,22 @@ function Invoke-StartWebSite($webSiteName, $portNumber){
             {
                 Write-Warning "Can not start the website: $webSiteName. Since, the same port: $portNumber is in use."
             }
+        }
+    }
+}
+
+function Invoke-ResetIIS {
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $default = 'n'
+        Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
+        $confirmation = Read-Host -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+        if (!$confirmation) { $confirmation = $default}
+        if ($confirmation -ieq 'y') {
+            & {iisreset}
+        }
+        else {
+            Write-Warning "Exiting the uninstall/upgrade process."
+            exit
         }
     }
 }

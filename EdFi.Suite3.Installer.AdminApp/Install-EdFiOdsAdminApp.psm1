@@ -707,15 +707,23 @@ function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersi
     $currentVersion = [System.Version]::Parse($versionString)
     $targetVersion = [System.Version]::Parse($targetVersionString)
 
-    $comparison = $targetVersion.CompareTo($currentVersion)
+    $targetIsNewer = IsVersionHigherThanOther $targetVersion $currentVersion 
 
-    if($comparison -le 0)
+    if(-not $targetIsNewer)
     {
         Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Exiting."
         exit
     }
 
     return $existingApplicationPath, $versionString
+}
+
+function IsVersionHigherThanOther($versionString, $otherVersionString){
+    $version = [System.Version]::Parse($versionString)
+    $otherVersion = [System.Version]::Parse($otherVersionString)
+
+    $result = $version.CompareTo($otherVersion)
+    return $result -gt 0
 }
 
 function Invoke-TransferAppsettings {

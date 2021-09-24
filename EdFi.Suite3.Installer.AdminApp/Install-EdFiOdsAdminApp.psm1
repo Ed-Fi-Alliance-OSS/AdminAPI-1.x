@@ -687,12 +687,8 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
     }
     $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
 
-    $requiredMajor = 2
-    $requiredMinor = 2
-    $existingApplicationVersion = [System.Version]::Parse($versionString)
-
-    if($existingApplicationVersion.Major -lt $requiredMajor -OR
-    ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
+    $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
+    if($versionIsBeforeUpgradeSupport)
     {
         Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
         exit

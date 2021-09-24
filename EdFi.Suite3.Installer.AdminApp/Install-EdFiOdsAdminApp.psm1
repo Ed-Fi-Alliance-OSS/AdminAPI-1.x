@@ -564,7 +564,7 @@ function Invoke-InstallationPreCheck{
         if($webSite -AND $existingAdminAppApplication)
         {
             $sitePath = $webSite.PhysicalPath
-            $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
+            $existingApplicationPath, $versionString = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
 
             Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
             $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
@@ -627,7 +627,7 @@ function Invoke-ApplicationUpgrade {
             $existingAppName = $customApplicationName
         }
 
-        $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
+        $existingApplicationPath, $versionString = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
 
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."
         Stop-IISSite -Name $existingWebSiteName
@@ -697,11 +697,8 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
         Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
         exit
     }
-    else {
-        $compatibleVersionIsInstalled =$true
-    }
 
-    return $existingApplicationPath, $versionString, $compatibleVersionIsInstalled
+    return $existingApplicationPath, $versionString
 }
 
 function Invoke-TransferAppsettings {

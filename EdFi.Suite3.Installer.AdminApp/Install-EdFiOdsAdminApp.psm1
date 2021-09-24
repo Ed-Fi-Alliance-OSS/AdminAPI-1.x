@@ -627,7 +627,7 @@ function Invoke-ApplicationUpgrade {
             $existingAppName = $customApplicationName
         }
 
-        $existingApplicationPath, $versionString = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
+        $existingApplicationPath, $versionString = CheckForCompatibleUpdate $existingWebSitePath $existingAdminApp $Config.PackageVersion
 
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."
         Stop-IISSite -Name $existingWebSiteName
@@ -695,6 +695,23 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
     ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
     {
         Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+        exit
+    }
+
+    return $existingApplicationPath, $versionString
+}
+
+function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {
+    $existingApplicationPath, $versionString = CheckForCompatibleVersion $webSitePath $existingAdminApp
+
+    $currentVersion = [System.Version]::Parse($versionString)
+    $targetVersion = [System.Version]::Parse($targetVersionString)
+
+    $comparison = $targetVersion.CompareTo($currentVersion)
+
+    if($comparison -le 0)
+    {
+        Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Exiting."
         exit
     }
 

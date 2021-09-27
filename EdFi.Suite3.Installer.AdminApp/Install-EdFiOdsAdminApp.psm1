@@ -700,10 +700,7 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
 function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {
     $existingApplicationPath, $versionString = CheckForCompatibleVersion $webSitePath $existingAdminApp
 
-    $currentVersion = [System.Version]::Parse($versionString)
-    $targetVersion = [System.Version]::Parse($targetVersionString)
-
-    $targetIsNewer = IsVersionHigherThanOther $targetVersion $currentVersion 
+    $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString 
 
     if(-not $targetIsNewer)
     {

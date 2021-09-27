@@ -711,12 +711,17 @@ function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersi
     return $existingApplicationPath, $versionString
 }
 
-function IsVersionHigherThanOther($versionString, $otherVersionString){
-    $version = [System.Version]::Parse($versionString)
-    $otherVersion = [System.Version]::Parse($otherVersionString)
+function IsVersionHigherThanOther($versionString, $otherVersionString) {
+    $version = ParseVersionWithoutTag($versionString)
+    $otherVersion = ParseVersionWithoutTag($otherVersionString)
 
     $result = $version.CompareTo($otherVersion)
     return $result -gt 0
+}
+
+function ParseVersionWithoutTag($versionString) {
+    $splitByTags = $versionString -split '-'
+    return ([System.Version]::Parse($splitByTags[0]))
 }
 
 function Invoke-TransferAppsettings {

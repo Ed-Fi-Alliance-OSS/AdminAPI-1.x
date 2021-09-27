@@ -721,7 +721,13 @@ function IsVersionHigherThanOther($versionString, $otherVersionString) {
 
 function ParseVersionWithoutTag($versionString) {
     $splitByTags = $versionString -split '-'
-    return ([System.Version]::Parse($splitByTags[0]))
+    
+    try { return [System.Version]::Parse($splitByTags[0]) }
+    catch
+    {
+        Write-Warning "Failed to parse version configuration $versionString. Please correct and try again."
+        exit
+    }
 }
 
 function Invoke-TransferAppsettings {

@@ -147,6 +147,14 @@ function Invoke-Upgrade-OldVersion{
     Update-EdFiOdsAdminApp -PackageVersion $existingInCompatibleVersion
 }
 
+function Invoke-Upgrade-Nonsense{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to not a version (should fail)
+    Update-EdFiOdsAdminApp -PackageVersion "asfjaslkdja"
+}
+
 function Invoke-InstallMultiInstanceSqlServer {
 
     $dbConnectionInfo = @{
@@ -235,6 +243,7 @@ try {
         "Upgrade-ApplicationWithCustomSettings" { Invoke-Upgrade-WithCustomSettings }
         "Upgrade-SameVersion" { Invoke-Upgrade-SameVersion }
         "Upgrade-OldVersion" { Invoke-Upgrade-OldVersion }
+        "Upgrade-Nonsense" { Invoke-Upgrade-Nonsense }
         "Uninstall" { Invoke-Uninstall }
         default {
             Write-Host "Valid test scenarios are: "
@@ -251,6 +260,7 @@ try {
             Write-Host "    Upgrade-ApplicationWithCustomSettings"
             Write-Host "    Upgrade-SameVersion"
             Write-Host "    Upgrade-OldVersion"
+            Write-Host "    Upgrade-Nonsense"
         }
     }
 }

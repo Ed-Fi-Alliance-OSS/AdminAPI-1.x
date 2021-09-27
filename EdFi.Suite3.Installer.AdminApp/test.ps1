@@ -131,6 +131,22 @@ function Invoke-Upgrade-WithCustomSettings{
     Update-EdFiOdsAdminApp @upgradeParam
 }
 
+function Invoke-Upgrade-SameVersion{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to same version (should fail)
+    Update-EdFiOdsAdminApp -PackageVersion $existingCompatibleVersion
+}
+
+function Invoke-Upgrade-OldVersion{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to older version (should fail)
+    Update-EdFiOdsAdminApp -PackageVersion $existingInCompatibleVersion
+}
+
 function Invoke-InstallMultiInstanceSqlServer {
 
     $dbConnectionInfo = @{
@@ -217,6 +233,8 @@ try {
         "Upgrade-CompatibleVersion" { Invoke-Upgrade-CompatibleVersion }
         "Upgrade-InCompatibleVersion" { Invoke-Upgrade-InCompatibleVersion }
         "Upgrade-ApplicationWithCustomSettings" { Invoke-Upgrade-WithCustomSettings }
+        "Upgrade-SameVersion" { Invoke-Upgrade-SameVersion }
+        "Upgrade-OldVersion" { Invoke-Upgrade-OldVersion }
         "Uninstall" { Invoke-Uninstall }
         default {
             Write-Host "Valid test scenarios are: "
@@ -231,6 +249,8 @@ try {
             Write-Host "    Upgrade-CompatibleVersion"
             Write-Host "    Upgrade-InCompatibleVersion"
             Write-Host "    Upgrade-ApplicationWithCustomSettings"
+            Write-Host "    Upgrade-SameVersion"
+            Write-Host "    Upgrade-OldVersion"
         }
     }
 }

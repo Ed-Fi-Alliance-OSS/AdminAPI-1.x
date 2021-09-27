@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -34,7 +34,7 @@ Import-Module -Force "$appCommonDirectory/Application/Install.psm1" -Scope Globa
 Import-Module -Force "$appCommonDirectory/Application/Uninstall.psm1" -Scope Global
 Import-Module -Force "$appCommonDirectory/Application/Configuration.psm1" -Scope Global
 
-$DbDeployVersion = "2.1.0"
+$DbDeployVersion = "2.3.10068"
 
 function Install-EdFiOdsAdminApp {
     <#

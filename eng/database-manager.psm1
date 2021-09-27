@@ -6,7 +6,7 @@
 #requires -version 5
 
 $ErrorActionPreference = "Stop"
-Set-Variable DbDeployVersion -option Constant -value "2.0.0"
+Set-Variable DbDeployVersion -option Constant -value "2.3.10068"
 
 Import-Module -Name "$PSScriptRoot/connection-strings.psm1"
 

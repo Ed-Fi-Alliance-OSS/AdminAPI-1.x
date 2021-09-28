@@ -570,8 +570,20 @@ function Invoke-InstallationPreCheck{
             $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
 
             if($targetIsNewer -and $upgradeIsSupported) {
-                Write-Warning "We found a preexisting Admin App $versionString installation. To install the new version $installVersionString, use the included upgrade script instead of this install script. Exiting."
-                exit
+                Write-Host "We found a preexisting Admin App $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are you seeking to change the configuration."
+                if(-not ($confirmation -ieq 'y')) {
+                    Write-Host "Exiting."
+                    exit
+                }else {
+                    $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
+                    if(Test-Path -Path $appsettingsFile)
+                    {
+                        Write-Host "To ensure your existing ODS / API Key and Secret values will continue to work, your existing encryption key is being copied forward from the appsettings.json file at $appsettingsFile"
+                        $appSettings = Get-Content $appsettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+                        $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
+                    }
+                }
             }elseif ($targetIsNewer) {
                 Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
                 exit

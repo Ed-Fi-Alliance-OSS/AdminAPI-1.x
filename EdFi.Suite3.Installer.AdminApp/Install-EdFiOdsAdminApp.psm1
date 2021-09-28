@@ -676,8 +676,7 @@ function Invoke-ApplicationUpgrade {
     }
 }
 
-function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
-
+function GetExistingAppVersion($webSitePath,  $existingAdminApp) {
     $existingApplicationPath = ($existingAdminApp).PhysicalPath
     if(!$existingApplicationPath)
     {
@@ -685,7 +684,14 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
         $appPath = $existingAdminApp.path.trimstart('/')
         $existingApplicationPath = "$webSitePath\$appPath"
     }
+
     $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
+
+    return $existingApplicationPath, $versionString
+}
+
+function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
+    $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
 
     $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
     if($versionIsBeforeUpgradeSupport)
@@ -698,7 +704,7 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
 }
 
 function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {
-    $existingApplicationPath, $versionString = CheckForCompatibleVersion $webSitePath $existingAdminApp
+    $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
 
     $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString 
 

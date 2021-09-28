@@ -570,7 +570,7 @@ function Invoke-InstallationPreCheck{
             $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
 
             if($targetIsNewer -and $upgradeIsSupported) {
-                Write-Host "We found a preexisting Admin App $versionString installation. To install the new version, use the included upgrade script instead of this install script. Exiting." -ForegroundColor Green
+                Write-Warning "We found a preexisting Admin App $versionString installation. To install the new version $installVersionString, use the included upgrade script instead of this install script. Exiting."
                 exit
             }elseif ($targetIsNewer) {
                 Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."

@@ -588,7 +588,7 @@ function Invoke-InstallationPreCheck{
                 Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
                 exit
             }else {
-                Write-Warning "We found a preexisting Admin App $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry."
+                Write-Warning "We found a preexisting Admin App $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry. Exiting."
                 exit
             }
         }

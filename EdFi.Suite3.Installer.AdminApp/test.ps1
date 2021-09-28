@@ -75,8 +75,16 @@ function Invoke-Install-InCompatibleVersion {
 
     Invoke-InstallApplication $existingInCompatibleVersion
 
-    # Install newer version
+    # Install newer version (should exit with warning)
     Invoke-InstallApplication $newVersion
+}
+
+function Invoke-Install-OldVersion {
+
+    Invoke-InstallApplication $existingInCompatibleVersion
+
+    # Install older version (should exit with warning)
+    Invoke-InstallApplication $existingInCompatibleVersion
 }
 
 function Invoke-Install-WithCustomSettings{
@@ -237,6 +245,7 @@ try {
         "InstallPostgresMultiInstance" { Invoke-InstallMultiInstancePostgres }
         "Install-CompatibleVersion" { Invoke-Install-CompatibleVersion }
         "Install-InCompatibleVersion" { Invoke-Install-InCompatibleVersion }
+        "Install-OldVersion" { Invoke-Install-OldVersion }
         "Install-WithCustomSettings" { Invoke-Install-WithCustomSettings }
         "Upgrade-CompatibleVersion" { Invoke-Upgrade-CompatibleVersion }
         "Upgrade-InCompatibleVersion" { Invoke-Upgrade-InCompatibleVersion }
@@ -254,6 +263,7 @@ try {
             Write-Host "    Uninstall"
             Write-Host "    Install-CompatibleVersion"
             Write-Host "    Install-InCompatibleVersion"
+            Write-Host "    Install-OldVersion"
             Write-Host "    Install-WithCustomSettings"
             Write-Host "    Upgrade-CompatibleVersion"
             Write-Host "    Upgrade-InCompatibleVersion"

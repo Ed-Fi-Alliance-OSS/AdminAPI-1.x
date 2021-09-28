@@ -564,7 +564,7 @@ function Invoke-InstallationPreCheck{
         if($webSite -AND $existingAdminAppApplication)
         {
             $sitePath = $webSite.PhysicalPath
-            $existingApplicationPath, $versionString = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
+            $existingApplicationPath, $versionString = CheckForInstallVersion $sitePath $existingAdminAppApplication
 
             Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
             $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
@@ -695,7 +695,7 @@ function CheckVersionSupportsUpgrade($versionString) {
     return -not $versionIsBeforeUpgradeSupport
 }
 
-function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
+function CheckForInstallVersion($webSitePath,  $existingAdminApp) {
     $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
 
     if(-not (CheckVersionSupportsUpgrade $versionString))

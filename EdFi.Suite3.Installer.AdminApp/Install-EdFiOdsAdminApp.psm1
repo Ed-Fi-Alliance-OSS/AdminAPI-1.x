@@ -563,8 +563,22 @@ function Invoke-InstallationPreCheck{
 
         if($webSite -AND $existingAdminAppApplication)
         {
-            $sitePath = $webSite.PhysicalPath
-            $existingApplicationPath, $versionString = CheckForInstallVersion $sitePath $existingAdminAppApplication $Config.PackageVersion
+            $existingApplicationPath, $versionString = GetExistingAppVersion $webSite.PhysicalPath $existingAdminAppApplication
+            $installVersionString = $Config.PackageVersion
+
+            $targetIsNewer = IsVersionHigherThanOther $installVersionString $versionString
+            $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
+
+            if($targetIsNewer -and $upgradeIsSupported) {
+                Write-Host "We found a preexisting Admin App $versionString installation. To install the new version, use the included upgrade script instead of this install script. Exiting." -ForegroundColor Green
+                exit
+            }elseif ($targetIsNewer) {
+                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
+                exit
+            }else {
+                Write-Warning "We found a preexisting Admin App $versionString installation older than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry."
+                exit
+            }
         }
     }
 }
@@ -675,27 +689,6 @@ function GetExistingAppVersion($webSitePath,  $existingAdminApp) {
 function CheckVersionSupportsUpgrade($versionString) { 
     $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
     return -not $versionIsBeforeUpgradeSupport
-}
-
-function CheckForInstallVersion($webSitePath,  $existingAdminApp, $installVersionString) {
-    $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
-
-    $targetIsNewer = IsVersionHigherThanOther $installVersionString $versionString
-    $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
-
-    if($targetIsNewer -and $upgradeIsSupported)
-    {
-        Write-Host "We found a preexisting Admin App $versionString installation. To install the new version, use the included upgrade script instead of this install script. Exiting." -ForegroundColor Green
-        exit
-    }elseif ($targetIsNewer) {
-        Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
-        exit
-    }else {
-        Write-Warning "We found a preexisting Admin App $versionString installation older than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry."
-        exit
-    }
-
-    return $existingApplicationPath, $versionString
 }
 
 function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {

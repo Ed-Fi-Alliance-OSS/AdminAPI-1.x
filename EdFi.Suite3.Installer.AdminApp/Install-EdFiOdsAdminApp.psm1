@@ -690,11 +690,15 @@ function GetExistingAppVersion($webSitePath,  $existingAdminApp) {
     return $existingApplicationPath, $versionString
 }
 
+function CheckVersionSupportsUpgrade($versionString) { 
+    $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
+    return -not $versionIsBeforeUpgradeSupport
+}
+
 function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
     $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
 
-    $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
-    if($versionIsBeforeUpgradeSupport)
+    if(-not (CheckVersionSupportsUpgrade $versionString))
     {
         Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
         exit
@@ -705,6 +709,12 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
 
 function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {
     $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
+
+    if(-not (CheckVersionSupportsUpgrade $versionString))
+    {
+        Write-Warning "Preexisting Admin App version $versionString cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+        exit
+    }
 
     $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString 
 

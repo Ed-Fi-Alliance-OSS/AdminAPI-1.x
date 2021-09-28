@@ -75,8 +75,16 @@ function Invoke-Install-InCompatibleVersion {
 
     Invoke-InstallApplication $existingInCompatibleVersion
 
-    # Install newer version
+    # Install newer version (should exit with warning)
     Invoke-InstallApplication $newVersion
+}
+
+function Invoke-Install-OldVersion {
+
+    Invoke-InstallApplication $existingInCompatibleVersion
+
+    # Install older version (should exit with warning)
+    Invoke-InstallApplication $existingInCompatibleVersion
 }
 
 function Invoke-Install-WithCustomSettings{
@@ -129,6 +137,30 @@ function Invoke-Upgrade-WithCustomSettings{
         WebApplicationName = "AdminApp-Custom"
     }
     Update-EdFiOdsAdminApp @upgradeParam
+}
+
+function Invoke-Upgrade-SameVersion{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to same version (should fail)
+    Update-EdFiOdsAdminApp -PackageVersion $existingCompatibleVersion
+}
+
+function Invoke-Upgrade-OldVersion{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to older version (should fail)
+    Update-EdFiOdsAdminApp -PackageVersion $existingInCompatibleVersion
+}
+
+function Invoke-Upgrade-Nonsense{
+
+    Invoke-InstallApplication $existingCompatibleVersion
+
+    # Upgrade to not a version (should fail)
+    Update-EdFiOdsAdminApp -PackageVersion "asfjaslkdja"
 }
 
 function Invoke-InstallMultiInstanceSqlServer {
@@ -213,10 +245,14 @@ try {
         "InstallPostgresMultiInstance" { Invoke-InstallMultiInstancePostgres }
         "Install-CompatibleVersion" { Invoke-Install-CompatibleVersion }
         "Install-InCompatibleVersion" { Invoke-Install-InCompatibleVersion }
+        "Install-OldVersion" { Invoke-Install-OldVersion }
         "Install-WithCustomSettings" { Invoke-Install-WithCustomSettings }
         "Upgrade-CompatibleVersion" { Invoke-Upgrade-CompatibleVersion }
         "Upgrade-InCompatibleVersion" { Invoke-Upgrade-InCompatibleVersion }
         "Upgrade-ApplicationWithCustomSettings" { Invoke-Upgrade-WithCustomSettings }
+        "Upgrade-SameVersion" { Invoke-Upgrade-SameVersion }
+        "Upgrade-OldVersion" { Invoke-Upgrade-OldVersion }
+        "Upgrade-Nonsense" { Invoke-Upgrade-Nonsense }
         "Uninstall" { Invoke-Uninstall }
         default {
             Write-Host "Valid test scenarios are: "
@@ -227,10 +263,14 @@ try {
             Write-Host "    Uninstall"
             Write-Host "    Install-CompatibleVersion"
             Write-Host "    Install-InCompatibleVersion"
+            Write-Host "    Install-OldVersion"
             Write-Host "    Install-WithCustomSettings"
             Write-Host "    Upgrade-CompatibleVersion"
             Write-Host "    Upgrade-InCompatibleVersion"
             Write-Host "    Upgrade-ApplicationWithCustomSettings"
+            Write-Host "    Upgrade-SameVersion"
+            Write-Host "    Upgrade-OldVersion"
+            Write-Host "    Upgrade-Nonsense"
         }
     }
 }

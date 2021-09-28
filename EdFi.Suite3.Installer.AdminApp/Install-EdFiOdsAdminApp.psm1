@@ -572,14 +572,20 @@ function Invoke-InstallationPreCheck{
 
         if($webSite -AND $existingAdminAppApplication)
         {
-            $sitePath = $webSite.PhysicalPath
-            $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
-            if($compatibleVersionIsInstalled)
-            {
-                Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
-                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
-                if($confirmation -ieq 'y')
-                {
+            $existingApplicationPath, $versionString = GetExistingAppVersion $webSite.PhysicalPath $existingAdminAppApplication
+            $installVersionString = $Config.PackageVersion
+
+            $targetIsNewer = IsVersionHigherThanOther $installVersionString $versionString
+            $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
+
+            if($targetIsNewer -and $upgradeIsSupported) {
+                Write-Host "We found a preexisting Admin App $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
+                Write-Host "Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only continue if you are you seeking to change the configuration." -ForegroundColor Yellow
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
+                if(-not ($confirmation -ieq 'y')) {
+                    Write-Host "Exiting."
+                    exit
+                }else {
                     $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
                     if(Test-Path -Path $appsettingsFile)
                     {
@@ -588,15 +594,11 @@ function Invoke-InstallationPreCheck{
                         $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
                     }
                 }
-                else
-                {
-                    Write-Warning "Exiting the installation."
-                    exit
-                }
-            }
-            else
-            {
-                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+            }elseif ($targetIsNewer) {
+                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
+                exit
+            }else {
+                Write-Warning "We found a preexisting Admin App $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry. Exiting."
                 exit
             }
         }
@@ -643,11 +645,7 @@ function Invoke-ApplicationUpgrade {
             $existingAppName = $customApplicationName
         }
 
-        $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
-        if(-not $compatibleVersionIsInstalled)
-        {
-            throw "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
-        }
+        $existingApplicationPath, $versionString = CheckForCompatibleUpdate $existingWebSitePath $existingAdminApp $Config.PackageVersion
 
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."
         Stop-IISSite -Name $existingWebSiteName
@@ -694,8 +692,7 @@ function Invoke-ApplicationUpgrade {
     }
 }
 
-function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
-
+function GetExistingAppVersion($webSitePath,  $existingAdminApp) {
     $existingApplicationPath = ($existingAdminApp).PhysicalPath
     if(!$existingApplicationPath)
     {
@@ -703,22 +700,54 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
         $appPath = $existingAdminApp.path.trimstart('/')
         $existingApplicationPath = "$webSitePath\$appPath"
     }
+
     $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
 
-    $requiredMajor = 2
-    $requiredMinor = 2
-    $existingApplicationVersion = [System.Version]::Parse($versionString)
+    return $existingApplicationPath, $versionString
+}
 
-    if($existingApplicationVersion.Major -lt $requiredMajor -OR
-    ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
+function CheckVersionSupportsUpgrade($versionString) { 
+    $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
+    return -not $versionIsBeforeUpgradeSupport
+}
+
+function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {
+    $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
+
+    if(-not (CheckVersionSupportsUpgrade $versionString))
     {
-        $compatibleVersionIsInstalled  = $false
-    }
-    else {
-        $compatibleVersionIsInstalled =$true
+        Write-Warning "Preexisting Admin App version $versionString cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+        exit
     }
 
-    return $existingApplicationPath, $versionString, $compatibleVersionIsInstalled
+    $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString 
+
+    if(-not $targetIsNewer)
+    {
+        Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Instead,  fully uninstall the existing Admin App and install the desired version."
+        exit
+    }
+
+    return $existingApplicationPath, $versionString
+}
+
+function IsVersionHigherThanOther($versionString, $otherVersionString) {
+    $version = ParseVersionWithoutTag($versionString)
+    $otherVersion = ParseVersionWithoutTag($otherVersionString)
+
+    $result = $version.CompareTo($otherVersion)
+    return $result -gt 0
+}
+
+function ParseVersionWithoutTag($versionString) {
+    $splitByTags = $versionString -split '-'
+    
+    try { return [System.Version]::Parse($splitByTags[0]) }
+    catch
+    {
+        Write-Warning "Failed to parse version configuration $versionString. Please correct and try again."
+        exit
+    }
 }
 
 function Invoke-TransferAppsettings {

@@ -704,7 +704,7 @@ function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersi
 
     if(-not $targetIsNewer)
     {
-        Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Exiting."
+        Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Instead,  fully uninstall the existing Admin App and install the desired version."
         exit
     }
 

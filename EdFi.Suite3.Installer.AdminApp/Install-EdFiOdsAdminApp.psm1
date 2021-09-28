@@ -564,25 +564,7 @@ function Invoke-InstallationPreCheck{
         if($webSite -AND $existingAdminAppApplication)
         {
             $sitePath = $webSite.PhysicalPath
-            $existingApplicationPath, $versionString = CheckForInstallVersion $sitePath $existingAdminAppApplication
-
-            Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
-            $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
-            if($confirmation -ieq 'y')
-            {
-                $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
-                if(Test-Path -Path $appsettingsFile)
-                {
-                    Write-Host "To ensure your existing ODS / API Key and Secret values will continue to work, your existing encryption key is being copied forward from the appsettings.json file at $appsettingsFile"
-                    $appSettings = Get-Content $appsettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
-                    $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
-                }
-            }
-            else
-            {
-                Write-Warning "Exiting the installation."
-                exit
-            }
+            $existingApplicationPath, $versionString = CheckForInstallVersion $sitePath $existingAdminAppApplication $Config.PackageVersion
         }
     }
 }
@@ -695,12 +677,21 @@ function CheckVersionSupportsUpgrade($versionString) {
     return -not $versionIsBeforeUpgradeSupport
 }
 
-function CheckForInstallVersion($webSitePath,  $existingAdminApp) {
+function CheckForInstallVersion($webSitePath,  $existingAdminApp, $installVersionString) {
     $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
 
-    if(-not (CheckVersionSupportsUpgrade $versionString))
+    $targetIsNewer = IsVersionHigherThanOther $installVersionString $versionString
+    $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
+
+    if($targetIsNewer -and $upgradeIsSupported)
     {
-        Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+        Write-Host "We found a preexisting Admin App $versionString installation. To install the new version, use the included upgrade script instead of this install script. Exiting." -ForegroundColor Green
+        exit
+    }elseif ($targetIsNewer) {
+        Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
+        exit
+    }else {
+        Write-Warning "We found a preexisting Admin App $versionString installation older than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry."
         exit
     }
 

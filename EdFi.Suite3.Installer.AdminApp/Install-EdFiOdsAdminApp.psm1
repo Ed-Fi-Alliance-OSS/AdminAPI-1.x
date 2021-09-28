@@ -571,7 +571,8 @@ function Invoke-InstallationPreCheck{
 
             if($targetIsNewer -and $upgradeIsSupported) {
                 Write-Host "We found a preexisting Admin App $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
-                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are you seeking to change the configuration."
+                Write-Host "Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only continue if you are you seeking to change the configuration." -ForegroundColor Yellow
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
                 if(-not ($confirmation -ieq 'y')) {
                     Write-Host "Exiting."
                     exit

@@ -1,8 +1,10 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using log4net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApp.Web.ErrorHandler
 {
@@ -18,35 +20,49 @@ namespace EdFi.Ods.AdminApp.Web.ErrorHandler
 
         public async Task Invoke(HttpContext context)
         {
-            var adminAppError = new AdminAppException();
             try
             {
                 await _requestHandler(context);
             }
-            catch (WebException webException)
-            {
-                _logger.Error(webException);
-                adminAppError.StackTrace = webException.StackTrace;
-                adminAppError.ErrorMessage = webException.Message;
-                adminAppError.Status = webException.Status.ToString();
-                adminAppError.InnerException = webException.InnerException;
-
-            }
             catch (Exception exception)
             {
-                _logger.Error(exception);
-                adminAppError.StackTrace = exception.StackTrace;
-                adminAppError.ErrorMessage = exception.Message;
-                adminAppError.InnerException = exception.InnerException;
+                HandleException(exception);
             }
+
+            void HandleException(Exception exception)
+            {
+                _logger.Error(exception);
+
+                if (context.Request.IsAjaxRequest())
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    var controllerName = context.Request.RouteValues["controller"].ToString();
+                    var responseText = IsReportsController(controllerName) && exception is SqlException
+                        ? "An error occurred trying to access the SQL views for reports."
+                        : exception.Message;
+                    context.Response.WriteAsync(responseText);
+                }
+                else
+                {
+                    var status = exception is WebException webException
+                        ? webException.Status.ToString()
+                        : WebExceptionStatus.UnknownError.ToString();
+
+                    // TODO: in AA-1377 we will start making use of this adminAppError object to show proper error on error page
+                    var adminAppError = new AdminAppException(exception.StackTrace, exception.Message, status, exception.InnerException );
+                    context.Response.Redirect("/Home/Error/");
+                }
+            }
+
+            static bool IsReportsController(string controllerName) => controllerName.ToLower().Equals("reports");
         }
+
     }
 
-    public class AdminAppException
+    public class AdminAppException : Exception
     {
-        public string ErrorMessage { get; set; }
-        public string StackTrace { get; set; }
-        public string Status { get; set; }
-        public Exception InnerException { get; set; }
+        public AdminAppException(string stackTrace, string error, string status, Exception innerException)
+            : base($"Error: {error}\nStatus:{status}\nStackTrace: {stackTrace}\n", innerException)
+        { }
     }
 }

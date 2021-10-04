@@ -69,7 +69,6 @@ namespace EdFi.Ods.AdminApp.Web
                         options.Filters.Add(new AuthorizeFilter("UserMustExistPolicy"));
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<JsonValidationFilter>();
-                        options.Filters.Add<HandleAjaxErrorAttribute>();
                         options.Filters.Add<SetupRequiredFilter>();
                         options.Filters.Add<UserContextFilter>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();

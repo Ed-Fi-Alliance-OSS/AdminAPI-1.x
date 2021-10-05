@@ -22,14 +22,14 @@ namespace EdFi.Ods.AdminApp.Web.ErrorHandler
         {
             try
             {
-                await _requestHandler(context);
+               await _requestHandler(context);
             }
             catch (Exception exception)
             {
-                HandleException(exception);
+               await HandleException(exception);
             }
 
-            void HandleException(Exception exception)
+            async Task HandleException(Exception exception)
             {
                 _logger.Error(exception);
 
@@ -40,7 +40,7 @@ namespace EdFi.Ods.AdminApp.Web.ErrorHandler
                     var responseText = IsReportsController(controllerName) && exception is SqlException
                         ? "An error occurred trying to access the SQL views for reports."
                         : exception.Message;
-                    context.Response.WriteAsync(responseText);
+                    await context.Response.WriteAsync(responseText);
                 }
                 else
                 {

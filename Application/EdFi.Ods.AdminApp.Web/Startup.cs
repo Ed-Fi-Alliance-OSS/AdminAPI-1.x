@@ -15,6 +15,7 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
+using EdFi.Ods.AdminApp.Web.ErrorHandler;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
@@ -68,7 +69,6 @@ namespace EdFi.Ods.AdminApp.Web
                         options.Filters.Add(new AuthorizeFilter("UserMustExistPolicy"));
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                         options.Filters.Add<JsonValidationFilter>();
-                        options.Filters.Add<HandleAjaxErrorAttribute>();
                         options.Filters.Add<SetupRequiredFilter>();
                         options.Filters.Add<UserContextFilter>();
                         options.Filters.Add<PasswordChangeRequiredFilter>();
@@ -183,6 +183,8 @@ namespace EdFi.Ods.AdminApp.Web
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalErrorHandler>();
 
             app.UseEndpoints(endpoints =>
             {

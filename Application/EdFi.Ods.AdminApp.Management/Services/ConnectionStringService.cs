@@ -7,6 +7,7 @@ using System;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using Microsoft.Extensions.Options;
+using ApiMode = EdFi.Ods.AdminApp.Management.Instances.ApiMode;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
@@ -14,43 +15,59 @@ namespace EdFi.Ods.AdminApp.Management.Services
     {
         private readonly ConnectionStrings _connectionStrings;
 
-        public ConnectionStringService(IOptions<ConnectionStrings> connectionStrings)
+        private readonly IConnectionStringBuilderAdapterFactory _connectionStringBuilderAdapterFactory;
+
+        public ConnectionStringService(IOptions<ConnectionStrings> connectionStrings,
+            IConnectionStringBuilderAdapterFactory connectionStringBuilderAdapterFactory)
         {
             _connectionStrings = connectionStrings.Value;
+            _connectionStringBuilderAdapterFactory = connectionStringBuilderAdapterFactory;
         }
 
         public string GetConnectionString(string odsInstanceName, ApiMode apiMode)
         {
-            var connectionString = _connectionStrings.ProductionOds;
+            var connectionStringBuilder = _connectionStringBuilderAdapterFactory.Get();
+            connectionStringBuilder.ConnectionString = _connectionStrings.ProductionOds;
+            connectionStringBuilder.DatabaseName = GetUpdatedName(connectionStringBuilder.DatabaseName, true);
+            connectionStringBuilder.ServerName = GetUpdatedName(connectionStringBuilder.ServerName, false);
 
-            if (apiMode.SupportsMultipleInstances)
+            return connectionStringBuilder.ConnectionString;
+
+            string GetUpdatedName(string input, bool isDbCheck)
             {
-                if (IsTemplate(connectionString))
+                var updatedValue = input;
+                if (apiMode.SupportsMultipleInstances)
                 {
-                    connectionString = GetModifiedConnectionString(
-                        connectionString, $"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
+                    if (IsTemplate(input))
+                    {
+                        updatedValue = GetModifiedString(input,$"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
+                    }
+                    else
+                    {
+                        if(isDbCheck)
+                        {
+                            throw new InvalidOperationException(
+                                "The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work.");
+                        }
+                    }
                 }
-                else
+                else if (apiMode == ApiMode.SharedInstance)
                 {
-                    throw new InvalidOperationException(
-                        "The connection string must contain a placeholder {0} for the multi-instance modes to work.");
+                    if (IsTemplate(input))
+                    {
+                        updatedValue = GetModifiedString(input, "Ods");
+                    }
                 }
-            }
-            else if (apiMode == ApiMode.SharedInstance)
-            {
-                if (IsTemplate(connectionString))
-                {
-                    connectionString = GetModifiedConnectionString(connectionString, "Ods");
-                }
+
+                return updatedValue;
             }
 
-            return connectionString;
         }
 
         private static bool IsTemplate(string connectionString)
             => connectionString.Contains("{0}");
 
-        private static string GetModifiedConnectionString(string connectionString, string replacement)
-            => connectionString.Replace("{0}", replacement);
-    }
+        private static string GetModifiedString(string input, string replacement)
+            => input.Replace("{0}", replacement);
+    }  
 }

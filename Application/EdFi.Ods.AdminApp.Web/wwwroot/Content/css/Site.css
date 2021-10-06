@@ -534,6 +534,12 @@ ul.nav-tabs {
     color: #8A8C8E;
 }
 
+.footer-feedback {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
 .application-version {
     font-size: 12px !important;
     color: #2774BD !important;

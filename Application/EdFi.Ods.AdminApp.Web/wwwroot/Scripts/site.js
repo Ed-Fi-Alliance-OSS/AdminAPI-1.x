@@ -496,3 +496,29 @@ function RemoveTooltips(elements) {
         element.removeAttr("data-toggle").removeAttr("title");
     });
 };
+
+function FieldValues() {
+    var fieldValues = {};
+
+    var errorMessage = $('.error-message');
+    var summary = $('.summary');
+
+    fieldValues["summary"] = summary.length ? summary.text() : "Admin App Feedback";
+
+    /*
+     * The following should only be used for automatically selecting the Admin App component for the production issue collector form.
+     * 
+     * fieldValues["components"] = ['13314'];
+     * 
+     */
+
+    // Remove the following fieldValues assignment when ready to use the production issue-collector.
+    fieldValues["components"] = ['12702'];
+
+    if (errorMessage.length) {
+        var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n {code}"+errorMessage.text()+"{code}";
+        fieldValues["description"] = description;
+    };
+
+    return fieldValues;
+};

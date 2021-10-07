@@ -6,19 +6,20 @@
 import-module -force "$PSScriptRoot/Install-EdFiOdsAdminApp.psm1"
 
 <#
-This script will take your existing Admin App installation and upgrade it to the version indicated by PackageVersion below.
-Your existing appsettings.json config values and connection strings will be copied forward to the new version.
+This script will uninstall your existing Admin App installation.
 
 .EXAMPLE
     $p = @{
-    ToolsPath = "C:/temp/tools"
-    PackageVersion = '2.2.1' }
+        ToolsPath = "C:/temp/tools"
+        WebSiteName="Ed-Fi-3"
+        WebApplicationPath="d:/edfi/applications/staging/AdminApp-3"
+        WebApplicationName = "AdminApp"
+    }
 #>
 
 $p = @{
     ToolsPath = "C:/temp/tools"
-    PackageVersion = '2.2.1'
 }
 
-Update-EdFiOdsAdminApp @p
+Uninstall-EdFiOdsAdminApp @p
 

@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -34,7 +34,7 @@ Import-Module -Force "$appCommonDirectory/Application/Install.psm1" -Scope Globa
 Import-Module -Force "$appCommonDirectory/Application/Uninstall.psm1" -Scope Global
 Import-Module -Force "$appCommonDirectory/Application/Configuration.psm1" -Scope Global
 
-$DbDeployVersion = "2.1.0"
+$DbDeployVersion = "2.3.10068"
 
 function Install-EdFiOdsAdminApp {
     <#
@@ -164,9 +164,9 @@ function Install-EdFiOdsAdminApp {
         [int]
         $WebSitePort = 443,
 
-        # Path for the web application. Default: "c:\inetpub\Ed-Fi\AdminApp".
+        # Directory for the web application. Default: "AdminApp".
         [string]
-        $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+        $WebApplicationDirectory = "AdminApp",
 
         # Web application name. Default: "AdminApp".
         [string]
@@ -273,7 +273,7 @@ function Install-EdFiOdsAdminApp {
     $result = @()
 
     $Config = @{
-        WebApplicationPath = $WebApplicationPath
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationDirectory)
         PackageName = $PackageName
         PackageVersion = $PackageVersion
         PackageSource = $PackageSource
@@ -310,7 +310,7 @@ function Install-EdFiOdsAdminApp {
         $result += Invoke-TransformAppSettings -Config $Config
         $result += Invoke-TransformConnectionStrings -Config $config
         $result += Install-Application -Config $Config
-        $result += Create-SqlLogins -Config $Config
+        $result += Set-SqlLogins -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
 
         $result
@@ -325,7 +325,7 @@ function Install-EdFiOdsAdminApp {
     }
 }
 
-function Upgrade-EdFiOdsAdminApp {
+function Update-EdFiOdsAdminApp {
     <#
     .SYNOPSIS
         Upgrade the Ed-Fi ODS/API AdminApp application in IIS.
@@ -377,9 +377,9 @@ function Upgrade-EdFiOdsAdminApp {
         [int]
         $WebSitePort = 443,
 
-        # Path for the web application. Default: "c:\inetpub\Ed-Fi\AdminApp".
+        # Directory for the web application. Default: "AdminApp".
         [string]
-        $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApp",
+        $WebApplicationDirectory = "AdminApp",
 
         # Web application name. Default: "AdminApp".
         [string]
@@ -424,7 +424,7 @@ function Upgrade-EdFiOdsAdminApp {
     $result = @()
 
     $Config = @{
-        WebApplicationPath = $WebApplicationPath
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationDirectory)
         PackageName = $PackageName
         PackageVersion = $PackageVersion
         PackageSource = $PackageSource
@@ -447,6 +447,7 @@ function Upgrade-EdFiOdsAdminApp {
     }
 
     $elapsed = Use-StopWatch {
+        $result += Invoke-ResetIIS
         $result += Invoke-ApplicationUpgrade -Config $Config
         $result += Get-AdminAppPackage -Config $Config
         $result += Get-DbDeploy -Config $Config
@@ -454,6 +455,7 @@ function Upgrade-EdFiOdsAdminApp {
         $result += Invoke-TransferConnectionStrings -Config $Config
         $result += Install-Application -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
+        $result += Invoke-StartWebSite $Config.WebSiteName $Config.WebSitePort
 
         $result
     }
@@ -526,13 +528,10 @@ function Uninstall-EdFiOdsAdminApp {
     $result = @()
 
     $elapsed = Use-StopWatch {
-        $parameters = @{
-            WebApplicationPath = $config.WebApplicationPath
-            WebApplicationName = $config.WebApplicationName
-            WebSiteName = $config.WebSiteName
-        }
 
-        Uninstall-EdFiApplicationFromIIS @parameters
+        Invoke-ResetIIS
+
+        UninstallAdminApp $config
 
         $result
     }
@@ -546,6 +545,17 @@ function Uninstall-EdFiOdsAdminApp {
     }
 }
 
+function UninstallAdminApp($config)
+{
+    $parameters = @{
+        WebApplicationPath = $config.WebApplicationPath
+        WebApplicationName = $config.WebApplicationName
+        WebSiteName = $config.WebSiteName
+    }
+
+    Uninstall-EdFiApplicationFromIIS @parameters
+}
+
 
 function Invoke-InstallationPreCheck{
     [CmdletBinding()]
@@ -557,19 +567,25 @@ function Invoke-InstallationPreCheck{
 
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
         $existingWebSiteName = $Config.WebsiteName
-        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        $webSite = Get-Website | Where-Object { $_.name -eq $existingWebSiteName }
         $existingAdminAppApplication = get-webapplication $Config.WebApplicationName
 
         if($webSite -AND $existingAdminAppApplication)
         {
-            $sitePath = $webSite.PhysicalPath
-            $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $sitePath $existingAdminAppApplication
-            if($compatibleVersionIsInstalled)
-            {
-                Write-Host "We found a preexisting Admin App $versionString installation. Most likely, you intended to use the upgrade script instead of this install script." -ForegroundColor Green
-                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to stop the installation so that you can instead run the upgrade script. Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only enter 'y' to continue if you are sure this is not an upgrade."
-                if($confirmation -ieq 'y')
-                {
+            $existingApplicationPath, $versionString = GetExistingAppVersion $webSite.PhysicalPath $existingAdminAppApplication
+            $installVersionString = $Config.PackageVersion
+
+            $targetIsNewer = IsVersionHigherThanOther $installVersionString $versionString
+            $upgradeIsSupported = CheckVersionSupportsUpgrade $versionString
+
+            if($targetIsNewer -and $upgradeIsSupported) {
+                Write-Host "We found a preexisting Admin App $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
+                Write-Host "Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only continue if you are you seeking to change the configuration." -ForegroundColor Yellow
+                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
+                if(-not ($confirmation -ieq 'y')) {
+                    Write-Host "Exiting."
+                    exit
+                }else {
                     $appsettingsFile =  Join-Path $existingApplicationPath "appsettings.json"
                     if(Test-Path -Path $appsettingsFile)
                     {
@@ -578,15 +594,11 @@ function Invoke-InstallationPreCheck{
                         $Config.EncryptionKey = $appSettings.AppSettings.EncryptionKey
                     }
                 }
-                else
-                {
-                    Write-Warning "Exiting the installation."
-                    exit
-                }
-            }
-            else
-            {
-                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+            }elseif ($targetIsNewer) {
+                Write-Warning "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp. Exiting."
+                exit
+            }else {
+                Write-Warning "We found a preexisting Admin App $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin App first and retry. Exiting."
                 exit
             }
         }
@@ -603,12 +615,12 @@ function Invoke-ApplicationUpgrade {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
 
         $existingWebSiteName = $Config.WebsiteName
-        $webSite = get-website | where-object { $_.name -eq $existingWebSiteName }
+        $webSite = Get-Website | Where-Object { $_.name -eq $existingWebSiteName }
         if($null -eq $webSite)
         {
             Write-Warning "Unable to find $existingWebSiteName on IIS."
             $customWebSiteName = Read-Host -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
-            $customWebSite = get-website | where-object { $_.name -eq $customWebSiteName }
+            $customWebSite = Get-Website | Where-Object { $_.name -eq $customWebSiteName }
             if($null -eq $customWebSite)
             {
                 throw "Unable to find $customWebSite on IIS. Please use install.ps1 for installing Ed-Fi website."
@@ -633,11 +645,7 @@ function Invoke-ApplicationUpgrade {
             $existingAppName = $customApplicationName
         }
 
-        $existingApplicationPath, $versionString, $compatibleVersionIsInstalled = CheckForCompatibleVersion $existingWebSitePath $existingAdminApp
-        if(-not $compatibleVersionIsInstalled)
-        {
-            throw "We found a preexisting Admin App $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
-        }
+        $existingApplicationPath, $versionString = CheckForCompatibleUpdate $existingWebSitePath $existingAdminApp $Config.PackageVersion
 
         Write-Host "Stopping the $existingWebSiteName before taking application files back up."
         Stop-IISSite -Name $existingWebSiteName
@@ -654,7 +662,7 @@ function Invoke-ApplicationUpgrade {
             $overwriteConfirmation = Read-Host -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
             if($overwriteConfirmation -ieq 'y')
             {
-                Get-ChildItem -Path  $destinationBackupPath -Force -Recurse | Remove-Item -force -recurse
+                Get-ChildItem -Path $destinationBackupPath -Force -Recurse | Sort-Object -Property FullName -Descending | Remove-Item
             }
             else {
                 $newDirectory = Read-Host -Prompt "Please enter back up folder name"
@@ -676,18 +684,15 @@ function Invoke-ApplicationUpgrade {
         $Config.WebSitePath = $existingWebSitePath
 
         $parameters = @{
-            ToolsPath = $Config.ToolsPath
             WebApplicationPath = $existingApplicationPath
             WebApplicationName = $existingAppName
             WebSiteName = $existingWebSiteName
-            NoDuration = $Config.NoDuration
         }
-        Uninstall-EdFiOdsAdminApp @parameters
+        UninstallAdminApp $parameters
     }
 }
 
-function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
-
+function GetExistingAppVersion($webSitePath,  $existingAdminApp) {
     $existingApplicationPath = ($existingAdminApp).PhysicalPath
     if(!$existingApplicationPath)
     {
@@ -695,22 +700,54 @@ function CheckForCompatibleVersion($webSitePath,  $existingAdminApp) {
         $appPath = $existingAdminApp.path.trimstart('/')
         $existingApplicationPath = "$webSitePath\$appPath"
     }
+
     $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApp.Web.exe").FileVersion
 
-    $requiredMajor = 2
-    $requiredMinor = 2
-    $existingApplicationVersion = [System.Version]::Parse($versionString)
+    return $existingApplicationPath, $versionString
+}
 
-    if($existingApplicationVersion.Major -lt $requiredMajor -OR
-    ($existingApplicationVersion.Major -eq $requiredMajor -AND $existingApplicationVersion.Minor -lt $requiredMinor))
+function CheckVersionSupportsUpgrade($versionString) { 
+    $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
+    return -not $versionIsBeforeUpgradeSupport
+}
+
+function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersionString) {
+    $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApp
+
+    if(-not (CheckVersionSupportsUpgrade $versionString))
     {
-        $compatibleVersionIsInstalled  = $false
-    }
-    else {
-        $compatibleVersionIsInstalled =$true
+        Write-Warning "Preexisting Admin App version $versionString cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApp."
+        exit
     }
 
-    return $existingApplicationPath, $versionString, $compatibleVersionIsInstalled
+    $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString 
+
+    if(-not $targetIsNewer)
+    {
+        Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Instead,  fully uninstall the existing Admin App and install the desired version."
+        exit
+    }
+
+    return $existingApplicationPath, $versionString
+}
+
+function IsVersionHigherThanOther($versionString, $otherVersionString) {
+    $version = ParseVersionWithoutTag($versionString)
+    $otherVersion = ParseVersionWithoutTag($otherVersionString)
+
+    $result = $version.CompareTo($otherVersion)
+    return $result -gt 0
+}
+
+function ParseVersionWithoutTag($versionString) {
+    $splitByTags = $versionString -split '-'
+    
+    try { return [System.Version]::Parse($splitByTags[0]) }
+    catch
+    {
+        Write-Warning "Failed to parse version configuration $versionString. Please correct and try again."
+        exit
+    }
 }
 
 function Invoke-TransferAppsettings {
@@ -782,6 +819,55 @@ function Invoke-TransferConnectionStrings{
         $Config.engine = $oldSettings.AppSettings.DatabaseEngine
         $mergedSettings = Merge-Hashtables $newSettings, $connectionstrings
         New-JsonFile $newSettingsFile  $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-StartWebSite($webSiteName, $portNumber){
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $webSite = Get-Website | Where-Object { $_.name -eq $webSiteName -and $_.State -eq 'Stopped'}
+        if($webSite)
+        {
+            $Websites = Get-ChildItem IIS:\Sites
+            foreach ($Site in $Websites)
+            {
+                if($Site.Name -ne $webSiteName -and $Site.State -eq 'Started')
+                {
+                    $webBinding = Get-WebBinding -Port $portNumber -Name $Site.Name -Protocol 'HTTPS'
+                    if($webBinding)
+                    {
+                        $webSiteUsingSamePort = $true
+                        break
+                    }
+                }
+            }
+
+            if(-not $webSiteUsingSamePort)
+            {
+                Write-Host "Starting $webSiteName."
+                Start-IISSite -Name $webSiteName
+            }
+            else
+            {
+                Write-Warning "Can not start the website: $webSiteName. Since, the same port: $portNumber is in use."
+            }
+        }
+    }
+}
+
+function Invoke-ResetIIS {
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $default = 'n'
+        Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
+        $confirmation = Read-Host -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+        if (!$confirmation) { $confirmation = $default}
+        if ($confirmation -ieq 'y') {
+            & {iisreset}
+        }
+        else {
+            Write-Warning "Exiting the uninstall/upgrade process."
+            exit
+        }
     }
 }
 
@@ -1062,7 +1148,7 @@ function Install-Application {
     }
 }
 
-function Create-SqlLogins {
+function Set-SqlLogins {
     [CmdletBinding()]
     param (
         [hashtable]
@@ -1085,4 +1171,4 @@ function Create-SqlLogins {
     }
 }
 
-Export-ModuleMember -Function Install-EdFiOdsAdminApp, Uninstall-EdFiOdsAdminApp, Upgrade-EdFiOdsAdminApp
+Export-ModuleMember -Function Install-EdFiOdsAdminApp, Uninstall-EdFiOdsAdminApp, Update-EdFiOdsAdminApp

@@ -496,3 +496,22 @@ function RemoveTooltips(elements) {
         element.removeAttr("data-toggle").removeAttr("title");
     });
 };
+
+function FieldValues() {
+    var fieldValues = {};
+
+    var errorDescription = $("#errorDescription");
+    var summary = $("#errorSummary");
+
+    fieldValues["summary"] = summary.length ? summary.text() : "Admin App Feedback";
+
+    // Selecting the Admin App component automatically
+    fieldValues["components"] = ["13314"];
+
+    if (errorDescription.length) {
+        var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n {code}"+errorDescription.text()+"{code}";
+        fieldValues["description"] = description;
+    };
+
+    return fieldValues;
+};

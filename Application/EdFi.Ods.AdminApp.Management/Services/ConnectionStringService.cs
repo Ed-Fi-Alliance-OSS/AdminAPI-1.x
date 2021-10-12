@@ -28,46 +28,38 @@ namespace EdFi.Ods.AdminApp.Management.Services
         {
             var connectionStringBuilder = _connectionStringBuilderAdapterFactory.Get();
             connectionStringBuilder.ConnectionString = _connectionStrings.ProductionOds;
-            connectionStringBuilder.DatabaseName = GetUpdatedName(connectionStringBuilder.DatabaseName, true);
-            connectionStringBuilder.ServerName = GetUpdatedName(connectionStringBuilder.ServerName, false);
+
+            if (apiMode.SupportsMultipleInstances && !IsTemplate(connectionStringBuilder.DatabaseName))
+            {
+                throw new InvalidOperationException(
+                             "The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work.");
+            }
+
+            connectionStringBuilder.DatabaseName = IsTemplate(connectionStringBuilder.DatabaseName) ?
+                GetUpdatedName(connectionStringBuilder.DatabaseName) : connectionStringBuilder.DatabaseName;
+
+            connectionStringBuilder.ServerName = IsTemplate(connectionStringBuilder.ServerName) ?
+                GetUpdatedName(connectionStringBuilder.ServerName) : connectionStringBuilder.ServerName;
 
             return connectionStringBuilder.ConnectionString;
 
-            string GetUpdatedName(string input, bool isDbCheck)
+            string GetUpdatedName(string input)
             {
                 var updatedValue = input;
                 if (apiMode.SupportsMultipleInstances)
                 {
-                    if (IsTemplate(input))
-                    {
-                        updatedValue = GetModifiedString(input,$"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
-                    }
-                    else
-                    {
-                        if(isDbCheck)
-                        {
-                            throw new InvalidOperationException(
-                                "The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work.");
-                        }
-                    }
+                    updatedValue = string.Format(input, $"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
                 }
                 else if (apiMode == ApiMode.SharedInstance)
                 {
-                    if (IsTemplate(input))
-                    {
-                        updatedValue = GetModifiedString(input, "Ods");
-                    }
+                    updatedValue = string.Format(input, "Ods");
                 }
 
                 return updatedValue;
             }
-
         }
 
         private static bool IsTemplate(string connectionString)
             => connectionString.Contains("{0}");
-
-        private static string GetModifiedString(string input, string replacement)
-            => input.Replace("{0}", replacement);
     }  
 }

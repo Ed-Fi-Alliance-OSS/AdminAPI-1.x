@@ -18,7 +18,7 @@ namespace EdFi.Ods.AdminApp.Management.Services
 
     public class ConnectionStringBuilderAdapterFactory : IConnectionStringBuilderAdapterFactory
     {
-        private IOptions<AppSettings> _appSettings;
+        private readonly IOptions<AppSettings> _appSettings;
 
         public ConnectionStringBuilderAdapterFactory(IOptions<AppSettings> appSettings) => _appSettings = appSettings;
 

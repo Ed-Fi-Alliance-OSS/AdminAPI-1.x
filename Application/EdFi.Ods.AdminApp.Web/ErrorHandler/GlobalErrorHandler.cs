@@ -50,7 +50,8 @@ namespace EdFi.Ods.AdminApp.Web.ErrorHandler
 
                     // TODO: in AA-1377 we will start making use of this adminAppError object to show proper error on error page
                     var adminAppError = new AdminAppException(exception.StackTrace, exception.Message, status, exception.InnerException );
-                    context.Response.Redirect("/Home/Error/");
+
+                    context.Response.Redirect($"{context.Request.PathBase}/Home/Error/");
                 }
             }
 

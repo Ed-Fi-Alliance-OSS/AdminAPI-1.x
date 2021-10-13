@@ -11,6 +11,7 @@ using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -58,6 +59,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult Error()
         {
+            var exceptionContext = HttpContext.Features.Get<IExceptionHandlerFeature>();
             return View();
         }
 

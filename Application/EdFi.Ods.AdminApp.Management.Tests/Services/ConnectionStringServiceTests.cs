@@ -1,4 +1,5 @@
 using System;
+using EdFi.Common.Database;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.Services;
@@ -13,6 +14,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
     {
         const string Template = "Data Source=.\\;Initial Catalog=EdFi_{0};Integrated Security=True";
         const string FixedTemplate = "Data Source=.\\;Initial Catalog=EdFi_Ods;Integrated Security=True";
+        const string TemplateWithServerNamePlaceholder = "Data Source={0};Initial Catalog=EdFi_{0};Integrated Security=True";       
 
         [Test]
         public void SharedInstance()
@@ -63,8 +65,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
         {
             Action ambiguousRequest = () => GetConnectionString(FixedTemplate, "EdFi_Ods_2009", ApiMode.YearSpecific);
 
-            ambiguousRequest.ShouldThrow<InvalidOperationException>(
-                "The connection string must contain a placeholder {0} for the multi-instance modes to work!");
+            ambiguousRequest.ShouldThrow<InvalidOperationException>().Message.
+                ShouldBe("The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work.");
         }
 
         [Test]
@@ -82,13 +84,38 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Services
         {
             Action ambiguousRequest = () => GetConnectionString(FixedTemplate, "EdFi_Ods_2995001", ApiMode.DistrictSpecific);
 
-            ambiguousRequest.ShouldThrow<InvalidOperationException>(
-                "The connection string must contain a placeholder {0} for the multi-instance modes to work!");
+            ambiguousRequest.ShouldThrow<InvalidOperationException>().Message.
+                ShouldBe("The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work."); ;
         }
 
+        [Test]
+        public void YearSpecificWithDynamicServerName()
+        {
+            GetConnectionString(TemplateWithServerNamePlaceholder, "EdFi_Ods_2009", ApiMode.YearSpecific)
+                .ShouldBe("Data Source=Ods_2009;Initial Catalog=EdFi_Ods_2009;Integrated Security=True");
+
+            GetConnectionString(TemplateWithServerNamePlaceholder, "EdFi_Ods_2010", ApiMode.YearSpecific)
+                 .ShouldBe("Data Source=Ods_2010;Initial Catalog=EdFi_Ods_2010;Integrated Security=True");
+        }      
+
+        [Test]
+        public void DistrictSpecificWithDynamicServerName()
+        {
+            GetConnectionString(TemplateWithServerNamePlaceholder, "EdFi_Ods_2995001", ApiMode.DistrictSpecific)
+                .ShouldBe("Data Source=Ods_2995001;Initial Catalog=EdFi_Ods_2995001;Integrated Security=True");
+
+            GetConnectionString(TemplateWithServerNamePlaceholder, "EdFi_Ods_2995002", ApiMode.DistrictSpecific)
+                .ShouldBe("Data Source=Ods_2995002;Initial Catalog=EdFi_Ods_2995002;Integrated Security=True");
+        }      
+
         private string GetConnectionString(string odsConnectionStringTemplate, string odsInstanceName, ApiMode apiMode)
-            => new ConnectionStringService(GetConnectionStringsAccessor(odsConnectionStringTemplate))
-                .GetConnectionString(odsInstanceName, apiMode);
+        {
+            var mockConnectionStringBuilderAdapterFactory = new Mock<IConnectionStringBuilderAdapterFactory>();
+            mockConnectionStringBuilderAdapterFactory.Setup(x => x.Get()).Returns(new SqlConnectionStringBuilderAdapter());
+            var service = new ConnectionStringService(GetConnectionStringsAccessor(odsConnectionStringTemplate), mockConnectionStringBuilderAdapterFactory.Object);
+            return service.GetConnectionString(odsInstanceName, apiMode);
+        }
+            
 
         private IOptions<ConnectionStrings> GetConnectionStringsAccessor(string productionOdsTemplate)
         {

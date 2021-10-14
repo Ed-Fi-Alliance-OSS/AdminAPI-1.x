@@ -35,16 +35,16 @@ namespace EdFi.Ods.AdminApp.Management.Services
                              "The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work.");
             }
 
-            connectionStringBuilder.DatabaseName = IsTemplate(connectionStringBuilder.DatabaseName) ?
-                GetUpdatedName(connectionStringBuilder.DatabaseName) : connectionStringBuilder.DatabaseName;
-
-            connectionStringBuilder.ServerName = IsTemplate(connectionStringBuilder.ServerName) ?
-                GetUpdatedName(connectionStringBuilder.ServerName) : connectionStringBuilder.ServerName;
+            connectionStringBuilder.DatabaseName = GetUpdatedName(connectionStringBuilder.DatabaseName);
+            connectionStringBuilder.ServerName = GetUpdatedName(connectionStringBuilder.ServerName);
 
             return connectionStringBuilder.ConnectionString;
 
             string GetUpdatedName(string input)
             {
+                if(!IsTemplate(input))                
+                    return input;
+                
                 var updatedValue = input;
                 if (apiMode.SupportsMultipleInstances)
                 {
@@ -59,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Services
             }
         }
 
-        private static bool IsTemplate(string connectionString)
-            => connectionString.Contains("{0}");
+        private static bool IsTemplate(string input)
+            => input.Contains("{0}");
     }  
 }

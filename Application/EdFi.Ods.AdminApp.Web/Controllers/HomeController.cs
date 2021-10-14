@@ -70,12 +70,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             _logger.Error(exception);
 
-            // TODO: in AA-1377 we will start making use of this adminAppError object to show proper error on error page
-            var adminAppError = new AdminAppException(exception.StackTrace, exception.Message, status, exception.InnerException );
-
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var controllerName = HttpContext.Request.RouteValues["controller"].ToString();
+                //TODO: Replace logic with explicit Reports exception using the below message in AA-1377
                 var responseText = IsReportsController(controllerName) && exception is SqlException
                     ? "An error occurred trying to access the SQL views for reports."
                     : exception.Message;

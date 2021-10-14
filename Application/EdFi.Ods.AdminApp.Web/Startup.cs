@@ -202,7 +202,7 @@ namespace EdFi.Ods.AdminApp.Web
 
                             var logger = LogManager.GetLogger(typeof(Startup));
                             logger.Debug($"Development Product Registration Sink Received Message: {Environment.NewLine}{body}");
-                            
+
                             var model = JsonConvert.DeserializeObject<ProductRegistrationModel>(body);
 
                             context.Response.StatusCode = (int)HttpStatusCode.OK;

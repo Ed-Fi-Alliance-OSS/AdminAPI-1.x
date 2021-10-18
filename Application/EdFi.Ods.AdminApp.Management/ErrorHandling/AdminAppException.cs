@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace EdFi.Ods.AdminApp.Web.ErrorHandler
+namespace EdFi.Ods.AdminApp.Management.ErrorHandling
 {
     public interface IAdminAppException
     {

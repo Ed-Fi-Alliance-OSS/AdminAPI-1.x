@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
-using EdFi.Ods.AdminApp.Web.ErrorHandler;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;

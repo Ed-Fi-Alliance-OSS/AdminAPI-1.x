@@ -3,15 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Reports;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
+using Microsoft.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -54,14 +57,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Reports Index", TelemetryType.View)]
         public ActionResult SelectDistrict(int id = 0)
         {
-            var districtOptions = _getAllLocalEducationAgenciesQuery
+            var districtOptions = CatchSqlFailures(() => _getAllLocalEducationAgenciesQuery
                 .Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode)
                 .Select(x => new SelectListItem
                 {
                     Text = x.Name,
                     Value = x.LocalEducationAgencyId.ToString(),
                     Selected = x.LocalEducationAgencyId == id
-                }).ToArray();
+                }).ToArray());
 
             var reportsModel = GetReportModel();
             reportsModel.SelectDistrictModel = new SelectDistrictModel
@@ -77,7 +80,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult TotalEnrollment(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.TotalEnrollmentReport = _totalEnrollmentQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.TotalEnrollmentReport =
+                CatchSqlFailures(() => _totalEnrollmentQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_TotalEnrollment", reportsModel);
         }
@@ -86,7 +90,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult SchoolsBySchoolType(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.SchoolTypeReport= _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.SchoolTypeReport=
+                CatchSqlFailures(() => _getSchoolsBySchoolTypeQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_SchoolsBySchoolType", reportsModel);
         }
@@ -95,7 +100,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult EnrollmentByGender(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.StudentGenderReport = _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.StudentGenderReport =
+                CatchSqlFailures(() => _studentEnrollmentByGenderQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_EnrollmentByGender", reportsModel);
         }
@@ -104,7 +110,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult EnrollmentByRace(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.StudentRaceReport = _studentEnrollmentByRaceQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.StudentRaceReport =
+                CatchSqlFailures(() => _studentEnrollmentByRaceQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_EnrollmentByRace", reportsModel);
         }
@@ -113,7 +120,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult EnrollmentByEthnicity(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.StudentEthnicityReport = _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.StudentEthnicityReport =
+                CatchSqlFailures(() => _studentEnrollmentByEthnicityQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_EnrollmentByEthnicity", reportsModel);
         }
@@ -122,7 +130,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult StudentsByProgram(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.StudentsByProgramReport = _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.StudentsByProgramReport =
+                CatchSqlFailures(() => _studentsByProgramQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_StudentsByProgram", reportsModel);
         }
@@ -131,9 +140,22 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult StudentsByAttribute(int id)
         {
             var reportsModel = GetReportModel();
-            reportsModel.StudentEconomicSituationReport = _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id);
+            reportsModel.StudentEconomicSituationReport =
+                CatchSqlFailures(() => _studentEconomicSituationReportQuery.Execute(_instanceContext.Name, CloudOdsAdminAppSettings.Instance.Mode, id));
 
             return PartialView("_StudentsByAttribute", reportsModel);
+        }
+
+        private T CatchSqlFailures<T>(Func<T> query)
+        {
+            try
+            {
+                return query.Invoke();
+            }
+            catch (SqlException e)
+            {
+                throw new AdminAppException("An error occurred trying to access the SQL views for reports.", e);
+            }
         }
 
         private ReportsIndexModel GetReportModel()

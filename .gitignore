@@ -32,6 +32,7 @@ _NCrunch*
 _ReSharper.*
 *.resharper
 *.resharper.user
+.idea/
 
 #Others
 *.cache

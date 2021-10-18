@@ -4,13 +4,19 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
+using EdFi.Ods.AdminApp.Web.ErrorHandler;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
+using log4net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -19,6 +25,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     {
         private readonly IHomeScreenDisplayService _homeScreenDisplayService;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
 
 
         public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
@@ -58,8 +65,27 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         public ActionResult Error()
         {
+            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            var exception = exceptionHandlerFeature.Error;
+
+            _logger.Error(exception);
+
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var controllerName = HttpContext.Request.RouteValues["controller"].ToString();
+                //TODO: Replace logic with explicit Reports exception using the below message in AA-1377
+                var responseText = IsReportsController(controllerName) && exception is SqlException
+                    ? "An error occurred trying to access the SQL views for reports."
+                    : exception.Message;
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, responseText);
+            }
+
             return View();
         }
+
+        private bool IsReportsController(string controllerName) => controllerName.ToLower().Equals("reports");
+
 
         private bool ZeroOdsInstanceRegistrations()
         {

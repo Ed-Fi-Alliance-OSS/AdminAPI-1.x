@@ -71,13 +71,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var controllerName = HttpContext.Request.RouteValues["controller"].ToString();
-                //TODO: Replace logic with explicit Reports exception using the below message in AA-1377
-                var responseText = IsReportsController(controllerName) && exception is SqlException
-                    ? "An error occurred trying to access the SQL views for reports."
-                    : exception.Message;
-
-                return StatusCode((int)HttpStatusCode.InternalServerError, responseText);
+                return StatusCode((int)HttpStatusCode.InternalServerError, exception.Message);
             }
 
             return View();

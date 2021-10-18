@@ -21,6 +21,7 @@ namespace EdFi.Ods.AdminApp.Web.ErrorHandler
         }
 
         public HttpStatusCode? StatusCode { get; }
+        public bool AllowFeedback { get; set; }
         public bool IsStackTraceRelevant { get => false;  }
     }
 }

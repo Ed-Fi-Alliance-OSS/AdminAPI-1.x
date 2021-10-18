@@ -69,12 +69,9 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
             _logger.Error(exception);
 
-            if (HttpContext.Request.IsAjaxRequest())
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, exception.Message);
-            }
-
-            return View();
+            return HttpContext.Request.IsAjaxRequest()
+                ? (ActionResult)StatusCode((int)HttpStatusCode.InternalServerError, exception.Message)
+                : View();
         }
 
         private bool IsReportsController(string controllerName) => controllerName.ToLower().Equals("reports");

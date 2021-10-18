@@ -14,6 +14,9 @@ namespace EdFi.Ods.AdminApp.Management.ErrorHandling
 
     public class AdminAppException : Exception, IAdminAppException
     {
+        public AdminAppException(string message) : base(message) { }
+        public AdminAppException(string message, Exception innerException) : base(message, innerException) { }
+
         public HttpStatusCode? StatusCode { get; set; }
         public bool AllowFeedback { get; set; }
         public bool IsStackTraceRelevant { get; set; }

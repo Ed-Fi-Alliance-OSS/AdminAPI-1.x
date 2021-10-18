@@ -10,17 +10,20 @@ namespace EdFi.Ods.AdminApp.Management.ErrorHandling
 {
     public class OdsApiConnectionException : Exception, IAdminAppException
     {
-        public OdsApiConnectionException(HttpStatusCode responseCode, string message) : base(message)
+        public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage) : base(exceptionMessage)
         {
             StatusCode = responseCode;
+            ResponseMessage = responseMessage;
         }
 
-        public OdsApiConnectionException(HttpStatusCode responseCode, string message, Exception innerException) : base(message, innerException)
+        public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage, Exception innerException) : base(exceptionMessage, innerException)
         {
             StatusCode = responseCode;
+            ResponseMessage = responseMessage;
         }
 
         public HttpStatusCode? StatusCode { get; }
+        public string ResponseMessage { get; }
         public bool AllowFeedback { get; set; }
         public bool IsStackTraceRelevant { get => false;  }
     }

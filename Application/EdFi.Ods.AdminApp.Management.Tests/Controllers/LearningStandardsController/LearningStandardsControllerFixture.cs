@@ -3,10 +3,16 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
+using EdFi.Ods.AdminApp.Web.Models.ViewModels.LearningStandards;
+using FluentValidation;
+using FluentValidation.Results;
 using Moq;
 using NUnit.Framework;
 
@@ -31,6 +37,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             ApiConnectionInformationProvider = new Mock<IOdsApiConnectionInformationProvider>();
             InstanceContext = new InstanceContext {Id = OdsInstanceId, Name = "TestOdsInstance", Description = "TestOdsInstance Description" };
             ApiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
+            var validationResult = new ValidationResult(new List<ValidationFailure>());
+            var learningStandardsValidator = new Mock<IValidator<LearningStandardsModel>>();
+            learningStandardsValidator.Setup(x
+                    => x.ValidateAsync(It.IsAny<LearningStandardsModel>(), CancellationToken.None)).
+                Returns(Task.FromResult(validationResult));
 
             SystemUnderTest = new Web.Controllers.LearningStandardsController(
                 OdsApiFacadeFactory.Object,
@@ -41,7 +52,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
                 ResetLearningStandards.Object,
                 ApiConnectionInformationProvider.Object,
                 InstanceContext,
-                ApiModeProvider.Object
+                ApiModeProvider.Object,
+                learningStandardsValidator.Object
             );
 
             AdditionalSetup();

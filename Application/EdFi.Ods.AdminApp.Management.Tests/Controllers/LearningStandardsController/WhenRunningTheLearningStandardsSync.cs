@@ -7,7 +7,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Web;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
@@ -27,11 +26,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             private const string ProductionUrl = "http://example.com";
             private const string ApiKey = "key";
             private const string ApiSecret = "secret";
-            private LearningStandardsModel _learningStandardsModel;
+            private LearningStandardsViewModel _learningStandardsModel;
 
             protected override void AdditionalSetup()
             {
-                _learningStandardsModel = new LearningStandardsModel
+                _learningStandardsModel = new LearningStandardsViewModel
                 {
                     ApiKey = ApiKey,
                     ApiSecret = ApiSecret
@@ -111,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             private const string ApiKey = "key";
             private const string ApiSecret = "secret";
             private const int Year = 1234;
-            private LearningStandardsModel _learningStandardsModel;
+            private LearningStandardsViewModel _learningStandardsModel;
             private readonly InstanceContext _instanceContext = new InstanceContext
             {
                 Id = 1,
@@ -120,7 +119,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
 
             protected override void AdditionalSetup()
             {
-                _learningStandardsModel = new LearningStandardsModel
+                _learningStandardsModel = new LearningStandardsViewModel
                 {
                     ApiKey = ApiKey,
                     ApiSecret = ApiSecret
@@ -202,7 +201,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             private const string ProductionUrl = "http://example.com";
             private const string ApiKey = "key";
             private const string ApiSecret = "secret";
-            private LearningStandardsModel _learningStandardsModel;
+            private LearningStandardsViewModel _learningStandardsModel;
             private readonly InstanceContext _instanceContext = new InstanceContext
             {
                 Id = 1234,
@@ -214,7 +213,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
                 InstanceContext.Id = _instanceContext.Id;
                 InstanceContext.Name = _instanceContext.Name;
 
-                _learningStandardsModel = new LearningStandardsModel
+                _learningStandardsModel = new LearningStandardsViewModel
                 {
                     ApiKey = ApiKey,
                     ApiSecret = ApiSecret

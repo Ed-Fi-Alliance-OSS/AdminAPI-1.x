@@ -5,7 +5,6 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.LearningStandards
 {
@@ -22,12 +21,9 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.LearningStandards
         public bool SynchronizationWasSuccessful { get; set; }
     }
 
-    public class LearningStandardsModelValidator : AbstractValidator<LearningStandardsModel>
+    public class LearningStandardsViewModel
     {
-        public LearningStandardsModelValidator()
-        {
-            RuleFor(m => m.ApiKey).NotEmpty();
-            RuleFor(m => m.ApiSecret).NotEmpty();
-        }
+        public string ApiKey { get; set; }
+        public string ApiSecret { get; set; }
     }
 }

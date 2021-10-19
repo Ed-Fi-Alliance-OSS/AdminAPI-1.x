@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EdFi.Common.Utils.Extensions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -24,6 +25,23 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
                 try
                 {
                     action(command, context);
+                }
+                catch (Exception exception)
+                {
+                    const string errorMsg = "A validation rule encountered an unexpected error. Check the Application Log for troubleshooting information.";
+                    context.AddFailure(errorMsg);
+                    _logger.Error(errorMsg, exception);
+                }
+            });
+        }
+
+        public static IRuleBuilderInitial<T, TProperty> SafeCustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CustomContext, Task> action)
+        {
+            return ruleBuilder.CustomAsync( async (command, context, cancellationToken) =>
+            {
+                try
+                {
+                    await action(command, context);
                 }
                 catch (Exception exception)
                 {

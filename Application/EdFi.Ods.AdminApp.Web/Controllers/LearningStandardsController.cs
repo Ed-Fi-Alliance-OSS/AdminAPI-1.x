@@ -4,6 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
@@ -14,6 +16,7 @@ using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.Jobs;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.LearningStandards;
+using FluentValidation;
 using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -30,6 +33,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ITabDisplayService _tabDisplayService;
         private readonly InstanceContext _instanceContext;
         private readonly ICloudOdsAdminAppSettingsApiModeProvider _cloudOdsAdminAppSettingsApiModeProvider;
+        private readonly IValidator<LearningStandardsModel> _learningStandardsValidator;
 
         public LearningStandardsController(IOdsApiFacadeFactory odsApiFacadeFactory
             , ITabDisplayService tabDisplayService
@@ -40,6 +44,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IOdsApiConnectionInformationProvider apiConnectionInformationProvider
             , InstanceContext instanceContext
             , ICloudOdsAdminAppSettingsApiModeProvider cloudOdsAdminAppSettingsApiModeProvider
+            , IValidator<LearningStandardsModel> learningStandardsValidator
             )
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
@@ -51,6 +56,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _apiConnectionInformationProvider = apiConnectionInformationProvider;
             _instanceContext = instanceContext;
             _cloudOdsAdminAppSettingsApiModeProvider = cloudOdsAdminAppSettingsApiModeProvider;
+            _learningStandardsValidator = learningStandardsValidator;
         }
 
         [AddTelemetry("Learning Standards Index", TelemetryType.View)]
@@ -91,8 +97,23 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         [HttpPost]
         [AddTelemetry("Run Learning Standards")]
-        public async Task<ActionResult> LearningStandards(LearningStandardsModel model)
+        public async Task<ActionResult> LearningStandards(LearningStandardsViewModel model)
         {
+            var learningStandardsModel = new LearningStandardsModel
+            {
+                ApiKey = model.ApiKey,
+                ApiSecret = model.ApiSecret
+            };
+
+            var result = await _learningStandardsValidator.ValidateAsync(learningStandardsModel);
+            
+            if (!result.IsValid)
+            {
+                var errorMessages = result.Errors.Select(x => new {x.ErrorMessage});
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return JsonResult(new { Result = new { Errors = errorMessages } });
+            }
+
             await _learningStandardsSetupCommand.Execute(
                 new AcademicBenchmarkConfig
                 {

@@ -33,7 +33,7 @@
                 @Html.InputBlock(m => m.ApiSecret)
                 <div class="col-xs-4"></div>
                 <div class="col-xs-6">
-                    @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button")
+                    @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
                 </div>
             }
             <div class="col-xs-12 margin-top-10">
@@ -56,7 +56,7 @@
             <br />
             @using (Html.BeginForm("UpdateLearningStandards", "LearningStandards", FormMethod.Post, new { id = "update-now-learning-standards" }))
             {
-                @Html.SaveButton("Update Now")
+                @Html.SaveButton("Update Now").AddClass("no-ajax")
             }
 
             @Html.AjaxPostButton(Url.Action("ResetLearningStandards", "LearningStandards"), "Reset Credentials")
@@ -73,11 +73,57 @@ else
 
 
 <script>
-    var enableLearningStandards = function(e) {
+    function ShowLearningStandardsStatus() {
+        edfiODS.signalR.showProgress();
+        $('#form-tab-content-prod').toggleClass('active');
+        $('#status-tab-content-prod').toggleClass('active');
+    }
+
+    var enableLearningStandards = function (e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var $validationSummary = form.find(".validationSummary").first();
+        $("#learning-standards-prod-button")
+            .html('Enabling Learning Standards... <span class="padding-left"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>');
+        $("#learning-standards-prod-button").attr('disabled', true);
+
+        var successHandler = function (data, status, xhr) {
+            $("#learning-standards-prod-button").html('Enable Learning Standards');
+            $validationSummary.attr('hidden', true);
+            form.find(".form-group").removeClass("has-error");
+            form[0].reset();
+            if (xhr.status !== edfiODS.httpStatusCodes.NoContent) {
+                location.reload();
+                ShowLearningStandardsStatus();
+            }
+        };
+
+        var errorHandler = function (data) {
+            $("#learning-standards-prod-button").html('Enable Learning Standards');
+            $("#learning-standards-prod-button").attr('disabled', false);
+            form.find(".form-group").addClass("has-error");
+            showSummary(data.responseJSON, $validationSummary);
+        };
+
+        var ajaxRequestData = {
+            form: form,
+            formData: new FormData(form[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            successHandler: successHandler,
+            errorHandler: errorHandler
+        };
+
+        submitAjaxForInnerTabs(ajaxRequestData);
+    };
+
+    var updateLearningStandards = function (e) {
         e.preventDefault();
 
         var $form = $(this),
-            formData = appendAntiForgeryToken($form.serialize());
+            formData = $form.serialize();
 
         $.ajax({
             url: $form.attr("action"),
@@ -85,6 +131,7 @@ else
             data: formData,
             success: function (data, status, xhr) {
                 if (xhr.status !== edfiODS.httpStatusCodes.NoContent) {
+                    location.reload();
                     ShowLearningStandardsStatus();
                 }
             },
@@ -94,15 +141,10 @@ else
         });
     };
 
-    $('#learning-standards-prod-form').submit(enableLearningStandards);
-    $('#update-now-learning-standards').submit(enableLearningStandards);
-
-    function ShowLearningStandardsStatus() {
-        edfiODS.signalR.showProgress();
-        $('#form-tab-content-prod').toggleClass('active');
-        $('#status-tab-content-prod').toggleClass('active');
-    }
     $(function () {
+        $('#learning-standards-prod-form').submit(enableLearningStandards);
+        $('#update-now-learning-standards').submit(updateLearningStandards);
+
         var hubUrl = '@ViewData["PathBase"]' + "/productionLearningStandardsHub";
         edfiODS.signalR.hideProgress();
         var connection = new signalR.HubConnectionBuilder()

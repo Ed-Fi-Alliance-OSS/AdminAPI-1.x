@@ -26,11 +26,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             private const string ProductionUrl = "http://example.com";
             private const string ApiKey = "key";
             private const string ApiSecret = "secret";
-            private LearningStandardsViewModel _learningStandardsViewModel;
+            private LearningStandardsViewModel _learningStandardsModel;
 
             protected override void AdditionalSetup()
             {
-                _learningStandardsViewModel = new LearningStandardsViewModel
+                _learningStandardsModel = new LearningStandardsViewModel
                 {
                     ApiKey = ApiKey,
                     ApiSecret = ApiSecret
@@ -55,7 +55,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldRespondWithStatusCode200()
             {
                 // Act
-                var result = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var result = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 result.ShouldBeOfType<OkResult>();
@@ -66,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldHaveSetupAValidLearningStandardsCommand()
             {
                 // Act
-                var _ = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var _ = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 Func<AcademicBenchmarkConfig, bool> learningStandardsSetupCommandExecuteVerifier = actual =>
@@ -86,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldHaveEnqueuedALearningStandardsSyncJobWithoutYear()
             {
                 // Act
-                var _ = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var _ = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
@@ -110,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             private const string ApiKey = "key";
             private const string ApiSecret = "secret";
             private const int Year = 1234;
-            private LearningStandardsViewModel _learningStandardsViewModel;
+            private LearningStandardsViewModel _learningStandardsModel;
             private readonly InstanceContext _instanceContext = new InstanceContext
             {
                 Id = 1,
@@ -119,7 +119,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
 
             protected override void AdditionalSetup()
             {
-                _learningStandardsViewModel = new LearningStandardsViewModel
+                _learningStandardsModel = new LearningStandardsViewModel
                 {
                     ApiKey = ApiKey,
                     ApiSecret = ApiSecret
@@ -147,7 +147,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldRespondWithStatusCode200()
             {
                 // Act
-                var result = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var result = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 result.ShouldBeOfType<OkResult>();
@@ -158,7 +158,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldHaveSetupAValidLearningStandardsCommand()
             {
                 // Act
-                var _ = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var _ = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 Func<AcademicBenchmarkConfig, bool> learningStandardsSetupCommandExecuteVerifier = actual =>
@@ -178,7 +178,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldHaveEnqueuedALearningStandardsSyncJobWithYear()
             {
                 // Act
-                var _ = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var _ = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>
@@ -201,7 +201,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             private const string ProductionUrl = "http://example.com";
             private const string ApiKey = "key";
             private const string ApiSecret = "secret";
-            private LearningStandardsViewModel _learningStandardsViewModel;
+            private LearningStandardsViewModel _learningStandardsModel;
             private readonly InstanceContext _instanceContext = new InstanceContext
             {
                 Id = 1234,
@@ -213,7 +213,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
                 InstanceContext.Id = _instanceContext.Id;
                 InstanceContext.Name = _instanceContext.Name;
 
-                _learningStandardsViewModel = new LearningStandardsViewModel
+                _learningStandardsModel = new LearningStandardsViewModel
                 {
                     ApiKey = ApiKey,
                     ApiSecret = ApiSecret
@@ -238,7 +238,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldRespondWithStatusCode200()
             {
                 // Act
-                var result = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var result = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 result.ShouldBeOfType<OkResult>();
@@ -252,7 +252,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
                 UpdateConfiguration();
 
                 // Act
-                var _ = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var _ = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 Func<AcademicBenchmarkConfig, bool> learningStandardsSetupCommandExecuteVerifier = actual =>
@@ -275,7 +275,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.LearningStandardsContro
             public async Task ThenItShouldHaveEnqueuedALearningStandardsSyncJobWithOdsInstanceId()
             {
                 // Act
-                var _ = await SystemUnderTest.LearningStandards(_learningStandardsViewModel);
+                var _ = await SystemUnderTest.LearningStandards(_learningStandardsModel);
 
                 // Assert
                 Func<LearningStandardsJobContext, bool> learningStandardsJobEnqueueVerifier = actual =>

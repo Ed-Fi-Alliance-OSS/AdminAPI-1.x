@@ -7,6 +7,7 @@ using System;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Management.Instances;
 using Microsoft.Extensions.Options;
+using ApiMode = EdFi.Ods.AdminApp.Management.Instances.ApiMode;
 
 namespace EdFi.Ods.AdminApp.Management.Services
 {
@@ -14,43 +15,51 @@ namespace EdFi.Ods.AdminApp.Management.Services
     {
         private readonly ConnectionStrings _connectionStrings;
 
-        public ConnectionStringService(IOptions<ConnectionStrings> connectionStrings)
+        private readonly IConnectionStringBuilderAdapterFactory _connectionStringBuilderAdapterFactory;
+
+        public ConnectionStringService(IOptions<ConnectionStrings> connectionStrings,
+            IConnectionStringBuilderAdapterFactory connectionStringBuilderAdapterFactory)
         {
             _connectionStrings = connectionStrings.Value;
+            _connectionStringBuilderAdapterFactory = connectionStringBuilderAdapterFactory;
         }
 
         public string GetConnectionString(string odsInstanceName, ApiMode apiMode)
         {
-            var connectionString = _connectionStrings.ProductionOds;
+            var connectionStringBuilder = _connectionStringBuilderAdapterFactory.Get();
+            connectionStringBuilder.ConnectionString = _connectionStrings.ProductionOds;
 
-            if (apiMode.SupportsMultipleInstances)
+            if (apiMode.SupportsMultipleInstances && !IsTemplate(connectionStringBuilder.DatabaseName))
             {
-                if (IsTemplate(connectionString))
-                {
-                    connectionString = GetModifiedConnectionString(
-                        connectionString, $"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        "The connection string must contain a placeholder {0} for the multi-instance modes to work.");
-                }
-            }
-            else if (apiMode == ApiMode.SharedInstance)
-            {
-                if (IsTemplate(connectionString))
-                {
-                    connectionString = GetModifiedConnectionString(connectionString, "Ods");
-                }
+                throw new InvalidOperationException(
+                             "The database name on the connection string must contain a placeholder {0} for the multi-instance modes to work.");
             }
 
-            return connectionString;
+            connectionStringBuilder.DatabaseName = GetUpdatedName(connectionStringBuilder.DatabaseName);
+            connectionStringBuilder.ServerName = GetUpdatedName(connectionStringBuilder.ServerName);
+
+            return connectionStringBuilder.ConnectionString;
+
+            string GetUpdatedName(string input)
+            {
+                if(!IsTemplate(input))                
+                    return input;
+                
+                var updatedValue = input;
+                if (apiMode.SupportsMultipleInstances)
+                {
+                    updatedValue = string.Format(input, $"Ods_{odsInstanceName.ExtractNumericInstanceSuffix()}");
+                }
+                else if (apiMode == ApiMode.SharedInstance)
+                {
+                    updatedValue = string.Format(input, "Ods");
+                }
+
+                return updatedValue;
+            }
         }
 
-        private static bool IsTemplate(string connectionString)
-            => connectionString.Contains("{0}");
-
-        private static string GetModifiedConnectionString(string connectionString, string replacement)
-            => connectionString.Replace("{0}", replacement);
-    }
+        private static bool IsTemplate(string input)
+            => input.Contains("{0}");
+    }  
 }

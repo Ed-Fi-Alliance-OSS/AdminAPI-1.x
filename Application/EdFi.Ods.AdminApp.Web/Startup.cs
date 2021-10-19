@@ -15,7 +15,6 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Ods.AdminApp.Web._Installers;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
-using EdFi.Ods.AdminApp.Web.ErrorHandler;
 using EdFi.Ods.AdminApp.Web.Hubs;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
@@ -184,8 +183,6 @@ namespace EdFi.Ods.AdminApp.Web
 
             app.UseAuthorization();
 
-            app.UseMiddleware<GlobalErrorHandler>();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -205,7 +202,7 @@ namespace EdFi.Ods.AdminApp.Web
 
                             var logger = LogManager.GetLogger(typeof(Startup));
                             logger.Debug($"Development Product Registration Sink Received Message: {Environment.NewLine}{body}");
-                            
+
                             var model = JsonConvert.DeserializeObject<ProductRegistrationModel>(body);
 
                             context.Response.StatusCode = (int)HttpStatusCode.OK;

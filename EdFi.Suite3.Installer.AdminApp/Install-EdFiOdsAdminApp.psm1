@@ -581,7 +581,14 @@ function Invoke-InstallationPreCheck{
             if($targetIsNewer -and $upgradeIsSupported) {
                 Write-Host "We found a preexisting Admin App $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
                 Write-Host "Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only continue if you are you seeking to change the configuration." -ForegroundColor Yellow
-                $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
+
+                $isInteractive = [Environment]::UserInteractive
+                if($isInteractive) {
+                    $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
+                } else {
+                    $confirmation = 'y'
+                }
+
                 if(-not ($confirmation -ieq 'y')) {
                     Write-Host "Exiting."
                     exit
@@ -706,7 +713,7 @@ function GetExistingAppVersion($webSitePath,  $existingAdminApp) {
     return $existingApplicationPath, $versionString
 }
 
-function CheckVersionSupportsUpgrade($versionString) { 
+function CheckVersionSupportsUpgrade($versionString) {
     $versionIsBeforeUpgradeSupport = IsVersionHigherThanOther '2.2' $versionString
     return -not $versionIsBeforeUpgradeSupport
 }
@@ -720,7 +727,7 @@ function CheckForCompatibleUpdate($webSitePath,  $existingAdminApp, $targetVersi
         exit
     }
 
-    $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString 
+    $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString
 
     if(-not $targetIsNewer)
     {
@@ -741,7 +748,7 @@ function IsVersionHigherThanOther($versionString, $otherVersionString) {
 
 function ParseVersionWithoutTag($versionString) {
     $splitByTags = $versionString -split '-'
-    
+
     try { return [System.Version]::Parse($splitByTags[0]) }
     catch
     {
@@ -857,9 +864,14 @@ function Invoke-StartWebSite($webSiteName, $portNumber){
 
 function Invoke-ResetIIS {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
-        $default = 'n'
-        Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
-        $confirmation = Read-Host -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+        $isInteractive = [Environment]::UserInteractive
+        if($isInteractive) {
+            $default = 'n'
+            Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
+            $confirmation = Read-Host -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+        } else {
+            $default = 'y'
+        }
         if (!$confirmation) { $confirmation = $default}
         if ($confirmation -ieq 'y') {
             & {iisreset}

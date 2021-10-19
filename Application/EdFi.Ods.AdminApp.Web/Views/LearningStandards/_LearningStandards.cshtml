@@ -95,7 +95,6 @@ else
             form[0].reset();
             if (xhr.status !== edfiODS.httpStatusCodes.NoContent) {
                 location.reload();
-                ShowLearningStandardsStatus();
             }
         };
 
@@ -132,7 +131,6 @@ else
             success: function (data, status, xhr) {
                 if (xhr.status !== edfiODS.httpStatusCodes.NoContent) {
                     location.reload();
-                    ShowLearningStandardsStatus();
                 }
             },
             error: function () {

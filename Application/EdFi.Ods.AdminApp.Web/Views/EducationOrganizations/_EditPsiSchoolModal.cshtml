@@ -29,11 +29,11 @@ See the LICENSE and NOTICES files in the project root for more information.
                     @Html.InputBlock(m => m.City)
                     @Html.SelectListBlock(m => m.State, Model.StateOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value, Selected = Model.State == x.Value })
                     @Html.InputBlock(m => m.ZipCode)
-                    if (Model.AccreditationStatusOptions.Count > 1)
+                    if (Model.AccreditationStatusOptions != null && Model.AccreditationStatusOptions.Count > 1)
                     {
                         @Html.SelectListBlock(m => m.AccreditationStatus, Model.AccreditationStatusOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value, Selected = Model.AccreditationStatus == x.Value})
                     }
-                    if (Model.FederalLocaleCodeOptions.Count > 1)
+                    if (Model.FederalLocaleCodeOptions != null && Model.FederalLocaleCodeOptions.Count > 1)
                     {
                         @Html.SelectListBlock(m => m.FederalLocaleCode, Model.FederalLocaleCodeOptions, x => new SelectListItem { Text = x.DisplayText, Value = x.Value, Selected = Model.FederalLocaleCode == x.Value})
                     }

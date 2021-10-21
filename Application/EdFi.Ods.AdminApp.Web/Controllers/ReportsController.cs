@@ -14,7 +14,6 @@ using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
-using Microsoft.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -152,7 +151,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             {
                 return query.Invoke();
             }
-            catch (SqlException e)
+            catch (System.Data.SqlClient.SqlException e)
+            {
+                throw new AdminAppException("An error occurred trying to access the SQL views for reports.", e);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException e)
             {
                 throw new AdminAppException("An error occurred trying to access the SQL views for reports.", e);
             }

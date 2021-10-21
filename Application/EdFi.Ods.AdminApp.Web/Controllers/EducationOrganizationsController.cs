@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
-        private readonly IInferExtensionDetails _inferExtensionDetails;
+        private readonly IInferExtensionDetails _inferExtensionDetails;       
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
             , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService
@@ -242,8 +242,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var psiSchool = api.GetPsiSchoolById(id);
             var gradeLevelOptions = api.GetAllGradeLevels();
             var stateOptions = api.GetAllStateAbbreviations();
-            var federalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes);
-            var accreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions);
+            var federalLocaleCodeOptions = CheckAndFillIfTpdmCommunityVersion(api.GetFederalLocaleCodes);
+            var accreditationStatusOptions = CheckAndFillIfTpdmCommunityVersion(api.GetAccreditationStatusOptions);
 
             var model = _mapper.Map<EditPsiSchoolModel>(psiSchool);
             model.GradeLevelOptions = gradeLevelOptions;
@@ -319,8 +319,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     GradeLevelOptions = api.GetAllGradeLevels(),
                     StateOptions = api.GetAllStateAbbreviations(),
-                    FederalLocaleCodeOptions = BuildListWithEmptyOption(api.GetFederalLocaleCodes),
-                    AccreditationStatusOptions = BuildListWithEmptyOption(api.GetAccreditationStatusOptions),
+                    FederalLocaleCodeOptions = CheckAndFillIfTpdmCommunityVersion(api.GetFederalLocaleCodes),
+                    AccreditationStatusOptions = CheckAndFillIfTpdmCommunityVersion(api.GetAccreditationStatusOptions),
                     RequiredApiDataExist = requiredApiDataExist
                 },
                 AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
@@ -375,13 +375,24 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         private bool TpdmEnabled()
         {
-            var version = InMemoryCache.Instance.GetOrSet(
+            var versionDetails = GetTpdmExtensionDetails();
+            return !string.IsNullOrEmpty(versionDetails?.TpdmVersion);
+        }
+
+        private TpdmExtensionDetails GetTpdmExtensionDetails()
+        {
+            return InMemoryCache.Instance.GetOrSet(
                 "TpdmExtensionVersion", () =>
                     _inferExtensionDetails.TpdmExtensionVersion(
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
 
-            return !string.IsNullOrEmpty(version);
         }
+
+        private List<SelectOptionModel> CheckAndFillIfTpdmCommunityVersion(Func<List<SelectOptionModel>> optionList)
+        {
+            var details = GetTpdmExtensionDetails();
+            return details.IsTpdmCommunityVersion ? BuildListWithEmptyOption(optionList) : null;
+        }      
 
         private List<SelectOptionModel> BuildListWithEmptyOption(Func<List<SelectOptionModel>> getSelectOptionList)
         {

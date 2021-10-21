@@ -73,10 +73,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 model.OdsApiVersion = InMemoryCache.Instance
                     .GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
 
-                model.TpdmVersion = InMemoryCache.Instance.GetOrSet(
+                var tpdmVersionDetails =InMemoryCache.Instance.GetOrSet(
                     "TpdmExtensionVersion", () =>
                         _inferExtensionDetails.TpdmExtensionVersion(
                             CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+
+                model.TpdmVersion = tpdmVersionDetails.TpdmVersion;
             }
             catch (Exception exception)
             {

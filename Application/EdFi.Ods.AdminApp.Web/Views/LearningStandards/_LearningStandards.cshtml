@@ -26,16 +26,20 @@
                     Please email <a href="mailto:absupport@certicasolutions.com">absupport@certicasolutions.com</a> for general help regarding the AB Connect learning standards module.
                 </div>
             </div>
-            @using (Html.BeginForm("LearningStandards", "LearningStandards", FormMethod.Post, new { id = "learning-standards-prod-form" }))
-            {
-                @Html.ValidationBlock()
-                @Html.InputBlock(m => m.ApiKey)
-                @Html.InputBlock(m => m.ApiSecret)
-                <div class="col-xs-4"></div>
-                <div class="col-xs-6">
-                    @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
+            <div class="col-xs-12">
+                <div class="row">
+                    @using (Html.BeginForm("LearningStandards", "LearningStandards", FormMethod.Post, new { id = "learning-standards-prod-form" }))
+                    {
+                        @Html.ValidationBlock()
+                        @Html.InputBlock(m => m.ApiKey)
+                        @Html.InputBlock(m => m.ApiSecret)
+                        <div class="col-xs-4"></div>
+                        <div class="col-xs-6">
+                            @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
+                        </div>
+                    }
                 </div>
-            }
+            </div>
             <div class="col-xs-12 margin-top-10">
                 <div class="margin-top-10">
                     By enabling the AB Connect learning standards module, I agree to the <a href="https://certicasolutions.com/products/AB-Ed-Fi-terms-use/">Certica Solutions Terms of Service</a> and <a href="https://certicasolutions.com/products/AB-Ed-Fi-privacy/">Privacy Policy</a>.

@@ -27,18 +27,16 @@
                 </div>
             </div>
             <div class="col-xs-12">
-                <div class="row">
-                    @using (Html.BeginForm("LearningStandards", "LearningStandards", FormMethod.Post, new { id = "learning-standards-prod-form" }))
-                    {
-                        @Html.ValidationBlock()
-                        @Html.InputBlock(m => m.ApiKey)
-                        @Html.InputBlock(m => m.ApiSecret)
-                        <div class="col-xs-4"></div>
-                        <div class="col-xs-6">
-                            @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
-                        </div>
-                    }
-                </div>
+                @using (Html.BeginForm("LearningStandards", "LearningStandards", FormMethod.Post, new { id = "learning-standards-prod-form" }))
+                {
+                    @Html.ValidationBlock().AddClass("col-xs-12")
+                    @Html.InputBlock(m => m.ApiKey)
+                    @Html.InputBlock(m => m.ApiSecret)
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-6">
+                        @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
+                    </div>
+                }
             </div>
             <div class="col-xs-12 margin-top-10">
                 <div class="margin-top-10">

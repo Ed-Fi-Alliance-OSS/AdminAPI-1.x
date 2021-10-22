@@ -5,7 +5,7 @@
 
 using System;
 using System.Net;
-using System.Security.Authentication;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -21,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
         private readonly OdsApiConnectionInformation _connectionInformation;
 
         /// <summary>
-        /// </summary> 
+        /// </summary>
         /// <param name="connectionInformation"></param>
         public TokenRetriever(OdsApiConnectionInformation connectionInformation)
         {
@@ -36,19 +36,17 @@ namespace EdFi.Ods.AdminApp.Management.Api
             {
                 return GetBearerToken(oauthClient);
             }
-            catch (TokenRetrieverException)
+            catch (OdsApiConnectionException)
             {
                 throw;
             }
             catch (JsonException exception)
             {
-                throw new TokenRetrieverException(
-                    "Unexpected response format from API. Please verify the address ({0}) is configured correctly.",
-                    exception.Message, exception, _connectionInformation.OAuthUrl);
+                throw new AdminAppException($"Unexpected response format from API. Please verify the address ({_connectionInformation.OAuthUrl}) is configured correctly.", exception) { AllowFeedback = false, };
             }
             catch (Exception exception)
             {
-                throw new TokenRetrieverException("Unexpected error while connecting to API.", exception.Message, exception);
+                throw new AdminAppException($"Unexpected error while connecting to API: {exception.Message}", exception);
             }
         }
 
@@ -66,31 +64,26 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 case HttpStatusCode.OK:
                     break;
                 case 0:
-                    throw new TokenRetrieverException("Unable to connect to API. Please verify the API ({0}) is running.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new OdsApiConnectionException(HttpStatusCode.NotFound, bearerTokenResponse.ErrorMessage,
+                        $"No response from API. Please verify the API ({_connectionInformation.ApiServerUrl})) is running."){ AllowFeedback = false, };
                 case HttpStatusCode.NotFound:
-                    throw new TokenRetrieverException("API not found. Please verify the address ({0}) is configured correctly.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new OdsApiConnectionException(HttpStatusCode.NotFound, bearerTokenResponse.ErrorMessage,
+                        $"API not found. Please verify the address ({_connectionInformation.ApiServerUrl})) is configured correctly."){ AllowFeedback = false, };
                 case HttpStatusCode.ServiceUnavailable:
-                    throw new TokenRetrieverException("API Service is unavailable. Please verify the API ({0}) hosting configuration is correct.", bearerTokenResponse.ErrorMessage, null, _connectionInformation.ApiServerUrl);
+                    throw new OdsApiConnectionException(HttpStatusCode.ServiceUnavailable, bearerTokenResponse.ErrorMessage,
+                        "API service is unavailable. Please verify the API hosting configuration is correct."){ AllowFeedback = false, };
                 default:
-                    throw new TokenRetrieverException("Unexpected response from API.", bearerTokenResponse.ErrorMessage, null);
+                    throw new OdsApiConnectionException(HttpStatusCode.ServiceUnavailable, bearerTokenResponse.ErrorMessage,
+                        $"Unexpected response from API: {bearerTokenResponse.ErrorMessage}"){ AllowFeedback = true, };
             }
 
             if (bearerTokenResponse.Data.Error != null || bearerTokenResponse.Data.TokenType != "bearer")
             {
-                throw new TokenRetrieverException("Please verify that your application secret is correct.", "", null);
+                throw new OdsApiConnectionException(HttpStatusCode.OK, bearerTokenResponse.ErrorMessage,
+                    "Unable to retrieve an access token. Please verify that your application secret is correct.") { AllowFeedback = false, };
             }
 
             return bearerTokenResponse.Data.AccessToken;
-        }
-
-        internal class TokenRetrieverException : AuthenticationException
-        {
-            public TokenRetrieverException() { }
-
-            public TokenRetrieverException(string helpText, string error, Exception innerException, params object[] formatArgs)
-            : base(string.Format("Unable to retrieve an access token. " + helpText + (string.IsNullOrWhiteSpace(error) ? "" : " Error message: " + error), formatArgs)
-            , innerException)
-            { }
         }
     }
 

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -41,8 +42,12 @@ namespace EdFi.Ods.AdminApp.Web.ActionFilters
 
                 if (instance == null)
                 {
-                    filterContext.Result = new RedirectResult("~/Error/MultiInstanceError");
-                    return;
+                    var errorMessage = "Invalid configuration:" +
+                       " A previous version of Admin App was already setup and this version cannot continue to function." +
+                       " See the Known Issues documentation page to rerun Admin App setup in this mode," +
+                       " or switch back to using the previous mode.";
+
+                    throw new AdminAppException(errorMessage) { AllowFeedback = false };
                 }
             }
             else

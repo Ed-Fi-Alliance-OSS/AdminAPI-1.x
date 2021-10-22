@@ -15,7 +15,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
 using log4net;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -73,9 +72,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 ? (ActionResult)StatusCode((int)HttpStatusCode.InternalServerError, exception.Message)
                 : View();
         }
-
-        private bool IsReportsController(string controllerName) => controllerName.ToLower().Equals("reports");
-
 
         private bool ZeroOdsInstanceRegistrations()
         {

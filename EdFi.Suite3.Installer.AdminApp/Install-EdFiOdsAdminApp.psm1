@@ -582,12 +582,7 @@ function Invoke-InstallationPreCheck{
                 Write-Host "We found a preexisting Admin App $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
                 Write-Host "Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only continue if you are you seeking to change the configuration." -ForegroundColor Yellow
 
-                $isInteractive = [Environment]::UserInteractive
-                if($isInteractive) {
-                    $confirmation = Read-Host -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
-                } else {
-                    $confirmation = 'y'
-                }
+                $confirmation = Request-Information -DefaultValue 'y' -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
 
                 if(-not ($confirmation -ieq 'y')) {
                     Write-Host "Exiting."
@@ -626,7 +621,7 @@ function Invoke-ApplicationUpgrade {
         if($null -eq $webSite)
         {
             Write-Warning "Unable to find $existingWebSiteName on IIS."
-            $customWebSiteName = Read-Host -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
+            $customWebSiteName = Request-Information -DefaultValue "Ed-Fi" -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
             $customWebSite = Get-Website | Where-Object { $_.name -eq $customWebSiteName }
             if($null -eq $customWebSite)
             {
@@ -642,7 +637,7 @@ function Invoke-ApplicationUpgrade {
         if($null -eq $existingAdminApp)
         {
             Write-Warning "Unable to find $existingAppName on IIS."
-            $customApplicationName = Read-Host -Prompt "If you previously installed AdminApp with a custom name, please enter that custom name"
+            $customApplicationName = Request-Information -DefaultValue "AdminApp" -Prompt "If you previously installed AdminApp with a custom name, please enter that custom name"
             $customAdminAppApplication = get-webapplication $customApplicationName
             if($null -eq $customAdminAppApplication)
             {
@@ -666,13 +661,13 @@ function Invoke-ApplicationUpgrade {
         if(Test-Path -Path $destinationBackupPath)
         {
             Write-Warning "Back up folder already exists $destinationBackupPath."
-            $overwriteConfirmation = Read-Host -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
+            $overwriteConfirmation = Request-Information -DefaultValue 'y' -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
             if($overwriteConfirmation -ieq 'y')
             {
                 Get-ChildItem -Path $destinationBackupPath -Force -Recurse | Sort-Object -Property FullName -Descending | Remove-Item
             }
             else {
-                $newDirectory = Read-Host -Prompt "Please enter back up folder name"
+                $newDirectory = Request-Information -DefaultValue "\" -Prompt "Please enter back up folder name"
                 $destinationBackupPath = "$basePath\$newDirectory\"
                 New-Item -ItemType directory -Path $destinationBackupPath
             }
@@ -864,14 +859,9 @@ function Invoke-StartWebSite($webSiteName, $portNumber){
 
 function Invoke-ResetIIS {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
-        $isInteractive = [Environment]::UserInteractive
-        if($isInteractive) {
-            $default = 'n'
-            Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
-            $confirmation = Read-Host -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
-        } else {
-            $default = 'y'
-        }
+        $default = 'n'
+        $confirmation = Request-Information -DefaultValue 'y' -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+
         if (!$confirmation) { $confirmation = $default}
         if ($confirmation -ieq 'y') {
             & {iisreset}
@@ -1134,6 +1124,25 @@ function Invoke-DbUpScripts {
 
         Invoke-DbDeploy @params
     }
+}
+
+function Request-Information {
+  [CmdletBinding()]
+  param (
+      [Parameter(Mandatory=$true)]
+      $Prompt,
+      [Parameter(Mandatory=$true)]
+      $DefaultValue
+  )
+
+  $isInteractive = [Environment]::UserInteractive
+  if($isInteractive) {
+      $confirmation = Read-Host -Prompt $Prompt
+  } else {
+      $confirmation = $DefaultValue
+  }
+
+  return $confirmation
 }
 
 function Install-Application {

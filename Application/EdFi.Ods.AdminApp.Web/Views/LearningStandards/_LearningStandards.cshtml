@@ -14,7 +14,7 @@
 {
     if (!Model.SynchronizationWasSuccessful && !Model.IsJobRunning)
     {
-        <div class="tab-pane active" id="form-tab-content-prod">
+        <div class="tab-pane active row" id="form-tab-content-prod">
             <div class="col-xs-12 margin-bottom-10">
                 <div class="margin-bottom-10">
                     AB Connect, provided by Certica Solutions, includes the Academic Benchmarks repository of learning standards and is the source for your Ed-Fi learning standards reference data. Once the AB Connect learning standards module is enabled, you can load and refresh your Ed-Fi ODS learning standards reference data.
@@ -26,16 +26,18 @@
                     Please email <a href="mailto:absupport@certicasolutions.com">absupport@certicasolutions.com</a> for general help regarding the AB Connect learning standards module.
                 </div>
             </div>
-            @using (Html.BeginForm("LearningStandards", "LearningStandards", FormMethod.Post, new { id = "learning-standards-prod-form" }))
-            {
-                @Html.ValidationBlock()
-                @Html.InputBlock(m => m.ApiKey)
-                @Html.InputBlock(m => m.ApiSecret)
-                <div class="col-xs-4"></div>
-                <div class="col-xs-6">
-                    @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
-                </div>
-            }
+            <div class="col-xs-12">
+                @using (Html.BeginForm("LearningStandards", "LearningStandards", FormMethod.Post, new { id = "learning-standards-prod-form" }))
+                {
+                    @Html.ValidationBlock().AddClass("col-xs-12")
+                    @Html.InputBlock(m => m.ApiKey)
+                    @Html.InputBlock(m => m.ApiSecret)
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-6">
+                        @Html.SaveButton("Enable Learning Standards").Id("learning-standards-prod-button").AddClass("no-ajax")
+                    </div>
+                }
+            </div>
             <div class="col-xs-12 margin-top-10">
                 <div class="margin-top-10">
                     By enabling the AB Connect learning standards module, I agree to the <a href="https://certicasolutions.com/products/AB-Ed-Fi-terms-use/">Certica Solutions Terms of Service</a> and <a href="https://certicasolutions.com/products/AB-Ed-Fi-privacy/">Privacy Policy</a>.

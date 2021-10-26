@@ -74,9 +74,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 : View(errorModel);
         }
 
-        private bool IsReportsController(string controllerName) => controllerName.ToLower().Equals("reports");
-
-
         private bool ZeroOdsInstanceRegistrations()
         {
             return CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances &&

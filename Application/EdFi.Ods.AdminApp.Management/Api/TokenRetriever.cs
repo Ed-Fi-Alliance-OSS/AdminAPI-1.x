@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -59,13 +59,17 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             var bearerTokenResponse = oauthClient.Execute<BearerTokenResponse>(bearerTokenRequest);
 
+            var additionalErrorMessage = "<br/> Please verify the configuration and try restarting the ODS / API. Then, reload this to see if this same error occurs." +
+                               " If the error persists, you can find more information and context in the application logs. If you are unable to identify the issue or resolve it, please schedule a ticket via <a href='https://tracker.ed-fi.org/projects/EDFI/issues'>Ed-Fi Tracker</a>" +
+                               " or visit <a href='https://techdocs.ed-fi.org/display/ADMIN'>Admin App documentation</a> for more information.";
+
             switch (bearerTokenResponse.StatusCode)
             {
                 case HttpStatusCode.OK:
                     break;
                 case 0:
                     throw new OdsApiConnectionException(HttpStatusCode.NotFound, bearerTokenResponse.ErrorMessage,
-                        $"No response from API. Please verify the API ({_connectionInformation.ApiServerUrl})) is running."){ AllowFeedback = false, };
+                        $"No response from API. Please verify the API ({_connectionInformation.ApiServerUrl})) is running. {additionalErrorMessage}"){ AllowFeedback = false, };
                 case HttpStatusCode.NotFound:
                     throw new OdsApiConnectionException(HttpStatusCode.NotFound, bearerTokenResponse.ErrorMessage,
                         $"API not found. Please verify the address ({_connectionInformation.ApiServerUrl})) is configured correctly."){ AllowFeedback = false, };
@@ -74,7 +78,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                         "API service is unavailable. Please verify the API hosting configuration is correct."){ AllowFeedback = false, };
                 default:
                     throw new OdsApiConnectionException(HttpStatusCode.ServiceUnavailable, bearerTokenResponse.ErrorMessage,
-                        $"Unexpected response from API: {bearerTokenResponse.ErrorMessage}"){ AllowFeedback = true, };
+                        $"Unexpected response from API: {bearerTokenResponse.ErrorMessage}. {additionalErrorMessage}"){ AllowFeedback = true, };
             }
 
             if (bearerTokenResponse.Data.Error != null || bearerTokenResponse.Data.TokenType != "bearer")

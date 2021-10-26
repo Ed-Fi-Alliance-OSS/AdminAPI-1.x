@@ -358,7 +358,6 @@ function LoadAsyncActions() {
     $(".load-action-async").each(function () {
         var $target = $(this);
         var sourceUrl = $target.attr("data-source-url");
-        var customErrorMessage = $target.attr("data-error-message");
 
         $.ajax({
             async: true,
@@ -368,22 +367,7 @@ function LoadAsyncActions() {
                 $target.html(data);
             },
             error: function (jqXhr) {
-                var errorMessage = "The following error occurred while loading page content: <br/><br/>";
-                if (!StringIsNullOrWhitespace(jqXhr.responseText)) {
-                    errorMessage = errorMessage + "<b>" + jqXhr.responseText + "</b>";
-                }
-
-                if (jqXhr.status > 0) {
-                    errorMessage = errorMessage + " Status " + jqXhr.status;
-                } else {
-                    errorMessage = errorMessage + "No response from server";
-                }
-
-                if (!StringIsNullOrWhitespace(customErrorMessage)) {
-                    errorMessage = errorMessage + ". <br/><br/>" + customErrorMessage;
-                }
-
-                $target.html("<em class='text-danger'>" + errorMessage + "</em>");
+                $target.html(jqXhr.responseText);
             },
             complete: function() {
                 $target.removeClass("load-action-async");

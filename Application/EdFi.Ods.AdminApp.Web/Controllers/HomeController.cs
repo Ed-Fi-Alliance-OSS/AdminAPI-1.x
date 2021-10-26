@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,6 @@ using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
 using log4net;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -65,13 +65,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult Error()
         {
             var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            var exception = exceptionHandlerFeature.Error;
+            var exception = exceptionHandlerFeature?.Error ?? new Exception();
 
-            _logger.Error(exception);
+            var errorModel = new ErrorModel(exception);
 
             return HttpContext.Request.IsAjaxRequest()
-                ? (ActionResult)StatusCode((int)HttpStatusCode.InternalServerError, exception.Message)
-                : View();
+                ? (ActionResult) PartialView("_ErrorFeedback", errorModel)
+                : View(errorModel);
         }
 
         private bool IsReportsController(string controllerName) => controllerName.ToLower().Equals("reports");

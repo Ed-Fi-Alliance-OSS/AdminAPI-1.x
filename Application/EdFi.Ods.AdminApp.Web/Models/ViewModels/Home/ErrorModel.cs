@@ -6,7 +6,6 @@
 using System;
 using System.Net;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using EdFi.Ods.AdminApp.Web.Controllers;
 using log4net;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -14,7 +13,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Home
 {
     public class ErrorModel: PageModel
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(ErrorModel));
 
         public string Message { get; }
         public string StackTrace { get; }

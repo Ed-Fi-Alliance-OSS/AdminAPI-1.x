@@ -14,7 +14,6 @@ using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
-using log4net;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -24,8 +23,6 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     {
         private readonly IHomeScreenDisplayService _homeScreenDisplayService;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
-        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
-
 
         public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
         {

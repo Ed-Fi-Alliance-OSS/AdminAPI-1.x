@@ -14,6 +14,7 @@
   <files>
     <file src="install.ps1" />
     <file src="upgrade.ps1" />
+    <file src="uninstall.ps1" />
     <file src="global.json" />
     <file src="Install-EdFiOdsAdminApp.psm1" />
     <file src="AppCommon/**" />

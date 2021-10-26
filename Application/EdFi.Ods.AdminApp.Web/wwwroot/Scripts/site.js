@@ -485,6 +485,8 @@ function FieldValues() {
     var fieldValues = {};
 
     var errorDescription = $("#errorDescription");
+    var errorStackTrace = $("#stackTrace");
+    var errorStatus = $("#errorStatus");
     var summary = $("#errorSummary");
 
     fieldValues["summary"] = summary.length ? summary.text() : "Admin App Feedback";
@@ -493,7 +495,14 @@ function FieldValues() {
     fieldValues["components"] = ["13314"];
 
     if (errorDescription.length) {
-        var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n {code}"+errorDescription.text()+"{code}";
+        var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n" +
+            "PLEASE REMOVE ANY PERSONALLY IDENTIFIABLE INFORMATION FROM THE FOLLOWING STACK TRACE \n ---- \n" +
+            errorDescription.text() + "\n" + errorStatus.text();
+
+        if (errorStackTrace.length) {
+            description += "\n {code}" + errorStackTrace.text() + "{code}";
+        }
+
         fieldValues["description"] = description;
     };
 

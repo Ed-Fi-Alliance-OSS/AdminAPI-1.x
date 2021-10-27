@@ -55,14 +55,50 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             }";
         }
 
+        private static string ExampleOdsRootDocumentWithInformationalVersion(string dataModel, string version, string infoVersion)
+        {
+            return @"{
+                ""version"": ""5.2"",
+                ""informationalVersion"": ""5.2"",
+                ""suite"": ""3"",
+                ""build"": ""5.2.14406.0"",
+                ""apiMode"": ""Sandbox"",
+                ""dataModels"": [
+                    { ""name"": ""Ed-Fi"", ""version"": ""3.3.0-a"" },
+                    { ""name"": """ + dataModel + @""", ""version"": """ + version + @""", ""informationalVersion"": """ + infoVersion + @"""}
+                ],
+                ""urls"": {
+                    ""dependencies"": ""https://api.ed-fi.org/v5.2/api/metadata/data/v3/dependencies"",
+                    ""openApiMetadata"": ""https://api.ed-fi.org/v5.2/api/metadata/"",
+                    ""oauth"": ""https://api.ed-fi.org/v5.2/api/oauth/token"",
+                    ""dataManagementApi"": ""https://api.ed-fi.org/v5.2/api/data/v3/"",
+                    ""xsdMetadata"": ""https://api.ed-fi.org/v5.2/api/metadata/xsd""
+                }
+            }";
+        }
+
         private static string TpdmExtensionVersion(string dataModel, string version)
         {
             var rootDocument = ExampleOdsRootDocument(dataModel, version);
 
+            return TpdmExtensionVersion(rootDocument).TpdmVersion;
+        }
+
+        private static TpdmExtensionDetails TpdmCore(string dataModel, string version)
+        {
+            var rootDocument = ExampleOdsRootDocumentWithInformationalVersion(dataModel, version, "TPDM-Core");
+
             return TpdmExtensionVersion(rootDocument);
         }
 
-        private static string TpdmExtensionVersion(string rootDocument)
+        private static TpdmExtensionDetails TpdmCommunity(string dataModel, string version)
+        {
+            var rootDocument = ExampleOdsRootDocumentWithInformationalVersion(dataModel, version, "TPDM-Community");
+
+            return TpdmExtensionVersion(rootDocument);
+        }
+
+        private static TpdmExtensionDetails TpdmExtensionVersion(string rootDocument)
         {
             var getRootDocument = new StubGetRequest(OdsRootUri, rootDocument);
 
@@ -74,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         [Test]
         public void CanDetectWhenTpdmModuleIsNotPresent()
         {
-            TpdmExtensionVersion("GrandBend", "1.0.0").ShouldBe("");
+            TpdmExtensionVersion("GrandBend", "1.0.0").ShouldBeNull();
         }
 
         [Test]
@@ -107,12 +143,40 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         [Test]
         public void DegradesGracefullyForMalformedOdsRootDocument()
         {
-            TpdmExtensionVersion("{}").ShouldBe(""); //Missing expected key.
-            TpdmExtensionVersion(@"{""dataModels"":5}").ShouldBe(""); //Expected key has unexpected simple value.
-            TpdmExtensionVersion(@"{""dataModels"":{""A"": 1}}").ShouldBe(""); //Expected key has unexpeted object value.
-            TpdmExtensionVersion(@"{""dataModels"":[1]}").ShouldBe(""); //Expected key has expected array but unexpected item type.
-            TpdmExtensionVersion(@"{""dataModels"":[{""name"": ""TPDM""}]}").ShouldBe(""); //Expected array lacks expected name.
-            TpdmExtensionVersion(@"{""dataModels"":[{""version"": ""1.0.0""}]}").ShouldBe(""); //Expected array lacks expected version.
+            TpdmExtensionVersion("{}").TpdmVersion.ShouldBeNull(); //Missing expected key.
+            TpdmExtensionVersion(@"{""dataModels"":5}").TpdmVersion.ShouldBeNull(); //Expected key has unexpected simple value.
+            TpdmExtensionVersion(@"{""dataModels"":{""A"": 1}}").TpdmVersion.ShouldBeNull(); //Expected key has unexpeted object value.
+            TpdmExtensionVersion(@"{""dataModels"":[1]}").TpdmVersion.ShouldBeNull(); //Expected key has expected array but unexpected item type.
+            TpdmExtensionVersion(@"{""dataModels"":[{""name"": ""TPDM""}]}").TpdmVersion.ShouldBeNull(); //Expected array lacks expected name.
+            TpdmExtensionVersion(@"{""dataModels"":[{""version"": ""1.0.0""}]}").TpdmVersion.ShouldBeNull(); //Expected array lacks expected version.
+        }
+
+        [Test]
+        public void CanDetectWhenTpdmCoreModuleIsPresentWithSupportedVersion()
+        {
+            var expectedVersion = "1.1.0";
+            var tpdmExtension = TpdmCore("TPDM", expectedVersion);
+            tpdmExtension.TpdmVersion.ShouldBe(expectedVersion);
+            tpdmExtension.IsTpdmCommunityVersion.ShouldBeFalse();
+        }
+
+        [Test]
+        public void CanDetectWhenTpdmCommunityModuleIsPresentWithSupportedVersion()
+        {
+            var expectedVersion = "1.0.0";
+            var tpdmExtension = TpdmCommunity("TPDM", expectedVersion);
+            tpdmExtension.TpdmVersion.ShouldBe(expectedVersion);
+            tpdmExtension.IsTpdmCommunityVersion.ShouldBeTrue();
+        }
+
+        [Test]
+        public void CanDetectWhenTpdmCommunityModuleIsPresentWithSupportedVersionNoInformationalVersion()
+        {
+            var expectedVersion = "1.0.0";
+            var rootDocument = ExampleOdsRootDocument("TPDM", expectedVersion);
+            var tpdmExtension = TpdmExtensionVersion(rootDocument);
+            tpdmExtension.TpdmVersion.ShouldBe(expectedVersion);
+            tpdmExtension.IsTpdmCommunityVersion.ShouldBeTrue();
         }
     }
 }

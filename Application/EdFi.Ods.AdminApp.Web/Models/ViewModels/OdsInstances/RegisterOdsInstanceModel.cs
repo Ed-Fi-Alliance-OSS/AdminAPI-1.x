@@ -95,30 +95,22 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
         private static bool BeAUniqueInstanceName(int? newInstanceNumericSuffix)
         {
-            var newInstanceDatabaseName = InferInstanceDatabaseName(newInstanceNumericSuffix);
-            return newInstanceDatabaseName != "" && !_database.OdsInstanceRegistrations.Any(x => x.Name == newInstanceDatabaseName);
+            var newInstanceName = newInstanceNumericSuffix.ToString();
+            return newInstanceName != "" && !_database.OdsInstanceRegistrations.Any(x => x.Name == newInstanceName);
         }
 
         private static bool BeWithinApplicationNameMaxLength(RegisterOdsInstanceModel model, int? newInstanceNumericSuffix, PropertyValidatorContext context)
         {
-            var newInstanceDatabaseName = InferInstanceDatabaseName(newInstanceNumericSuffix);
-            var extraCharactersInPrefix = newInstanceDatabaseName.GetAdminApplicationName().Length - ApplicationExtensions.MaximumApplicationNameLength;
+            var extraCharactersInPrefix = newInstanceNumericSuffix.ToString().GetAdminApplicationName().Length - ApplicationExtensions.MaximumApplicationNameLength;
             if (extraCharactersInPrefix <= 0)
             {
                 return true;
             }
 
             context.Rule.MessageBuilder = c
-                => $"The resulting database name {newInstanceDatabaseName} would be too long for Admin App to set up necessary Application records." +
-                   $" Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by {extraCharactersInPrefix} character(s).";
+                => $"The instance id/name {newInstanceNumericSuffix} would be too long for Admin App to set up necessary Application records.";
 
             return  false;
-        }
-
-        private static string InferInstanceDatabaseName(int? newInstanceNumericSuffix)
-        {
-            using (var connection = _databaseConnectionProvider.CreateNewConnection(newInstanceNumericSuffix.Value, _mode))
-                return connection.Database;
         }
 
         private static bool BeAUniqueInstanceDescription(string newInstanceDescription)

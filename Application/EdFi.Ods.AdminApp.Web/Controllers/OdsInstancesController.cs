@@ -63,6 +63,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                         {
                             Id = x.Id,
                             Name = x.Name,
+                            DatabaseName = x.DatabaseName,
                             Description = x.Description,
                             SchoolYearDescription =
                                 _getCurrentSchoolYear

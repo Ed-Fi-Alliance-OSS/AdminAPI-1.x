@@ -48,8 +48,8 @@ See the LICENSE and NOTICES files in the project root for more information.
                         @foreach (var instance in Model.OdsInstances)
                         {
                             <tr>
-                                <th scope="row"><a class="instance-settings" href="@Url.Action("ActivateOdsInstance", "OdsInstances", new {instanceId = instance.Id})">@instance.Name.ExtractNumericInstanceSuffix().ToString()</a></th>
-                                <td>@instance.Name</td>
+                                <th scope="row"><a class="instance-settings" href="@Url.Action("ActivateOdsInstance", "OdsInstances", new {instanceId = instance.Id})">@instance.Name</a></th>
+                                <td>@instance.DatabaseName</td>
                                 <td>@instance.Description</td>
                                 <td>
                                     @instance.SchoolYearDescription

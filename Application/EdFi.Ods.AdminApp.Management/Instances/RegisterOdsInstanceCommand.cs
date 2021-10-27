@@ -33,23 +33,24 @@ namespace EdFi.Ods.AdminApp.Management.Instances
 
         public async Task<int> Execute(IRegisterOdsInstanceModel instance, ApiMode mode, string userId, CloudOdsClaimSet cloudOdsClaimSet = null)
         {
-            var instanceName = InferInstanceDatabaseName(instance.NumericSuffix.Value, mode);
+            var instanceName = instance.NumericSuffix.Value.ToString();
 
             var newInstance = new OdsInstanceRegistration
             {
                 Name = instanceName,
+                DatabaseName = InferInstanceDatabaseName(instance.NumericSuffix.Value, mode),
                 Description = instance.Description
             };
             await _odsInstanceFirstTimeSetupService.CompleteSetup(newInstance, cloudOdsClaimSet, mode);
 
-            _identity.UserOdsInstanceRegistrations.Add(
+            await _identity.UserOdsInstanceRegistrations.AddAsync(
                 new UserOdsInstanceRegistration
                 {
                     OdsInstanceRegistrationId = newInstance.Id,
                     UserId = userId
                 });
 
-            _identity.SaveChanges();
+            await _identity.SaveChangesAsync();
 
             if (mode == ApiMode.YearSpecific)
                 _setCurrentSchoolYear.Execute(instanceName, mode, (short)instance.NumericSuffix.Value);
@@ -59,8 +60,9 @@ namespace EdFi.Ods.AdminApp.Management.Instances
 
         private string InferInstanceDatabaseName(int odsInstanceNumericSuffix, ApiMode mode)
         {
-            using (var connection = _connectionProvider.CreateNewConnection(odsInstanceNumericSuffix, mode))
-                return connection.Database;
+            using var connection = _connectionProvider.CreateNewConnection(odsInstanceNumericSuffix, mode);
+
+            return connection.Database;
         }
     }
 

@@ -31,7 +31,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
-        private readonly IInferExtensionDetails _inferExtensionDetails;       
+        private readonly IInferExtensionDetails _inferExtensionDetails;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
             , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService

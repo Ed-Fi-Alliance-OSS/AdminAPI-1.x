@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 {
     public interface IInferExtensionDetails
     {
-        TpdmExtensionDetails TpdmExtensionVersion(string apiServerUrl);        
+        TpdmExtensionDetails TpdmExtensionVersion(string apiServerUrl);
     }
 
     public class InferExtensionDetails : IInferExtensionDetails
@@ -42,9 +42,11 @@ namespace EdFi.Ods.AdminApp.Management.Api
                                 var version = versionToken.ToString(CultureInfo.InvariantCulture);
                                 versionDetails.TpdmVersion = new Version(version) >= new Version("1.0.0") ? version : string.Empty;
                             }
-                            versionDetails.IsTpdmCommunityVersion = dataModel["informationalVersion"] == null
-                                    || !(dataModel["informationalVersion"] is JValue informationalVersionToken
-                                    && informationalVersionToken.ToString(CultureInfo.InvariantCulture).ToLower().Equals("tpdm-core"));
+
+                            var isTpdmCore = dataModel["informationalVersion"] is JValue informationalVersionToken
+                                             && informationalVersionToken.ToString(CultureInfo.InvariantCulture).ToLower()
+                                                 .Equals("tpdm-core");
+                            versionDetails.IsTpdmCommunityVersion = dataModel["informationalVersion"] == null || !isTpdmCore;
                         }
                 }
             }

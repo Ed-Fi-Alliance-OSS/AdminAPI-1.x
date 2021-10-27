@@ -407,7 +407,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             const string gradeLevel = "FirstGrade";
             var value = "Namespace#FirstGrade";
             var schoolId = "id";
-            var name = "school";           
+            var name = "school";       
 
             var editPsiSchoolModel = new EditPsiSchoolModel
             {
@@ -417,7 +417,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             var tpdmVersionDetails = new TpdmExtensionDetails()
             {
                 TpdmVersion = "1.1.0", IsTpdmCommunityVersion = false
-            };          
+            };
             _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
 
             _mockOdsApiFacade.Setup(x => x.GetPsiSchoolById(schoolId))
@@ -427,7 +427,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
                 .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
             _mockOdsApiFacadeFactory.Setup(x => x.Create())
-                .Returns(Task.FromResult(_mockOdsApiFacade.Object));          
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _mockOdsApiFacade.Setup(x => x.GetAccreditationStatusOptions()).Returns<List<SelectOptionModel>>(null);
+            _mockOdsApiFacade.Setup(x => x.GetFederalLocaleCodes()).Returns<List<SelectOptionModel>>(null);
             _controller =
                 new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _mockInferExtensionDetails.Object);
 

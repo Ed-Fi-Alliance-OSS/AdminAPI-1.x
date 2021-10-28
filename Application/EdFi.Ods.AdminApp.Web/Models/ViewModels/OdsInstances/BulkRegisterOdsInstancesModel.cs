@@ -93,8 +93,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                             (model, context) =>
                             {
                                 var validator = new RegisterOdsInstanceModelValidator(
-                                    database, apiModeProvider, databaseValidationService,
-                                    databaseConnectionProvider, true);
+                                    database, apiModeProvider, databaseValidationService, true);
 
                                 var newOdsInstancesToRegister = dataFilterService.FilteredRecords(model.DataRecords(), mode).ToList();
                                 model.FilteredDataRecords = newOdsInstancesToRegister;

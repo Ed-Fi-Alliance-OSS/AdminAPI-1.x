@@ -6,13 +6,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using FluentValidation;
-using FluentValidation.Validators;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 {
@@ -28,18 +25,15 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
     {
         private static AdminAppDbContext _database;
         private static IDatabaseValidationService _databaseValidationService;
-        private static IDatabaseConnectionProvider _databaseConnectionProvider;
         private static ApiMode _mode;
 
         public RegisterOdsInstanceModelValidator(AdminAppDbContext database
             , ICloudOdsAdminAppSettingsApiModeProvider apiModeProvider
             , IDatabaseValidationService databaseValidationService
-            , IDatabaseConnectionProvider databaseConnectionProvider
             , bool validationMessageWithDetails = false)
         {
             _database = database;
             _databaseValidationService = databaseValidationService;
-            _databaseConnectionProvider = databaseConnectionProvider;
             var requiredNumericSuffixMessage = "'ODS Instance District / EdOrg Id' must not be empty.";
             var inRangeMessage = "'ODS Instance District / EdOrg Id' must be a valid positive integer.";
             var maxValue = int.MaxValue;
@@ -57,10 +51,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             }
 
             RuleFor(m => m.NumericSuffix).NotEmpty().WithMessage(requiredNumericSuffixMessage);
-
-            RuleFor(m => m.NumericSuffix)
-                .Must(BeWithinApplicationNameMaxLength)
-                .When(x => x.NumericSuffix != null);
 
             RuleFor(m => m.NumericSuffix)
                 .Must(x=> x <= maxValue && x >= minValue)
@@ -97,20 +87,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
         {
             var newInstanceName = newInstanceNumericSuffix.ToString();
             return newInstanceName != "" && !_database.OdsInstanceRegistrations.Any(x => x.Name == newInstanceName);
-        }
-
-        private static bool BeWithinApplicationNameMaxLength(RegisterOdsInstanceModel model, int? newInstanceNumericSuffix, PropertyValidatorContext context)
-        {
-            var extraCharactersInPrefix = newInstanceNumericSuffix.ToString().GetAdminApplicationName().Length - ApplicationExtensions.MaximumApplicationNameLength;
-            if (extraCharactersInPrefix <= 0)
-            {
-                return true;
-            }
-
-            context.Rule.MessageBuilder = c
-                => $"The instance id/name {newInstanceNumericSuffix} would be too long for Admin App to set up necessary Application records.";
-
-            return  false;
         }
 
         private static bool BeAUniqueInstanceDescription(string newInstanceDescription)

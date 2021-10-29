@@ -19,4 +19,5 @@ object AdminAppInstallerProject : Project({
 
     buildType(_self.buildTypes.BuildAdminAppInstaller)
     buildType(_self.buildTypes.Deploy)
+    buildType(_self.buildTypes.RepackageAdminAppInstallerAndPushToAzureBlobStorage)
 })

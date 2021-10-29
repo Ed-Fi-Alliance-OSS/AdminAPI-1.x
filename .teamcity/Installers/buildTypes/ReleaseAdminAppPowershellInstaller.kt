@@ -16,7 +16,6 @@ object ReleaseAdminAppPowerShellInstaller : BuildType({
     maxRunningBuilds = 1
     params {
         param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", """{"endpointCredentials": [{"endpoint": "%azureArtifacts.feed.nuget%","username": "%azureArtifacts.edFiBuildAgent.userName%","password": "%azureArtifacts.edFiBuildAgent.accessToken%"}]}""")
-        param("project.directory", """Ed-Fi-ODS-AdminApp\%project.name%""")
     }
     steps {
         powerShell {

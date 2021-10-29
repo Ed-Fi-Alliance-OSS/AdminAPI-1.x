@@ -12,10 +12,6 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.powerShell
 object RepackageAdminAppInstallerAndPushToAzureBlobStorage : BuildType({
     name = "Repackage Admin App Installer and Push to Azure Blob Storage"
 
-    params {
-        param("project.directory", """Ed-Fi-ODS-AdminApp\%project.name%""")
-    }
-
     steps {
         powerShell {
             name = "Repackage and Push"

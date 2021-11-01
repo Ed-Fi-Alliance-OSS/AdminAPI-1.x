@@ -37,6 +37,11 @@ function MeetsMinimumNuGetVersion {
     }
 }
 
+function Set-TlsVersion {
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
+}
+
 function Install-NugetCli {
     param(
         [string]
@@ -65,6 +70,7 @@ function Install-NugetCli {
 
     Write-Host "Downloading nuget.exe official distribution from " $sourceNugetExe
     Write-Host "Saving to $exePath"
+    Set-TlsVersion
     Invoke-WebRequest $sourceNugetExe -OutFile $exePath
 
     return $exePath

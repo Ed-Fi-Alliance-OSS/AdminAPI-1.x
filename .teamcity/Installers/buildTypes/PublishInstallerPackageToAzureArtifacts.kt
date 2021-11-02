@@ -8,8 +8,8 @@ package _self.buildTypes
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.powerShell
 
-object ReleaseAdminAppPowerShellInstaller : BuildType({
-    name = "Release AdminApp PowerShell Installer"
+object PublishInstallerPackageToAzureArtifacts : BuildType({
+    name = "Publish Installer Package To Azure Artifacts"
 
     enablePersonalBuilds = false
     type = BuildTypeSettings.Type.DEPLOYMENT

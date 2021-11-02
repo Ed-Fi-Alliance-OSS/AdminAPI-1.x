@@ -13,7 +13,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.finishBuildTrigger
 object Deploy : BuildType ({
     name = "Deploy"
     description = "Creates a release in Octopus Deploy and triggers its deployment to the test server"
-    
+
     type = BuildTypeSettings.Type.DEPLOYMENT
 
     params {
@@ -37,8 +37,8 @@ object Deploy : BuildType ({
             scriptMode = script {
                 content = """
                     Write-Host "##teamcity[setParameter name='octopus.package' value='$(Get-ChildItem -Filter "*Installer.AdminApp*")']"
-                    Write-Host "##teamcity[setParameter name='octopus.packageVersion' value='$( Get-ChildItem -Filter "*Installer.AdminApp*" |% {  
-                            ${'$'}result = ${'$'}${'_'}.Name -match '(\d)\.(\d)\.(\d)(\-pre(\d+))?' 
+                    Write-Host "##teamcity[setParameter name='octopus.packageVersion' value='$( Get-ChildItem -Filter "*Installer.AdminApp*" |% {
+                            ${'$'}result = ${'$'}${'_'}.Name -match '(\d)\.(\d)\.(\d)(\-pre(\d+))?'
                             ${'$'}matches[0] })']"
                  """
             }

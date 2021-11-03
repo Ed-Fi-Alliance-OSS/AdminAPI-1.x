@@ -59,9 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             var bearerTokenResponse = oauthClient.Execute<BearerTokenResponse>(bearerTokenRequest);
 
-            var additionalErrorMessage = "<br/> Please verify the configuration and try restarting the ODS / API. Then, reload this to see if this same error occurs." +
-                               " If the error persists, you can find more information and context in the application logs. If you are unable to identify the issue or resolve it, please schedule a ticket via <a href='https://tracker.ed-fi.org/projects/EDFI/issues'>Ed-Fi Tracker</a>" +
-                               " or visit <a href='https://techdocs.ed-fi.org/display/ADMIN'>Admin App documentation</a> for more information.";
+            var additionalErrorMessage = "<br/> Please verify the configuration and try restarting the ODS / API. Then, reload this to see if this same error occurs.";
 
             switch (bearerTokenResponse.StatusCode)
             {

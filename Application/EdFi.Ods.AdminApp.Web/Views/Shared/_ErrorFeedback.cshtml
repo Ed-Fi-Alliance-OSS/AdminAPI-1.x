@@ -12,7 +12,7 @@
     <div class="col-md-12">
         @if (!string.IsNullOrEmpty(Model.Message))
         {
-            <p id="errorDescription"><em class='text-danger'><b>@(new HtmlString(Model.Message))</b></em></p>
+            <p id="errorDescription"><em class="text-danger"><b>@(new HtmlString(Model.Message))</b></em></p>
         }
         else
         {
@@ -20,30 +20,31 @@
         }
         @if (Model.StatusCode != null)
         {
-            <p id="errorStatus"><em class='text-danger'><b> Status: @((int)Model.StatusCode)</b></em></p>
+            <p id="errorStatus"><em class="text-danger"><b> Status: @((int)Model.StatusCode)</b></em></p>
         }
         else
         {
-            <p id="errorStatus"><em class='text-danger'><b>No response from server</b></em></p>
+            <p id="errorStatus"><em class="text-danger"><b>No response from server</b></em></p>
         }
-        @if (Model.IsStackTraceRelevant)
+        <p>
+            <em class="text-danger">
+                If the error persists, you can find more information and context in the application logs. If you are unable to identify the issue or resolve it, please schedule a ticket via <a href='https://tracker.ed-fi.org/projects/EDFI/issues'>Ed-Fi Tracker</a>
+                or visit <a href='https://techdocs.ed-fi.org/display/ADMIN'>Admin App documentation</a> for more information.
+            </em>
+        </p>
+        @if (!string.IsNullOrEmpty(Model.StackTrace))
         {
-            @if (!string.IsNullOrEmpty(Model.StackTrace))
-            {
-                <p><em class='text-danger'><b>Error Stack Trace:</b></em></p>
+            <div style="@(Model.IsStackTraceRelevant? "display:block" : "display:none")">
+                <p><em class="text-danger"><b>Error Stack Trace:</b></em></p>
                 <code id="stackTrace">@Model.StackTrace</code>
-            }
+            </div>
         }
         <br />
     </div>
 </div>
-@if (Model.AllowFeedback)
-{
-    <div class="row">
-        <div class="padding-top-5 text-center">
-            <a href="javascript:history.go(-1);" class="btn btn-primary cta">Back</a>
-            <a href="#" id="error-report-button" class="btn btn-primary cta hidden">Report Error</a>
-        </div>
+<div class="row">
+    <div class="padding-top-5 text-center">
+        <a href="javascript:history.go(-1);" class="btn btn-primary cta">Back</a>
+        <a href="#" id="error-report-button" class="@(Model.AllowFeedback? "btn btn-primary cta" : "btn btn-primary cta hidden")">Report Error</a>
     </div>
-}
-
+</div>

@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
@@ -63,8 +62,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
 
         public BulkRegisterOdsInstancesModelValidator(AdminAppDbContext database
             , ICloudOdsAdminAppSettingsApiModeProvider apiModeProvider
-            , IDatabaseValidationService databaseValidationService
-            , IDatabaseConnectionProvider databaseConnectionProvider
+            , IDatabaseValidationService databaseValidationService            
             , IBulkRegisterOdsInstancesFiltrationService dataFilterService)
         {
             var mode = apiModeProvider.GetApiMode();
@@ -93,8 +91,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                             (model, context) =>
                             {
                                 var validator = new RegisterOdsInstanceModelValidator(
-                                    database, apiModeProvider, databaseValidationService,
-                                    databaseConnectionProvider, true);
+                                    database, apiModeProvider, databaseValidationService, true);
 
                                 var newOdsInstancesToRegister = dataFilterService.FilteredRecords(model.DataRecords(), mode).ToList();
                                 model.FilteredDataRecords = newOdsInstancesToRegister;

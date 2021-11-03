@@ -15,8 +15,8 @@ $.extend(true, edfiODS, {
 });
 
 $.extend({
-    redirectIfAuthenticationRequired: function(xhr, data) {
-        if (data.authentication_required || (typeof data === "string" && data.indexOf("authentication_required") !== -1) || xhr.getResponseHeader("x-authentication-required")) {
+    redirectIfAuthenticationRequired: function (xhr, data) {
+        if (data && data.authentication_required || (typeof data === "string" && data.indexOf("authentication_required") !== -1) || xhr.getResponseHeader("x-authentication-required")) {
             window.location.reload(); //re-trigger authentication workflow
         }
     }
@@ -488,9 +488,8 @@ function FieldValues() {
     var errorDescription = $("#errorDescription");
     var errorStackTrace = $("#stackTrace");
     var errorStatus = $("#errorStatus");
-    var summary = $("#errorSummary");
 
-    fieldValues["summary"] = summary.length ? summary.text() : "Admin App Feedback";
+    fieldValues["summary"] = errorDescription.length ? errorDescription.text().trim() : "Admin App Feedback";
 
     // Selecting the Admin App component automatically
     fieldValues["components"] = ["13314"];
@@ -498,10 +497,10 @@ function FieldValues() {
     if (errorDescription.length) {
         var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n" +
             "PLEASE REMOVE ANY PERSONALLY IDENTIFIABLE INFORMATION FROM THE FOLLOWING STACK TRACE \n ---- \n" +
-            errorDescription.text() + "\n" + errorStatus.text();
+            errorDescription.text().trim() + "\n" + errorStatus.text().trim();
 
         if (errorStackTrace.length) {
-            description += "\n {code}" + errorStackTrace.text() + "{code}";
+            description += "\n {code}" + errorStackTrace.text().trim() + "{code}";
         }
 
         fieldValues["description"] = description;

@@ -5,7 +5,7 @@
 
 using System;
 using System.Linq;
-using System.Net;
+using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -14,6 +14,7 @@ using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Home;
+using log4net;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
@@ -23,11 +24,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     {
         private readonly IHomeScreenDisplayService _homeScreenDisplayService;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
+        private readonly ApplicationConfigurationService _applicationConfigurationService;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
 
-        public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
+        public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery, ApplicationConfigurationService applicationConfigurationService)
         {
             _homeScreenDisplayService = homeScreenDisplayService;
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
+            _applicationConfigurationService = applicationConfigurationService;
         }
 
         [AddTelemetry("Home Index", TelemetryType.View)]
@@ -64,7 +68,10 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             var exception = exceptionHandlerFeature?.Error ?? new Exception();
 
-            var errorModel = new ErrorModel(exception);
+            _logger.Error(exception);
+
+            var errorModel = new ErrorModel(exception,
+                _applicationConfigurationService.IsProductImprovementEnabled() && HttpContext.User.Identity.IsAuthenticated);
 
             return HttpContext.Request.IsAjaxRequest()
                 ? (ActionResult) PartialView("_ErrorFeedback", errorModel)

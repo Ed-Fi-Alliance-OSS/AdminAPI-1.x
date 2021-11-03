@@ -6,15 +6,12 @@
 using System;
 using System.Net;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using log4net;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Home
 {
     public class ErrorModel: PageModel
     {
-        private readonly ILog _logger = LogManager.GetLogger(typeof(ErrorModel));
-
         public string Message { get; }
         public string StackTrace { get; }
         public HttpStatusCode? StatusCode { get; }
@@ -22,31 +19,28 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Home
         public bool IsStackTraceRelevant { get; }
         public bool AllowFeedback { get; }
 
-        public ErrorModel(Exception exception)
+        public ErrorModel(Exception exception, bool isProductImprovementEnabled)
         {
             StackTrace = exception.StackTrace;
             Message = exception.Message;
 
-            switch (exception)
+            if (exception is IAdminAppException adminAppException)
             {
-                case AdminAppException adminException:
-                    StatusCode = adminException.StatusCode;
-                    IsStackTraceRelevant = adminException.IsStackTraceRelevant;
-                    AllowFeedback = adminException.AllowFeedback;
-                    break;
-                case OdsApiConnectionException odsApiConnectionException:
-                    StatusCode = odsApiConnectionException.StatusCode;
-                    IsStackTraceRelevant = odsApiConnectionException.IsStackTraceRelevant;
-                    AllowFeedback = odsApiConnectionException.AllowFeedback;
-                    break;
-                default:
-                    StatusCode = HttpStatusCode.InternalServerError;
-                    IsStackTraceRelevant = true;
-                    AllowFeedback = true;
-                    break;
+                StatusCode = adminAppException.StatusCode;
+                IsStackTraceRelevant = adminAppException.IsStackTraceRelevant;
+                AllowFeedback = adminAppException.AllowFeedback;
+            }
+            else
+            {
+                StatusCode = HttpStatusCode.InternalServerError;
+                IsStackTraceRelevant = true;
+                AllowFeedback = true;
             }
 
-            _logger.Error(exception);
+            if (!isProductImprovementEnabled)
+            {
+                AllowFeedback = false;
+            }
         }
     }
 }

@@ -18,8 +18,8 @@ changeBuildType(RelativeId("Deploy")) {
             scriptMode = script {
                 content = """
                     Write-Host "##teamcity[setParameter name='octopus.package' value='${'$'}(Get-ChildItem -Filter "*Installer.AdminApp*")']"
-                                        Write-Host "##teamcity[setParameter name='octopus.packageVersion' value='${'$'}( Get-ChildItem -Filter "*Installer.AdminApp*" |% {  
-                                                ${'$'}result = ${'$'}_.Name -match '(\d)\.(\d)\.(\d)(\-pre(\d+))?' 
+                                        Write-Host "##teamcity[setParameter name='octopus.packageVersion' value='${'$'}( Get-ChildItem -Filter "*Installer.AdminApp*" |% {
+                                                ${'$'}result = ${'$'}_.Name -match '(\d)\.(\d)\.(\d)(\-pre(\d+))?'
                                                 ${'$'}matches[0] })']"
                 """.trimIndent()
             }

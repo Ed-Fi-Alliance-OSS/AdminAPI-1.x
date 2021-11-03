@@ -69,6 +69,22 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
             var edFiOdsApiConfiguration = GetEdFiOdsApiConfig(jobContext, secureCredentials);
             var academicBenchmarkApiAuthConfig = GetAcademicBenchmarkApiAuthConfig(secureCredentials);
 
+            var validationResult = await ValidateEdFiOdsApiConfiguration(edFiOdsApiConfiguration);
+
+            if (!validationResult.IsSuccess)
+            {
+                OnStatusComplete(
+                    new LearningStandardsSynchronizerProgressInfo(
+                        TaskName, 100,
+                        new Exception(validationResult.ErrorMessage)));
+
+                return new WorkflowResult
+                {
+                    ErrorMessage = validationResult.ErrorMessage,
+                    Error = true
+                };
+            }
+
             var response = await _learningStandardsPlugin.LearningStandardsSynchronizer.SynchronizeAsync(
                 edFiOdsApiConfiguration,
                 academicBenchmarkApiAuthConfig,
@@ -124,6 +140,13 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.Jobs
             config.LearningStandardsCredential.LastUpdatedDate = DateTime.Now;
 
             await _odsSecretConfigurationProvider.SetSecretConfiguration(config, odsInstanceId);
+        }
+
+        private async Task<IResponse> ValidateEdFiOdsApiConfiguration(IEdFiOdsApiConfiguration apiConfig)
+        {
+            return await _learningStandardsPlugin.LearningStandardsConfigurationValidator
+                .ValidateEdFiOdsApiConfigurationAsync(
+                    apiConfig);
         }
 
         private static AuthenticationConfiguration GetAcademicBenchmarkApiAuthConfig(SecureCredentials secureCredentials)

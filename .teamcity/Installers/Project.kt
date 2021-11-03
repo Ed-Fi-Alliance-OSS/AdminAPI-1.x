@@ -15,8 +15,11 @@ object AdminAppInstallerProject : Project({
     params {
         param("version.preReleaseLabel", "pre")
         param("project.name", "EdFi.Suite3.Installer.AdminApp")
+        param("project.directory", """Ed-Fi-ODS-AdminApp\%project.name%""")
     }
 
     buildType(_self.buildTypes.BuildAdminAppInstaller)
     buildType(_self.buildTypes.Deploy)
+    buildType(_self.buildTypes.RepackageAdminAppInstallerAndPushToAzureBlobStorage)
+    buildType(_self.buildTypes.PublishInstallerPackageToAzureArtifacts)
 })

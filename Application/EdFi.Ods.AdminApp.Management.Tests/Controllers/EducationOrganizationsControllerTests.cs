@@ -19,6 +19,7 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
+using System.Runtime.Caching;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
 {
@@ -32,6 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
         private Mock<InstanceContext> _mockInstanceContext;
         private Mock<ITabDisplayService> _tabDisplayService;
         private IInferExtensionDetails _inferExtensionDetails;
+        private Mock<IInferExtensionDetails> _mockInferExtensionDetails;
 
         [SetUp]
         public void Init()
@@ -41,7 +43,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             _mockOdsApiFacade = new Mock<IOdsApiFacade>();
             _mockInstanceContext = new Mock<InstanceContext>();
             _tabDisplayService = new Mock<ITabDisplayService>();
+            _mockInferExtensionDetails = new Mock<IInferExtensionDetails>();
             _inferExtensionDetails = new InferExtensionDetails(new Mock<ISimpleGetRequest>().Object);
+            MemoryCache.Default.Remove("TpdmExtensionVersion");
         }
 
         [Test]
@@ -351,6 +355,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 Name = name
             };
 
+            var tpdmVersionDetails = new TpdmExtensionDetails
+            {
+                TpdmVersion = "1.1.0", IsTpdmCommunityVersion = true
+            };            
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+
             _mockOdsApiFacade.Setup(x => x.GetPsiSchoolById(schoolId))
                 .Returns(new PsiSchool());
             _mockMapper.Setup(x => x.Map<EditPsiSchoolModel>(It.IsAny<PsiSchool>()))
@@ -366,7 +376,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 .Returns(new List<SelectOptionModel>
                     {new SelectOptionModel {DisplayText = federalLocaleCode, Value = federalLocaleCodeValue}});
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _mockInferExtensionDetails.Object);
 
             // Act
             var result = _controller.EditPsiSchoolModal(schoolId).Result as PartialViewResult;
@@ -388,6 +398,55 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             var federalLocaleCodeOption = model.FederalLocaleCodeOptions.Single(x => x.Value != null);
             federalLocaleCodeOption.DisplayText.ShouldBe(federalLocaleCode);
             federalLocaleCodeOption.Value.ShouldBe(federalLocaleCodeValue);
+        }
+
+        [Test]
+        public void When_Perform_Get_Request_To_EditPsiSchoolModal_Return_PartialView_With_Expected_Model_On_TpdmCore()
+        {
+            // Arrange
+            const string gradeLevel = "FirstGrade";
+            var value = "Namespace#FirstGrade";
+            var schoolId = "id";
+            var name = "school";       
+
+            var editPsiSchoolModel = new EditPsiSchoolModel
+            {
+                Name = name
+            };
+
+            var tpdmVersionDetails = new TpdmExtensionDetails()
+            {
+                TpdmVersion = "1.1.0", IsTpdmCommunityVersion = false
+            };
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+
+            _mockOdsApiFacade.Setup(x => x.GetPsiSchoolById(schoolId))
+                .Returns(new PsiSchool());
+            _mockMapper.Setup(x => x.Map<EditPsiSchoolModel>(It.IsAny<PsiSchool>()))
+                .Returns(editPsiSchoolModel);
+            _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
+                .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _mockOdsApiFacade.Setup(x => x.GetAccreditationStatusOptions()).Returns<List<SelectOptionModel>>(null);
+            _mockOdsApiFacade.Setup(x => x.GetFederalLocaleCodes()).Returns<List<SelectOptionModel>>(null);
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _mockInferExtensionDetails.Object);
+
+            // Act
+            var result = _controller.EditPsiSchoolModal(schoolId).Result as PartialViewResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            var model = (EditPsiSchoolModel)result.ViewData.Model;
+            model.ShouldNotBeNull();
+            model.GradeLevelOptions.Count.ShouldBeGreaterThan(0);
+            model.GradeLevelOptions.First().DisplayText.ShouldBe(gradeLevel);
+            model.GradeLevelOptions.First().Value.ShouldBe(value);
+            model.Name.ShouldMatch(name);
+
+            model.AccreditationStatusOptions.ShouldBeNull();
+            model.FederalLocaleCodeOptions.ShouldBeNull();        
         }
 
         [Test]
@@ -584,6 +643,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             const string federalLocaleCode = "Test Federal Locale Code";
             const string federalLocaleCodeValue = "Namespace#Test Federal Locale Code";
 
+            var tpdmVersionDetails = new TpdmExtensionDetails()
+            {
+                TpdmVersion = "1.1.0", IsTpdmCommunityVersion = true
+            };          
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+
             _mockOdsApiFacade.Setup(x => x.GetAllPsiSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
             _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionsByPage(0, Page<PostSecondaryInstitution>.DefaultPageSize + 1)).Returns(psis);
@@ -604,7 +669,82 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
                 .Returns(new List<SelectOptionModel>
                     {new SelectOptionModel {DisplayText = federalLocaleCode, Value = federalLocaleCodeValue}});
             _controller =
-                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _inferExtensionDetails);
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _mockInferExtensionDetails.Object);
+
+            // Act
+            var result = _controller.PostSecondaryInstitutionsList(1).Result as PartialViewResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            var model = (PostSecondaryInstitutionViewModel)result.ViewData.Model;
+            model.ShouldNotBeNull();
+            model.Schools.Count.ShouldBeGreaterThan(0);
+            model.PostSecondaryInstitutions.Items.Count().ShouldBeGreaterThan(0);
+
+            var addSchoolModel = model.AddPsiSchoolModel;
+            addSchoolModel.ShouldNotBeNull();
+            addSchoolModel.GradeLevelOptions.Count.ShouldBe(1);
+            addSchoolModel.GradeLevelOptions.Single().DisplayText.ShouldBe(gradeLevel);
+            addSchoolModel.GradeLevelOptions.Single().Value.ShouldBe(value);
+
+            var addPostSecondaryInstitutionModel = model.AddPostSecondaryInstitutionModel;
+            addPostSecondaryInstitutionModel.ShouldNotBeNull();
+            addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Count.ShouldBeGreaterThan(0);
+            addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Count.ShouldBeGreaterThan(0);
+            var postSecondaryInstitutionLevelOption = addPostSecondaryInstitutionModel.PostSecondaryInstitutionLevelOptions.Single(x => x.Value != null);
+            postSecondaryInstitutionLevelOption.DisplayText.ShouldBe(postSecondaryInstitutionLevel);
+            postSecondaryInstitutionLevelOption.Value.ShouldBe(postSecondaryInstitutionLevelValue);
+            var administrativeFundingControlOption = addPostSecondaryInstitutionModel.AdministrativeFundingControlOptions.Single(x => x.Value != null);
+            administrativeFundingControlOption.DisplayText.ShouldBe(administrativeFundingControl);
+            administrativeFundingControlOption.Value.ShouldBe(administrativeFundingControlValue);
+        }
+
+        [Test]
+        public void When_Perform_Get_Request_To_PostSecondaryInstitutionsList_Return_Post_Secondary_Institutions_List_On_TpdmCore()
+        {
+            // Arrange
+            var schools = new List<PsiSchool>
+            {
+                new PsiSchool()
+            };
+
+            var leas = new List<LocalEducationAgency>
+            {
+                new LocalEducationAgency()
+            };
+
+            var psis = new List<PostSecondaryInstitution>
+            {
+                new PostSecondaryInstitution()
+            };
+            const string gradeLevel = "FirstGrade";
+            const string value = "Namespace#FirstGrade";
+            const string postSecondaryInstitutionLevel = "Four or more years";
+            const string postSecondaryInstitutionLevelValue = "Namespace#Four or more years";
+            const string administrativeFundingControl = "Private School";
+            const string administrativeFundingControlValue = "Namespace#Private School";          
+
+            var tpdmVersionDetails = new TpdmExtensionDetails()
+            {
+                TpdmVersion = "1.1.0", IsTpdmCommunityVersion = false
+            };
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+
+            _mockOdsApiFacade.Setup(x => x.GetAllPsiSchools()).Returns(schools);
+            _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
+            _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionsByPage(0, Page<PostSecondaryInstitution>.DefaultPageSize + 1)).Returns(psis);
+            _mockOdsApiFacadeFactory.Setup(x => x.Create())
+                .Returns(Task.FromResult(_mockOdsApiFacade.Object));
+            _mockOdsApiFacade.Setup(x => x.GetAllGradeLevels())
+                .Returns(new List<SelectOptionModel> { new SelectOptionModel { DisplayText = gradeLevel, Value = value } });
+            _mockOdsApiFacade.Setup(x => x.GetPostSecondaryInstitutionLevels())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = postSecondaryInstitutionLevel, Value = postSecondaryInstitutionLevelValue}});
+            _mockOdsApiFacade.Setup(x => x.GetAdministrativeFundingControls())
+                .Returns(new List<SelectOptionModel>
+                    {new SelectOptionModel {DisplayText = administrativeFundingControl, Value = administrativeFundingControlValue}});         
+            _controller =
+                new EducationOrganizationsController(_mockOdsApiFacadeFactory.Object, _mockMapper.Object, _mockInstanceContext.Object, _tabDisplayService.Object, _mockInferExtensionDetails.Object);
 
             // Act
             var result = _controller.PostSecondaryInstitutionsList(1).Result as PartialViewResult;

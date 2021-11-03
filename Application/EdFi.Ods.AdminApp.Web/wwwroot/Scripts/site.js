@@ -368,6 +368,7 @@ function LoadAsyncActions() {
             },
             error: function (jqXhr) {
                 $target.html(jqXhr.responseText);
+                AddIssueCollectorTriggerForAjaxErrors();
             },
             complete: function() {
                 $target.removeClass("load-action-async");
@@ -507,4 +508,19 @@ function FieldValues() {
     };
 
     return fieldValues;
+};
+
+function AddIssueCollectorTriggerForAjaxErrors() {
+    var issueCollectorScriptUrl = "https://tracker.ed-fi.org/s/4a7f82a0811a8a96ea499ae3f2052bc9-T/1shsk6/813009/e21wtc/4.0.4/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=333a4a0f";
+    $.getScript(issueCollectorScriptUrl, function () {
+        window.ATL_JQ_PAGE_PROPS = $.extend(window.ATL_JQ_PAGE_PROPS, {
+                triggerFunction: function(showCollectorDialog) {
+                    $('#error-report-button').on('click', function (e) {
+                        e.preventDefault();
+                        showCollectorDialog();
+                    });
+                },
+                fieldValues: FieldValues()
+            });
+    });
 };

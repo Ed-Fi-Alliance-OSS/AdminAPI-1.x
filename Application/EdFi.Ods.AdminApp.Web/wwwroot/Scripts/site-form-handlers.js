@@ -50,8 +50,10 @@ var submitAjax = function ($form, updateTargetId, spinnerId) {
             }
         },
         error: function (xhr) {
-            var $validationSummary = $form.find(".validationSummary").first();
-            errorHighlighter(xhr, $validationSummary);
+            ajaxErrorHandler(xhr, $form, function() {
+                var $validationSummary = $form.find(".validationSummary").first();
+                errorHighlighter(xhr, $validationSummary);
+            });
         }
     });
 }
@@ -83,10 +85,12 @@ var submitAjaxForInnerTabs = function (ajaxRequestData) {
         errorHandler = ajaxRequestData.errorHandler;
     } else {
         errorHandler = function (data) {
-            validationBlock.hidden = false;
-            validationBlock.innerText = getErrorString(data);
-            if (ajaxRequestData.errorAdditionalBehavior != null)
-                ajaxRequestData.errorAdditionalBehavior();
+            ajaxErrorHandler(data, form, function () {
+                validationBlock.hidden = false;
+                validationBlock.innerText = getErrorString(data);
+                if (ajaxRequestData.errorAdditionalBehavior != null)
+                    ajaxRequestData.errorAdditionalBehavior();
+            });
         };
     }
     $.ajax({
@@ -128,23 +132,27 @@ var getErrorString = function(data) {
     return errString;
 }
 
-var errorHighlighter = function (xhr, $validationSummary) {
-    if (xhr.status === 400) {
-        var data = JSON.parse(xhr.responseText);
-        highlightFields(data);
-        showSummary(data, $validationSummary);
+var ajaxErrorHandler = function(data, form, validationHandler) {
+    if (data.status === 400) {
+        validationHandler();
     } else {
-        var errorMessage = "An error occured while processing your request: ";
-        if (!StringIsNullOrWhitespace(xhr.responseText)) {
-            errorMessage = errorMessage + xhr.responseText + ". ";
-        }
-        if (xhr.status > 0) {
-            errorMessage = errorMessage + "Status " + xhr.status;
+        var errorModal = $("#error-modal");
+        var openedModal = form.closest(".modal");
+        if (openedModal.length) {
+            openedModal.modal("hide");
+            errorModal.find(".modal-body").html(data.responseText);
+            errorModal.modal("show");
         } else {
-            errorMessage = errorMessage + "No response from server";
+            form.html(data.responseText);
         }
-        showError(errorMessage, $validationSummary);
+        AddIssueCollectorTriggerForAjaxErrors();
     }
+}
+
+var errorHighlighter = function (xhr, $validationSummary) {
+    var data = JSON.parse(xhr.responseText);
+    highlightFields(data);
+    showSummary(data, $validationSummary);
 }
 
 var showError = function (errorMessage, $validationSummary) {

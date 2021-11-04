@@ -15,8 +15,8 @@ $.extend(true, edfiODS, {
 });
 
 $.extend({
-    redirectIfAuthenticationRequired: function(xhr, data) {
-        if (data.authentication_required || (typeof data === "string" && data.indexOf("authentication_required") !== -1) || xhr.getResponseHeader("x-authentication-required")) {
+    redirectIfAuthenticationRequired: function (xhr, data) {
+        if (data && data.authentication_required || (typeof data === "string" && data.indexOf("authentication_required") !== -1) || xhr.getResponseHeader("x-authentication-required")) {
             window.location.reload(); //re-trigger authentication workflow
         }
     }
@@ -358,7 +358,6 @@ function LoadAsyncActions() {
     $(".load-action-async").each(function () {
         var $target = $(this);
         var sourceUrl = $target.attr("data-source-url");
-        var customErrorMessage = $target.attr("data-error-message");
 
         $.ajax({
             async: true,
@@ -368,22 +367,8 @@ function LoadAsyncActions() {
                 $target.html(data);
             },
             error: function (jqXhr) {
-                var errorMessage = "The following error occurred while loading page content: <br/><br/>";
-                if (!StringIsNullOrWhitespace(jqXhr.responseText)) {
-                    errorMessage = errorMessage + "<b>" + jqXhr.responseText + "</b>";
-                }
-
-                if (jqXhr.status > 0) {
-                    errorMessage = errorMessage + " Status " + jqXhr.status;
-                } else {
-                    errorMessage = errorMessage + "No response from server";
-                }
-
-                if (!StringIsNullOrWhitespace(customErrorMessage)) {
-                    errorMessage = errorMessage + ". <br/><br/>" + customErrorMessage;
-                }
-
-                $target.html("<em class='text-danger'>" + errorMessage + "</em>");
+                $target.html(jqXhr.responseText);
+                AddIssueCollectorTriggerForAjaxErrors();
             },
             complete: function() {
                 $target.removeClass("load-action-async");
@@ -501,17 +486,40 @@ function FieldValues() {
     var fieldValues = {};
 
     var errorDescription = $("#errorDescription");
-    var summary = $("#errorSummary");
+    var errorStackTrace = $("#stackTrace");
+    var errorStatus = $("#errorStatus");
 
-    fieldValues["summary"] = summary.length ? summary.text() : "Admin App Feedback";
+    fieldValues["summary"] = errorDescription.length ? errorDescription.text().trim() : "Admin App Feedback";
 
     // Selecting the Admin App component automatically
     fieldValues["components"] = ["13314"];
 
     if (errorDescription.length) {
-        var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n {code}"+errorDescription.text()+"{code}";
+        var description = "\n\n\n\n ---- \n TYPE YOUR DESCRIPTION ABOVE THIS LINE \n ---- \n" +
+            "PLEASE REMOVE ANY PERSONALLY IDENTIFIABLE INFORMATION FROM THE FOLLOWING STACK TRACE \n ---- \n" +
+            errorDescription.text().trim() + "\n" + errorStatus.text().trim();
+
+        if (errorStackTrace.length) {
+            description += "\n {code}" + errorStackTrace.text().trim() + "{code}";
+        }
+
         fieldValues["description"] = description;
     };
 
     return fieldValues;
+};
+
+function AddIssueCollectorTriggerForAjaxErrors() {
+    var issueCollectorScriptUrl = "https://tracker.ed-fi.org/s/4a7f82a0811a8a96ea499ae3f2052bc9-T/1shsk6/813009/e21wtc/4.0.4/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=333a4a0f";
+    $.getScript(issueCollectorScriptUrl, function () {
+        window.ATL_JQ_PAGE_PROPS = $.extend(window.ATL_JQ_PAGE_PROPS, {
+                triggerFunction: function(showCollectorDialog) {
+                    $('#error-report-button').on('click', function (e) {
+                        e.preventDefault();
+                        showCollectorDialog();
+                    });
+                },
+                fieldValues: FieldValues()
+            });
+    });
 };

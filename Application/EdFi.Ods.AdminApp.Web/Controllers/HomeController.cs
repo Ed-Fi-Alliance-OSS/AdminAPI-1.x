@@ -3,8 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Linq;
-using System.Net;
+using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EdFi.Ods.AdminApp.Management.Instances;
@@ -23,13 +24,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
     {
         private readonly IHomeScreenDisplayService _homeScreenDisplayService;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
+        private readonly ApplicationConfigurationService _applicationConfigurationService;
         private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
 
-
-        public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
+        public HomeController(IHomeScreenDisplayService homeScreenDisplayService, IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery, ApplicationConfigurationService applicationConfigurationService)
         {
             _homeScreenDisplayService = homeScreenDisplayService;
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
+            _applicationConfigurationService = applicationConfigurationService;
         }
 
         [AddTelemetry("Home Index", TelemetryType.View)]
@@ -64,13 +66,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         public ActionResult Error()
         {
             var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            var exception = exceptionHandlerFeature.Error;
+            var exception = exceptionHandlerFeature?.Error ?? new Exception();
 
             _logger.Error(exception);
 
+            var errorModel = new ErrorModel(exception,
+                _applicationConfigurationService.IsProductImprovementEnabled() && HttpContext.User.Identity.IsAuthenticated);
+
             return HttpContext.Request.IsAjaxRequest()
-                ? (ActionResult)StatusCode((int)HttpStatusCode.InternalServerError, exception.Message)
-                : View();
+                ? (ActionResult) PartialView("_ErrorFeedback", errorModel)
+                : View(errorModel);
         }
 
         private bool ZeroOdsInstanceRegistrations()

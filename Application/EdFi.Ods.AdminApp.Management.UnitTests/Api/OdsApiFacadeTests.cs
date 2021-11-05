@@ -294,6 +294,34 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         }
 
         [Test]
+        public void Should_DeleteSchool_returns_not_success_result_when_api_returns_not_ok_response()
+        {
+            // Arrange
+            const string errorMsg = "exception";
+            var mockRestClient = new Mock<IRestClient>();
+            mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
+            mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
+                { StatusCode = HttpStatusCode.NotFound, ErrorMessage = errorMsg });
+
+            var mockTokenRetriever = new Mock<ITokenRetriever>();
+            mockTokenRetriever.Setup(x => x.ObtainNewBearerToken()).Returns("Token");
+
+            var mockOdsRestClient =
+                new OdsRestClient(_connectionInformation, mockRestClient.Object, mockTokenRetriever.Object);
+
+            _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
+
+            // Act
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetAllDescriptors());
+
+            // Assert
+            Assert.AreEqual(errorMsg, ex.ResponseMessage);
+
+            // Assert
+            ex.Message.ShouldBe(errorMsg);
+        }
+
+        [Test]
         public void Should_GetAllDescriptors_returns_expected_descriptors_list()
         {
             // Arrange

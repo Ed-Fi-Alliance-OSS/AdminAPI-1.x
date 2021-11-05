@@ -20,9 +20,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             if (!response.IsSuccessful)
             {
+                var content = JsonConvert.DeserializeObject<JObject>(response.Content);
+                content.TryGetValue("message", out var contentMessage);
+
                 ErrorMessage = !string.IsNullOrEmpty(response.ErrorMessage)
                     ? response.ErrorMessage
-                    : $"ODS API failure with no message. Status Code: {response.StatusCode}";
+                    : contentMessage?.ToString() ?? $"ODS API failure with no message. Status Code: {response.StatusCode}";
             }
         }
     }

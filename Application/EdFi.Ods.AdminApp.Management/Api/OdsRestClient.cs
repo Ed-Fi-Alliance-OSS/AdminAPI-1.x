@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -61,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 _logger.Debug("*** ErrorException:");
                 _logger.Debug(response.ErrorException);
 
-                throw new Exception(response.ErrorMessage);
+                throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message);
             }
         }
 

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: Apache-2.0
+﻿# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
@@ -164,10 +164,6 @@ function Install-EdFiOdsAdminApp {
         [int]
         $WebSitePort = 443,
 
-        # Directory for the web application. Default: "AdminApp".
-        [string]
-        $WebApplicationDirectory = "AdminApp",
-
         # Web application name. Default: "AdminApp".
         [string]
         $WebApplicationName = "AdminApp",
@@ -273,7 +269,7 @@ function Install-EdFiOdsAdminApp {
     $result = @()
 
     $Config = @{
-        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationDirectory)
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationName)
         PackageName = $PackageName
         PackageVersion = $PackageVersion
         PackageSource = $PackageSource
@@ -377,10 +373,6 @@ function Update-EdFiOdsAdminApp {
         [int]
         $WebSitePort = 443,
 
-        # Directory for the web application. Default: "AdminApp".
-        [string]
-        $WebApplicationDirectory = "AdminApp",
-
         # Web application name. Default: "AdminApp".
         [string]
         $WebApplicationName = "AdminApp",
@@ -424,7 +416,7 @@ function Update-EdFiOdsAdminApp {
     $result = @()
 
     $Config = @{
-        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationDirectory)
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationName)
         PackageName = $PackageName
         PackageVersion = $PackageVersion
         PackageSource = $PackageSource
@@ -488,8 +480,8 @@ function Uninstall-EdFiOdsAdminApp {
     .EXAMPLE
         PS c:\> $p = @{
             WebSiteName="Ed-Fi-3"
-            WebApplicationPath="d:/octopus/applications/staging/AdminApp-3"
-            WebApplicationName = "AdminApp"
+            WebApplicationPath="c:/inetpub/Ed-Fi-3/AdminApp-3"
+            WebApplicationName = "AdminApp-3"
         }
         PS c:\> Uninstall-EdFiOdsAdminApp @p
 

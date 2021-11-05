@@ -12,8 +12,8 @@ This script will uninstall your existing Admin App installation.
     $p = @{
         ToolsPath = "C:/temp/tools"
         WebSiteName="Ed-Fi-3"
-        WebApplicationPath="d:/edfi/applications/staging/AdminApp-3"
-        WebApplicationName = "AdminApp"
+        WebApplicationPath="c:/inetpub/Ed-Fi-3/AdminApp-3"
+        WebApplicationName = "AdminApp-3"
     }
 #>
 

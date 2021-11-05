@@ -80,7 +80,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
             responseList.AddRange(pageItems);
 
-            return responseList; 
+            return responseList;
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath) where T : class
@@ -108,7 +108,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             }
             while (pageItems.Count >= limit);
 
-            return responseList; 
+            return responseList;
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath, Dictionary<string, object> filters) where T : class

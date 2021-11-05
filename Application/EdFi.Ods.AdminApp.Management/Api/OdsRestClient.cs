@@ -62,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 _logger.Debug("*** ErrorException:");
                 _logger.Debug(response.ErrorException);
 
-                throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message);
+                throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message ?? response.ErrorMessage);
             }
         }
 

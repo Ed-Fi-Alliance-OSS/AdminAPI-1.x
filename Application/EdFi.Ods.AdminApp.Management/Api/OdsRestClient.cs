@@ -241,8 +241,8 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 var request = OdsRequest(elementPath);
                 request.Method = Method.DELETE;
                 request.AddUrlSegment("id", id);
-                _restClient.Execute(request);
-                return new OdsApiResult();
+                var response = _restClient.Execute(request);
+                return new OdsApiResult(response);
             }
             catch (Exception ex)
             {

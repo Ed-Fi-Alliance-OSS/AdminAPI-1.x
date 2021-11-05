@@ -20,7 +20,9 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             if (!response.IsSuccessful)
             {
-                ErrorMessage = response.ErrorMessage;
+                ErrorMessage = !string.IsNullOrEmpty(response.ErrorMessage)
+                    ? response.ErrorMessage
+                    : $"ODS API failure with no message. Status Code: {response.StatusCode}";
             }
         }
     }

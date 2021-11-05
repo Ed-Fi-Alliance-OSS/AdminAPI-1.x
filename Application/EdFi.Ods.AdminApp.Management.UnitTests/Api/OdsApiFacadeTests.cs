@@ -13,6 +13,7 @@ using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Api.Common;
 using EdFi.Ods.AdminApp.Management.Api.DomainModels;
 using EdFi.Ods.AdminApp.Management.Api.Models;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Ods.AdminApp.Management.Instances;
 using NUnit.Framework;
 using Moq;
@@ -99,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetAllSchools());
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetAllSchools());
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);
@@ -154,7 +155,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetSchoolsByLeaIds(new List<int> { LocalEducationAgencyId }));
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetSchoolsByLeaIds(new List<int> { LocalEducationAgencyId }));
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);
@@ -200,7 +201,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetSchoolById(SchoolId));
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetSchoolById(SchoolId));
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);
@@ -341,7 +342,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetAllDescriptors());
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetAllDescriptors());
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);

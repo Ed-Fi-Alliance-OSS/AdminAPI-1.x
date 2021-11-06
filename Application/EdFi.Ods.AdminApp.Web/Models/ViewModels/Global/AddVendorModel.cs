@@ -5,7 +5,6 @@
 
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Global
@@ -13,7 +12,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Global
     public class AddVendorModel : IAddVendorModel
     {
         public string Company { get; set; }
-        public string NamespacePrefix { get; set; }
+        public string NamespacePrefixes { get; set; }
         public string ContactName { get; set; }
         public string ContactEmailAddress { get; set; }
     }

@@ -9,6 +9,6 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels
     {
         public int VendorId { get; set; }
         public string VendorName { get; set; }
-        public string NamespacePrefix { get; set; }
+        public string NamespacePrefixes { get; set; }
     }
 }

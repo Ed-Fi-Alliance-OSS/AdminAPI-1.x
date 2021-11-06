@@ -21,7 +21,28 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     @Html.ValidationBlock()
                     @Html.InputBlock(m => m.Company, "Vendor Name")
-                    @Html.InputBlock(m => m.NamespacePrefix, "http://vendorwebsite.com")
+                    @Html.InputTextAreaBlock(m => m.NamespacePrefixes, placeholderText:"http://vendor1.com, http://vendor2.com, http://vendor3.com ..."
+                        , helpText:"You can provide a comma separated list of vendor namespace prefixes."
+                        , inputModifier: x =>
+                        {
+                            x.Attr("id", "add-vendor-namespaces");
+                            x.Attr("rows", 4);
+                        })
+                    <div class="form-horizontal">
+                        <div class="row form-group">
+                            <div class="col-xs-4"></div>
+                            <div class="col-xs-6 text-left">
+                                <div class="input-group">
+                                    <input id="add-namespace-prefix-input" type="text" class="form-control" placeholder="http://vendorwebsite.com">
+                                    <span class="input-group-btn">
+                                        <button id="add-namespace-prefix" class="btn btn-primary" type="button">Add</button>
+                                    </span>
+                                </div>
+                                <small class="text-muted">Use 'Add' to add a vendor namespace prefix in the textbox above.</small>
+                            </div>
+                            <span class="text-left help-form col-xs-2"><span></span></span>
+                        </div>
+                    </div>
                     @Html.InputBlock(m => m.ContactName, "Jane Smith")
                     @Html.InputBlock(m => m.ContactEmailAddress, "email@vendorwebsite.com")
                 }

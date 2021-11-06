@@ -139,6 +139,42 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             return FormBlock(label, input, helpTooltip);
         }
 
+        public static HtmlTag InputTextAreaBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression, string value = null, string placeholderText = null, string helpText = null, Action<HtmlTag> inputModifier = null, string customLabelText = null) where T : class
+        {
+            Preconditions.ThrowIfNull(helper, nameof(helper));
+            Preconditions.ThrowIfNull(expression, nameof(expression));
+
+            var label = helper.Label(expression);
+            if (customLabelText != null)
+            {
+                label.Text(customLabelText);
+            }
+            label = label.WrapWith(new DivTag().AddClasses("col-xs-4", "text-right"));
+
+            var expressionPropertyName = Property.From(expression).Name;
+
+            var textAreaInput = new HtmlTag("textarea")
+                .Id(expressionPropertyName)
+                .Name(expressionPropertyName)
+                .AddClass("form-control");
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                textAreaInput.AppendText(value);
+            }
+
+            if (!string.IsNullOrEmpty(placeholderText))
+            {
+                textAreaInput.AddPlaceholder(placeholderText);
+            }
+            inputModifier?.Invoke(textAreaInput);
+
+            textAreaInput = textAreaInput.WrapWith(new DivTag().AddClasses("col-xs-6", "text-left"));
+            textAreaInput.Append(new HtmlTag("small").AppendText(helpText).AddClass("text-muted"));
+
+            return FormBlock(label, textAreaInput, HtmlTag.Empty());
+        }
+
         public static HtmlTag SelectList<T, TR>(this IHtmlHelper<T> helper, Expression<Func<T, TR>> expression, bool includeBlankOption = false)
             where T : class
             where TR : Enumeration<TR>

@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
@@ -22,12 +23,15 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
         public int Execute(IAddVendorModel newVendor)
         {
             var namespacePrefixes = new List<VendorNamespacePrefix>();
-            if (!string.IsNullOrWhiteSpace(newVendor.NamespacePrefix))
+            if (!string.IsNullOrWhiteSpace(newVendor.NamespacePrefixes))
             {
-                namespacePrefixes.Add(new VendorNamespacePrefix
-                {
-                    NamespacePrefix = newVendor.NamespacePrefix.Trim(),
-                });
+                var namespacePrefixSplits = newVendor.NamespacePrefixes.Split(",");
+
+                namespacePrefixes.AddRange(namespacePrefixSplits.Select(
+                        namespacePrefix => new VendorNamespacePrefix
+                        {
+                            NamespacePrefix = namespacePrefix.Trim()
+                        }));
             }
 
             var vendor = new Vendor
@@ -53,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
     public interface IAddVendorModel
     {
         string Company { get; }
-        string NamespacePrefix { get; }
+        string NamespacePrefixes { get; }
         string ContactName { get; }
         string ContactEmailAddress { get; }
     }

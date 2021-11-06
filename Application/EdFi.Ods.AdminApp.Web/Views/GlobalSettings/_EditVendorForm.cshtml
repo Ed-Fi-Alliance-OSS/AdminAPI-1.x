@@ -46,4 +46,26 @@ else
         @Html.InputBlock(m => m.ContactName, "Jane Smith")
         @Html.InputBlock(m => m.ContactEmailAddress, "email@vendorwebsite.com")
     }
+
+    <script type="text/javascript">
+        $(function() {
+            $("textarea[id=edit-vendor-namespaces]").on("input", function (e) {
+                this.val(e.target.value);
+            });
+            $("#edit-namespace-prefix").on("click", function () {
+                var namespacePrefixesInput = $("textarea[id=edit-vendor-namespaces]");
+                var previousValue = namespacePrefixesInput.val().trim();
+                var namespaceToAdd = $("#edit-namespace-prefix-input").val().trim();
+                var newValue = "";
+                if (namespaceToAdd.length) {
+                    if (previousValue.length) {
+                        newValue = previousValue + ",";
+                    }
+                    newValue += namespaceToAdd;
+                    namespacePrefixesInput.val(newValue);
+                }
+                $("#edit-namespace-prefix-input").val("");
+            });
+        });
+    </script>
 }

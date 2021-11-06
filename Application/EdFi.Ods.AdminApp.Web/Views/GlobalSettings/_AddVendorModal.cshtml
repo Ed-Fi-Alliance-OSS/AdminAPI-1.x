@@ -59,7 +59,26 @@ See the LICENSE and NOTICES files in the project root for more information.
         $(".add-vendor-modal").on("show.bs.modal", function () {            
             $("#addVendorFormModal").get(0).reset();
             $(".form-group").removeClass("has-error");
-            $(".validationSummary").addClass("hidden");         
-        });      
+            $(".validationSummary").addClass("hidden");
+            $("#addVendorFormModal.textarea").val("");
+            $("#addVendorFormModal.input").val("");
+        });
+        $("textarea[id=add-vendor-namespaces]").on("input", function (e) {
+            this.val(e.target.value);
+        });
+        $("#add-namespace-prefix").on("click", function () {
+            var namespacePrefixesInput = $("textarea[id=add-vendor-namespaces]"); 
+            var previousValue = namespacePrefixesInput.val().trim();
+            var namespaceToAdd = $("#add-namespace-prefix-input").val().trim();
+            var newValue = "";
+            if (namespaceToAdd.length) {
+                if (previousValue.length) {
+                    newValue = previousValue + ",";
+                }
+                newValue += namespaceToAdd;
+                namespacePrefixesInput.val(newValue);
+            }
+            $("#add-namespace-prefix-input").val("");
+        });
     });
 </script> 

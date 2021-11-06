@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Collections.Generic;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
@@ -12,7 +13,6 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 using EdFi.Security.DataAccess.Models;
 using Application = EdFi.Admin.DataAccess.Models.Application;
 using Profile = AutoMapper.Profile;
@@ -37,20 +37,14 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
                 .ForMember(dst => dst.Company, opt => opt.MapFrom(src => src.VendorName))
                 .ForMember(dst => dst.ContactName, opt => opt.MapFrom(src => src.ContactName()))
                 .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))
-                .ForMember(dst => dst.NamespacePrefix, opt => opt.MapFrom(src =>
-                    src.VendorNamespacePrefixes != null && src.VendorNamespacePrefixes.Any()
-                        ? src.VendorNamespacePrefixes.First().NamespacePrefix
-                        : string.Empty));
+                .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => ToCommaSeparated(src.VendorNamespacePrefixes)));
             
             CreateMap<Vendor, VendorApplicationsModel>()
                 .ForMember(dst => dst.Applications,
                     opt => opt.MapFrom(src => src.Applications == null ? null : src.Applications.Where(app => app.OdsInstance != null)));
 
             CreateMap<Vendor, VendorOverviewModel>()
-                .ForMember(dst => dst.NamespacePrefix, opt => opt.MapFrom(src =>
-                        src.VendorNamespacePrefixes != null && src.VendorNamespacePrefixes.Any()
-                            ? src.VendorNamespacePrefixes.First().NamespacePrefix
-                            : string.Empty));
+                .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => ToCommaSeparated(src.VendorNamespacePrefixes)));
 
             CreateMap<EducationOrganization, EducationOrganizationModel>();
             CreateMap<LocalEducationAgency, EducationOrganizationModel>();
@@ -128,6 +122,13 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.AutoMapper
 
             CreateMap<AdminAppUser, UserModel>()
                 .ForMember(dst => dst.UserId, opt => opt.MapFrom(src => src.Id));
+        }
+
+        private string ToCommaSeparated(ICollection<VendorNamespacePrefix> vendorNamespacePrefixes)
+        {
+            return vendorNamespacePrefixes != null && vendorNamespacePrefixes.Any()
+                            ? vendorNamespacePrefixes.Select(x => x.NamespacePrefix).ToDelimiterSeparated()
+                            : string.Empty;
         }
     }
 }

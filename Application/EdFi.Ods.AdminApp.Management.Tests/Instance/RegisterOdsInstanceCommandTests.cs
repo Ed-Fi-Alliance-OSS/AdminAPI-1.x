@@ -37,6 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         private Mock<ICloudOdsAdminAppSettingsApiModeProvider> _apiModeProvider;
         private Mock<IDatabaseConnectionProvider> _connectionProvider;
         private Mock<ISetCurrentSchoolYearCommand> _setCurrentSchoolYear;
+        private readonly string _dbNamePrefix = "EdFi_Ods_";
 
 
         [SetUp]
@@ -56,11 +57,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             var apiMode = ApiMode.DistrictSpecific;
 
             ResetOdsInstanceRegistrations();
-            var instanceName = "EdFi_Ods_23456";
+            var instanceName = "23456";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
+            
 
-            using (var connection = GetDatabaseConnection(instanceName))
+            using (var connection = GetDatabaseConnection(instanceName, _dbNamePrefix))
             {
                 _connectionProvider.Setup(x => x.CreateNewConnection(23456, apiMode))
                     .Returns(connection);
@@ -91,6 +93,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 secretConfiguration.EncryptedData.ShouldBe(encryptedSecretConfigValue);
                 addedInstance.Name.ShouldBe(instanceName);
                 addedInstance.Description.ShouldBe(newInstance.Description);
+                addedInstance.DatabaseName.ShouldBe($"{_dbNamePrefix}{instanceName}");
 
                 _setCurrentSchoolYear.Verify(
                     x => x.Execute(It.IsAny<string>(), It.IsAny<ApiMode>(), It.IsAny<short>()),
@@ -104,11 +107,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             var apiMode = ApiMode.YearSpecific;
 
             ResetOdsInstanceRegistrations();
-            var instanceName = "EdFi_Ods_2022";
+            var instanceName = "2022";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 
-            using (var connection = GetDatabaseConnection(instanceName))
+            using (var connection = GetDatabaseConnection(instanceName, _dbNamePrefix))
             {
                 _connectionProvider.Setup(x => x.CreateNewConnection(2022, apiMode))
                     .Returns(connection);
@@ -139,8 +142,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 secretConfiguration.EncryptedData.ShouldBe(encryptedSecretConfigValue);
                 addedInstance.Name.ShouldBe(instanceName);
                 addedInstance.Description.ShouldBe(newInstance.Description);
+                addedInstance.DatabaseName.ShouldBe($"{_dbNamePrefix}{instanceName}");
 
-                _setCurrentSchoolYear.Verify(x => x.Execute("EdFi_Ods_2022", apiMode, 2022), Times.Once);
+                _setCurrentSchoolYear.Verify(x => x.Execute("2022", apiMode, 2022), Times.Once);
                 _setCurrentSchoolYear.VerifyNoOtherCalls();
             }
         }
@@ -195,7 +199,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
             Scoped<AdminAppDbContext>(database =>
             {
-                new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object)
                     .ShouldNotValidate(newInstance,
                         "'ODS Instance District / EdOrg Id' must not be empty.",
                         "'ODS Instance Description' must not be empty.");
@@ -206,11 +210,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         [TestCase(0)]
         [TestCase(-1)]
         public void ShouldBeInvalidDistrictOrEdOrgId(int invalidId)
-        {
-            var invalidInstanceName = "Test_Ods_" + invalidId;
+        {           
+            var invalidInstanceName = invalidId.ToString();
 
-            using (var connection1 = GetDatabaseConnection(invalidInstanceName))
-            using (var connection2 = GetDatabaseConnection(invalidInstanceName))
+            using (var connection1 = GetDatabaseConnection(invalidInstanceName, _dbNamePrefix))
+            using (var connection2 = GetDatabaseConnection(invalidInstanceName, _dbNamePrefix))
             {
                 _connectionProvider
                     .SetupSequence(x => x.CreateNewConnection(invalidId, ApiMode.DistrictSpecific))
@@ -227,22 +231,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                        .ShouldNotValidate(newInstance,
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object).ShouldNotValidate(newInstance,
                             "'ODS Instance District / EdOrg Id' must be a valid positive integer.");
                 });
             }
         }
-      
+
         [TestCase(null)]
         [TestCase(3099)]
         [TestCase(1800)]
         public void ShouldBeInvalidSchoolYear(int? invalidSchoolYear)
         {
-            var invalidInstanceName = "Test_Ods_" + invalidSchoolYear;
+            var invalidInstanceName = invalidSchoolYear.ToString();
 
-            using (var connection1 = GetDatabaseConnection(invalidInstanceName))
-            using (var connection2 = GetDatabaseConnection(invalidInstanceName))
+            using (var connection1 = GetDatabaseConnection(invalidInstanceName, _dbNamePrefix))
+            using (var connection2 = GetDatabaseConnection(invalidInstanceName, _dbNamePrefix))
             {
                 _connectionProvider.SetupSequence(
                         x => x.CreateNewConnection(invalidSchoolYear ?? 0, ApiMode.YearSpecific))
@@ -258,7 +261,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object)
                         .ShouldNotValidate(newInstance,
                             invalidSchoolYear == null
                             ? "'ODS Instance School Year' must not be empty."
@@ -270,7 +273,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         [Test]
         public void ShouldNotRegisterInstanceIfOdsInstanceIdentifierNotUniqueOnYearSpecificMode()
         {
-            var instanceName = "Test_Ods_2020";
+            var instanceName = "2020";
             ResetOdsInstanceRegistrations();
             SetupOdsInstanceRegistration(instanceName);
             _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.YearSpecific);
@@ -290,7 +293,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object)
                         .ShouldNotValidate(newInstance,
                             "An instance for this school year already exists.");
                 });
@@ -300,7 +303,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         [Test]
         public void ShouldNotRegisterInstanceIfOdsInstanceIdentifierNotUniqueOnDistrictSpecificMode()
         {
-            var instanceName = "Test_Ods_8787877";
+            var instanceName = "8787877";
             ResetOdsInstanceRegistrations();
             SetupOdsInstanceRegistration(instanceName);
 
@@ -321,8 +324,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 Scoped<AdminAppDbContext>(database =>
                 {
                     new RegisterOdsInstanceModelValidator(
-                            database, _apiModeProvider.Object, _databaseValidationService.Object,
-                            _connectionProvider.Object)
+                            database, _apiModeProvider.Object, _databaseValidationService.Object)
                         .ShouldNotValidate(
                             newInstance,
                             "An instance for this Education Organization / District Id already exists.");
@@ -334,7 +336,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         public void ShouldNotRegisterInstanceIfOdsInstanceIdentifierAssociatedDbDoesNotExistsOnDistrictSpecificMode()
         {
             const int odsInstanceNumericSuffix = 8787877;
-            const string instanceName = "Test_Ods_8787877";
+            const string instanceName = "8787877";
 
             var mockDatabaseValidationService = new Mock<IDatabaseValidationService>();
             mockDatabaseValidationService.Setup(x => x.IsValidDatabase(odsInstanceNumericSuffix, ApiMode.DistrictSpecific))
@@ -358,7 +360,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object)
                         .ShouldNotValidate(newInstance,
                             "Could not connect to an ODS instance database for this Education Organization / District Id.");
                 });
@@ -369,7 +371,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         public void ShouldNotRegisterInstanceIfOdsInstanceIdentifierAssociatedDbDoesNotExistsOnYearSpecificMode()
         {
             const int odsInstanceNumericSuffix = 2020;
-            const string instanceName = "Test_Ods_2020";
+            const string instanceName = "2020";
 
             var mockDatabaseValidationService = new Mock<IDatabaseValidationService>();
             mockDatabaseValidationService.Setup(x => x.IsValidDatabase(odsInstanceNumericSuffix, ApiMode.YearSpecific))
@@ -392,7 +394,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object)
                         .ShouldNotValidate(newInstance,
                             "Could not connect to an ODS instance database for this school year.");
                 });
@@ -403,7 +405,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         public void ShouldReturnValidationMessageWithYear()
         {
             const int odsInstanceNumericSuffix = 2020;
-            const string instanceName = "Test_Ods_2020";
+            const string instanceName = "2020";
 
             var mockDatabaseValidationService = new Mock<IDatabaseValidationService>();
             mockDatabaseValidationService.Setup(x => x.IsValidDatabase(odsInstanceNumericSuffix, ApiMode.YearSpecific))
@@ -426,7 +428,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                     Scoped<AdminAppDbContext>(database =>
                     {
-                        new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, _connectionProvider.Object,true)
+                        new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, mockDatabaseValidationService.Object, true)
                             .ShouldNotValidate(newInstance,
                                 $"Could not connect to an ODS instance database for this school year ({odsInstanceNumericSuffix}).");
                     });
@@ -436,7 +438,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         [Test]
         public void ShouldReturnValidationMessageWithDistrictId()
         {
-            var instanceName = "Test_Ods_8787877";
+            var instanceName = "8787877";
             ResetOdsInstanceRegistrations();
             SetupOdsInstanceRegistration(instanceName);
 
@@ -457,8 +459,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Scoped<AdminAppDbContext>(database =>
                     {
                         new RegisterOdsInstanceModelValidator(
-                                database, _apiModeProvider.Object, _databaseValidationService.Object,
-                                _connectionProvider.Object, true)
+                                database, _apiModeProvider.Object, _databaseValidationService.Object, true)
                             .ShouldNotValidate(
                                 newInstance,
                                 "An instance for this Education Organization / District Id (8787877) already exists.");
@@ -470,7 +471,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         public void ShouldReturnValidationMessageWithDistrictIdAndDescription()
         {
             var districtId = "8787877";
-            var instanceName = $"Test_Ods_8787877";
+            var instanceName = "8787877";
             ResetOdsInstanceRegistrations();
             var createdInstance = SetupOdsInstanceRegistration(instanceName);
 
@@ -491,8 +492,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     Scoped<AdminAppDbContext>(database =>
                     {
                         new RegisterOdsInstanceModelValidator(
-                                database, _apiModeProvider.Object, _databaseValidationService.Object,
-                                _connectionProvider.Object, true)
+                                database, _apiModeProvider.Object, _databaseValidationService.Object, true)
                             .ShouldNotValidate(newInstance,
                                 $"An instance with this description (Education Organization / District Id: 8787878, Description: {newInstance.Description}) already exists.");
                     });
@@ -503,9 +503,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         public void ShouldNotRegisterInstanceIfOdsInstanceDescriptionNotUnique()
         {
             ResetOdsInstanceRegistrations();
-            var instance = SetupOdsInstanceRegistration("Test_Ods_8787877");
+            var instance = SetupOdsInstanceRegistration("8787877");
 
-            var instanceName = "Test_Ods_7878787";
+            var instanceName = "7878787";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))
@@ -525,40 +525,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object)
                         .ShouldNotValidate(newInstance, "An instance with this description already exists.");
-                });
-            }
-        }
-
-        [Test]
-        public void ShouldNotRegisterInstanceIfOdsInstanceNameNotWithinApplicationNameMaxLength()
-        {
-            ResetOdsInstanceRegistrations();
-
-            var instanceName = "Test_Ods_7878787";
-            var prefix = Sample("TestPrefix_", 50);
-
-            using (var connection1 = GetDatabaseConnection(instanceName, prefix))
-            using (var connection2 = GetDatabaseConnection(instanceName, prefix))
-            {
-                _connectionProvider
-                    .SetupSequence(x => x.CreateNewConnection(7878787, ApiMode.DistrictSpecific))
-                    .Returns(connection1)
-                    .Returns(connection2);
-        
-                _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
-        
-                var newInstance = new RegisterOdsInstanceModel
-                {
-                    NumericSuffix = 7878787,
-                    Description = Sample("Description")
-                };
-
-                Scoped<AdminAppDbContext>(database =>
-                {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
-                        .ShouldNotValidate(newInstance, $"The resulting database name {connection1.Database} would be too long for Admin App to set up necessary Application records. Consider shortening the naming convention prefix in the database names and corresponding Web.config entries by 33 character(s).");
                 });
             }
         }
@@ -568,7 +536,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
 
-            var instanceName = "EdFi_Ods_7878787";
+            var instanceName = "7878787";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))
@@ -588,7 +556,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object)
                         .ShouldValidate(newInstance);
                 });
             }
@@ -599,7 +567,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
         {
             ResetOdsInstanceRegistrations();
 
-            var instanceName = "EdFi_Ods_2020";
+            var instanceName = "2020";
 
             using (var connection1 = GetDatabaseConnection(instanceName))
             using (var connection2 = GetDatabaseConnection(instanceName))
@@ -618,7 +586,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
 
                 Scoped<AdminAppDbContext>(database =>
                 {
-                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object, _connectionProvider.Object)
+                    new RegisterOdsInstanceModelValidator(database, _apiModeProvider.Object, _databaseValidationService.Object)
                         .ShouldValidate(newInstance);
                 });
             }

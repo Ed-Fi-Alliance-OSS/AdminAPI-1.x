@@ -30,6 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                 .Select((x, index) => new OdsInstanceRegistration
                 {
                     Name = useGuidName ? $"Ods{Guid.NewGuid():N}_{index:D4}" : $"Ods_{index:D4}",
+                    DatabaseName = $"DatabaseName_{index}",
                     Description = Sample("Description")
                 })
                 .ToList();
@@ -46,6 +47,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             var testInstance = new OdsInstanceRegistration
             {
                 Name = instanceName,
+                DatabaseName = instanceName,
                 Description = Sample("Description")
             };
 

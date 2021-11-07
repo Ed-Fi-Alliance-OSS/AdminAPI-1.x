@@ -1,4 +1,4 @@
-@*
+﻿@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
@@ -34,6 +34,17 @@ See the LICENSE and NOTICES files in the project root for more information.
     @await Component.InvokeAsync("Tracker")
 </head>
 <body>
+    <div id="error-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Error</h4>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
     <div id="dynamic-modal-container"></div>
     <script language="javascript">
         toastr.options.positionClass = "toast-bottom-right";

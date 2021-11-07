@@ -55,7 +55,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         public async Task ShouldRegisterOneNewOdsInstanceInBulk()
         {
             ResetOdsInstanceRegistrations();
-            var instanceName = "EdFi_Ods_23456";
+            var instanceName = "23456";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 
@@ -102,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         public async Task BulkShouldNotRegisterOneOdsInstancePreviouslyRegistered()
         {
             ResetOdsInstanceRegistrations();
-            var instanceName = "EdFi_Ods_23456";
+            var instanceName = "23456";
             const string description = "Test Description";
             var encryptedSecretConfigValue = "Encrypted string";
 

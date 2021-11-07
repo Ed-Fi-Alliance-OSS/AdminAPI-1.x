@@ -349,7 +349,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             OdsInstanceRegistration createdOdsInstanceRegistration = null;
             Scoped<AdminAppDbContext>(database =>
             {
-                database.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName});
+                database.OdsInstanceRegistrations.Add(new OdsInstanceRegistration {Name = instanceName, DatabaseName = instanceName});
                 database.SaveChanges();
 
                 createdOdsInstanceRegistration =

@@ -66,6 +66,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             result.Id.ShouldBe(testInstance.Id);
             result.Name.ShouldBe(testInstance.Name);
             result.Description.ShouldBe(testInstance.Description);
+            result.DatabaseName.ShouldBe(testInstance.DatabaseName);
         }
 
         [Test]
@@ -83,6 +84,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             result.Id.ShouldBe(testInstance.Id);
             result.Name.ShouldBe(testInstance.Name);
             result.Description.ShouldBe(testInstance.Description);
+            result.DatabaseName.ShouldBe(testInstance.DatabaseName);
         }
     }
 }

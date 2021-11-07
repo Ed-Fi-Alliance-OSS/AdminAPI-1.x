@@ -21,8 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
     public class BulkRegisterOdsInstancesRecordTests: AdminAppDataTestBase
     {
         private Mock<IDatabaseValidationService> _databaseValidationService;
-        private Mock<ICloudOdsAdminAppSettingsApiModeProvider> _apiModeProvider;
-        private Mock<IDatabaseConnectionProvider> _connectionProvider;
+        private Mock<ICloudOdsAdminAppSettingsApiModeProvider> _apiModeProvider;       
         private Mock<IBulkRegisterOdsInstancesFiltrationService> _dataFiltrationService;
 
         [SetUp]
@@ -31,8 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             _databaseValidationService = new Mock<IDatabaseValidationService>();
             _databaseValidationService.Setup(x => x.IsValidDatabase(It.IsAny<int>(), It.IsAny<ApiMode>())).Returns(true);
             _apiModeProvider = new Mock<ICloudOdsAdminAppSettingsApiModeProvider>();
-            _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);
-            _connectionProvider =  new Mock<IDatabaseConnectionProvider>();
+            _apiModeProvider.Setup(x => x.GetApiMode()).Returns(ApiMode.DistrictSpecific);           
             _dataFiltrationService = new Mock<IBulkRegisterOdsInstancesFiltrationService>();
         }
 
@@ -46,8 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             Scoped<AdminAppDbContext>(database =>
             {
                 var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
-                    database, _apiModeProvider.Object, _databaseValidationService.Object,
-                    _connectionProvider.Object, _dataFiltrationService.Object);
+                    database, _apiModeProvider.Object, _databaseValidationService.Object, _dataFiltrationService.Object);
 
                 bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
 
@@ -67,8 +64,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
             Scoped<AdminAppDbContext>(database =>
             {
                 var bulkRegisterOdsInstancesModelValidator = new BulkRegisterOdsInstancesModelValidator(
-                    database, _apiModeProvider.Object, _databaseValidationService.Object,
-                    _connectionProvider.Object, _dataFiltrationService.Object);
+                    database, _apiModeProvider.Object, _databaseValidationService.Object, _dataFiltrationService.Object);
 
                 bulkRegisterOdsInstancesModelValidator.GetDuplicates(dataRecords, out var duplicateNumericSuffixes, out var duplicateDescriptions);
 

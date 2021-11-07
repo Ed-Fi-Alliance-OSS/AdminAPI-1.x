@@ -11,6 +11,7 @@ using Shouldly;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Web.Helpers;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
@@ -21,6 +22,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
     {
         private int _vendorId;
         private int _vendorWithNoNameSpaceId;
+        private const string OriginalVendorNamespacePrefix = "old namespace prefix";
 
         [SetUp]
         public void Init()
@@ -28,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var originalVendor = new Vendor
             {
                 VendorName = "old vendor name",
-                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "old namespace prefix" } },
+                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = OriginalVendorNamespacePrefix } },
             };
             var originalVendorWithNoNameSpace = new Vendor
             {
@@ -55,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var newVendorData = new Mock<IEditVendor>();
             newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
             newVendorData.Setup(v => v.Company).Returns("new vendor name");
-            newVendorData.Setup(v => v.NamespacePrefix).Returns("new namespace prefix");
+            newVendorData.Setup(v => v.NamespacePrefixes).Returns("new namespace prefix");
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
@@ -81,7 +83,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var newVendorData = new Mock<IEditVendor>();
             newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
             newVendorData.Setup(v => v.Company).Returns("new vendor name");
-            newVendorData.Setup(v => v.NamespacePrefix).Returns(string.Empty);
+            newVendorData.Setup(v => v.NamespacePrefixes).Returns(string.Empty);
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
@@ -107,7 +109,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var newVendorData = new Mock<IEditVendor>();
             newVendorData.Setup(v => v.VendorId).Returns(_vendorWithNoNameSpaceId);
             newVendorData.Setup(v => v.Company).Returns("new vendor name");
-            newVendorData.Setup(v => v.NamespacePrefix).Returns("new namespace prefix");
+            newVendorData.Setup(v => v.NamespacePrefixes).Returns("new namespace prefix");
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
@@ -122,6 +124,77 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorWithNoNameSpaceId);
                 changedVendor.VendorName.ShouldBe("new vendor name");
                 changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
+                changedVendor.Users.First().FullName.ShouldBe("new contact name");
+                changedVendor.Users.First().Email.ShouldBe("new contact email");
+            });
+        }
+
+        [Test]
+        public void ShouldEditVendorByAddingMultipleNameSpacePrefixes()
+        {
+            var newVendorData = new Mock<IEditVendor>();
+            Transaction(usersContext =>
+            {
+                var originalVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
+            });
+            var newNamespacePrefixes = new List<string>
+            {
+                
+                "http://www.test1.com/",
+                "http://www.test2.com/",
+                "http://www.test3.com/"
+            };
+            newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+            newVendorData.Setup(v => v.Company).Returns("new vendor name");
+            newVendorData.Setup(v => v.NamespacePrefixes).Returns(newNamespacePrefixes.ToDelimiterSeparated());
+            newVendorData.Setup(v => v.ContactName).Returns("new contact name");
+            newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
+
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var editVendorCommand = new EditVendorCommand(usersContext);
+                editVendorCommand.Execute(newVendorData.Object);
+            });
+
+            Transaction(usersContext =>
+            {
+                var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                changedVendor.VendorName.ShouldBe("new vendor name");
+                changedVendor.VendorNamespacePrefixes.Select(x => x.NamespacePrefix).ShouldBe(newNamespacePrefixes);
+                changedVendor.Users.First().FullName.ShouldBe("new contact name");
+                changedVendor.Users.First().Email.ShouldBe("new contact email");
+            });
+        }
+
+        [Test]
+        public void ShouldEditVendorByRemovingNameSpacePrefix()
+        {
+            var newVendorData = new Mock<IEditVendor>();
+
+            Transaction(usersContext =>
+            {
+                var originalVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
+            });
+
+            newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+            newVendorData.Setup(v => v.Company).Returns("new vendor name");
+            newVendorData.Setup(v => v.NamespacePrefixes).Returns("");
+            newVendorData.Setup(v => v.ContactName).Returns("new contact name");
+            newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
+
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var editVendorCommand = new EditVendorCommand(usersContext);
+                editVendorCommand.Execute(newVendorData.Object);
+            });
+
+            Transaction(usersContext =>
+            {
+                var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                changedVendor.VendorName.ShouldBe("new vendor name");
+                changedVendor.VendorNamespacePrefixes.ShouldBeEmpty();
                 changedVendor.Users.First().FullName.ShouldBe("new contact name");
                 changedVendor.Users.First().Email.ShouldBe("new contact email");
             });

@@ -1218,6 +1218,16 @@ input[type="checkbox"]:checked + label > .fa-check-square:before {
     content: "\f14a";
 }
 
+#vendors-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#vendors-table td {
+    overflow: hidden;
+    word-break: break-word;
+    text-align: left;
+}
 
 @media (min-width: 768px) {
     .container-fluid > .navbar-collapse, .container-fluid > .navbar-header, .container > .navbar-collapse, .container > .navbar-header {

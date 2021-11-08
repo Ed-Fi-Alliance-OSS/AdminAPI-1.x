@@ -312,13 +312,11 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             // Act
-            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetAllDescriptors());
+            var result = _facade.DeleteSchool(SchoolId);
 
             // Assert
-            Assert.AreEqual(errorMsg, ex.ResponseMessage);
-
-            // Assert
-            ex.Message.ShouldBe(errorMsg);
+            result.Success.ShouldBe(false);
+            result.ErrorMessage.ShouldBe(errorMsg);
         }
 
         [Test]

@@ -10,6 +10,7 @@ using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
 using EdFi.Security.DataAccess.Contexts;
@@ -32,6 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
         private readonly IAssessmentVendorAdjustment _assessmentVendorAdjustment;
         private readonly ILearningStandardsSetup _learningStandardsSetup;
         private readonly IClaimSetCheckService _claimSetCheckService;
+        private readonly IDatabaseConnectionProvider _connectionProvider;
 
         public Action ExtraDatabaseInitializationAction { get; set; }
 
@@ -48,7 +50,8 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             IRestartAppServicesCommand restartAppServicesCommand,
             IAssessmentVendorAdjustment assessmentVendorAdjustment,
             ILearningStandardsSetup learningStandardsSetup,
-            IClaimSetCheckService claimSetCheckService)
+            IClaimSetCheckService claimSetCheckService,
+            IDatabaseConnectionProvider connectionProvider)
         {
             _restartAppServicesCommand = restartAppServicesCommand;
             _assessmentVendorAdjustment = assessmentVendorAdjustment;
@@ -63,6 +66,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             _odsSecretConfigurationProvider = odsSecretConfigurationProvider;
             _cloudOdsDatabaseSqlServerSecurityConfiguration = cloudOdsDatabaseSqlServerSecurityConfiguration;
             _odsInstanceFirstTimeSetupService = odsInstanceFirstTimeSetupService;
+            _connectionProvider = connectionProvider;
         }
         
         public async Task<bool> Execute(string odsInstanceName, CloudOdsClaimSet claimSet, ApiMode apiMode)
@@ -79,6 +83,7 @@ namespace EdFi.Ods.AdminApp.Management.Azure
                 var defaultOdsInstance = new OdsInstanceRegistration
                 {
                     Name = odsInstanceName,
+                    DatabaseName = InferInstanceDatabaseName(0, apiMode),
                     Description = "Default single ods instance"
                 };
                 await _odsInstanceFirstTimeSetupService.CompleteSetup(defaultOdsInstance, claimSet, apiMode);
@@ -99,6 +104,13 @@ namespace EdFi.Ods.AdminApp.Management.Azure
             await _restartAppServicesCommand.Execute(new CloudOdsApiOperationContext(cloudOdsInstance));
 
             return restartRequired;
+        }
+
+        private string InferInstanceDatabaseName(int odsInstanceNumericSuffix, ApiMode mode)
+        {
+            using var connection = _connectionProvider.CreateNewConnection(odsInstanceNumericSuffix, mode);
+
+            return connection.Database;
         }
 
         private void SetupAndRuntimeConfigurations(OdsFirstTimeSetupConfiguration firstTimeSetupConfiguration)

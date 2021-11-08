@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
@@ -11,6 +12,7 @@ using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
+using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
@@ -24,6 +26,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
     [TestFixture]
     public class CompleteOdsFirstTimeSetupCommandTester
     {
+        private Mock<IDatabaseConnectionProvider> _connectionProvider = null;
+
+        [SetUp]
+        public void Init()
+        {
+            _connectionProvider = new Mock<IDatabaseConnectionProvider>();
+            var connectionString = "Data Source=.\\;Integrated Security=True";
+            var sqlConnectionBuilder =
+                new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "Ed-Fi_Ods" };
+            using var connection = new SqlConnection(sqlConnectionBuilder.ConnectionString);
+            _connectionProvider.Setup(x => x.CreateNewConnection(0, ApiMode.SharedInstance)).Returns(connection);
+        }
+
         [Test]
         public async Task ShouldRunSqlConfigurator()
         {
@@ -89,7 +104,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockRestartAppServicesCommand.Object,
                 mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
-                mockClaimSetCheckService.Object);
+                mockClaimSetCheckService.Object,
+                _connectionProvider.Object);
 
             await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
 
@@ -165,7 +181,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockRestartAppServicesCommand.Object,
                 mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
-                mockClaimSetCheckService.Object);
+                mockClaimSetCheckService.Object,
+                _connectionProvider.Object);
 
             await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
 

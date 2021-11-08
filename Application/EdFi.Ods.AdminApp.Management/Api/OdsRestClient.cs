@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -61,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 _logger.Debug("*** ErrorException:");
                 _logger.Debug(response.ErrorException);
 
-                throw new Exception(response.ErrorMessage);
+                throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message ?? response.ErrorMessage);
             }
         }
 
@@ -80,7 +81,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
             responseList.AddRange(pageItems);
 
-            return responseList; 
+            return responseList;
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath) where T : class
@@ -108,7 +109,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             }
             while (pageItems.Count >= limit);
 
-            return responseList; 
+            return responseList;
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath, Dictionary<string, object> filters) where T : class
@@ -241,7 +242,8 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 var request = OdsRequest(elementPath);
                 request.Method = Method.DELETE;
                 request.AddUrlSegment("id", id);
-                _restClient.Execute(request);
+                var restResponse = _restClient.Execute(request);
+                HandleErrorResponse(restResponse);
                 return new OdsApiResult();
             }
             catch (Exception ex)

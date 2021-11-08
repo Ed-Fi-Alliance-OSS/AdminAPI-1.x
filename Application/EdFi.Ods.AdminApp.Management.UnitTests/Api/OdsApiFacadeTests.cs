@@ -13,6 +13,7 @@ using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Api.Common;
 using EdFi.Ods.AdminApp.Management.Api.DomainModels;
 using EdFi.Ods.AdminApp.Management.Api.Models;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Ods.AdminApp.Management.Instances;
 using NUnit.Framework;
 using Moq;
@@ -99,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetAllSchools());
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetAllSchools());
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);
@@ -154,7 +155,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetSchoolsByLeaIds(new List<int> { LocalEducationAgencyId }));
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetSchoolsByLeaIds(new List<int> { LocalEducationAgencyId }));
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);
@@ -200,7 +201,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetSchoolById(SchoolId));
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetSchoolById(SchoolId));
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);
@@ -293,6 +294,32 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         }
 
         [Test]
+        public void Should_DeleteSchool_returns_not_success_result_when_api_returns_not_ok_response()
+        {
+            // Arrange
+            const string errorMsg = "exception";
+            var mockRestClient = new Mock<IRestClient>();
+            mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
+            mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
+                { StatusCode = HttpStatusCode.NotFound, ErrorMessage = errorMsg });
+
+            var mockTokenRetriever = new Mock<ITokenRetriever>();
+            mockTokenRetriever.Setup(x => x.ObtainNewBearerToken()).Returns("Token");
+
+            var mockOdsRestClient =
+                new OdsRestClient(_connectionInformation, mockRestClient.Object, mockTokenRetriever.Object);
+
+            _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
+
+            // Act
+            var result = _facade.DeleteSchool(SchoolId);
+
+            // Assert
+            result.Success.ShouldBe(false);
+            result.ErrorMessage.ShouldBe(errorMsg);
+        }
+
+        [Test]
         public void Should_GetAllDescriptors_returns_expected_descriptors_list()
         {
             // Arrange
@@ -341,7 +368,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             _facade = new OdsApiFacade(_mapper, mockOdsRestClient);
 
             //Act
-            var ex = Assert.Throws<Exception>(() => _facade.GetAllDescriptors());
+            var ex = Assert.Throws<OdsApiConnectionException>(() => _facade.GetAllDescriptors());
 
             // Assert
             Assert.AreEqual(errorMessage, ex.Message);

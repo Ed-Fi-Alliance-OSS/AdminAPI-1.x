@@ -51,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         private static void HandleErrorResponse(IRestResponse response)
         {
-            if (!response.StatusCode.Equals(HttpStatusCode.OK))
+            if (!response.IsSuccessful)
             {
                 _logger.Debug("*** Status:");
                 _logger.Debug(response.StatusCode);

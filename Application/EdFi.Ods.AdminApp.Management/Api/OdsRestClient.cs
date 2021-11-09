@@ -52,25 +52,20 @@ namespace EdFi.Ods.AdminApp.Management.Api
         private IRestResponse ExecuteRequestAndHandleErrors(IRestRequest request)
         {
             var response = _restClient.Execute(request);
-            HandleErrorResponse(response);
-            return response;
-        }
 
-        private static void HandleErrorResponse(IRestResponse response)
-        {
-            if (!response.IsSuccessful)
-            {
-                _logger.Debug("*** Status:");
-                _logger.Debug(response.StatusCode);
+            if (response.IsSuccessful)
+                return response;
 
-                _logger.Debug("*** Content:");
-                _logger.Debug(response.Content);
+            _logger.Debug("*** Status:");
+            _logger.Debug(response.StatusCode);
 
-                _logger.Debug("*** ErrorException:");
-                _logger.Debug(response.ErrorException);
+            _logger.Debug("*** Content:");
+            _logger.Debug(response.Content);
 
-                throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message ?? response.ErrorMessage);
-            }
+            _logger.Debug("*** ErrorException:");
+            _logger.Debug(response.ErrorException);
+
+            throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message ?? response.ErrorMessage);
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath, int offset, int limit = 50) where T : class

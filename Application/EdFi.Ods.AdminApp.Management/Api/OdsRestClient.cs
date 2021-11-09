@@ -51,7 +51,15 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         private IRestResponse ExecuteRequestAndHandleErrors(IRestRequest request)
         {
-            var response = _restClient.Execute(request);
+            IRestResponse response;
+            try
+            {
+                response = _restClient.Execute(request);
+            }
+            catch (Exception ex)
+            {
+                throw new AdminAppException($"Unexpected ODS API failure: {ex.Message}", ex);
+            }
 
             if (response.IsSuccessful)
                 return response;
@@ -154,45 +162,42 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         public OdsApiResult PostResource<T>(T resource, string elementPath, bool refreshToken = false)
         {
+            var request = OdsRequest(elementPath);
+            request.Method = Method.POST;
+
             try
             {
-                var request = OdsRequest(elementPath);
-                request.Method = Method.POST;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
-
-                ExecuteRequestAndHandleErrors(request);
-
-                return new OdsApiResult();
             }
             catch (Exception ex)
             {
-                return new OdsApiResult
-                {
-                    ErrorMessage = ex.Message
-                };
+                throw new AdminAppException("Failed to serialize resource", ex);
             }
+
+            ExecuteRequestAndHandleErrors(request);
+
+            return new OdsApiResult();
         }
 
         public OdsApiResult PutResource<T>(T resource, string elementPath, string id, bool refreshToken = false)
         {
+            var request = OdsRequest($"{elementPath}/{id}");
+            request.Method = Method.PUT;
+
             try
             {
-                var request = OdsRequest($"{elementPath}/{id}");
-                request.Method = Method.PUT;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
-                ExecuteRequestAndHandleErrors(request);
-
-                return new OdsApiResult();
             }
             catch (Exception ex)
             {
-                return new OdsApiResult
-                {
-                    ErrorMessage = ex.Message
-                };
+                throw new AdminAppException("Failed to serialize resource", ex);
             }
+
+            ExecuteRequestAndHandleErrors(request);
+
+            return new OdsApiResult();
         }
 
         public IReadOnlyList<string> GetAllDescriptors()
@@ -223,21 +228,11 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         public OdsApiResult DeleteResource(string elementPath, string id, bool refreshToken = false)
         {
-            try
-            {
-                var request = OdsRequest(elementPath);
-                request.Method = Method.DELETE;
-                request.AddUrlSegment("id", id);
-                ExecuteRequestAndHandleErrors(request);
-                return new OdsApiResult();
-            }
-            catch (Exception ex)
-            {
-                return new OdsApiResult
-                {
-                    ErrorMessage = ex.Message
-                };
-            }
+            var request = OdsRequest(elementPath);
+            request.Method = Method.DELETE;
+            request.AddUrlSegment("id", id);
+            ExecuteRequestAndHandleErrors(request);
+            return new OdsApiResult();
         }
     }
 }

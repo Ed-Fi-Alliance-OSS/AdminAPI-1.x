@@ -49,6 +49,13 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return request;
         }
 
+        private IRestResponse ExecuteRequestAndHandleErrors(IRestRequest request)
+        {
+            var response = _restClient.Execute(request);
+            HandleErrorResponse(response);
+            return response;
+        }
+
         private static void HandleErrorResponse(IRestResponse response)
         {
             if (!response.IsSuccessful)
@@ -75,8 +82,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             var responseList = new List<T>();
             List<T> pageItems;
 
-            var restResponse = _restClient.Execute(request);
-            HandleErrorResponse(restResponse);
+            var restResponse = ExecuteRequestAndHandleErrors(request);
 
             pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
             responseList.AddRange(pageItems);
@@ -98,8 +104,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             do
             {
-                var restResponse = _restClient.Execute(request);
-                HandleErrorResponse(restResponse);
+                var restResponse = ExecuteRequestAndHandleErrors(request);
 
                 pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
                 responseList.AddRange(pageItems);
@@ -131,8 +136,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             do
             {
-                var restResponse = _restClient.Execute(request);
-                HandleErrorResponse(restResponse);
+                var restResponse = ExecuteRequestAndHandleErrors(request);
 
                 pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
                 responseList.AddRange(pageItems);
@@ -149,25 +153,22 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             var request = OdsRequest(elementPath);
             request.AddUrlSegment("id", id);
-            var response = _restClient.Execute(request);
-            HandleErrorResponse(response);
+            var response = ExecuteRequestAndHandleErrors(request);
             return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
         public OdsApiResult PostResource<T>(T resource, string elementPath, bool refreshToken = false)
         {
-            var result = new OdsApiResult();
             try
             {
                 var request = OdsRequest(elementPath);
                 request.Method = Method.POST;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
-                var response = _restClient.Execute(request);
 
-                HandleErrorResponse(response);
+                ExecuteRequestAndHandleErrors(request);
 
-                return result;
+                return new OdsApiResult();
             }
             catch (Exception ex)
             {
@@ -186,8 +187,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 request.Method = Method.PUT;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
-                var response = _restClient.Execute(request);
-                HandleErrorResponse(response);
+                ExecuteRequestAndHandleErrors(request);
 
                 return new OdsApiResult();
             }
@@ -204,8 +204,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             _restClient.BaseUrl = new Uri(_connectionInformation.DescriptorsUrl);
             var request = OdsRequest("swagger.json");
-            var response = _restClient.Execute(request);
-            HandleErrorResponse(response);
+            var response = ExecuteRequestAndHandleErrors(request);
             var swaggerDocument = JsonConvert.DeserializeObject<JObject>(response.Content);
             var descriptorPaths = swaggerDocument["paths"].ToObject<Dictionary<string, JObject>>();
 
@@ -234,8 +233,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 var request = OdsRequest(elementPath);
                 request.Method = Method.DELETE;
                 request.AddUrlSegment("id", id);
-                var restResponse = _restClient.Execute(request);
-                HandleErrorResponse(restResponse);
+                ExecuteRequestAndHandleErrors(request);
                 return new OdsApiResult();
             }
             catch (Exception ex)

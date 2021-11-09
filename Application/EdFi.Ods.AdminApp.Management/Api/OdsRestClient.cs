@@ -73,7 +73,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
             _logger.Debug("*** ErrorException:");
             _logger.Debug(response.ErrorException);
 
-            throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message ?? response.ErrorMessage);
+            var embeddedError = response.ErrorException?.Message ?? response.ErrorMessage;
+            var errorMesssage = !string.IsNullOrEmpty(embeddedError)
+                ? embeddedError
+                : $"ODS API failure with no message. Status Code: {response.StatusCode}";
+
+            throw new OdsApiConnectionException(response.StatusCode, embeddedError, errorMesssage);
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath, int offset, int limit = 50) where T : class

@@ -74,9 +74,12 @@ namespace EdFi.Ods.AdminApp.Management.Api
             _logger.Debug(response.ErrorException);
 
             var embeddedError = response.ErrorException?.Message ?? response.ErrorMessage;
+            var contentObj = JsonConvert.DeserializeObject<JObject>(response.Content);
+            contentObj.TryGetValue("message", out var contentMessage);
+
             var errorMesssage = !string.IsNullOrEmpty(embeddedError)
                 ? embeddedError
-                : $"ODS API failure with no message. Status Code: {response.StatusCode}";
+                : contentMessage?.ToString() ?? $"ODS API failure with no message. Status Code: {response.StatusCode}";
 
             throw new OdsApiConnectionException(response.StatusCode, embeddedError, errorMesssage);
         }

@@ -164,11 +164,8 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
                 var response = _restClient.Execute(request);
-                if (response != null && response.StatusCode != HttpStatusCode.Created &&
-                                        response.StatusCode != HttpStatusCode.OK)
-                {
-                    result.ErrorMessage = response.ErrorMessage ?? $"ODS/API returned status code '{response.StatusCode}'";
-                }
+
+                HandleErrorResponse(response);
 
                 return result;
             }
@@ -185,19 +182,14 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             try
             {
-                var result = new OdsApiResult();
                 var request = OdsRequest($"{elementPath}/{id}");
                 request.Method = Method.PUT;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
                 var response = _restClient.Execute(request);
-                if (response != null && (!response.StatusCode.Equals(HttpStatusCode.Created) ||
-                                         !response.StatusCode.Equals(HttpStatusCode.NoContent)))
-                {
-                    result.ErrorMessage = response.ErrorMessage;
-                }
+                HandleErrorResponse(response);
 
-                return result;
+                return new OdsApiResult();
             }
             catch (Exception ex)
             {

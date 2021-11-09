@@ -9,12 +9,17 @@ See the LICENSE and NOTICES files in the project root for more information.
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global
 @model EdFi.Ods.AdminApp.Web.Models.ViewModels.Global.VendorsListModel
 
-<table class="table table-hover table-custom">
+<table id="vendors-table" class="table table-hover table-custom">
+    <colgroup>
+        <col style="width: 20%">
+        <col style="width: 70%">
+        <col style="width: 10%">
+    </colgroup>
     <thead class="thead-inverse">
         <tr class="tr-custom">
-            <th>Name</th>
-            <th>Name Space Prefix </th>
-            <th>Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Name Space Prefixes </th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +27,7 @@ See the LICENSE and NOTICES files in the project root for more information.
     {
         <tr class="tr-custom">
             <th>@vendor.VendorName.ToTitleCase()</th>
-            <td>@vendor.NamespacePrefix</td>
+            <td>@vendor.NamespacePrefixes</td>
             <td>
                 <a title="Edit Vendor" href="javascript:void(0)" class="edit-table edit-vendor-link" data-id="@vendor.VendorId"> <span class="fa fa-pencil action-icons"></span></a>
                 <a title="Delete Vendor" href="javascript:void(0)" class="delete-vendor-link" data-id="@vendor.VendorId" data-name="@vendor.VendorName"> <span class="fa fa-trash-o action-icons"></span></a>

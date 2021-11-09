@@ -4,7 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -64,6 +66,15 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
             }
 
             return descriptorPath;
+        }
+
+        public static string ToDelimiterSeparated(this IEnumerable<string> inputStrings, string separator = ",")
+        {
+            var listOfStrings = inputStrings.ToList();
+
+            return listOfStrings.Any()
+                ? string.Join(separator, listOfStrings)
+                : string.Empty;
         }
 
         private static string CapitalizeFirstLetter(this string text)

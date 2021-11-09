@@ -25,30 +25,25 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             var vendor = _context.Vendors.Single(v => v.VendorId == changedVendorData.VendorId);
             vendor.VendorName = changedVendorData.Company;
 
-            // because of no UI support for multiple VendorNamespacePrefixes,
-            // we will always have only one VendorNamespacePrefix associated with vendor.
-            // So, we'll update/remove the first item available.
-            if (!string.IsNullOrEmpty(changedVendorData.NamespacePrefix))
+            if (vendor.VendorNamespacePrefixes.Any())
             {
-                if (vendor.VendorNamespacePrefixes.Any())
+                foreach (var vendorNamespacePrefix in vendor.VendorNamespacePrefixes.ToList())
                 {
-                    vendor.VendorNamespacePrefixes.First().NamespacePrefix = changedVendorData.NamespacePrefix;
-                }
-                else
-                {
-                    vendor.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
-                    {
-                        NamespacePrefix = changedVendorData.NamespacePrefix,
-                        Vendor = vendor
-                    });
+                     _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);    
                 }
             }
-            else
+
+            if (!string.IsNullOrEmpty(changedVendorData.NamespacePrefixes))
             {
-                if (vendor.VendorNamespacePrefixes.Any())
+                var namespacePrefixSplits = changedVendorData.NamespacePrefixes.Split(",");
+
+                foreach (var namespacePrefix in namespacePrefixSplits)
                 {
-                    var toRemove = vendor.VendorNamespacePrefixes.First();
-                    _context.VendorNamespacePrefixes.Remove(toRemove);
+                    _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
+                    {
+                        NamespacePrefix = namespacePrefix,
+                        Vendor = vendor
+                    });
                 }
             }
 
@@ -77,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
     {
         int VendorId { get; set; }
         string Company { get; set; }
-        string NamespacePrefix { get; set; }
+        string NamespacePrefixes { get; set; }
         string ContactName { get; set; }
         string ContactEmailAddress { get; set; }
     }

@@ -49,6 +49,19 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return request;
         }
 
+        private OdsApiResult ExecuteWithDefaultResponse(IRestRequest request)
+        {
+            try
+            {
+                ExecuteRequestAndHandleErrors(request);
+                return new OdsApiResult();
+            }
+            catch (Exception e)
+            {
+                return new OdsApiResult { ErrorMessage = e.Message };
+            }
+        }
+
         private IRestResponse ExecuteRequestAndHandleErrors(IRestRequest request)
         {
             IRestResponse response;
@@ -182,10 +195,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             {
                 throw new AdminAppException("Failed to serialize resource", ex);
             }
-
-            ExecuteRequestAndHandleErrors(request);
-
-            return new OdsApiResult();
+            return ExecuteWithDefaultResponse(request);
         }
 
         public OdsApiResult PutResource<T>(T resource, string elementPath, string id, bool refreshToken = false)
@@ -203,9 +213,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
                 throw new AdminAppException("Failed to serialize resource", ex);
             }
 
-            ExecuteRequestAndHandleErrors(request);
-
-            return new OdsApiResult();
+            return ExecuteWithDefaultResponse(request);
         }
 
         public IReadOnlyList<string> GetAllDescriptors()
@@ -239,8 +247,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             var request = OdsRequest(elementPath);
             request.Method = Method.DELETE;
             request.AddUrlSegment("id", id);
-            ExecuteRequestAndHandleErrors(request);
-            return new OdsApiResult();
+            return ExecuteWithDefaultResponse(request);
         }
     }
 }

@@ -49,21 +49,52 @@ namespace EdFi.Ods.AdminApp.Management.Api
             return request;
         }
 
-        private static void HandleErrorResponse(IRestResponse response)
+        private OdsApiResult ExecuteWithDefaultResponse(IRestRequest request)
         {
-            if (!response.StatusCode.Equals(HttpStatusCode.OK))
+            try
             {
-                _logger.Debug("*** Status:");
-                _logger.Debug(response.StatusCode);
-
-                _logger.Debug("*** Content:");
-                _logger.Debug(response.Content);
-
-                _logger.Debug("*** ErrorException:");
-                _logger.Debug(response.ErrorException);
-
-                throw new OdsApiConnectionException(response.StatusCode, response.ErrorMessage, response.ErrorException?.Message ?? response.ErrorMessage);
+                ExecuteRequestAndHandleErrors(request);
+                return new OdsApiResult();
             }
+            catch (Exception e)
+            {
+                return new OdsApiResult { ErrorMessage = e.Message };
+            }
+        }
+
+        private IRestResponse ExecuteRequestAndHandleErrors(IRestRequest request)
+        {
+            IRestResponse response;
+            try
+            {
+                response = _restClient.Execute(request);
+            }
+            catch (Exception ex)
+            {
+                throw new AdminAppException($"Unexpected ODS API failure: {ex.Message}", ex);
+            }
+
+            if (response.IsSuccessful)
+                return response;
+
+            _logger.Debug("*** Status:");
+            _logger.Debug(response.StatusCode);
+
+            _logger.Debug("*** Content:");
+            _logger.Debug(response.Content);
+
+            _logger.Debug("*** ErrorException:");
+            _logger.Debug(response.ErrorException);
+
+            var embeddedError = response.ErrorException?.Message ?? response.ErrorMessage;
+            var contentObj = JsonConvert.DeserializeObject<JObject>(response.Content) ?? new JObject();
+            contentObj.TryGetValue("message", out var contentMessage);
+
+            var errorMesssage = !string.IsNullOrEmpty(embeddedError)
+                ? embeddedError
+                : contentMessage?.ToString() ?? $"ODS API failure with no message. Status Code: {response.StatusCode}";
+
+            throw new OdsApiConnectionException(response.StatusCode, embeddedError, errorMesssage);
         }
 
         public IReadOnlyList<T> GetAll<T>(string elementPath, int offset, int limit = 50) where T : class
@@ -75,8 +106,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             var responseList = new List<T>();
             List<T> pageItems;
 
-            var restResponse = _restClient.Execute(request);
-            HandleErrorResponse(restResponse);
+            var restResponse = ExecuteRequestAndHandleErrors(request);
 
             pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
             responseList.AddRange(pageItems);
@@ -98,8 +128,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             do
             {
-                var restResponse = _restClient.Execute(request);
-                HandleErrorResponse(restResponse);
+                var restResponse = ExecuteRequestAndHandleErrors(request);
 
                 pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
                 responseList.AddRange(pageItems);
@@ -131,8 +160,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
             do
             {
-                var restResponse = _restClient.Execute(request);
-                HandleErrorResponse(restResponse);
+                var restResponse = ExecuteRequestAndHandleErrors(request);
 
                 pageItems = JsonConvert.DeserializeObject<List<T>>(restResponse.Content);
                 responseList.AddRange(pageItems);
@@ -149,71 +177,50 @@ namespace EdFi.Ods.AdminApp.Management.Api
         {
             var request = OdsRequest(elementPath);
             request.AddUrlSegment("id", id);
-            var response = _restClient.Execute(request);
-            HandleErrorResponse(response);
+            var response = ExecuteRequestAndHandleErrors(request);
             return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
         public OdsApiResult PostResource<T>(T resource, string elementPath, bool refreshToken = false)
         {
-            var result = new OdsApiResult();
+            var request = OdsRequest(elementPath);
+            request.Method = Method.POST;
+
             try
             {
-                var request = OdsRequest(elementPath);
-                request.Method = Method.POST;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
-                var response = _restClient.Execute(request);
-                if (response != null && response.StatusCode != HttpStatusCode.Created &&
-                                        response.StatusCode != HttpStatusCode.OK)
-                {
-                    result.ErrorMessage = response.ErrorMessage ?? $"ODS/API returned status code '{response.StatusCode}'";
-                }
-
-                return result;
             }
             catch (Exception ex)
             {
-                return new OdsApiResult
-                {
-                    ErrorMessage = ex.Message
-                };
+                throw new AdminAppException("Failed to serialize resource", ex);
             }
+            return ExecuteWithDefaultResponse(request);
         }
 
         public OdsApiResult PutResource<T>(T resource, string elementPath, string id, bool refreshToken = false)
         {
+            var request = OdsRequest($"{elementPath}/{id}");
+            request.Method = Method.PUT;
+
             try
             {
-                var result = new OdsApiResult();
-                var request = OdsRequest($"{elementPath}/{id}");
-                request.Method = Method.PUT;
                 var jsonInput = JsonConvert.SerializeObject(resource);
                 request.AddParameter("application/json; charset=utf-8", jsonInput, ParameterType.RequestBody);
-                var response = _restClient.Execute(request);
-                if (response != null && (!response.StatusCode.Equals(HttpStatusCode.Created) ||
-                                         !response.StatusCode.Equals(HttpStatusCode.NoContent)))
-                {
-                    result.ErrorMessage = response.ErrorMessage;
-                }
-
-                return result;
             }
             catch (Exception ex)
             {
-                return new OdsApiResult
-                {
-                    ErrorMessage = ex.Message
-                };
+                throw new AdminAppException("Failed to serialize resource", ex);
             }
+
+            return ExecuteWithDefaultResponse(request);
         }
 
         public IReadOnlyList<string> GetAllDescriptors()
         {
             _restClient.BaseUrl = new Uri(_connectionInformation.DescriptorsUrl);
             var request = OdsRequest("swagger.json");
-            var response = _restClient.Execute(request);
-            HandleErrorResponse(response);
+            var response = ExecuteRequestAndHandleErrors(request);
             var swaggerDocument = JsonConvert.DeserializeObject<JObject>(response.Content);
             var descriptorPaths = swaggerDocument["paths"].ToObject<Dictionary<string, JObject>>();
 
@@ -237,22 +244,10 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         public OdsApiResult DeleteResource(string elementPath, string id, bool refreshToken = false)
         {
-            try
-            {
-                var request = OdsRequest(elementPath);
-                request.Method = Method.DELETE;
-                request.AddUrlSegment("id", id);
-                var restResponse = _restClient.Execute(request);
-                HandleErrorResponse(restResponse);
-                return new OdsApiResult();
-            }
-            catch (Exception ex)
-            {
-                return new OdsApiResult
-                {
-                    ErrorMessage = ex.Message
-                };
-            }
+            var request = OdsRequest(elementPath);
+            request.Method = Method.DELETE;
+            request.AddUrlSegment("id", id);
+            return ExecuteWithDefaultResponse(request);
         }
     }
 }

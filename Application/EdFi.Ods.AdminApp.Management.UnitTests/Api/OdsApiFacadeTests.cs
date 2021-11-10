@@ -247,7 +247,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.Success.ShouldBe(false);
-            result.ErrorMessage.ShouldBe(errorMsg);
+            result.ErrorMessage.ShouldContain(errorMsg);
         }
 
         [Test]
@@ -290,7 +290,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.Success.ShouldBe(false);
-            result.ErrorMessage.ShouldBe(errorMsg);
+            result.ErrorMessage.ShouldContain(errorMsg);
         }
 
         [Test]
@@ -328,7 +328,11 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             var mockRestClient = new Mock<IRestClient>();
             mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
             mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
-                { StatusCode = HttpStatusCode.OK, Content = content });
+            {
+                ResponseStatus = ResponseStatus.Completed,
+                StatusCode = HttpStatusCode.OK,
+                Content = content
+            });
 
             var mockTokenRetriever = new Mock<ITokenRetriever>();
             mockTokenRetriever.Setup(x => x.ObtainNewBearerToken()).Returns("Token");
@@ -415,7 +419,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.Success.ShouldBe(false);
-            result.ErrorMessage.ShouldBe(errorMsg);
+            result.ErrorMessage.ShouldContain(errorMsg);
         }
 
         [Test]
@@ -455,6 +459,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
             mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
             {
+                ResponseStatus = ResponseStatus.Completed,
                 StatusCode = HttpStatusCode.Created
             });
 
@@ -510,7 +515,8 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             mockRestClient.Setup(x => x.BaseUrl).Returns(new Uri(_connectionInformation.ApiBaseUrl));
             mockRestClient.Setup(x => x.Execute(It.IsAny<RestRequest>())).Returns(new RestResponse
             {
-                StatusCode = HttpStatusCode.NoContent
+                StatusCode = HttpStatusCode.NoContent,
+                ResponseStatus = ResponseStatus.Completed,
             });
 
             var mockTokenRetriever = new Mock<ITokenRetriever>();

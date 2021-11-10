@@ -87,7 +87,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
             _logger.Debug(response.ErrorException);
 
             var embeddedError = response.ErrorException?.Message ?? response.ErrorMessage;
-            var contentObj = JsonConvert.DeserializeObject<JObject>(response.Content);
+            var contentObj = JsonConvert.DeserializeObject<JObject>(response.Content) ?? new JObject();
             contentObj.TryGetValue("message", out var contentMessage);
 
             var errorMesssage = !string.IsNullOrEmpty(embeddedError)

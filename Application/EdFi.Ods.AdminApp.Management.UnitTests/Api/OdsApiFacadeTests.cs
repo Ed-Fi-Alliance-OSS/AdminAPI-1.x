@@ -247,7 +247,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.Success.ShouldBe(false);
-            result.ErrorMessage.ShouldBe(errorMsg);
+            result.ErrorMessage.ShouldContain(errorMsg);
         }
 
         [Test]
@@ -290,7 +290,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.Success.ShouldBe(false);
-            result.ErrorMessage.ShouldBe(errorMsg);
+            result.ErrorMessage.ShouldContain(errorMsg);
         }
 
         [Test]
@@ -415,7 +415,7 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
 
             // Assert
             result.Success.ShouldBe(false);
-            result.ErrorMessage.ShouldBe(errorMsg);
+            result.ErrorMessage.ShouldContain(errorMsg);
         }
 
         [Test]

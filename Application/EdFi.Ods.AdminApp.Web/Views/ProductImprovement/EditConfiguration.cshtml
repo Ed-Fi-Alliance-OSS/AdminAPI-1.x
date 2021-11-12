@@ -20,7 +20,7 @@
                 Ed-Fi offers community members the ability to provide direct product feedback via telemetry and
                 Ed-Fi Tracker Jira feature request forms. The telemetry data sent to Ed-Fi allows us to improve
                 products based on usage from its active adopters. To see more information on this topic,
-                <a href="https://techdocs.ed-fi.org/display/EDFITOOLS/Product+Improvement">
+                <a href="https://techdocs.ed-fi.org/display/EDFITOOLS/Product+Improvement" target="_blank" rel="noopener noreferrer">
                     please see this article on TechDocs
                 </a>.
             </p>
@@ -38,6 +38,9 @@
                 @Html.InputBlock(x => x.EnableProductImprovement)
                 <div id="ProductRegistrationIdWrapper">
                     @Html.InputBlock(x => x.ProductRegistrationId)
+                    <div class="row form-group">                   
+                        <div class="col-xs-offset-4 col-xs-6">To register this instance, please <a href="https://edfi-tools-analytics.azurewebsites.net/register/" target="_blank" rel="noopener noreferrer">click here</a> to obtain a key.</div>
+                    </div>
                 </div>
                 <div class="row form-group text-center">
                     <div class="col-xs-offset-4 col-xs-6">

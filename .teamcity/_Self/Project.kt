@@ -18,7 +18,7 @@ object AdminAppProject : Project({
             +:refs/(pull/*)/merge
         """.trimIndent())
         param("teamcity.ui.settings.readOnly","true")
-        param("adminApp.version", "2.3.1")
+        param("adminApp.version", "2.4.0")
     }
 
     subProject(web.AdminAppWebProject)

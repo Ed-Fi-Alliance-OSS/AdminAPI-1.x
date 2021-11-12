@@ -16,7 +16,8 @@ namespace EdFi.Ods.AdminApp.Management
         public static readonly string[] SystemReservedClaimSets =
         {
             InternalAdminAppClaimSet,
-            "Bootstrap Descriptors and EdOrgs"
+            "Bootstrap Descriptors and EdOrgs",
+            "Education Preparation Program"
         };
     }
 }

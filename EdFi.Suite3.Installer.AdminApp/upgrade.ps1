@@ -12,12 +12,12 @@ Your existing appsettings.json config values and connection strings will be copi
 .EXAMPLE
     $p = @{
     ToolsPath = "C:/temp/tools"
-    PackageVersion = '2.2.1' }
+    PackageVersion = '2.3.1' }
 #>
 
 $p = @{
     ToolsPath = "C:/temp/tools"
-    PackageVersion = '2.2.1'
+    PackageVersion = '2.3.1'
 }
 
 Update-EdFiOdsAdminApp @p

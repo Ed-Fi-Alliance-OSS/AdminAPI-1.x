@@ -18,6 +18,16 @@ Installs and connects the applications to the database using SQL Authentication
         Username = "exampleAdmin"
         Password = "examplePassword"
     }
+
+Installs and connects the applications to the database using PostgreSQL Authentication
+
+    $dbConnectionInfo = @{
+        Server = "localhost"
+        Engine = "PostgreSQL"
+        UseIntegratedSecurity = $false
+        Username = "postgres"
+        Password = "examplePassword"
+    }
 #>
 
 $dbConnectionInfo = @{
@@ -36,7 +46,7 @@ Configure Admin App to manage an API with url "https://localhost:54746"
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
         OdsApiUrl = "https://localhost:54746"
-        PackageVersion = '2.2.1'
+        PackageVersion = '2.3.1'
     }
 
 .EXAMPLE
@@ -50,7 +60,7 @@ Deploy Admin App for use with a "District Specific" ODS API
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
         OdsApiUrl = "http://web-api.example.com/WebApi"
-        PackageVersion = '2.2.1'
+        PackageVersion = '2.3.1'
         AdminAppFeatures = $adminAppFeatures
     }
 #>
@@ -63,7 +73,7 @@ $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
     OdsApiUrl = ""
-    PackageVersion = '2.2.1'
+    PackageVersion = '2.3.1'
     AdminAppFeatures = $adminAppFeatures
 }
 

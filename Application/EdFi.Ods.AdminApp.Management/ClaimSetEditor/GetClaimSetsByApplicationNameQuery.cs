@@ -21,7 +21,8 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             "Assessment Read",
             "District Hosted SIS Vendor",
             "AB Connect",
-            "Bootstrap Descriptors and EdOrgs"
+            "Bootstrap Descriptors and EdOrgs",
+            "Education Preparation Program"
         };
 
         private readonly ISecurityContext _securityContext;

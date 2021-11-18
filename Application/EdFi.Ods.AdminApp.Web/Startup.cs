@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -138,6 +139,8 @@ namespace EdFi.Ods.AdminApp.Web
             HangFireInstance.EnableWithoutSchemaMigration();
             services.AddHangfireServer();
 
+            services.AddHealthCheck(Configuration.GetConnectionString("Admin"), IsSqlServer(databaseEngine));
+
             CommonConfigurationInstaller.ConfigureLearningStandards(services);
         }
 
@@ -146,11 +149,13 @@ namespace EdFi.Ods.AdminApp.Web
             var connectionString = Configuration.GetConnectionString("Admin");
             var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
 
-            if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
-                options.UseSqlServer(connectionString);
+            if (IsSqlServer(databaseEngine))
+                    options.UseSqlServer(connectionString);
             else
                 options.UseNpgsql(connectionString);
         }
+
+        private static bool IsSqlServer(string databaseEngine) => "SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase);
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -213,6 +218,8 @@ namespace EdFi.Ods.AdminApp.Web
                                 "This notification will NOT be reported to the Production registration endpoint.");
                         });
                 }
+
+                endpoints.MapHealthChecks("/health");
             });
         }
 

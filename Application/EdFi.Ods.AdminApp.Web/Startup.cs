@@ -150,7 +150,7 @@ namespace EdFi.Ods.AdminApp.Web
             var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
 
             if (IsSqlServer(databaseEngine))
-                    options.UseSqlServer(connectionString);
+                options.UseSqlServer(connectionString);
             else
                 options.UseNpgsql(connectionString);
         }

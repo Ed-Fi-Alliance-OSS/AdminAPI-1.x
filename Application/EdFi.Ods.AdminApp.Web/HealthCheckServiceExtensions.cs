@@ -21,8 +21,7 @@ namespace EdFi.Ods.AdminApp.Web
                 hcBuilder.AddNpgSql(connectionString);
             }
 
-            return services;        
+            return services;
         }
     }
 }
-

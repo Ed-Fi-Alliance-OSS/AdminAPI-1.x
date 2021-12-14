@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "@cucumber/cucumber": "^7.3.1",
+    "chromedriver": "^96.0.0",
+    "dotenv": "^10.0.0",
+    "playwright": "^1.17.1"
+  },
+  "description": "Playwright end-to-end test automation for Admin App. Using Commonjs, Cucumber and Assert.",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-cucumber": "1.4.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1",
+    "pretty-quick": "^3.1.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "license": "MIT",
+  "name": "playwright-admin-app-tests",
+  "scripts": {
+    "lint": "npx eslint --ext .ts ./ --fix",
+    "cucumber": "cucumber-js --require features/**/*.ts --require-module ts-node/register --publish-quiet",
+    "test": "npm run cucumber -- features/**/*.feature",
+    "report": "npm run test -- --format json:reports/report.json",
+    "sanity-test": "npm run test -- --tags @Sanity",
+    "test-wip": "npm run test -- --tags @WIP",
+    "publish": "npm run test -- --publish",
+    "test-login": "npm run cucumber -- features/login.feature --fail-fast"
+  },
+  "version": "1.0.0"
+}

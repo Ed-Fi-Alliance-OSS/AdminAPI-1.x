@@ -1,10 +1,14 @@
-name: .NET
+name: Build and Test
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
+env:
+  BUILD_VERSION: ${{ secrets.SEMANTIC_VERSION }}
+  GA_MEASUREMENT_ID: ${{ secrets.GOOGLE_ANALYTICS_MEASUREMENT_ID}}
 
 jobs:
   build:
@@ -21,8 +25,14 @@ jobs:
       run: dotnet restore
       working-directory: ./Application
     - name: Build
-      run: dotnet build --no-restore -c Release
-      working-directory: ./Application
-    - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release --filter FullyQualifiedName~UnitTests
-      working-directory: ./Application
+      run: |
+        ./build.ps1 -Command Build -Configuration Release -Version ${{ env.BUILD_VERSION }} -BuildCounter ${{ github.run_number }}
+      shell: pwsh
+    - name: Populate Google Analytics ID
+      run: |
+        .\build.ps1 -Command PopulateGoogleAnalyticsAppSettings -GoogleAnalyticsMeasurementId ${{env.GA_MEASUREMENT_ID}}
+      shell: pwsh
+    - name: Unit Tests
+      run: |
+        ./build.ps1 -Command UnitTest -Configuration Release
+      shell: pwsh

@@ -1,0 +1,9 @@
+node_modules/
+
+screenshots/
+videos/
+state/
+logs/
+reports/
+
+.env

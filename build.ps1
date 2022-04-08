@@ -273,20 +273,18 @@ function NewDevCertificate {
     }
 }
 
-function GetPackagePreleaseVersion {
-    return "$Version-pre$($BuildCounter.PadLeft(4,'0'))"
+function GetPackageVersion {
+    return "$Version.$BuildCounter"
 }
 
 function BuildDatabaseScriptPackage{
     $nugetSpecPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/EdFi.Ods.AdminApp.Database.nuspec"
-    RunNuGetPack -PackageVersion $Version $nugetSpecPath
-    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion) $nugetSpecPath
+    RunNuGetPack -PackageVersion $(GetPackageVersion) $nugetSpecPath
 }
 
 function BuildPackage {
     $nugetSpecPath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/EdFi.Ods.AdminApp.Web.nuspec"
-    RunNuGetPack -PackageVersion $Version $nugetSpecPath
-    RunNuGetPack -PackageVersion $(GetPackagePreleaseVersion) $nugetSpecPath
+    RunNuGetPack -PackageVersion $(GetPackageVersion) $nugetSpecPath
 }
 
 function PushPackage {
@@ -295,7 +293,7 @@ function PushPackage {
     }
 
     if (-not $PackageFile) {
-        $PackageFile = "$PSScriptRoot/EdFi.Ods.AdminApp.Web.$(GetPackagePreleaseVersion).nupkg"
+        $PackageFile = "$PSScriptRoot/EdFi.Ods.AdminApp.Web.$(GetPackageVersion).nupkg"
     }
 
     $arguments = @{

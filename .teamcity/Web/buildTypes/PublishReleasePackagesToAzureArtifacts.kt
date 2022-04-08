@@ -19,8 +19,9 @@ object PublishReleasePackagesToAzureArtifacts : BuildType ({
     option("shouldFailBuildOnAnyErrorMessage", "true")
 
     params {
-        param("nuGet.packageFile.database", "EdFi.Suite3.ODS.AdminApp.Database.%adminApp.version%.nupkg")
-        param("nuGet.packageFile.web", "EdFi.Suite3.ODS.AdminApp.Web.%adminApp.version%.nupkg")
+        param("promote.packages.view", "placeholder")
+        param("nuGet.packageFile.database", "EdFi.Suite3.ODS.AdminApp.Database.%adminApp.version%.%build.counter%.nupkg")
+        param("nuGet.packageFile.web", "EdFi.Suite3.ODS.AdminApp.Web.%adminApp.version%.%build.counter%.nupkg")
         param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", "{\"endpointCredentials\": [{\"endpoint\": \"%azureArtifacts.feed.nuget%\",\"username\": \"%azureArtifacts.edFiBuildAgent.userName%\",\"password\": \"%azureArtifacts.edFiBuildAgent.accessToken%\"}]}")
     }
 
@@ -56,6 +57,28 @@ object PublishReleasePackagesToAzureArtifacts : BuildType ({
                         NuGetApiKey = "%azureArtifacts.edFiBuildAgent.accessToken%"
                     }
                     ./build.ps1 Push @arguments
+                """.trimIndent()
+            }
+        }
+        powerShell {
+            name = "Promote Packages"
+            formatStderrAsError = true
+            executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
+            scriptMode = script {
+                content = """
+                    ${'$'}Version = "%adminApp.version%.%build.counter%"
+                    ${'$'}Packages =  @{ }
+                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Database".ToLower().Trim(), ${'$'}Version)
+                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Web".ToLower().Trim(), ${'$'}Version)
+
+                    ${'$'}arguments = @{
+                    	 PackagesURL = "%azureArtifacts.api.packaging%"
+                         Username    = "%azureArtifacts.edFiBuildAgent.userName%"
+                         Password    = (ConvertTo-SecureString -String "%azureArtifacts.edFiBuildAgent.accessToken%" -AsPlainText -Force)
+                         View        = "%promote.packages.view%"
+                         Packages    = ${'$'}Packages
+                    }
+                    eng\promote-packages.ps1 @arguments
                 """.trimIndent()
             }
         }

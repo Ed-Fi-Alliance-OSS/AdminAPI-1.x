@@ -21,7 +21,7 @@ object BuildAdminAppInstaller : BuildType ({
     params {
         param("github.organization", "Ed-Fi-Alliance-OSS")
         param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", """{"endpointCredentials": [{"endpoint": "%azureArtifacts.feed.nuget%","username": "%azureArtifacts.edFiBuildAgent.userName%","password": "%azureArtifacts.edFiBuildAgent.accessToken%"}]}""")
-        param("project.shouldPublishPreRelease", "true")
+        param("project.shouldPublishInstallerPackage", "true")
     }
 
     vcs {
@@ -40,8 +40,7 @@ object BuildAdminAppInstaller : BuildType ({
                     ${'$'}parameters = @{
                         SemanticVersion = "%adminApp.version%"
                         BuildCounter = "%build.counter%"
-                        PreReleaseLabel = "%version.preReleaseLabel%"
-                        Publish = [System.Convert]::ToBoolean("%project.shouldPublishPreRelease%")
+                        Publish = [System.Convert]::ToBoolean("%project.shouldPublishInstallerPackage%")
                         NuGetFeed = "%azureArtifacts.feed.nuget%"
                         NuGetApiKey = "%azureArtifacts.edFiBuildAgent.accessToken%"
                     }

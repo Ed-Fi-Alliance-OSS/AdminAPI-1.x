@@ -14,7 +14,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Home
     {
         public string Message { get; }
         public string StackTrace { get; }
-        public HttpStatusCode? StatusCode { get; }
+        public new HttpStatusCode? StatusCode { get; }
 
         public bool IsStackTraceRelevant { get; }
         public bool AllowFeedback { get; }

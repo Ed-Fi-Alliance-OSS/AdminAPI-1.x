@@ -3,14 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using FluentValidation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApp.Web.Helpers;
-using FluentValidation.Validators;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 {
@@ -48,6 +46,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
             RuleFor(m => m.ApplicationName).NotEmpty();
             RuleFor(m => m.ApplicationName)
                 .Must(BeWithinApplicationNameMaxLength)
+                .WithMessage("The Application Name {ApplicationName} would be too long for Admin App to set up necessary Application records." +
+                             " Consider shortening the name by {ExtraCharactersInName} character(s).")
                 .When(x => x.ApplicationName != null);
 
             RuleFor(m => m.ClaimSetName)
@@ -61,7 +61,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
             RuleFor(m => m.VendorId).NotEmpty();
         }
 
-        private bool BeWithinApplicationNameMaxLength(EditApplicationModel model, string applicationName, PropertyValidatorContext context)
+        private bool BeWithinApplicationNameMaxLength<T>(EditApplicationModel model, string applicationName, ValidationContext<T> context)
         {            
             var extraCharactersInName = applicationName.Length - ApplicationExtensions.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)
@@ -69,9 +69,9 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
                 return true;
             }
 
-            context.Rule.MessageBuilder = c
-                => $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records." +
-                   $" Consider shortening the name by {extraCharactersInName} character(s).";
+            context.MessageFormatter.AppendArgument("ApplicationName", applicationName);
+            context.MessageFormatter.AppendArgument("ExtraCharactersInName", extraCharactersInName);
+
 
             return false;
         }

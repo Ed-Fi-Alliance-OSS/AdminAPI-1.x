@@ -154,7 +154,7 @@ function InitializeNuGet {
 }
 
 function Restore {
-    Invoke-Execute { &$script:nugetExe restore $solution }
+    Invoke-Execute { dotnet restore $solution }
 }
 
 function AssemblyInfo {

@@ -19,11 +19,11 @@ For debugging on Azure, see [CloudODS Debugging](cloudods-debugging.md)
 
 ## Development Pre-Requisites
 
-* [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+* [.NET Core 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
 * Either:
-  * [Visual Studio 2019](https://visualstudio.microsoft.com/downloads), or
-  * [Visual Studio 2019 Build
-    Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
+  * [Visual Studio 2022](https://visualstudio.microsoft.com/downloads), or
+  * [Visual Studio 2022 Build
+    Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
     (install the ".NET Build Tools" component)
 * Clone [this
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp) locally
@@ -43,7 +43,7 @@ longer than 256 characters:
 
 The PowerShell script `build.ps1` in the root directory contains functions for
 running standard build operations at the command line . This script assumes that
-.NET Core 3.1 SDK or newer is installed. Other dependencies tools are downloaded
+.NET 6.0 SDK or newer is installed. Other dependencies tools are downloaded
 as needed (nuget, nunit).
 
 Available commands:

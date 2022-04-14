@@ -13,7 +13,6 @@ using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
 using FluentValidation;
 using log4net;
-using FluentValidation.Validators;
 using EdFi.Ods.AdminApp.Management.Instances;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
@@ -121,7 +120,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
                 .Where(g => g.Count() > 1).Select(x => x.Key).ToList();
         }
 
-        private void HaveValidHeaders(BulkRegisterOdsInstancesModel model, CustomContext context)
+        private void HaveValidHeaders<T>(BulkRegisterOdsInstancesModel model, ValidationContext<T> context)
         {
             var missingHeaders = model.MissingHeaders();
 
@@ -134,7 +133,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances
             context.AddFailure($"Missing Headers: {string.Join(",", model.MissingHeaders())}");
         }
 
-        private void HaveUniqueRecords(BulkRegisterOdsInstancesModel model, CustomContext context)
+        private void HaveUniqueRecords<T>(BulkRegisterOdsInstancesModel model, ValidationContext<T> context)
         {
             GetDuplicates(model.DataRecords().ToList(), out var duplicateNumericSuffixes, out var duplicateDescriptions);
 

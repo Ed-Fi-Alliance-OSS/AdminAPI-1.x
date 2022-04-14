@@ -216,8 +216,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                     EducationOrganizationCategory = LocalEducationAgencyCategoryType
                 };
 
+                var edfiSchool = new EdFiSchool(Id, Name, SchoolId, new List<EdFiEducationOrganizationAddress>(),
+                    new List<EdFiEducationOrganizationCategory>(), new List<EdFiSchoolGradeLevel>());
                 // Act
-                var result = _mapper.Map<EdFiSchool>(school);
+                var result = _mapper.Map(school, edfiSchool);
 
                 // Assert
                 result.ShouldNotBeNull();
@@ -302,8 +304,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Automapper
                     EducationOrganizationCategory = LocalEducationAgencyCategoryType
                 };
 
+                var edfiLea = new EdFiLocalEducationAgency(Id, new List<EdFiEducationOrganizationAddress>(),
+                    new List<EdFiEducationOrganizationCategory>(), LeaId, nameOfInstitution: Name, localEducationAgencyCategoryDescriptor: LocalEducationAgencyCategoryType);
                 // Act
-                var result = _mapper.Map<EdFiLocalEducationAgency>(lea);
+                var result = _mapper.Map(lea, edfiLea);
 
                 // Assert
                 result.ShouldNotBeNull();

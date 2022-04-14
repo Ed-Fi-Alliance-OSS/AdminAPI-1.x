@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EdFi.Ods.AdminApp.Management.Database
 {
@@ -22,7 +23,11 @@ namespace EdFi.Ods.AdminApp.Management.Database
                 entity.SetTableName(entity.GetTableName().ToLowerInvariant());
 
                 foreach (var property in entity.GetProperties())
-                    property.SetColumnName(property.GetColumnName().ToLowerInvariant());
+                {
+                    var tableId = StoreObjectIdentifier.Table(entity.GetTableName());
+                    var columnName = property.GetColumnName(tableId) ?? property.GetDefaultColumnName(tableId);
+                    property.SetColumnName(columnName.ToLowerInvariant());
+                }
 
                 foreach (var key in entity.GetKeys())
                     key.SetName(key.GetName().ToLowerInvariant());
@@ -31,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.Database
                     key.SetConstraintName(key.GetConstraintName().ToLowerInvariant());
 
                 foreach (var index in entity.GetIndexes())
-                    index.SetName(index.GetName().ToLowerInvariant());
+                    index.SetDatabaseName(index.GetDatabaseName().ToLowerInvariant());
             }
         }
     }

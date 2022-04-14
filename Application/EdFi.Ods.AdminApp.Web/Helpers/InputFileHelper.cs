@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using CsvHelper;
+using CsvHelper.Configuration;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstances;
 
 namespace EdFi.Ods.AdminApp.Web.Helpers
@@ -18,23 +19,28 @@ namespace EdFi.Ods.AdminApp.Web.Helpers
         {
             var localMissingHeaders = new List<string>();
             List<RegisterOdsInstanceModel> records = new List<RegisterOdsInstanceModel>();
-            using (var streamReader = new StreamReader(stream))
-                using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+
+            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                PrepareHeaderForMatch = headerArgs => headerArgs.Header.ToLower(),
+                HasHeaderRecord = true,
+                HeaderValidated = (headerArgs) =>
                 {
-                    csv.Configuration.PrepareHeaderForMatch =
-                        (header, index) => header.ToLower();
+                    if (!headerArgs.InvalidHeaders.Any())
+                    {
+                        return;
+                    }
 
-                    csv.Configuration.HasHeaderRecord = true;
+                    foreach (var invalidHeader in headerArgs.InvalidHeaders)
+                    {
+                        localMissingHeaders.AddRange(invalidHeader.Names.ToList());
+                    }
+                }
+            };
 
-                    csv.Configuration.HeaderValidated =
-                        (isValid, headerNames, headerNameIndex, context) =>
-                        {
-                            if (!isValid)
-                            {
-                                localMissingHeaders.AddRange(headerNames.ToList());
-                            }
-                        };
-
+            using (var streamReader = new StreamReader(stream))
+                using (var csv = new CsvReader(streamReader, configuration))
+                {
                     csv.Read();
                     csv.ReadHeader();
                     csv.ValidateHeader<RegisterOdsInstanceModel>();

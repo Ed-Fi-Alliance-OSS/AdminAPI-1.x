@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using EdFi.Common.Utils.Extensions;
 using FluentValidation;
 using FluentValidation.Results;
-using FluentValidation.Validators;
 using log4net;
 
 namespace EdFi.Ods.AdminApp.Web.Infrastructure
@@ -18,7 +17,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ValidationExtensions));
 
-        public static IRuleBuilderInitial<T, TProperty> SafeCustom<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<TProperty, CustomContext> action)
+        public static IRuleBuilderOptionsConditions<T, TProperty> SafeCustom<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<TProperty, ValidationContext<T>> action)
         {
             return ruleBuilder.Custom((command, context) =>
             {
@@ -35,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             });
         }
 
-        public static IRuleBuilderInitial<T, TProperty> SafeCustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CustomContext, Task> action)
+        public static IRuleBuilderOptionsConditions<T, TProperty> SafeCustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, ValidationContext<T>, Task> action)
         {
             return ruleBuilder.CustomAsync( async (command, context, cancellationToken) =>
             {
@@ -52,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             });
         }
 
-        public static void AddFailures(this CustomContext context, ValidationResult result)
+        public static void AddFailures<T>(this ValidationContext<T> context, ValidationResult result)
         {
             result.Errors.Select(x => x.ErrorMessage).ForEach(context.AddFailure);
         }

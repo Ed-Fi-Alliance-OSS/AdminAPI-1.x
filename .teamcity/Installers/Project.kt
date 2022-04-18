@@ -13,7 +13,6 @@ object AdminAppInstallerProject : Project({
     description = "ODS Admin App Installer Build Configurations"
 
     params {
-        param("version.preReleaseLabel", "pre")
         param("project.name", "EdFi.Suite3.Installer.AdminApp")
         param("project.directory", """Ed-Fi-ODS-AdminApp\%project.name%""")
     }

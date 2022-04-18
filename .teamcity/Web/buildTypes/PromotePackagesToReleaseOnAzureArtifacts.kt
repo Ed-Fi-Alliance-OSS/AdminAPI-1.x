@@ -19,7 +19,7 @@ object PromotePackagesToReleaseOnAzureArtifacts : BuildType ({
     option("shouldFailBuildOnAnyErrorMessage", "true")
 
     params {
-        param("promote.packages.view", "placeholder")
+        param("promote.packages.view", "Prerelease")
         param("env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS", "{\"endpointCredentials\": [{\"endpoint\": \"%azureArtifacts.feed.nuget%\",\"username\": \"%azureArtifacts.edFiBuildAgent.userName%\",\"password\": \"%azureArtifacts.edFiBuildAgent.accessToken%\"}]}")
     }
 
@@ -34,12 +34,12 @@ object PromotePackagesToReleaseOnAzureArtifacts : BuildType ({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = script {
                 content = """
-                    ${'$'}Version = "%adminApp.version%.%build.counter%"
                     ${'$'}Packages =  @{ }
-                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Database".ToLower().Trim(), ${'$'}Version)
-                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Web".ToLower().Trim(), ${'$'}Version)
+                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Database")
+                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Web")
 
                     ${'$'}arguments = @{
+                         FeedsURL    = "%azureArtifacts.feed.nuget%"
                     	 PackagesURL = "%azureArtifacts.api.packaging%"
                          Username    = "%azureArtifacts.edFiBuildAgent.userName%"
                          Password    = (ConvertTo-SecureString -String "%azureArtifacts.edFiBuildAgent.accessToken%" -AsPlainText -Force)

@@ -7,6 +7,9 @@
 param( 
 
     [Parameter(Mandatory = $true)]
+    $FeedsURL,
+
+    [Parameter(Mandatory = $true)]
     $PackagesURL,
 
     [Parameter(Mandatory = $true)]
@@ -22,6 +25,27 @@ param(
     $Packages
 )
 
+function Get-AzurePackages { 
+
+    $uri = "$FeedsURL/packages?api-version=6.0-preview.1"
+    $result = @{ }
+
+    foreach ($packageName in $Packages) {
+        $packageQueryUrl = "$uri&packageNameQuery=$packageName"
+        $packagesResponse = (Invoke-WebRequest -Uri $packageQueryUrl -UseBasicParsing).Content | ConvertFrom-Json
+        $latestPackageVersion = ($packagesResponse.value.versions | Where-Object { $_.isLatest -eq $True } | Select-Object -ExpandProperty version)      
+    
+        Write-Host "Package Name: $packageName"
+        Write-Host "Package Version: $latestPackageVersion"  
+        
+        $result.add(
+            $packageName.ToLower().Trim(),
+            $latestPackageVersion
+        )
+    }  
+    return $result
+}
+
 $ErrorActionPreference = 'Stop'
 
 $body = @{
@@ -32,10 +56,12 @@ $body = @{
     packages  = @()
 }
 
-foreach ($key in $Packages.Keys) {
+$latestPackages = Get-AzurePackages
+
+foreach ($key in $latestPackages.Keys) {
     $body.packages += @{
         id           = $key
-        version      = $Packages[$key]
+        version      = $latestPackages[$key]
         protocolType = "NuGet"
     }
 }

@@ -35,6 +35,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NUglify.Css;
+using NUglify.JavaScript;
 
 namespace EdFi.Ods.AdminApp.Web
 {
@@ -82,6 +84,29 @@ namespace EdFi.Ods.AdminApp.Web
                                 => memberInfo?
                                     .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
                         });
+
+            services.AddWebOptimizer(
+                pipeline =>
+                {
+                    var minifyJsSettings = new CodeSettings
+                    {
+                        LocalRenaming = LocalRenaming.CrunchAll,
+                        MinifyCode = true
+                    };
+            
+                    var minifyCssSettings = new CssSettings
+                    {
+                        MinifyExpressions = true
+                    };
+            
+                    pipeline.AddCssBundle("/bundles/bootstrap-multiselect.min.css", minifyCssSettings, "/content/css/bootstrap-multiselect.css");
+                    pipeline.AddCssBundle("/bundles/site.min.css", minifyCssSettings, "/content/css/Site.css");
+                    pipeline.AddJavaScriptBundle("/bundles/bootstrap-multiselect.min.js", minifyJsSettings, "/Scripts/bootstrap-multiselect.js");
+                    pipeline.AddJavaScriptBundle("/bundles/modernizr.min.js", minifyJsSettings, "/Scripts/modernizr-2.8.3.js");
+                    pipeline.AddJavaScriptBundle("/bundles/site.min.js", minifyJsSettings, "/Scripts/site.js", "/Scripts/site-form-handlers.js", "/Scripts/signalr-progress.js");
+                    pipeline.AddJavaScriptBundle("/bundles/claimset.min.js", minifyJsSettings, "/Scripts/resource-editor.js");
+                    pipeline.AddJavaScriptBundle("/bundles/authstrategy.min.js", minifyJsSettings, "/Scripts/auth-editor.js");
+                });
 
             services.AddAuthorization(options =>
             {
@@ -178,6 +203,8 @@ namespace EdFi.Ods.AdminApp.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseWebOptimizer();
 
             app.UseStaticFiles();
 

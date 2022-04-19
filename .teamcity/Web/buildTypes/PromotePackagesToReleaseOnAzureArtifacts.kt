@@ -34,12 +34,10 @@ object PromotePackagesToReleaseOnAzureArtifacts : BuildType ({
             executionMode = BuildStep.ExecutionMode.RUN_ON_SUCCESS
             scriptMode = script {
                 content = """
-                    ${'$'}Packages =  @{ }
-                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Database")
-                    ${'$'}Packages.add("EdFi.Suite3.ODS.AdminApp.Web")
+                    ${'$'}Packages =  @('EdFi.Suite3.ODS.AdminApp.Database', 'EdFi.Suite3.ODS.AdminApp.Web')
 
                     ${'$'}arguments = @{
-                         FeedsURL    = "%azureArtifacts.feed.nuget%"
+                         FeedsURL    = "%azureArtifacts.api.feeds%"
                     	 PackagesURL = "%azureArtifacts.api.packaging%"
                          Username    = "%azureArtifacts.edFiBuildAgent.userName%"
                          Password    = (ConvertTo-SecureString -String "%azureArtifacts.edFiBuildAgent.accessToken%" -AsPlainText -Force)
@@ -51,7 +49,6 @@ object PromotePackagesToReleaseOnAzureArtifacts : BuildType ({
             }
         }
     }
-
 
     // This deliberately does not have a trigger - should only be run manually.
 })

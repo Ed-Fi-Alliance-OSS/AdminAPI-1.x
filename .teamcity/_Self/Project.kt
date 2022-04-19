@@ -19,6 +19,7 @@ object AdminAppProject : Project({
         """.trimIndent())
         param("teamcity.ui.settings.readOnly","true")
         param("adminApp.version", "2.4")
+        param("azureArtifacts.api.feeds", "https://feeds.dev.azure.com/%azureArtifacts.organization%/_apis/packaging/feeds/%azureArtifacts.feed.name%")
     }
 
     subProject(web.AdminAppWebProject)

@@ -3,7 +3,6 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-[cmdletbinding(SupportsShouldProcess)]
 param( 
 
     [Parameter(Mandatory = $true)]
@@ -78,9 +77,5 @@ $parameters | Out-Host
 $parameters.URI | Out-Host
 $parameters.Body | Out-Host
 
-if ($PSCmdlet.ShouldProcess($PackagesURL)) {
-    $response = Invoke-WebRequest @parameters
-    $response | ConvertTo-Json -Depth 10 | Out-Host
-}
-
-Write-TeamCityBuildStatus "Packages promoted: $($Packages.Count)"
+$response = Invoke-WebRequest @parameters -UseBasicParsing
+$response | ConvertTo-Json -Depth 10 | Out-Host

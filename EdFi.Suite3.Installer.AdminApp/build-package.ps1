@@ -13,9 +13,6 @@ param (
     [Parameter(Mandatory=$true)]
     $BuildCounter,
     
-    [string]
-    $PreReleaseLabel = "pre",
-
     [switch]
     $Publish,
 
@@ -38,8 +35,7 @@ Import-Module "$appCommonUtilityDirectory/create-package.psm1" -Force
 
 $parameters = @{
     PackageDefinitionFile = Resolve-Path "$PSScriptRoot/EdFi.Suite3.Installer.AdminApp.nuspec"
-    Version = $SemanticVersion
-    Suffix = "$PreReleaseLabel$($BuildCounter.PadLeft(4,'0'))"
+    Version = "$SemanticVersion.$BuildCounter"
     OutputDirectory = Resolve-Path $PSScriptRoot
     Publish = $Publish
     Source = $NuGetFeed

@@ -95,7 +95,7 @@ object PublishPackagesToAzureArtifacts : BuildType ({
 
             artifacts {
                 artifactRules = """
-                    +:*pre*.nupkg =>
+                    +:*.nupkg =>
                 """.trimIndent()
             }
         }

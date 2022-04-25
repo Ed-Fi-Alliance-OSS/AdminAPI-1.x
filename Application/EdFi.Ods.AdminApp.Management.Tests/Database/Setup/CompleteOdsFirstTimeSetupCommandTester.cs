@@ -37,59 +37,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             _connectionProvider.Setup(x => x.CreateNewConnection(0, ApiMode.SharedInstance)).Returns(connection);
         }
 
-        [Test]
-        public async Task ShouldRunSqlConfigurator()
-        {
-            var odsSecretConfiguration = GetOdsSecretConfiguration();
-            var odsSqlConfiguration = GetOdsSqlConfiguration();
-            var setupConfig = GetFirstTimeSetupConfiguration();
-            setupConfig.SqlConfiguration = odsSqlConfiguration;
-
-            var mockOdsInstances = MockExtensions.EmptyMockDbSet<OdsInstance>();
-            var mockVendors = MockExtensions.EmptyMockDbSet<Vendor>();
-            var mockApps = MockExtensions.EmptyMockDbSet<Application>();
-
-            var mockUsersContext = new Mock<IUsersContext>();
-            mockUsersContext.Setup(c => c.OdsInstances).Returns(mockOdsInstances.Object);
-            mockUsersContext.Setup(c => c.Vendors).Returns(mockVendors.Object);
-            mockUsersContext.Setup(c => c.Applications).Returns(mockApps.Object);
-
-            var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
-
-            var mockSecurityContext = new Mock<ISecurityContext>();
-            mockSecurityContext.Object.Applications = mockApplications.Object;
-
-            var mockClaimSetConfigurator = new Mock<ICloudOdsClaimSetConfigurator>();
-            mockClaimSetConfigurator.Setup(m => m.ApplyConfiguration(null)).Callback(() => { });
-
-            var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
-            mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
-
-            var mockOdsSecretConfigurationProvider = new Mock<IOdsSecretConfigurationProvider>();
-            
-            mockOdsSecretConfigurationProvider.Setup(a => a.GetSecretConfiguration(null)).ReturnsAsync(odsSecretConfiguration);
-            mockOdsSecretConfigurationProvider.Setup(a => a.SetSecretConfiguration(It.IsAny<OdsSecretConfiguration>(), null)).Returns(Task.CompletedTask);
-
-            var mockFirstTimeSetupService = new Mock<IOdsInstanceFirstTimeSetupService>();
-
-            var mockAssessmentVendorAdjustment = new Mock<IAssessmentVendorAdjustment>();
-
-            var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
-        
-            var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
-
-            var command = new CompleteOnPremFirstTimeSetupCommand(
-                mockUsersContext.Object,
-                mockSecurityContext.Object,
-                mockClaimSetConfigurator.Object,
-                mockFirstTimeSetupService.Object,
-                mockAssessmentVendorAdjustment.Object,
-                mockLearningStandardsSetup.Object,
-                mockClaimSetCheckService.Object,
-                _connectionProvider.Object);
-
-            await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
-        }
 
         [Test]
         public async Task ShouldConfigureClaimSet()
@@ -149,17 +96,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
         }
 
         #region MockGetters
-        private OdsFirstTimeSetupConfiguration GetFirstTimeSetupConfiguration()
-        {
-            return new OdsFirstTimeSetupConfiguration
-            {
-                Components = GetMockComponents(),
-                Name = GetOdsName(),
-                SqlConfiguration = new OdsSqlConfiguration(),
-                Version = GetDefaultInstance().Version,
-                ClaimSet = GetClaimSet()
-            };
-        }
 
         private OdsSecretConfiguration GetOdsSecretConfiguration()
         {
@@ -169,47 +105,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             };
 
             return odsSecretConfiguration;
-        }
-
-        private OdsSqlConfiguration GetOdsSqlConfiguration()
-        {
-            var odsSqlConfiguration = new OdsSqlConfiguration
-            {
-                HostName = "test",
-                AdminCredentials = new OdsSqlAdminCredential { UserName = "test", Password = "test" },
-                AdminAppCredentials = new OdsSqlCredential { UserName = "test", Password = "test" },
-                ProductionApiCredentials = new OdsSqlCredential { UserName = "test", Password = "test" }
-            };
-
-            return odsSqlConfiguration;
-        }
-
-        private IEnumerable<OdsComponent> GetMockComponents()
-        {
-            return new List<OdsComponent>
-            {
-                new OdsComponent
-                {
-                    Name = "Api",
-                    Environment = "Production",
-                    Url = "http://fake.production.server",
-                    Version = "0.0"
-                },
-                new OdsComponent
-                {
-                    Name = "AdminApp",
-                    Environment = "Production",
-                    Url = "http://fake.adminapp.server",
-                    Version = "0.0"
-                },
-                new OdsComponent
-                {
-                    Name = "Swagger",
-                    Environment = "Staging",
-                    Url = "http://fake.swagger.server",
-                    Version = "0.0"
-                }
-            };
         }
 
         private CloudOdsClaimSet GetClaimSet()

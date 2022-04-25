@@ -1,15 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30517.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management", "EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj", "{FBBA172C-6F81-4753-92B9-C31277B032DD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Azure", "EdFi.Ods.AdminApp.Management.Azure\EdFi.Ods.AdminApp.Management.Azure.csproj", "{A1951107-BE72-4745-8C9E-6EC1F741384D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Azure.UnitTests", "EdFi.Ods.AdminApp.Management.Azure.UnitTests\EdFi.Ods.AdminApp.Management.Azure.UnitTests.csproj", "{470BAA61-6F58-4940-B71A-E90A74A1B073}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Azure.IntegrationTests", "EdFi.Ods.AdminApp.Management.Azure.IntegrationTests\EdFi.Ods.AdminApp.Management.Azure.IntegrationTests.csproj", "{B0230C03-1362-4F67-9D97-27E7070AF90A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.OnPrem", "EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj", "{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}"
 EndProject
@@ -29,13 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web", "Ed
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Tests", "EdFi.Ods.AdminApp.Management.Tests\EdFi.Ods.AdminApp.Management.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy NET48 Web App Files", "Legacy NET48 Web App Files", "{0EC4F26E-497B-4320-AD67-66FEA772AAAF}"
-	ProjectSection(SolutionItems) = preProject
-		Legacy NET48 Web App Files\ApplicationInsights.config = Legacy NET48 Web App Files\ApplicationInsights.config
-		Legacy NET48 Web App Files\StartupBase.cs = Legacy NET48 Web App Files\StartupBase.cs
-		Legacy NET48 Web App Files\Web.base.config = Legacy NET48 Web App Files\Web.base.config
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,30 +39,6 @@ Global
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.ActiveCfg = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.Build.0 = Release|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Debug|x64.Build.0 = Debug|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Release|x64.ActiveCfg = Release|Any CPU
-		{A1951107-BE72-4745-8C9E-6EC1F741384D}.Release|x64.Build.0 = Release|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Debug|x64.Build.0 = Debug|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Release|Any CPU.Build.0 = Release|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Release|x64.ActiveCfg = Release|Any CPU
-		{470BAA61-6F58-4940-B71A-E90A74A1B073}.Release|x64.Build.0 = Release|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Debug|x64.Build.0 = Debug|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Release|x64.ActiveCfg = Release|Any CPU
-		{B0230C03-1362-4F67-9D97-27E7070AF90A}.Release|x64.Build.0 = Release|Any CPU
 		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|x64.ActiveCfg = Debug|Any CPU

@@ -8,10 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Common.Security;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.OnPrem;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -76,7 +75,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             applications.FirstOrDefault()?.ApplicationEducationOrganizations.Count.ShouldBe(1);
         }
 
-        private static AzureFirstTimeSetupService GetFirstTimeSetupService(List<OdsInstance> instances, List<Application> applications = null)
+        private static OnPremFirstTimeSetupService GetFirstTimeSetupService(List<OdsInstance> instances, List<Application> applications = null)
         {
             var mockApplications = applications != null ? MockExtensions.MockDbSet(applications) : MockExtensions.EmptyMockDbSet<Application>();
            
@@ -88,13 +87,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             usersContext.Setup(x => x.Vendors).Returns(mockVendors.Object);
             usersContext.Setup(x => x.OdsInstances).Returns(mockOdsInstance.Object);
 
-            var securityContext = new Mock<ISecurityContext>();
-         
             var securePackedHashProvider = new Mock<ISecurePackedHashProvider>();
             var hashConfigProvider = new Mock<IHashConfigurationProvider>();
 
-            return new AzureFirstTimeSetupService(usersContext.Object, securityContext.Object, 
-                securePackedHashProvider.Object, hashConfigProvider.Object);
+            return new OnPremFirstTimeSetupService(usersContext.Object, securePackedHashProvider.Object, hashConfigProvider.Object);
         }
     }
 }

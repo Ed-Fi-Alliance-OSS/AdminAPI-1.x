@@ -5,17 +5,15 @@
 
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.Azure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
-using EdFi.Ods.AdminApp.Management.Database.Setup;
 using EdFi.Ods.AdminApp.Management.Instances;
 using EdFi.Ods.AdminApp.Management.OdsInstanceServices;
+using EdFi.Ods.AdminApp.Management.OnPrem;
 using EdFi.Security.DataAccess.Contexts;
 using Moq;
 using NUnit.Framework;
@@ -26,7 +24,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
     [TestFixture]
     public class CompleteOdsFirstTimeSetupCommandTester
     {
-        private Mock<IDatabaseConnectionProvider> _connectionProvider = null;
+        private Mock<IDatabaseConnectionProvider> _connectionProvider;
 
         [SetUp]
         public void Init()
@@ -61,29 +59,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
 
-            var mockSqlConfigurator = GetMockDatabaseSecurityConfigurator();
-
             var mockClaimSetConfigurator = new Mock<ICloudOdsClaimSetConfigurator>();
             mockClaimSetConfigurator.Setup(m => m.ApplyConfiguration(null)).Callback(() => { });
 
             var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
             mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
 
-            var mockGetCloudHostedComponentQuery = new Mock<IGetAzureCloudOdsHostedComponentsQuery>();
-            mockGetCloudHostedComponentQuery.Setup(a => a.Execute(It.IsAny<CloudOdsInstance>()))
-                .ReturnsAsync(GetMockComponents());
-
             var mockOdsSecretConfigurationProvider = new Mock<IOdsSecretConfigurationProvider>();
             
-            mockOdsSecretConfigurationProvider.Setup(a => a.GetSqlConfiguration()).ReturnsAsync(odsSqlConfiguration);
             mockOdsSecretConfigurationProvider.Setup(a => a.GetSecretConfiguration(null)).ReturnsAsync(odsSecretConfiguration);
             mockOdsSecretConfigurationProvider.Setup(a => a.SetSecretConfiguration(It.IsAny<OdsSecretConfiguration>(), null)).Returns(Task.CompletedTask);
 
-            var mockCloudOdsDatabaseSqlServerSecurityConfiguration = new Mock<ICloudOdsDatabaseSqlServerSecurityConfiguration>();
-
             var mockFirstTimeSetupService = new Mock<IOdsInstanceFirstTimeSetupService>();
-
-            var mockRestartAppServicesCommand = new Mock<IRestartAppServicesCommand>();
 
             var mockAssessmentVendorAdjustment = new Mock<IAssessmentVendorAdjustment>();
 
@@ -91,27 +78,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
         
             var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
 
-            var command = new CompleteAzureFirstTimeSetupCommand(
+            var command = new CompleteOnPremFirstTimeSetupCommand(
                 mockUsersContext.Object,
-                mockSqlConfigurator.Object,
                 mockSecurityContext.Object,
                 mockClaimSetConfigurator.Object,
-                mockCloudOdsInstanceQuery.Object,
-                mockGetCloudHostedComponentQuery.Object,
-                mockOdsSecretConfigurationProvider.Object,
-                mockCloudOdsDatabaseSqlServerSecurityConfiguration.Object,
                 mockFirstTimeSetupService.Object,
-                mockRestartAppServicesCommand.Object,
                 mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
                 mockClaimSetCheckService.Object,
                 _connectionProvider.Object);
 
             await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
-
-            mockSqlConfigurator.Verify(x => x.CreateServerLogins(It.IsAny<OdsSqlConfiguration>()), Times.Once);
-            mockSqlConfigurator.Verify(x => x.ApplyConfiguration(It.IsAny<OdsSqlConfiguration>(), It.IsNotNull<IEnumerable<CloudOdsDatabaseSecurityConfiguration>>()), Times.Exactly(2));
-            mockSqlConfigurator.Verify(x => x.RemoveConfiguration(It.IsAny<OdsSqlConfiguration>(), It.IsNotNull<IEnumerable<CloudOdsDatabaseSecurityConfiguration>>()), Times.Once);
         }
 
         [Test]
@@ -136,30 +113,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
 
-            var mockSqlConfigurator = GetMockDatabaseSecurityConfigurator();
-
             var mockClaimSetConfigurator = new Mock<ICloudOdsClaimSetConfigurator>();
             mockClaimSetConfigurator.Setup(m => m.ApplyConfiguration(null)).Callback(() => { });
 
             var mockCloudOdsInstanceQuery = new Mock<IGetCloudOdsInstanceQuery>();
             mockCloudOdsInstanceQuery.Setup(a => a.Execute(It.IsAny<string>())).ReturnsAsync(GetDefaultInstance());
 
-            var mockGetCloudHostedComponentQuery = new Mock<IGetAzureCloudOdsHostedComponentsQuery>();
-            mockGetCloudHostedComponentQuery.Setup(a => a.Execute(It.IsAny<CloudOdsInstance>()))
-                .ReturnsAsync(GetMockComponents());
-
             var mockOdsSecretConfigurationProvider = new Mock<IOdsSecretConfigurationProvider>();
             var odsSecretConfiguration = GetOdsSecretConfiguration();
-            var odsSqlConfiguration = GetOdsSqlConfiguration();
-            mockOdsSecretConfigurationProvider.Setup(a => a.GetSqlConfiguration()).ReturnsAsync(odsSqlConfiguration);
             mockOdsSecretConfigurationProvider.Setup(a => a.GetSecretConfiguration(null)).ReturnsAsync(odsSecretConfiguration);
             mockOdsSecretConfigurationProvider.Setup(a => a.SetSecretConfiguration(It.IsAny<OdsSecretConfiguration>(), null)).Returns(Task.CompletedTask);
 
-            var mockCloudOdsDatabaseSqlServerSecurityConfiguration = new Mock<ICloudOdsDatabaseSqlServerSecurityConfiguration>();
-
             var mockFirstTimeSetupService = new Mock<IOdsInstanceFirstTimeSetupService>();
-
-            var mockRestartAppServicesCommand = new Mock<IRestartAppServicesCommand>();
 
             var mockAssessmentVendorAdjustment = new Mock<IAssessmentVendorAdjustment>();
 
@@ -168,17 +133,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
             mockClaimSetCheckService.Setup(a => a.RequiredClaimSetsExist()).Returns(false);
 
-            var command = new CompleteAzureFirstTimeSetupCommand(
+            var command = new CompleteOnPremFirstTimeSetupCommand(
                 mockUsersContext.Object,
-                mockSqlConfigurator.Object,
                 mockSecurityContext.Object,
                 mockClaimSetConfigurator.Object,
-                mockCloudOdsInstanceQuery.Object,
-                mockGetCloudHostedComponentQuery.Object,
-                mockOdsSecretConfigurationProvider.Object,
-                mockCloudOdsDatabaseSqlServerSecurityConfiguration.Object,
                 mockFirstTimeSetupService.Object,
-                mockRestartAppServicesCommand.Object,
                 mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
                 mockClaimSetCheckService.Object,
@@ -190,20 +149,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
         }
 
         #region MockGetters
-        private static Mock<IAzureSqlSecurityConfigurator> GetMockDatabaseSecurityConfigurator()
-        {
-            var mockSqlConfigurator = new Mock<IAzureSqlSecurityConfigurator>();
-
-            mockSqlConfigurator.Setup(m => m.CreateServerLogins(null)).Callback(() => { });
-            mockSqlConfigurator.Setup(m => m.ApplyConfiguration(null, Enumerable.Empty<CloudOdsDatabaseSecurityConfiguration>()))
-                .Callback(() => { });
-            mockSqlConfigurator.Setup(
-                m => m.RemoveConfiguration(null, Enumerable.Empty<CloudOdsDatabaseSecurityConfiguration>()))
-                .Callback(() => { });
-
-            return mockSqlConfigurator;
-        }
-
         private OdsFirstTimeSetupConfiguration GetFirstTimeSetupConfiguration()
         {
             return new OdsFirstTimeSetupConfiguration

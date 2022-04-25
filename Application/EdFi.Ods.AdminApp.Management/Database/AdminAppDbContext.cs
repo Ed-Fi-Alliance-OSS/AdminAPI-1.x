@@ -31,7 +31,6 @@ namespace EdFi.Ods.AdminApp.Management.Database
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
         public DbSet<SecretConfiguration> SecretConfigurations { get; set; }
-        public DbSet<AzureSqlConfiguration> AzureSqlConfigurations { get; set; }
         public DbSet<OdsInstanceRegistration> OdsInstanceRegistrations { get; set; }
         public DbSet<DatabaseVersion> DatabaseVersionView { get; set; }
 

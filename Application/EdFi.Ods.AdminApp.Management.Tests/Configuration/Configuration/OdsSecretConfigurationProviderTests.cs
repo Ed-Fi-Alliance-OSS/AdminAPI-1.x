@@ -18,12 +18,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 {
     public class OdsSecretConfigurationProviderTests : AdminAppDataTestBase
     {
-        private static async Task<OdsSqlConfiguration> GetSqlConfiguration()
-        {
-            return await ScopedAsync<IOdsSecretConfigurationProvider, OdsSqlConfiguration>(
-                async provider => await provider.GetSqlConfiguration());
-        }
-
         private static async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
         {
             return await ScopedAsync<IOdsSecretConfigurationProvider, OdsSecretConfiguration>(
@@ -264,65 +258,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             editedSecretConfigurationForInstance1.ProductionAcademicBenchmarkApiClientKeyAndSecret.ShouldBe(null);
         }
 
-        [Test]
-        public async Task ShouldReturnNullWhenThereAreZeroSqlConfigurations()
-        {
-            ClearSqlConfigurationCache();
-            EnsureZeroSqlConfigurations();
-
-            var sqlConfiguration = await GetSqlConfiguration();
-
-            sqlConfiguration.ShouldBe(null);
-        }
-
-        [Test]
-        public async Task ShouldRetrieveUnencryptedSqlConfiguration()
-        {
-            const string jsonConfiguration = "{\"AdminCredentials\":{\"Password\":\"adminPassword\",\"UserName\":\"adminUser\"}," +
-                                             "\"HostName\":\"localhost\"," +
-                                             "\"ProductionApiCredentials\":{\"Password\":\"ProductionApiPassword\",\"UserName\":\"EdFiOdsProductionApi\"}," +
-                                             "\"AdminAppCredentials\":{\"Password\":\"AdminAppPassword\",\"UserName\":\"EdFiOdsAdminApp\"}}";
-
-            ClearSqlConfigurationCache();
-            EnsureOneSqlConfiguration(jsonConfiguration);
-
-            var initialRecord = GetAzureSqlConfigurationRecord();
-            initialRecord.IsEncrypted.ShouldBe(false);
-            initialRecord.Configurations.ShouldBe(jsonConfiguration);
-
-            var sqlConfiguration = await GetSqlConfiguration();
-
-            var recordUponSelfEncryptingRead = GetAzureSqlConfigurationRecord();
-            recordUponSelfEncryptingRead.IsEncrypted.ShouldBe(true);
-            recordUponSelfEncryptingRead.Configurations.ShouldNotBe(jsonConfiguration);
-            recordUponSelfEncryptingRead.Configurations.ShouldEndWith("=");
-
-            sqlConfiguration.HostName.ShouldBe("localhost");
-            sqlConfiguration.AdminCredentials.UserName.ShouldBe("adminUser");
-            sqlConfiguration.AdminCredentials.Password.ShouldBe("adminPassword");
-            sqlConfiguration.ProductionApiCredentials.UserName.ShouldBe("EdFiOdsProductionApi");
-            sqlConfiguration.ProductionApiCredentials.Password.ShouldBe("ProductionApiPassword");
-            sqlConfiguration.AdminAppCredentials.UserName.ShouldBe("EdFiOdsAdminApp");
-            sqlConfiguration.AdminAppCredentials.Password.ShouldBe("AdminAppPassword");
-        }
-
         private void EnsureZeroSecretConfigurations()
         {
             Scoped<AdminAppDbContext>(database =>
             {
                 foreach (var entity in database.SecretConfigurations)
                     database.SecretConfigurations.Remove(entity);
-
-                database.SaveChanges();
-            });
-        }
-
-        private void EnsureZeroSqlConfigurations()
-        {
-            Scoped<AdminAppDbContext>(database =>
-            {
-                foreach (var entity in database.AzureSqlConfigurations)
-                    database.AzureSqlConfigurations.Remove(entity);
 
                 database.SaveChanges();
             });
@@ -359,23 +300,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             return createdOdsInstanceRegistration;
         }
 
-        private void EnsureOneSqlConfiguration(string jsonConfigurationPlainText)
-        {
-            EnsureZeroSqlConfigurations();
-
-            Scoped<AdminAppDbContext>(database =>
-            {
-                database.AzureSqlConfigurations.Add(
-                    new AzureSqlConfiguration
-                    {
-                        Configurations = jsonConfigurationPlainText,
-                        IsEncrypted = false
-                    });
-
-                database.SaveChanges();
-            });
-        }
-
         private void ClearSecretConfigurationCache()
         {
             var cacheKeys = _cache.Select(k => k.Key).ToList();
@@ -385,15 +309,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             }
         }
 
-        private void ClearSqlConfigurationCache()
-        {
-            _cache.Remove("OdsSqlConfiguration");
-        }
-
         private static SecretConfiguration GetSecretConfigurationRecord(int odsInstanceRegistrationId)
             => Query(db => db.SecretConfigurations.Single(x => x.OdsInstanceRegistrationId == odsInstanceRegistrationId));
-
-        private static AzureSqlConfiguration GetAzureSqlConfigurationRecord()
-            => Query(db => db.AzureSqlConfigurations.Single());
     }
 }

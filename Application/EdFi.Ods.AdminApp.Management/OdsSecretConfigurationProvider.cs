@@ -20,28 +20,11 @@ namespace EdFi.Ods.AdminApp.Management
         private readonly AdminAppDbContext _database;
         private readonly ObjectCache _cache = MemoryCache.Default;
         private const string OdsSecretCacheKey = "OdsSecretConfiguration";
-        private const string OdsSqlCacheKey = "OdsSqlConfiguration";
 
         public OdsSecretConfigurationProvider(IStringEncryptorService stringEncryptorService, AdminAppDbContext database)
         {
             _stringEncryptorService = stringEncryptorService;
             _database = database;
-        }
-
-        public async Task<OdsSqlConfiguration> GetSqlConfiguration()
-        {
-            if (_cache.Get(OdsSqlCacheKey) is OdsSqlConfiguration result)
-                return result;
-
-            result = await ReadSqlConfigurations();
-
-            if (result != null)
-            {
-                CacheConfiguration(result, OdsSqlCacheKey);
-                await WriteSqlConfiguration(result);
-            }
-
-            return result;
         }
 
         public async Task<OdsSecretConfiguration> GetSecretConfiguration(int? instanceRegistrationId = null)
@@ -70,22 +53,6 @@ namespace EdFi.Ods.AdminApp.Management
         private void CacheConfiguration<T>(T result, string cacheKey)
         {
             _cache.Set(cacheKey, result, DateTimeOffset.Now.AddMinutes(5));
-        }
-
-        private async Task<OdsSqlConfiguration> ReadSqlConfigurations()
-        {
-            var sqlConfigurations = await _database.AzureSqlConfigurations.SingleOrDefaultAsync();
-            var rawValue = sqlConfigurations?.Configurations;
-
-            if (rawValue == null)
-            {
-                return null;
-            }
-
-            return JsonConvert.DeserializeObject<OdsSqlConfiguration>(!sqlConfigurations.IsEncrypted ? rawValue :
-                _stringEncryptorService.TryDecrypt(rawValue, out var unencryptedValue)
-                    ? unencryptedValue
-                    : rawValue, GetSerializerSettings());
         }
 
         private async Task<OdsSecretConfiguration> ReadSecretConfigurations(int? instanceRegistrationId)
@@ -120,24 +87,6 @@ namespace EdFi.Ods.AdminApp.Management
             {
                 secretConfiguration.EncryptedData = encryptedValue;
                 secretConfiguration.IsEncrypted = true;
-            }
-
-            await _database.SaveChangesAsync();
-        }
-
-        private async Task WriteSqlConfiguration(OdsSqlConfiguration configuration)
-        {
-            var stringValue = JsonConvert.SerializeObject(configuration, GetSerializerSettings());
-            var encryptedValue = _stringEncryptorService.Encrypt(stringValue);
-
-            var sqlConfiguration = await _database.AzureSqlConfigurations.SingleOrDefaultAsync();
-            if (sqlConfiguration == null)
-                _database.AzureSqlConfigurations.Add(new AzureSqlConfiguration
-                { Configurations = encryptedValue, IsEncrypted = true});
-            else
-            {
-                sqlConfiguration.Configurations = encryptedValue;
-                sqlConfiguration.IsEncrypted = true;
             }
 
             await _database.SaveChangesAsync();

@@ -9,7 +9,6 @@ namespace EdFi.Ods.AdminApp.Management
 {
     public interface IOdsSecretConfigurationProvider
     {
-        Task<OdsSqlConfiguration> GetSqlConfiguration();
         Task<OdsSecretConfiguration> GetSecretConfiguration(int? odsInstanceId = null);
         Task SetSecretConfiguration(OdsSecretConfiguration configuration, int? odsInstanceId = null);
     }

@@ -17,21 +17,22 @@ function SetPackageDetails{
         $packageNamePrefix       
     )
 
-    # There should only be one file here - the pre-release NuGet package from the upstream build artifacts
-    $pkg = Get-ChildItem -Filter "*$packageNamePrefix*pre*.nupkg"
+    # There should only be one file here - the NuGet package from the upstream build artifacts
+    $pkg = Get-ChildItem -Filter "*$packageNamePrefix*.nupkg"
 
     if (-not $pkg) {
-        throw "No pre-release $packageNamePrefix package found."
+        throw "No $packageNamePrefix package found."
     }
 
+    Write-Host $pkg
     # Extract the version number
-    $result = $pkg -match "$packageNamePrefix\.(\d)\.(\d)\.(\d)\-pre(\d+)\.nupkg"
+    $result = $pkg -match "$packageNamePrefix\.(\d)\.(\d)\.(\d+)\.nupkg"
 
     if (-not $result) {
         throw "$packageNamePrefix package name does not match the expected naming convention."
     }
 
-    $release = $matches[1]+"."+$matches[2]+"."+$matches[3]+"-pre"+$matches[4]
+    $release = $matches[1]+"."+$matches[2]+"."+$matches[3]
 
     Write-Host "##teamcity[setParameter name='nuGet.packageFile' value='$pkg']"
     Write-Host "##teamcity[setParameter name='nuGet.packageVersion' value='$release']"

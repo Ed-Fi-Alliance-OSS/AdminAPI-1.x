@@ -17,13 +17,13 @@ namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
     public class BulkRegisterOdsInstancesFiltrationService : IBulkRegisterOdsInstancesFiltrationService
     {
         private readonly AdminAppDbContext _database;
-        private readonly IDatabaseConnectionProvider _databaseConnectionProvider;
+        private readonly IInferInstanceService _inferInstanceService;
 
-        public BulkRegisterOdsInstancesFiltrationService(AdminAppDbContext database,
-            IDatabaseConnectionProvider databaseConnectionProvider)
+        public BulkRegisterOdsInstancesFiltrationService(AdminAppDbContext database
+            , IInferInstanceService inferInstanceService)
         {
             _database = database;
-            _databaseConnectionProvider = databaseConnectionProvider;
+            _inferInstanceService = inferInstanceService;
         }
 
         public IEnumerable<IRegisterOdsInstanceModel> FilteredRecords(
@@ -32,15 +32,9 @@ namespace EdFi.Ods.AdminApp.Management.OdsInstanceServices
             var newRows = dataRecords.Where(
                 dataRecord => !_database.OdsInstanceRegistrations.Any(
                     previousRegister =>
-                        previousRegister.Name == InferInstanceDatabaseName(dataRecord.NumericSuffix, mode)));
+                        previousRegister.Name == _inferInstanceService.DatabaseName(dataRecord.NumericSuffix.Value, mode)));
 
             return newRows;
-        }
-
-        private string InferInstanceDatabaseName(int? newInstanceNumericSuffix, ApiMode mode)
-        {
-            using (var connection = _databaseConnectionProvider.CreateNewConnection(newInstanceNumericSuffix.Value, mode))
-                return connection.Database;
         }
     }
 }

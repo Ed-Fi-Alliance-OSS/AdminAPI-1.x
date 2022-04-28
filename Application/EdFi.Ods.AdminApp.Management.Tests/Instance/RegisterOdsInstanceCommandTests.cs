@@ -80,8 +80,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     return await ScopedAsync<AdminAppDbContext, int>(async database =>
                     {
                         var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database, apiMode);
-
-                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity, _setCurrentSchoolYear.Object);
+                        var inferInstanceService = new InferInstanceService(_connectionProvider.Object);
+                        
+                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, identity, _setCurrentSchoolYear.Object, inferInstanceService);
                         return await command.Execute(newInstance, apiMode, testUsername, new CloudOdsClaimSet());
                     });
                 });
@@ -129,8 +130,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Instance
                     return await ScopedAsync<AdminAppDbContext, int>(async database =>
                     {
                         var odsInstanceFirstTimeSetupService = GetOdsInstanceFirstTimeSetupService(encryptedSecretConfigValue, instanceName, database, apiMode);
+                        var inferInstanceService = new InferInstanceService(_connectionProvider.Object);
 
-                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, _connectionProvider.Object, identity, _setCurrentSchoolYear.Object);
+                        var command = new RegisterOdsInstanceCommand(odsInstanceFirstTimeSetupService, identity, _setCurrentSchoolYear.Object, inferInstanceService);
                         return await command.Execute(newInstance, apiMode, testUsername, new CloudOdsClaimSet());
                     });
                 });

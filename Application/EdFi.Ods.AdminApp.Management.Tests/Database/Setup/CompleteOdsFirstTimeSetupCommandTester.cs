@@ -80,6 +80,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
             mockClaimSetCheckService.Setup(a => a.RequiredClaimSetsExist()).Returns(false);
 
+            var mockInferInstanceService = new Mock<IInferInstanceService>();
+
             var command = new CompleteOnPremFirstTimeSetupCommand(
                 mockUsersContext.Object,
                 mockSecurityContext.Object,
@@ -88,7 +90,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
                 mockClaimSetCheckService.Object,
-                _connectionProvider.Object);
+                mockInferInstanceService.Object);
 
             await command.Execute(GetOdsName(), GetClaimSet(), ApiMode.SharedInstance);
 

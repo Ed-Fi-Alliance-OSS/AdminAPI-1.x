@@ -145,7 +145,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Scoped<IGetResourcesByClaimSetIdQuery>(query =>
             {
                 var results = query.AllResources(testClaimSet.ClaimSetId).ToArray();
-                results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+                results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategies.Single()
+                .AuthorizationStrategy.AuthorizationStrategyName), true);
             });
         }
 
@@ -174,7 +175,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 var testResourceClaim =
                     testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == "TestResourceClaim3.00").ResourceClaim;
                 var testAuthStrategy = testAuthStrategies.Single(x =>
-                    x.ResourceClaim.ResourceClaimId == testResourceClaim.ResourceClaimId && x.Action.ActionName == ActionName.Create.Value).AuthorizationStrategy;
+                    x.ResourceClaim.ResourceClaimId == testResourceClaim.ResourceClaimId && x.Action.ActionName == ActionName.Create.Value)
+                .AuthorizationStrategies.Single().AuthorizationStrategy;
 
                 var result = query.SingleResource(testClaimSet.ClaimSetId, testResourceClaim.ResourceClaimId);
 
@@ -221,7 +223,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 var testAuthStrategiesForParents =
                     testAuthStrategies.Where(x => x.ResourceClaim.ParentResourceClaim == null);
 
-                results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+                results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x =>
+                x.AuthorizationStrategies.Single().AuthorizationStrategy.AuthorizationStrategyName), true);
 
                 foreach (var testParentResourceClaim in testParentResourceClaimsForId)
                 {
@@ -229,7 +232,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     var testAuthStrategiesForChildren =
                         testAuthStrategies.Where(x =>
                             x.ResourceClaim.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId);
-                    parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+                    parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategies.Single()
+                    .AuthorizationStrategy.AuthorizationStrategyName), true);
                 }
             });
         }
@@ -253,9 +257,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             return testClaimSets;
         }
 
-        private IReadOnlyCollection<ClaimSetResourceClaim> SetupParentResourceClaims(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5)
+        private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaims(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5)
         {
-            var claimSetResourceClaims = new List<ClaimSetResourceClaim>();
+            var claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
             foreach (var claimSet in testClaimSets)
             {
                 foreach (var index in Enumerable.Range(1, resourceClaimCount))
@@ -272,7 +276,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                         ActionName = ActionName.Create.Value,
                         ActionUri = "create"
                     };
-                    var claimSetResourceClaim = new ClaimSetResourceClaim
+                    var claimSetResourceClaim = new ClaimSetResourceClaimAction
                     {
                         ResourceClaim = resourceClaim, Action = action, ClaimSet = claimSet
                     };
@@ -285,7 +289,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             return claimSetResourceClaims;
         }
 
-        private IReadOnlyCollection<ClaimSetResourceClaim> SetupParentResourceClaimsWithChildren(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
+        private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
         {
             var parentResourceClaims = new List<ResourceClaim>();
             var childResourceClaims = new List<ResourceClaim>();
@@ -315,7 +319,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(parentResourceClaims.Cast<object>().ToArray());
             Save(childResourceClaims.Cast<object>().ToArray());
 
-            var claimSetResourceClaims = new List<ClaimSetResourceClaim>();
+            var claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
             var claimSets = testClaimSets.ToList();
             foreach (var claimSet in claimSets)
             {
@@ -326,7 +330,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                         ActionName = ActionName.Create.Value,
                         ActionUri = "create"
                     };
-                    var claimSetResourceClaim = new ClaimSetResourceClaim
+                    var claimSetResourceClaim = new ClaimSetResourceClaimAction
                     {
                         ResourceClaim = childResourceClaims[index - 1],
                         Action = action,
@@ -338,7 +342,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Save(claimSetResourceClaims.Cast<object>().ToArray());
 
-            claimSetResourceClaims = new List<ClaimSetResourceClaim>();
+            claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
             foreach (var claimSet in claimSets)
             {
                 foreach (var index in Enumerable.Range(1, resourceClaimCount))
@@ -349,7 +353,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                         ActionName = ActionName.Create.Value,
                         ActionUri = "create"
                     };
-                    var claimSetResourceClaim = new ClaimSetResourceClaim
+                    var claimSetResourceClaim = new ClaimSetResourceClaimAction
                     {
                         ResourceClaim = parentResource,
                         Action = action,
@@ -358,7 +362,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     claimSetResourceClaims.Add(claimSetResourceClaim);
                     var childResources = childResourceClaims
                         .Where(x => x.ParentResourceClaimId == parentResource.ResourceClaimId).Select(x =>
-                            new ClaimSetResourceClaim
+                            new ClaimSetResourceClaimAction
                             {
                                 ResourceClaim = x,
                                 Action = action,

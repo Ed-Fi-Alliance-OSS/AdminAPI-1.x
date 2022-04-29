@@ -51,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
 
             Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId)).ShouldBeNull();
-            Transaction(securityContext => securityContext.ClaimSetResourceClaims.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
+            Transaction(securityContext => securityContext.ClaimSetResourceClaimActions.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
                 .ShouldBe(0);
 
             var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));

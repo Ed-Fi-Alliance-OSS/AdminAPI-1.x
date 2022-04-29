@@ -183,7 +183,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testResourceToEdit = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
 
-            Transaction(securityContext => securityContext.ClaimSetResourceClaims
+            Transaction(securityContext => securityContext.ClaimSetResourceClaimActions
                 .Any(x => x.ResourceClaim.ResourceClaimId == testResourceToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId))
                 .ShouldBe(false);
 

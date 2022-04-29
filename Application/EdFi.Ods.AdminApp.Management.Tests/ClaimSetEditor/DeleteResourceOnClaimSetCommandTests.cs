@@ -58,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Transaction(securityContext =>
             {
                 var resourceClaimsForClaimSet =
-                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
+                    securityContext.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
                 resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount - 1);
 
                 var resultResourceClaim = resourceClaimsForClaimSet.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testResourceToDelete.ResourceClaimId);
@@ -110,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Transaction(securityContext =>
             {
                 var resultChildResources =
-                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
+                    securityContext.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
                 resultChildResources.Count().ShouldBe(childResourcesForParentOriginalCount - 1);
 
                 var resultResourceClaim = resultChildResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testChildResourceToDelete.ResourceClaimId);

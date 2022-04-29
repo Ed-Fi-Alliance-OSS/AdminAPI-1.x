@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -22,25 +22,25 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
         public void Execute(IOverrideDefaultAuthorizationStrategyModel model)
         {         
-            var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaims
+            var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaimActions
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)
                 .Include(x => x.ClaimSet)
-                .Include(x => x.AuthorizationStrategyOverride)
+                .Include(x => x.AuthorizationStrategyOverrides)
                 .Where(x => x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
                 .ToList();
 
             var parentResourceClaimId = _context.ResourceClaims
                 .Single(x => x.ResourceClaimId == model.ResourceClaimId).ParentResourceClaimId;
-            var parentResourceClaims = new List<ClaimSetResourceClaim>();
+            var parentResourceClaims = new List<ClaimSetResourceClaimAction>();
 
             if (parentResourceClaimId != null)
             {
-                parentResourceClaims = _context.ClaimSetResourceClaims
+                parentResourceClaims = _context.ClaimSetResourceClaimActions
                     .Include(x => x.ResourceClaim)
                     .Include(x => x.Action)
                     .Include(x => x.ClaimSet)
-                    .Include(x => x.AuthorizationStrategyOverride)
+                    .Include(x => x.AuthorizationStrategyOverrides)
                     .Where(x => x.ResourceClaim.ResourceClaimId == parentResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
                     .ToList();
             }
@@ -58,26 +58,26 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             _context.SaveChanges();
         }
 
-        private List<ClaimSetResourceClaim> RemoveOverrides(IOverrideDefaultAuthorizationStrategyModel model, IEnumerable<ClaimSetResourceClaim> resourceClaimsToEdit)
+        private List<ClaimSetResourceClaimAction> RemoveOverrides(IOverrideDefaultAuthorizationStrategyModel model, IEnumerable<ClaimSetResourceClaimAction> resourceClaimsToEdit)
         {
             var claimSetResourceClaims = resourceClaimsToEdit.ToList();
             foreach (var claimSetResourceClaim in claimSetResourceClaims)
             {
                 if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate == 0)
                 {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = null;
+                    claimSetResourceClaim.AuthorizationStrategyOverrides = null;
                 }
                 else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead == 0)
                 {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = null;
+                    claimSetResourceClaim.AuthorizationStrategyOverrides = null;
                 }
                 else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate == 0)
                 {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = null;
+                    claimSetResourceClaim.AuthorizationStrategyOverrides = null;
                 }
                 else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete == 0)
                 {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = null;
+                    claimSetResourceClaim.AuthorizationStrategyOverrides = null;
                 }
             }
 
@@ -85,66 +85,54 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         }
 
         private static void AddOverrides(IOverrideDefaultAuthorizationStrategyModel model,
-            IEnumerable<ClaimSetResourceClaim> resourceClaimsToEdit,
+            IEnumerable<ClaimSetResourceClaimAction> resourceClaimsToEdit,
             Dictionary<int, Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary,
-            List<ClaimSetResourceClaim> parentResourceClaims)
+            List<ClaimSetResourceClaimAction> parentResourceClaims)
         {
             var claimSetResourceClaims = resourceClaimsToEdit.ToList();
             foreach (var claimSetResourceClaim in claimSetResourceClaims)
             {
-
                 if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate != 0)
                 {
-                    if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
-                            x.Action.ActionName == Action.Create.Value && x.AuthorizationStrategyOverride != null &&
-                            x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForCreate) == null)
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForCreate];
-                    }
-                    else if (!parentResourceClaims.Any())
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForCreate];
-                    }
+                    SetAuthorizationStrategyOverrides(claimSetResourceClaim, parentResourceClaims, model.AuthorizationStrategyForCreate,
+                        authorizationStrategiesDictionary, Action.Create.Value);
                 }
                 else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead != 0)
                 {
-                    if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
-                            x.Action.ActionName == Action.Read.Value && x.AuthorizationStrategyOverride != null &&
-                            x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForRead) == null)
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForRead];
-                    }
-                    else if (!parentResourceClaims.Any())
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForRead];
-                    }
+                    SetAuthorizationStrategyOverrides(claimSetResourceClaim, parentResourceClaims, model.AuthorizationStrategyForRead,
+                        authorizationStrategiesDictionary, Action.Read.Value);
                 }
                 else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate != 0)
                 {
-                    if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
-                            x.Action.ActionName == Action.Update.Value && x.AuthorizationStrategyOverride != null &&
-                            x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForUpdate) == null)
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForUpdate];
-                    }
-                    else if (!parentResourceClaims.Any())
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForUpdate];
-                    }
+                    SetAuthorizationStrategyOverrides(claimSetResourceClaim, parentResourceClaims, model.AuthorizationStrategyForUpdate,
+                        authorizationStrategiesDictionary, Action.Update.Value);
                 }
                 else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete != 0)
                 {
-                    if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
-                            x.Action.ActionName == Action.Delete.Value && x.AuthorizationStrategyOverride != null &&
-                            x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForDelete) == null)
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForDelete];
-                    }
-                    else if (!parentResourceClaims.Any())
-                    {
-                        claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForDelete];
-                    }
+                    SetAuthorizationStrategyOverrides(claimSetResourceClaim, parentResourceClaims, model.AuthorizationStrategyForDelete,
+                       authorizationStrategiesDictionary, Action.Delete.Value);
                 }
+            }
+        }
+
+        private static void SetAuthorizationStrategyOverrides(ClaimSetResourceClaimAction claimSetResourceClaimAction,
+            List<ClaimSetResourceClaimAction> parentResourceClaims, int authorizationStrategyValue,
+            Dictionary<int, Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary, string actionName)
+        {
+            var authStrategyOverrides = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>{
+                            new ClaimSetResourceClaimActionAuthorizationStrategyOverrides{
+                                AuthorizationStrategy = authorizationStrategiesDictionary[authorizationStrategyValue] } };
+
+            if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
+                    x.Action.ActionName == actionName && x.AuthorizationStrategyOverrides != null &&
+                    x.AuthorizationStrategyOverrides.Any() && x.AuthorizationStrategyOverrides.SingleOrDefault()?.
+                    AuthorizationStrategyId == authorizationStrategyValue) == null)
+            {
+                claimSetResourceClaimAction.AuthorizationStrategyOverrides = authStrategyOverrides;
+            }
+            else if (!parentResourceClaims.Any())
+            {
+                claimSetResourceClaimAction.AuthorizationStrategyOverrides = authStrategyOverrides;
             }
         }
     }

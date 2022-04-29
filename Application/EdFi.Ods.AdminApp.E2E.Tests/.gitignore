@@ -1,9 +1,8 @@
 node_modules/
 
 screenshots/
-videos/
 state/
-logs/
+traces/
 reports/
 
 .env

@@ -1,5 +1,6 @@
 {
     "recommendations": [
+        "psioniq.psi-header",
         "alexkrechik.cucumberautocomplete"
     ]
 }

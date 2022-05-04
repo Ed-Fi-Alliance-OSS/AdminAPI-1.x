@@ -69,7 +69,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.ResourceClaim.ParentResourceClaim)
                 .Include(x => x.Action)
-                .Include(x => x.AuthorizationStrategyOverrides)
+                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)) //AA-1481
                 .Where(x => x.ClaimSet.ClaimSetId == claimSetId
                             && x.ResourceClaim.ParentResourceClaimId == null).ToList();
 
@@ -98,7 +98,9 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             var resultDictionary = new Dictionary<int, AuthorizationStrategy[]>();
 
             var defaultAuthStrategies = _securityContext.ResourceClaimActions
-                .Include(x => x.ResourceClaim).Include(x => x.Action).Include(x => x.AuthorizationStrategies).ToList();
+                .Include(x => x.ResourceClaim)
+                .Include(x => x.Action)
+                .Include(x => x.AuthorizationStrategies.Select(x => x.AuthorizationStrategy)).ToList(); //AA-1481
 
             var defaultAuthStrategiesForParents = defaultAuthStrategies
                 .Where(x => x.ResourceClaim.ParentResourceClaimId == null).ToList();
@@ -197,7 +199,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         .Include(x => x.ResourceClaim)
                         .Include(x => x.ClaimSet)
                         .Include(x => x.Action)
-                        .Include(x => x.AuthorizationStrategyOverrides).ToList();
+                        .Include(x => x.AuthorizationStrategyOverrides.Select(x=> x.AuthorizationStrategy)).ToList(); // AA-1481
                     var parentResourceOverride = parentResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaim.ParentResourceClaimId
                                                                                                && x.ClaimSet.ClaimSetId == resourceClaim.ClaimSet.ClaimSetId
                                                                                                && x.Action.ActionId == resourceClaim.Action.ActionId);

@@ -54,17 +54,15 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Claims
                         a.AuthorizationStrategyName == requiredClaim.AuthorizationStrategy.StrategyName)
                     : null;
 
-                var overrides = authOverride != null ? new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides> { new
-                ClaimSetResourceClaimActionAuthorizationStrategyOverrides{ AuthorizationStrategy = authOverride } } : null;
-
-                foreach (var claimSetResourceClaim in requiredClaim.Actions.Select(action =>                 
+                foreach (var claimSetResourceClaim in requiredClaim.Actions.Select(action =>
                 new ClaimSetResourceClaimAction
-                    {
-                        Action = actions.Single(a => a.ActionName == action.ActionName),
-                        AuthorizationStrategyOverrides = overrides,
-                        ClaimSet = claimSet,
-                        ResourceClaim = resourceClaim
-                    }))
+                {
+                    Action = actions.Single(a => a.ActionName == action.ActionName),
+                    AuthorizationStrategyOverrides = authOverride != null ? new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides> { new
+                    ClaimSetResourceClaimActionAuthorizationStrategyOverrides{ AuthorizationStrategy = authOverride } } : null,
+                    ClaimSet = claimSet,
+                    ResourceClaim = resourceClaim
+                }))
                 {
                     _securityContext.ClaimSetResourceClaimActions.Add(claimSetResourceClaim);
                 }

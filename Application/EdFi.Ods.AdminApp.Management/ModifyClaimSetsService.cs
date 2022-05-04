@@ -42,8 +42,15 @@ namespace EdFi.Ods.AdminApp.Management
 
             if (authStrategy == null) return;
 
+            // AA-1481
+            var existingAuthOverride = _securityContext.ResourceClaimActionAuthorizationStrategies.First(x => x.ResourceClaimActionId == claimAuthMetadata.ResourceClaimActionId);
+            if(existingAuthOverride != null)
+            {
+                _securityContext.ResourceClaimActionAuthorizationStrategies.Remove(existingAuthOverride);
+            }
+            claimAuthMetadata.AuthorizationStrategies.Clear();
             claimAuthMetadata.AuthorizationStrategies = new List<ResourceClaimActionAuthorizationStrategies> { new
-                ResourceClaimActionAuthorizationStrategies{AuthorizationStrategy = authStrategy } };
+                ResourceClaimActionAuthorizationStrategies{ AuthorizationStrategy = authStrategy } };
         }
     }
 }

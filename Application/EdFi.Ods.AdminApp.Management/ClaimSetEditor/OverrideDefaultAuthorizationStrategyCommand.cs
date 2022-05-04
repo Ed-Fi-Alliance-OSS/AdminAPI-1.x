@@ -40,7 +40,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     .Include(x => x.ResourceClaim)
                     .Include(x => x.Action)
                     .Include(x => x.ClaimSet)
-                    .Include(x => x.AuthorizationStrategyOverrides)
+                    .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)) //AA-1481
                     .Where(x => x.ResourceClaim.ResourceClaimId == parentResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
                     .ToList();
             }

@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)
                 .Include(x => x.ClaimSet)
-                .Include(x => x.AuthorizationStrategyOverrides)
+                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)) //AA-1481
                 .Where(x => x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
                 .ToList();
 
@@ -57,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
             _context.SaveChanges();
         }
-
+      
         private List<ClaimSetResourceClaimAction> RemoveOverrides(IOverrideDefaultAuthorizationStrategyModel model, IEnumerable<ClaimSetResourceClaimAction> resourceClaimsToEdit)
         {
             var claimSetResourceClaims = resourceClaimsToEdit.ToList();
@@ -78,6 +78,18 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete == 0)
                 {
                     claimSetResourceClaim.AuthorizationStrategyOverrides = null;
+                }
+
+                RemoveClaimSetResourceClaimActionAuthorizationStrategyOverrides(claimSetResourceClaim);
+            }
+
+            void RemoveClaimSetResourceClaimActionAuthorizationStrategyOverrides(ClaimSetResourceClaimAction claimSetResourceClaimAction)
+            {
+                var existingAuthOverride = _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.
+                    FirstOrDefault(x => x.ClaimSetResourceClaimActionId == claimSetResourceClaimAction.ClaimSetResourceClaimActionId);
+                if (existingAuthOverride != null)
+                {
+                    _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.Remove(existingAuthOverride);
                 }
             }
 
@@ -120,8 +132,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             Dictionary<int, Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary, string actionName)
         {
             var authStrategyOverrides = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>{
-                            new ClaimSetResourceClaimActionAuthorizationStrategyOverrides{
-                                AuthorizationStrategy = authorizationStrategiesDictionary[authorizationStrategyValue] } };
+                            new ClaimSetResourceClaimActionAuthorizationStrategyOverrides{ AuthorizationStrategy = authorizationStrategiesDictionary[authorizationStrategyValue] } };
 
             if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
                     x.Action.ActionName == actionName && x.AuthorizationStrategyOverrides != null &&

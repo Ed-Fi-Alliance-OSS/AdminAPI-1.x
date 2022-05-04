@@ -12,7 +12,7 @@ on:
 
 env:
   JIRA_ACCESS_TOKEN: ${{ secrets.JIRA_ACCESS_TOKEN }}
-  ADMIN_APP_VERSION: '2.3.1'
+  ADMIN_APP_VERSION: '2.4.0'
   PROJECT_ID: '11900'
   CYCLE_NAME: 'Automation Cycle'
   TASK_NAME: 'Playwright Automation Task'
@@ -38,6 +38,7 @@ jobs:
     - name: Send report to Zephyr
       if: contains(github.ref, 'main')
       run: |
+        Write-Host "Sending test results for branch ${{github.ref}}"
         $parameters = @{
             cycleName = '${{ env.CYCLE_NAME }}'
             taskName = '${{ env.TASK_NAME }}'
@@ -45,3 +46,4 @@ jobs:
         }
         .\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminAppVersion '${{ env.ADMIN_APP_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/${{ env.RESULTS_FILE }}.xml' -ConfigParams $parameters
       shell: pwsh
+      working-directory: eng

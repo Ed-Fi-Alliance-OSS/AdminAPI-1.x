@@ -29,7 +29,7 @@ jobs:
     - name: Add cert
       run: sudo cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/ssl ./ods-docker
     - name: Run ODS
-      run: docker-compose -f ./ods-docker/Compose/pgsql/compose-shared-instance-env-build.yml --env-file ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/.automation.env up -d
+      run: docker-compose -f ./ods-docker/Compose/pgsql/compose-shared-instance-env.yml --env-file ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/.automation.env up -d
     - name: Verify ODS Health
       run: |
         chmod +x ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/inspect.sh

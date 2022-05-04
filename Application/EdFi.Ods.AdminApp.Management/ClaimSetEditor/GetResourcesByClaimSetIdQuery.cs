@@ -203,22 +203,20 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     var parentResourceOverride = parentResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaim.ParentResourceClaimId
                                                                                                && x.ClaimSet.ClaimSetId == resourceClaim.ClaimSet.ClaimSetId
                                                                                                && x.Action.ActionId == resourceClaim.Action.ActionId);
-                    if (parentResourceOverride?.AuthorizationStrategyOverrides != null)
+
+                    if (parentResourceOverride?.AuthorizationStrategyOverrides != null && parentResourceOverride.AuthorizationStrategyOverrides.Any())
                     {
-                        authStrategy =
-                            _mapper.Map<AuthorizationStrategy>(parentResourceOverride.AuthorizationStrategyOverrides.Any() ?
-                            parentResourceOverride.AuthorizationStrategyOverrides.Single().AuthorizationStrategy : null);
+                        authStrategy = _mapper.Map<AuthorizationStrategy>(parentResourceOverride.AuthorizationStrategyOverrides.Single().AuthorizationStrategy);
                         if (authStrategy != null)
                         {
                             authStrategy.IsInheritedFromParent = true;
                         }
                     }
 
-                    if(resourceClaim.AuthorizationStrategyOverrides != null)
+                    if(resourceClaim.AuthorizationStrategyOverrides != null && resourceClaim.AuthorizationStrategyOverrides.Any())
                     {
-                        authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverrides.Any() ?
-                            resourceClaim.AuthorizationStrategyOverrides.Single().AuthorizationStrategy : null);
-                    }                        
+                        authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverrides.Single().AuthorizationStrategy);                        
+                    }
                 }
 
                 if (resultDictionary.ContainsKey(resourceClaim.ResourceClaim.ResourceClaimId))

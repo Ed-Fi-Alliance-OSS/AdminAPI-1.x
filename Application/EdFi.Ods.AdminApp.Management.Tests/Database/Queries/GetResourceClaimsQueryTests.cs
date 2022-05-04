@@ -64,7 +64,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             Save(testApplication);
 
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testApplication).ToList();
+            var testResourceClaims = SetupParentResourceClaimsWithChildren(testApplication, UniqueNameList("Parent", 1), UniqueNameList("Child", 1)).ToList();
             var parentResourceNames = testResourceClaims.Where(x => x.ParentResourceClaim == null)
                 .OrderBy(x => x.ResourceName).Select(x => x.ResourceName).ToList();
             var childResourceNames = testResourceClaims.Where(x => x.ParentResourceClaim != null)
@@ -111,22 +111,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             return resourceClaims;
         }
 
-        private IReadOnlyCollection<ResourceClaim> SetupParentResourceClaimsWithChildren(Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
+        private IReadOnlyCollection<ResourceClaim> SetupParentResourceClaimsWithChildren(Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
         {
-            var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(parentIndex => new ResourceClaim
+            var parentResourceClaims = parentRcNames.Select(parentRcName => new ResourceClaim
             {
-                ClaimName = $"TestParentResourceClaim{parentIndex}",
-                DisplayName = $"TestParentResourceClaim{parentIndex}",
-                ResourceName = $"TestParentResourceClaim{parentIndex}",
+                ClaimName = parentRcName,
+                DisplayName = parentRcName,
+                ResourceName = parentRcName,
                 Application = testApplication
             }).ToList();
 
-            var childResourceClaims = parentResourceClaims.SelectMany(x => Enumerable.Range(1, childResourceClaimCount)
+            var childResourceClaims = parentResourceClaims.SelectMany(x => childRcNames
                 .Select(childIndex => new ResourceClaim
                 {
-                    ClaimName = $"TestChildResourceClaim{childIndex}",
-                    DisplayName = $"TestChildResourceClaim{childIndex}",
-                    ResourceName = $"TestChildResourceClaim{childIndex}",
+                    ClaimName = $"{childIndex}-{x.ClaimName}",
+                    DisplayName = $"{childIndex}-{x.ClaimName}",
+                    ResourceName = $"{childIndex}-{x.ClaimName}",
                     Application = testApplication,
                     ParentResourceClaim = x
                 })).ToList();

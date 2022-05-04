@@ -94,14 +94,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
                 var claimSetResourceClaims = securityContext.ClaimSetResourceClaimActions
                     .Include(c => c.Action)
                     .Include(c => c.ResourceClaim)
-                    .Include(c => c.AuthorizationStrategyOverrides)
+                    .Include(c => c.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
                     .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
 
                 foreach (var claim in testClaimSet.Claims)
                 {
                     foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
                     {
-                        resourceClaim.AuthorizationStrategyOverrides.Single().AuthorizationStrategy.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
+                        resourceClaim.AuthorizationStrategyOverrides.First().AuthorizationStrategy.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
                     }
                 }
             });

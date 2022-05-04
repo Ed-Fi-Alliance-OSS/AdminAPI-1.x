@@ -22,6 +22,14 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             var resourceClaimsToRemove = _context.ClaimSetResourceClaimActions.Where(x =>
                 x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
 
+            foreach (var resourceClaimAction in resourceClaimsToRemove)
+            {
+                var resourceClaimActionAuthorizationStrategyOverrides = _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.
+                    Where(x => x.ClaimSetResourceClaimActionId == resourceClaimAction.ClaimSetResourceClaimActionId);
+
+                _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.RemoveRange(resourceClaimActionAuthorizationStrategyOverrides);
+            }
+
             _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsToRemove);
             _context.SaveChanges();
         }

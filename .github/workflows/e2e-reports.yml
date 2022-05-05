@@ -44,6 +44,5 @@ jobs:
             taskName = '${{ env.TASK_NAME }}'
             folderName = '${{ env.FOLDER_NAME }}'
         }
-        .\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminAppVersion '${{ env.ADMIN_APP_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/${{ env.RESULTS_FILE }}.xml' -ConfigParams $parameters
+        .\eng\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminAppVersion '${{ env.ADMIN_APP_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/${{ env.RESULTS_FILE }}.xml' -ConfigParams $parameters
       shell: pwsh
-      working-directory: eng

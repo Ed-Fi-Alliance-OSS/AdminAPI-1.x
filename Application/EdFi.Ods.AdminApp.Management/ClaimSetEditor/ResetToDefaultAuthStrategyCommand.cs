@@ -30,12 +30,11 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
             foreach (var claimSetResourceClaim in claimSetResourceClaimsToEdit)
             {
-                // AA-1481
                 var existingAuthorizationStrategies = _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.First(x => x.ClaimSetResourceClaimActionId == claimSetResourceClaim.ClaimSetResourceClaimActionId);
                 if (existingAuthorizationStrategies != null)
                 {
                     _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.Remove(existingAuthorizationStrategies);
-                }               
+                }
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;
             }
 

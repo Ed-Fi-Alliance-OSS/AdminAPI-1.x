@@ -69,7 +69,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.ResourceClaim.ParentResourceClaim)
                 .Include(x => x.Action)
-                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)) //AA-1481
+                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
                 .Where(x => x.ClaimSet.ClaimSetId == claimSetId
                             && x.ResourceClaim.ParentResourceClaimId == null).ToList();
 
@@ -100,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             var defaultAuthStrategies = _securityContext.ResourceClaimActions
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)
-                .Include(x => x.AuthorizationStrategies.Select(x => x.AuthorizationStrategy)).ToList(); //AA-1481
+                .Include(x => x.AuthorizationStrategies.Select(x => x.AuthorizationStrategy)).ToList();
 
             var defaultAuthStrategiesForParents = defaultAuthStrategies
                 .Where(x => x.ResourceClaim.ParentResourceClaimId == null).ToList();
@@ -199,7 +199,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         .Include(x => x.ResourceClaim)
                         .Include(x => x.ClaimSet)
                         .Include(x => x.Action)
-                        .Include(x => x.AuthorizationStrategyOverrides.Select(x=> x.AuthorizationStrategy)).ToList(); // AA-1481
+                        .Include(x => x.AuthorizationStrategyOverrides.Select(x=> x.AuthorizationStrategy)).ToList();
                     var parentResourceOverride = parentResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaim.ParentResourceClaimId
                                                                                                && x.ClaimSet.ClaimSetId == resourceClaim.ClaimSet.ClaimSetId
                                                                                                && x.Action.ActionId == resourceClaim.Action.ActionId);
@@ -215,7 +215,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
                     if(resourceClaim.AuthorizationStrategyOverrides != null && resourceClaim.AuthorizationStrategyOverrides.Any())
                     {
-                        authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverrides.Single().AuthorizationStrategy);                        
+                        authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverrides.Single().AuthorizationStrategy);
                     }
                 }
 

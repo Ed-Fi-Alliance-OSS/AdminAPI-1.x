@@ -42,7 +42,6 @@ namespace EdFi.Ods.AdminApp.Management
 
             if (authStrategy == null) return;
 
-            // AA-1481
             var existingAuthOverride = _securityContext.ResourceClaimActionAuthorizationStrategies.First(x => x.ResourceClaimActionId == claimAuthMetadata.ResourceClaimActionId);
             if(existingAuthOverride != null)
             {

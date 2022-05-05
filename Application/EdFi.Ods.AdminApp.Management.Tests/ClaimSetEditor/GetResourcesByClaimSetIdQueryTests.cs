@@ -309,7 +309,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 };
                 parentResourceClaims.Add(resourceClaim);
 
-                childResourceClaims.AddRange(Enumerable.Range(1, childResourceClaimCount) // AA-1481
+                childResourceClaims.AddRange(Enumerable.Range(1, childResourceClaimCount)
                     .Select(childIndex => new ResourceClaim
                     {
                         ClaimName = $"TestChildResourceClaim{resourceClaim.ClaimName}",

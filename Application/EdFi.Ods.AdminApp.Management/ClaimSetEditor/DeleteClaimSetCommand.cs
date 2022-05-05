@@ -29,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
                 _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.RemoveRange(resourceClaimActionAuthorizationStrategyOverrides);
             }
-            
+
             _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSetId);
             _context.ClaimSets.Remove(claimSetToDelete);
             _context.SaveChanges();

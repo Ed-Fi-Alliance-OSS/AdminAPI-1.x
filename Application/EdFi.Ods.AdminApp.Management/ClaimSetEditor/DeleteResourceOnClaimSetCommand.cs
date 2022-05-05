@@ -18,7 +18,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         }
 
         public void Execute(IDeleteResourceOnClaimSetModel model)
-        {            
+        {
             var resourceClaimsToRemove = _context.ClaimSetResourceClaimActions.Where(x =>
                 x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
 

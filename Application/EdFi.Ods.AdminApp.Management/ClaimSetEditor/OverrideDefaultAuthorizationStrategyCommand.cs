@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)
                 .Include(x => x.ClaimSet)
-                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)) //AA-1481
+                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
                 .Where(x => x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
                 .ToList();
 
@@ -40,7 +40,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     .Include(x => x.ResourceClaim)
                     .Include(x => x.Action)
                     .Include(x => x.ClaimSet)
-                    .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)) //AA-1481
+                    .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
                     .Where(x => x.ResourceClaim.ResourceClaimId == parentResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
                     .ToList();
             }
@@ -57,7 +57,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
             _context.SaveChanges();
         }
-      
+
         private List<ClaimSetResourceClaimAction> RemoveOverrides(IOverrideDefaultAuthorizationStrategyModel model, IEnumerable<ClaimSetResourceClaimAction> resourceClaimsToEdit)
         {
             var claimSetResourceClaims = resourceClaimsToEdit.ToList();

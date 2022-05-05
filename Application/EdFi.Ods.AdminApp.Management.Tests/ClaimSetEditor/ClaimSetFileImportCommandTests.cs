@@ -123,7 +123,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "Test ClaimSet", Application = testApplication };
             Save(alreadyExistingClaimSet);
 
-            SetupResourceClaims(testApplication, new List<string> { "TestParentResourceClaim8789783213" }, UniqueNameList("Child", 1));           
+            SetupResourceClaims(testApplication, new List<string> { "TestParentResourceClaim8789783213" }, UniqueNameList("Child", 1));
 
             var testJSON = @"{
                 ""title"": ""testfile"",
@@ -167,7 +167,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            SetupResourceClaims(testApplication, new List<string> { "TestParent88"}, UniqueNameList("child",1));         
+            SetupResourceClaims(testApplication, new List<string> { "TestParent88"}, UniqueNameList("child",1));
 
             var testJSON = @"{
                 ""title"": ""testfile"",

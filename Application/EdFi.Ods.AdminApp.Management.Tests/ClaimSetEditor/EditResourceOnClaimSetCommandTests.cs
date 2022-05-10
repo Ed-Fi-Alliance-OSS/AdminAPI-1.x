@@ -34,10 +34,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+            var parentRcNames = UniqueNameList("ParentRc", 2);
+            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("ChildRc", 1));
 
-            var testResource1ToEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
-            var testResource2ToNotEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim2");
+            var testResource1ToEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.First());
+            var testResource2ToNotEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.Last());
             
             var editedResource = new ResourceClaim
             {
@@ -92,12 +93,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+            var parentRcNames = UniqueNameList("ParentRc", 1);
+            var childRcNames = UniqueNameList("ChildRc", 2);
+            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, childRcNames);
 
-            var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == "TestParentResourceClaim1");
+            var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First());
 
-            var testChildResource1ToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
-            var testChildResource2NotToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim2" && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
+            var test1ChildResourceClaim = $"{childRcNames.First()}-{parentRcNames.First()}";
+            var test2ChildResourceClaim = $"{childRcNames.Last()}-{parentRcNames.First()}";
+
+            var testChildResource1ToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == test1ChildResourceClaim && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
+            var testChildResource2NotToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == test2ChildResourceClaim && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
 
             var editedResource = new ResourceClaim
             {
@@ -159,10 +165,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
-
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
-
-            var testResource = testResources.Single(x => x.ResourceClaim.ResourceName == "TestParentResourceClaim1").ResourceClaim;
+            var parentRcNames = UniqueNameList("Parent", 1);
+            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
+            var testResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First()).ResourceClaim;
 
             var invalidResource = new ResourceClaim
             {
@@ -184,7 +189,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var validator = new EditClaimSetResourceModelValidator();
             var validationResults = validator.Validate(editResourceOnClaimSetModel);
             validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource:\nTestParentResourceClaim1");
+            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource:\n{parentRcNames.First()}");
         }
 
         [Test]
@@ -199,11 +204,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+            var parentRcNames = UniqueNameList("Parent", 1);
+
+            SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
 
             var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
-            var duplicateResource = existingResources.Single(x => x.Name == "TestParentResourceClaim1");
+            var duplicateResource = existingResources.Single(x => x.Name == parentRcNames.First());
 
             var editResourceOnClaimSetModel = new EditClaimSetResourceModel
             {
@@ -215,7 +222,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var validator = new EditClaimSetResourceModelValidator();
             var validationResults = validator.Validate(editResourceOnClaimSetModel);
             validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("Only unique resource claims can be added. The following is a duplicate resource:\nTestParentResourceClaim1");
+            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Only unique resource claims can be added. The following is a duplicate resource:\n{parentRcNames.First()}");
         }
 
         [Test]
@@ -230,8 +237,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var testResources = SetupResourceClaims(testApplication);
-            var testResourceToAdd = testResources.Single(x => x.ResourceName == "TestParentResourceClaim1");
+            var parentRcNames = UniqueNameList("Parent", 1);
+            var testResources = SetupResourceClaims(testApplication, parentRcNames, UniqueNameList("child",1));
+            var testResourceToAdd = testResources.Single(x => x.ResourceName == parentRcNames.First());
             var resourceToAdd = new ResourceClaim()
             {
                 Id = testResourceToAdd.ResourceClaimId,
@@ -278,10 +286,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var testResources = SetupResourceClaims(testApplication);
-            var testParentResource1 = testResources.Single(x => x.ResourceName == "TestParentResourceClaim1");
+            var parentRcNames = UniqueNameList("Parent", 1);
+            var childRcNames = UniqueNameList("Child", 1);
+            var testResources = SetupResourceClaims(testApplication, parentRcNames, childRcNames);
 
-            var testChildResource1ToAdd = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource1.ResourceClaimId));
+            var testParentResource1 = testResources.Single(x => x.ResourceName == parentRcNames.First());
+            var childRcToTest = $"{childRcNames.First()}-{parentRcNames.First()}";
+            var testChildResource1ToAdd = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == childRcToTest && x.ParentResourceClaimId == testParentResource1.ResourceClaimId));
             var resourceToAdd = new ResourceClaim()
             {
                     Id = testChildResource1ToAdd.ResourceClaimId,

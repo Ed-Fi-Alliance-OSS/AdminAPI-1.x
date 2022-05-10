@@ -32,12 +32,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSetToDelete = new ClaimSet
                 {ClaimSetName = "TestClaimSet_Delete", Application = testApplication};
             Save(testClaimSetToDelete);
-            SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication);
+            SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
             var testClaimSetToPreserve = new ClaimSet
                 {ClaimSetName = "TestClaimSet_Preserve", Application = testApplication};
             Save(testClaimSetToPreserve);
-            var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication);
+            var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
             var deleteModel = new Mock<IDeleteClaimSetModel>();
             deleteModel.Setup(x => x.Name).Returns(testClaimSetToDelete.ClaimSetName);
@@ -51,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
 
             Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId)).ShouldBeNull();
-            Transaction(securityContext => securityContext.ClaimSetResourceClaims.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
+            Transaction(securityContext => securityContext.ClaimSetResourceClaimActions.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
                 .ShouldBe(0);
 
             var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));

@@ -34,7 +34,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet", Application = testApplication};
             Save(testClaimSet);
 
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication,
+                UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
             var newClaimSet = new Mock<ICopyClaimSetModel>();
             newClaimSet.Setup(x => x.Name).Returns("TestClaimSet_Copy");

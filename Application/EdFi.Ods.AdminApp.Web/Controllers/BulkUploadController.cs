@@ -140,8 +140,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             }
 
             var schemaBasePath = Path.Combine(_webHostEnvironment.ContentRootPath, _appSettings.XsdFolder);
-            var standardVersion = _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
-            var odsApiVersion = _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
+            var standardVersion = await _inferOdsApiVersion.EdFiStandardVersion(connectionInformation.ApiServerUrl);
+            var odsApiVersion = await _inferOdsApiVersion.Version(connectionInformation.ApiServerUrl);
 
             const int IdealSimultaneousRequests = 20;
             const int PessimisticSimultaneousRequests = 1;

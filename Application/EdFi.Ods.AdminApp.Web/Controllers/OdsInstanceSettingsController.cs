@@ -29,6 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly InstanceContext _instanceContext;
         private readonly AppSettings _appSettings;
         private readonly IInferExtensionDetails _inferExtensionDetails;
+        private readonly IInferOdsApiVersion _inferOdsApiVersion;
 
         public OdsInstanceSettingsController(
              ICloudOdsSettingsService cloudOdsSettingsService
@@ -36,6 +37,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , InstanceContext instanceContext
             , IOptions<AppSettings> appSettingsAccessor
             , IInferExtensionDetails inferExtensionDetails
+            , IInferOdsApiVersion inferOdsApiVersion
             )
         {
             _cloudOdsSettingsService = cloudOdsSettingsService;
@@ -43,6 +45,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             _instanceContext = instanceContext;
             _appSettings = appSettingsAccessor.Value;
             _inferExtensionDetails = inferExtensionDetails;
+            _inferOdsApiVersion = inferOdsApiVersion;
         }
 
         [AddTelemetry("ODS Instance Settings > Logging", TelemetryType.View)]
@@ -64,16 +67,16 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return View(model);
         }
 
-        public ActionResult OdsVersionMetadata()
+        public async Task<ActionResult> OdsVersionMetadata()
         {
             var model = new OdsVersionMetadataViewModel();
 
             try
             {
-                model.OdsApiVersion = InMemoryCache.Instance
-                    .GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
+                model.OdsApiVersion = await InMemoryCache.Instance
+                    .GetOrSet("OdsApiVersion", async () => await _inferOdsApiVersion.Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
 
-                var tpdmVersionDetails =InMemoryCache.Instance.GetOrSet(
+                var tpdmVersionDetails = await InMemoryCache.Instance.GetOrSet(
                     "TpdmExtensionVersion", () =>
                         _inferExtensionDetails.TpdmExtensionVersion(
                             CloudOdsAdminAppSettings.Instance.ProductionApiUrl));

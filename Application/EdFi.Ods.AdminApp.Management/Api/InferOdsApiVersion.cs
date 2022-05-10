@@ -4,46 +4,69 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace EdFi.Ods.AdminApp.Management.Api
 {
     public interface IInferOdsApiVersion
     {
-       string Version(string apiServerUrl);
-       string EdFiStandardVersion(string apiServerUrl);
+       Task<string> Version(string apiServerUrl);
+       Task<string> EdFiStandardVersion(string apiServerUrl);
     }
 
     public class InferOdsApiVersion : IInferOdsApiVersion
     {
-        public string Version(string apiServerUrl)
+        private readonly IHttpClientFactory _clientFactory;
+
+        public InferOdsApiVersion(IHttpClientFactory clientFactory)
         {
-            using (var client = new WebClient())
+            _clientFactory = clientFactory;
+        }
+
+        public async Task<string> Version(string apiServerUrl)
+        {
+            var httpClient = _clientFactory.CreateClient();
+
+            using (var response = await httpClient.GetAsync(apiServerUrl))
             {
-                var rawApis = client.DownloadString(apiServerUrl);
+                using (var content = response.Content)
+                {
+                    var contentAsString = await content.ReadAsStringAsync();
 
-                var response = JToken.Parse(rawApis);
+                    var parsedContent = JToken.Parse(contentAsString);
 
-                var apiVersion = response["version"].ToString();
+                    var apiVersion = parsedContent["version"]?.ToString();
 
-                return apiVersion;
+                    return apiVersion;
+                }
             }
         }
 
-        public string EdFiStandardVersion(string apiServerUrl)
+        public async Task<string> EdFiStandardVersion(string apiServerUrl)
         {
-            using (var client = new WebClient())
+            var httpClient = _clientFactory.CreateClient();
+
+            using (var response = await httpClient.GetAsync(apiServerUrl))
             {
-                var rawApis = client.DownloadString(apiServerUrl);
+                using (var content = response.Content)
+                {
+                    var contentAsString = await content.ReadAsStringAsync();
 
-                var response = JToken.Parse(rawApis);
+                    var parsedContent = JToken.Parse(contentAsString);
 
-                foreach (var dataModel in response["dataModels"])
-                    if (dataModel["name"].ToString() == "Ed-Fi")
-                        return dataModel["version"].ToString();
+                    var dataModels = parsedContent["dataModels"];
 
-                throw new Exception("The Ed-Fi Standard version could not be determined for this ODS/API instance.");
+                    if (dataModels != null)
+                    {
+                        foreach (var dataModel in dataModels)
+                            if (dataModel["name"]?.ToString() == "Ed-Fi")
+                                return dataModel["version"]?.ToString();
+                    }
+
+                    throw new Exception("The Ed-Fi Standard version could not be determined for this ODS/API instance.");
+                }
             }
         }
     }

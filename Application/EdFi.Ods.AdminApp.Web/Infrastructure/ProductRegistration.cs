@@ -35,6 +35,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ApplicationConfigurationService _applicationConfigurationService;
         private readonly IGetOdsInstanceRegistrationsQuery _getOdsInstanceRegistrationsQuery;
+        private static IInferOdsApiVersion _inferOdsApiVersion;
 
         private readonly string _odsApiMode;
         private readonly string _productRegistrationUrl;
@@ -44,12 +45,14 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             AdminAppDbContext database,
             IHttpContextAccessor httpContextAccessor,
             ApplicationConfigurationService applicationConfigurationService,
-            IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery)
+            IGetOdsInstanceRegistrationsQuery getOdsInstanceRegistrationsQuery,
+            IInferOdsApiVersion inferOdsApiVersion)
         {
             _database = database;
             _httpContextAccessor = httpContextAccessor;
             _applicationConfigurationService = applicationConfigurationService;
             _getOdsInstanceRegistrationsQuery = getOdsInstanceRegistrationsQuery;
+            _inferOdsApiVersion = inferOdsApiVersion;
 
             var appSettings = appSettingsAccessor.Value;
             _odsApiMode = appSettings.ApiStartupType;
@@ -66,7 +69,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
 
                 if (productImprovementEnabled && productRegistrationUrlAvailable && productRegistrationIdAvailable)
                 {
-                    await Notify(BuildProductRegistrationModel(productRegistrationId, user));
+                    await Notify(await BuildProductRegistrationModel(productRegistrationId, user));
                 }
             }
             catch (Exception exception)
@@ -109,11 +112,11 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
         }
 
-        private ProductRegistrationModel BuildProductRegistrationModel(string productRegistrationId, AdminAppUser user)
+        private async Task<ProductRegistrationModel> BuildProductRegistrationModel(string productRegistrationId, AdminAppUser user)
         {
             var singleOdsApiConnection = new ProductRegistrationModel.OdsApiConnection
             {
-                OdsApiVersion = OdsApiVersion(),
+                OdsApiVersion = await OdsApiVersion(),
                 OdsApiMode = _odsApiMode,
                 InstanceCount = InstanceCount()
             };
@@ -154,13 +157,12 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             return Try(() => Version.InformationalVersion);
         }
 
-        private static string OdsApiVersion()
+        private static Task<string> OdsApiVersion()
         {
             return Try(
-                () => InMemoryCache.Instance.GetOrSet(
-                    "OdsApiVersion",
-                    () => new InferOdsApiVersion().Version(
-                        CloudOdsAdminAppSettings.Instance.ProductionApiUrl)));
+                async () => await InMemoryCache.Instance.GetOrSet(
+                "OdsApiVersion", async () => await _inferOdsApiVersion.Version(
+                    CloudOdsAdminAppSettings.Instance.ProductionApiUrl)));
         }
 
         private int? InstanceCount()
@@ -215,6 +217,23 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             }
 
             return null;
+        }
+
+        private static async Task<string> Try(Func<Task<string>> getValue, [CallerMemberName] string caller = null)
+        {
+            string value = null;
+
+            try
+            {
+                value = await getValue();
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"Could not determine '{caller}' when submitting product registration. " +
+                              "This notice is merely diagnostic and does not limit Admin App functionality.", exception);
+            }
+
+            return value ?? "";
         }
     }
 }

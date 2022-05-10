@@ -32,17 +32,21 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
         private readonly AdminAppUserContext _userContext;
         private readonly AdminAppDbContext _database;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IInferOdsApiVersion _inferOdsApiVersion;
         private const string NotSet = "(not set)";
 
         private readonly string _measurementId;
         private readonly string _informationalVersion;
         private readonly SimpleTrackerEnvironment _environment;
 
-        public Telemetry(IOptions<AppSettings> appSettingsAccessor, AdminAppUserContext userContext, AdminAppDbContext database, IHttpContextAccessor httpContextAccessor)
+        public Telemetry(IOptions<AppSettings> appSettingsAccessor, AdminAppUserContext userContext, AdminAppDbContext database, IHttpContextAccessor httpContextAccessor,
+            IInferOdsApiVersion inferOdsApiVersion)
         {
             _userContext = userContext;
             _database = database;
             _httpContextAccessor = httpContextAccessor;
+            _inferOdsApiVersion = inferOdsApiVersion;
+
             var appSettings = appSettingsAccessor.Value;
             _measurementId = appSettings.GoogleAnalyticsMeasurementId;
 
@@ -61,7 +65,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure
             string odsApiVersion = null;
             try
             {
-                odsApiVersion = InMemoryCache.Instance.GetOrSet("OdsApiVersion", () => new InferOdsApiVersion().Version(
+                odsApiVersion = await InMemoryCache.Instance.GetOrSet("OdsApiVersion", async () => await _inferOdsApiVersion.Version(
                             CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
             }
             catch (Exception e)

@@ -45,7 +45,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
-        public ActionResult LocalEducationAgencies()
+        public async Task<ActionResult> LocalEducationAgencies()
         {
             var model = new EducationOrganizationsIndexModel
             {
@@ -53,7 +53,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
                 OdsInstance = _instanceContext,
-                TpdmEnabled = TpdmEnabled(),
+                TpdmEnabled = await TpdmEnabled(),
                 Mode = EducationOrganizationsMode.LocalEducationAgencies
             };
 
@@ -61,7 +61,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         }
 
         [AddTelemetry("Post-Secondary Institutions Index", TelemetryType.View)]
-        public ActionResult PostSecondaryInstitutions()
+        public async Task<ActionResult> PostSecondaryInstitutions()
         {
             var model = new EducationOrganizationsIndexModel
             {
@@ -69,7 +69,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                     _tabDisplayService.GetOdsInstanceSettingsTabDisplay(OdsInstanceSettingsTabEnumeration
                         .EducationOrganizations),
                 OdsInstance = _instanceContext,
-                TpdmEnabled = TpdmEnabled(),
+                TpdmEnabled = await TpdmEnabled(),
                 Mode = EducationOrganizationsMode.PostSecondaryInstitutions
             };
 
@@ -242,8 +242,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             var psiSchool = api.GetPsiSchoolById(id);
             var gradeLevelOptions = api.GetAllGradeLevels();
             var stateOptions = api.GetAllStateAbbreviations();
-            var federalLocaleCodeOptions = CheckAndFillIfTpdmCommunityVersion(api.GetFederalLocaleCodes);
-            var accreditationStatusOptions = CheckAndFillIfTpdmCommunityVersion(api.GetAccreditationStatusOptions);
+            var federalLocaleCodeOptions = await CheckAndFillIfTpdmCommunityVersion(api.GetFederalLocaleCodes);
+            var accreditationStatusOptions = await CheckAndFillIfTpdmCommunityVersion(api.GetAccreditationStatusOptions);
 
             var model = _mapper.Map<EditPsiSchoolModel>(psiSchool);
             model.GradeLevelOptions = gradeLevelOptions;
@@ -319,8 +319,8 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 {
                     GradeLevelOptions = api.GetAllGradeLevels(),
                     StateOptions = api.GetAllStateAbbreviations(),
-                    FederalLocaleCodeOptions = CheckAndFillIfTpdmCommunityVersion(api.GetFederalLocaleCodes),
-                    AccreditationStatusOptions = CheckAndFillIfTpdmCommunityVersion(api.GetAccreditationStatusOptions),
+                    FederalLocaleCodeOptions = await CheckAndFillIfTpdmCommunityVersion(api.GetFederalLocaleCodes),
+                    AccreditationStatusOptions = await CheckAndFillIfTpdmCommunityVersion(api.GetAccreditationStatusOptions),
                     RequiredApiDataExist = requiredApiDataExist
                 },
                 AddPostSecondaryInstitutionModel = new AddPostSecondaryInstitutionModel
@@ -373,24 +373,24 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             return deletionResult.Success ? JsonSuccess("School Removed") : JsonError(deletionResult.ErrorMessage);
         }
 
-        private bool TpdmEnabled()
+        private async Task<bool> TpdmEnabled()
         {
-            var versionDetails = GetTpdmExtensionDetails();
+            var versionDetails = await GetTpdmExtensionDetails();
             return !string.IsNullOrEmpty(versionDetails?.TpdmVersion);
         }
 
-        private TpdmExtensionDetails GetTpdmExtensionDetails()
+        private async Task<TpdmExtensionDetails> GetTpdmExtensionDetails()
         {
-            return InMemoryCache.Instance.GetOrSet(
-                "TpdmExtensionVersion", () =>
-                    _inferExtensionDetails.TpdmExtensionVersion(
+            return await InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionVersion", async () =>
+                   await _inferExtensionDetails.TpdmExtensionVersion(
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
 
         }
 
-        private List<SelectOptionModel> CheckAndFillIfTpdmCommunityVersion(Func<List<SelectOptionModel>> optionList)
+        private async Task<List<SelectOptionModel>> CheckAndFillIfTpdmCommunityVersion(Func<List<SelectOptionModel>> optionList)
         {
-            var details = GetTpdmExtensionDetails();
+            var details = await GetTpdmExtensionDetails();
             return details.IsTpdmCommunityVersion ? BuildListWithEmptyOption(optionList) : null;
         }      
 

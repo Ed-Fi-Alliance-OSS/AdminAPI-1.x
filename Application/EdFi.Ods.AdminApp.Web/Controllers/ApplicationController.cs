@@ -148,7 +148,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Schools = schools,
                 ClaimSetNames = GetClaimSetNames(),
                 Profiles = profiles,
-                TpdmEnabled = TpdmEnabled()
+                TpdmEnabled = await TpdmEnabled()
             };
 
             return PartialView("_AddApplicationModal", model);
@@ -221,7 +221,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 Profiles = profiles,
                 VendorId = application.Vendor.VendorId,
                 EducationOrganizationType = edOrgType,
-                TpdmEnabled = TpdmEnabled()
+                TpdmEnabled = await TpdmEnabled()
             };
 
             return PartialView("_EditApplicationModal", model);
@@ -274,11 +274,11 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
                 : apiUrl;
         }
 
-        private bool TpdmEnabled()
+        private async Task<bool> TpdmEnabled()
         {
-            var versionDetails = InMemoryCache.Instance.GetOrSet(
-                "TpdmExtensionVersion", () =>
-                    _inferExtensionDetails.TpdmExtensionVersion(
+            var versionDetails = await InMemoryCache.Instance.GetOrSet(
+                "TpdmExtensionVersion", async () =>
+                    await _inferExtensionDetails.TpdmExtensionVersion(
                         CloudOdsAdminAppSettings.Instance.ProductionApiUrl));
 
             return !string.IsNullOrEmpty(versionDetails.TpdmVersion);

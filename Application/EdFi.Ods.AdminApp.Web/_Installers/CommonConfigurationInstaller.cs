@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EdFi.Common.Extensions;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.LearningStandards.Core.Configuration;
@@ -141,10 +142,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);
 
-        public static void ConfigureLearningStandards(IServiceCollection services)
+        public static async Task ConfigureLearningStandards(IServiceCollection services)
         {
+            var serviceProvider = (IServiceProvider)services.BuildServiceProvider();
+
+            var learningStandardsMaxSimultaneousRequests = await GetLearningStandardsMaxSimultaneousRequests(serviceProvider);
+
             var config = new EdFiOdsApiClientConfiguration(
-                maxSimultaneousRequests: GetLearningStandardsMaxSimultaneousRequests());
+                maxSimultaneousRequests: learningStandardsMaxSimultaneousRequests);
 
             var serviceCollection = new ServiceCollection();
 
@@ -158,14 +163,15 @@ namespace EdFi.Ods.AdminApp.Web._Installers
             services.AddSingleton<ILearningStandardsCorePluginConnector>(pluginConnector);
         }
 
-        private static int GetLearningStandardsMaxSimultaneousRequests()
+        private static async Task<int> GetLearningStandardsMaxSimultaneousRequests(IServiceProvider serviceProvider)
         {
             const int IdealSimultaneousRequests = 4;
             const int PessimisticSimultaneousRequests = 1;
 
             try
             {
-                var odsApiVersion = new InferOdsApiVersion().Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl);
+                var inferOdsApiVersion = serviceProvider.GetRequiredService<IInferOdsApiVersion>();
+                var odsApiVersion = await inferOdsApiVersion.Version(CloudOdsAdminAppSettings.Instance.ProductionApiUrl);
 
                 return odsApiVersion.StartsWith("3.") ? PessimisticSimultaneousRequests : IdealSimultaneousRequests;
             }

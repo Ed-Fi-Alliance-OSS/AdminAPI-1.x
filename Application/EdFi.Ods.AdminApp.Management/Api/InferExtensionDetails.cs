@@ -5,6 +5,7 @@
 
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Services;
 using Newtonsoft.Json.Linq;
 
@@ -12,7 +13,7 @@ namespace EdFi.Ods.AdminApp.Management.Api
 {
     public interface IInferExtensionDetails
     {
-        TpdmExtensionDetails TpdmExtensionVersion(string apiServerUrl);
+        Task<TpdmExtensionDetails> TpdmExtensionVersion(string apiServerUrl);
     }
 
     public class InferExtensionDetails : IInferExtensionDetails
@@ -21,14 +22,14 @@ namespace EdFi.Ods.AdminApp.Management.Api
 
         public InferExtensionDetails(ISimpleGetRequest getRequest) => _getRequest = getRequest;
 
-        public TpdmExtensionDetails TpdmExtensionVersion(string apiServerUrl)
+        public async Task<TpdmExtensionDetails> TpdmExtensionVersion(string apiServerUrl)
         {
-            return GetVersion(apiServerUrl);          
+            return await GetVersion(apiServerUrl);          
         }
 
-        private TpdmExtensionDetails GetVersion(string apiServerUrl)
+        private async Task<TpdmExtensionDetails> GetVersion(string apiServerUrl)
         {
-            var response = JToken.Parse(_getRequest.DownloadString(apiServerUrl));
+            var response = JToken.Parse(await _getRequest.DownloadString(apiServerUrl));
             var versionDetails = new TpdmExtensionDetails();
             if (response["dataModels"] is JArray dataModels)
             {

@@ -165,8 +165,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.BulkUploadController
         {
             const string odsApiVersion = "5.0.0";
             const string edfiStandardVersion = "3.2.0-c";
-            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
-            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
+            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(Task.FromResult(odsApiVersion));
+            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(Task.FromResult(edfiStandardVersion));
 
             var schemaBasePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Schema");
             var schemaPath = $"{schemaBasePath}\\{edfiStandardVersion}";
@@ -211,8 +211,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.BulkUploadController
         {
             const string odsApiVersion = "3.4.0";
             const string edfiStandardVersion = "3.2.0-b";
-            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
-            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
+            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(Task.FromResult(odsApiVersion));
+            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(Task.FromResult(edfiStandardVersion));
 
             var model = SetupBulkUpload(out var fileUploadResult);
 
@@ -243,8 +243,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers.BulkUploadController
         {
             const string odsApiVersion = "3.4.0";
             const string edfiStandardVersion = "3.2.0-b";
-            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(odsApiVersion);
-            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(edfiStandardVersion);
+            InferOdsApiVersion.Setup(x => x.Version("http://example.com")).Returns(Task.FromResult(odsApiVersion));
+            InferOdsApiVersion.Setup(x => x.EdFiStandardVersion("http://example.com")).Returns(Task.FromResult(edfiStandardVersion));
 
             var model = SetupBulkUpload(out var fileUploadResult);
 

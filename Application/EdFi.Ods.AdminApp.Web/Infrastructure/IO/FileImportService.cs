@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.IO;
+using System.Threading.Tasks;
 using EdFi.LoadTools.BulkLoadClient;
 using EdFi.Ods.AdminApp.Management.Api;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +38,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.IO
 
             var xsdDirectoryExistWithFiles =
                 Directory.Exists(xsdFolderPath) && Directory.GetFiles(xsdFolderPath).Length > 0;
-            var odsVersion = new OdsVersion(_inferOdsApiVersion.Version(_configuration.GetValue<string>("OdsApi:Url")));
+            var odsVersion = new OdsVersion(_inferOdsApiVersion.Version(_configuration.GetValue<string>("OdsApi:Url")).GetAwaiter().GetResult());
             var requiredVersion = new OdsVersion("5.1.0");
             if(odsVersion < requiredVersion)
             {

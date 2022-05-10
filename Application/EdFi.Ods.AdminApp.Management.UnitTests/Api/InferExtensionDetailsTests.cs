@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Services;
 using NUnit.Framework;
@@ -26,10 +27,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
                 _jsonResponse = jsonResponse;
             }
 
-            public string DownloadString(string address)
+            public Task<string> DownloadString(string address)
             {
                 address.ShouldBe(_expectedAddress);
-                return _jsonResponse;
+                return Task.FromResult(_jsonResponse);
             }
         }
 
@@ -77,104 +78,104 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
             }";
         }
 
-        private static string TpdmExtensionVersion(string dataModel, string version)
+        private static async Task<string> TpdmExtensionVersion(string dataModel, string version)
         {
             var rootDocument = ExampleOdsRootDocument(dataModel, version);
 
-            return TpdmExtensionVersion(rootDocument).TpdmVersion;
+            return (await TpdmExtensionVersion(rootDocument)).TpdmVersion;
         }
 
-        private static TpdmExtensionDetails TpdmCore(string dataModel, string version)
+        private static async Task<TpdmExtensionDetails> TpdmCore(string dataModel, string version)
         {
             var rootDocument = ExampleOdsRootDocumentWithInformationalVersion(dataModel, version, "TPDM-Core");
 
-            return TpdmExtensionVersion(rootDocument);
+            return await TpdmExtensionVersion(rootDocument);
         }
 
-        private static TpdmExtensionDetails TpdmCommunity(string dataModel, string version)
+        private static async Task<TpdmExtensionDetails> TpdmCommunity(string dataModel, string version)
         {
             var rootDocument = ExampleOdsRootDocumentWithInformationalVersion(dataModel, version, "TPDM-Community");
 
-            return TpdmExtensionVersion(rootDocument);
+            return await TpdmExtensionVersion(rootDocument);
         }
 
-        private static TpdmExtensionDetails TpdmExtensionVersion(string rootDocument)
+        private static async Task<TpdmExtensionDetails> TpdmExtensionVersion(string rootDocument)
         {
             var getRootDocument = new StubGetRequest(OdsRootUri, rootDocument);
 
             var extensionDetails = new InferExtensionDetails(getRootDocument);
 
-            return extensionDetails.TpdmExtensionVersion(OdsRootUri);
+            return  await extensionDetails.TpdmExtensionVersion(OdsRootUri);
         }
 
         [Test]
-        public void CanDetectWhenTpdmModuleIsNotPresent()
+        public async Task CanDetectWhenTpdmModuleIsNotPresent()
         {
-            TpdmExtensionVersion("GrandBend", "1.0.0").ShouldBeNull();
+            (await TpdmExtensionVersion("GrandBend", "1.0.0")).ShouldBeNull();
         }
 
         [Test]
-        public void CanDetectWhenTpdmModuleIsPresentAtExactlyMinimumSupportedVersion()
+        public async Task CanDetectWhenTpdmModuleIsPresentAtExactlyMinimumSupportedVersion()
         {
-            TpdmExtensionVersion("TPDM", "1.0.0").ShouldBe("1.0.0");
+            (await TpdmExtensionVersion("TPDM", "1.0.0")).ShouldBe("1.0.0");
         }
 
         [Test]
-        public void CanDetectWhenTpdmModuleIsPresentAndNewerThanMinimumSupportedVersion()
+        public async Task CanDetectWhenTpdmModuleIsPresentAndNewerThanMinimumSupportedVersion()
         {
-            TpdmExtensionVersion("TPDM", "1.0.1").ShouldBe("1.0.1");
-            TpdmExtensionVersion("TPDM", "1.1.0").ShouldBe("1.1.0");
-            TpdmExtensionVersion("TPDM", "9.8.7").ShouldBe("9.8.7");
+            (await TpdmExtensionVersion("TPDM", "1.0.1")).ShouldBe("1.0.1");
+            (await TpdmExtensionVersion("TPDM", "1.1.0")).ShouldBe("1.1.0");
+            (await TpdmExtensionVersion("TPDM", "9.8.7")).ShouldBe("9.8.7");
         }
 
         [Test]
-        public void CanDetectWhenTpdmModuleIsPresentButInsufficientVersionToSupport()
+        public async Task CanDetectWhenTpdmModuleIsPresentButInsufficientVersionToSupport()
         {
-            TpdmExtensionVersion("TPDM", "0.999.999").ShouldBe("");
-            TpdmExtensionVersion("TPDM", "0.8.0").ShouldBe("");
+            (await TpdmExtensionVersion("TPDM", "0.999.999")).ShouldBe("");
+            (await TpdmExtensionVersion("TPDM", "0.8.0")).ShouldBe("");
         }
 
         [Test]
-        public void CanDetectWhenTpdmModuleIsUsingCaseInsensitiveModuleNameComparisons()
+        public async Task CanDetectWhenTpdmModuleIsUsingCaseInsensitiveModuleNameComparisons()
         {
-            TpdmExtensionVersion("tPdM", "1.0.0").ShouldBe("1.0.0");
+            (await TpdmExtensionVersion("tPdM", "1.0.0")).ShouldBe("1.0.0");
         }
 
         [Test]
-        public void DegradesGracefullyForMalformedOdsRootDocument()
+        public async Task DegradesGracefullyForMalformedOdsRootDocument()
         {
-            TpdmExtensionVersion("{}").TpdmVersion.ShouldBeNull(); //Missing expected key.
-            TpdmExtensionVersion(@"{""dataModels"":5}").TpdmVersion.ShouldBeNull(); //Expected key has unexpected simple value.
-            TpdmExtensionVersion(@"{""dataModels"":{""A"": 1}}").TpdmVersion.ShouldBeNull(); //Expected key has unexpeted object value.
-            TpdmExtensionVersion(@"{""dataModels"":[1]}").TpdmVersion.ShouldBeNull(); //Expected key has expected array but unexpected item type.
-            TpdmExtensionVersion(@"{""dataModels"":[{""name"": ""TPDM""}]}").TpdmVersion.ShouldBeNull(); //Expected array lacks expected name.
-            TpdmExtensionVersion(@"{""dataModels"":[{""version"": ""1.0.0""}]}").TpdmVersion.ShouldBeNull(); //Expected array lacks expected version.
+            (await TpdmExtensionVersion("{}")).TpdmVersion.ShouldBeNull(); //Missing expected key.
+            (await TpdmExtensionVersion(@"{""dataModels"":5}")).TpdmVersion.ShouldBeNull(); //Expected key has unexpected simple value.
+            (await TpdmExtensionVersion(@"{""dataModels"":{""A"": 1}}")).TpdmVersion.ShouldBeNull(); //Expected key has unexpeted object value.
+            (await TpdmExtensionVersion(@"{""dataModels"":[1]}")).TpdmVersion.ShouldBeNull(); //Expected key has expected array but unexpected item type.
+            (await TpdmExtensionVersion(@"{""dataModels"":[{""name"": ""TPDM""}]}")).TpdmVersion.ShouldBeNull(); //Expected array lacks expected name.
+            (await TpdmExtensionVersion(@"{""dataModels"":[{""version"": ""1.0.0""}]}")).TpdmVersion.ShouldBeNull(); //Expected array lacks expected version.
         }
 
         [Test]
-        public void CanDetectWhenTpdmCoreModuleIsPresentWithSupportedVersion()
+        public async Task CanDetectWhenTpdmCoreModuleIsPresentWithSupportedVersion()
         {
             var expectedVersion = "1.1.0";
-            var tpdmExtension = TpdmCore("TPDM", expectedVersion);
+            var tpdmExtension = await TpdmCore("TPDM", expectedVersion);
             tpdmExtension.TpdmVersion.ShouldBe(expectedVersion);
             tpdmExtension.IsTpdmCommunityVersion.ShouldBeFalse();
         }
 
         [Test]
-        public void CanDetectWhenTpdmCommunityModuleIsPresentWithSupportedVersion()
+        public async Task CanDetectWhenTpdmCommunityModuleIsPresentWithSupportedVersion()
         {
             var expectedVersion = "1.0.0";
-            var tpdmExtension = TpdmCommunity("TPDM", expectedVersion);
+            var tpdmExtension = await TpdmCommunity("TPDM", expectedVersion);
             tpdmExtension.TpdmVersion.ShouldBe(expectedVersion);
             tpdmExtension.IsTpdmCommunityVersion.ShouldBeTrue();
         }
 
         [Test]
-        public void CanDetectWhenTpdmCommunityModuleIsPresentWithSupportedVersionNoInformationalVersion()
+        public async Task CanDetectWhenTpdmCommunityModuleIsPresentWithSupportedVersionNoInformationalVersion()
         {
             var expectedVersion = "1.0.0";
             var rootDocument = ExampleOdsRootDocument("TPDM", expectedVersion);
-            var tpdmExtension = TpdmExtensionVersion(rootDocument);
+            var tpdmExtension = await TpdmExtensionVersion(rootDocument);
             tpdmExtension.TpdmVersion.ShouldBe(expectedVersion);
             tpdmExtension.IsTpdmCommunityVersion.ShouldBeTrue();
         }

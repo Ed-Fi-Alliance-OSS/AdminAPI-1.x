@@ -359,7 +359,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 TpdmVersion = "1.1.0", IsTpdmCommunityVersion = true
             };            
-            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(Task.FromResult(tpdmVersionDetails));
 
             _mockOdsApiFacade.Setup(x => x.GetPsiSchoolById(schoolId))
                 .Returns(new PsiSchool());
@@ -418,7 +418,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 TpdmVersion = "1.1.0", IsTpdmCommunityVersion = false
             };
-            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(Task.FromResult(tpdmVersionDetails));
 
             _mockOdsApiFacade.Setup(x => x.GetPsiSchoolById(schoolId))
                 .Returns(new PsiSchool());
@@ -647,7 +647,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 TpdmVersion = "1.1.0", IsTpdmCommunityVersion = true
             };          
-            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(Task.FromResult(tpdmVersionDetails));
 
             _mockOdsApiFacade.Setup(x => x.GetAllPsiSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);
@@ -728,7 +728,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Controllers
             {
                 TpdmVersion = "1.1.0", IsTpdmCommunityVersion = false
             };
-            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(tpdmVersionDetails);
+            _mockInferExtensionDetails.Setup(x => x.TpdmExtensionVersion(It.IsAny<string>())).Returns(Task.FromResult(tpdmVersionDetails));
 
             _mockOdsApiFacade.Setup(x => x.GetAllPsiSchools()).Returns(schools);
             _mockOdsApiFacade.Setup(x => x.GetLocalEducationAgenciesByPage(0, Page<LocalEducationAgency>.DefaultPageSize + 1)).Returns(leas);

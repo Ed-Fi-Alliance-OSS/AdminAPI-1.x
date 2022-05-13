@@ -1,5 +1,6 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
@@ -56,7 +57,11 @@ public static class WebApplicationBuilderExtensions
         else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
-                options => options.UseSqlServer(adminConnectionString));
+                options =>
+                {
+                    options.UseSqlServer(adminConnectionString);
+                    options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
+                });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new SqlServerSecurityContext(securityConnectionString));

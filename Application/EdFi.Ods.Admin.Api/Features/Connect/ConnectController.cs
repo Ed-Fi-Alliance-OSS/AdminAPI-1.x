@@ -11,16 +11,22 @@ using OpenIddict.Server.AspNetCore;
 
 namespace EdFi.Ods.Admin.Api.Features.Connect;
 
+[AllowAnonymous]
 public class ConnectController : Controller
 {
     private readonly ITokenService _tokenService;
+    private readonly IRegisterService _registerService;
 
-    public ConnectController(ITokenService tokenService)
+    public ConnectController(ITokenService tokenService, IRegisterService registerService)
     {
         _tokenService = tokenService;
+        _registerService = registerService;
     }
 
-    [AllowAnonymous]
+    [HttpPost("/connect/register")]
+    [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
+    public Task<IResult> Register([FromForm] RegisterService.Request request) => _registerService.Handle(request);
+
     [HttpPost("/connect/token")]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     public async Task<ActionResult> Token()

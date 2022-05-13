@@ -85,6 +85,7 @@ public static class WebApplicationBuilderExtensions
         });
 		
 		webApplicationBuilder.Services.AddTransient<ITokenService, TokenService>();
+        webApplicationBuilder.Services.AddTransient<IRegisterService, RegisterService>();
         webApplicationBuilder.Services.AddControllers();
     }
 

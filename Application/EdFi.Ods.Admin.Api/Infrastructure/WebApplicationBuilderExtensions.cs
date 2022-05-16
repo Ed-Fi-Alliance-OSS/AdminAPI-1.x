@@ -33,7 +33,7 @@ public static class WebApplicationBuilderExtensions
                         .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
             });
 
-        // Services
+        //Databases
         var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];
         webApplicationBuilder.AddDatabases(databaseEngine);
 

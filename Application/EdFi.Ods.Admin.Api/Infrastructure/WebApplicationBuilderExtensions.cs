@@ -39,7 +39,11 @@ public static class WebApplicationBuilderExtensions
 
         //OpenIddict Auth
         webApplicationBuilder.Services.AddOpenIddict()
-            .AddCore(opt => opt.UseEntityFrameworkCore().UseDbContext<AdminAppDbContext>())
+            .AddCore(opt =>
+            {
+                opt.UseEntityFrameworkCore().UseDbContext<AdminApiDbContext>()
+                    .ReplaceDefaultEntities<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
+            })
             .AddServer(opt =>
             {
                 opt.AllowClientCredentialsFlow();
@@ -78,6 +82,9 @@ public static class WebApplicationBuilderExtensions
         else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
+                options => options.UseSqlServer(adminConnectionString));
+
+            webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>
                 {
                     options.UseSqlServer(adminConnectionString);

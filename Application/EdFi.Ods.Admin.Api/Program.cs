@@ -30,6 +30,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 app.MapFeatureEndpoints();
+app.MapControllers();
 
 if (app.Configuration.GetValue<bool>("EnableSwagger"))
 {

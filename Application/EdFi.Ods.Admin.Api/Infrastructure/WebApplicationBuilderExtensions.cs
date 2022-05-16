@@ -1,5 +1,6 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.Admin.Api.Features.Connect;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
@@ -61,6 +62,9 @@ public static class WebApplicationBuilderExtensions
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
+
+        webApplicationBuilder.Services.AddTransient<ITokenService, TokenService>();
+        webApplicationBuilder.Services.AddControllers();
     }
 
     private static void AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

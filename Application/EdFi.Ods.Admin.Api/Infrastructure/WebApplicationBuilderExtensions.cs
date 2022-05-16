@@ -16,7 +16,7 @@ public static class WebApplicationBuilderExtensions
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
-        webApplicationBuilder.Services.AddSwaggerGen();
+        webApplicationBuilder.Services.AddSwaggerGen(opt => opt.CustomSchemaIds(x => x.FullName));
 
         // Logging
         var loggingOptions = webApplicationBuilder.Configuration.GetSection("Log4NetCore").Get<Log4NetProviderOptions>();

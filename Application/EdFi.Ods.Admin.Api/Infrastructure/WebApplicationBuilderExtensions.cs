@@ -36,6 +36,27 @@ public static class WebApplicationBuilderExtensions
         // Services
         var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];
         webApplicationBuilder.AddDatabases(databaseEngine);
+
+        //OpenIddict Auth
+        webApplicationBuilder.Services.AddOpenIddict()
+            .AddCore(opt => opt.UseEntityFrameworkCore().UseDbContext<AdminAppDbContext>())
+            .AddServer(opt =>
+            {
+                opt.AllowClientCredentialsFlow();
+
+                opt.SetTokenEndpointUris("/connect/token");
+
+                opt.AddEphemeralEncryptionKey();
+                opt.AddEphemeralSigningKey();
+
+                opt.RegisterScopes("edfi_admin_api/full_access");
+                opt.UseAspNetCore().EnableTokenEndpointPassthrough();
+            })
+            .AddValidation(options =>
+            {
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
     }
 
     private static void AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

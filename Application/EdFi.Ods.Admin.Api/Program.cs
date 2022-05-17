@@ -28,6 +28,9 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseRouting();
 app.MapFeatureEndpoints();
 app.MapControllers();

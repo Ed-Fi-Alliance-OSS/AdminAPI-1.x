@@ -5,7 +5,10 @@ using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
@@ -63,7 +66,25 @@ public static class WebApplicationBuilderExtensions
                 options.UseAspNetCore();
             });
 
-        webApplicationBuilder.Services.AddTransient<ITokenService, TokenService>();
+        var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
+        webApplicationBuilder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+            {
+                opt.Authority = issuer;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = issuer,
+                    ValidAudience = issuer,
+                };
+            });
+        webApplicationBuilder.Services.AddAuthorization(opt =>
+        {
+            opt.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireClaim("scope", "edfi_adminapi/full_access")
+                .Build();
+        });
+		
+		webApplicationBuilder.Services.AddTransient<ITokenService, TokenService>();
         webApplicationBuilder.Services.AddControllers();
     }
 

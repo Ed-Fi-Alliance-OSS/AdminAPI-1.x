@@ -30,7 +30,7 @@ public static class WebApplicationBuilderExtensions
                     {
                         ClientCredentials = new OpenApiOAuthFlow
                         {
-                            TokenUrl = new Uri($"{issuer}/connect/token"),
+                            TokenUrl = new Uri($"{issuer}{SecurityConstants.TokenEndpointUri}"),
                         },
                     },
                     In = ParameterLocation.Header,

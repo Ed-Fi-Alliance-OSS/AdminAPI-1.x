@@ -56,8 +56,8 @@ public static class SecurityExtensions
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters
             {
+                ValidateAudience = false,
                 ValidIssuer = issuer,
-                ValidAudience = issuer,
             };
         });
         services.AddAuthorization(opt =>

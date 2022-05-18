@@ -50,8 +50,11 @@ public static class SecurityExtensions
 
         //Application Security
         var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+        services.AddAuthentication(opt =>
         {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opt => {
             opt.Authority = issuer;
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters

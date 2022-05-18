@@ -29,12 +29,10 @@ public static class SecurityExtensions
 
                 opt.SetTokenEndpointUris(SecurityConstants.TokenEndpointUri);
 
-                if (webHostEnvironment.IsDevelopment())
-                {
-                    opt.AddEphemeralEncryptionKey();
-                    opt.AddEphemeralSigningKey();
-                }
-                else
+                opt.AddEphemeralEncryptionKey();
+                opt.AddEphemeralSigningKey();
+
+                if (!webHostEnvironment.IsDevelopment())
                 {
                     var encryptionKey = configuration.GetValue<string>("AppSettings:EncryptionKey");
                     var signingKey = configuration.GetValue<string>("Authentication:SigningKey");

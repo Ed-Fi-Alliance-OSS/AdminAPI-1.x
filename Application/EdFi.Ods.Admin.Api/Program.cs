@@ -28,10 +28,10 @@ else
 
 app.UseHttpsRedirection();
 
+//The ordering here is meaningful: Routing -> Auth -> Endpoints
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseRouting();
 app.MapFeatureEndpoints();
 app.MapControllers();
 

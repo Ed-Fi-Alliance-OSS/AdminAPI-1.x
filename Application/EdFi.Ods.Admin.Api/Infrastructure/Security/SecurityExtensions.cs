@@ -36,7 +36,11 @@ public static class SecurityExtensions
                 }
                 else
                 {
-                    //TBD
+                    var encryptionKey = configuration.GetValue<string>("AppSettings:EncryptionKey");
+                    var signingKey = configuration.GetValue<string>("Authentication:SigningKey");
+
+                    opt.AddEncryptionKey(new SymmetricSecurityKey(Convert.FromBase64String(encryptionKey)));
+                    opt.AddSigningKey(new SymmetricSecurityKey(Convert.FromBase64String(signingKey)));
                 }
 
                 opt.RegisterScopes();

@@ -42,9 +42,9 @@ public class TokenService : ITokenService
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
 
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
-        identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!);
-        identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!);
-        identity.AddClaim(OpenIddictConstants.Claims.Scope, "edfi_admin_api/full_access");
+        identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Scope, "edfi_admin_api/full_access", OpenIddictConstants.Destinations.AccessToken);
 
         return new ClaimsPrincipal(identity);
     }

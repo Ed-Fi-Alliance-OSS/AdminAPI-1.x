@@ -21,6 +21,7 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
             opt.CustomSchemaIds(x => x.FullName);
+            opt.OperationFilter<TokenEndpointBodyDescriptionFilter>();
             opt.AddSecurityDefinition(
                 "oauth",
                 new OpenApiSecurityScheme

@@ -13,7 +13,8 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Security;
 
 public static class SecurityExtensions
 {
-    public static void AddSecurityUsingOpenIddict(this IServiceCollection services, IConfiguration configuration)
+    public static void AddSecurityUsingOpenIddict(this IServiceCollection services,
+        IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
         //OpenIddict Server
         services.AddOpenIddict()
@@ -28,8 +29,15 @@ public static class SecurityExtensions
 
                 opt.SetTokenEndpointUris(SecurityConstants.TokenEndpointUri);
 
-                opt.AddEphemeralEncryptionKey();
-                opt.AddEphemeralSigningKey();
+                if (webHostEnvironment.IsDevelopment())
+                {
+                    opt.AddEphemeralEncryptionKey();
+                    opt.AddEphemeralSigningKey();
+                }
+                else
+                {
+                    //TBD
+                }
 
                 opt.RegisterScopes();
                 opt.UseAspNetCore().EnableTokenEndpointPassthrough();

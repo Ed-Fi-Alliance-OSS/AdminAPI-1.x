@@ -72,7 +72,7 @@ public static class WebApplicationBuilderExtensions
         var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];
         webApplicationBuilder.AddDatabases(databaseEngine);
 
-        webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration);
+        webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration, webApplicationBuilder.Environment);
     }
 
     private static void AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

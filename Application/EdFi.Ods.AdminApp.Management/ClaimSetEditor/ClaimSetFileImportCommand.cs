@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+﻿// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -47,18 +47,16 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                             resource.Read = r.Read;
                             resource.Update = r.Update;
                             resource.Delete = r.Delete;
-                            resource.AuthStrategyOverridesForCRUD = r.AuthStrategyOverridesForCRUD;
                         }
                         return resource;
                     }).ToList();
                 currentResources.RemoveAll(x => x == null);
-
                 foreach (var resource in currentResources)
                 {
                     var editResourceModel = new EditResourceOnClaimSetModel
                     {
                         ClaimSetId = claimSetId,
-                        ResourceClaim = resource
+                        ResourceClaim = resource 
                     };
 
                     _editResourceOnClaimSetCommand.Execute(editResourceModel);
@@ -80,7 +78,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         }
     }
 
-    public class AddClaimSetModel : IAddClaimSetModel
+    public class AddClaimSetModel: IAddClaimSetModel
     {
         public string ClaimSetName { get; set; }
     }
@@ -88,6 +86,6 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
     public class EditResourceOnClaimSetModel : IEditResourceOnClaimSetModel
     {
         public int ClaimSetId { get; set; }
-        public ResourceClaim ResourceClaim { get; set; }
+        public ResourceClaim ResourceClaim { get; set;  }
     }
 }

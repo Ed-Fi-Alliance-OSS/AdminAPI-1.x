@@ -36,13 +36,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(testClaimSet);
 
             var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-
-            var parentRcNames = UniqueNameList("ParentRc", 2);
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
+            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
             SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
-            var testResource1ToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.First());
-            var testResource2ToNotEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.Last());
+            var testResource1ToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
+            var testResource2ToNotEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim2");
             
             var overrideModel = new OverrideDefaultAuthorizationStrategyModel
             {
@@ -96,19 +94,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(testClaimSet);
 
             var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-            var parentRcs = UniqueNameList("Parent", 1);
-            var childRcs = UniqueNameList("Child", 2);
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcs, childRcs);
+            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
             SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
-            var testParentResource = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcs.First());
-            var test1ChildResourceClaim = $"{childRcs.First()}-{parentRcs.First()}";
-            var test2ChildResourceClaim = $"{childRcs.Last()}-{parentRcs.First()}";
+            var testParentResource = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
             var testChildResourceToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x =>
-                x.ResourceName == test1ChildResourceClaim &&
+                x.ResourceName == "TestChildResourceClaim1" &&
                 x.ParentResourceClaimId == testParentResource.ResourceClaimId);
             var testChildResourceNotToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x =>
-                x.ResourceName == test2ChildResourceClaim &&
+                x.ResourceName == "TestChildResourceClaim2" &&
                 x.ParentResourceClaimId == testParentResource.ResourceClaimId);
 
             var overrideModel = new OverrideDefaultAuthorizationStrategyModel
@@ -165,12 +159,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(testClaimSet);
 
             var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-            var parentRcs = UniqueNameList("Parent", 1);
-            var testResourceClaims = SetupResourceClaims(testApplication, parentRcs, UniqueNameList("Child", 1));
+            var testResourceClaims = SetupResourceClaims(testApplication);
 
-            var testResource1ToEdit = testResourceClaims.Single(x => x.ResourceName == parentRcs.First());
+            var testResource1ToEdit = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
 
-            Transaction(securityContext => securityContext.ClaimSetResourceClaimActions
+            Transaction(securityContext => securityContext.ClaimSetResourceClaims
                 .Any(x => x.ResourceClaim.ResourceClaimId == testResource1ToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId))
                 .ShouldBe(false);
 

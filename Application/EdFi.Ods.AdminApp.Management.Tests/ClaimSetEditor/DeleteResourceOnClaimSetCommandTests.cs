@@ -34,13 +34,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var parentIds = UniqueNameList("ParentRc", 1);
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentIds, UniqueNameList("ChildRc", 1));
+            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
 
             var parentResourcesOnClaimSetOriginalCount =
                 testResources.Count(x => x.ResourceClaim.ParentResourceClaim == null);
 
-            var testResourceToDelete = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentIds.First());
+            var testResourceToDelete = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
             
             var deleteResourceOnClaimSetModel = new DeleteClaimSetResourceModel
             {
@@ -59,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Transaction(securityContext =>
             {
                 var resourceClaimsForClaimSet =
-                    securityContext.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
+                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
                 resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount - 1);
 
                 var resultResourceClaim = resourceClaimsForClaimSet.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testResourceToDelete.ResourceClaimId);
@@ -80,18 +79,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var parentRcNames = UniqueNameList("ParentRc", 1);
-            var childRcNames = UniqueNameList("ChildRc", 1);
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, childRcNames);
-
-            var childRcNameToTest = $"{childRcNames.First()}-{parentRcNames.First()}";
+            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
 
             var parentResourcesOnClaimSetOriginalCount =
                 testResources.Count(x => x.ResourceClaim.ParentResourceClaim == null);
 
-            var testParentResource = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.First());
+            var testParentResource = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
             var childResourcesForParentOriginalCount = testResources.Count(x => x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
-            var testChildResourceToDelete = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == childRcNameToTest && x.ParentResourceClaimId == testParentResource.ResourceClaimId);
+            var testChildResourceToDelete = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource.ResourceClaimId);
 
             var deleteResourceOnClaimSetModel = new DeleteClaimSetResourceModel
             {
@@ -115,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Transaction(securityContext =>
             {
                 var resultChildResources =
-                    securityContext.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
+                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
                 resultChildResources.Count().ShouldBe(childResourcesForParentOriginalCount - 1);
 
                 var resultResourceClaim = resultChildResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testChildResourceToDelete.ResourceClaimId);
@@ -136,7 +131,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
 
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
+            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
 
             var resourceNotOnClaimSet = new ResourceClaim
             {

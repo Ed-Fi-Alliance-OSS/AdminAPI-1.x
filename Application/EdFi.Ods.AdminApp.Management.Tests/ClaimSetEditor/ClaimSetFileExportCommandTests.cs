@@ -36,12 +36,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet2 = new ClaimSet { ClaimSetName = "TestClaimSet2", Application = testApplication };
             Save(testClaimSet2);
 
-            var parent1Rcs = UniqueNameList("ParentResourceClaim", 1);
-            var parent2Rcs = UniqueNameList("ParentResourceClaim", 1);
+            SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication);
 
-            SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication, parent1Rcs, UniqueNameList($"{parent1Rcs.First()}-ChildResourceClaim", 2));
-
-            SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication, parent2Rcs, UniqueNameList($"{parent2Rcs.First()}-ChildResourceClaim", 2));
+            SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication);
 
             var exportModel = Scoped<IGetClaimSetByIdQuery, ClaimSetFileExportModel>(getClaimSetById =>
             {

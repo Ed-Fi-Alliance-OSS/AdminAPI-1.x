@@ -132,19 +132,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 AuthorizationStrategy authorizationStrategy,
                 ResourceClaim resourceClaim)
             {
-                var resourceClaimAuthorizationMetadata = TestContext.ResourceClaimActions.FirstOrDefault(rcm =>
-                        rcm.Action.ActionId == action.ActionId && rcm.AuthorizationStrategies.FirstOrDefault()
-                        .AuthorizationStrategyId == authorizationStrategy.AuthorizationStrategyId &&
+                var resourceClaimAuthorizationMetadata = TestContext.ResourceClaimAuthorizationMetadatas.FirstOrDefault(rcm =>
+                        rcm.Action.ActionId == action.ActionId && rcm.AuthorizationStrategy.AuthorizationStrategyId == authorizationStrategy.AuthorizationStrategyId &&
                         rcm.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId);
 
                 if (resourceClaimAuthorizationMetadata == null)
                 {
-                    TestContext.ResourceClaimActions.Add(new ResourceClaimAction
+                    TestContext.ResourceClaimAuthorizationMetadatas.Add(new ResourceClaimAuthorizationMetadata
                     {
                         Action = action,
-                        AuthorizationStrategies = authorizationStrategy != null ?
-                        new List<ResourceClaimActionAuthorizationStrategies> { new ResourceClaimActionAuthorizationStrategies
-                        { AuthorizationStrategy = authorizationStrategy} } : null,
+                        AuthorizationStrategy = authorizationStrategy,
                         ResourceClaim = resourceClaim,
                         ValidationRuleSetName = null
                     });
@@ -152,33 +149,31 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         }
 
-        protected IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
+        protected IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
         {
             var parentResourceClaims = new List<ResourceClaim>();
             var childResourceClaims = new List<ResourceClaim>();
             var actions = new List<Action>();
-            foreach (var parentName in parentRcNames)
+            foreach (var parentIndex in Enumerable.Range(1, resourceClaimCount))
             {
                 var resourceClaim = new ResourceClaim
                 {
-                    ClaimName = parentName,
-                    DisplayName = parentName,
-                    ResourceName = parentName,
+                    ClaimName = $"TestParentResourceClaim{parentIndex}",
+                    DisplayName = $"TestParentResourceClaim{parentIndex}",
+                    ResourceName = $"TestParentResourceClaim{parentIndex}",
                     Application = testApplication
                 };
                 parentResourceClaims.Add(resourceClaim);
 
-                childResourceClaims.AddRange(childRcNames
-                    .Select(childName => { var childRcName = $"{childName}-{parentName}";
-                    return new ResourceClaim
+                childResourceClaims.AddRange(Enumerable.Range(1, childResourceClaimCount)
+                    .Select(childIndex => new ResourceClaim
                     {
-                        ClaimName = childRcName,
-                        DisplayName = childRcName,
-                        ResourceName = childRcName,
+                        ClaimName = $"TestChildResourceClaim{childIndex}",
+                        DisplayName = $"TestChildResourceClaim{childIndex}",
+                        ResourceName = $"TestChildResourceClaim{childIndex}",
                         Application = testApplication,
                         ParentResourceClaim = resourceClaim,
                         ParentResourceClaimId = resourceClaim.ResourceClaimId
-                    };
                     }));
             }
 
@@ -199,49 +194,32 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return parentResourceClaims;
         }
 
-        public IList<string> UniqueNameList(string prefix, int resourceClaimCount = 5)
-        {
-            var random = new Random();
-            var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(index => {
-                return $"{prefix}{random.Next()}";
-            }).ToList();
-
-            return parentResourceClaims;
-        }
-
-        protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
+        protected IReadOnlyCollection<ClaimSetResourceClaim> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
         {
             var actions = ActionName.GetAll().Select(action => new Action {ActionName = action.Value, ActionUri = action.Value}).ToList();
             Save(actions.Cast<object>().ToArray());
 
-            var parentResourceClaims = parentRcNames.Select(parentRcName => {                
-                return new ResourceClaim
-                {
-                    ClaimName = parentRcName,
-                    DisplayName = parentRcName,
-                    ResourceName = parentRcName,
-                    Application = testApplication
-                };
+            var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(parentIndex => new ResourceClaim
+            {
+                ClaimName = $"TestParentResourceClaim{parentIndex}",
+                DisplayName = $"TestParentResourceClaim{parentIndex}",
+                ResourceName = $"TestParentResourceClaim{parentIndex}", Application = testApplication
             }).ToList();
 
-            var childResourceClaims = parentResourceClaims.SelectMany(x => childRcNames
-                .Select(childRcName =>
+            var childResourceClaims = parentResourceClaims.SelectMany(x => Enumerable.Range(1, childResourceClaimCount)
+                .Select(childIndex => new ResourceClaim
                 {
-                    var childName = $"{childRcName}-{x.ClaimName}";
-                    return new ResourceClaim
-                    {
-                        ClaimName = childName,
-                        DisplayName = childName,
-                        ResourceName = childName,
-                        Application = testApplication,
-                        ParentResourceClaim = x
-                    };
+                    ClaimName = $"TestChildResourceClaim{childIndex}",
+                    DisplayName = $"TestChildResourceClaim{childIndex}",
+                    ResourceName = $"TestChildResourceClaim{childIndex}",
+                    Application = testApplication,
+                    ParentResourceClaim = x
                 })).ToList();
 
             Save(childResourceClaims.Cast<object>().ToArray());
 
-            var claimSetResourceClaims = Enumerable.Range(1, parentRcNames.Count)
-                .Select(index => parentResourceClaims[index - 1]).Select(parentResource => new ClaimSetResourceClaimAction
+            var claimSetResourceClaims = Enumerable.Range(1, resourceClaimCount)
+                .Select(index => parentResourceClaims[index - 1]).Select(parentResource => new ClaimSetResourceClaim
                 {
                     ResourceClaim = parentResource,
                     Action = actions.Single(x => x.ActionName == ActionName.Create.Value), ClaimSet = testClaimSet
@@ -249,7 +227,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
             var childResources = parentResourceClaims.SelectMany(x => childResourceClaims
                 .Where(child => child.ParentResourceClaimId == x.ResourceClaimId)
-                .Select(child => new ClaimSetResourceClaimAction
+                .Select(child => new ClaimSetResourceClaim
                 {
                     ResourceClaim = child,
                     Action = actions.Single(a => a.ActionName == ActionName.Create.Value),
@@ -283,25 +261,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return authStrategies;
         }
 
-        protected IReadOnlyCollection<ResourceClaimAction> SetupResourcesWithDefaultAuthorizationStrategies(List<AuthorizationStrategy> testAuthorizationStrategies, List<ClaimSetResourceClaimAction> claimSetResourceClaims)
+        protected IReadOnlyCollection<ResourceClaimAuthorizationMetadata> SetupResourcesWithDefaultAuthorizationStrategies(List<AuthorizationStrategy> testAuthorizationStrategies, List<ClaimSetResourceClaim> claimSetResourceClaims)
         {
-            var resourceClaimWithDefaultAuthStrategies = new List<ResourceClaimAction>();
+            var resourceClaimWithDefaultAuthStrategies = new List<ResourceClaimAuthorizationMetadata>();
             var random = new Random();
             foreach (var resourceClaim in claimSetResourceClaims)
             {
                 var testAuthorizationStrategy = testAuthorizationStrategies[random.Next(testAuthorizationStrategies.Count)];
 
-                var rcActionAuthorizationStrategies = testAuthorizationStrategy != null ?
-                     new List<ResourceClaimActionAuthorizationStrategies> {
-                        new ResourceClaimActionAuthorizationStrategies { AuthorizationStrategy = testAuthorizationStrategy } } : null;
-
-                var resourceClaimWithDefaultAuthStrategy = new ResourceClaimAction
+                var resourceClaimWithDefaultAuthStrategy = new ResourceClaimAuthorizationMetadata
                 {
                     ResourceClaim = resourceClaim.ResourceClaim,
                     Action = resourceClaim.Action,
-                    AuthorizationStrategies = rcActionAuthorizationStrategies
+                    AuthorizationStrategy = testAuthorizationStrategy
                 };
-                
                 resourceClaimWithDefaultAuthStrategies.Add(resourceClaimWithDefaultAuthStrategy);
             }
 

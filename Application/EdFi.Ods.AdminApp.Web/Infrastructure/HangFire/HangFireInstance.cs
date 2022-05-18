@@ -30,8 +30,7 @@ namespace EdFi.Ods.AdminApp.Web.Infrastructure.HangFire
             {
                 var options = new PostgreSqlStorageOptions
                 {
-                    SchemaName = schemaName,
-                    PrepareSchemaIfNecessary = enableSchemaMigration
+                    SchemaName = schemaName
                 };
 
                 GlobalConfiguration.Configuration.UsePostgreSqlStorage(connectionString, options);

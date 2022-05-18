@@ -1,9 +1,8 @@
-// SPDX-License-Identifier: Apache-2.0
+﻿// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
@@ -29,34 +28,24 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             };
 
             var originalResourceClaims =
-                _context.ClaimSetResourceClaimActions
+                _context.ClaimSetResourceClaims
                     .Where(x => x.ClaimSet.ClaimSetId == claimSet.OriginalId)
                     .Include(x => x.ResourceClaim)
                     .Include(x => x.Action)
-                    .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                    .Include(x => x.AuthorizationStrategyOverride)
                     .ToList();
             _context.ClaimSets.Add(newClaimSet);
 
-            foreach (var resourceClaim in originalResourceClaims.ToList())
+            foreach (var resourceClaim in originalResourceClaims)
             {
-                List <ClaimSetResourceClaimActionAuthorizationStrategyOverrides> authStrategyOverrides = null;
-                if (resourceClaim.AuthorizationStrategyOverrides != null && resourceClaim.AuthorizationStrategyOverrides.Any())
-                {
-                    authStrategyOverrides = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>();
-                    foreach (var authStrategyOverride in resourceClaim.AuthorizationStrategyOverrides)
-                    {
-                        authStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides
-                        { AuthorizationStrategy = authStrategyOverride.AuthorizationStrategy});
-                    }
-                }
-                var copyResourceClaim = new ClaimSetResourceClaimAction
+                var copyResourceClaim = new ClaimSetResourceClaim
                 {
                     ClaimSet = newClaimSet,
                     Action = resourceClaim.Action,
-                    AuthorizationStrategyOverrides = authStrategyOverrides,
+                    AuthorizationStrategyOverride = resourceClaim.AuthorizationStrategyOverride,
                     ResourceClaim = resourceClaim.ResourceClaim
                 };
-                _context.ClaimSetResourceClaimActions.Add(copyResourceClaim);
+                _context.ClaimSetResourceClaims.Add(copyResourceClaim);
             }
             _context.SaveChanges();
 

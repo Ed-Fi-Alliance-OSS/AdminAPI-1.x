@@ -27,13 +27,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             Save(testApplication);
 
-            var parentRcs = UniqueNameList("Parent", 2);
+            var testResourceClaims = SetupResourceClaims(testApplication);
 
-            var childRcs = UniqueNameList("Child", 1);
-
-            var testResourceClaims = SetupResourceClaims(testApplication, parentRcs, childRcs);
-
-            var testParentResource = testResourceClaims.Single(x => x.ResourceName == parentRcs.First());
+            var testParentResource = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
 
             ResourceClaim[] results = null;
             Scoped<ISecurityContext>(securityContext =>

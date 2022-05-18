@@ -30,22 +30,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 
             TestContext.SaveChanges();
 
-            var rcActionAuthorizationStrat = Transaction(securityContext => securityContext.ResourceClaimActions                
-                .Include(c => c.Action)
-                .Include(c => c.ResourceClaim)
-                .Include(c => c.AuthorizationStrategies.Select(x => x.AuthorizationStrategy))
+            var testAuthorizationStrat = Transaction(securityContext => securityContext.ResourceClaimAuthorizationMetadatas
+                .Include(x => x.AuthorizationStrategy)
                 .Single(x =>
                     x.Action.ActionName == CloudOdsClaimAction.Read.ActionName &&
-                    x.ResourceClaim.ResourceName == "educationStandards"));
-            rcActionAuthorizationStrat.AuthorizationStrategies.First().AuthorizationStrategy.AuthorizationStrategyName.ShouldBe(CloudOdsClaimAuthorizationStrategy
+                    x.ResourceClaim.ResourceName == "educationStandards")
+                .AuthorizationStrategy);
+
+            testAuthorizationStrat.AuthorizationStrategyName.ShouldBe(CloudOdsClaimAuthorizationStrategy
                 .NoFurtherAuthorizationRequired.StrategyName);
         }
 
         [Test]
         public void ShouldHandleClaimsetThatDoesNotExist()
         {
-            var noFurtherAuthRequiredCount = TestContext.ResourceClaimActions.Count(x =>
-                x.AuthorizationStrategies.FirstOrDefault().AuthorizationStrategy.AuthorizationStrategyName ==
+            var noFurtherAuthRequiredCount = TestContext.ResourceClaimAuthorizationMetadatas.Count(x =>
+                x.AuthorizationStrategy.AuthorizationStrategyName ==
                 CloudOdsClaimAuthorizationStrategy.NoFurtherAuthorizationRequired.StrategyName);
 
             var modifyClaimSets = new ModifyClaimSetsService(TestContext);
@@ -55,8 +55,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 
             TestContext.Actions.Count(x => x.ActionName == "NotAnAction").ShouldBe(0);
 
-            TestContext.ResourceClaimActions
-                .Count(x => x.AuthorizationStrategies.FirstOrDefault().AuthorizationStrategy.AuthorizationStrategyName ==
+            TestContext.ResourceClaimAuthorizationMetadatas
+                .Count(x => x.AuthorizationStrategy.AuthorizationStrategyName ==
                             CloudOdsClaimAuthorizationStrategy.NoFurtherAuthorizationRequired.StrategyName)
                 .ShouldBe(noFurtherAuthRequiredCount);
         }

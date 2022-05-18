@@ -5,6 +5,7 @@
 
 using System.Security.Authentication;
 using System.Security.Claims;
+using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using OpenIddict.Abstractions;
 
@@ -44,7 +45,7 @@ public class TokenService : ITokenService
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
-        identity.AddClaim(OpenIddictConstants.Claims.Scope, "edfi_admin_api/full_access", OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.ApiFullAccessScope, OpenIddictConstants.Destinations.AccessToken);
 
         return new ClaimsPrincipal(identity);
     }

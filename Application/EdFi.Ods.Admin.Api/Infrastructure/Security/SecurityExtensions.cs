@@ -7,6 +7,7 @@ using EdFi.Ods.Admin.Api.Features.Connect;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Abstractions;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.Security;
 
@@ -25,12 +26,12 @@ public static class SecurityExtensions
             {
                 opt.AllowClientCredentialsFlow();
 
-                opt.SetTokenEndpointUris("/connect/token");
+                opt.SetTokenEndpointUris(SecurityConstants.TokenEndpointUri);
 
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
 
-                opt.RegisterScopes("edfi_admin_api/full_access");
+                opt.RegisterScopes();
                 opt.UseAspNetCore().EnableTokenEndpointPassthrough();
             })
             .AddValidation(options =>
@@ -54,7 +55,7 @@ public static class SecurityExtensions
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .RequireClaim("scope", "edfi_adminapi/full_access")
+                .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.ApiFullAccessScope)
                 .Build();
         });
 

@@ -16,17 +16,21 @@ public interface IRegisterService
 
 public class RegisterService : IRegisterService
 {
+    private readonly IConfiguration _configuration;
     private readonly Validator _validator;
     private readonly IOpenIddictApplicationManager _applicationManager;
 
-    public RegisterService(Validator validator, IOpenIddictApplicationManager applicationManager)
+    public RegisterService(IConfiguration configuration, Validator validator, IOpenIddictApplicationManager applicationManager)
     {
+        _configuration = configuration;
         _validator = validator;
         _applicationManager = applicationManager;
     }
 
     public async Task<IResult> Handle(Request request)
     {
+        if(!await RegistrationIsEnabledOrNecessary())
+            return AdminApiError.Unexpected("Application registration is disabled");
         await _validator.GuardAsync(request);
 
         var existingApp = await _applicationManager.FindByClientIdAsync(request.ClientId!);
@@ -49,6 +53,13 @@ public class RegisterService : IRegisterService
 
         await _applicationManager.CreateAsync(application);
         return AdminApiResponse.Ok($"Registered client {request.ClientId} successfully.");
+    }
+
+    private async Task<bool> RegistrationIsEnabledOrNecessary()
+    {
+        var registrationIsEnabled = _configuration.GetValue<bool>("Authentication:AllowRegistration");
+        var applicationCount = await _applicationManager.CountAsync();
+        return registrationIsEnabled || applicationCount == 0;
     }
 
     public class Validator : AbstractValidator<Request>

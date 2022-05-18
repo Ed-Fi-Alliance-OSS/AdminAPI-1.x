@@ -21,15 +21,15 @@ public class AdminApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var engine = _configuration.GetValue<string>("AppSettings:DatabaseEngine");
-
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema("adminapi");
-        modelBuilder.ApplyDatabaseServerSpecificConventions(engine);
 
         modelBuilder.Entity<ApiApplication>().ToTable("Applications").HasKey(a => a.Id);
         modelBuilder.Entity<ApiScope>().ToTable("Scopes").HasKey(s => s.Id);
         modelBuilder.Entity<ApiAuthorization>().ToTable("Authorizations").HasKey(a => a.Id);
         modelBuilder.Entity<ApiToken>().ToTable("Tokens").HasKey(t => t.Id);
+
+        var engine = _configuration.GetValue<string>("AppSettings:DatabaseEngine");
+        modelBuilder.ApplyDatabaseServerSpecificConventions(engine);
     }
 }

@@ -86,6 +86,13 @@ public static class WebApplicationBuilderExtensions
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
                 options => options.UseNpgsql(adminConnectionString));
 
+            webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
+                options =>
+                {
+                    options.UseNpgsql(adminConnectionString);
+                    options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
+                });
+
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new PostgresSecurityContext(securityConnectionString));
 

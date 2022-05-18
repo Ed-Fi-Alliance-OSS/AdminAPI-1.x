@@ -1,14 +1,10 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.Admin.Api.Features.Connect;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
@@ -41,52 +37,7 @@ public static class WebApplicationBuilderExtensions
         var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];
         webApplicationBuilder.AddDatabases(databaseEngine);
 
-        //OpenIddict Auth
-        webApplicationBuilder.Services.AddOpenIddict()
-            .AddCore(opt =>
-            {
-                opt.UseEntityFrameworkCore().UseDbContext<AdminApiDbContext>()
-                    .ReplaceDefaultEntities<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
-            })
-            .AddServer(opt =>
-            {
-                opt.AllowClientCredentialsFlow();
-
-                opt.SetTokenEndpointUris("/connect/token");
-
-                opt.AddEphemeralEncryptionKey();
-                opt.AddEphemeralSigningKey();
-
-                opt.RegisterScopes("edfi_admin_api/full_access");
-                opt.UseAspNetCore().EnableTokenEndpointPassthrough();
-            })
-            .AddValidation(options =>
-            {
-                options.UseLocalServer();
-                options.UseAspNetCore();
-            });
-
-        var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
-        webApplicationBuilder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-            {
-                opt.Authority = issuer;
-                opt.SaveToken = true;
-                opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = issuer,
-                    ValidAudience = issuer,
-                };
-            });
-        webApplicationBuilder.Services.AddAuthorization(opt =>
-        {
-            opt.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .RequireClaim("scope", "edfi_adminapi/full_access")
-                .Build();
-        });
-		
-		webApplicationBuilder.Services.AddTransient<ITokenService, TokenService>();
-        webApplicationBuilder.Services.AddTransient<IRegisterService, RegisterService>();
-        webApplicationBuilder.Services.AddControllers();
+        webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration);
     }
 
     private static void AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

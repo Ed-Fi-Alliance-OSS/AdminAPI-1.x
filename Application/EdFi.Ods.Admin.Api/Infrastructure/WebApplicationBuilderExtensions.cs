@@ -5,6 +5,8 @@ using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
@@ -15,7 +17,40 @@ public static class WebApplicationBuilderExtensions
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
-        webApplicationBuilder.Services.AddSwaggerGen(opt => opt.CustomSchemaIds(x => x.FullName));
+        var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
+        webApplicationBuilder.Services.AddSwaggerGen(opt =>
+        {
+            opt.CustomSchemaIds(x => x.FullName);
+            opt.AddSecurityDefinition(
+                "oauth",
+                new OpenApiSecurityScheme
+                {
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        ClientCredentials = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri($"{issuer}/connect/token"),
+                        },
+                    },
+                    In = ParameterLocation.Header,
+                    Name = HeaderNames.Authorization,
+                    Type = SecuritySchemeType.OAuth2
+                }
+            );
+            opt.AddSecurityRequirement(
+                new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                                { Type = ReferenceType.SecurityScheme, Id = "oauth" },
+                        },
+                        new[] { "api" }
+                    }
+                }
+            );
+        });
 
         // Logging
         var loggingOptions = webApplicationBuilder.Configuration.GetSection("Log4NetCore").Get<Log4NetProviderOptions>();

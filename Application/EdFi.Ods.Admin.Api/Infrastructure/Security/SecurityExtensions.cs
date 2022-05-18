@@ -41,7 +41,7 @@ public static class SecurityExtensions
                     opt.AddSigningKey(new SymmetricSecurityKey(Convert.FromBase64String(signingKey)));
                 }
 
-                opt.RegisterScopes();
+                opt.RegisterScopes(SecurityConstants.ApiFullAccessScope);
                 opt.UseAspNetCore().EnableTokenEndpointPassthrough();
             })
             .AddValidation(options =>

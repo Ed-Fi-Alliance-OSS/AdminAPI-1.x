@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using FluentValidation;
 using FluentValidation.Results;
 using OpenIddict.Abstractions;
@@ -46,8 +47,7 @@ public class RegisterService : IRegisterService
             {
                 OpenIddictConstants.Permissions.Endpoints.Token,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-
-                OpenIddictConstants.Permissions.Prefixes.Scope + "api"
+                OpenIddictConstants.Permissions.Prefixes.Scope + SecurityConstants.ApiFullAccessScope
             },
         };
 

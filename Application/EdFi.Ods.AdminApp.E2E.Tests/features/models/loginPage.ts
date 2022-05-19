@@ -73,7 +73,7 @@ export class LoginPage extends AdminAppPage {
     }
 
     async hasRegisterButton(): Promise<boolean> {
-        return await this.hasText({ text: "Register as a new user", selector: "a.btn" });
+        return await this.hasText({ text: "Register as a new user", selector: this.registerNewUserBtn });
     }
 
     async startRegistration(): Promise<void> {
@@ -85,7 +85,7 @@ export class LoginPage extends AdminAppPage {
     }
 
     async getErrorMessages(): Promise<string | null> {
-        return await this.getText(this.errorMsgSection);
+        return await this.getText({ selector: this.errorMsgSection });
     }
 
     private async clickLogin(): Promise<void> {

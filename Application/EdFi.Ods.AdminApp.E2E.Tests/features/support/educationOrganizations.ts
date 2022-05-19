@@ -28,7 +28,7 @@ When("filling local education agency form", async () => {
     strictEqual(
         await models.edOrgsPage.modalTitle(),
         models.edOrgsPage.modalTitleMessages.addLEA,
-        "Add modal title not found"
+        "Modal title not found"
     );
     await models.edOrgsPage.fillLEAForm();
 });

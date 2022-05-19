@@ -9,11 +9,16 @@ Feature: Vendors
         And user is logged in
         And setup is complete
 
+    #AA-1143
+    Scenario: Empty vendor list
+        Given it's on the "Vendors" page
+        And vendor page has loaded
+        Then no vendors message appears
+
     #AA-871
     Scenario: Add vendor
         Given it's on the "Vendors" page
         And vendor page has loaded
-        And there are no vendors
         When clicking add vendor
         And filling vendor form
         And adding vendor namespace prefix
@@ -43,7 +48,7 @@ Feature: Vendors
         Then vendor is deleted
 
     #AA-880
-    Scenario: Help Section
+    Scenario: Help section
         Given it's on the "Vendors" page
         And vendor page has loaded
         When help section is present
@@ -62,7 +67,6 @@ Feature: Vendors
     Scenario Outline: Add vendor form validations
         Given it's on the "Vendors" page
         And vendor page has loaded
-        And there are no vendors
         When clicking add vendor
         And entering vendor form "<Scenario>"
         And clicking save vendor with errors
@@ -74,11 +78,10 @@ Feature: Vendors
             | no data     |
             | wrong email |
 
-    #AA-1143
-    Scenario Outline: Add vendor modal interactions
+    #AA-1503
+    Scenario Outline: Modal interactions
         Given it's on the "Vendors" page
         And vendor page has loaded
-        And there are no vendors
         When clicking add vendor
         Then vendor modal can be closed by "<Scenario>"
         And vendor modal is closed

@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "@cucumber/cucumber": "^8.1.2",
-    "chromedriver": "^100.0.0",
-    "dotenv": "^16.0.0",
-    "playwright": "^1.21.1"
+    "@cucumber/cucumber": "^8.2.1",
+    "chromedriver": "^101.0.0",
+    "dotenv": "^16.0.1",
+    "playwright": "^1.22.1"
   },
   "description": "Playwright end-to-end test automation for Admin App. Using Commonjs, Cucumber and Assert.",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.21.0",
-    "eslint": "^8.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cucumber": "^2.0.0",
     "eslint-plugin-import": "^2.25.3",
@@ -17,7 +17,7 @@
     "prettier": "^2.6.2",
     "pretty-quick": "^3.1.2",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.4"
   },
   "license": "MIT",
   "name": "playwright-admin-app-tests",
@@ -34,6 +34,7 @@
     "test-login": "cucumber-js -- features/login.feature --fail-fast",
     "test-ed-orgs": "cucumber-js -- features/educationOrganizations.feature --fail-fast",
     "test-vendors": "cucumber-js -- features/vendors.feature --fail-fast",
+    "test-applications": "cucumber-js -- features/applications.feature --fail-fast",
     "trace-viewer": "playwright show-trace"
   },
   "version": "1.0.0"

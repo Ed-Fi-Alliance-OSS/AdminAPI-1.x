@@ -58,7 +58,7 @@
         },
         {
             "language": "cucumber",
-            "mapTo": "python"
+            "mapTo": "javascript"
         },
         {
             "_": "Apply double dash-based comments",

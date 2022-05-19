@@ -20,10 +20,6 @@ Given("vendor page has loaded", async () => {
     ok(await models.vendorsPage.hasPageTitle(), "Page title not found.");
 });
 
-Given("there are no vendors", async () => {
-    ok(await models.vendorsPage.noVendorsMessageVisible(), "There are vendors on the page");
-});
-
 When("clicking add vendor", async () => {
     await models.vendorsPage.addVendor();
 });
@@ -108,6 +104,10 @@ When("entering vendor form {string}", async (scenario: string) => {
         default:
             break;
     }
+});
+
+Then("no vendors message appears", async () => {
+    ok(await models.vendorsPage.noVendorsMessageVisible(), "There are vendors on the page");
 });
 
 Then("vendor is added", async () => {

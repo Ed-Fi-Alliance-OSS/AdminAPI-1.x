@@ -50,6 +50,9 @@ Given("it's on the {string} page", async (pageName: string) => {
         case "Vendors":
             currentPage = models.vendorsPage;
             break;
+        case "Applications":
+            currentPage = models.applicationsPage;
+            break;
         default:
             break;
     }

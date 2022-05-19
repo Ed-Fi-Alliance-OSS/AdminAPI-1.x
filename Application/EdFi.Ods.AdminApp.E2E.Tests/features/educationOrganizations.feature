@@ -42,7 +42,7 @@ Feature: Education Organizations
         Then local education agency is deleted
 
     #AA-862
-    Scenario: Collapse local education agency Section
+    Scenario: Collapse local education agency section
         Given there's a local education agency added
         And it's on the "Education Organizations" page
         And education organization list has loaded
@@ -64,7 +64,7 @@ Feature: Education Organizations
             | no data  |
             | wrong id |
 
-    #AA-1448
+    #AA-1495
     Scenario: Add Duplicated local education agency Id
         Given there's a local education agency added
         And it's on the "Education Organizations" page

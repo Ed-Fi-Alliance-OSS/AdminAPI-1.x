@@ -49,34 +49,43 @@ export abstract class AdminAppPage {
         }
     }
 
-    async waitForResponse({ url, status = 200 }: { url: string; status?: number }): Promise<void> {
-        await this.page.waitForResponse((response) => {
-            if (response.url().includes(url) && response.status() !== status) {
-                return Promise.reject(new Error(`Expected status ${status}, got ${response.status()}`));
-            }
-            return response.url().includes(url) && response.status() === status;
-        });
-    }
-
     async getToastMessage(): Promise<string | null> {
-        return await this.getText(this.toastSelector);
+        return await this.getText({ selector: this.toastSelector });
     }
 
     async modalTitle(): Promise<string> {
-        const content = await this.modalSelector.locator(this.modalTitleHeader).textContent();
-        return content ? content : "";
+        const content = this.getText({ section: this.modalSelector, selector: this.modalTitleHeader });
+        return content;
     }
 
     async hasModalOpen(): Promise<boolean> {
-        return this.elementExists(this.openModalSection);
+        return await this.elementExists(this.openModalSection);
+    }
+
+    async waitForModalVisible(): Promise<void> {
+        await this.waitForElementToBeVisible(this.openModalSection);
+    }
+
+    async waitForElementToBeVisible(element: string): Promise<void> {
+        await this.page.locator(element).waitFor({ state: "visible" });
     }
 
     async clickOutside(): Promise<void> {
         await this.page.locator(this.bodySelector).click();
     }
 
-    protected async getText(text: string): Promise<string | null> {
-        return this.page.textContent(text);
+    protected async getText({
+        section = this.page,
+        selector,
+    }: {
+        section?: Locator | Page;
+        selector: string;
+    }): Promise<string> {
+        const content = await section.locator(selector).textContent();
+        if (!content) {
+            throw `Text for selector ${selector} not found`;
+        }
+        return content;
     }
 
     protected async hasText({
@@ -86,7 +95,7 @@ export abstract class AdminAppPage {
         text: string;
         selector?: string;
     }): Promise<boolean> {
-        return await this.elementExists(`${this.mainSectionSelector} ${selector}:has-text("${text}")`);
+        return await this.elementExists(`${this.mainSectionSelector} ${selector}:has-text("${text.trim()}")`);
     }
 
     protected async elementExists(selector: string): Promise<boolean> {

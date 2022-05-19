@@ -3,11 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+import dotenv = require("dotenv");
 import { Before, BeforeAll, ITestCaseHookParameter, setDefaultTimeout } from "@cucumber/cucumber";
 import { chromium, Browser, BrowserContext, Page } from "playwright";
 import { ModelResolver } from "../models/modelResolver";
-
-import dotenv = require("dotenv");
+import { Test } from "../interfaces";
+import { Network } from "./network";
 
 dotenv.config();
 setDefaultTimeout(60 * 1000);
@@ -16,9 +17,11 @@ export let browser: Browser;
 export let page: Page;
 export let context: BrowserContext;
 export let models: ModelResolver;
-export const currentTest = {
-    feature: "",
-    scenario: "",
+export let network: Network;
+
+export const currentTest: Test = {
+    Feature: "",
+    Scenario: "",
 };
 
 Before(async (scenario) => {
@@ -35,7 +38,9 @@ Before(async (scenario) => {
     }
 
     page = await context.newPage();
+
     models = new ModelResolver(page);
+    network = new Network();
 
     setScenarioName(scenario);
 });
@@ -50,14 +55,14 @@ BeforeAll(async () => {
 function setScenarioName(scenario: ITestCaseHookParameter) {
     const featureName = scenario.gherkinDocument.feature?.name;
     if (featureName) {
-        currentTest.feature = featureName;
+        currentTest.Feature = featureName;
     }
 
-    currentTest.scenario = scenario.pickle.name;
+    currentTest.Scenario = scenario.pickle.name;
 
     const example = getScenarioExample(scenario);
     if (example) {
-        currentTest.scenario += `- ${example}`;
+        currentTest.Scenario += `- ${example}`;
     }
 }
 

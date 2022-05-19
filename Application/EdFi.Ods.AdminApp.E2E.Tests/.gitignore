@@ -4,5 +4,6 @@ screenshots/
 state/
 traces/
 reports/
+videos/
 
 .env

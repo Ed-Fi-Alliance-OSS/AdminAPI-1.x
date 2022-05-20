@@ -1,10 +1,11 @@
-﻿@*
+@*
 SPDX-License-Identifier: Apache-2.0
 Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 See the LICENSE and NOTICES files in the project root for more information.
 *@
 
+@using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions
 @using EdFi.Ods.AdminApp.Web.Helpers
 @using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 @using Newtonsoft.Json;
@@ -63,14 +64,26 @@ See the LICENSE and NOTICES files in the project root for more information.
                     <tbody>
                     @if (Model.ResourceClaim != null)
                     {
+                         var authStrategyOverridesForRead = Model.ResourceClaim.AuthStrategyOverridesForCRUD.Read();
+                         var defaultAuthStrategyForRead = Model.ResourceClaim.DefaultAuthStrategiesForCRUD.Read();
+
+                         var authStrategyOverridesForCreate = Model.ResourceClaim.AuthStrategyOverridesForCRUD.Create();
+                         var defaultAuthStrategyForCreate = Model.ResourceClaim.DefaultAuthStrategiesForCRUD.Create();
+
+                         var authStrategyOverridesForUpdate = Model.ResourceClaim.AuthStrategyOverridesForCRUD.Update();
+                         var defaultAuthStrategyForUpdate = Model.ResourceClaim.DefaultAuthStrategiesForCRUD.Update();
+
+                         var authStrategyOverridesForDelete = Model.ResourceClaim.AuthStrategyOverridesForCRUD.Delete();
+                         var defaultAuthStrategyForDelete = Model.ResourceClaim.DefaultAuthStrategiesForCRUD.Delete();
+
                         <tr class="parent-resource-claim">
                             <td class="icon-cell"></td>
                             <td data-resource-id='@Model.ResourceClaim.Id' class="resource-label">@Model.ResourceClaim.Name</td>
                             <td class="read-action-cell" data-existing-action='@Model.ResourceClaim.Read'>
-                                @if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[1] != null)
+                                @if (authStrategyOverridesForRead != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.AuthStrategyOverridesForCRUD[1].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[1].DisplayName'>@Model.ResourceClaim.AuthStrategyOverridesForCRUD[1].DisplayName</span>
-                                    if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[1].IsInheritedFromParent)
+                                    <span data-is-inherited="@authStrategyOverridesForRead.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForRead.DisplayName'>@authStrategyOverridesForRead.DisplayName</span>
+                                    if (authStrategyOverridesForRead.IsInheritedFromParent)
                                     {
                                         <span class="overridden-strategy inherited-override">(Overridden)</span>
                                     }
@@ -79,10 +92,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                         <span class="overridden-strategy">(Overridden)</span>
                                     }
                                 }
-                                else if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[1] != null)
+                                else if (defaultAuthStrategyForRead != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[1].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[1].DisplayName'>@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[1].DisplayName</span>
-                                    if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[1].IsInheritedFromParent)
+                                    <span data-is-inherited="@defaultAuthStrategyForRead.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForRead.DisplayName'>@defaultAuthStrategyForRead.DisplayName</span>
+                                    if (defaultAuthStrategyForRead.IsInheritedFromParent)
                                     {
                                         <span class="default-strategy inherited-strategy">(Default)</span>
                                     }
@@ -93,10 +106,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                 }
                             </td>
                             <td class="create-action-cell" data-existing-action='@Model.ResourceClaim.Create'>
-                                @if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[0] != null)
+                                @if (authStrategyOverridesForCreate != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.AuthStrategyOverridesForCRUD[0].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[0].DisplayName'>@Model.ResourceClaim.AuthStrategyOverridesForCRUD[0].DisplayName</span>
-                                    if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[0].IsInheritedFromParent)
+                                    <span data-is-inherited="@authStrategyOverridesForCreate.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForCreate.DisplayName'>@authStrategyOverridesForCreate.DisplayName</span>
+                                    if (authStrategyOverridesForCreate.IsInheritedFromParent)
                                     {
                                         <span class="overridden-strategy inherited-override">(Overridden)</span>
                                     }
@@ -105,10 +118,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                         <span class="overridden-strategy">(Overridden)</span>
                                     }
                                 }
-                                else if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[0] != null)
+                                else if (defaultAuthStrategyForCreate != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[0].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[0].DisplayName'>@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[0].DisplayName</span>
-                                    if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[0].IsInheritedFromParent)
+                                    <span data-is-inherited="@defaultAuthStrategyForCreate.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForCreate.DisplayName'>@defaultAuthStrategyForCreate.DisplayName</span>
+                                    if (defaultAuthStrategyForCreate.IsInheritedFromParent)
                                     {
                                         <span class="default-strategy inherited-strategy">(Default)</span>
                                     }
@@ -119,10 +132,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                 }
                             </td>
                             <td class="update-action-cell" data-existing-action='@Model.ResourceClaim.Update'>
-                                @if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[2] != null)
+                                @if (authStrategyOverridesForUpdate != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.AuthStrategyOverridesForCRUD[2].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[2].DisplayName'>@Model.ResourceClaim.AuthStrategyOverridesForCRUD[2].DisplayName</span>
-                                    if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[2].IsInheritedFromParent)
+                                    <span data-is-inherited="@authStrategyOverridesForUpdate.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForUpdate.DisplayName'>@authStrategyOverridesForUpdate.DisplayName</span>
+                                    if (authStrategyOverridesForUpdate.IsInheritedFromParent)
                                     {
                                         <span class="overridden-strategy inherited-override">(Overridden)</span>
                                     }
@@ -131,10 +144,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                         <span class="overridden-strategy">(Overridden)</span>
                                     }
                                 }
-                                else if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[2] != null)
+                                else if (defaultAuthStrategyForUpdate != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[2].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[2].DisplayName'>@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[2].DisplayName</span>
-                                    if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[2].IsInheritedFromParent)
+                                    <span data-is-inherited="@defaultAuthStrategyForUpdate.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForUpdate.DisplayName'>@defaultAuthStrategyForUpdate.DisplayName</span>
+                                    if (defaultAuthStrategyForUpdate.IsInheritedFromParent)
                                     {
                                         <span class="default-strategy inherited-strategy">(Default)</span>
                                     }
@@ -145,10 +158,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                 }
                             </td>
                             <td class="delete-action-cell" data-existing-action='@Model.ResourceClaim.Delete'>
-                                @if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[3] != null)
+                                @if (authStrategyOverridesForDelete != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.AuthStrategyOverridesForCRUD[3].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[3].DisplayName'>@Model.ResourceClaim.AuthStrategyOverridesForCRUD[3].DisplayName</span>
-                                    if (Model.ResourceClaim.AuthStrategyOverridesForCRUD[3].IsInheritedFromParent)
+                                    <span data-is-inherited="@authStrategyOverridesForDelete.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForDelete.DisplayName'>@authStrategyOverridesForDelete.DisplayName</span>
+                                    if (authStrategyOverridesForDelete.IsInheritedFromParent)
                                     {
                                         <span class="overridden-strategy inherited-override">(Overridden)</span>
                                     }
@@ -157,10 +170,10 @@ See the LICENSE and NOTICES files in the project root for more information.
                                         <span class="overridden-strategy">(Overridden)</span>
                                     }
                                 }
-                                else if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[3] != null)
+                                else if (defaultAuthStrategyForDelete != null)
                                 {
-                                    <span data-is-inherited="@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[3].IsInheritedFromParent" data-default-strategy='@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[3].DisplayName'>@Model.ResourceClaim.DefaultAuthStrategiesForCRUD[3].DisplayName</span>
-                                    if (Model.ResourceClaim.DefaultAuthStrategiesForCRUD[3].IsInheritedFromParent)
+                                    <span data-is-inherited="@defaultAuthStrategyForDelete.IsInheritedFromParent" data-default-strategy='@defaultAuthStrategyForDelete.DisplayName'>@defaultAuthStrategyForDelete.DisplayName</span>
+                                    if (defaultAuthStrategyForDelete.IsInheritedFromParent)
                                     {
                                         <span class="default-strategy inherited-strategy">(Default)</span>
                                     }

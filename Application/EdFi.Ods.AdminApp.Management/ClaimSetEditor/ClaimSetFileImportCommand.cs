@@ -1,10 +1,11 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
@@ -14,12 +15,17 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         private readonly AddClaimSetCommand _addClaimSetCommand;
         private readonly EditResourceOnClaimSetCommand _editResourceOnClaimSetCommand;
         private readonly GetResourceClaimsQuery _getResourceClaimsQuery;
+        private readonly OverrideDefaultAuthorizationStrategyCommand _overrideDefaultAuthorizationStrategyCommand;
 
-        public ClaimSetFileImportCommand(AddClaimSetCommand addClaimSetCommand, EditResourceOnClaimSetCommand editResourceOnClaimSetCommand, GetResourceClaimsQuery getResourceClaimsQuery)
+        public ClaimSetFileImportCommand(AddClaimSetCommand addClaimSetCommand,
+            EditResourceOnClaimSetCommand editResourceOnClaimSetCommand,
+            GetResourceClaimsQuery getResourceClaimsQuery,
+            OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand)
         {
             _addClaimSetCommand = addClaimSetCommand;
             _editResourceOnClaimSetCommand = editResourceOnClaimSetCommand;
             _getResourceClaimsQuery = getResourceClaimsQuery;
+            _overrideDefaultAuthorizationStrategyCommand = overrideDefaultAuthorizationStrategyCommand;
         }
 
         public void Execute(SharingModel model)
@@ -47,6 +53,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                             resource.Read = r.Read;
                             resource.Update = r.Update;
                             resource.Delete = r.Delete;
+                            resource.AuthStrategyOverridesForCRUD = r.AuthStrategyOverridesForCRUD;
                         }
                         return resource;
                     }).ToList();
@@ -60,6 +67,25 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     };
 
                     _editResourceOnClaimSetCommand.Execute(editResourceModel);
+
+                    if (resource.AuthStrategyOverridesForCRUD != null && resource.AuthStrategyOverridesForCRUD.Any())
+                    {
+                        var overrideAuthStrategyModel = new OverrideAuthorizationStrategyModel
+                        {
+                            ClaimSetId = claimSetId,
+                            ResourceClaimId = resource.Id,
+                            AuthorizationStrategyForCreate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Create()),
+                            AuthorizationStrategyForRead = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Read()),
+                            AuthorizationStrategyForUpdate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Update()),
+                            AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Delete())
+                        };
+                        _overrideDefaultAuthorizationStrategyCommand.Execute(overrideAuthStrategyModel);
+                    }
+                }
+
+                static int AuthStrategyOverrideForAction(AuthorizationStrategy authorizationStrategy)
+                {
+                    return authorizationStrategy != null ? authorizationStrategy.AuthStrategyId : 0;
                 }
             }
         }
@@ -87,5 +113,15 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
     {
         public int ClaimSetId { get; set; }
         public ResourceClaim ResourceClaim { get; set;  }
+    }
+
+    public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationStrategyModel
+    {
+        public int ClaimSetId { get; set; }
+        public int ResourceClaimId { get; set; }
+        public int AuthorizationStrategyForCreate { get; set; }
+        public int AuthorizationStrategyForRead { get; set; }
+        public int AuthorizationStrategyForUpdate { get; set; }
+        public int AuthorizationStrategyForDelete { get; set; }
     }
 }

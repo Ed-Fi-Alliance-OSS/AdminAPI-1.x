@@ -37,7 +37,7 @@ public class TokenEndpointBodyDescriptionFilter : IOperationFilter
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 { "client_id", new OpenApiSchema { Type = "string "} },
-                { "client_name", new OpenApiSchema { Type = "string "} },
+                { "client_secret", new OpenApiSchema { Type = "string "} },
                 { "grant_type", new OpenApiSchema { Type = "string "} },
             }
         }

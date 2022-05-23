@@ -32,10 +32,15 @@ public static class SecurityExtensions
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
 
-                if (!webHostEnvironment.IsDevelopment())
+                if (!webHostEnvironment.IsDevelopment()) //Keys below will override Ephemeral / Dev Keys
                 {
                     var encryptionKey = configuration.GetValue<string>("AppSettings:EncryptionKey");
                     var signingKey = configuration.GetValue<string>("Authentication:SigningKey");
+
+                    if (string.IsNullOrWhiteSpace(encryptionKey) || string.IsNullOrWhiteSpace(signingKey))
+                    {
+                        throw new Exception("Invalid Configuration: AppSettings:EncryptionKey and Authentication:SigningKey are required.");
+                    }
 
                     opt.AddEncryptionKey(new SymmetricSecurityKey(Convert.FromBase64String(encryptionKey)));
                     opt.AddSigningKey(new SymmetricSecurityKey(Convert.FromBase64String(signingKey)));

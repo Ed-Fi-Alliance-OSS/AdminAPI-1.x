@@ -11,11 +11,11 @@ public class VendorFeatures : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/vendors", GetVendors);
-        endpoints.MapGet("/vendors/{id}", GetVendor);
-        endpoints.MapPost("/vendors", AddVendor);
-        endpoints.MapPut("/vendors", UpdateVendor);
-        endpoints.MapDelete("/vendors/{id}", DeleteVendor);
+        endpoints.MapGet("/vendors", GetVendors).RequireAuthorization();
+        endpoints.MapGet("/vendors/{id}", GetVendor).RequireAuthorization();
+        endpoints.MapPost("/vendors", AddVendor).RequireAuthorization();
+        endpoints.MapPut("/vendors", UpdateVendor).RequireAuthorization();
+        endpoints.MapDelete("/vendors/{id}", DeleteVendor).RequireAuthorization();
     }
 
     internal Task<IResult> GetVendors(AdminAppDbContext dbContext)

@@ -8,4 +8,6 @@ namespace EdFi.Ods.Admin.Api.Features;
 public interface IFeature
 {
     void MapEndpoints(IEndpointRouteBuilder endpoints);
+
+    void DefineFeatureSpecificServices(IServiceCollection services);
 }

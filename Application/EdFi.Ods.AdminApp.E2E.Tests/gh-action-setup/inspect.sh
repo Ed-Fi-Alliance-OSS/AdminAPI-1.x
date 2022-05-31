@@ -12,4 +12,5 @@ else
     docker ps
     docker logs ed-fi-ods-adminapp --tail 50
     echo "--- Operation timed out. Review container status ---"
+    exit 1
 fi

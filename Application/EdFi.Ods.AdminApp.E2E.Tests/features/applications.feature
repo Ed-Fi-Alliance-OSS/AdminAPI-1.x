@@ -11,7 +11,7 @@ Feature: Applications
 
     #AA-868
     Scenario: API URL
-        And it's on the "Applications" page
+        Given it's on the "Applications" page
         And applications page has loaded
         When clicking API URL
         Then copied URL message appears
@@ -73,7 +73,7 @@ Feature: Applications
             And application appears on list
 
         #AA-1107
-        Scenario: Form validations
+        Scenario Outline: Form validations
             Given it's on the "Applications" page
             And applications page has loaded
             When adding new application

@@ -26,14 +26,21 @@ jobs:
       with:
         repository: Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker
         path: ods-docker
-    - name: Add cert
-      run: sudo cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/ssl ./ods-docker
+    - name: Copy files to Docker repo
+      run: |
+        cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/ssl ./ods-docker
+        cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/compose-aa-build.yml ./ods-docker/Compose/pgsql
+    - uses: nuget/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1 #v1.0.5
+    - name: Update Admin App Docker package versions
+      run: |
+        chmod +x ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/set-versions.sh
+        ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/set-versions.sh
     - name: Run ODS
-      run: docker-compose -f ./ods-docker/Compose/pgsql/compose-shared-instance-env.yml --env-file ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/.automation.env up -d
+      run: docker-compose -f ./ods-docker/Compose/pgsql/compose-aa-build.yml --env-file ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/.automation.env up -d
     - name: Verify ODS Health
       run: |
-        chmod +x ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/inspect.sh
-        ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/ct-setup/inspect.sh
+        chmod +x ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/inspect.sh
+        ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/inspect.sh
     - name: Setup node
       uses: actions/setup-node@56337c425554a6be30cdef71bf441f15be286854 # v3.1.1
       with:

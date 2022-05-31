@@ -45,7 +45,10 @@ export abstract class AdminAppPage {
 
     async navigate(): Promise<void> {
         if (!this.isOnPage) {
-            await this.page.goto(this.path(), { waitUntil: "networkidle" });
+            const navigationResult = await this.page.goto(this.path(), { waitUntil: "networkidle" });
+            if (!navigationResult?.ok()) {
+                throw `Unable to navigate to expected page ${this.path()}. Status: ${navigationResult?.status()}`;
+            }
         }
     }
 

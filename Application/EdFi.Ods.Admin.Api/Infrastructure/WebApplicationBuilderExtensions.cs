@@ -171,18 +171,7 @@ public static class WebApplicationBuilderExtensions
 
     public static void AddFeatureSpecificServices(this IServiceCollection services)
     {
-        var featureInterface = typeof(IFeature);
-        var featureImpls = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(p => featureInterface.IsAssignableFrom(p) && p.IsClass);
-
-        var features = new List<IFeature>();
-
-        foreach (var featureImpl in featureImpls)
-        {
-            if (Activator.CreateInstance(featureImpl) is IFeature feature)
-                features.Add(feature);
-        }
-        foreach (var routeBuilder in features)
+        foreach (var routeBuilder in Helpers.FeaturesHelper.GetFeatures())
         {
             routeBuilder.DefineFeatureSpecificServices(services);
         }

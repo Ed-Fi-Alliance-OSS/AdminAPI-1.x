@@ -11,8 +11,6 @@ namespace EdFi.Ods.Admin.Api.Features;
 
 public class ErrorHandler : IFeature
 {
-    public void DefineFeatureSpecificServices(IServiceCollection services) { }
-
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         endpoints.Map("/error", Handle);

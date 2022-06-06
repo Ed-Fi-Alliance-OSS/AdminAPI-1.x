@@ -7,8 +7,6 @@ namespace EdFi.Ods.Admin.Api.Features;
 
 public class ResponseSamplesFeature : IFeature
 {
-    public void DefineFeatureSpecificServices(IServiceCollection services) { }
-
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/samples/error", Error);

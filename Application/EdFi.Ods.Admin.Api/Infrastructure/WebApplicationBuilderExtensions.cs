@@ -168,12 +168,4 @@ public static class WebApplicationBuilderExtensions
                 sp => new SqlServerUsersContext(adminConnectionString));
         }
     }
-
-    public static void AddFeatureSpecificServices(this IServiceCollection services)
-    {
-        foreach (var routeBuilder in Helpers.FeaturesHelper.GetFeatures())
-        {
-            routeBuilder.DefineFeatureSpecificServices(services);
-        }
-    }
 }

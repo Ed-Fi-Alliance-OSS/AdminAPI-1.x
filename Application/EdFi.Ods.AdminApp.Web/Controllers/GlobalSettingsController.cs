@@ -22,6 +22,7 @@ using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace EdFi.Ods.AdminApp.Web.Controllers
 {
@@ -134,14 +135,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Delete Vendor")]
         public ActionResult DeleteVendor(DeleteVendorModel model)
         {
-            var vendor = _getVendorByIdQuery.Execute(model.VendorId);
-
-            if (vendor.IsSystemReservedVendor())
+            try
             {
-                return JsonError("This Vendor is required for proper system function and may not be deleted");
+                _deleteVendorCommand.Execute(model.VendorId);
             }
-
-            _deleteVendorCommand.Execute(model.VendorId);
+            catch(Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
             return RedirectToActionJson<GlobalSettingsController>(x => x.Vendors(), "Vendor removed successfully");
         }
 
@@ -156,19 +157,14 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Edit Vendor")]
         public ActionResult EditVendor(EditVendorModel model)
         {
-            var vendor = _getVendorByIdQuery.Execute(model.VendorId);
-
-            if (vendor == null)
+            try
             {
-                return JsonError("This vendor no longer exists.  It may have been recently deleted.");
+                _editVendorCommand.Execute(model);
             }
-
-            if (vendor.IsSystemReservedVendor())
+            catch (Exception ex)
             {
-                return JsonError("This vendor is required for proper system function and may not be modified.");
+                return JsonError(ex.Message);
             }
-
-            _editVendorCommand.Execute(model);
             return RedirectToActionJson<GlobalSettingsController>(x => x.Vendors(), "Vendor updated successfully");
         }
 

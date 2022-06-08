@@ -143,6 +143,6 @@
                 "AppSettings:EncryptionKey": "bEnFYNociET2R1Wua3DHzwfU5u/Fa47N5fw0PXD0OSI=",
                 "AppSettings:ProductRegistrationUrl": "https://localhost:5123/development-product-registration-sink"
             }
-        },
+        }
     }
 }

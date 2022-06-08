@@ -32,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             {
                 var command = new AddVendorCommand(usersContext);
 
-                id = command.Execute(newVendor.Object);
+                id = command.Execute(newVendor.Object).VendorId;
                 id.ShouldBeGreaterThan(0);
             });
 
@@ -66,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             {
                 var command = new AddVendorCommand(usersContext);
 
-                id = command.Execute(newVendor.Object);
+                id = command.Execute(newVendor.Object).VendorId;
                 id.ShouldBeGreaterThan(0);
             });
 

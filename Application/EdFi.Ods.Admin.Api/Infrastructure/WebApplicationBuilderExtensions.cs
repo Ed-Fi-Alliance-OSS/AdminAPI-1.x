@@ -1,19 +1,64 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
+using EdFi.Ods.AdminApp.Management;
+using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
 public static class WebApplicationBuilderExtensions
 {
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
+        var executingAssembly = Assembly.GetExecutingAssembly();
+        webApplicationBuilder.Services.AddAutoMapper(executingAssembly);
+        webApplicationBuilder.Services.AddScoped<InstanceContext>();
+
+        foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
+        {
+            if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
+            {
+                var concreteClass = type;
+
+                if (concreteClass == typeof(OdsApiFacade))
+                    continue; //IOdsApiFacade is never resolved. Instead, classes inject IOdsApiFacadeFactory.
+
+                if (concreteClass == typeof(OdsRestClient))
+                    continue; //IOdsRestClient is never resolved. Instead, classes inject IOdsRestClientFactory.
+
+                if (concreteClass == typeof(TokenRetriever))
+                    continue; //ITokenRetriever is never resolved. Instead, other dependencies construct TokenRetriever directly.
+
+                var interfaces = concreteClass.GetInterfaces().ToArray();
+
+                if (concreteClass.Namespace != null)
+                {
+                    if (concreteClass.Namespace.EndsWith("Database.Commands") || concreteClass.Namespace.EndsWith("Database.Queries"))
+                    {
+                        if (interfaces.Length == 1)
+                        {
+                            var serviceType = interfaces.Single();
+                            if (serviceType.FullName == $"{concreteClass.Namespace}.I{concreteClass.Name}")
+                                webApplicationBuilder.Services.AddTransient(serviceType, concreteClass);
+                        }
+                        else if (interfaces.Length == 0)
+                        {
+                            if (concreteClass.Name.EndsWith("Command") || concreteClass.Name.EndsWith("Query"))
+                            {
+                                webApplicationBuilder.Services.AddTransient(concreteClass);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -51,6 +96,12 @@ public static class WebApplicationBuilderExtensions
                     }
                 }
             );
+
+            opt.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Admin API Documentation", Version = "v1"
+            });
+            opt.DocumentFilter<OrderOperationsDocumentFilter>();
         });
 
         // Logging
@@ -58,7 +109,6 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Logging.AddLog4Net(loggingOptions);
 
         // Fluent validation
-        var executingAssembly = Assembly.GetExecutingAssembly();
         webApplicationBuilder.Services.AddFluentValidation(
             opt =>
             {

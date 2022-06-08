@@ -5,6 +5,7 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.ActionFilters;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
@@ -15,9 +16,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPut($"/{FeatureConstants.Vendors}" + "/{id}", Handle).RequireAuthorization()
-                .WithTags(FeatureConstants.Vendors)
-                .WithMetadata(new OperationOrderAttribute(4));
+            endpoints.MapPutWithDefaultOptions($"/{FeatureConstants.Vendors}" + "/{id}", Handle, FeatureConstants.Vendors);
         }
 
         public async Task<IResult> Handle(EditVendorCommand editVendorCommand, IMapper mapper,
@@ -30,6 +29,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Updated(model, "Vendor");
         }
 
+        [CustomSchemaName("EditVendor")]
         public class Request : IEditVendor
         {
             public int VendorId { get; set; }

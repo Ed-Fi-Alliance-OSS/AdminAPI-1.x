@@ -102,6 +102,10 @@ public static class WebApplicationBuilderExtensions
                 Title = "Admin API Documentation", Version = "v1"
             });
             opt.DocumentFilter<OrderOperationsDocumentFilter>();
+            opt.OperationFilter<OperationDescriptionFilter>();
+            //opt.SchemaFilter<AssignPropertyRequiredFilter>();
+            //opt.CustomSchemaIds(x => x.GetCustomAttributes<CustomSchemaNameAttribute>().SingleOrDefault()?.Name);
+            opt.EnableAnnotations();
         });
 
         // Logging

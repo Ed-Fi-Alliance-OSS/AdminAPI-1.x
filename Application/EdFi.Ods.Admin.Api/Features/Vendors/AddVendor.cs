@@ -28,16 +28,23 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/{FeatureConstants.Vendors}/{model.VendorId}");
         }
 
-        [CustomSchemaName("AddVendor")]
+        [DisplaySchemaName(FeatureConstants.AddVendorDisplayName)]
         public class Request : IAddVendorModel
         {
-            [SwaggerSchema(Description = "Company/ Vendor name")]
+            [SwaggerRequired]
+            [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]
             public string? Company { get; set; }
-            [SwaggerSchema(Description = "Namespace prefix for vendor")]
+
+            [SwaggerRequired]
+            [SwaggerSchema(Description = FeatureConstants.VendorNamespaceDescription, Nullable = false)]
             public string? NamespacePrefixes { get; set; }
-            [SwaggerSchema(Description = "Contact name")]
+
+            [SwaggerRequired]
+            [SwaggerSchema(Description = FeatureConstants.VendorContactDescription, Nullable = false)]
             public string? ContactName { get; set; }
-            [SwaggerSchema(Description = "Contact email address")]
+
+            [SwaggerRequired]
+            [SwaggerSchema(Description = FeatureConstants.VendorContactEmailDescription, Nullable = false)]
             public string? ContactEmailAddress { get; set; }
         }
 

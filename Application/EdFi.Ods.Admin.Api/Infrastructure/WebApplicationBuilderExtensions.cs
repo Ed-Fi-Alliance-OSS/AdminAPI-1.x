@@ -102,9 +102,14 @@ public static class WebApplicationBuilderExtensions
                 Title = "Admin API Documentation", Version = "v1"
             });
             opt.DocumentFilter<OrderOperationsDocumentFilter>();
+            opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.OperationFilter<OperationDescriptionFilter>();
-            //opt.SchemaFilter<AssignPropertyRequiredFilter>();
-            //opt.CustomSchemaIds(x => x.GetCustomAttributes<CustomSchemaNameAttribute>().SingleOrDefault()?.Name);
+            opt.SchemaFilter<SwaggerRequiredSchemaFilter>();
+            opt.CustomSchemaIds(x =>
+            {
+                var customSchemaName = x.GetCustomAttributes<DisplaySchemaNameAttribute>().SingleOrDefault();
+                return customSchemaName != null ? customSchemaName.Name : x.FullName;
+            });
             opt.EnableAnnotations();
         });
 

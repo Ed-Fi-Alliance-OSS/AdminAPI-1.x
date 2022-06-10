@@ -3,20 +3,17 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.Admin.Api.Features.Connect;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EdFi.Ods.Admin.Api.ActionFilters
 {
-    public class RemoveSchemaDocumentFilter : IDocumentFilter
+    public class AddRegisterSchemaDocumentFilter : IDocumentFilter
     {
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            var existingSchemas = swaggerDoc.Components.Schemas;
-            foreach (var schemaToRemove in existingSchemas.Where(x => x.Key.ToLower().Contains("iresult")))
-            {
-                context.SchemaRepository.Schemas.Remove(schemaToRemove.Key);
-            }
+            context.SchemaGenerator.GenerateSchema(typeof(RegisterService.Request), context.SchemaRepository);
         }
     }
 }

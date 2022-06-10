@@ -8,6 +8,7 @@ using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using FluentValidation;
 using FluentValidation.Results;
 using OpenIddict.Abstractions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.Admin.Api.Features.Connect;
 
@@ -76,8 +77,14 @@ public class RegisterService : IRegisterService
     [DisplaySchemaName("Register")]
     public class Request
     {
+        [SwaggerRequired]
+        [SwaggerSchema(Description = FeatureConstants.RegisterClientId, Nullable = false)]
         public string? ClientId { get; set; }
+        [SwaggerRequired]
+        [SwaggerSchema(Description = FeatureConstants.RegisterClientSecret, Nullable = false)]
         public string? ClientSecret { get; set; }
+        [SwaggerRequired]
+        [SwaggerSchema(Description = FeatureConstants.RegisterDisplayName, Nullable = false)]
         public string? DisplayName { get; set; }
     }
 }

@@ -103,6 +103,7 @@ public static class WebApplicationBuilderExtensions
             });
             opt.DocumentFilter<OrderOperationsDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
+            opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();
             opt.OperationFilter<OperationDescriptionFilter>();
             opt.SchemaFilter<SwaggerRequiredSchemaFilter>();
             opt.CustomSchemaIds(x =>

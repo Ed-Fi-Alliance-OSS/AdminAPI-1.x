@@ -15,5 +15,9 @@ namespace EdFi.Ods.Admin.Api.Features
         public const string VendorNamespaceDescription = "Namespace prefix for the vendor";
         public const string VendorContactDescription = "Vendor contact name";
         public const string VendorContactEmailDescription = "Vendor contact email id";
+
+        public const string RegisterClientId = "Client id";
+        public const string RegisterClientSecret = "Client secret";
+        public const string RegisterDisplayName = "Client display name";
     }
 }

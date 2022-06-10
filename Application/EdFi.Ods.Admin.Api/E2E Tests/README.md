@@ -33,7 +33,7 @@ You can also execute the entire collection to get the results automatically: [Ru
 [Newman](https://learning.postman.com/docs/running-collections/using-newman-cli/command-line-integration-with-newman/) is a CLI tool to execute Postman collections from the command line. To execute, install globally ```npm i newman -g``` and execute the following command:
 
 ```
-newman run '.\Admin API.postman_collection.json' -e '.\Admin API.postman_environment.json' -k
+newman run '.\Admin API E2E.postman_collection.json' -e '.\Admin API.postman_environment.json' -k
 ```
 
 -k flag is only required when running with local certificate to ignore SSL errors.

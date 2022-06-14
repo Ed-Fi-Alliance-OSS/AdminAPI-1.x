@@ -3,7 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.Admin.Api.ActionFilters;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 
 namespace EdFi.Ods.Admin.Api.Features.Vendors
@@ -12,9 +12,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapDelete($"/{FeatureConstants.Vendors}"+"/{id}", Handle).RequireAuthorization()
-                .WithTags(FeatureConstants.Vendors)
-                .WithMetadata(new OperationOrderAttribute(5));
+            endpoints.MapDeleteWithDefaultOptions($"/{FeatureConstants.Vendors}" + "/{id}", Handle, FeatureConstants.Vendors);
         }
 
         public Task<IResult> Handle(DeleteVendorCommand deleteVendorCommand, int id)

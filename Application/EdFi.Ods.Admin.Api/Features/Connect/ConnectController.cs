@@ -1,8 +1,9 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using FluentValidation;
 using Microsoft.AspNetCore;
@@ -26,8 +27,10 @@ public class ConnectController : Controller
 
     [HttpPost("/connect/register")]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
-    public Task<IResult> Register([FromForm] RegisterService.Request request) => _registerService.Handle(request);
+    [OperationDescription("Registers new client", "Registers new client")]
+    public async Task<ActionResult> Register(RegisterService.Request request) => new JsonResult(await _registerService.Handle(request));
 
+    [OperationDescription("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
     [HttpPost(SecurityConstants.TokenEndpointUri)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     public async Task<ActionResult> Token()

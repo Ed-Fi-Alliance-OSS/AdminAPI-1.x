@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.Admin.Api.ActionFilters;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 
@@ -14,12 +14,8 @@ public class ReadVendor : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet($"/{FeatureConstants.Vendors}", GetVendors).RequireAuthorization()
-            .WithTags(FeatureConstants.Vendors)
-            .WithMetadata(new OperationOrderAttribute(1));
-        endpoints.MapGet($"/{FeatureConstants.Vendors}"+"/{id}", GetVendor).RequireAuthorization()
-            .WithTags(FeatureConstants.Vendors)
-            .WithMetadata(new OperationOrderAttribute(2));
+        endpoints.MapGetWithDefaultOptions($"/{FeatureConstants.Vendors}", GetVendors, FeatureConstants.Vendors);
+        endpoints.MapGetByIdWithDefaultOptions($"/{FeatureConstants.Vendors}" + "/{id}", GetVendor, FeatureConstants.Vendors);
     }
 
     internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper)

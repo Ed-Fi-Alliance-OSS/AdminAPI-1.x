@@ -21,7 +21,6 @@ public class TokenEndpointBodyDescriptionFilter : IOperationFilter
         if (descriptor?.ControllerName != "Connect" || descriptor.ActionName != "Token")
             return;
 
-        operation.Description = (operation.Description ?? "") + "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.";
         operation.RequestBody ??= new OpenApiRequestBody();
         operation.RequestBody.Content = new Dictionary<string, OpenApiMediaType>
         {

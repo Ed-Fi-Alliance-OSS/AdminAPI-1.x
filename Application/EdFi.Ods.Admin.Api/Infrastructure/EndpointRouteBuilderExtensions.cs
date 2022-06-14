@@ -3,13 +3,13 @@ using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure
 {
-    public static class EndpointEndpointRouteBuilderExtensions
+    public static class EndpointRouteBuilderExtensions
     {
         internal static RouteHandlerBuilder MapGetWithDefaultOptions(this IEndpointRouteBuilder builder,
            string pattern, Delegate handler, string tag)
         {
             var routeHandler = builder.MapGet(pattern, handler);
-            SetDefaultOptions(routeHandler, 1, $"Retrieves all the {tag}.", tag);
+            SetDefaultOptions(routeHandler, 1, $"Retrieves all {tag}.", tag);
             return routeHandler;
         }
 

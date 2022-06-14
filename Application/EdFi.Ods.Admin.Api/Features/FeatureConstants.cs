@@ -12,7 +12,7 @@ namespace EdFi.Ods.Admin.Api.Features
         public const string EditVendorDisplayName = "EditVendor";
         public const string VedorIdDescription = "Vendor/ company id";
         public const string VendorNameDescription = "Vendor/ company name";
-        public const string VendorNamespaceDescription = "Namespace prefix for the vendor";
+        public const string VendorNamespaceDescription = "Namespace prefix for the vendor. Multiple namespace prefixes can be provided as comma separated list if required.";
         public const string VendorContactDescription = "Vendor contact name";
         public const string VendorContactEmailDescription = "Vendor contact email id";
 

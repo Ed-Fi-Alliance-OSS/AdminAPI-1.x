@@ -18,11 +18,11 @@ namespace EdFi.Ods.Admin.Api.ActionFilters
             // Responses
             var getOkResponse = new OpenApiResponse() { Description = "The requested resource was successfully retrieved." };
             var unAuthorizedResponse = new OpenApiResponse() { Description = "Unauthorized. The request requires authentication" };
-            var unhandledErrorResponse = new OpenApiResponse() { Description = "An unhandled error occurred on the server.See the response body for details." };
+            var unhandledErrorResponse = new OpenApiResponse() { Description = "An unhandled error occurred on the server. See the response body for details." };
             var deleteSuccessResponse = new OpenApiResponse() { Description = "The resource was successfully deleted." };
             var resourceNotFoundResponse = new OpenApiResponse() { Description = "The resource could not be found." };
             var postCreatedResponse = new OpenApiResponse() { Description = "The resource was created." };
-            var badRequestResponse = new OpenApiResponse() { Description = "Bad Request.The request was invalid and cannot be completed." };
+            var badRequestResponse = new OpenApiResponse() { Description = "Bad Request. The request was invalid and cannot be completed." };
             var putUpdatedResponse = new OpenApiResponse() { Description = "The resource was updated." };
 
             foreach (var path in swaggerDoc.Paths)

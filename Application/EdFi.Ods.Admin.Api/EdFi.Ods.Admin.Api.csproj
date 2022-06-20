@@ -4,7 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>true</IsPackable>
+    <NoWarn>NU5100, NU5124</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="EdFi.Ods.Admin.Api.nuspec" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />

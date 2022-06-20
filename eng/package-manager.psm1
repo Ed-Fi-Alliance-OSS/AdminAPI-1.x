@@ -85,23 +85,11 @@ function Push-Package {
         $NuGetFeed,
 
         [string]
-        $NuGetApiKey,
-
-        [string]
-        $ToolsPath = "$PSScriptRoot/.tools"
+        $NuGetApiKey
     )
 
-    $nugetExe = Install-NuGetCli -ToolsPath $ToolsPath
-
-    $arguments = @(
-        "push",
-        "$PackageFile",
-        "$NuGetApiKey",
-        "-source", "$NuGetFeed"
-    )
-
-    Write-Host "Executing: nuget.exe $arguments" -ForegroundColor Magenta
-    &$nugetExe @arguments
+    Write-Host "Pushing $PackageFile to $NuGetFeed"
+    dotnet nuget push $PackageFile --api-key $NuGetApiKey --source $NuGetFeed
 }
 
 function Get-RestApiPackage {

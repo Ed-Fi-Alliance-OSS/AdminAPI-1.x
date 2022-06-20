@@ -122,7 +122,7 @@ public static class WebApplicationBuilderExtensions
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();
             opt.OperationFilter<OperationDescriptionFilter>();
-            opt.SchemaFilter<SwaggerRequiredSchemaFilter>();
+            opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
             opt.CustomSchemaIds(x =>
             {
                 var customSchemaName = x.GetCustomAttributes<DisplaySchemaNameAttribute>().SingleOrDefault();

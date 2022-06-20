@@ -51,22 +51,19 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
             [SwaggerSchema(Description = FeatureConstants.ApplicationIdDescription, Nullable = false)]
             public int ApplicationId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
             public string? ApplicationName { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
             public int VendorId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
             public string? ClaimSetName { get; set; }
 
+            [SwaggerOptional]
             [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
             public int? ProfileId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
             public IEnumerable<int>? EducationOrganizationIds { get; set; }
         }

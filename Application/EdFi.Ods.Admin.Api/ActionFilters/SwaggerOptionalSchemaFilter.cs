@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace EdFi.Ods.Admin.Api.ActionFilters
 {
-    public class SwaggerRequiredSchemaFilter : ISchemaFilter
+    public class SwaggerOptionalSchemaFilter : ISchemaFilter
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
@@ -17,9 +17,9 @@ namespace EdFi.Ods.Admin.Api.ActionFilters
 
             foreach (var property in properties)
             {
-                var attribute = property.GetCustomAttribute(typeof(SwaggerRequiredAttribute));
+                var attribute = property.GetCustomAttribute(typeof(SwaggerOptionalAttribute));
 
-                if (attribute != null)
+                if (attribute == null)
                 {
                     var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
 

@@ -38,19 +38,15 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
             public int VendorId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]
             public string? Company { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorNamespaceDescription, Nullable = false)]
             public string? NamespacePrefixes { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorContactDescription, Nullable = false)]
             public string? ContactName { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorContactEmailDescription, Nullable = false)]
             public string? ContactEmailAddress { get; set; }
         }

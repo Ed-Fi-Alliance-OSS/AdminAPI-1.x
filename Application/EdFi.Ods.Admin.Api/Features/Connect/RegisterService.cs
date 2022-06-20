@@ -78,13 +78,10 @@ public class RegisterService : IRegisterService
     [DisplaySchemaName("Register")]
     public class Request
     {
-        [SwaggerRequired]
         [SwaggerSchema(Description = FeatureConstants.RegisterClientId, Nullable = false)]
         public string? ClientId { get; set; }
-        [SwaggerRequired]
         [SwaggerSchema(Description = FeatureConstants.RegisterClientSecret, Nullable = false)]
         public string? ClientSecret { get; set; }
-        [SwaggerRequired]
         [SwaggerSchema(Description = FeatureConstants.RegisterDisplayName, Nullable = false)]
         public string? DisplayName { get; set; }
     }

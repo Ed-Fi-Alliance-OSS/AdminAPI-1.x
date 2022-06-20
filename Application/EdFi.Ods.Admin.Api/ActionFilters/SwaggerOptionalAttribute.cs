@@ -6,7 +6,7 @@
 namespace EdFi.Ods.Admin.Api.ActionFilters
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class SwaggerRequiredAttribute : Attribute
+    public class SwaggerOptionalAttribute : Attribute
     {
     }
 }

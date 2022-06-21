@@ -67,7 +67,7 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "UnitTest", "IntegrationTest", "Package", "PackageApi", "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
+    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "Package", "PackageApi", "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
     $Command = "Build",
 
     # Assembly and package version number for AdminApp Web. The current package number is
@@ -351,13 +351,16 @@ function PushPackage {
 }
 
 function Invoke-Build {
-    Write-Host "Building Version $Version" -ForegroundColor Cyan
-
     Invoke-Step { Clean }
     Invoke-Step { Restore }
+    Invoke-Step { Compile }
+}
+
+function Invoke-Publish {
+    Write-Host "Building Version $Version" -ForegroundColor Cyan
+
     Invoke-Step { SetAdminAppAssemblyInfo }
     Invoke-Step { SetAdminApiAssemblyInfo }
-    Invoke-Step { Compile }
     Invoke-Step { PublishAdminApp }
     Invoke-Step { PublishAdminApi }
 }
@@ -412,7 +415,7 @@ function Invoke-BuildApiPackage {
     Invoke-Step { BuildApiPackage }
 }
 
-function Invoke-BuildDatabasePackage{
+function Invoke-BuildDatabasePackage {
     Invoke-Step { BuildDatabaseScriptPackage }
 }
 
@@ -473,6 +476,10 @@ Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }
+        BuildAndPublish {
+            Invoke-Build
+            Invoke-Publish
+        }
         Run { Invoke-Run }
         UnitTest { Invoke-UnitTests }
         IntegrationTest { Invoke-IntegrationTests }

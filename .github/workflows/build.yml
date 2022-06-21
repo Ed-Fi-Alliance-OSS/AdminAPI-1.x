@@ -11,14 +11,14 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  BUILD_VERSION: ${{ secrets.SEMANTIC_VERSION }}
-  GA_MEASUREMENT_ID: ${{ secrets.GOOGLE_ANALYTICS_MEASUREMENT_ID}}
-
 jobs:
-  build:
+  build-test:
 
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: pwsh
 
     steps:
     - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
@@ -26,15 +26,8 @@ jobs:
       uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-      working-directory: ./Application
     - name: Build
-      run: ./build.ps1 -Command Build -Configuration Release -Version ${{ env.BUILD_VERSION }} -BuildCounter ${{ github.run_number }}
-      shell: pwsh
-    - name: Populate Google Analytics ID
-      run: .\build.ps1 -Command PopulateGoogleAnalyticsAppSettings -GoogleAnalyticsMeasurementId ${{env.GA_MEASUREMENT_ID}}
-      shell: pwsh
+      run: ./build.ps1 -Command Build -Configuration Release
     - name: Unit Tests
+      if: success()
       run: ./build.ps1 -Command UnitTest -Configuration Release
-      shell: pwsh

@@ -20,7 +20,12 @@ env:
   RESULTS_FILE: 'playwright-results'
 
 jobs:
+
   report:
+    defaults:
+      run:
+        shell: pwsh
+
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -34,15 +39,12 @@ jobs:
         reporter: java-junit
     - name: Extract Artifact
       run: Expand-Archive "${{ env.RESULTS_FILE }}.zip"
-      shell: pwsh
     - name: Send report to Zephyr
-      if: contains(github.ref, 'main')
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
-        Write-Host "Sending test results for branch ${{github.ref}}"
         $parameters = @{
             cycleName = '${{ env.CYCLE_NAME }}'
             taskName = '${{ env.TASK_NAME }}'
             folderName = '${{ env.FOLDER_NAME }}'
         }
         .\eng\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminAppVersion '${{ env.ADMIN_APP_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/${{ env.RESULTS_FILE }}.xml' -ConfigParams $parameters
-      shell: pwsh

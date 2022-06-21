@@ -21,4 +21,4 @@ sed -i "s/ENV ADMINAPP_DATABASE_VERSION=\"[0-9].[0-9].[0-9]\"/ENV ADMINAPP_DATAB
 
 sed -i "s/core\/aspnet@sha256:[a-z0-9]\+/aspnet:6.0-alpine/g" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile
 
-sed -i "s/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.6 jq=~1.6 icu=~67.1 curl=~7.79/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql13-client=~13.6 jq=~1.6 icu=~69.1 curl=~7.80/g" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile
+sed -i "s/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.6 jq=~1.6 icu=~67.1 curl=~7.79/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql13-client=~13.7 jq=~1.6 icu=~71.1 curl=~7.83/g" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile

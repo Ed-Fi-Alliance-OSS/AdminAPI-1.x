@@ -1,23 +1,23 @@
 {
   "dependencies": {
-    "@cucumber/cucumber": "^8.2.1",
-    "chromedriver": "^101.0.0",
+    "@cucumber/cucumber": "^8.3.0",
+    "chromedriver": "^102.0.0",
     "dotenv": "^16.0.1",
-    "playwright": "^1.22.1"
+    "playwright": "^1.22.2"
   },
   "description": "Playwright end-to-end test automation for Admin App. Using Commonjs, Cucumber and Assert.",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
-    "eslint": "^8.15.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cucumber": "^2.0.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.6.2",
+    "prettier": "^2.7.1",
     "pretty-quick": "^3.1.2",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.4"
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
   },
   "license": "MIT",
   "name": "playwright-admin-app-tests",

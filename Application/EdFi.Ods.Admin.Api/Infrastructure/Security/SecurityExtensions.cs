@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -17,6 +17,9 @@ public static class SecurityExtensions
         IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
         //OpenIddict Server
+        var signingKeyValue = configuration.GetValue<string>("Authentication:SigningKey");
+        var signingKey = string.IsNullOrEmpty(signingKeyValue) ? null : new SymmetricSecurityKey(Convert.FromBase64String(signingKeyValue));
+
         services.AddOpenIddict()
             .AddCore(opt =>
             {
@@ -31,19 +34,15 @@ public static class SecurityExtensions
 
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
+                opt.DisableAccessTokenEncryption();
 
                 if (!webHostEnvironment.IsDevelopment()) //Keys below will override Ephemeral / Dev Keys
                 {
-                    var encryptionKey = configuration.GetValue<string>("AppSettings:EncryptionKey");
-                    var signingKey = configuration.GetValue<string>("Authentication:SigningKey");
-
-                    if (string.IsNullOrWhiteSpace(encryptionKey) || string.IsNullOrWhiteSpace(signingKey))
+                    if (signingKey == null)
                     {
-                        throw new Exception("Invalid Configuration: AppSettings:EncryptionKey and Authentication:SigningKey are required.");
+                        throw new Exception("Invalid Configuration: Authentication:SigningKey is required.");
                     }
-
-                    opt.AddEncryptionKey(new SymmetricSecurityKey(Convert.FromBase64String(encryptionKey)));
-                    opt.AddSigningKey(new SymmetricSecurityKey(Convert.FromBase64String(signingKey)));
+                    opt.AddSigningKey(signingKey);
                 }
 
                 opt.RegisterScopes(SecurityConstants.ApiFullAccessScope);
@@ -53,6 +52,7 @@ public static class SecurityExtensions
             {
                 options.UseLocalServer();
                 options.UseAspNetCore();
+                options.Configure(options => options.TokenValidationParameters.IssuerSigningKey = signingKey);
             });
 
         //Application Security
@@ -68,6 +68,7 @@ public static class SecurityExtensions
             {
                 ValidateAudience = false,
                 ValidIssuer = issuer,
+                IssuerSigningKey = signingKey
             };
         });
         services.AddAuthorization(opt =>

@@ -12,7 +12,7 @@ Feature: First Time Setup
 
     #AA-1429
     @FTS
-    Scenario: First Time Setup Successful
+    Scenario: Setup Successful
         Given it's on the "First Time Setup" page
         When clicking Continue
         Then first time setup is successful

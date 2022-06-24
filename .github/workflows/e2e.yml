@@ -66,12 +66,14 @@ jobs:
       with:
         name: playwright-results
         path: main/Application/EdFi.Ods.AdminApp.E2E.Tests/reports/playwright-results.xml
+        retention-days: 10
     - name: Upload execution traces
       if: failure()
       uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
       with:
         name: playwright-execution-traces
         path: main/Application/EdFi.Ods.AdminApp.E2E.Tests/traces
+        retention-days: 10
     - name: Clean ODS
       if: always()
       run: ./shared-instance-env-clean.ps1

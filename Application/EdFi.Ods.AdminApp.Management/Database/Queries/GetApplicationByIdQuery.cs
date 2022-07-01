@@ -6,6 +6,7 @@
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
@@ -20,7 +21,13 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
 
         public Application Execute(int applicationId)
         {
-            return _context.Applications.Single(app => app.ApplicationId == applicationId);
+            var application = _context.Applications.SingleOrDefault(app => app.ApplicationId == applicationId);
+            if (application == null)
+            {
+                throw new NotFoundException<int>("application", applicationId);
+            }
+
+            return application;
         }
     }
 }

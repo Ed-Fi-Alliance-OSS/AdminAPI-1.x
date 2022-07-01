@@ -178,15 +178,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Delete Application")]
         public ActionResult Delete(DeleteApplicationModel model)
         {
-            var application = _getApplicationByIdQuery.Execute(model.ApplicationId);
-
-            if (application.IsSystemReservedApplication())
+            try
             {
-                return JsonError("This Application is required for proper system function and may not be deleted");
+                _deleteApplicationCommand.Execute(model.ApplicationId);
+                return JsonSuccess("Application deleted successfully");
             }
-
-            _deleteApplicationCommand.Execute(model.ApplicationId);
-            return JsonSuccess("Application deleted successfully");
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
         }
 
         public async Task<ActionResult> Edit(int applicationId)
@@ -231,15 +231,15 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Edit Application")]
         public ActionResult Edit(EditApplicationModel model)
         {
-            var application = _getApplicationByIdQuery.Execute(model.ApplicationId);
-
-            if (application.IsSystemReservedApplication())
+            try
             {
-                return JsonError("This Application is required for proper system function and may not be modified");
+                _editApplicationCommand.Execute(model);
+                return JsonSuccess("Application updated successfully");
             }
-
-            _editApplicationCommand.Execute(model);
-            return JsonSuccess("Application updated successfully");
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
         }
 
         [HttpPost]

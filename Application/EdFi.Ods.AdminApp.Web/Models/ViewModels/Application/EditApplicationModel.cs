@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApp.Management.Database.Commands;
 using FluentValidation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using EdFi.Ods.AdminApp.Web.Helpers;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 {
@@ -62,8 +62,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
         }
 
         private bool BeWithinApplicationNameMaxLength<T>(EditApplicationModel model, string applicationName, ValidationContext<T> context)
-        {            
-            var extraCharactersInName = applicationName.Length - ApplicationExtensions.MaximumApplicationNameLength;
+        {
+            var extraCharactersInName = applicationName.Length - ValidationConstants.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)
             {
                 return true;

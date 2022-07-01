@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
@@ -21,7 +22,16 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
 
         public List<Application> Execute(int vendorid)
         {
-            return _context.Applications.Where(a => a.Vendor != null && a.Vendor.VendorId == vendorid).ToList();
+            var applications = _context.Applications
+                .Where(a => a.Vendor != null && a.Vendor.VendorId == vendorid)
+                .ToList();
+
+            if (!applications.Any() && _context.Vendors.Find(vendorid) == null)
+            {
+                throw new NotFoundException<int>("vendor", vendorid);
+            }
+
+            return applications;
         }
     }
 }

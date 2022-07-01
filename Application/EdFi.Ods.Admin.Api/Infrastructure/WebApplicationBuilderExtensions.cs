@@ -101,7 +101,7 @@ public static class WebApplicationBuilderExtensions
             {
                 Title = "Admin API Documentation", Version = "v1"
             });
-            opt.DocumentFilter<OperationResponsesAndOrderDocumentFilter>();
+            opt.DocumentFilter<OperationResponsesDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();
             opt.OperationFilter<OperationDescriptionFilter>();
@@ -112,6 +112,13 @@ public static class WebApplicationBuilderExtensions
                 return customSchemaName != null ? customSchemaName.Name : x.FullName;
             });
             opt.EnableAnnotations();
+            opt.OrderActionsBy(x =>
+            {
+                return x.HttpMethod != null ? x.HttpMethod.Equals("GET", StringComparison.InvariantCultureIgnoreCase) ? "0"
+                    : x.HttpMethod.Equals("POST", StringComparison.InvariantCultureIgnoreCase) ? "1"
+                    : x.HttpMethod.Equals("PUT", StringComparison.InvariantCultureIgnoreCase) ? "2"
+                    : x.HttpMethod.Equals("DELETE", StringComparison.InvariantCultureIgnoreCase) ? "3" : "4" : "5";
+            });
         });
 
         // Logging

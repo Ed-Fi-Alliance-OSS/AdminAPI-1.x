@@ -9,7 +9,7 @@ using FluentValidation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Web.Helpers;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
 {
@@ -29,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
     {
         public string VendorName { get; set; }
         public List<string> ClaimSetNames { get; set; }
-        public List<ProfileModel> Profiles { get; set; } 
+        public List<ProfileModel> Profiles { get; set; }
         public List<LocalEducationAgency> LocalEducationAgencies { get; set; }
         public List<PostSecondaryInstitution> PostSecondaryInstitutions { get; set; }
         public List<School> Schools { get; set; }
@@ -73,8 +73,8 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.Application
         }
 
         private bool BeWithinApplicationNameMaxLength<T>(AddApplicationModel model, string applicationName, ValidationContext<T> context)
-        {            
-            var extraCharactersInName = applicationName.Length - ApplicationExtensions.MaximumApplicationNameLength;
+        {
+            var extraCharactersInName = applicationName.Length - ValidationConstants.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)
             {
                 return true;

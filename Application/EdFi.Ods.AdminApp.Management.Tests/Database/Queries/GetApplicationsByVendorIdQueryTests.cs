@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
@@ -88,6 +89,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
                 var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
                 var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
                 results.Single().Profiles.Single().ProfileId.ShouldBe(profileId);
+            });
+        }
+
+        [Test]
+        public void ShouldThrowWhenVendorIdIsInvalid()
+        {
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
+                Should.Throw<NotFoundException<int>>(() =>
+                {
+                    getApplicationsByVendorIdQuery.Execute(int.MaxValue);
+                });
             });
         }
     }

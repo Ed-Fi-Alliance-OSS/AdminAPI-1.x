@@ -1,11 +1,14 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Commands
 {
@@ -30,6 +33,15 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 .Include(a => a.ApiClients.Select(c => c.ClientAccessTokens))
                 .Include(a => a.ApplicationEducationOrganizations)
                 .SingleOrDefault(a => a.ApplicationId == id);
+
+            if (application == null)
+            {
+                throw new NotFoundException<int>("application", id);
+            }
+            if (application != null && application.Vendor.IsSystemReservedVendor())
+            {
+                throw new Exception("This Application is required for proper system function and may not be modified");
+            }
 
             if (application == null)
             {

@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "EdFi.Ods.Admin.Api": {
+    "EdFi.Ods.Admin.Api (Dev)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

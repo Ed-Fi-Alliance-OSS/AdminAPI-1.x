@@ -2148,15 +2148,6 @@
 	"variable": [
 		{
 			"key": "TOKEN",
-			"value": ""
-		},
-		{
-			"key": "CreatedVendorId",
-			"value": "",
-			"disabled": true
-		},
-		{
-			"key": "CreatedVendor",
 			"value": "",
 			"disabled": true
 		}

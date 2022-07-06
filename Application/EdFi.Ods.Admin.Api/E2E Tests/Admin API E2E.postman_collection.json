@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "380187be-88da-4506-ad0e-3b2461b3fdc3",
+		"_postman_id": "d1e11b5e-30eb-46a6-9be1-9b32fb6982c6",
 		"name": "Admin API E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15734759"
+		"_exporter_id": "20720204"
 	},
 	"item": [
 		{
@@ -324,15 +324,6 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{API_URL}}/vendors",
 									"host": [
@@ -1010,6 +1001,115 @@
 							"body": "{\n    \"status\": 200,\n    \"title\": \"Vendor deleted successfully\"\n}"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"  url: `${pm.variables.get(\"API_URL\")}/vendors`,\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"      \"Content-Type\": \"application/json\",\r",
+									"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw:JSON.stringify({\r",
+									"      \"company\": \"Application Company\",\r",
+									"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"      \"contactName\": \"Application User\",\r",
+									"      \"contactEmailAddress\": \"application@example.com\"\r",
+									"    }), \r",
+									"  }\r",
+									"},  \r",
+									"function (err, response) {\r",
+									"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+									"  const json = response.json();\r",
+									"  if(!json.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', json); }\r",
+									"  else {\r",
+									"    pm.collectionVariables.set(\"ApplicationVendorId\", json.result.vendorId);\r",
+									"  }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(201);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response includes location in header\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    pm.response.to.be.header(\"Location\", `/applications/${result.applicationId}`);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes application key and secret\", function () {\r",
+									"    pm.expect(result).to.have.property(\"applicationId\");\r",
+									"    pm.expect(result).to.have.property(\"key\");\r",
+									"    pm.expect(result).to.have.property(\"secret\");\r",
+									"});\r",
+									"\r",
+									"if(result.applicationId) {\r",
+									"    pm.collectionVariables.set(\"CreatedApplicationId\", result.applicationId);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

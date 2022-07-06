@@ -108,7 +108,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             });
 
             var updatedApiClient = Transaction(usersContext => usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId));
-            
+
             result.Key.ShouldBe(orignalKey);
             result.Secret.ShouldNotBe(originalSecret);
             result.Secret.ShouldNotBe("SIMULATED HASH OF " + originalSecret);

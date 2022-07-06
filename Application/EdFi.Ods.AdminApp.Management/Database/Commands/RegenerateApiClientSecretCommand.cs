@@ -28,7 +28,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             }
 
             var apiClient = application.ApiClients.First();
-    
+
             apiClient.GenerateSecret();
             apiClient.SecretIsHashed = false;
             _context.SaveChanges();

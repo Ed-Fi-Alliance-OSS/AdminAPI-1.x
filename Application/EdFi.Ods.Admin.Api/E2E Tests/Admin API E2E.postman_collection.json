@@ -16,9 +16,177 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"client\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"registered\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "ClientId",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "ClientSecret",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "DisplayName",
+									"value": "Postman Test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register - Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"ClientId\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ClientSecret\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"DisplayName\"].length).to.equal(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "ClientId",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "ClientSecret",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "DisplayName",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register - Already Exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.ClientId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ClientId[0]).to.contain(\"already exists\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -61,189 +229,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Client already exists",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "ClientId",
-											"value": "{{ClientId}}",
-											"type": "text"
-										},
-										{
-											"key": "ClientSecret",
-											"value": "{{ClientSecret}}",
-											"type": "text"
-										},
-										{
-											"key": "DisplayName",
-											"value": "{{UserName}}",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{API_URL}}/connect/register",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"connect",
-										"register"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:32:33 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- ClientId: ClientId test-client already exists Severity: Error\r\n   at EdFi.Ods.Admin.Api.Features.Connect.RegisterService.Handle(Request request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Connect\\RegisterService.cs:line 39\r\n   at lambda_method15(Closure , Object )\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 68\r\nPostman-Token: abff4861-de39-4ba9-b979-1e513b04d2a3\r\n"
-						},
-						{
-							"name": "Register successful",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "ClientId",
-											"value": "{{ClientId}}",
-											"type": "text"
-										},
-										{
-											"key": "ClientSecret",
-											"value": "{{ClientSecret}}",
-											"type": "text"
-										},
-										{
-											"key": "DisplayName",
-											"value": "{{UserName}}",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{API_URL}}/connect/register",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"connect",
-										"register"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:32:57 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"value\": {\n        \"status\": 200,\n        \"title\": \"Registered client test-client successfully.\"\n    },\n    \"statusCode\": 200,\n    \"contentType\": null\n}"
-						},
-						{
-							"name": "Missing required property",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "ClientId",
-											"value": "{{ClientId}}",
-											"type": "text"
-										},
-										{
-											"key": "ClientSecret",
-											"value": "{{ClientSecret}}",
-											"type": "text"
-										},
-										{
-											"key": "DisplayName",
-											"value": "{{UserName}}",
-											"type": "text",
-											"disabled": true
-										}
-									]
-								},
-								"url": {
-									"raw": "{{API_URL}}/connect/register",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"connect",
-										"register"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:33:30 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- DisplayName: 'Display Name' must not be empty. Severity: Error\r\n   at ValidatorExtensions.GuardAsync[TRequest](IValidator`1 validator, TRequest request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Infrastructure\\ValidatorExtensions.cs:line 15\r\n   at EdFi.Ods.Admin.Api.Features.Connect.RegisterService.Handle(Request request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Connect\\RegisterService.cs:line 35\r\n   at lambda_method15(Closure , Object )\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 46\r\nPostman-Token: dcf3237d-fed7-44e6-b5be-b7cbcf7dd46d\r\n"
-						}
-					]
+					"response": []
 				}
 			],
 			"auth": {
@@ -2148,8 +2134,7 @@
 	"variable": [
 		{
 			"key": "TOKEN",
-			"value": "",
-			"disabled": true
+			"value": ""
 		}
 	]
 }

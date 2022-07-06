@@ -1362,6 +1362,162 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"updated\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes updated application\", function () {\r",
+									"    pm.expect(result.applicationName).to.equal(\"Updated Application Name\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi ODS Admin App\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(1234);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result does not include application key and secret\", function () {\r",
+									"    pm.expect(result).to.not.have.property(\"key\");\r",
+									"    pm.expect(result).to.not.have.property(\"secret\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request updated Application/Vendor relationship\", function () {\r",
+									"    pm.sendRequest({\r",
+									"      url: `${pm.variables.get(\"API_URL\")}/vendors/${pm.collectionVariables.get(\"ApplicationVendorId\")}/applications`,\r",
+									"      method: 'GET',\r",
+									"      header: {\r",
+									"          \"Content-Type\": \"application/json\",\r",
+									"          \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"      },\r",
+									"      body: {\r",
+									"        mode: 'raw',\r",
+									"        raw:JSON.stringify({\r",
+									"          \"company\": \"Application Company\",\r",
+									"          \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"          \"contactName\": \"Application User\",\r",
+									"          \"contactEmailAddress\": \"application@example.com\"\r",
+									"        }), \r",
+									"      }\r",
+									"  },  \r",
+									"  function (err, response) {\r",
+									"    if(err) { console.log(\"Error in test request:\", err); }\r",
+									"    if(response.code != 200) { console.log('Error in  test request. Response is:', response); }\r",
+									"    const results = response.json().result;\r",
+									"    pm.expect(results.length).to.equal(0);\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Credential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"updated\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes application key and secret\", function () {\r",
+									"    pm.expect(result).to.have.property(\"applicationId\");\r",
+									"    pm.expect(result).to.have.property(\"key\");\r",
+									"    pm.expect(result).to.have.property(\"secret\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}/reset-credential",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}",
+								"reset-credential"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

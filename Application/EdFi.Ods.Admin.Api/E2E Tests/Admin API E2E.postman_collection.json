@@ -1110,6 +1110,258 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const results = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes applications\", function () {\r",
+									"    pm.expect(results.length).to.be.greaterThan(0);\r",
+									"\r",
+									"    const indexOfApplication = results.map(\r",
+									"        function(application) { return application.applicationId; }\r",
+									"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"\r",
+									"    const result = results[indexOfApplication];\r",
+									"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response results do not include key or secret\", function () {\r",
+									"    results.forEach(function(result, i) {\r",
+									"        pm.expect(result).to.not.have.property(\"key\");\r",
+									"        pm.expect(result).to.not.have.property(\"secret\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result matches application\", function () {\r",
+									"    const applicationId = pm.collectionVariables.get(\"CreatedApplicationId\");\r",
+									"    \r",
+									"    pm.expect(result.applicationId).to.equal(applicationId);\r",
+									"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result does not include key or secret\", function () {  \r",
+									"    pm.expect(result).to.not.have.property(\"key\");\r",
+									"    pm.expect(result).to.not.have.property(\"secret\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications by Vendor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const results = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes applications\", function () {\r",
+									"    pm.expect(results.length).to.be.greaterThan(0);\r",
+									"\r",
+									"    const indexOfApplication = results.map(\r",
+									"        function(application) { return application.applicationId; }\r",
+									"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"\r",
+									"    const result = results[indexOfApplication];\r",
+									"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result is filtered by vendor\", function () {\r",
+									"    const resultApplicationIds = results.map(\r",
+									"        function(application) { return application.applicationId; }\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(resultApplicationIds).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"    pm.expect(resultApplicationIds).to.not.contain(pm.collectionVariables.get(\"OtherApplicationId\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response results do not include key or secret\", function () {\r",
+									"    results.forEach(function(result, i) {\r",
+									"        pm.expect(result).to.not.have.property(\"key\");\r",
+									"        pm.expect(result).to.not.have.property(\"secret\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"  url: `${pm.variables.get(\"API_URL\")}/vendors`,\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"      \"Content-Type\": \"application/json\",\r",
+									"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw:JSON.stringify({\r",
+									"      \"company\": \"Other Company\",\r",
+									"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"      \"contactName\": \"Other Application User\",\r",
+									"      \"contactEmailAddress\": \"otherapplication@example.com\"\r",
+									"    }), \r",
+									"  }\r",
+									"},\r",
+									"function (vendorErr, vendorResponse) {\r",
+									"  if(vendorErr) { console.log(\"Error in Pre-request:\", vendorErr); }\r",
+									"  const vendorJson = vendorResponse.json();\r",
+									"  if(!vendorJson.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', vendorJson); }\r",
+									"  pm.collectionVariables.set(\"OtherApplicationVendorId\", vendorJson.result.vendorId);\r",
+									"\r",
+									"  pm.sendRequest({\r",
+									"    url: `${pm.variables.get(\"API_URL\")}/applications`,\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        \"Content-Type\": \"application/json\",\r",
+									"        \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"    },\r",
+									"    body: {\r",
+									"      mode: 'raw',\r",
+									"      raw:JSON.stringify({\r",
+									"        \"applicationName\": \"Other Vendor Application\",\r",
+									"        \"vendorId\": pm.collectionVariables.get(\"OtherApplicationVendorId\"),\r",
+									"        \"claimSetName\": \"Ed-Fi Sandbox\",\r",
+									"        \"profileId\": null,\r",
+									"        \"educationOrganizationIds\": [ 255901 ]\r",
+									"      }),\r",
+									"    }\r",
+									"  },  \r",
+									"  function (appErr, appResonse) {\r",
+									"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
+									"    const appJson = appResonse.json();\r",
+									"    if(!appJson.result.applicationId) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }\r",
+									"    else {\r",
+									"      pm.collectionVariables.set(\"OtherApplicationId\", appJson.result.applicationId);\r",
+									"    }\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/vendors/{{ApplicationVendorId}}/applications",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors",
+								"{{ApplicationVendorId}}",
+								"applications"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -1169,6 +1421,22 @@
 	"variable": [
 		{
 			"key": "TOKEN",
+			"value": ""
+		},
+		{
+			"key": "ApplicationVendorId",
+			"value": ""
+		},
+		{
+			"key": "CreatedApplicationId",
+			"value": ""
+		},
+		{
+			"key": "OtherApplicationVendorId",
+			"value": ""
+		},
+		{
+			"key": "OtherApplicationId",
 			"value": ""
 		}
 	]

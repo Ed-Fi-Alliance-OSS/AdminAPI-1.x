@@ -1112,6 +1112,209 @@
 					"response": []
 				},
 				{
+					"name": "Applications - Invalid",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"ApplicationName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ClaimSetName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"EducationOrganizationIds\"].length).to.equal(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Vendor",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.VendorId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.VendorId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const errors = pm.response.json().errors;\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.ProfileId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ProfileId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Applications",
 					"event": [
 						{
@@ -1447,6 +1650,209 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"ApplicationName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ClaimSetName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"EducationOrganizationIds\"].length).to.equal(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Vendor",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.VendorId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.VendorId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const errors = pm.response.json().errors;\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.ProfileId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ProfileId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"

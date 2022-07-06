@@ -30,6 +30,7 @@
         "ASPNETCORE_ENVIRONMENT": "Production",
         "AUTHENTICATION__ISSUERURL": "https://localhost:7214",
         "AUTHENTICATION__SIGNINGKEY": "dGhlKndlYnNpdGVfSVNf8J+Glw==",
+        "AUTHENTICATION__ALLOWREGISTRATION": "true",
         "ENABLESWAGGER": "true"
       }
     },

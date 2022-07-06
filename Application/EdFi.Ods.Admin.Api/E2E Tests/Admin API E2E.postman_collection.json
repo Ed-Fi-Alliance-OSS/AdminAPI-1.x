@@ -41,6 +41,8 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
+									"pm.collectionVariables.set(\"RegisteredClientId\", pm.variables.replaceIn('{{$guid}}'));\r",
+									"pm.collectionVariables.set(\"RegisteredClientSecret\", pm.variables.replaceIn('{{$guid}}'));\r",
 									""
 								],
 								"type": "text/javascript"
@@ -58,12 +60,12 @@
 							"urlencoded": [
 								{
 									"key": "ClientId",
-									"value": "{{$guid}}",
+									"value": "{{RegisteredClientId}}",
 									"type": "text"
 								},
 								{
 									"key": "ClientSecret",
-									"value": "{{$guid}}",
+									"value": "{{RegisteredClientSecret}}",
 									"type": "text"
 								},
 								{
@@ -226,6 +228,264 @@
 							"path": [
 								"connect",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes token\", function () {\r",
+									"    pm.expect(response).to.have.property(\"access_token\");\r",
+									"    pm.expect(response).to.have.property(\"token_type\");\r",
+									"    pm.expect(response).to.have.property(\"expires_in\");\r",
+									"\r",
+									"    pm.expect(response[\"token_type\"]).to.equal(\"Bearer\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{RegisteredClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Invalid Grant Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"grant_type\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{RegisteredClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Incorrect Secret",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"credentials\");\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"invalid\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"RegisteredClientId\");\r",
+									"pm.collectionVariables.unset(\"RegisteredClientSecret\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
 							]
 						}
 					},

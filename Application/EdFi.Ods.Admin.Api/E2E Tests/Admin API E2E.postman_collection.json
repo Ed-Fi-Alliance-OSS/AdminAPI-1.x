@@ -1565,6 +1565,215 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Applications - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Credential - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}/reset-credential",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}",
+								"reset-credential"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"ApplicationVendorId\");\r",
+									"pm.collectionVariables.unset(\"CreatedApplicationId\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -1624,22 +1833,6 @@
 	"variable": [
 		{
 			"key": "TOKEN",
-			"value": ""
-		},
-		{
-			"key": "ApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "CreatedApplicationId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationId",
 			"value": ""
 		}
 	]

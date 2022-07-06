@@ -1518,6 +1518,53 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"OtherApplicationVendorId\");\r",
+									"pm.collectionVariables.unset(\"OtherApplicationId\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

@@ -15,7 +15,7 @@ import { VendorsPage } from "./vendorsPage";
 import { ApplicationsPage } from "./applicationsPage";
 
 export class ModelResolver {
-    aaPages: Array<AdminAppPage> = [];
+    private aaPages: Array<AdminAppPage> = [];
 
     public get landingPage(): LandingPage {
         let model = this.getModel<LandingPage>(LandingPage.name);

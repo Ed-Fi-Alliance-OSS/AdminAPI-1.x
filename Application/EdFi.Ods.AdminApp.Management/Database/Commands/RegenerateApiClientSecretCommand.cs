@@ -21,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
         public RegenerateApiClientSecretResult Execute(int applicationId)
         {
-            var application = _context.Applications.Single(a => a.ApplicationId == applicationId);
+            var application = _context.Applications.SingleOrDefault(a => a.ApplicationId == applicationId);
             if(application == null)
             {
                 throw new NotFoundException<int>("application", applicationId);

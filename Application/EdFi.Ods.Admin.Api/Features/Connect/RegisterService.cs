@@ -14,7 +14,7 @@ namespace EdFi.Ods.Admin.Api.Features.Connect;
 
 public interface IRegisterService
 {
-    Task<IResult> Handle(RegisterService.Request request);
+    Task<string> Handle(RegisterService.Request request);
 }
 
 public class RegisterService : IRegisterService
@@ -30,10 +30,11 @@ public class RegisterService : IRegisterService
         _applicationManager = applicationManager;
     }
 
-    public async Task<IResult> Handle(Request request)
+    public async Task<string> Handle(Request request)
     {
         if(!await RegistrationIsEnabledOrNecessary())
-            return AdminApiError.Unexpected("Application registration is disabled");
+            throw new Exception("Application registration is disabled");
+
         await _validator.GuardAsync(request);
 
         var existingApp = await _applicationManager.FindByClientIdAsync(request.ClientId!);
@@ -54,7 +55,7 @@ public class RegisterService : IRegisterService
         };
 
         await _applicationManager.CreateAsync(application);
-        return AdminApiResponse.Ok($"Registered client {request.ClientId} successfully.");
+        return $"Registered client {request.ClientId} successfully.";
     }
 
     private async Task<bool> RegistrationIsEnabledOrNecessary()

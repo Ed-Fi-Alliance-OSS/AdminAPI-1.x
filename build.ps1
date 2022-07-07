@@ -306,7 +306,7 @@ function GetAdminApiPackageVersion {
 }
 
 function BuildDatabasePackage {
-    $project = "EdFi.Ods.Admin.Web"
+    $project = "EdFi.Ods.AdminApp.Web"
     $mainPath = "$solutionRoot/$project"
     $projectPath = "$mainPath/$project.csproj"
     $nugetSpecPath = "$mainPath/publish/EdFi.Ods.AdminApp.Database.nuspec"
@@ -416,7 +416,7 @@ function Invoke-BuildApiPackage {
 }
 
 function Invoke-BuildDatabasePackage {
-    Invoke-Step { BuildDatabaseScriptPackage }
+    Invoke-Step { BuildDatabasePackage }
 }
 
 function Invoke-PushPackage {

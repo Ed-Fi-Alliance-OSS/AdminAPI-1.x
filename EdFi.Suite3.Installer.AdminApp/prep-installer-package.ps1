@@ -18,18 +18,25 @@ param (
 $ErrorActionPreference = "Stop"
 
 Push-Location $PackageDirectory
-
-Import-Module -Force "$PSScriptRoot/nuget-helper.psm1"
-
-# Download App Common
-$parameters = @{
-    PackageName = "EdFi.Installer.AppCommon"
-    PackageVersion = $AppCommonVersion
-    ToolsPath = "C:/temp/tools"
-    PackageSource = $PackageSource
+if(-not(Test-Path -Path $Downloads )){
+        mkdir $Downloads
 }
-$appCommonDirectory = Get-NugetPackage @parameters
 
+$PackageName = "EdFi.Installer.AppCommon"
+$PackageVersion = "2.0.0"
+
+$parameters = @(
+    "install", $PackageName,
+    "-source", $NuGetFeed,
+    "-outputDirectory", $Downloads
+    "-version", $PackageVersion
+)
+
+Write-Host "Downloading AppCommon"
+Write-Host -ForegroundColor Magenta "Executing nuget: $parameters"
+nuget $parameters
+
+$appCommonDirectory = Resolve-Path $Downloads/$PackageName.$PackageVersion* | Select-Object -Last 1
 
 # Move AppCommon's modules to a local AppCommon directory
 @(
@@ -42,7 +49,7 @@ $appCommonDirectory = Get-NugetPackage @parameters
         Recurse = $true
         Force = $true
         Path = "$appCommonDirectory/$_"
-        Destination = "$PackageDirectory/AppCommon/$_"
+        Destination = "$PSScriptRoot/AppCommon/$_"
     }
     Copy-Item @parameters
 }

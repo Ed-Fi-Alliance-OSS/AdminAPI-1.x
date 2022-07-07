@@ -17,7 +17,7 @@
     <file src="uninstall.ps1" />
     <file src="global.json" />
     <file src="Install-EdFiOdsAdminApp.psm1" />
-    <file src="AppCommon/**" />
+    <file src="AppCommon/**" exclude="AppCommon/Utility/*.*" />
     <file src="../LICENSE" />
     <file src="../NOTICES.md" />
     <file src="../eng/key-management.psm1" />

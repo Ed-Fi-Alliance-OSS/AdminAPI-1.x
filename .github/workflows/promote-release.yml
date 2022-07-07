@@ -41,5 +41,5 @@ jobs:
           View        = "${{ github.event.inputs.view-type }}"
         }
         $arguments.Password = (ConvertTo-SecureString -String "${{ secrets.ARTIFACTS_API_KEY }}" -AsPlainText -Force)
-        $arguments.Packages = @('EdFi.Suite3.ODS.AdminApp.Database', 'EdFi.Suite3.ODS.AdminApp.Web', 'EdFi.Suite3.ODS.Admin.Api')
+        $arguments.Packages = @('EdFi.Suite3.ODS.AdminApp.Database', 'EdFi.Suite3.ODS.AdminApp.Web', 'EdFi.Suite3.ODS.Admin.Api', 'EdFi.Suite3.Installer.AdminApp')
         eng\promote-packages.ps1 @arguments

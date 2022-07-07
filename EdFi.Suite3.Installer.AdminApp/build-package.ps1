@@ -12,9 +12,6 @@ param (
     [string]
     [Parameter(Mandatory=$true)]
     $BuildCounter,
-    
-    [switch]
-    $Publish,
 
     [string]
     $NuGetFeed,
@@ -24,22 +21,25 @@ param (
 )
 
 $ErrorActionPreference = "Stop"
+$OutputDirectory = Resolve-Path $PSScriptRoot
+$PackageDefinitionFile = Resolve-Path "$PSScriptRoot/EdFi.Suite3.Installer.AdminApp.nuspec"
+$Downloads = "$PSScriptRoot/downloads"
+$Version = "$SemanticVersion.$BuildCounter"
 
 Invoke-Expression "$PSScriptRoot/prep-installer-package.ps1 $PSScriptRoot"
 
-$verbose = $PSCmdlet.MyInvocation.BoundParameters["Verbose"]
+function Build-Package {
 
-$appCommonUtilityDirectory = "$PSScriptRoot/AppCommon/Utility"
+    $parameters = @(
+        "pack", $PackageDefinitionFile,
+        "-Version", $Version,
+        "-OutputDirectory", $OutputDirectory,
+        "-Verbosity", "detailed"
+    )
 
-Import-Module "$appCommonUtilityDirectory/create-package.psm1" -Force
-
-$parameters = @{
-    PackageDefinitionFile = Resolve-Path "$PSScriptRoot/EdFi.Suite3.Installer.AdminApp.nuspec"
-    Version = "$SemanticVersion.$BuildCounter"
-    OutputDirectory = Resolve-Path $PSScriptRoot
-    Publish = $Publish
-    Source = $NuGetFeed
-    ApiKey = $NuGetApiKey
-    ToolsPath = "C:/temp/tools"
+    Write-Host @parameters -ForegroundColor Magenta
+    nuget @parameters
 }
-Invoke-CreatePackage @parameters -Verbose:$verbose
+
+Write-Host "Building package"
+Build-Package

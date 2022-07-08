@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "EdFi.Ods.Admin.Api": {
+    "EdFi.Ods.Admin.Api (Dev)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
@@ -18,6 +18,20 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "AUTHENTICATION__ISSUERURL": "https://localhost:7214"
+      }
+    },
+    "EdFi.Ods.Admin.Api (Prod)": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7214;http://localhost:5214",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "AUTHENTICATION__ISSUERURL": "https://localhost:7214",
+        "AUTHENTICATION__SIGNINGKEY": "dGhlKndlYnNpdGVfSVNf8J+Glw==",
+        "AUTHENTICATION__ALLOWREGISTRATION": "true",
+        "ENABLESWAGGER": "true"
       }
     },
     "IIS Express": {

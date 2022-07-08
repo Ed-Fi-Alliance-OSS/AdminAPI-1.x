@@ -28,7 +28,11 @@ public class ConnectController : Controller
     [HttpPost("/connect/register")]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [OperationDescription("Registers new client", "Registers new client")]
-    public async Task<ActionResult> Register(RegisterService.Request request) => new JsonResult(await _registerService.Handle(request));
+    public async Task<IActionResult> Register(RegisterService.Request request)
+    {
+        var message = await _registerService.Handle(request);
+        return Ok(new { Title = message, Status = 200 });
+    }
 
     [OperationDescription("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
     [HttpPost(SecurityConstants.TokenEndpointUri)]

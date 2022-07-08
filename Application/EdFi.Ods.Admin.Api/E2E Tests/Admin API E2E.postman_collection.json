@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "380187be-88da-4506-ad0e-3b2461b3fdc3",
+		"_postman_id": "d1e11b5e-30eb-46a6-9be1-9b32fb6982c6",
 		"name": "Admin API E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15734759"
+		"_exporter_id": "20720204"
 	},
 	"item": [
 		{
@@ -16,9 +16,179 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"client\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"registered\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"RegisteredClientId\", pm.variables.replaceIn('{{$guid}}'));\r",
+									"pm.collectionVariables.set(\"RegisteredClientSecret\", pm.variables.replaceIn('{{$guid}}'));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "ClientId",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "ClientSecret",
+									"value": "{{RegisteredClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "DisplayName",
+									"value": "Postman Test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register - Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"ClientId\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ClientSecret\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"DisplayName\"].length).to.equal(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "ClientId",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "ClientSecret",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "DisplayName",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register - Already Exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.ClientId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ClientId[0]).to.contain(\"already exists\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -61,189 +231,265 @@
 							]
 						}
 					},
-					"response": [
+					"response": []
+				},
+				{
+					"name": "Token",
+					"event": [
 						{
-							"name": "Client already exists",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "ClientId",
-											"value": "{{ClientId}}",
-											"type": "text"
-										},
-										{
-											"key": "ClientSecret",
-											"value": "{{ClientSecret}}",
-											"type": "text"
-										},
-										{
-											"key": "DisplayName",
-											"value": "{{UserName}}",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{API_URL}}/connect/register",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"connect",
-										"register"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:32:33 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- ClientId: ClientId test-client already exists Severity: Error\r\n   at EdFi.Ods.Admin.Api.Features.Connect.RegisterService.Handle(Request request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Connect\\RegisterService.cs:line 39\r\n   at lambda_method15(Closure , Object )\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 68\r\nPostman-Token: abff4861-de39-4ba9-b979-1e513b04d2a3\r\n"
-						},
-						{
-							"name": "Register successful",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "ClientId",
-											"value": "{{ClientId}}",
-											"type": "text"
-										},
-										{
-											"key": "ClientSecret",
-											"value": "{{ClientSecret}}",
-											"type": "text"
-										},
-										{
-											"key": "DisplayName",
-											"value": "{{UserName}}",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{API_URL}}/connect/register",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"connect",
-										"register"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:32:57 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"value\": {\n        \"status\": 200,\n        \"title\": \"Registered client test-client successfully.\"\n    },\n    \"statusCode\": 200,\n    \"contentType\": null\n}"
-						},
-						{
-							"name": "Missing required property",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "ClientId",
-											"value": "{{ClientId}}",
-											"type": "text"
-										},
-										{
-											"key": "ClientSecret",
-											"value": "{{ClientSecret}}",
-											"type": "text"
-										},
-										{
-											"key": "DisplayName",
-											"value": "{{UserName}}",
-											"type": "text",
-											"disabled": true
-										}
-									]
-								},
-								"url": {
-									"raw": "{{API_URL}}/connect/register",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"connect",
-										"register"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:33:30 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- DisplayName: 'Display Name' must not be empty. Severity: Error\r\n   at ValidatorExtensions.GuardAsync[TRequest](IValidator`1 validator, TRequest request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Infrastructure\\ValidatorExtensions.cs:line 15\r\n   at EdFi.Ods.Admin.Api.Features.Connect.RegisterService.Handle(Request request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Connect\\RegisterService.cs:line 35\r\n   at lambda_method15(Closure , Object )\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 46\r\nPostman-Token: dcf3237d-fed7-44e6-b5be-b7cbcf7dd46d\r\n"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes token\", function () {\r",
+									"    pm.expect(response).to.have.property(\"access_token\");\r",
+									"    pm.expect(response).to.have.property(\"token_type\");\r",
+									"    pm.expect(response).to.have.property(\"expires_in\");\r",
+									"\r",
+									"    pm.expect(response[\"token_type\"]).to.equal(\"Bearer\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{RegisteredClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Invalid Grant Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"grant_type\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{RegisteredClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Incorrect Secret",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"credentials\");\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"invalid\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"RegisteredClientId\");\r",
+									"pm.collectionVariables.unset(\"RegisteredClientSecret\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"auth": {
@@ -280,112 +526,38 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"response must contain vendors\", function () {\r",
-									"    const vendors = pm.response.json().result;\r",
-									"    pm.expect(vendors.length).to.be.gte(0);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/vendors",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"vendors"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Get all vendors",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 00:22:51 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"result\": [\n        {\n            \"vendorId\": 3,\n            \"company\": \"Test Company\",\n            \"namespacePrefixes\": \"uri://ed-fi.org\",\n            \"contactName\": \"Test User\",\n            \"contactEmailAddress\": \"test@test-ed-fi.org\"\n        },\n        {\n            \"vendorId\": 4,\n            \"company\": \"Test Company\",\n            \"namespacePrefixes\": \"uri://ed-fi.org\",\n            \"contactName\": \"Test User\",\n            \"contactEmailAddress\": \"test@test-ed-fi.org\"\n        }\n    ],\n    \"status\": 200,\n    \"title\": \"Request successful\"\n}"
-						}
-					]
-				},
-				{
-					"name": "Vendors",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Vendor is created\", function () {\r",
+									"pm.test(\"Status code is Created\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"const json = pm.response.json();\r",
-									"const result = json.result;\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(201);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"vendor\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response includes location in header\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    pm.response.to.be.header(\"Location\", `/vendors/${result.vendorId}`);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes vendor info\", function () {\r",
+									"    pm.expect(result.company).to.equal(\"Test Company\");\r",
+									"    pm.expect(result.namespacePrefixes).to.equal(\"uri://ed-fi.org\");\r",
+									"    pm.expect(result.contactName).to.equal(\"Test User\");\r",
+									"    pm.expect(result.contactEmailAddress).to.equal(\"test@test-ed-fi.org\");\r",
+									"});\r",
 									"\r",
 									"if(result.vendorId) {\r",
-									"    pm.collectionVariables.set(\"VendorId\", result.vendorId);\r",
-									"    pm.collectionVariables.set(\"InitialVendor\", result);\r",
+									"    pm.collectionVariables.set(\"CreatedVendorId\", result.vendorId);\r",
 									"}"
 								],
 								"type": "text/javascript"
@@ -416,59 +588,7 @@
 					},
 					"response": [
 						{
-							"name": "Add a vendor",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"company\": {{CompanyName}},\r\n    \"namespacePrefixes\": \"uri://ed-fi.org\",\r\n    \"contactName\": {{ContactName}},\r\n    \"contactEmailAddress\": {{ContactEmail}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 02 Jun 2022 23:12:16 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Location",
-									"value": "/Vendors/1"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"result\": {\n        \"vendorId\": 1,\n        \"company\": \"Test Company\",\n        \"namespacePrefixes\": \"uri://ed-fi.org\",\n        \"contactName\": \"Test User\",\n        \"contactEmailAddress\": \"test@test-ed-fi.org\"\n    },\n    \"status\": 201,\n    \"title\": \"Vendor created successfully\"\n}"
-						},
-						{
-							"name": "Add a vendor with multiple namespaces",
+							"name": "Vendor with multiple namespaces",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
@@ -518,71 +638,163 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"result\": {\n        \"vendorId\": 2,\n        \"company\": \"Test Company\",\n        \"namespacePrefixes\": \"uri://ed-fi.org,uri://academicbenchmarks.com\",\n        \"contactName\": \"Test User\",\n        \"contactEmailAddress\": \"test@test-ed-fi.org\"\n    },\n    \"status\": 201,\n    \"title\": \"Vendor created successfully\"\n}"
-						},
-						{
-							"name": "Missing required property",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"company\": {{CompanyName}},\r\n    \"namespacePrefixes\": {{NamespacePrefix}},\r\n    \"contactEmailAddress\": {{ContactEmail}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/vendors",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 06 Jun 2022 23:19:06 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- ContactName: 'Contact Name' must not be empty. Severity: Error\r\n   at ValidatorExtensions.GuardAsync[TRequest](IValidator`1 validator, TRequest request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Infrastructure\\ValidatorExtensions.cs:line 15\r\n   at EdFi.Ods.Admin.Api.Features.Vendors.VendorFeatures.AddVendor(AddVendorCommand addVendorCommand, IMapper mapper, AddVendorModelValidator validator, AddVendorModel vendor) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Vendors\\VendorFeatures.cs:line 54\r\n   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)\r\n   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass46_3.<<HandleRequestBodyAndCompileRequestDelegate>b__2>d.MoveNext()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationMiddlewareResultHandler.HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nAuthorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ik5IQzRNNDFRS0paTzVITzJNQkI1SEVBWVhPT1hVSVVCREdGOVotVF8iLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiJ0ZXN0LWNsaWVudCIsIm5hbWUiOiJUZXN0Q2xpZW50Iiwic2NvcGUiOiJlZGZpX2FkbWluX2FwaS9mdWxsX2FjY2VzcyIsIm9pX3Byc3QiOiJ0ZXN0LWNsaWVudCIsImNsaWVudF9pZCI6InRlc3QtY2xpZW50Iiwib2lfdGtuX2lkIjoiMTQzIiwiZXhwIjoxNjU0NTYxMTQ3LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MjE0LyIsImlhdCI6MTY1NDU1NzU0N30.HWIw7zSW0EK9ayHnszDzWsbZIBmffsh2KZaXbhte0l67SCySbG-bD8QKPsgcYwiP5-TnWZoYqcjStYPLed5bISbnMyuQf8iWVth7QDvTRfQosZilzIIR1Pv0GD8vziPKruhKGYy8phZwpREpZIcI_KzN_ipzbKn-k0pOjVHfZaEWddYZsx8ZxiKcvA2gP17dYI_fNsIMaSA-H0ttHi3klXgx2Zvt_HmD0lGJjoYuvryVMInVmiLYaI1kRJ8IJ_ZEPTmlcLO6FiRo3K760VNe8ihXPFv6JPQ-Fkx1S_1khFdVfnDwaulHbW04roQoN2yjstAjbxxAzQJUUIR_1CJQ2A\r\nContent-Type: application/json\r\nContent-Length: 137\r\nPostman-Token: 6391ae0c-58f8-4f33-ac40-b7529d9ac20d\r\n"
 						}
 					]
 				},
 				{
-					"name": "Vendor",
+					"name": "Vendors - Invalid",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"Company\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ContactName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ContactEmailAddress\"].length).to.equal(2);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"company\": \"\",\r\n    \"namespacePrefixes\": \"\",\r\n    \"contactName\": \"\",\r\n    \"contactEmailAddress\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/vendors",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"id is present in response\", function () {\r",
-									"    pm.expect(pm.response.id).not.eq(undefined);\r",
-									"});"
+									"const response = pm.response.json();\r",
+									"const results = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes vendors\", function () {\r",
+									"    pm.expect(results.length).to.be.greaterThan(0);\r",
+									"\r",
+									"    const indexOfVendor = results.map(\r",
+									"        function(vendor) { return vendor.vendorId; }\r",
+									"    ).indexOf(pm.collectionVariables.get(\"CreatedVendorId\"));\r",
+									"\r",
+									"    const result = results[indexOfVendor];\r",
+									"    pm.expect(result.company).to.equal(\"Test Company\");\r",
+									"    pm.expect(result.namespacePrefixes).to.equal(\"uri://ed-fi.org\");\r",
+									"    pm.expect(result.contactName).to.equal(\"Test User\");\r",
+									"    pm.expect(result.contactEmailAddress).to.equal(\"test@test-ed-fi.org\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/vendors",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendors by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result matches vendor\", function () {\r",
+									"    const vendorId = pm.collectionVariables.get(\"CreatedVendorId\");\r",
+									"    \r",
+									"    pm.expect(result.vendorId).to.equal(vendorId);\r",
+									"    pm.expect(result.company).to.equal(\"Test Company\");\r",
+									"    pm.expect(result.namespacePrefixes).to.equal(\"uri://ed-fi.org\");\r",
+									"    pm.expect(result.contactName).to.equal(\"Test User\");\r",
+									"    pm.expect(result.contactEmailAddress).to.equal(\"test@test-ed-fi.org\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -592,123 +804,48 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{API_URL}}/vendors/{{VendorId}}",
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
 								"vendors",
-								"{{VendorId}}"
+								"{{CreatedVendorId}}"
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Vendor found",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{Vendor}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{Vendor}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 06 Jun 2022 21:56:13 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"result\": {\n        \"vendorId\": 18,\n        \"company\": \"Test Company\",\n        \"namespacePrefixes\": \"uri://ed-fi.org\",\n        \"contactName\": \"Test User\",\n        \"contactEmailAddress\": \"test@test-ed-fi.org\"\n    },\n    \"status\": 200,\n    \"title\": \"Request successful\"\n}"
-						},
-						{
-							"name": "Vendor not found",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{VendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{VendorId}}"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 06 Jun 2022 21:48:58 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "EdFi.Ods.AdminApp.Management.ErrorHandling.NotFoundException`1[System.Int32]: Not found: This vendor no longer exists.It may have been recently deleted. with ID -1\r\n   at EdFi.Ods.Admin.Api.Features.Vendors.VendorFeatures.GetVendor(IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, Int32 id) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Vendors\\VendorFeatures.cs:line 45\r\n   at lambda_method7(Closure , Object , HttpContext )\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationMiddlewareResultHandler.HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nAuthorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ik5IQzRNNDFRS0paTzVITzJNQkI1SEVBWVhPT1hVSVVCREdGOVotVF8iLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiJ0ZXN0LWNsaWVudCIsIm5hbWUiOiJUZXN0Q2xpZW50Iiwic2NvcGUiOiJlZGZpX2FkbWluX2FwaS9mdWxsX2FjY2VzcyIsIm9pX3Byc3QiOiJ0ZXN0LWNsaWVudCIsImNsaWVudF9pZCI6InRlc3QtY2xpZW50Iiwib2lfdGtuX2lkIjoiNjgiLCJleHAiOjE2NTQ1NTU3MzksImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyMTQvIiwiaWF0IjoxNjU0NTUyMTM5fQ.GwMY90_M7cOVQPU2_R9hLgSM9paRczYe7TuqDW0c4-UXpZcTXqYHc44cG-7Y8ECur2rDvsuKMfXYBPlUUUAxTmmp1NVSOffRxXi-ShLJbAtvciz8n6oED9AEejMe-RvxoaVmQupGVpBbAQEQE26JgY1MUF9JddczR6egmWWdOq6SbUCdp4tJEjA1wHQ54QRu2Bn9hD2DgqiS11gpOa-RbV5LD2oG5d8Ffu22WsU3vPLiM7zm5d1br2-vHaFYp8zwC0GZFRn4gGfLHsyRKVXfOdXbqd6dy1hhkeEWV1O32nqpQedEsO4XyUhplmSrelJtjZsxCD9S-7WQ6LPJuuN7ow\r\nPostman-Token: 6f975f11-853f-467f-9a12-0c3462883330\r\n"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Vendor",
+					"name": "Vendors",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Vendor is updated\", function () {\r",
-									"    const json = pm.response.json();\r",
-									"    const result = json.result;\r",
-									"    const initial = pm.collectionVariables.get(\"InitialVendor\");\r",
-									"    \r",
-									"    if(!initial) {\r",
-									"        throw new Error(\"Initial Vendor not found. This should be executed after the POST request\");\r",
-									"    }\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
 									"\r",
-									"    pm.expect(result.company).not.to.eq(initial.company);\r",
-									"    \r",
-									"    pm.collectionVariables.unset(\"InitialVendor\");\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
 									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"vendor\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"updated\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes updated vendor\", function () {\r",
+									"    pm.expect(result.company).to.equal(\"Updated Test Company\");\r",
+									"    pm.expect(result.namespacePrefixes).to.equal(\"uri://academicbenchmarks.com\");\r",
+									"    pm.expect(result.contactName).to.equal(\"Updated User\");\r",
+									"    pm.expect(result.contactEmailAddress).to.equal(\"updated@example.com\");\r",
 									"});\r",
 									""
 								],
@@ -730,7 +867,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"company\": \"Updated Test Company\",\r\n    \"contactName\": \"Test User\",\r\n    \"contactEmailAddress\": \"test@test-ed-fi.org\"\r\n}",
+							"raw": "{\r\n    \"company\": \"Updated Test Company\",\r\n    \"namespacePrefixes\": \"uri://academicbenchmarks.com\",\r\n    \"contactName\": \"Updated User\",\r\n    \"contactEmailAddress\": \"updated@example.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -738,177 +875,109 @@
 							}
 						},
 						"url": {
-							"raw": "{{API_URL}}/vendors/{{VendorId}}",
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
 								"vendors",
-								"{{VendorId}}"
+								"{{CreatedVendorId}}"
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Missing required property",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"company\": {{CompanyName}},\r\n    \"namespacePrefixes\": {{NamespacePrefix}},\r\n    \"contactEmailAddress\": {{ContactEmail}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{VendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{VendorId}}"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 06 Jun 2022 23:17:47 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- ContactName: 'Contact Name' must not be empty. Severity: Error\r\n   at ValidatorExtensions.GuardAsync[TRequest](IValidator`1 validator, TRequest request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Infrastructure\\ValidatorExtensions.cs:line 15\r\n   at EdFi.Ods.Admin.Api.Features.Vendors.VendorFeatures.UpdateVendor(EditVendorCommand editVendorCommand, IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, EditVendorModelValidator validator, EditVendorModel vendorModel) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Vendors\\VendorFeatures.cs:line 63\r\n   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)\r\n   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass46_3.<<HandleRequestBodyAndCompileRequestDelegate>b__2>d.MoveNext()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationMiddlewareResultHandler.HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nAuthorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ik5IQzRNNDFRS0paTzVITzJNQkI1SEVBWVhPT1hVSVVCREdGOVotVF8iLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiJ0ZXN0LWNsaWVudCIsIm5hbWUiOiJUZXN0Q2xpZW50Iiwic2NvcGUiOiJlZGZpX2FkbWluX2FwaS9mdWxsX2FjY2VzcyIsIm9pX3Byc3QiOiJ0ZXN0LWNsaWVudCIsImNsaWVudF9pZCI6InRlc3QtY2xpZW50Iiwib2lfdGtuX2lkIjoiMTQyIiwiZXhwIjoxNjU0NTYxMDY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MjE0LyIsImlhdCI6MTY1NDU1NzQ2OH0.E9A2sJBFymxoKYrsWLMbGlfSrvjJ8XR7D_n2FK-20fsp-7fF3fdyDvipDi9icyYYuR2Kw8x0vGH-c7BpZP-awwPQ42P9TCp0BkS3LdTP1qlPxbWs4W-baK1-PWqz3tkE-pSH5Vg7-ht0qzMSfqMhN5CEVRHJ4C8P72d66QPo89WlvZOvIl48T0s7zMeNqnBh1P4ZicpvcO_Hd-Ps9pQmIPo5LvyuqYYQzm4Cm5Z_Deu-h5vdEcpxK43jHV7SRKZTr75wHxrOe-mnqRuCEQivLoJTfzfINq4H6kLqehG3tmM8ny-de6IZMnWJ9ckdrjDkFbbEd1GcgOl9INZzHzdXDQ\r\nContent-Type: application/json\r\nContent-Length: 115\r\nPostman-Token: fab49422-0860-4748-9b5b-abdbb4f49f1b\r\n"
-						},
-						{
-							"name": "Vendor edited",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"company\": {{CompanyName}},\r\n    \"namespacePrefixes\": {{NamespacePrefix}},\r\n    \"contactEmailAddress\": {{ContactEmail}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{VendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{VendorId}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 23:23:15 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"result\": {\n        \"vendorId\": 40,\n        \"company\": \"Updated Test Company\",\n        \"namespacePrefixes\": \"\",\n        \"contactName\": \"Test User\",\n        \"contactEmailAddress\": \"test@test-ed-fi.org\"\n    },\n    \"status\": 200,\n    \"title\": \"Vendor updated successfully\"\n}"
-						},
-						{
-							"name": "Vendor not found",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"company\": {{CompanyName}},\r\n    \"namespacePrefixes\": {{NamespacePrefix}},\r\n    \"contactEmailAddress\": {{ContactEmail}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{VendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{VendorId}}"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 Jun 2022 23:24:57 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "FluentValidation.ValidationException: Validation failed: \r\n -- VendorId: Please provide valid Vendor Id. Severity: Error\r\n   at ValidatorExtensions.GuardAsync[TRequest](IValidator`1 validator, TRequest request) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Infrastructure\\ValidatorExtensions.cs:line 15\r\n   at EdFi.Ods.Admin.Api.Features.Vendors.EditVendor.Handle(EditVendorCommand editVendorCommand, IMapper mapper, Validator validator, Request request, Int32 id) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Vendors\\EditVendor.cs:line 27\r\n   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)\r\n   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass46_3.<<HandleRequestBodyAndCompileRequestDelegate>b__2>d.MoveNext()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)\r\n   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationMiddlewareResultHandler.HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nAuthorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ik9KQTgxWVc3NFJFVVRFWlRKTVQ4QTFKUzM3S1JGVjFZOFdJU1VMRzgiLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiJ0ZXN0LWNsaWVudCIsIm5hbWUiOiJUZXN0Q2xpZW50Iiwic2NvcGUiOiJlZGZpX2FkbWluX2FwaS9mdWxsX2FjY2VzcyIsIm9pX3Byc3QiOiJ0ZXN0LWNsaWVudCIsImNsaWVudF9pZCI6InRlc3QtY2xpZW50Iiwib2lfdGtuX2lkIjoiMjIwIiwiZXhwIjoxNjU0NjQ3Nzg5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MjE0LyIsImlhdCI6MTY1NDY0NDE4OX0.OkQQMWtFtWrXVlj2E8RabVkOqjY2Q7lOCa_6GOmemnqJalboVwGMTxqqyicq6gqENs4woxKug-JwD0YBhnxCq3mcBiYycAb_i406eoxgvaJxF5-J1lcmuKjNnUG97jZ9w6n50gp3yaRuUP38RSeAXz5bWSPK6SkFbBkr019Nue_ST4LQGBC__taL2NODKgAn15d-hdJQkm16AMkbwZYw5p4oa4lITHTWrRImr8GE6oqhaQpamqO_r6gi9w-ayp0z6_NNNw3HQQ-vDRbiBKgiWCEAQtp0kdY0a7WTa6B4yOVDefBLGyG0-lRni16tzr-04LtqCs5TVyjmmOHgWB3bfQ\r\nContent-Type: application/json\r\nContent-Length: 127\r\nPostman-Token: 987d59a9-eef4-42bf-844b-e203bdea20f1\r\n"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Vendor",
+					"name": "Vendors - Invalid",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"Company\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ContactName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ContactEmailAddress\"].length).to.equal(2);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"company\": \"\",\r\n    \"contactName\": \"\",\r\n    \"contactEmailAddress\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors",
+								"{{CreatedVendorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"    pm.collectionVariables.unset(\"VendorId\");\r",
-									"});"
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"vendor\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -918,98 +987,1354 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{API_URL}}/vendors/{{VendorId}}",
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
 								"vendors",
-								"{{VendorId}}"
+								"{{CreatedVendorId}}"
 							]
 						}
 					},
-					"response": [
+					"response": []
+				},
+				{
+					"name": "Vendors -  Not Found",
+					"event": [
 						{
-							"name": "Vendor to delete not found",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{VendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{VendorId}}"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 06 Jun 2022 22:04:59 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"vendor\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedVendorId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+							"host": [
+								"{{API_URL}}"
 							],
-							"cookie": [],
-							"body": "EdFi.Ods.AdminApp.Management.ErrorHandling.NotFoundException`1[System.Int32]: Not found: This vendor no longer exists.It may have been recently deleted. with ID -1\r\n   at EdFi.Ods.AdminApp.Management.Database.Commands.DeleteVendorCommand.Execute(Int32 id) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.AdminApp.Management\\Database\\Commands\\DeleteVendorCommand.cs:line 31\r\n   at EdFi.Ods.Admin.Api.Features.Vendors.VendorFeatures.DeleteVendor(DeleteVendorCommand deleteVendorCommand, IGetVendorByIdQuery getVendorByIdQuery, Int32 id) in C:\\Users\\anunez\\Documents\\Ed-Fi\\Repos\\Ed-Fi-ODS-AdminApp\\Application\\EdFi.Ods.Admin.Api\\Features\\Vendors\\VendorFeatures.cs:line 72\r\n   at lambda_method10(Closure , Object , HttpContext )\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationMiddlewareResultHandler.HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)\r\n   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)\r\n\r\nHEADERS\r\n=======\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: localhost:7214\r\nUser-Agent: PostmanRuntime/7.29.0\r\nAccept-Encoding: gzip, deflate, br\r\nAuthorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ik5IQzRNNDFRS0paTzVITzJNQkI1SEVBWVhPT1hVSVVCREdGOVotVF8iLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiJ0ZXN0LWNsaWVudCIsIm5hbWUiOiJUZXN0Q2xpZW50Iiwic2NvcGUiOiJlZGZpX2FkbWluX2FwaS9mdWxsX2FjY2VzcyIsIm9pX3Byc3QiOiJ0ZXN0LWNsaWVudCIsImNsaWVudF9pZCI6InRlc3QtY2xpZW50Iiwib2lfdGtuX2lkIjoiNzQiLCJleHAiOjE2NTQ1NTY2OTksImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyMTQvIiwiaWF0IjoxNjU0NTUzMDk5fQ.bwzuOtViJwHXXlBM79D8ebswiJ_Menhjictgl_WTbaeg9ruJ35Ue2eft2tznuFJdYlGS7fLMnYp_v-ppOX_wmCMAZCmEAzmeFLHx6yhiMxAIeILANdESVjD5vLyVC6I6kTp0trWFfXI36ZIJQ7zP7hEq_UeQUIV13TP2YeEPINLKW4UURaJLRmUPe87riZuLoyl08ICGVyeb9tKtI47jGycnRCBpcuhZVksCiCgXz-03Yc8qazB4gw9UJBkY8cdQEst6HBmqAYMWSEkTirNUM4ZN-RC7RgPIPVsrbfMs1__OG2WQfeBclPh2YLYNcb0gq13ArfvtzdkphzgyndOa0w\r\nPostman-Token: a5a5057d-50f6-470f-bcda-d6c662c1b816\r\n"
+							"path": [
+								"vendors",
+								"{{CreatedVendorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendors - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"vendor\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedVendorId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"company\": \"Updated Test Company\",\r\n    \"namespacePrefixes\": \"uri://academicbenchmarks.com\",\r\n    \"contactName\": \"Updated User\",\r\n    \"contactEmailAddress\": \"updated@example.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors",
+								"{{CreatedVendorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendors - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"vendor\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedVendorId\"));\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"CreatedVendorId\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors",
+								"{{CreatedVendorId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"  url: `${pm.variables.get(\"API_URL\")}/vendors`,\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"      \"Content-Type\": \"application/json\",\r",
+									"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw:JSON.stringify({\r",
+									"      \"company\": \"Application Company\",\r",
+									"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"      \"contactName\": \"Application User\",\r",
+									"      \"contactEmailAddress\": \"application@example.com\"\r",
+									"    }), \r",
+									"  }\r",
+									"},  \r",
+									"function (err, response) {\r",
+									"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+									"  const json = response.json();\r",
+									"  if(!json.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', json); }\r",
+									"  else {\r",
+									"    pm.collectionVariables.set(\"ApplicationVendorId\", json.result.vendorId);\r",
+									"  }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
 						},
 						{
-							"name": "Vendor deleted",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/vendors/{{VendorId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"vendors",
-										"{{VendorId}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 06 Jun 2022 23:22:12 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"title\": \"Vendor deleted successfully\"\n}"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(201);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response includes location in header\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    pm.response.to.be.header(\"Location\", `/applications/${result.applicationId}`);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes application key and secret\", function () {\r",
+									"    pm.expect(result).to.have.property(\"applicationId\");\r",
+									"    pm.expect(result).to.have.property(\"key\");\r",
+									"    pm.expect(result).to.have.property(\"secret\");\r",
+									"});\r",
+									"\r",
+									"if(result.applicationId) {\r",
+									"    pm.collectionVariables.set(\"CreatedApplicationId\", result.applicationId);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"ApplicationName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ClaimSetName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"EducationOrganizationIds\"].length).to.equal(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Vendor",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.VendorId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.VendorId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const errors = pm.response.json().errors;\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.ProfileId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ProfileId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const results = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes applications\", function () {\r",
+									"    pm.expect(results.length).to.be.greaterThan(0);\r",
+									"\r",
+									"    const indexOfApplication = results.map(\r",
+									"        function(application) { return application.applicationId; }\r",
+									"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"\r",
+									"    const result = results[indexOfApplication];\r",
+									"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response results do not include key or secret\", function () {\r",
+									"    results.forEach(function(result, i) {\r",
+									"        pm.expect(result).to.not.have.property(\"key\");\r",
+									"        pm.expect(result).to.not.have.property(\"secret\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result matches application\", function () {\r",
+									"    const applicationId = pm.collectionVariables.get(\"CreatedApplicationId\");\r",
+									"    \r",
+									"    pm.expect(result.applicationId).to.equal(applicationId);\r",
+									"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result does not include key or secret\", function () {  \r",
+									"    pm.expect(result).to.not.have.property(\"key\");\r",
+									"    pm.expect(result).to.not.have.property(\"secret\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications by Vendor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const results = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes applications\", function () {\r",
+									"    pm.expect(results.length).to.be.greaterThan(0);\r",
+									"\r",
+									"    const indexOfApplication = results.map(\r",
+									"        function(application) { return application.applicationId; }\r",
+									"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"\r",
+									"    const result = results[indexOfApplication];\r",
+									"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result is filtered by vendor\", function () {\r",
+									"    const resultApplicationIds = results.map(\r",
+									"        function(application) { return application.applicationId; }\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(resultApplicationIds).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"    pm.expect(resultApplicationIds).to.not.contain(pm.collectionVariables.get(\"OtherApplicationId\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response results do not include key or secret\", function () {\r",
+									"    results.forEach(function(result, i) {\r",
+									"        pm.expect(result).to.not.have.property(\"key\");\r",
+									"        pm.expect(result).to.not.have.property(\"secret\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"  url: `${pm.variables.get(\"API_URL\")}/vendors`,\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"      \"Content-Type\": \"application/json\",\r",
+									"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw:JSON.stringify({\r",
+									"      \"company\": \"Other Company\",\r",
+									"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"      \"contactName\": \"Other Application User\",\r",
+									"      \"contactEmailAddress\": \"otherapplication@example.com\"\r",
+									"    }), \r",
+									"  }\r",
+									"},\r",
+									"function (vendorErr, vendorResponse) {\r",
+									"  if(vendorErr) { console.log(\"Error in Pre-request:\", vendorErr); }\r",
+									"  const vendorJson = vendorResponse.json();\r",
+									"  if(!vendorJson.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', vendorJson); }\r",
+									"  pm.collectionVariables.set(\"OtherApplicationVendorId\", vendorJson.result.vendorId);\r",
+									"\r",
+									"  pm.sendRequest({\r",
+									"    url: `${pm.variables.get(\"API_URL\")}/applications`,\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        \"Content-Type\": \"application/json\",\r",
+									"        \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"    },\r",
+									"    body: {\r",
+									"      mode: 'raw',\r",
+									"      raw:JSON.stringify({\r",
+									"        \"applicationName\": \"Other Vendor Application\",\r",
+									"        \"vendorId\": pm.collectionVariables.get(\"OtherApplicationVendorId\"),\r",
+									"        \"claimSetName\": \"Ed-Fi Sandbox\",\r",
+									"        \"profileId\": null,\r",
+									"        \"educationOrganizationIds\": [ 255901 ]\r",
+									"      }),\r",
+									"    }\r",
+									"  },  \r",
+									"  function (appErr, appResonse) {\r",
+									"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
+									"    const appJson = appResonse.json();\r",
+									"    if(!appJson.result.applicationId) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }\r",
+									"    else {\r",
+									"      pm.collectionVariables.set(\"OtherApplicationId\", appJson.result.applicationId);\r",
+									"    }\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/vendors/{{ApplicationVendorId}}/applications",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"vendors",
+								"{{ApplicationVendorId}}",
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"updated\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes updated application\", function () {\r",
+									"    pm.expect(result.applicationName).to.equal(\"Updated Application Name\");\r",
+									"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi ODS Admin App\");\r",
+									"    pm.expect(result.educationOrganizationId).to.equal(1234);\r",
+									"    pm.expect(result.profileName).to.equal(null);\r",
+									"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result does not include application key and secret\", function () {\r",
+									"    pm.expect(result).to.not.have.property(\"key\");\r",
+									"    pm.expect(result).to.not.have.property(\"secret\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request updated Application/Vendor relationship\", function () {\r",
+									"    pm.sendRequest({\r",
+									"      url: `${pm.variables.get(\"API_URL\")}/vendors/${pm.collectionVariables.get(\"ApplicationVendorId\")}/applications`,\r",
+									"      method: 'GET',\r",
+									"      header: {\r",
+									"          \"Content-Type\": \"application/json\",\r",
+									"          \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"      },\r",
+									"      body: {\r",
+									"        mode: 'raw',\r",
+									"        raw:JSON.stringify({\r",
+									"          \"company\": \"Application Company\",\r",
+									"          \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"          \"contactName\": \"Application User\",\r",
+									"          \"contactEmailAddress\": \"application@example.com\"\r",
+									"        }), \r",
+									"      }\r",
+									"  },  \r",
+									"  function (err, response) {\r",
+									"    if(err) { console.log(\"Error in test request:\", err); }\r",
+									"    if(response.code != 200) { console.log('Error in  test request. Response is:', response); }\r",
+									"    const results = response.json().result;\r",
+									"    pm.expect(results.length).to.equal(0);\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors[\"ApplicationName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"ClaimSetName\"].length).to.equal(1);\r",
+									"    pm.expect(response.errors[\"EducationOrganizationIds\"].length).to.equal(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Vendor",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.VendorId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.VendorId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Invalid Profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const errors = pm.response.json().errors;\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    pm.expect(response.status).to.equal(400);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response errors include messages by property\", function () {\r",
+									"    pm.expect(response.errors.ProfileId.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ProfileId[0]).to.contain(\"not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Credential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const result = pm.response.json().result;\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"result\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"updated\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response result includes application key and secret\", function () {\r",
+									"    pm.expect(result).to.have.property(\"applicationId\");\r",
+									"    pm.expect(result).to.have.property(\"key\");\r",
+									"    pm.expect(result).to.have.property(\"secret\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}/reset-credential",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}",
+								"reset-credential"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response matches success format\", function () {\r",
+									"    pm.expect(response.status).to.equal(200);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"OtherApplicationVendorId\");\r",
+									"pm.collectionVariables.unset(\"OtherApplicationId\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Credential - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}/reset-credential",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}",
+								"reset-credential"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Applications - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches error format\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.status).to.equal(404);\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"    pm.expect(response.errors).to.contain(response.title);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response title is helpful and accurate\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(response.title).to.contain(\"Not found\");\r",
+									"    pm.expect(response.title).to.contain(\"application\");\r",
+									"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.unset(\"ApplicationVendorId\");\r",
+									"pm.collectionVariables.unset(\"CreatedApplicationId\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"applications",
+								"{{CreatedApplicationId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

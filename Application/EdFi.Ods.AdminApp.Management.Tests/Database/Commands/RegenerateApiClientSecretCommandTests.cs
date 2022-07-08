@@ -9,6 +9,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
@@ -25,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             Scoped<IUsersContext>(usersContext =>
             {
                 var command = new RegenerateApiClientSecretCommand(usersContext);
-                Assert.Throws<InvalidOperationException>(() => command.Execute(0));
+                Assert.Throws<NotFoundException<int>>(() => command.Execute(0));
             });
         }
 
@@ -107,7 +108,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             });
 
             var updatedApiClient = Transaction(usersContext => usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId));
-            
+
             result.Key.ShouldBe(orignalKey);
             result.Secret.ShouldNotBe(originalSecret);
             result.Secret.ShouldNotBe("SIMULATED HASH OF " + originalSecret);

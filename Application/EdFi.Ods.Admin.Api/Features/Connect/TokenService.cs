@@ -46,7 +46,7 @@ public class TokenService : ITokenService
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
-        identity.AddClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.ApiFullAccessScope, OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess, OpenIddictConstants.Destinations.AccessToken);
 
         return new ClaimsPrincipal(identity);
     }

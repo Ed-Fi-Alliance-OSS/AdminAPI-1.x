@@ -45,7 +45,7 @@ public static class SecurityExtensions
                     opt.AddSigningKey(signingKey);
                 }
 
-                opt.RegisterScopes(SecurityConstants.ApiFullAccessScope);
+                opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
                 opt.UseAspNetCore().EnableTokenEndpointPassthrough();
             })
             .AddValidation(options =>
@@ -75,7 +75,7 @@ public static class SecurityExtensions
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.ApiFullAccessScope)
+                .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess)
                 .Build();
         });
 

@@ -12,6 +12,6 @@
     <license type="expression">Apache-2.0</license>
   </metadata>
   <files>
-       <file src="**" exclude="E2E Tests/**;**/*.sql" />
+       <file src="**" exclude="E2E Tests/**;Docker/**;Compose/**;**/*.sql" />
   </files>
 </package>

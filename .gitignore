@@ -39,6 +39,10 @@ _ReSharper.*
 *.orig
 *.original
 *.log
+*.env
+*.crt
+*.key
+*.pfx
 
 #Packages
 packages/

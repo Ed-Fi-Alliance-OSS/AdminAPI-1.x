@@ -24,8 +24,10 @@
         * Package: builds pre-release and release NuGet packages for the Admin
           App web application.
         * Push: uploads a NuGet package to the NuGet feed.
-        * BuildAndDeployToDockerContainer: runs the build operation, update the appsettings.json with provided
+        * BuildAndDeployToAdminAppDockerContainer: runs the build operation, update the appsettings.json with provided
           DockerEnvValues and copy over the latest files to existing AdminApp docker container for testing.
+        * BuildAndDeployToAdminApiDockerContainer: runs the build operation, update the appsettings.json with provided
+          DockerEnvValues and copy over the latest files to existing AdminApi docker container for testing.
         * PopulateGoogleAnalyticsAppSettings: update the appsettings.json with provided GoogleAnalyticsMeasurementId.
 
     .EXAMPLE
@@ -62,12 +64,12 @@
             ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApp;"
             }
 
-        .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
+        .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminAppDockerContainer
 #>
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "Package", "PackageApi", "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
+    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "Package", "PackageApi", "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToAdminAppDockerContainer", "BuildAndDeployToAdminApiDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
     $Command = "Build",
 
     # Assembly and package version number for AdminApp Web. The current package number is
@@ -108,7 +110,7 @@ param(
 
     # Environment values for updating the appsettings on existing AdminApp docker container.
 
-    # Only required with the BuildAndDeployToDockerContainer command.
+    # Only required with the BuildAndDeployToAdminAppDockerContainer or BuildAndDeployToAdminApiDockerContainer commands.
     [hashtable]
     $DockerEnvValues,
 
@@ -430,7 +432,7 @@ function Update-AppSettingsToAddGoogleAnalyticsMeasurementId {
     $json | ConvertTo-Json | Set-Content $filePath
 }
 
-function UpdateAppSettingsForDocker {
+function UpdateAppSettingsForAdminAppDocker {
     $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
     $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
@@ -457,19 +459,53 @@ function UpdateAppSettingsForDocker {
     $json | ConvertTo-Json | Set-Content $filePath
 }
 
-function CopyLatestFilesToContainer {
+function UpdateAppSettingsForAdminApiDocker {
+    $filePath = "$solutionRoot/EdFi.Ods.Admin.Api/publish/appsettings.json"
+    $json = (Get-Content -Path $filePath) | ConvertFrom-Json
+    $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
+    $json.AppSettings.ApiExternalUrl = $DockerEnvValues["ApiExternalUrl"]
+    $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
+    $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
+    $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
+    
+    $json.Authentication.IssuerUrl = $DockerEnvValues["IssuerUrl"]
+    $json.Authentication.SigningKey = $DockerEnvValues["SigningKey"]
+
+    $json.ConnectionStrings.Admin = $DockerEnvValues["AdminDB"]
+    $json.ConnectionStrings.Security = $DockerEnvValues["SecurityDB"]
+    $json.ConnectionStrings.ProductionOds = $DockerEnvValues["ProductionOdsDB"]
+    $json.Log4NetCore.Log4NetConfigFileName =  "./log4net.config"
+    $json | ConvertTo-Json | Set-Content $filePath
+}
+
+function CopyLatestFilesToAdminAppContainer {
     $source = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/."
     docker cp $source ed-fi-ods-adminapp:/app
+}
+
+function CopyLatestFilesToAdminApiContainer {
+    $source = "$solutionRoot/EdFi.Ods.Admin.Api/publish/."
+    &docker cp $source adminapi:/app/AdminApi
 }
 
 function RestartAdminAppContainer {
     &docker restart ed-fi-ods-adminapp
 }
 
-function Invoke-DockerDeploy {
-   Invoke-Step { UpdateAppSettingsForDocker }
-   Invoke-Step { CopyLatestFilesToContainer }
+function RestartAdminApiContainer {
+    &docker restart adminapi
+}
+
+function Invoke-AdminAppDockerDeploy {
+   Invoke-Step { UpdateAppSettingsForAdminAppDocker }
+   Invoke-Step { CopyLatestFilesToAdminAppContainer }
    Invoke-Step { RestartAdminAppContainer }
+}
+
+function Invoke-AdminApiDockerDeploy {
+   Invoke-Step { UpdateAppSettingsForAdminApiDocker }
+   Invoke-Step { CopyLatestFilesToAdminApiContainer }
+   Invoke-Step { RestartAdminApiContainer }
 }
 
 Invoke-Main {
@@ -492,9 +528,13 @@ Invoke-Main {
         PackageApi { Invoke-BuildApiPackage }
         PackageDatabase { Invoke-BuildDatabasePackage }
         Push { Invoke-PushPackage }
-        BuildAndDeployToDockerContainer {
+        BuildAndDeployToAdminAppDockerContainer {
             Invoke-Build
-            Invoke-DockerDeploy
+            Invoke-AdminAppDockerDeploy
+        }
+        BuildAndDeployToAdminApiDockerContainer {
+            Invoke-Build
+            Invoke-AdminApiDockerDeploy
         }
         PopulateGoogleAnalyticsAppSettings {
             Update-AppSettingsToAddGoogleAnalyticsMeasurementId

@@ -31,4 +31,4 @@ $p = @{
         ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApp;"
     }
 
-.\build.ps1 -Version 2.1.1 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToDockerContainer
+.\build.ps1 -Version 2.1.1 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminAppDockerContainer

@@ -41,13 +41,16 @@ public class TokenService : ITokenService
             throw new AuthenticationException("Invalid Admin API Client key and secret");
         }
 
+        var requestedScopes = request.GetScopes();
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
 
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
-        identity.AddClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess, OpenIddictConstants.Destinations.AccessToken);
 
-        return new ClaimsPrincipal(identity);
+        var principal = new ClaimsPrincipal(identity);
+        principal.SetScopes(requestedScopes);
+
+        return principal;
     }
 }

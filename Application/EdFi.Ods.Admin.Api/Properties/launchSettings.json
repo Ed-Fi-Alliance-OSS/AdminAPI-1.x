@@ -17,6 +17,7 @@
       "applicationUrl": "https://localhost:7214;http://localhost:5214",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "AUTHENTICATION__AUTHORITY": "https://localhost:7214",
         "AUTHENTICATION__ISSUERURL": "https://localhost:7214"
       }
     },
@@ -28,6 +29,7 @@
       "applicationUrl": "https://localhost:7214;http://localhost:5214",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production",
+        "AUTHENTICATION__AUTHORITY": "https://localhost:7214",
         "AUTHENTICATION__ISSUERURL": "https://localhost:7214",
         "AUTHENTICATION__SIGNINGKEY": "dGhlKndlYnNpdGVfSVNf8J+Glw==",
         "AUTHENTICATION__ALLOWREGISTRATION": "true",
@@ -40,6 +42,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "AUTHENTICATION__AUTHORITY": "https://localhost:44370",
         "AUTHENTICATION__ISSUERURL": "https://localhost:44370"
       }
     }

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d1e11b5e-30eb-46a6-9be1-9b32fb6982c6",
+		"_postman_id": "726d1780-411c-40f3-bc09-6ce719b27f77",
 		"name": "Admin API E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20720204"
@@ -279,6 +279,11 @@
 									"key": "grant_type",
 									"value": "client_credentials",
 									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "edfi_admin_api/full_access",
+									"type": "text"
 								}
 							]
 						},
@@ -401,6 +406,87 @@
 									"key": "grant_type",
 									"value": "authorization_code",
 									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "edfi_admin_api/full_access",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/token",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token - Invalid Scope",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes error message\", function () {\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");\r",
+									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"scope\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{$guid}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "NOT_REAL/SCOPE",
+									"type": "text"
 								}
 							]
 						},
@@ -474,6 +560,11 @@
 								{
 									"key": "grant_type",
 									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "edfi_admin_api/full_access",
 									"type": "text"
 								}
 							]
@@ -2371,7 +2462,8 @@
 					"        urlencoded: [",
 					"            {key: 'client_id', value: pm.variables.get(\"ClientId\")},",
 					"            {key: 'client_secret', value: pm.variables.get(\"ClientSecret\")},",
-					"            {key: 'grant_type', value: \"client_credentials\"}",
+					"            {key: 'grant_type', value: \"client_credentials\"},",
+					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
 					"        ]",
 					"    }",
 					"},",

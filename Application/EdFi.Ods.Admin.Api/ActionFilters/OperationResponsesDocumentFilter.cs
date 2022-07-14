@@ -17,6 +17,7 @@ namespace EdFi.Ods.Admin.Api.ActionFilters
             // Responses
             var getOkResponse = new OpenApiResponse() { Description = "The requested resource was successfully retrieved." };
             var unAuthorizedResponse = new OpenApiResponse() { Description = "Unauthorized. The request requires authentication" };
+            var forbiddenResponse = new OpenApiResponse() { Description = "Forbidden. The request is authenticated, but not authorized to access this resource" };
             var unhandledErrorResponse = new OpenApiResponse() { Description = "An unhandled error occurred on the server. See the response body for details." };
             var deleteSuccessResponse = new OpenApiResponse() { Description = "The resource was successfully deleted." };
             var resourceNotFoundResponse = new OpenApiResponse() { Description = "The resource could not be found." };
@@ -32,6 +33,7 @@ namespace EdFi.Ods.Admin.Api.ActionFilters
                     // Add appropriate responses
                     operation.Value.Responses.Clear();
                     operation.Value.Responses.Add(StatusCodes.Status401Unauthorized.ToString(), unAuthorizedResponse);
+                    operation.Value.Responses.Add(StatusCodes.Status403Forbidden.ToString(), forbiddenResponse);
                     operation.Value.Responses.Add(StatusCodes.Status500InternalServerError.ToString(), unhandledErrorResponse);
                     switch (operation.Key)
                     {

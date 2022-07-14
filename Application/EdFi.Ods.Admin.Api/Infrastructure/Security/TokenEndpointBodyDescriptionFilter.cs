@@ -38,6 +38,7 @@ public class TokenEndpointBodyDescriptionFilter : IOperationFilter
                 { "client_id", new OpenApiSchema { Type = "string "} },
                 { "client_secret", new OpenApiSchema { Type = "string "} },
                 { "grant_type", new OpenApiSchema { Type = "string "} },
+                { "scope", new OpenApiSchema { Type = "string"} },
             }
         }
     };

@@ -5,8 +5,12 @@
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.Security;
 
-public class SecurityConstants
+public static class SecurityConstants
 {
     public const string TokenEndpointUri = "/connect/token";
-    public const string ApiFullAccessScope = "edfi_admin_api/full_access";
+
+    public static class Scopes
+    {
+        public const string AdminApiFullAccess = "edfi_admin_api/full_access";
+    }
 }

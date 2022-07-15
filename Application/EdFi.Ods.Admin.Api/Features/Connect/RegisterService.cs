@@ -50,7 +50,7 @@ public class RegisterService : IRegisterService
             {
                 OpenIddictConstants.Permissions.Endpoints.Token,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-                OpenIddictConstants.Permissions.Prefixes.Scope + SecurityConstants.ApiFullAccessScope
+                OpenIddictConstants.Permissions.Prefixes.Scope + SecurityConstants.Scopes.AdminApiFullAccess
             },
         };
 

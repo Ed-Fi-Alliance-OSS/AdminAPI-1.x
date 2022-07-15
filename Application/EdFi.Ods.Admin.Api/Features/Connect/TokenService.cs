@@ -41,13 +41,25 @@ public class TokenService : ITokenService
             throw new AuthenticationException("Invalid Admin API Client key and secret");
         }
 
+        var requestedScopes = request.GetScopes();
+        var appScopes = (await _applicationManager.GetPermissionsAsync(application))
+            .Where(p => p.StartsWith(OpenIddictConstants.Permissions.Prefixes.Scope))
+            .Select(p => p.Substring(OpenIddictConstants.Permissions.Prefixes.Scope.Length))
+            .ToList();
+
+        var missingScopes = requestedScopes.Where(s => !appScopes.Contains(s)).ToList();
+        if(missingScopes.Any())
+            throw new AuthenticationException($"Client is not allowed access to requested scope(s): {string.Join(", " , missingScopes)}");
+
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
 
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
         identity.AddClaim(OpenIddictConstants.Claims.Subject, request.ClientId!, OpenIddictConstants.Destinations.AccessToken);
         identity.AddClaim(OpenIddictConstants.Claims.Name, displayName!, OpenIddictConstants.Destinations.AccessToken);
-        identity.AddClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.ApiFullAccessScope, OpenIddictConstants.Destinations.AccessToken);
 
-        return new ClaimsPrincipal(identity);
+        var principal = new ClaimsPrincipal(identity);
+        principal.SetScopes(requestedScopes);
+
+        return principal;
     }
 }

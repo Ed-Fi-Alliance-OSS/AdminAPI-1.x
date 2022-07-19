@@ -62,7 +62,8 @@ public static class SecurityExtensions
         {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(opt => {
+        }).AddJwtBearer(opt =>
+        {
             opt.Authority = authority;
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters

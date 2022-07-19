@@ -3,14 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.Security;
-
-public static class SecurityConstants
+namespace EdFi.Ods.Admin.Api.Features.Information
 {
-    public const string TokenEndpointUri = "/connect/token";
-
-    public static class Scopes
+    public class InformationResult
     {
-        public const string AdminApiFullAccess = "edfi_admin_api/full_access";
+        public string? Version { get; set; }
+        public string? Build { get; set; }
     }
+
 }

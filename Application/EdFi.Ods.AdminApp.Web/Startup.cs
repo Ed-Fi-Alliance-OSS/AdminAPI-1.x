@@ -8,7 +8,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using AutoMapper;
+using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
@@ -93,12 +93,12 @@ namespace EdFi.Ods.AdminApp.Web
                         LocalRenaming = LocalRenaming.CrunchAll,
                         MinifyCode = true
                     };
-            
+
                     var minifyCssSettings = new CssSettings
                     {
                         MinifyExpressions = true
                     };
-            
+
                     pipeline.AddCssBundle("/bundles/bootstrap-multiselect.min.css", minifyCssSettings, "/content/css/bootstrap-multiselect.css");
                     pipeline.AddCssBundle("/bundles/site.min.css", minifyCssSettings, "/content/css/Site.css");
                     pipeline.AddJavaScriptBundle("/bundles/bootstrap-multiselect.min.js", minifyJsSettings, "/Scripts/bootstrap-multiselect.js");
@@ -164,7 +164,7 @@ namespace EdFi.Ods.AdminApp.Web
 
             services.AddHealthCheck(Configuration.GetConnectionString("Admin"), IsSqlServer(databaseEngine));
 
-            // This statement should be kept last to ensure that the IHttpClientFactory and IInferOdsApiVersion services are registered. 
+            // This statement should be kept last to ensure that the IHttpClientFactory and IInferOdsApiVersion services are registered.
             CommonConfigurationInstaller.ConfigureLearningStandards(services).Wait();
         }
 

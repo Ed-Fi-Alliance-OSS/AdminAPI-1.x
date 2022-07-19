@@ -9,7 +9,8 @@ public static class WebApplicationExtensions
 {
     public static void MapFeatureEndpoints(this WebApplication application)
     {
-        application.UseEndpoints(endpoints => {
+        application.UseEndpoints(endpoints =>
+        {
             foreach (var routeBuilder in Helpers.FeaturesHelper.GetFeatures())
             {
                 routeBuilder.MapEndpoints(endpoints);

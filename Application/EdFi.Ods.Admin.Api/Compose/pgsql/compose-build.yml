@@ -24,13 +24,17 @@ services:
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
-      ADMINAPP_VIRTUAL_NAME: ${ADMINAPP_VIRTUAL_NAME} 
+      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
     depends_on:
       - pb-admin
     restart: always
-    hostname: adminapi 
+    hostname: adminapi
     container_name: adminapi
+    healthcheck:
+      test: $$ADMIN_API_HEALTHCHECK_TEST
+      start_period: "60s"
+      retries: 3
 
   db-admin:
     image: edfialliance/ods-api-db-admin:latest

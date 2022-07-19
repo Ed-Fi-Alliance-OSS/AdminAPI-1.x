@@ -5,7 +5,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EdFi.Ods.AdminApp.Web
+namespace EdFi.Ods.AdminApp.Management
 {
     public static class HealthCheckServiceExtensions
     {

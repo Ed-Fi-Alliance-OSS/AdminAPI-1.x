@@ -1,11 +1,66 @@
 {
 	"info": {
-		"_postman_id": "726d1780-411c-40f3-bc09-6ce719b27f77",
+		"_postman_id": "d3ec5be6-74d3-4d25-b094-98700ec61c32",
 		"name": "Admin API E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20720204"
+		"_exporter_id": "15734759"
 	},
 	"item": [
+		{
+			"name": "Landing",
+			"item": [
+				{
+					"name": "Landing Page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response includes expected properties\", function () {\r",
+									"    pm.expect(response).to.have.property(\"version\");\r",
+									"    pm.expect(response).to.have.property(\"build\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "User Management",
 			"item": [

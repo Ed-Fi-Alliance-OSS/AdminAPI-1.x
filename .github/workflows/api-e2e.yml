@@ -31,8 +31,8 @@ jobs:
           docker-compose -f ./Compose/pgsql/compose-build.yml --env-file ./Compose/.env up -d
     - name: Verify ODS Health
       run: |
-        chmod +x ./E2E Tests/gh-action-setup/inspect.sh
-        ./E2E Tests/gh-action-setup/inspect.sh
+        chmod +x './E2E Tests/gh-action-setup/inspect.sh'
+        './E2E Tests/gh-action-setup/inspect.sh'
     - name: Setup node
       uses: actions/setup-node@56337c425554a6be30cdef71bf441f15be286854 # v3.1.1
       with:

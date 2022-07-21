@@ -5,6 +5,12 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
 {
     public static class EndpointRouteBuilderExtensions
     {
+        internal static AdminApiEndpointBuilder WithDefaultOptions(this AdminApiEndpointBuilder builder, string tag)
+        {
+            builder.WithRouteOptions(rhb => SetDefaultOptions(rhb, "Temp Message Will Fix", tag));
+            return builder;
+        }
+
         internal static RouteHandlerBuilder MapGetWithDefaultOptions(this IEndpointRouteBuilder builder,
            string route, Delegate handler, string tag)
         {

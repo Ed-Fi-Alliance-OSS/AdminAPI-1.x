@@ -20,6 +20,7 @@ public class AdminApiEndpointBuilder
     private readonly HttpVerb _verb;
     private string _route;
     private Delegate _handler;
+    private List<Action<RouteHandlerBuilder>> _routeOptions = new();
 
     public static AdminApiEndpointBuilder MapGet(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.GET, route, handler);
@@ -47,9 +48,19 @@ public class AdminApiEndpointBuilder
                 HttpVerb.DELETE => _endpoints.MapDelete(versionedRoute, _handler),
                 _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_}")
             };
+
+            foreach (var action in _routeOptions)
+            {
+                action(builder);
+            }
         }
     }
 
-    private enum HttpVerb { GET, POST, PUT, DELETE }
+    public AdminApiEndpointBuilder WithRouteOptions(Action<RouteHandlerBuilder> routeHandlerBuilderAction)
+    {
+        _routeOptions.Add(routeHandlerBuilderAction);
+        return this;
+    }
 
+    private enum HttpVerb { GET, POST, PUT, DELETE }
 }

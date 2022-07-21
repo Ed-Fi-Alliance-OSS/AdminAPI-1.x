@@ -43,7 +43,8 @@ jobs:
       run: newman run './E2E Tests/Admin API E2E.postman_collection.json' -e './E2E Tests/Admin API.postman_environment.json' -r junit,cli --reporter-junit-export ./reports/report.xml
     - name: Upload results
       uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
+      if: success() || failure()
       with:
         name: newman-results
-        path: ./reports/report.xml
+        path: Application/EdFi.Ods.Admin.Api/reports
         retention-days: 10

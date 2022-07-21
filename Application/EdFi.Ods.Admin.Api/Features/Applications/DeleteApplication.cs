@@ -6,13 +6,15 @@
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 
-namespace EdFi.Ods.Admin.Api.Features.Vendors
+namespace EdFi.Ods.Admin.Api.Features.Applications
 {
     public class DeleteApplication : IFeature
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapDeleteWithDefaultOptions($"/{FeatureConstants.Applications}" + "/{id}", Handle, FeatureConstants.Applications);
+            AdminApiEndpointBuilder.MapDelete(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", Handle)
+                .WithRouteOptions(rhb => rhb.WithDefaultDeleteOptions(FeatureConstants.Applications))
+                .BuildForVersions(AdminApiVersions.V1);
         }
 
         public Task<IResult> Handle(IDeleteApplicationCommand deleteApplicationCommand, int id)

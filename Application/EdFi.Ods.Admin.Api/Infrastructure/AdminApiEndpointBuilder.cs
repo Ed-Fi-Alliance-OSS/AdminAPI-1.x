@@ -34,13 +34,15 @@ public class AdminApiEndpointBuilder
     public static AdminApiEndpointBuilder MapDelete(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.DELETE, route, handler);
 
-    public void BuildForVersions(params string[] versions)
+    public void BuildForVersions(params AdminApiVersions.AdminApiVersion[] versions)
     {
         if(versions.Length == 0) throw new ArgumentException("Must register for at least 1 version");
         if(string.IsNullOrEmpty(_route)) throw new Exception("Invalid endpoint registration. Route must be specified");
 
         foreach (var version in versions)
         {
+            if(version == null) throw new ArgumentException("Version cannot be null");
+
             var versionedRoute = $"/{version}/{_route}";
 
             var builder = _verb switch
@@ -52,7 +54,7 @@ public class AdminApiEndpointBuilder
                 _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_verb}")
             };
 
-            builder.WithGroupName(version);
+            builder.WithGroupName(version.ToString());
 
             foreach (var action in _routeOptions)
             {

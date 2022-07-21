@@ -34,6 +34,8 @@ else
 
 app.UseHttpsRedirection();
 
+AdminApiVersions.Initialize(app);
+
 //The ordering here is meaningful: Routing -> Auth -> Endpoints
 app.UseRouting();
 app.UseAuthentication();
@@ -45,7 +47,7 @@ app.UseHealthChecks("/health");
 if (app.Configuration.GetValue<bool>("EnableSwagger"))
 {
     app.UseSwagger();
-    app.DefineSwaggerUIWithApiVersions("v1", "v2");
+    app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersions());
 }
 
 app.Run();

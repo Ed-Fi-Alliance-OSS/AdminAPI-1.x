@@ -102,15 +102,14 @@ public static class WebApplicationBuilderExtensions
                 }
             );
 
-            opt.SwaggerDoc("v1", new OpenApiInfo
+            foreach (var version in AdminApiVersions.GetAllVersions())
             {
-                Title = "Admin API Documentation", Version = "v1"
-            });
+                opt.SwaggerDoc(version, new OpenApiInfo
+                {
+                    Title = "Admin API Documentation", Version = version
+                });
+            }
 
-            opt.SwaggerDoc("v2", new OpenApiInfo
-            {
-                Title = "Admin API Documentation", Version = "v2"
-            });
             opt.DocumentFilter<OperationResponsesDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();

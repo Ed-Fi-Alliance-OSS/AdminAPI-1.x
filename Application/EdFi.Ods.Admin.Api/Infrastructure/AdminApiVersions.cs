@@ -12,11 +12,8 @@ namespace EdFi.Ods.Admin.Api.Infrastructure;
 public class AdminApiVersions
 {
     private static bool _isInitialized;
-    public const double V1Version = 1.0;
-    public const double V2Version = 2.0;
 
-    public static AdminApiVersion V1 = new AdminApiVersion(V1Version, "v1");
-    public static AdminApiVersion V2 = new AdminApiVersion(2.0, "v2");
+    public static AdminApiVersion V1 = new(1.0, "v1");
     private static ApiVersionSet? _versionSet;
 
     public static void Initialize(WebApplication app)
@@ -25,7 +22,6 @@ public class AdminApiVersions
 
         _versionSet = app.NewApiVersionSet()
             .HasApiVersion(V1.Version)
-            .HasApiVersion(V2.Version)
             .Build();
 
         _isInitialized = true;

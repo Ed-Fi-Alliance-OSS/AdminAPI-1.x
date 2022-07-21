@@ -52,6 +52,8 @@ public class AdminApiEndpointBuilder
                 _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_verb}")
             };
 
+            builder.WithGroupName(version);
+
             foreach (var action in _routeOptions)
             {
                 action(builder);

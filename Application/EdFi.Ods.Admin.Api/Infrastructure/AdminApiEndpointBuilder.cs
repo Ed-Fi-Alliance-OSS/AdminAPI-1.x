@@ -17,10 +17,10 @@ public class AdminApiEndpointBuilder
     }
 
     private readonly IEndpointRouteBuilder _endpoints;
-    private readonly HttpVerb _verb;
-    private string _route;
-    private Delegate _handler;
-    private List<Action<RouteHandlerBuilder>> _routeOptions = new();
+    private readonly HttpVerb? _verb;
+    private readonly string? _route;
+    private readonly Delegate? _handler;
+    private readonly List<Action<RouteHandlerBuilder>> _routeOptions = new();
 
     public static AdminApiEndpointBuilder MapGet(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.GET, route, handler);
@@ -38,6 +38,7 @@ public class AdminApiEndpointBuilder
     {
         if(versions.Length == 0) throw new ArgumentException("Must register for at least 1 version");
         if(_route == null) throw new Exception("Invalid endpoint registration. Route must be specified");
+        if(_handler == null) throw new Exception("Invalid endpoint registration. Handler must be specified");
 
         foreach (var version in versions)
         {

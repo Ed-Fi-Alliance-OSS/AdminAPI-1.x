@@ -11,6 +11,9 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
             return builder;
         }
 
+        internal static void DefaultGetOptions(RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Retrieves all {tag}.", tag);
+
         internal static RouteHandlerBuilder MapGetWithDefaultOptions(this IEndpointRouteBuilder builder,
            string route, Delegate handler, string tag)
         {

@@ -7,6 +7,7 @@ using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EndpointExtensions = EdFi.Ods.Admin.Api.Infrastructure.EndpointRouteBuilderExtensions;
 
 namespace EdFi.Ods.Admin.Api.Features.Vendors;
 
@@ -14,8 +15,13 @@ public class ReadVendor : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGetWithDefaultOptions($"/{FeatureConstants.Vendors}", GetVendors, FeatureConstants.Vendors);
-        endpoints.MapGetByIdWithDefaultOptions($"/{FeatureConstants.Vendors}" + "/{id}", GetVendor, FeatureConstants.Vendors);
+        AdminApiEndpointBuilder.MapGet(endpoints, $"{FeatureConstants.Vendors}", GetVendors)
+            .WithRouteOptions(rhb => EndpointExtensions.DefaultGetOptions(rhb, FeatureConstants.Vendors))
+            .BuildForVersions("v1", "v2");
+
+        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Vendors}" + "/{id}", GetVendor)
+            .WithRouteOptions(rhb => EndpointExtensions.DefaultGetOptions(rhb, FeatureConstants.Vendors))
+            .BuildForVersions("v1", "v2");
     }
 
     internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper)

@@ -726,11 +726,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/vendors",
+									"raw": "{{API_URL}}/v1/vendors",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors"
 									]
 								}
@@ -837,11 +838,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/vendors",
+									"raw": "{{API_URL}}/v1/vendors",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors"
 									]
 								}
@@ -903,11 +905,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/vendors",
+									"raw": "{{API_URL}}/v1/vendors",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors"
 									]
 								}
@@ -953,11 +956,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1024,11 +1028,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1092,11 +1097,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1136,11 +1142,12 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1185,11 +1192,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1243,11 +1251,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1294,11 +1303,12 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{CreatedVendorId}}",
+									"raw": "{{API_URL}}/v1/vendors/{{CreatedVendorId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{CreatedVendorId}}"
 									]
@@ -1319,7 +1329,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/vendors`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/vendors`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1403,11 +1413,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/",
+									"raw": "{{API_URL}}/v1/applications/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										""
 									]
@@ -1471,11 +1482,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/",
+									"raw": "{{API_URL}}/v1/applications/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										""
 									]
@@ -1538,11 +1550,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/",
+									"raw": "{{API_URL}}/v1/applications/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										""
 									]
@@ -1606,11 +1619,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/",
+									"raw": "{{API_URL}}/v1/applications/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										""
 									]
@@ -1669,11 +1683,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/",
+									"raw": "{{API_URL}}/v1/applications/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										""
 									]
@@ -1726,11 +1741,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -1798,7 +1814,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/vendors`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/vendors`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1821,7 +1837,7 @@
 											"  pm.collectionVariables.set(\"OtherApplicationVendorId\", vendorJson.result.vendorId);\r",
 											"\r",
 											"  pm.sendRequest({\r",
-											"    url: `${pm.variables.get(\"API_URL\")}/applications`,\r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v1/applications`,\r",
 											"    method: 'POST',\r",
 											"    header: {\r",
 											"        \"Content-Type\": \"application/json\",\r",
@@ -1857,11 +1873,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/vendors/{{ApplicationVendorId}}/applications",
+									"raw": "{{API_URL}}/v1/vendors/{{ApplicationVendorId}}/applications",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"vendors",
 										"{{ApplicationVendorId}}",
 										"applications"
@@ -1919,7 +1936,7 @@
 											"\r",
 											"pm.test(\"Request updated Application/Vendor relationship\", function () {\r",
 											"    pm.sendRequest({\r",
-											"      url: `${pm.variables.get(\"API_URL\")}/vendors/${pm.collectionVariables.get(\"ApplicationVendorId\")}/applications`,\r",
+											"      url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"ApplicationVendorId\")}/applications`,\r",
 											"      method: 'GET',\r",
 											"      header: {\r",
 											"          \"Content-Type\": \"application/json\",\r",
@@ -1961,11 +1978,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2029,11 +2047,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2096,11 +2115,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2164,11 +2184,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2216,11 +2237,12 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}/reset-credential",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}/reset-credential",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}",
 										"reset-credential"
@@ -2264,11 +2286,12 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2313,11 +2336,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2362,11 +2386,12 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}/reset-credential",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}/reset-credential",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}",
 										"reset-credential"
@@ -2421,11 +2446,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]
@@ -2473,11 +2499,12 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/applications/{{CreatedApplicationId}}",
+									"raw": "{{API_URL}}/v1/applications/{{CreatedApplicationId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
+										"v1",
 										"applications",
 										"{{CreatedApplicationId}}"
 									]

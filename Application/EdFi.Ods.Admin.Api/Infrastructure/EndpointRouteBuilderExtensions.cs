@@ -20,13 +20,8 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
         internal static RouteHandlerBuilder WithDefaultPostOptions(this RouteHandlerBuilder builder, string tag)
             => SetDefaultOptions(builder, $"Creates {tag.ToSingleEntity()} based on the supplied values.", tag);
 
-        internal static RouteHandlerBuilder MapPutWithDefaultOptions(this IEndpointRouteBuilder builder,
-           string route, Delegate handler, string tag)
-        {
-            var routeHandler = builder.MapPut(route, handler);
-            SetDefaultOptions(routeHandler, $"Updates {tag.ToSingleEntity()} based on the resource identifier.", tag);
-            return routeHandler;
-        }
+        internal static RouteHandlerBuilder WithDefaultPutOptions(this RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Updates {tag.ToSingleEntity()} based on the resource identifier.", tag);
 
         internal static RouteHandlerBuilder MapDeleteWithDefaultOptions(this IEndpointRouteBuilder builder,
            string route, Delegate handler, string tag)

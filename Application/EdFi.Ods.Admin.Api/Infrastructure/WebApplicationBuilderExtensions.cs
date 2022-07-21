@@ -106,6 +106,11 @@ public static class WebApplicationBuilderExtensions
             {
                 Title = "Admin API Documentation", Version = "v1"
             });
+
+            opt.SwaggerDoc("v2", new OpenApiInfo
+            {
+                Title = "Admin API Documentation", Version = "v2"
+            });
             opt.DocumentFilter<OperationResponsesDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();

@@ -47,7 +47,7 @@ app.UseHealthChecks("/health");
 if (app.Configuration.GetValue<bool>("EnableSwagger"))
 {
     app.UseSwagger();
-    app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersions());
+    app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());
 }
 
 app.Run();

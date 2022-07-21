@@ -12,7 +12,10 @@ namespace EdFi.Ods.Admin.Api.Infrastructure;
 public class AdminApiVersions
 {
     private static bool _isInitialized;
-    public static AdminApiVersion V1 = new AdminApiVersion(1.0, "v1");
+    public const double V1Version = 1.0;
+    public const double V2Version = 2.0;
+
+    public static AdminApiVersion V1 = new AdminApiVersion(V1Version, "v1");
     public static AdminApiVersion V2 = new AdminApiVersion(2.0, "v2");
     private static ApiVersionSet? _versionSet;
 
@@ -34,13 +37,20 @@ public class AdminApiVersions
             "Admin API Versions have not been initialized. Call Initialize() at app startup");
     }
 
-    public static string[] GetAllVersions()
+    public static IEnumerable<AdminApiVersion> GetAllVersions()
     {
         return typeof(AdminApiVersions)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
             .Where(field => field.FieldType == typeof(AdminApiVersion))
             .Select(field => field.GetValue(null) as AdminApiVersion)
-            .Select(apiVersion => apiVersion?.ToString() ?? "")
+            .Where(apiVersion => apiVersion != null)
+            .ToArray()!;
+    }
+
+    public static string[] GetAllVersionStrings()
+    {
+        return GetAllVersions()
+            .Select(apiVersion => apiVersion.ToString())
             .ToArray();
     }
 

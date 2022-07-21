@@ -108,7 +108,7 @@ public static class WebApplicationBuilderExtensions
                 }
             );
 
-            foreach (var version in AdminApiVersions.GetAllVersions())
+            foreach (var version in AdminApiVersions.GetAllVersionStrings())
             {
                 opt.SwaggerDoc(version, new OpenApiInfo
                 {

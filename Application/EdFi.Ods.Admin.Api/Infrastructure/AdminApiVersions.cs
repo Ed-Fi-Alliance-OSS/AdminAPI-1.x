@@ -38,7 +38,7 @@ public class AdminApiVersions
     {
         return typeof(AdminApiVersions)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Where(field => field == typeof(AdminApiVersion))
+            .Where(field => field.FieldType == typeof(AdminApiVersion))
             .Select(field => field.GetValue(null) as AdminApiVersion)
             .Select(apiVersion => apiVersion?.ToString() ?? "")
             .ToArray();

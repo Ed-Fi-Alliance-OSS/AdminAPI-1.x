@@ -63,6 +63,12 @@ public static class WebApplicationBuilderExtensions
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
+        webApplicationBuilder.Services.AddApiVersioning(opt =>
+        {
+            opt.ReportApiVersions = true;
+            opt.AssumeDefaultVersionWhenUnspecified = false;
+        });
+
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {

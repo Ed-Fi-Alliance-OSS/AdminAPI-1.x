@@ -11,7 +11,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
             return builder;
         }
 
-        internal static void DefaultGetOptions(RouteHandlerBuilder builder, string tag)
+        internal static RouteHandlerBuilder WithDefaultGetOptions(this RouteHandlerBuilder builder, string tag)
             => SetDefaultOptions(builder, $"Retrieves all {tag}.", tag);
 
         internal static RouteHandlerBuilder MapGetWithDefaultOptions(this IEndpointRouteBuilder builder,
@@ -54,11 +54,13 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
             return routeHandler;
         }
 
-        private static void SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
+        private static RouteHandlerBuilder SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
         {
             routeHandlerBuilder.WithMetadata(new OperationDescriptionAttribute(operationSummary, null));
             routeHandlerBuilder.WithTags(tag);
             routeHandlerBuilder.RequireAuthorization();
+
+            return routeHandlerBuilder;
         }
     }
 }

@@ -12,7 +12,7 @@ public class AdminApiEndpointBuilder
     {
         _endpoints = endpoints;
         _verb = verb;
-        _route = route;
+        _route = route.Trim('/');
         _handler = handler;
     }
 

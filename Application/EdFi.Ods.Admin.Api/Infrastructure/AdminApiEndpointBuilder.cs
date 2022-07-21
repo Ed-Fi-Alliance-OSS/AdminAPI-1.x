@@ -36,9 +36,12 @@ public class AdminApiEndpointBuilder
 
     public void BuildForVersions(params string[] versions)
     {
+        if(versions.Length == 0) throw new ArgumentException("Must register for at least 1 version");
+        if(string.IsNullOrEmpty(_route)) throw new Exception("Invalid endpoint registration. Route must be specified");
+
         foreach (var version in versions)
         {
-            var versionedRoute = $"{version}/{_route}";
+            var versionedRoute = $"/{version}/{_route}";
 
             var builder = _verb switch
             {
@@ -46,7 +49,7 @@ public class AdminApiEndpointBuilder
                 HttpVerb.POST => _endpoints.MapPost(versionedRoute, _handler),
                 HttpVerb.PUT => _endpoints.MapPut(versionedRoute, _handler),
                 HttpVerb.DELETE => _endpoints.MapDelete(versionedRoute, _handler),
-                _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_}")
+                _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_verb}")
             };
 
             foreach (var action in _routeOptions)

@@ -6,7 +6,7 @@
 name: 'E2E Reports'
 on:
   workflow_run:
-    workflows: [ 'E2E Tests' ]
+    workflows: [ 'E2E Tests', 'Admin API E2E Tests' ]
     types:
       - completed
 
@@ -17,7 +17,7 @@ env:
   CYCLE_NAME: 'Automation Cycle'
   TASK_NAME: 'Playwright Automation Task'
   FOLDER_NAME: 'Playwright Automation Run'
-  RESULTS_FILE: 'playwright-results'
+  RESULTS_FILE: 'test-results'
 
 jobs:
 
@@ -34,13 +34,13 @@ jobs:
       uses: dorny/test-reporter@0d00bb14cb0cc2c9b8985df6e81dd333188224e1 #v1.5.0
       with:
         artifact: ${{ env.RESULTS_FILE }}
-        name: Playwright Tests
+        name: Tests Results
         path: '*.xml'
         reporter: java-junit
     - name: Extract Artifact
       run: Expand-Archive "${{ env.RESULTS_FILE }}.zip"
     - name: Send report to Zephyr
-      if: github.event.workflow_run.head_branch == 'main'
+      if: github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.name != 'Admin API E2E Tests'
       run: |
         $parameters = @{
             cycleName = '${{ env.CYCLE_NAME }}'

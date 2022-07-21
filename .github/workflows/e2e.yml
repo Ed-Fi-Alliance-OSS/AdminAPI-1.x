@@ -64,7 +64,7 @@ jobs:
     - name: Upload results
       uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
       with:
-        name: playwright-results
+        name: test-results
         path: main/Application/EdFi.Ods.AdminApp.E2E.Tests/reports/playwright-results.xml
         retention-days: 10
     - name: Upload execution traces

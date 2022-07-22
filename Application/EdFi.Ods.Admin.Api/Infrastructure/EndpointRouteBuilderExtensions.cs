@@ -29,7 +29,6 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
         private static RouteHandlerBuilder SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
         {
             routeHandlerBuilder.WithMetadata(new OperationDescriptionAttribute(operationSummary, null));
-            routeHandlerBuilder.WithTags(tag);
             routeHandlerBuilder.RequireAuthorization();
 
             return routeHandlerBuilder;

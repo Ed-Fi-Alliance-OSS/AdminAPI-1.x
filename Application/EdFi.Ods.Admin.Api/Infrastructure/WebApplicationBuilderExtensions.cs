@@ -2,6 +2,7 @@ using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
+using EdFi.Ods.Admin.Api.Infrastructure.Swagger;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Database;
@@ -74,6 +75,7 @@ public static class WebApplicationBuilderExtensions
         {
             opt.CustomSchemaIds(x => x.FullName);
             opt.OperationFilter<TokenEndpointBodyDescriptionFilter>();
+            opt.OperationFilter<TagByResourceUrlFilter>();
             opt.AddSecurityDefinition(
                 "oauth",
                 new OpenApiSecurityScheme

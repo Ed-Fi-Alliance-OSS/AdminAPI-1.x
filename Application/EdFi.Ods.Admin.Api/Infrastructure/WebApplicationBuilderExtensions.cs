@@ -63,6 +63,12 @@ public static class WebApplicationBuilderExtensions
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
+        webApplicationBuilder.Services.AddApiVersioning(opt =>
+        {
+            opt.ReportApiVersions = true;
+            opt.AssumeDefaultVersionWhenUnspecified = false;
+        });
+
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
@@ -102,10 +108,14 @@ public static class WebApplicationBuilderExtensions
                 }
             );
 
-            opt.SwaggerDoc("v1", new OpenApiInfo
+            foreach (var version in AdminApiVersions.GetAllVersionStrings())
             {
-                Title = "Admin API Documentation", Version = "v1"
-            });
+                opt.SwaggerDoc(version, new OpenApiInfo
+                {
+                    Title = "Admin API Documentation", Version = version
+                });
+            }
+
             opt.DocumentFilter<OperationResponsesDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();

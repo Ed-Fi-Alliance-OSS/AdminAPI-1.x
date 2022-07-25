@@ -5,51 +5,34 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
 {
     public static class EndpointRouteBuilderExtensions
     {
-        internal static RouteHandlerBuilder MapGetWithDefaultOptions(this IEndpointRouteBuilder builder,
-           string route, Delegate handler, string tag)
+        internal static AdminApiEndpointBuilder WithDefaultOptions(this AdminApiEndpointBuilder builder, string tag)
         {
-            var routeHandler = builder.MapGet(route, handler);
-            SetDefaultOptions(routeHandler, $"Retrieves all {tag}.", tag);
-            return routeHandler;
+            builder.WithRouteOptions(rhb => SetDefaultOptions(rhb, "Temp Message Will Fix", tag));
+            return builder;
         }
 
-        internal static RouteHandlerBuilder MapGetByIdWithDefaultOptions(this IEndpointRouteBuilder builder,
-          string route, Delegate handler, string tag)
-        {
-            var routeHandler = builder.MapGet(route, handler);
-            SetDefaultOptions(routeHandler, $"Retrieves a specific {tag.ToSingleEntity()} based on the resource identifier.", tag);
-            return routeHandler;
-        }
+        internal static RouteHandlerBuilder WithDefaultGetOptions(this RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Retrieves all {tag}.", tag);
 
-        internal static RouteHandlerBuilder MapPostWithDefaultOptions(this IEndpointRouteBuilder builder,
-           string route, Delegate handler, string tag)
-        {
-            var routeHandler = builder.MapPost(route, handler);
-            SetDefaultOptions(routeHandler, $"Creates {tag.ToSingleEntity()} based on the supplied values.", tag);
-            return routeHandler;
-        }
+        internal static RouteHandlerBuilder WithDefaultGetByIdOptions(this RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Retrieves a specific {tag.ToSingleEntity()} based on the identifier.", tag);
 
-        internal static RouteHandlerBuilder MapPutWithDefaultOptions(this IEndpointRouteBuilder builder,
-           string route, Delegate handler, string tag)
-        {
-            var routeHandler = builder.MapPut(route, handler);
-            SetDefaultOptions(routeHandler, $"Updates {tag.ToSingleEntity()} based on the resource identifier.", tag);
-            return routeHandler;
-        }
+        internal static RouteHandlerBuilder WithDefaultPostOptions(this RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Creates {tag.ToSingleEntity()} based on the supplied values.", tag);
 
-        internal static RouteHandlerBuilder MapDeleteWithDefaultOptions(this IEndpointRouteBuilder builder,
-           string route, Delegate handler, string tag)
-        {
-            var routeHandler = builder.MapDelete(route, handler);
-            SetDefaultOptions(routeHandler, $"Deletes an existing {tag.ToSingleEntity()} using the resource identifier.", tag);
-            return routeHandler;
-        }
+        internal static RouteHandlerBuilder WithDefaultPutOptions(this RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Updates {tag.ToSingleEntity()} based on the resource identifier.", tag);
 
-        private static void SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
+        internal static RouteHandlerBuilder WithDefaultDeleteOptions(this RouteHandlerBuilder builder, string tag)
+            => SetDefaultOptions(builder, $"Deletes an existing {tag.ToSingleEntity()} using the resource identifier.", tag);
+
+        private static RouteHandlerBuilder SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
         {
             routeHandlerBuilder.WithMetadata(new OperationDescriptionAttribute(operationSummary, null));
             routeHandlerBuilder.WithTags(tag);
             routeHandlerBuilder.RequireAuthorization();
+
+            return routeHandlerBuilder;
         }
     }
 }

@@ -14,8 +14,13 @@ public class ReadApplication : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGetWithDefaultOptions($"/{FeatureConstants.Applications}", GetApplications, FeatureConstants.Applications);
-        endpoints.MapGetByIdWithDefaultOptions($"/{FeatureConstants.Applications}" + "/{id}", GetApplication, FeatureConstants.Applications);
+        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Applications}", GetApplications)
+            .WithRouteOptions(rhb => rhb.WithDefaultGetOptions(FeatureConstants.Applications))
+            .BuildForVersions(AdminApiVersions.V1);
+
+        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", GetApplication)
+            .WithRouteOptions(rhb => rhb.WithDefaultGetByIdOptions(FeatureConstants.Applications))
+            .BuildForVersions(AdminApiVersions.V1);
     }
 
     internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper)

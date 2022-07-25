@@ -14,7 +14,10 @@ public class ReadApplicationsByVendor : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var url = $"{FeatureConstants.Vendors}/"+"{id}"+$"/{FeatureConstants.Applications}";
-        endpoints.MapGetByIdWithDefaultOptions(url , GetVendorApplications, FeatureConstants.Vendors);
+
+        AdminApiEndpointBuilder.MapGet(endpoints, url, GetVendorApplications)
+            .WithRouteOptions(rhb => rhb.WithDefaultGetOptions(FeatureConstants.Vendors))
+            .BuildForVersions(AdminApiVersions.V1);
     }
 
     internal Task<IResult> GetVendorApplications(GetApplicationsByVendorIdQuery getApplicationByVendorIdQuery, IMapper mapper, int id)

@@ -16,4 +16,7 @@ jq --arg variable "$measurementId" '.AppSettings.GoogleAnalyticsMeasurementId = 
 
 mv /app/temp.json /app/appsettings.json
 
+cp /ssl/server.crt /usr/local/share/ca-certificates/
+update-ca-certificates
+
 dotnet EdFi.Ods.Admin.Api.dll

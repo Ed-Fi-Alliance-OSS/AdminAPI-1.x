@@ -46,7 +46,7 @@ public static class SecurityExtensions
                 }
 
                 opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
-                opt.UseAspNetCore().EnableTokenEndpointPassthrough();
+                opt.UseAspNetCore().EnableTokenEndpointPassthrough().DisableTransportSecurityRequirement();
             })
             .AddValidation(options =>
             {
@@ -72,6 +72,7 @@ public static class SecurityExtensions
                 ValidIssuer = issuer,
                 IssuerSigningKey = signingKey
             };
+            opt.RequireHttpsMetadata = false;
         });
         services.AddAuthorization(opt =>
         {

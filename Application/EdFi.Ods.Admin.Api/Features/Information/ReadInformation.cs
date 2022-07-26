@@ -20,12 +20,6 @@ public class ReadInformation : IFeature
 
     internal InformationResult GetInformation()
     {
-        var content = new InformationResult()
-        {
-            Version = ConstantsHelpers.Version,
-            Build = ConstantsHelpers.Build
-        };
-
-        return content;
+        return new InformationResult(ConstantsHelpers.Version, ConstantsHelpers.Build);
     }
 }

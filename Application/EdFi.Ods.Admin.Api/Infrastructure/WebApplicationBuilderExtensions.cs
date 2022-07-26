@@ -121,13 +121,8 @@ public static class WebApplicationBuilderExtensions
             opt.DocumentFilter<OperationResponsesDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();
-            opt.OperationFilter<OperationDescriptionFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
-            opt.CustomSchemaIds(x =>
-            {
-                var customSchemaName = x.GetCustomAttributes<DisplaySchemaNameAttribute>().SingleOrDefault();
-                return customSchemaName != null ? customSchemaName.Name : x.FullName;
-            });
+            opt.CustomSchemaIds(x => x.FullName);
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {

@@ -1,5 +1,5 @@
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure
 {
@@ -28,7 +28,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
 
         private static RouteHandlerBuilder SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
         {
-            routeHandlerBuilder.WithMetadata(new OperationDescriptionAttribute(operationSummary, null));
+            routeHandlerBuilder.WithMetadata(new SwaggerOperationAttribute(operationSummary, null));
             routeHandlerBuilder.RequireAuthorization();
 
             return routeHandlerBuilder;

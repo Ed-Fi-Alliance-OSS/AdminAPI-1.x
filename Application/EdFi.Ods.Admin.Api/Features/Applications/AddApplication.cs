@@ -8,7 +8,6 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using FluentValidation;
-using EdFi.Ods.Admin.Api.ActionFilters;
 using Swashbuckle.AspNetCore.Annotations;
 using FluentValidation.Results;
 
@@ -41,7 +40,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
         }
 
-        [DisplaySchemaName(FeatureConstants.AddApplicationDisplayName)]
+        [SwaggerSchema(Title = FeatureConstants.AddApplicationDisplayName)]
         public class Request : IAddApplicationModel
         {
             [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]

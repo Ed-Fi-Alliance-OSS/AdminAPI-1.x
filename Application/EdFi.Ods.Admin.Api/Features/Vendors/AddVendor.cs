@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
-using EdFi.Ods.Admin.Api.ActionFilters;
 
 namespace EdFi.Ods.Admin.Api.Features.Vendors
 {
@@ -31,7 +30,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/{FeatureConstants.Vendors}/{model.VendorId}");
         }
 
-        [DisplaySchemaName(FeatureConstants.AddVendorDisplayName)]
+        [SwaggerSchema(Title=FeatureConstants.AddVendorDisplayName)]
         public class Request : IAddVendorModel
         {
             [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]

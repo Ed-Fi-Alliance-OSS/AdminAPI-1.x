@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
@@ -32,7 +31,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Updated(model, "Vendor");
         }
 
-        [DisplaySchemaName(FeatureConstants.EditVendorDisplayName)]
+        [SwaggerSchema(Title = FeatureConstants.EditVendorDisplayName)]
         public class Request : IEditVendor
         {
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]

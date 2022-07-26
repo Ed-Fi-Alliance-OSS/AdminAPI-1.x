@@ -16,6 +16,9 @@ public static class SecurityExtensions
     public static void AddSecurityUsingOpenIddict(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
+
+        var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
+
         //OpenIddict Server
         var signingKeyValue = configuration.GetValue<string>("Authentication:SigningKey");
         var signingKey = string.IsNullOrEmpty(signingKeyValue) ? null : new SymmetricSecurityKey(Convert.FromBase64String(signingKeyValue));
@@ -46,7 +49,13 @@ public static class SecurityExtensions
                 }
 
                 opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
-                opt.UseAspNetCore().EnableTokenEndpointPassthrough().DisableTransportSecurityRequirement();
+                if (isDockerEnvironment)
+                {
+                    opt.UseAspNetCore().EnableTokenEndpointPassthrough().DisableTransportSecurityRequirement();
+                } else
+                {
+                    opt.UseAspNetCore().EnableTokenEndpointPassthrough();
+                }
             })
             .AddValidation(options =>
             {
@@ -72,7 +81,11 @@ public static class SecurityExtensions
                 ValidIssuer = issuer,
                 IssuerSigningKey = signingKey
             };
-            opt.RequireHttpsMetadata = false;
+            if (isDockerEnvironment)
+            {
+                opt.RequireHttpsMetadata = false;
+            }
+            
         });
         services.AddAuthorization(opt =>
         {

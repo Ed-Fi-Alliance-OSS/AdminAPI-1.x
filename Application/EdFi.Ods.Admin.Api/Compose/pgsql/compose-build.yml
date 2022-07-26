@@ -24,7 +24,6 @@ services:
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
-      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
     depends_on:
       - pb-admin

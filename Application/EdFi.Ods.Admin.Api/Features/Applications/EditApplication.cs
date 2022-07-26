@@ -44,10 +44,10 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
         }
 
-        [SwaggerSchema(Title = FeatureConstants.EditApplicationDisplayName)]
+        [SwaggerSchema(Title = "EditApplication")]
         public class Request : IEditApplicationModel
         {
-            [SwaggerSchema(Description = FeatureConstants.ApplicationIdDescription, Nullable = false)]
+            [SwaggerSchema(Description = "Application id", Nullable = false)]
             public int ApplicationId { get; set; }
 
             [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]

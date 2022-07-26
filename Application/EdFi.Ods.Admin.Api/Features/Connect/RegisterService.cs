@@ -78,11 +78,11 @@ public class RegisterService : IRegisterService
     [SwaggerSchema(Title="Register")]
     public class Request
     {
-        [SwaggerSchema(Description = FeatureConstants.RegisterClientId, Nullable = false)]
+        [SwaggerSchema(Description = "Client id", Nullable = false)]
         public string? ClientId { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.RegisterClientSecret, Nullable = false)]
+        [SwaggerSchema(Description = "Client secret", Nullable = false)]
         public string? ClientSecret { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.RegisterDisplayName, Nullable = false)]
+        [SwaggerSchema(Description = "Client display name", Nullable = false)]
         public string? DisplayName { get; set; }
     }
 }

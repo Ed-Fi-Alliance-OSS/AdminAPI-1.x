@@ -31,7 +31,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Updated(model, "Vendor");
         }
 
-        [SwaggerSchema(Title = FeatureConstants.EditVendorDisplayName)]
+        [SwaggerSchema(Title = "EditVendor")]
         public class Request : IEditVendor
         {
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]

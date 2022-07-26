@@ -6,6 +6,23 @@
 version: "3.8"
 
 services:
+  nginx:
+    build:
+      context: ../../Docker/gateway/
+      dockerfile: Dockerfile
+    environment:
+      ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+    ports:
+      - "443:443"
+      - "80:80"
+    container_name: ed-fi-adminapi-gateway
+    restart: always
+    hostname: nginx
+    volumes:
+      - ../../Docker/ssl:/ssl/
+    depends_on:
+      - adminapi
+  
   adminapi:
     build:
       context: ../../
@@ -24,11 +41,14 @@ services:
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
+      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi} 
       API_INTERNAL_URL: ${API_INTERNAL_URL}
+    volumes:
+      - ../../Docker/ssl:/ssl/
     depends_on:
       - pb-admin
     restart: always
-    hostname: adminapi
+    hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi} 
     container_name: adminapi
     healthcheck:
       test: $$ADMIN_API_HEALTHCHECK_TEST

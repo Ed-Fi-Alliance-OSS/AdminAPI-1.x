@@ -19,7 +19,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
             AdminApiEndpointBuilder.MapPut(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPutOptions(FeatureConstants.Applications))
+                .WithDefaultDescription()
                 .BuildForVersions(AdminApiVersions.V1);
         }
 

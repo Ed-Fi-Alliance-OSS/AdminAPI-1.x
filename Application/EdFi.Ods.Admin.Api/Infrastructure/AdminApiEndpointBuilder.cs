@@ -3,6 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
 public class AdminApiEndpointBuilder
@@ -14,13 +17,15 @@ public class AdminApiEndpointBuilder
         _verb = verb;
         _route = route.Trim('/');
         _handler = handler;
+        _pluralResourceName = _route.Split('/').First();
     }
 
     private readonly IEndpointRouteBuilder _endpoints;
     private readonly HttpVerb? _verb;
-    private readonly string? _route;
+    private readonly string _route;
     private readonly Delegate? _handler;
     private readonly List<Action<RouteHandlerBuilder>> _routeOptions = new();
+    private readonly string _pluralResourceName;
 
     public static AdminApiEndpointBuilder MapGet(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.GET, route, handler);
@@ -67,6 +72,26 @@ public class AdminApiEndpointBuilder
     public AdminApiEndpointBuilder WithRouteOptions(Action<RouteHandlerBuilder> routeHandlerBuilderAction)
     {
         _routeOptions.Add(routeHandlerBuilderAction);
+        return this;
+    }
+
+    public AdminApiEndpointBuilder WithDefaultDescription()
+    {
+        var description = _verb switch
+        {
+            HttpVerb.GET => _route.Contains("id") ? $"Retrieves a specific {_pluralResourceName.ToSingleEntity()} based on the identifier." : $"Retrieves all {_pluralResourceName}.",
+            HttpVerb.POST => $"Creates {_pluralResourceName.ToSingleEntity()} based on the supplied values.",
+            HttpVerb.PUT => $"Updates {_pluralResourceName.ToSingleEntity()} based on the resource identifier.",
+            HttpVerb.DELETE => $"Deletes an existing {_pluralResourceName.ToSingleEntity()} using the resource identifier.",
+            _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for default description {_verb}")
+        };
+
+        return WithDescription(description);
+    }
+
+    public AdminApiEndpointBuilder WithDescription(string description)
+    {
+        _routeOptions.Add(rhb => rhb.WithMetadata(new SwaggerOperationAttribute(description)));
         return this;
     }
 

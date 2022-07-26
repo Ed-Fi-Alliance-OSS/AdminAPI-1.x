@@ -18,7 +18,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
         {
             AdminApiEndpointBuilder
                 .MapPost(endpoints, $"/{FeatureConstants.Vendors}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPostOptions(FeatureConstants.Vendors))
+                .WithDefaultDescription()
                 .BuildForVersions(AdminApiVersions.V1);
         }
 

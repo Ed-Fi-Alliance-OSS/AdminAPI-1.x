@@ -5,6 +5,7 @@
 
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using FluentValidation;
@@ -18,7 +19,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
             AdminApiEndpointBuilder.MapPost(endpoints, $"/{FeatureConstants.Applications}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPostOptions(FeatureConstants.Applications))
+                .WithDefaultDescription()
                 .BuildForVersions(AdminApiVersions.V1);
         }
 

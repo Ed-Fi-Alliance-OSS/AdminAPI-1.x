@@ -12,7 +12,7 @@ public class ReadClaimSets : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.ClaimSets}", GetClaimSets)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets", GetClaimSets)
             .WithDefaultDescription()
             .BuildForVersions(AdminApiVersions.V1);
     }

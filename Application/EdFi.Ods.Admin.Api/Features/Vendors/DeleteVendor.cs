@@ -12,7 +12,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            AdminApiEndpointBuilder.MapDelete(endpoints, $"/{FeatureConstants.Vendors}" + "/{id}", Handle)
+            AdminApiEndpointBuilder.MapDelete(endpoints, "/vendors/{id}", Handle)
                 .WithDefaultDescription()
                 .BuildForVersions(AdminApiVersions.V1);
         }

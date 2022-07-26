@@ -18,7 +18,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            AdminApiEndpointBuilder.MapPost(endpoints, $"/{FeatureConstants.Applications}", Handle)
+            AdminApiEndpointBuilder.MapPost(endpoints, "/applications", Handle)
                 .WithDefaultDescription()
                 .BuildForVersions(AdminApiVersions.V1);
         }
@@ -29,7 +29,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
             GuardAgainstInvalidEntityReferences(request, db);
             var addedApplicationResult = addApplicationCommand.Execute(request);
             var model = mapper.Map<ApplicationResult>(addedApplicationResult);
-            return AdminApiResponse<ApplicationResult>.Created(model, "Application", $"/{FeatureConstants.Applications}/{model.ApplicationId}");
+            return AdminApiResponse<ApplicationResult>.Created(model, "Application", $"/applications/{model.ApplicationId}");
         }
 
         private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)

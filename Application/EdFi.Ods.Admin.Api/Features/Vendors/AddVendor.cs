@@ -17,7 +17,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
             AdminApiEndpointBuilder
-                .MapPost(endpoints, $"/{FeatureConstants.Vendors}", Handle)
+                .MapPost(endpoints, "/vendors", Handle)
                 .WithDefaultDescription()
                 .BuildForVersions(AdminApiVersions.V1);
         }
@@ -27,7 +27,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             await validator.GuardAsync(request);
             var addedVendor = addVendorCommand.Execute(request);
             var model = mapper.Map<VendorModel>(addedVendor);
-            return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/{FeatureConstants.Vendors}/{model.VendorId}");
+            return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/vendors/{model.VendorId}");
         }
 
         [SwaggerSchema(Title = "AddVendor")]

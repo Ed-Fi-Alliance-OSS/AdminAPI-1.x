@@ -14,11 +14,11 @@ public class ReadApplication : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Applications}", GetApplications)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/applications", GetApplications)
             .WithDefaultDescription()
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", GetApplication)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{id}", GetApplication)
             .WithDefaultDescription()
             .BuildForVersions(AdminApiVersions.V1);
     }

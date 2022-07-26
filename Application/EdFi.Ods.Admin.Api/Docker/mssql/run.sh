@@ -7,13 +7,13 @@
 set -e
 set -x
 
-envsubst < /app/AdminApi/appsettings.template.json > /app/AdminApi/temp.json
+envsubst < /app/AdminApi/appsettings.template.json > /app/temp.json
 
-measurementId=`jq -r '.AppSettings.GoogleAnalyticsMeasurementId' /app/AdminApi/appsettings.json`
+measurementId=`jq -r '.AppSettings.GoogleAnalyticsMeasurementId' /app/appsettings.json`
 
 tmp=$(mktemp)
-jq --arg variable "$measurementId" '.AppSettings.GoogleAnalyticsMeasurementId = $variable' /app/AdminApi/temp.json > "$tmp" && mv "$tmp" /app/AdminApi/temp.json
+jq --arg variable "$measurementId" '.AppSettings.GoogleAnalyticsMeasurementId = $variable' /app/temp.json > "$tmp" && mv "$tmp" /app/temp.json
 
-mv /app/AdminApi/temp.json /app/AdminApi/appsettings.json
+mv /app/temp.json /app/appsettings.json
 
 dotnet EdFi.Ods.Admin.Api.dll

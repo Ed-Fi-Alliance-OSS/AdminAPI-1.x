@@ -118,7 +118,6 @@ public static class WebApplicationBuilderExtensions
                 });
             }
 
-            opt.DocumentFilter<OperationResponsesDocumentFilter>();
             opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();

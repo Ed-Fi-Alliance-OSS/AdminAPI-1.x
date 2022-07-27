@@ -69,6 +69,12 @@ public class AdminApiEndpointBuilder
             {
                 builder.WithResponseCode(404, "Not found. A resource with given identifier could not be found.");
             }
+
+            if (_verb is HttpVerb.PUT or HttpVerb.POST)
+            {
+                builder.WithResponseCode(400, "Bad Request. The request was invalid and cannot be completed. See the response body for details.");
+            }
+
             foreach (var action in _routeOptions)
             {
                 action(builder);

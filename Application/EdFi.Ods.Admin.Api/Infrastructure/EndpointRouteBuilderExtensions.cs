@@ -17,13 +17,5 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
             builder.WithMetadata(new SwaggerResponseAttribute(code, description, typeof(T)));
             return builder;
         }
-
-        private static RouteHandlerBuilder SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
-        {
-            routeHandlerBuilder.WithMetadata(new SwaggerOperationAttribute(operationSummary, null));
-            routeHandlerBuilder.RequireAuthorization();
-
-            return routeHandlerBuilder;
-        }
     }
 }

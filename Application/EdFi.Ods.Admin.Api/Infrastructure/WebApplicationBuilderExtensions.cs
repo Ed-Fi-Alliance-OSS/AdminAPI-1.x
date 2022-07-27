@@ -118,7 +118,6 @@ public static class WebApplicationBuilderExtensions
                 });
             }
 
-            opt.DocumentFilter<RemoveSchemaDocumentFilter>();
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
             opt.CustomSchemaIds(x => x.FullName);

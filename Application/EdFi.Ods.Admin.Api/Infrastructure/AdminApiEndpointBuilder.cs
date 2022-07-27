@@ -27,6 +27,7 @@ public class AdminApiEndpointBuilder
     private readonly Delegate? _handler;
     private readonly List<Action<RouteHandlerBuilder>> _routeOptions = new();
     private readonly string _pluralResourceName;
+    private bool _allowAnonymous = false;
 
     public static AdminApiEndpointBuilder MapGet(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.GET, route, handler);
@@ -60,6 +61,15 @@ public class AdminApiEndpointBuilder
                 HttpVerb.DELETE => _endpoints.MapDelete(versionedRoute, _handler),
                 _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_verb}")
             };
+
+            if (_allowAnonymous)
+            {
+                builder.AllowAnonymous();
+            }
+            else
+            {
+                builder.RequireAuthorization();
+            }
 
             builder.WithGroupName(version.ToString());
             builder.WithResponseCode(401, "Unauthorized. The request requires authentication");
@@ -106,6 +116,12 @@ public class AdminApiEndpointBuilder
     public AdminApiEndpointBuilder WithDescription(string description)
     {
         _routeOptions.Add(rhb => rhb.WithMetadata(new SwaggerOperationAttribute(description)));
+        return this;
+    }
+
+    public AdminApiEndpointBuilder AllowAnonymous()
+    {
+        _allowAnonymous = true;
         return this;
     }
 

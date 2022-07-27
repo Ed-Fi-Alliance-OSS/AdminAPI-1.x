@@ -28,9 +28,6 @@ services:
       context: ../../
       dockerfile: pgsql.Dockerfile
     image: adminapi
-    ports:
-      - "8080:80"
-      - "8001:443"
     environment:
       ADMIN_POSTGRES_HOST: pb-admin
       POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"

@@ -49,12 +49,10 @@ public static class SecurityExtensions
                 }
 
                 opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
+                var aspNetCoreBuilder = opt.UseAspNetCore().EnableTokenEndpointPassthrough();
                 if (isDockerEnvironment)
                 {
-                    opt.UseAspNetCore().EnableTokenEndpointPassthrough().DisableTransportSecurityRequirement();
-                } else
-                {
-                    opt.UseAspNetCore().EnableTokenEndpointPassthrough();
+                    aspNetCoreBuilder.DisableTransportSecurityRequirement();
                 }
             })
             .AddValidation(options =>
@@ -81,11 +79,7 @@ public static class SecurityExtensions
                 ValidIssuer = issuer,
                 IssuerSigningKey = signingKey
             };
-            if (isDockerEnvironment)
-            {
-                opt.RequireHttpsMetadata = false;
-            }
-            
+            opt.RequireHttpsMetadata = !isDockerEnvironment;
         });
         services.AddAuthorization(opt =>
         {

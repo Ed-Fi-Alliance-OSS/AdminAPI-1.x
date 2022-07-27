@@ -16,10 +16,12 @@ public class ReadApplication : IFeature
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications", GetApplications)
             .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{id}", GetApplication)
             .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 

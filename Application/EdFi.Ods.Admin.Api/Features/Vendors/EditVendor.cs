@@ -18,6 +18,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
         {
             AdminApiEndpointBuilder.MapPut(endpoints, "/vendors/{id}", Handle)
                 .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 

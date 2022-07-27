@@ -20,6 +20,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
         {
             AdminApiEndpointBuilder.MapPost(endpoints, "/applications", Handle)
                 .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponse<ApplicationResult>(201))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 

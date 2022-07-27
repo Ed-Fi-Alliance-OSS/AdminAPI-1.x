@@ -17,6 +17,7 @@ public class ReadApplicationsByVendor : IFeature
 
         AdminApiEndpointBuilder.MapGet(endpoints, url, GetVendorApplications)
             .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 

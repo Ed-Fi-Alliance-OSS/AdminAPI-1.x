@@ -15,6 +15,7 @@ public class ResetApplicationCredentials : IFeature
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/applications/{id}/reset-credential", HandleResetCredentials)
             .WithDescription("Reset application credentials. Returns new key and secret.")
+            .WithRouteOptions(b => b.WithResponse<ApplicationResult>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 

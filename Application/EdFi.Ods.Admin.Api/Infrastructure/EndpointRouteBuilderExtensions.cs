@@ -11,6 +11,13 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
             return builder;
         }
 
+        public static RouteHandlerBuilder WithResponse<T>(this RouteHandlerBuilder builder, int code, string? description = null)
+        {
+            builder.Produces(code, responseType: typeof(T));
+            builder.WithMetadata(new SwaggerResponseAttribute(code, description, typeof(T)));
+            return builder;
+        }
+
         private static RouteHandlerBuilder SetDefaultOptions(RouteHandlerBuilder routeHandlerBuilder, string operationSummary, string tag)
         {
             routeHandlerBuilder.WithMetadata(new SwaggerOperationAttribute(operationSummary, null));

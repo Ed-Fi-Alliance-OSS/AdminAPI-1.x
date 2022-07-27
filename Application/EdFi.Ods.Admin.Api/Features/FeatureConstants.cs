@@ -21,5 +21,6 @@ namespace EdFi.Ods.Admin.Api.Features
         public const string ClaimSetNameValidationMessage = "Please provide a valid claim set name.";
         public const string EdOrgIdsValidationMessage = "Please provide at least one education organization id.";
         public const string VendorIdValidationMessage = "Please provide valid vendor id.";
+        public const string DeletedSuccessResponseDescription = "Resource was successfully deleted.";
     }
 }

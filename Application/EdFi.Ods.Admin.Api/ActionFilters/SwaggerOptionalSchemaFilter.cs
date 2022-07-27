@@ -9,6 +9,11 @@ using System.Reflection;
 
 namespace EdFi.Ods.Admin.Api.ActionFilters
 {
+    [AttributeUsage(AttributeTargets.Property)]
+    public class SwaggerOptionalAttribute : Attribute
+    {
+    }
+
     public class SwaggerOptionalSchemaFilter : ISchemaFilter
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)

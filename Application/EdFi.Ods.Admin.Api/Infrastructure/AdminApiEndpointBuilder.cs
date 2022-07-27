@@ -61,6 +61,9 @@ public class AdminApiEndpointBuilder
             };
 
             builder.WithGroupName(version.ToString());
+            builder.WithResponseCode(401, "Unauthorized. The request requires authentication");
+            builder.WithResponseCode(403, "Forbidden. The request is authenticated, but not authorized to access this resource");
+            builder.WithResponseCode(500, "Internal server error. An unhandled error occurred on the server. See the response body for details.");
 
             foreach (var action in _routeOptions)
             {

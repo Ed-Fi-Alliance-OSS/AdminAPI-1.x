@@ -65,6 +65,10 @@ public class AdminApiEndpointBuilder
             builder.WithResponseCode(403, "Forbidden. The request is authenticated, but not authorized to access this resource");
             builder.WithResponseCode(500, "Internal server error. An unhandled error occurred on the server. See the response body for details.");
 
+            if (_route.Contains("id", StringComparison.InvariantCultureIgnoreCase))
+            {
+                builder.WithResponseCode(404, "Not found. A resource with given identifier could not be found.");
+            }
             foreach (var action in _routeOptions)
             {
                 action(builder);

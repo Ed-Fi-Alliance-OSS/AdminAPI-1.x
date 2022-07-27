@@ -1,6 +1,6 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.Admin.Api.ActionFilters;
+using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.Admin.Api.Infrastructure.Swagger;
 using EdFi.Ods.AdminApp.Management;

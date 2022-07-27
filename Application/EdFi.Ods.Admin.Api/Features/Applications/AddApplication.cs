@@ -5,8 +5,8 @@
 
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure;
+using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;

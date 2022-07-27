@@ -8,7 +8,7 @@ using EdFi.Ods.Admin.Api.Features.Connect;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace EdFi.Ods.Admin.Api.ActionFilters
+namespace EdFi.Ods.Admin.Api.Infrastructure.Documentation
 {
     public class ListExplicitSchemaDocumentFilter : IDocumentFilter
     {

@@ -22,5 +22,7 @@ namespace EdFi.Ods.Admin.Api.Features
         public const string EdOrgIdsValidationMessage = "Please provide at least one education organization id.";
         public const string VendorIdValidationMessage = "Please provide valid vendor id.";
         public const string DeletedSuccessResponseDescription = "Resource was successfully deleted.";
+        public const string InternalServerErrorResponseDescription = "Internal server error. An unhandled error occurred on the server. See the response body for details.";
+        public const string BadRequestResponseDescription = "Bad Request. The request was invalid and cannot be completed. See the response body for details.";
     }
 }

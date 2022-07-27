@@ -15,6 +15,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace EdFi.Ods.Admin.Api.Features.Connect;
 
 [AllowAnonymous]
+[SwaggerResponse(400, "Bad Request. The request was invalid and cannot be completed. See the response body for details.")]
+[SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
 public class ConnectController : Controller
 {
     private readonly ITokenService _tokenService;
@@ -29,15 +31,17 @@ public class ConnectController : Controller
     [HttpPost("/connect/register")]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Registers new client", "Registers new client")]
-    public async Task<IActionResult> Register(RegisterService.Request request)
+    [SwaggerResponse(200, "Application registered successfully.")]
+    public async Task<IActionResult> Register([FromBody]RegisterService.Request request)
     {
         var message = await _registerService.Handle(request);
         return Ok(new { Title = message, Status = 200 });
     }
 
-    [SwaggerOperation("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
     [HttpPost(SecurityConstants.TokenEndpointUri)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
+    [SwaggerOperation("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
+    [SwaggerResponse(200, "Sign-in successful.")]
     public async Task<ActionResult> Token()
     {
         var request = HttpContext.GetOpenIddictServerRequest();

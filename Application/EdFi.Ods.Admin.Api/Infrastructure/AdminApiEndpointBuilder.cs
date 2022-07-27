@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.Admin.Api.Features;
 using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -63,7 +64,7 @@ public class AdminApiEndpointBuilder
             builder.WithGroupName(version.ToString());
             builder.WithResponseCode(401, "Unauthorized. The request requires authentication");
             builder.WithResponseCode(403, "Forbidden. The request is authenticated, but not authorized to access this resource");
-            builder.WithResponseCode(500, "Internal server error. An unhandled error occurred on the server. See the response body for details.");
+            builder.WithResponseCode(500, FeatureConstants.InternalServerErrorResponseDescription);
 
             if (_route.Contains("id", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -72,7 +73,7 @@ public class AdminApiEndpointBuilder
 
             if (_verb is HttpVerb.PUT or HttpVerb.POST)
             {
-                builder.WithResponseCode(400, "Bad Request. The request was invalid and cannot be completed. See the response body for details.");
+                builder.WithResponseCode(400, FeatureConstants.BadRequestResponseDescription);
             }
 
             foreach (var action in _routeOptions)

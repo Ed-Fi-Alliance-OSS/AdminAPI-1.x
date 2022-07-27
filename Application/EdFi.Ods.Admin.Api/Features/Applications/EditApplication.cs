@@ -45,7 +45,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
         }
 
-        [SwaggerSchema(Title = "EditApplication")]
+        [SwaggerSchema(Title = "EditApplicationRequest")]
         public class Request : IEditApplicationModel
         {
             [SwaggerSchema(Description = "Application id", Nullable = false)]

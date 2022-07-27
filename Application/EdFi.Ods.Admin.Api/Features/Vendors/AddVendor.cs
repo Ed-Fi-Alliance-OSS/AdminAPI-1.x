@@ -31,7 +31,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/vendors/{model.VendorId}");
         }
 
-        [SwaggerSchema(Title = "AddVendor")]
+        [SwaggerSchema(Title = "AddVendorRequest")]
         public class Request : IAddVendorModel
         {
             [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]

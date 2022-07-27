@@ -75,7 +75,7 @@ public class RegisterService : IRegisterService
         }
     }
 
-    [SwaggerSchema(Title="Register")]
+    [SwaggerSchema(Title="RegisterClientRequest")]
     public class Request
     {
         [SwaggerSchema(Description = "Client id", Nullable = false)]

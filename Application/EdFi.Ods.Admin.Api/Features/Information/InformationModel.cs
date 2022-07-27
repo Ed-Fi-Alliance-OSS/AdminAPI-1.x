@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.Admin.Api.Features.Information
 {
-    [SwaggerSchema(Title = "InformationModel")]
+    [SwaggerSchema(Title = "Information")]
     public class InformationResult
     {
         public InformationResult(string version, string build)

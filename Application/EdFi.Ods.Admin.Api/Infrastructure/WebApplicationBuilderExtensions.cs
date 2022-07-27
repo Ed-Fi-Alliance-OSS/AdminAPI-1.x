@@ -124,10 +124,9 @@ public static class WebApplicationBuilderExtensions
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {
-                return x.HttpMethod != null ? x.HttpMethod.Equals("GET", StringComparison.InvariantCultureIgnoreCase) ? "0"
-                    : x.HttpMethod.Equals("POST", StringComparison.InvariantCultureIgnoreCase) ? "1"
-                    : x.HttpMethod.Equals("PUT", StringComparison.InvariantCultureIgnoreCase) ? "2"
-                    : x.HttpMethod.Equals("DELETE", StringComparison.InvariantCultureIgnoreCase) ? "3" : "4" : "5";
+                return x.HttpMethod != null && Enum.TryParse<HttpVerbOrder>(x.HttpMethod, out var verb)
+                    ? ((int) verb).ToString()
+                    : int.MaxValue.ToString();
             });
         });
 
@@ -210,5 +209,13 @@ public static class WebApplicationBuilderExtensions
         }
 
         throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
+    }
+
+    private enum HttpVerbOrder
+    {
+        GET = 1,
+        POST = 2,
+        PUT = 3,
+        DELETE = 4,
     }
 }

@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace EdFi.Ods.Admin.Api.Features;
 
 public class AdminApiResponse
@@ -20,6 +22,7 @@ public class AdminApiResponse
         => Results.Ok(new AdminApiResponse(200, $"{name} deleted successfully"));
 }
 
+[SwaggerSchema(Title = "AdminApiResponse", Description = "Wrapper schema for all successful responses")]
 public class AdminApiResponse<T> : AdminApiResponse
 {
     public T Result { get; }

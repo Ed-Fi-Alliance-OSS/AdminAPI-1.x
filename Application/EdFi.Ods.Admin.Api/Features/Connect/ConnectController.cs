@@ -3,17 +3,19 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using FluentValidation;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Server.AspNetCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.Admin.Api.Features.Connect;
 
 [AllowAnonymous]
+[SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
+[SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
 public class ConnectController : Controller
 {
     private readonly ITokenService _tokenService;
@@ -27,16 +29,18 @@ public class ConnectController : Controller
 
     [HttpPost("/connect/register")]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
-    [OperationDescription("Registers new client", "Registers new client")]
-    public async Task<IActionResult> Register(RegisterService.Request request)
+    [SwaggerOperation("Registers new client", "Registers new client")]
+    [SwaggerResponse(200, "Application registered successfully.")]
+    public async Task<IActionResult> Register([FromBody]RegisterService.Request request)
     {
         var message = await _registerService.Handle(request);
         return Ok(new { Title = message, Status = 200 });
     }
 
-    [OperationDescription("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
     [HttpPost(SecurityConstants.TokenEndpointUri)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
+    [SwaggerOperation("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
+    [SwaggerResponse(200, "Sign-in successful.")]
     public async Task<ActionResult> Token()
     {
         var request = HttpContext.GetOpenIddictServerRequest();

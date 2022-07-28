@@ -5,10 +5,9 @@
 
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure;
+using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
@@ -19,8 +18,9 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            AdminApiEndpointBuilder.MapPut(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPutOptions(FeatureConstants.Applications))
+            AdminApiEndpointBuilder.MapPut(endpoints, "/applications/{id}", Handle)
+                .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
@@ -45,28 +45,25 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
         }
 
-        [DisplaySchemaName(FeatureConstants.EditApplicationDisplayName)]
+        [SwaggerSchema(Title = "EditApplicationRequest")]
         public class Request : IEditApplicationModel
         {
-            [SwaggerSchema(Description = FeatureConstants.ApplicationIdDescription, Nullable = false)]
+            [SwaggerSchema(Description = "Application id", Nullable = false)]
             public int ApplicationId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
             public string? ApplicationName { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
             public int VendorId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
             public string? ClaimSetName { get; set; }
 
+            [SwaggerOptional]
             [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
             public int? ProfileId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
             public IEnumerable<int>? EducationOrganizationIds { get; set; }
         }

@@ -1,6 +1,6 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.Admin.Api.ActionFilters;
+using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
@@ -74,6 +74,7 @@ public static class WebApplicationBuilderExtensions
         {
             opt.CustomSchemaIds(x => x.FullName);
             opt.OperationFilter<TokenEndpointBodyDescriptionFilter>();
+            opt.OperationFilter<TagByResourceUrlFilter>();
             opt.AddSecurityDefinition(
                 "oauth",
                 new OpenApiSecurityScheme
@@ -116,23 +117,15 @@ public static class WebApplicationBuilderExtensions
                 });
             }
 
-            opt.DocumentFilter<OperationResponsesDocumentFilter>();
-            opt.DocumentFilter<RemoveSchemaDocumentFilter>();
-            opt.DocumentFilter<AddRegisterSchemaDocumentFilter>();
-            opt.OperationFilter<OperationDescriptionFilter>();
-            opt.SchemaFilter<SwaggerRequiredSchemaFilter>();
-            opt.CustomSchemaIds(x =>
-            {
-                var customSchemaName = x.GetCustomAttributes<DisplaySchemaNameAttribute>().SingleOrDefault();
-                return customSchemaName != null ? customSchemaName.Name : x.FullName;
-            });
+            opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
+            opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
+            opt.CustomSchemaIds(x => x.FullName);
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {
-                return x.HttpMethod != null ? x.HttpMethod.Equals("GET", StringComparison.InvariantCultureIgnoreCase) ? "0"
-                    : x.HttpMethod.Equals("POST", StringComparison.InvariantCultureIgnoreCase) ? "1"
-                    : x.HttpMethod.Equals("PUT", StringComparison.InvariantCultureIgnoreCase) ? "2"
-                    : x.HttpMethod.Equals("DELETE", StringComparison.InvariantCultureIgnoreCase) ? "3" : "4" : "5";
+                return x.HttpMethod != null && Enum.TryParse<HttpVerbOrder>(x.HttpMethod, out var verb)
+                    ? ((int) verb).ToString()
+                    : int.MaxValue.ToString();
             });
         });
 
@@ -215,5 +208,13 @@ public static class WebApplicationBuilderExtensions
         }
 
         throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
+    }
+
+    private enum HttpVerbOrder
+    {
+        GET = 1,
+        POST = 2,
+        PUT = 3,
+        DELETE = 4,
     }
 }

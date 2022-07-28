@@ -3,13 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
 
-namespace EdFi.Ods.Admin.Api.ActionFilters
+namespace EdFi.Ods.Admin.Api.Infrastructure.Documentation
 {
-    public class SwaggerRequiredSchemaFilter : ISchemaFilter
+    [AttributeUsage(AttributeTargets.Property)]
+    public class SwaggerOptionalAttribute : Attribute
+    {
+    }
+
+    public class SwaggerOptionalSchemaFilter : ISchemaFilter
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
@@ -17,15 +22,18 @@ namespace EdFi.Ods.Admin.Api.ActionFilters
 
             foreach (var property in properties)
             {
-                var attribute = property.GetCustomAttribute(typeof(SwaggerRequiredAttribute));
+                var attribute = property.GetCustomAttribute(typeof(SwaggerOptionalAttribute));
+                var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
 
                 if (attribute != null)
                 {
-                    var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
-
+                    schema.Required?.Remove(propertyNameInCamelCasing);
+                }
+                else
+                {
                     if (schema.Required == null)
                     {
-                        schema.Required = new HashSet<string>() { propertyNameInCamelCasing };
+                        schema.Required = new HashSet<string>() {propertyNameInCamelCasing};
                     }
                     else
                     {

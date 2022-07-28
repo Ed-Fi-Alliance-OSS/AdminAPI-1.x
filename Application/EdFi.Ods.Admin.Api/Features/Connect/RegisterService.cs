@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using FluentValidation;
 using FluentValidation.Results;
@@ -75,17 +74,14 @@ public class RegisterService : IRegisterService
         }
     }
 
-    [DisplaySchemaName("Register")]
+    [SwaggerSchema(Title="RegisterClientRequest")]
     public class Request
     {
-        [SwaggerRequired]
-        [SwaggerSchema(Description = FeatureConstants.RegisterClientId, Nullable = false)]
+        [SwaggerSchema(Description = "Client id", Nullable = false)]
         public string? ClientId { get; set; }
-        [SwaggerRequired]
-        [SwaggerSchema(Description = FeatureConstants.RegisterClientSecret, Nullable = false)]
+        [SwaggerSchema(Description = "Client secret", Nullable = false)]
         public string? ClientSecret { get; set; }
-        [SwaggerRequired]
-        [SwaggerSchema(Description = FeatureConstants.RegisterDisplayName, Nullable = false)]
+        [SwaggerSchema(Description = "Client display name", Nullable = false)]
         public string? DisplayName { get; set; }
     }
 }

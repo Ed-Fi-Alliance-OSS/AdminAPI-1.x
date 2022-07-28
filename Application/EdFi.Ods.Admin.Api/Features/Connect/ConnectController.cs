@@ -14,7 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace EdFi.Ods.Admin.Api.Features.Connect;
 
 [AllowAnonymous]
-[SwaggerResponse(400, "Bad Request. The request was invalid and cannot be completed. See the response body for details.")]
+[SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
 [SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
 public class ConnectController : Controller
 {

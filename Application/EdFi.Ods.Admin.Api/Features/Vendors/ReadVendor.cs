@@ -14,12 +14,14 @@ public class ReadVendor : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, $"{FeatureConstants.Vendors}", GetVendors)
-            .WithRouteOptions(rhb => rhb.WithDefaultGetOptions(FeatureConstants.Vendors))
+        AdminApiEndpointBuilder.MapGet(endpoints, "/vendors", GetVendors)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<VendorModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Vendors}" + "/{id}", GetVendor)
-            .WithRouteOptions(rhb => rhb.WithDefaultGetByIdOptions(FeatureConstants.Vendors))
+        AdminApiEndpointBuilder.MapGet(endpoints, "/vendors/{id}", GetVendor)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 

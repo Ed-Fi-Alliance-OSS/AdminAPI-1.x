@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.Admin.Api.ActionFilters;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
@@ -17,8 +16,9 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            AdminApiEndpointBuilder.MapPut(endpoints, $"/{FeatureConstants.Vendors}" + "/{id}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPutOptions(FeatureConstants.Vendors))
+            AdminApiEndpointBuilder.MapPut(endpoints, "/vendors/{id}", Handle)
+                .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
@@ -32,25 +32,21 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             return AdminApiResponse<VendorModel>.Updated(model, "Vendor");
         }
 
-        [DisplaySchemaName(FeatureConstants.EditVendorDisplayName)]
+        [SwaggerSchema(Title = "EditVendorRequest")]
         public class Request : IEditVendor
         {
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
             public int VendorId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]
             public string? Company { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorNamespaceDescription, Nullable = false)]
             public string? NamespacePrefixes { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorContactDescription, Nullable = false)]
             public string? ContactName { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorContactEmailDescription, Nullable = false)]
             public string? ContactEmailAddress { get; set; }
         }

@@ -3,12 +3,22 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace EdFi.Ods.Admin.Api.Features.Information
 {
+    [SwaggerSchema(Title = "Information")]
     public class InformationResult
     {
-        public string? Version { get; set; }
-        public string? Build { get; set; }
-    }
+        public InformationResult(string version, string build)
+        {
+            Build = build;
+            Version = version;
+        }
 
+        [SwaggerSchema("Application version", Nullable = false)]
+        public string Version { get; }
+        [SwaggerSchema("Build / release version", Nullable = false)]
+        public string Build { get;  }
+    }
 }

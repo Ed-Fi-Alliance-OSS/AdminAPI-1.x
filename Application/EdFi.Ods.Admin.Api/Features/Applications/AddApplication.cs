@@ -6,9 +6,9 @@
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.Admin.Api.Infrastructure;
+using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using FluentValidation;
-using EdFi.Ods.Admin.Api.ActionFilters;
 using Swashbuckle.AspNetCore.Annotations;
 using FluentValidation.Results;
 
@@ -18,8 +18,9 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            AdminApiEndpointBuilder.MapPost(endpoints, $"/{FeatureConstants.Applications}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPostOptions(FeatureConstants.Applications))
+            AdminApiEndpointBuilder.MapPost(endpoints, "/applications", Handle)
+                .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponse<ApplicationResult>(201))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
@@ -29,7 +30,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
             GuardAgainstInvalidEntityReferences(request, db);
             var addedApplicationResult = addApplicationCommand.Execute(request);
             var model = mapper.Map<ApplicationResult>(addedApplicationResult);
-            return AdminApiResponse<ApplicationResult>.Created(model, "Application", $"/{FeatureConstants.Applications}/{model.ApplicationId}");
+            return AdminApiResponse<ApplicationResult>.Created(model, "Application", $"/applications/{model.ApplicationId}");
         }
 
         private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
@@ -41,25 +42,22 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
         }
 
-        [DisplaySchemaName(FeatureConstants.AddApplicationDisplayName)]
+        [SwaggerSchema(Title = "AddApplicationRequest")]
         public class Request : IAddApplicationModel
         {
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
             public string? ApplicationName { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
             public int VendorId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
             public string? ClaimSetName { get; set; }
 
+            [SwaggerOptional]
             [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
             public int? ProfileId { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
             public IEnumerable<int>? EducationOrganizationIds { get; set; }
         }

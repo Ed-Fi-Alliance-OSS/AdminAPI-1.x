@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
-using EdFi.Ods.Admin.Api.ActionFilters;
 
 namespace EdFi.Ods.Admin.Api.Features.Vendors
 {
@@ -18,8 +17,9 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
             AdminApiEndpointBuilder
-                .MapPost(endpoints, $"/{FeatureConstants.Vendors}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultPostOptions(FeatureConstants.Vendors))
+                .MapPost(endpoints, "/vendors", Handle)
+                .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponse<VendorModel>(201))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
@@ -28,25 +28,21 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             await validator.GuardAsync(request);
             var addedVendor = addVendorCommand.Execute(request);
             var model = mapper.Map<VendorModel>(addedVendor);
-            return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/{FeatureConstants.Vendors}/{model.VendorId}");
+            return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/vendors/{model.VendorId}");
         }
 
-        [DisplaySchemaName(FeatureConstants.AddVendorDisplayName)]
+        [SwaggerSchema(Title = "AddVendorRequest")]
         public class Request : IAddVendorModel
         {
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]
             public string? Company { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorNamespaceDescription, Nullable = false)]
             public string? NamespacePrefixes { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorContactDescription, Nullable = false)]
             public string? ContactName { get; set; }
 
-            [SwaggerRequired]
             [SwaggerSchema(Description = FeatureConstants.VendorContactEmailDescription, Nullable = false)]
             public string? ContactEmailAddress { get; set; }
         }

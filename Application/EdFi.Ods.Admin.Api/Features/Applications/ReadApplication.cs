@@ -14,12 +14,14 @@ public class ReadApplication : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Applications}", GetApplications)
-            .WithRouteOptions(rhb => rhb.WithDefaultGetOptions(FeatureConstants.Applications))
+        AdminApiEndpointBuilder.MapGet(endpoints, "/applications", GetApplications)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", GetApplication)
-            .WithRouteOptions(rhb => rhb.WithDefaultGetByIdOptions(FeatureConstants.Applications))
+        AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{id}", GetApplication)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
             .BuildForVersions(AdminApiVersions.V1);
     }
 

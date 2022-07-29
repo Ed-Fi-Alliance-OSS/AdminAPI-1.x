@@ -3,8 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.Admin.Api.ActionFilters;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.Admin.Api.Infrastructure.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.Admin.Api.Features.Information;
 
@@ -13,19 +14,15 @@ public class ReadInformation : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("", GetInformation)
-            .WithMetadata(new OperationDescriptionAttribute("Retrieve API informational metadata", null))
+            .WithMetadata(new SwaggerOperationAttribute("Retrieve API informational metadata", null))
+            .WithResponse<InformationResult>(200)
+            .WithResponseCode(500, FeatureConstants.InternalServerErrorResponseDescription)
             .WithTags("Information")
             .AllowAnonymous();
     }
 
     internal InformationResult GetInformation()
     {
-        var content = new InformationResult()
-        {
-            Version = ConstantsHelpers.Version,
-            Build = ConstantsHelpers.Build
-        };
-
-        return content;
+        return new InformationResult(ConstantsHelpers.Version, ConstantsHelpers.Build);
     }
 }

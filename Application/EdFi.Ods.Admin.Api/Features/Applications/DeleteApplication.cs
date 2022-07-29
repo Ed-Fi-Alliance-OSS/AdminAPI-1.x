@@ -12,8 +12,9 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
     {
         public void MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            AdminApiEndpointBuilder.MapDelete(endpoints, $"/{FeatureConstants.Applications}" + "/{id}", Handle)
-                .WithRouteOptions(rhb => rhb.WithDefaultDeleteOptions(FeatureConstants.Applications))
+            AdminApiEndpointBuilder.MapDelete(endpoints, "/applications/{id}", Handle)
+                .WithDefaultDescription()
+                .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
                 .BuildForVersions(AdminApiVersions.V1);
         }
 

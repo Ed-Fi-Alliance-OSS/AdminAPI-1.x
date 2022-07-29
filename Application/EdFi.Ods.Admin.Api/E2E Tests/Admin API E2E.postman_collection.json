@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "3af680b2-e64a-45ca-bb94-9829551e4617",
+		"_postman_id": "18244070-0d8a-458a-b867-e3a557a75fbc",
 		"name": "Admin API E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20720204"
+		"_exporter_id": "15734759"
 	},
 	"item": [
 		{
@@ -59,7 +59,11 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": []
 		},
 		{
 			"name": "User Management",
@@ -260,12 +264,12 @@
 							"urlencoded": [
 								{
 									"key": "ClientId",
-									"value": "{{ClientId}}",
+									"value": "{{RegisteredClientId}}",
 									"type": "text"
 								},
 								{
 									"key": "ClientSecret",
-									"value": "{{ClientSecret}}",
+									"value": "{{RegisteredClientSecret}}",
 									"type": "text"
 								},
 								{
@@ -641,26 +645,7 @@
 			"auth": {
 				"type": "noauth"
 			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
+			"event": []
 		},
 		{
 			"name": "v1",
@@ -2533,6 +2518,10 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"if(pm.request.auth && pm.request.auth.type === \"noauth\") {",
+					"    return;",
+					"}",
+					"",
 					"let currentToken = pm.collectionVariables.get(\"TOKEN\");",
 					"if(currentToken) {",
 					"    return;",
@@ -2547,14 +2536,18 @@
 					"    body: {",
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
-					"            {key: 'client_id', value: pm.variables.get(\"ClientId\")},",
-					"            {key: 'client_secret', value: pm.variables.get(\"ClientSecret\")},",
+					"            {key: 'client_id', value: pm.variables.get(\"RegisteredClientId\")},",
+					"            {key: 'client_secret', value: pm.variables.get(\"RegisteredClientSecret\")},",
 					"            {key: 'grant_type', value: \"client_credentials\"},",
 					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
 					"        ]",
 					"    }",
 					"},",
 					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
 					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
 					"});"
 				]

@@ -15,6 +15,17 @@ on:
         - Prerelease
         - Release
         required: true
+      packages:
+        type: choice
+        description: Packages to promote
+        options:
+        - All
+        - EdFi.Suite3.ODS.AdminApp.Database
+        - EdFi.Suite3.ODS.AdminApp.Web
+        - EdFi.Suite3.ODS.Admin.Api
+        - EdFi.Suite3.Installer.AdminApp
+        required: true
+        default: All
 
 env:
   ARTIFACTS_API_KEY: ${{ secrets.AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN }}
@@ -40,6 +51,14 @@ jobs:
           Username    = "${{ env.ARTIFACTS_USERNAME }}"
           View        = "${{ github.event.inputs.view-type }}"
         }
+
+        $packages = "${{ github.event.inputs.packages }}"
+
+        if ($packages -eq "All") {
+            $arguments.Packages = @('EdFi.Suite3.ODS.AdminApp.Database', 'EdFi.Suite3.ODS.AdminApp.Web', 'EdFi.Suite3.ODS.Admin.Api', 'EdFi.Suite3.Installer.AdminApp')
+        } else {
+            $arguments.Packages = @($packages)
+        }
+
         $arguments.Password = (ConvertTo-SecureString -String "${{ secrets.ARTIFACTS_API_KEY }}" -AsPlainText -Force)
-        $arguments.Packages = @('EdFi.Suite3.ODS.AdminApp.Database', 'EdFi.Suite3.ODS.AdminApp.Web', 'EdFi.Suite3.ODS.Admin.Api', 'EdFi.Suite3.Installer.AdminApp')
         eng\promote-packages.ps1 @arguments

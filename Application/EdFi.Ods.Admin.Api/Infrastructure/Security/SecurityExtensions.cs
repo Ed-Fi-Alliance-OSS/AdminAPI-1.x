@@ -76,7 +76,7 @@ public static class SecurityExtensions
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
-                ValidIssuer = issuer,
+                ValidateIssuer = false,
                 IssuerSigningKey = signingKey
             };
             opt.RequireHttpsMetadata = !isDockerEnvironment;

@@ -6,7 +6,7 @@
 name: 'E2E Reports'
 on:
   workflow_run:
-    workflows: [ 'E2E Tests', 'Admin API E2E Tests' ]
+    workflows: [ 'Admin App E2E Tests', 'Admin API E2E Tests' ]
     types:
       - completed
 

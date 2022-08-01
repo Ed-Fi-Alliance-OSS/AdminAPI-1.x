@@ -74,8 +74,3 @@ jobs:
         name: playwright-execution-traces
         path: main/Application/EdFi.Ods.AdminApp.E2E.Tests/traces
         retention-days: 10
-    - name: Clean ODS
-      if: always()
-      run: ./shared-instance-env-clean.ps1
-      shell: pwsh
-      working-directory: ods-docker

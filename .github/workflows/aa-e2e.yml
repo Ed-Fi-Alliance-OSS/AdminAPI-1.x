@@ -57,6 +57,15 @@ jobs:
     - name: Run tests
       run: npm run report
       working-directory: main/Application/EdFi.Ods.AdminApp.E2E.Tests
+    - name: Get Docker logs
+      if: failure()
+      run: |
+        docker logs ed-fi-db-admin > ed-fi-db-admin.log
+        docker logs ed-fi-ods-adminapp > ed-fi-db-admin.log
+      uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
+      with:
+        name: docker-logs
+        retention-days: 10
     - name: Transform results
       if: success() || failure()
       run: python ./resultparser.py

@@ -16,6 +16,11 @@ public static class SecurityExtensions
     public static void AddSecurityUsingOpenIddict(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
+
+        var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
+        var authority = configuration.GetValue<string>("Authentication:Authority");
+        var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
+
         //OpenIddict Server
         var signingKeyValue = configuration.GetValue<string>("Authentication:SigningKey");
         var signingKey = string.IsNullOrEmpty(signingKeyValue) ? null : new SymmetricSecurityKey(Convert.FromBase64String(signingKeyValue));
@@ -35,6 +40,7 @@ public static class SecurityExtensions
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
                 opt.DisableAccessTokenEncryption();
+                opt.SetIssuer(new Uri(authority));
 
                 if (!webHostEnvironment.IsDevelopment()) //Keys below will override Ephemeral / Dev Keys
                 {
@@ -46,7 +52,11 @@ public static class SecurityExtensions
                 }
 
                 opt.RegisterScopes(SecurityConstants.Scopes.AdminApiFullAccess);
-                opt.UseAspNetCore().EnableTokenEndpointPassthrough();
+                var aspNetCoreBuilder = opt.UseAspNetCore().EnableTokenEndpointPassthrough();
+                if (isDockerEnvironment)
+                {
+                    aspNetCoreBuilder.DisableTransportSecurityRequirement();
+                }
             })
             .AddValidation(options =>
             {
@@ -56,8 +66,6 @@ public static class SecurityExtensions
             });
 
         //Application Security
-        var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
-        var authority = configuration.GetValue<string>("Authentication:Authority");
         services.AddAuthentication(opt =>
         {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,9 +77,10 @@ public static class SecurityExtensions
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
-                ValidIssuer = issuer,
+                ValidIssuer = authority,
                 IssuerSigningKey = signingKey
             };
+            opt.RequireHttpsMetadata = !isDockerEnvironment;
         });
         services.AddAuthorization(opt =>
         {

@@ -21,9 +21,10 @@ public static class WebApplicationExtensions
     public static void DefineSwaggerUIWithApiVersions(this WebApplication application, params string[] versions)
     {
         application.UseSwaggerUI(definitions => {
+            definitions.RoutePrefix = "swagger";
             foreach (var version in versions)
             {
-                definitions.SwaggerEndpoint($"/swagger/{version}/swagger.json", version);
+                definitions.SwaggerEndpoint($"{version}/swagger.json", version);
             }
         });
     }

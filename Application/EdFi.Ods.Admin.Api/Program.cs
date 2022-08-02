@@ -20,6 +20,7 @@ var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
 if (!string.IsNullOrEmpty(pathBase))
 {
     app.UsePathBase("/" + pathBase.Trim('/'));
+    app.UseForwardedHeaders();
 }
 
 // Configure the HTTP request pipeline.
@@ -31,8 +32,6 @@ else
 {
     app.UseExceptionHandler("/error");
 }
-
-app.UseHttpsRedirection();
 
 AdminApiVersions.Initialize(app);
 

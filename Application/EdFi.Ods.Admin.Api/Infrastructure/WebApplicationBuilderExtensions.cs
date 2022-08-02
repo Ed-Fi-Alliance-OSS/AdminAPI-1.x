@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+// Licensed to the Ed-Fi Alliance under one or more agreements.
+// The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+// See the LICENSE and NOTICES files in the project root for more information.
+
+using System.Data.Entity;
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
@@ -167,6 +173,7 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
+            DbConfiguration.SetConfiguration(new PostgreSqlDbConfiguration());
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
                 options => options.UseNpgsql(adminConnectionString));
 

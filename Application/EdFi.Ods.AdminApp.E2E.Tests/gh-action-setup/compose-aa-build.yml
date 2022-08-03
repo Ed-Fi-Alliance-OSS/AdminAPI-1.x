@@ -19,9 +19,10 @@ services:
     container_name: ed-fi-db-ods
 
   db-admin:
-    build:
-      context: ../../DB-Admin/Alpine/pgsql
-      dockerfile: Dockerfile
+    # build:
+    #   context: ../../DB-Admin/Alpine/pgsql
+    #   dockerfile: Dockerfile
+    image: edfialliance/ods-api-db-admin:${TAG}
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

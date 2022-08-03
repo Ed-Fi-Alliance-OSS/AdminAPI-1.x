@@ -60,6 +60,7 @@ jobs:
     - name: Get Docker logs
       if: failure()
       run: |
+        mkdir docker-logs
         docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
         docker logs ed-fi-ods-adminapp > docker-logs/ed-fi-adminapp.log
     - name: Upload Docker logs

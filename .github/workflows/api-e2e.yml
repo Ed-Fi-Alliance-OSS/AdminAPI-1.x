@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
     - name: Update certificates
-      run: mv './E2E Tests/gh-action-setup/ssl/localhost.pfx' ./Docker/ssl/localhost.pfx
+      run: cp -r ../../eng/test-certs/ssl ./Docker
     - name: Run Admin API
       run: |
           mv './E2E Tests/gh-action-setup/.automation.env' ./Compose/.env

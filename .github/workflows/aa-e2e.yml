@@ -28,7 +28,7 @@ jobs:
         path: ods-docker
     - name: Copy files to Docker repo
       run: |
-        cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/ssl ./ods-docker
+        cp -r ./main/eng/test-certs/ssl ./ods-docker
         cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/compose-aa-build.yml ./ods-docker/Compose/pgsql
     - uses: nuget/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1 #v1.0.5
     - name: Update Admin App Docker package versions

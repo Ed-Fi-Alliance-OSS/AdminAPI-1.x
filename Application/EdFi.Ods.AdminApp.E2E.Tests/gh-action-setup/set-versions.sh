@@ -7,14 +7,12 @@ WEB_PACKAGE=$(nuget list $WEB -Source $NUGET_URL)
 WEB_VERSION=$(echo $WEB_PACKAGE| cut -d' ' -f 2)
 echo "Using $WEB Version: $WEB_VERSION"
 
-# This must be commented until AA-1562 is fixed.
-# This means that the latest Admin App web will run against the released version of Admin DB (2.3.2) which will work until there are breaking changes on the Database for Admin App
-# DB="EdFi.Suite3.ODS.AdminApp.Database"
-# DB_PACKAGE=$(nuget list $DB -Source $NUGET_URL)
-# DB_VERSION=$(echo $DB_PACKAGE| cut -d' ' -f 2)
-# echo "Using $DB Version: $DB_VERSION"
+DB="EdFi.Suite3.ODS.AdminApp.Database"
+DB_PACKAGE=$(nuget list $DB -Source $NUGET_URL)
+DB_VERSION=$(echo $DB_PACKAGE| cut -d' ' -f 2)
+echo "Using $DB Version: $DB_VERSION"
 
-# sed -i "s/ENV ADMINAPP_DATABASE_VERSION=\"[0-9].[0-9].[0-9]\"/ENV ADMINAPP_DATABASE_VERSION=\"$DB_VERSION\"/w changelog.txt" ods-docker/DB-Admin/Alpine/pgsql/Dockerfile
+sed -i "s/ENV ADMINAPP_DATABASE_VERSION=\"[0-9].[0-9].[0-9]\"/ENV ADMINAPP_DATABASE_VERSION=\"$DB_VERSION\"/w changelog.txt" ods-docker/DB-Admin/Alpine/pgsql/Dockerfile
 
 sed -i "s/ENV VERSION=\"[0-9].[0-9].[0-9]\"/ENV VERSION=\"$WEB_VERSION\"/w changelog.txt" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile
 

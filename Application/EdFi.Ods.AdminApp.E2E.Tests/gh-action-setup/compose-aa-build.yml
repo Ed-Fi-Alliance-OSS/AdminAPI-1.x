@@ -20,11 +20,8 @@ services:
 
   db-admin:
     build:
-    # This must be changed once AA-1562 is fixed
-    # build:
-    #   context: ../../DB-Admin/Alpine/pgsql
-    #   dockerfile: Dockerfile
-    image: edfialliance/ods-api-db-admin:${TAG}
+      context: ../../DB-Admin/Alpine/pgsql
+      dockerfile: Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

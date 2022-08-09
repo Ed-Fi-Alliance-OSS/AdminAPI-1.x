@@ -3,7 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-name: E2E Tests
+name: Admin App E2E Tests
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         path: ods-docker
     - name: Copy files to Docker repo
       run: |
-        cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/ssl ./ods-docker
+        cp -r ./main/eng/test-certs/ssl ./ods-docker
         cp -r ./main/Application/EdFi.Ods.AdminApp.E2E.Tests/gh-action-setup/compose-aa-build.yml ./ods-docker/Compose/pgsql
     - uses: nuget/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1 #v1.0.5
     - name: Update Admin App Docker package versions
@@ -57,6 +57,19 @@ jobs:
     - name: Run tests
       run: npm run report
       working-directory: main/Application/EdFi.Ods.AdminApp.E2E.Tests
+    - name: Get Docker logs
+      if: failure()
+      run: |
+        mkdir docker-logs
+        docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
+        docker logs ed-fi-ods-adminapp > docker-logs/ed-fi-adminapp.log
+    - name: Upload Docker logs
+      if: failure()
+      uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
+      with:
+        name: docker-logs
+        path: docker-logs/
+        retention-days: 10
     - name: Transform results
       if: success() || failure()
       run: python ./resultparser.py
@@ -64,7 +77,7 @@ jobs:
     - name: Upload results
       uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
       with:
-        name: playwright-results
+        name: test-results
         path: main/Application/EdFi.Ods.AdminApp.E2E.Tests/reports/playwright-results.xml
         retention-days: 10
     - name: Upload execution traces
@@ -74,8 +87,3 @@ jobs:
         name: playwright-execution-traces
         path: main/Application/EdFi.Ods.AdminApp.E2E.Tests/traces
         retention-days: 10
-    - name: Clean ODS
-      if: always()
-      run: ./shared-instance-env-clean.ps1
-      shell: pwsh
-      working-directory: ods-docker

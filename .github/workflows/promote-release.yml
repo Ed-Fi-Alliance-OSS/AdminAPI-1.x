@@ -60,5 +60,5 @@ jobs:
             $arguments.Packages = @($packages)
         }
 
-        $arguments.Password = (ConvertTo-SecureString -String "${{ secrets.ARTIFACTS_API_KEY }}" -AsPlainText -Force)
+        $arguments.Password = (ConvertTo-SecureString -String "${{ env.ARTIFACTS_API_KEY }}" -AsPlainText -Force)
         eng\promote-packages.ps1 @arguments

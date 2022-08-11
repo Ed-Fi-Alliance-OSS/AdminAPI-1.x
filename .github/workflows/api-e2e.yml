@@ -51,7 +51,7 @@ jobs:
       uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
       with:
         name: docker-logs
-        path: docker-logs/
+        path: Application/EdFi.Ods.Admin.Api/docker-logs/
         retention-days: 10
     - name: Upload results
       uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0

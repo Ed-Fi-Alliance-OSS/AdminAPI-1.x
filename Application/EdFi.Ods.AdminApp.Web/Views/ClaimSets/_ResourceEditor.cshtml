@@ -149,11 +149,11 @@ See the LICENSE and NOTICES files in the project root for more information.
     var childResourcesForParentUrl = '@Url.Action("GetSelectListForChildResourceClaims", "ClaimSets")';
     InitializeModalLoaders();
 
-    $("#ResourceClaimsDropDown").change(function () {        
+    $("#ResourceClaimsDropDown").change(function () {
         $('#add-resource-button').prop("disabled", false);
     });
-    $("#add-resource-button").click(function () {        
+    $("#add-resource-button").click(function () {
         $('#add-resource-button').prop("disabled", true);
     });
-</script>  
+</script>
 <script type="text/javascript" src="~/bundles/claimset.min.js" asp-append-version="true"></script>

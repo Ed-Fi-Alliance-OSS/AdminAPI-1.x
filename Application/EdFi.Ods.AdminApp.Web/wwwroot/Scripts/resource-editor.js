@@ -372,11 +372,11 @@ var buildChildDropdownRow = function buildChildDropdownRow(parentResourceId) {
     return $row;
 };
 
-$("#add-resource-button").click(function (e) {        
+$("#add-resource-button").click(function (e) {
     e.preventDefault();
-    var dropDownList = $("#ResourceClaimsDropDown")[0];    
+    var dropDownList = $("#ResourceClaimsDropDown")[0];
     var selectedItem = dropDownList.options[dropDownList.selectedIndex];
-    if (selectedItem.closest("optgroup")) {        
+    if (selectedItem.closest("optgroup")) {
         var optGroup = selectedItem.closest("optgroup").label;
         if (!selectedItem.disabled) {
             if (optGroup === "Groups") {
@@ -423,7 +423,7 @@ var disableAlreadyAddedResources = function disableAlreadyAddedResources() {
 
 var populateChildren = function populateChildren() {
     $(".claims-toggle").each(function () {
-        var resourceId = $(this).data("resource-id");
+        var resourceId=  $(this).data("resource-id");
         populateChildResourcesForParent(resourceId);
     });
 };

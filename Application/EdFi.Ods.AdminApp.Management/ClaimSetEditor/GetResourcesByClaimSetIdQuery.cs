@@ -173,7 +173,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         return actions;
                     }
                 }
-                
+
                 resultDictionary[resourceClaim.ResourceClaimId] = actions.ToArray();
             }
 

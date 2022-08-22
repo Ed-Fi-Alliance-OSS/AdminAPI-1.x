@@ -85,6 +85,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
                     Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
                     Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                    IsParent = true,
                     DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
                     AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].ToArray()
                 })
@@ -252,6 +253,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
                     Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
                     Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                    IsParent = false,
                     DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
                     AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].ToArray()
                 })

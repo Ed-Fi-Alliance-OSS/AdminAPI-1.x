@@ -17,6 +17,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public bool Create { get; set; }
         public bool Update { get; set; }
         public bool Delete { get; set; }
+        public bool IsParent { get; set; }
         public AuthorizationStrategy[] DefaultAuthStrategiesForCRUD { get; set; }
         public AuthorizationStrategy[] AuthStrategyOverridesForCRUD { get; set; }
         public List<ResourceClaim> Children { get; set; }

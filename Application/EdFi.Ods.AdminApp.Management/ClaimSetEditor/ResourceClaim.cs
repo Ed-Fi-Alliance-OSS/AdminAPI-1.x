@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -17,6 +18,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public bool Create { get; set; }
         public bool Update { get; set; }
         public bool Delete { get; set; }
+        [JsonIgnore]
         public bool IsParent { get; set; }
         public AuthorizationStrategy[] DefaultAuthStrategiesForCRUD { get; set; }
         public AuthorizationStrategy[] AuthStrategyOverridesForCRUD { get; set; }

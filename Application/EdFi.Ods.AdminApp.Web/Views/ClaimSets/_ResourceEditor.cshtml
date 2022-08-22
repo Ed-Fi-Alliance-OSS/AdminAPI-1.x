@@ -33,7 +33,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     <tr class="parent-resource-claim">
                         <td class="icon-cell">
-                            @if (resourceClaim.Children.Any())
+                            @if (resourceClaim.Children.Any() || resourceClaim.IsParent)
                             {<a class="claims-toggle" data-resource-id='@resourceClaim.Id'><span class="fa fa-chevron-down caret-custom"></span></a>}
                         </td>
                         <td data-resource-id='@resourceClaim.Id' class="resource-label">@resourceClaim.Name</td>

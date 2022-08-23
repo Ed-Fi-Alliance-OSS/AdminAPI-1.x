@@ -33,7 +33,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 {
                     <tr class="parent-resource-claim">
                         <td class="icon-cell">
-                            @if (resourceClaim.Children.Any())
+                            @if (resourceClaim.Children.Any() || resourceClaim.IsParent)
                             {<a class="claims-toggle" data-resource-id='@resourceClaim.Id'><span class="fa fa-chevron-down caret-custom"></span></a>}
                         </td>
                         <td data-resource-id='@resourceClaim.Id' class="resource-label">@resourceClaim.Name</td>
@@ -149,11 +149,11 @@ See the LICENSE and NOTICES files in the project root for more information.
     var childResourcesForParentUrl = '@Url.Action("GetSelectListForChildResourceClaims", "ClaimSets")';
     InitializeModalLoaders();
 
-    $("#ResourceClaimsDropDown").change(function () {        
+    $("#ResourceClaimsDropDown").change(function () {
         $('#add-resource-button').prop("disabled", false);
     });
-    $("#add-resource-button").click(function () {        
+    $("#add-resource-button").click(function () {
         $('#add-resource-button').prop("disabled", true);
     });
-</script>  
+</script>
 <script type="text/javascript" src="~/bundles/claimset.min.js" asp-append-version="true"></script>

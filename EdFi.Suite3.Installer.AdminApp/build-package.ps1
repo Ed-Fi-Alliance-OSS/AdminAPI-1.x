@@ -93,6 +93,8 @@ function Move-AppCommon {
     }
 }
 
+function New-Package {
+
     $parameters = @(
         "pack", $PackageDefinitionFile,
         "-Version", $Version,
@@ -104,5 +106,38 @@ function Move-AppCommon {
     nuget @parameters
 }
 
-Write-Host "Building package"
-Build-Package
+function New-PackageLocal {
+
+    $appCommonUtilityDirectory = "$PSScriptRoot/AppCommon/Utility"
+
+    Import-Module "$appCommonUtilityDirectory/create-package.psm1" -Force
+
+    $parameters = @{
+        PackageDefinitionFile = $PackageDefinitionFile
+        Version = "$Version"
+        OutputDirectory = $OutputDirectory
+        Source = $NuGetFeed
+        ApiKey = $NuGetApiKey
+        ToolsPath = "C:/temp/tools"
+    }
+    Invoke-CreatePackage @parameters -Verbose:$verbose
+}
+
+
+if (-not $IsLocalBuild) {
+    
+    #Add AppCommon for Github Actions
+    Add-AppCommon
+    
+    # Build package for Github Actions
+    Write-Host "Building Package"
+    New-Package
+} else {
+ 
+    #Add AppCommon locally
+    Add-AppCommonLocal
+    
+    # Build package locally
+    Write-Host "Building Package"
+    New-PackageLocal
+}

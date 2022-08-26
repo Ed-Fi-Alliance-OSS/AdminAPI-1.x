@@ -14,7 +14,7 @@ param (
     $BuildCounter,
 
     [string]
-    $NuGetFeed,
+    $NuGetFeed = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
 
     [string]
     $NuGetApiKey,

@@ -29,9 +29,54 @@ $PackageDefinitionFile = Resolve-Path "$PSScriptRoot/EdFi.Suite3.Installer.Admin
 $Downloads = "$PSScriptRoot/downloads"
 $Version = "$SemanticVersion.$BuildCounter"
 
-Invoke-Expression "$PSScriptRoot/prep-installer-package.ps1 $PSScriptRoot"
+$AppCommonPackageName = "EdFi.Installer.AppCommon"
+$AppCommonPackageVersion = "2.0.0"
 
-function Build-Package {
+function Add-AppCommon{
+
+    if(-not(Test-Path -Path $Downloads )){
+        mkdir $Downloads
+    }
+
+    $parameters = @(
+        "install", $AppCommonPackageName,
+        "-source", $NuGetFeed,
+        "-outputDirectory", $Downloads
+        "-version", $AppCommonPackageVersion
+    )
+
+    Write-Host "Downloading AppCommon"
+    Write-Host -ForegroundColor Magenta "Executing nuget: $parameters"
+    nuget $parameters
+
+    $appCommonDirectory = Resolve-Path $Downloads/$AppCommonPackageName.$AppCommonPackageVersion* | Select-Object -Last 1
+
+    Move-AppCommon $appCommonDirectory
+}
+
+function Move-AppCommon {
+    param (
+        [string]
+        [Parameter(Mandatory=$true)]
+        $AppCommonSourceDirectory
+    )
+
+    # Move AppCommon's modules to a local AppCommon directory
+    @(
+        "Application"
+        "Environment"
+        "IIS"
+        "Utility"
+    ) | ForEach-Object {
+        $parameters = @{
+            Recurse = $true
+            Force = $true
+            Path = "$AppCommonSourceDirectory/$_"
+            Destination = "$PSScriptRoot/AppCommon/$_"
+        }
+        Copy-Item @parameters
+    }
+}
 
     $parameters = @(
         "pack", $PackageDefinitionFile,

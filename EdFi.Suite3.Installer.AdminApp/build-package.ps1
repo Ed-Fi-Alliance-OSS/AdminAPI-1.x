@@ -54,6 +54,21 @@ function Add-AppCommon{
     Move-AppCommon $appCommonDirectory
 }
 
+function Add-AppCommonLocal{    
+
+    Import-Module -Force "$PSScriptRoot/nuget-helper.psm1"
+
+    $parameters = @{
+        PackageName = $AppCommonPackageName
+        PackageVersion = $AppCommonPackageVersion
+        ToolsPath = "C:/temp/tools"
+        PackageSource = $NuGetFeed
+    }
+    $appCommonDirectory = Get-NugetPackage @parameters
+
+    Move-AppCommon $appCommonDirectory
+}
+
 function Move-AppCommon {
     param (
         [string]

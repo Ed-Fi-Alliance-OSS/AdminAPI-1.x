@@ -17,7 +17,10 @@ param (
     $NuGetFeed,
 
     [string]
-    $NuGetApiKey
+    $NuGetApiKey,
+
+    [switch]
+    $IsLocalBuild
 )
 
 $ErrorActionPreference = "Stop"

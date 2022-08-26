@@ -14,10 +14,13 @@ param (
     $BuildCounter,
 
     [string]
-    $NuGetFeed,
+    $NuGetFeed = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
 
     [string]
-    $NuGetApiKey
+    $NuGetApiKey,
+
+    [switch]
+    $IsLocalBuild
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,9 +29,71 @@ $PackageDefinitionFile = Resolve-Path "$PSScriptRoot/EdFi.Suite3.Installer.Admin
 $Downloads = "$PSScriptRoot/downloads"
 $Version = "$SemanticVersion.$BuildCounter"
 
-Invoke-Expression "$PSScriptRoot/prep-installer-package.ps1 $PSScriptRoot"
+$AppCommonPackageName = "EdFi.Installer.AppCommon"
+$AppCommonPackageVersion = "2.0.0"
 
-function Build-Package {
+function Add-AppCommon{
+
+    if(-not(Test-Path -Path $Downloads )){
+        mkdir $Downloads
+    }
+
+    $parameters = @(
+        "install", $AppCommonPackageName,
+        "-source", $NuGetFeed,
+        "-outputDirectory", $Downloads
+        "-version", $AppCommonPackageVersion
+    )
+
+    Write-Host "Downloading AppCommon"
+    Write-Host -ForegroundColor Magenta "Executing nuget: $parameters"
+    nuget $parameters
+
+    $appCommonDirectory = Resolve-Path $Downloads/$AppCommonPackageName.$AppCommonPackageVersion* | Select-Object -Last 1
+
+    Move-AppCommon $appCommonDirectory
+}
+
+function Add-AppCommonLocal{    
+
+    Import-Module -Force "$PSScriptRoot/nuget-helper.psm1"
+
+    $parameters = @{
+        PackageName = $AppCommonPackageName
+        PackageVersion = $AppCommonPackageVersion
+        ToolsPath = "C:/temp/tools"
+        PackageSource = $NuGetFeed
+    }
+    $appCommonDirectory = Get-NugetPackage @parameters
+
+    Move-AppCommon $appCommonDirectory
+}
+
+function Move-AppCommon {
+    param (
+        [string]
+        [Parameter(Mandatory=$true)]
+        $AppCommonSourceDirectory
+    )
+
+    # Move AppCommon's modules to a local AppCommon directory
+    @(
+        "Application"
+        "Environment"
+        "IIS"
+        "Utility"
+    ) | ForEach-Object {
+        $parameters = @{
+            Recurse = $true
+            Force = $true
+            Path = "$AppCommonSourceDirectory/$_"
+            Destination = "$PSScriptRoot/AppCommon/$_"
+        }
+        Copy-Item @parameters
+    }
+}
+
+function New-Package {
 
     $parameters = @(
         "pack", $PackageDefinitionFile,
@@ -41,5 +106,38 @@ function Build-Package {
     nuget @parameters
 }
 
-Write-Host "Building package"
-Build-Package
+function New-PackageLocal {
+
+    $appCommonUtilityDirectory = "$PSScriptRoot/AppCommon/Utility"
+
+    Import-Module "$appCommonUtilityDirectory/create-package.psm1" -Force
+
+    $parameters = @{
+        PackageDefinitionFile = $PackageDefinitionFile
+        Version = "$Version"
+        OutputDirectory = $OutputDirectory
+        Source = $NuGetFeed
+        ApiKey = $NuGetApiKey
+        ToolsPath = "C:/temp/tools"
+    }
+    Invoke-CreatePackage @parameters -Verbose:$verbose
+}
+
+
+if (-not $IsLocalBuild) {
+    
+    #Add AppCommon for Github Actions
+    Add-AppCommon
+    
+    # Build package for Github Actions
+    Write-Host "Building Package"
+    New-Package
+} else {
+ 
+    #Add AppCommon locally
+    Add-AppCommonLocal
+    
+    # Build package locally
+    Write-Host "Building Package"
+    New-PackageLocal
+}

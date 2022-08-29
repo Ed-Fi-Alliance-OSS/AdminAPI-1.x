@@ -41,7 +41,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             {
                 foreach (var vendorNamespacePrefix in vendor.VendorNamespacePrefixes.ToList())
                 {
-                     _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);    
+                     _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);
                 }
             }
 
@@ -51,7 +51,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
                 foreach (var namespacePrefix in namespacePrefixSplits)
                 {
-                    if (!string.IsNullOrEmpty(namespacePrefix))
+                    if (!string.IsNullOrWhiteSpace(namespacePrefix))
                     {
                         _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
                         {

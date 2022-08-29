@@ -28,11 +28,11 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 var namespacePrefixSplits = newVendor.NamespacePrefixes.Split(",");
 
                 namespacePrefixes.AddRange(namespacePrefixSplits
-                    .Where(namespacePrefix => !string.IsNullOrEmpty(namespacePrefix))
+                    .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
                     .Select(
                         namespacePrefix => new VendorNamespacePrefix
                         {
-                            NamespacePrefix = namespacePrefix.Trim()
+                            NamespacePrefix = namespacePrefix
                         }));
             }
 

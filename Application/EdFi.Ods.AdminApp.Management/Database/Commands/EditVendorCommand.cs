@@ -55,7 +55,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                     {
                         _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
                         {
-                            NamespacePrefix = namespacePrefix,
+                            NamespacePrefix = namespacePrefix.Trim(),
                             Vendor = vendor
                         });
                     }

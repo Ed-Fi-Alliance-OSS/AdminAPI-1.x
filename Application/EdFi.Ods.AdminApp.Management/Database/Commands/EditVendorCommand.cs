@@ -51,11 +51,14 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
                 foreach (var namespacePrefix in namespacePrefixSplits)
                 {
-                    _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
+                    if (!string.IsNullOrEmpty(namespacePrefix))
                     {
-                        NamespacePrefix = namespacePrefix,
-                        Vendor = vendor
-                    });
+                        _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
+                        {
+                            NamespacePrefix = namespacePrefix,
+                            Vendor = vendor
+                        });
+                    }
                 }
             }
 

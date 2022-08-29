@@ -27,7 +27,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             {
                 var namespacePrefixSplits = newVendor.NamespacePrefixes.Split(",");
 
-                namespacePrefixes.AddRange(namespacePrefixSplits.Select(
+                namespacePrefixes.AddRange(namespacePrefixSplits
+                    .Where(namespacePrefix => !string.IsNullOrEmpty(namespacePrefix))
+                    .Select(
                         namespacePrefix => new VendorNamespacePrefix
                         {
                             NamespacePrefix = namespacePrefix.Trim()

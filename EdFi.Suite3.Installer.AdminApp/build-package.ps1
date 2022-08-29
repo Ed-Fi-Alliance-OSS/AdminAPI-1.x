@@ -30,7 +30,7 @@ $Downloads = "$PSScriptRoot/downloads"
 $Version = "$SemanticVersion.$BuildCounter"
 
 $AppCommonPackageName = "EdFi.Installer.AppCommon"
-$AppCommonPackageVersion = "2.0.0"
+$AppCommonPackageVersion = "3.0.0"
 
 function Add-AppCommon{
 

@@ -20,6 +20,8 @@ function Set-TlsVersion {
 Import-Module "$PSScriptRoot/key-management.psm1"
 
 $appCommonDirectory = "$PSScriptRoot/AppCommon"
+$RequiredDotNetHostingBundleVersion = "6.0.0"
+
 Import-Module -Force "$appCommonDirectory/Environment/Prerequisites.psm1" -Scope Global
 Set-TlsVersion
 Install-DotNetCore "C:\temp\tools"
@@ -1165,6 +1167,7 @@ function Install-Application {
             WebSitePort = $Config.WebSitePort
             WebSiteName = $Config.WebSiteName
             CertThumbprint = $Config.CertThumbprint
+            DotNetVersion = $RequiredDotNetHostingBundleVersion
         }
 
         Install-EdFiApplicationIntoIIS @iisParams
@@ -1183,13 +1186,18 @@ function Set-SqlLogins {
 
         if($Config.usingSharedCredentials)
         {
-            Add-SqlLogins $Config.DbConnectionInfo $Config.WebApplicationName
+            Add-SqlLogins $Config.DbConnectionInfo $Config.WebApplicationName -IsCustomLogin
         }
         else
         {
-            Add-SqlLogins $Config.AdminDbConnectionInfo $Config.WebApplicationName
-            Add-SqlLogins $Config.OdsDbConnectionInfo $Config.WebApplicationName
-            Add-SqlLogins $Config.SecurityDbConnectionInfo $Config.WebApplicationName
+            Write-Host "Adding Sql Login for Admin Database:";
+            Add-SqlLogins $Config.AdminDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
+            
+            Write-Host "Adding Sql Login for Ed-Fi ODS Database:";
+            Add-SqlLogins $Config.OdsDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
+            
+            Write-Host "Adding Sql Login for Security Database:";
+            Add-SqlLogins $Config.SecurityDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
         }
     }
 }

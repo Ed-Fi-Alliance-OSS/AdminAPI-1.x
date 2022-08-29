@@ -47,18 +47,17 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
             if (!string.IsNullOrEmpty(changedVendorData.NamespacePrefixes))
             {
-                var namespacePrefixSplits = changedVendorData.NamespacePrefixes.Split(",");
-
-                foreach (var namespacePrefix in namespacePrefixSplits)
-                {
-                    if (!string.IsNullOrWhiteSpace(namespacePrefix))
+                var namespacePrefixes = changedVendorData.NamespacePrefixes.Split(",")
+                    .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
+                    .Select(namespacePrefix => new VendorNamespacePrefix
                     {
-                        _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
-                        {
-                            NamespacePrefix = namespacePrefix.Trim(),
-                            Vendor = vendor
-                        });
-                    }
+                        NamespacePrefix = namespacePrefix.Trim(),
+                        Vendor = vendor
+                    });
+
+                foreach (var namespacePrefix in namespacePrefixes)
+                {
+                    _context.VendorNamespacePrefixes.Add(namespacePrefix);
                 }
             }
 

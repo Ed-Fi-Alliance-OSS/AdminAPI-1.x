@@ -66,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);
             });
-            
+
             Transaction(usersContext =>
             {
                 var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
@@ -140,7 +140,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             });
             var newNamespacePrefixes = new List<string>
             {
-                
+
                 "http://www.test1.com/",
                 "http://www.test2.com/",
                 "http://www.test3.com/"

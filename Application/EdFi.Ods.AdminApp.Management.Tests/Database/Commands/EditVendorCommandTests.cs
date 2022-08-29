@@ -169,6 +169,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
         [TestCase("http://www.test1.com/, http://www.test2.com/,", "http://www.test1.com/,http://www.test2.com/")]
         [TestCase(", ,", "")]
+        [TestCase(" ", "")]
+        [TestCase(null, "")]
         public void ShouldNotAddEmptyNameSpacePrefixesWhileEditingVendor(string inputNamespacePrefixes, string expectedNamespacePrefixes)
         {
             var newVendorData = new Mock<IEditVendor>();

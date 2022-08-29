@@ -45,20 +45,17 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 }
             }
 
-            if (!string.IsNullOrEmpty(changedVendorData.NamespacePrefixes))
-            {
-                var namespacePrefixes = changedVendorData.NamespacePrefixes.Split(",")
-                    .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
-                    .Select(namespacePrefix => new VendorNamespacePrefix
-                    {
-                        NamespacePrefix = namespacePrefix.Trim(),
-                        Vendor = vendor
-                    });
-
-                foreach (var namespacePrefix in namespacePrefixes)
+            var namespacePrefixes = changedVendorData.NamespacePrefixes?.Split(",")
+                .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
+                .Select(namespacePrefix => new VendorNamespacePrefix
                 {
-                    _context.VendorNamespacePrefixes.Add(namespacePrefix);
-                }
+                    NamespacePrefix = namespacePrefix.Trim(),
+                    Vendor = vendor
+                });
+
+            foreach (var namespacePrefix in namespacePrefixes ?? Enumerable.Empty<VendorNamespacePrefix>())
+            {
+                _context.VendorNamespacePrefixes.Add(namespacePrefix);
             }
 
             if (vendor.Users?.FirstOrDefault() != null)

@@ -79,5 +79,34 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 vendor.Users.Single().Email.ShouldBe("test@test.com");
             });
         }
+
+        [TestCase("http://www.test1.com/, http://www.test2.com/,", "http://www.test1.com/,http://www.test2.com/")]
+        [TestCase(",", "")]
+        public void ShouldNotAddEmptyNamespacePrefixesWhileAddingVendor(string inputNamespacePrefixes, string expectedNamespacePrefixes)
+        {
+            var newVendor = new Mock<IAddVendorModel>();
+            newVendor.Setup(x => x.Company).Returns("test vendor");
+            newVendor.Setup(x => x.NamespacePrefixes).Returns(inputNamespacePrefixes);
+            newVendor.Setup(x => x.ContactName).Returns("test user");
+            newVendor.Setup(x => x.ContactEmailAddress).Returns("test@test.com");
+
+            int id = 0;
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var command = new AddVendorCommand(usersContext);
+
+                id = command.Execute(newVendor.Object).VendorId;
+                id.ShouldBeGreaterThan(0);
+            });
+
+            Transaction(usersContext =>
+            {
+                var vendor = usersContext.Vendors.Single(v => v.VendorId == id);
+                vendor.VendorName.ShouldBe("test vendor");
+                vendor.VendorNamespacePrefixes.Select(x => x.NamespacePrefix).ToDelimiterSeparated().ShouldBe(expectedNamespacePrefixes);
+                vendor.Users.Single().FullName.ShouldBe("test user");
+                vendor.Users.Single().Email.ShouldBe("test@test.com");
+            });
+        }
     }
 }

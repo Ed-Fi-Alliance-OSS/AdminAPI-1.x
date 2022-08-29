@@ -167,6 +167,39 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             });
         }
 
+        [TestCase("http://www.test1.com/, http://www.test2.com/,", "http://www.test1.com/,http://www.test2.com/")]
+        [TestCase(",", "")]
+        public void ShouldNotAddEmptyNameSpacePrefixesWhileEditingVendor(string inputNamespacePrefixes, string expectedNamespacePrefixes)
+        {
+            var newVendorData = new Mock<IEditVendor>();
+            Transaction(usersContext =>
+            {
+                var originalVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
+            });
+
+            newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+            newVendorData.Setup(v => v.Company).Returns("new vendor name");
+            newVendorData.Setup(v => v.NamespacePrefixes).Returns(inputNamespacePrefixes);
+            newVendorData.Setup(v => v.ContactName).Returns("new contact name");
+            newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
+
+            Scoped<IUsersContext>(usersContext =>
+            {
+                var editVendorCommand = new EditVendorCommand(usersContext);
+                editVendorCommand.Execute(newVendorData.Object);
+            });
+
+            Transaction(usersContext =>
+            {
+                var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+                changedVendor.VendorName.ShouldBe("new vendor name");
+                changedVendor.VendorNamespacePrefixes.Select(x => x.NamespacePrefix).ToDelimiterSeparated().ShouldBe(expectedNamespacePrefixes);
+                changedVendor.Users.First().FullName.ShouldBe("new contact name");
+                changedVendor.Users.First().Email.ShouldBe("new contact email");
+            });
+        }
+
         [Test]
         public void ShouldEditVendorByRemovingNameSpacePrefix()
         {

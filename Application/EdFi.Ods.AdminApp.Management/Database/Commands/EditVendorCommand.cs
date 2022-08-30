@@ -41,22 +41,21 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             {
                 foreach (var vendorNamespacePrefix in vendor.VendorNamespacePrefixes.ToList())
                 {
-                     _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);    
+                     _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);
                 }
             }
 
-            if (!string.IsNullOrEmpty(changedVendorData.NamespacePrefixes))
-            {
-                var namespacePrefixSplits = changedVendorData.NamespacePrefixes.Split(",");
-
-                foreach (var namespacePrefix in namespacePrefixSplits)
+            var namespacePrefixes = changedVendorData.NamespacePrefixes?.Split(",")
+                .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
+                .Select(namespacePrefix => new VendorNamespacePrefix
                 {
-                    _context.VendorNamespacePrefixes.Add(new VendorNamespacePrefix
-                    {
-                        NamespacePrefix = namespacePrefix,
-                        Vendor = vendor
-                    });
-                }
+                    NamespacePrefix = namespacePrefix.Trim(),
+                    Vendor = vendor
+                });
+
+            foreach (var namespacePrefix in namespacePrefixes ?? Enumerable.Empty<VendorNamespacePrefix>())
+            {
+                _context.VendorNamespacePrefixes.Add(namespacePrefix);
             }
 
             if (vendor.Users?.FirstOrDefault() != null)

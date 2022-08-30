@@ -22,17 +22,13 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
         public Vendor Execute(IAddVendorModel newVendor)
         {
-            var namespacePrefixes = new List<VendorNamespacePrefix>();
-            if (!string.IsNullOrWhiteSpace(newVendor.NamespacePrefixes))
-            {
-                var namespacePrefixSplits = newVendor.NamespacePrefixes.Split(",");
-
-                namespacePrefixes.AddRange(namespacePrefixSplits.Select(
-                        namespacePrefix => new VendorNamespacePrefix
-                        {
-                            NamespacePrefix = namespacePrefix.Trim()
-                        }));
-            }
+            var namespacePrefixes = newVendor.NamespacePrefixes?.Split(",")
+                .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
+                .Select(namespacePrefix => new VendorNamespacePrefix
+                {
+                    NamespacePrefix = namespacePrefix.Trim()
+                })
+                .ToList();
 
             var vendor = new Vendor
             {

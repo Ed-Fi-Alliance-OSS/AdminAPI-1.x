@@ -175,7 +175,7 @@ function Invoke-InstallMultiInstanceSqlServer {
     }
 
     $adminAppFeatures = @{
-        ApiMode = "yearSpecific"
+        ApiMode = "yearspecific"
     }
 
     $p = @{

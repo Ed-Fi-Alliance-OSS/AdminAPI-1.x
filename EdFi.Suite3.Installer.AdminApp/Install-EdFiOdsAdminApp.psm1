@@ -598,6 +598,15 @@ function Invoke-InstallationPreCheck{
                 exit
             }
         }
+
+        if($Config.AdminAppFeatures.ContainsKey("ApiMode") -and $Config.AdminAppFeatures.ApiMode) {
+            $apiMode = $Config.AdminAppFeatures.ApiMode
+            $supportedModes = @('sandbox', 'sharedinstance', 'yearspecific', 'districtspecific')
+            if ($supportedModes -NotContains $apiMode) {
+                Write-Warning "Not supported ApiMode: '$apiMode'. Please use one of the supported modes for the ApiMode Admin App feature. Supported modes:'$($supportedModes -join "','")'"
+                exit
+            }
+        }
     }
 }
 

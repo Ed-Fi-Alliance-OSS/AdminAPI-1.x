@@ -66,7 +66,7 @@ Deploy Admin App for use with a "District Specific" ODS API
 #>
 
 $adminAppFeatures = @{
-    ApiMode = "sharedInstance"
+    ApiMode = "sharedinstance"
 }
 
 $p = @{

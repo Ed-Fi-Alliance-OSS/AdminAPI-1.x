@@ -54,7 +54,7 @@ function Add-AppCommon{
     Move-AppCommon $appCommonDirectory
 }
 
-function Add-AppCommonLocal{    
+function Add-AppCommonLocal{
 
     Import-Module -Force "$PSScriptRoot/nuget-helper.psm1"
 
@@ -125,18 +125,18 @@ function New-PackageLocal {
 
 
 if (-not $IsLocalBuild) {
-    
+
     #Add AppCommon for Github Actions
     Add-AppCommon
-    
+
     # Build package for Github Actions
     Write-Host "Building Package"
     New-Package
 } else {
- 
+
     #Add AppCommon locally
     Add-AppCommonLocal
-    
+
     # Build package locally
     Write-Host "Building Package"
     New-PackageLocal

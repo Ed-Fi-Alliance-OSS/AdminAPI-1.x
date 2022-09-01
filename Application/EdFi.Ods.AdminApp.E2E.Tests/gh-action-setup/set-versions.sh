@@ -21,7 +21,7 @@ sed -i "s/ENV VERSION=\"[0-9].[0-9].[0-9]\"/ENV VERSION=\"$WEB_VERSION\"/w chang
 
 sed -i "s/core\/aspnet@sha256:[a-z0-9]\+/aspnet@sha256:5d7911e8485a58ac50eefa09e2cea8f3d59268fd7f1501f72324e37e29d9d6ee/w changelog.txt" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile
 
-sed -i "s/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.7-r0 jq=~1.6 icu=~67.1 curl=~7.79/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.7 jq=~1.6 icu=~67.1 curl=~7.79/w changelog.txt" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile
+sed -i "s/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.7-r0 jq=~1.6 icu=~67.1 curl=~7.79/RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.8-r0 jq=~1.6 icu=~67.1 curl=~7.79/w changelog.txt" ods-docker/Web-Ods-AdminApp/Alpine/pgsql/Dockerfile
 
 if [ -s changelog.txt ]; then
     echo "Files updated"

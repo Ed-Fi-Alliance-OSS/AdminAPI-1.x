@@ -24,7 +24,6 @@ $RequiredDotNetHostingBundleVersion = "6.0.0"
 
 Import-Module -Force "$appCommonDirectory/Environment/Prerequisites.psm1" -Scope Global
 Set-TlsVersion
-Install-DotNetCore "C:\temp\tools"
 
 Import-Module -Force "$appCommonDirectory/Utility/hashtable.psm1" -Scope Global
 Import-Module -Force "$appCommonDirectory/Utility/nuget-helper.psm1"

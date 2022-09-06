@@ -1200,10 +1200,10 @@ function Set-SqlLogins {
         {
             Write-Host "Adding Sql Login for Admin Database:";
             Add-SqlLogins $Config.AdminDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
-            
+
             Write-Host "Adding Sql Login for Ed-Fi ODS Database:";
             Add-SqlLogins $Config.OdsDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
-            
+
             Write-Host "Adding Sql Login for Security Database:";
             Add-SqlLogins $Config.SecurityDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
         }

@@ -187,7 +187,7 @@ export class VendorsPage extends AdminAppPage {
     }
 
     async clickDelete(): Promise<void> {
-        await this.page.locator(this.deleteVendorBtn).click();
+        await this.page.locator(this.deleteVendorBtn).first().click();
     }
 
     async deleteVendor(): Promise<void> {
@@ -202,7 +202,7 @@ export class VendorsPage extends AdminAppPage {
     }
 
     async clickEdit(): Promise<void> {
-        await this.page.locator(this.editVendorBtn).click();
+        await this.page.locator(this.editVendorBtn).first().click();
     }
 
     async editVendorForm(): Promise<void> {

@@ -111,7 +111,7 @@ export class ApplicationsPage extends AdminAppPage {
     }
 
     async addApplication(): Promise<void> {
-        await this.page.locator(this.addNewApplicationBtn).click();
+        await this.page.locator(this.addNewApplicationBtn).first().click();
     }
 
     async fillApplicationForm(): Promise<void> {
@@ -242,15 +242,15 @@ export class ApplicationsPage extends AdminAppPage {
     }
 
     async clickEdit(): Promise<void> {
-        await this.page.locator(this.editApplicationBtn).click();
+        await this.page.locator(this.editApplicationBtn).first().click();
     }
 
     async clickDelete(): Promise<void> {
-        await this.page.locator(this.deleteApplicationBtn).click();
+        await this.page.locator(this.deleteApplicationBtn).first().click();
     }
 
     async clickRegenerate() {
-        await this.page.locator(this.regenerateBtn).click();
+        await this.page.locator(this.regenerateBtn).first().click();
     }
 
     async confirmRegenerate() {
@@ -292,7 +292,7 @@ export class ApplicationsPage extends AdminAppPage {
     }
 
     async clickCollapse(): Promise<void> {
-        await this.page.locator(this.collapseBtn).click();
+        await this.page.locator(this.collapseBtn).first().click();
     }
 
     async isCollapsed(): Promise<boolean> {

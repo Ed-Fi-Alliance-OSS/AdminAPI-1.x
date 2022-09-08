@@ -24,7 +24,6 @@ $RequiredDotNetHostingBundleVersion = "6.0.0"
 
 Import-Module -Force "$appCommonDirectory/Environment/Prerequisites.psm1" -Scope Global
 Set-TlsVersion
-Install-DotNetCore "C:\temp\tools"
 
 Import-Module -Force "$appCommonDirectory/Utility/hashtable.psm1" -Scope Global
 Import-Module -Force "$appCommonDirectory/Utility/nuget-helper.psm1"
@@ -1201,10 +1200,10 @@ function Set-SqlLogins {
         {
             Write-Host "Adding Sql Login for Admin Database:";
             Add-SqlLogins $Config.AdminDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
-            
+
             Write-Host "Adding Sql Login for Ed-Fi ODS Database:";
             Add-SqlLogins $Config.OdsDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
-            
+
             Write-Host "Adding Sql Login for Security Database:";
             Add-SqlLogins $Config.SecurityDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
         }

@@ -7,6 +7,10 @@ See the LICENSE and NOTICES files in the project root for more information.
 
 @using EdFi.Ods.AdminApp.Web.Helpers
 @using EdFi.Ods.AdminApp.Web.Infrastructure
+@using Microsoft.Extensions.Options
+@using EdFi.Ods.AdminApp.Management.Helpers
+
+@inject IOptions<AppSettings> AppSettings
 
 <!DOCTYPE html>
 <html lang="en">
@@ -72,16 +76,20 @@ See the LICENSE and NOTICES files in the project root for more information.
         <div class="row margin-right-30">
             @if (User.Identity.IsAuthenticated)
             {
-                <div class="col-md-1 col-md-offset-10 nav-links">
+                var offsetClass = AppSettings.Value.EnableProductImprovementSettings ? "col-md-offset-10" : "col-md-offset-11";
+                <div class="col-md-1 @offsetClass nav-links">
                     <a href="@Url.Action("Index", "Home")" class="text-nowrap">
                         <span class="fa fa-home"></span><strong>Home</strong>
                     </a>
                 </div>
-                 <div class="col-md-1 nav-links">
-                     <a href="@Url.Action("EditConfiguration", "ProductImprovement")" class="text-nowrap">
-                         <span class="fa fa-cog"></span><strong>Configuration</strong>
-                     </a>
-                 </div>
+                @if (AppSettings.Value.EnableProductImprovementSettings)
+                {
+                    <div class="col-md-1 nav-links">
+                        <a href="@Url.Action("EditConfiguration", "ProductImprovement")" class="text-nowrap">
+                            <span class="fa fa-cog"></span><strong>Configuration</strong>
+                        </a>
+                    </div>
+                }
             }
         </div>
         <section>

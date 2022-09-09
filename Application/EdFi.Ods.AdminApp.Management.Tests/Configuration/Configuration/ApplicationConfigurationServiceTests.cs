@@ -7,6 +7,8 @@ using System;
 using EdFi.Ods.AdminApp.Management.Configuration.Application;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Helpers;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -92,6 +94,38 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             Count<ApplicationConfiguration>().ShouldBe(1);
         }
 
+        [Test]
+        public void ShouldSetInitialProductImprovementBasedOnSettings()
+        {
+            CompleteFirstTimeSetUpStatus(true);
+            IsProductImprovementEnabled().ShouldBe((true, null));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            CompleteFirstTimeSetUpStatus(false);
+            IsProductImprovementEnabled().ShouldBe((false, null));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+        }
+
+        [Test]
+        public void ShouldDisableProductImprovementAlwaysWhenDisabledInSettings()
+        {
+            EnableProductImprovement(enableProductImprovement: true, productRegistrationId: "", enableProductImprovementSettings: true);
+            IsProductImprovementEnabled(true).ShouldBe((true, ""));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            EnableProductImprovement(enableProductImprovement: true, productRegistrationId: "", enableProductImprovementSettings: true);
+            IsProductImprovementEnabled(false).ShouldBe((false, ""));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            EnableProductImprovement(enableProductImprovement: true, productRegistrationId: "", enableProductImprovementSettings: false);
+            IsProductImprovementEnabled(true).ShouldBe((false, ""));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+
+            EnableProductImprovement(enableProductImprovement: false, productRegistrationId: "", enableProductImprovementSettings: false);
+            IsProductImprovementEnabled(true).ShouldBe((false, ""));
+            Count<ApplicationConfiguration>().ShouldBe(1);
+        }
+
         private bool AllowUserRegistrations()
         {
             return Transaction(database =>
@@ -100,14 +134,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
                 Scoped<AdminAppIdentityDbContext>(identity =>
                 {
-                    allowUserRegistration = new ApplicationConfigurationService(database, identity).AllowUserRegistration();
+                    var appSettings = new AppSettings { EnableProductImprovementSettings = true };
+                    allowUserRegistration = new ApplicationConfigurationService(database, identity, Options.Create(appSettings)).AllowUserRegistration();
                 });
 
                 return allowUserRegistration;
             });
         }
 
-        private (bool, string) IsProductImprovementEnabled()
+        private (bool, string) IsProductImprovementEnabled(bool areProductImprovementSettingsEnabled = true)
         {
             return Transaction(database =>
             {
@@ -116,7 +151,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
 
                 Scoped<AdminAppIdentityDbContext>(identity =>
                 {
-                    enableProductImprovement = new ApplicationConfigurationService(database, identity)
+                    var appSettings = new AppSettings { EnableProductImprovementSettings = areProductImprovementSettingsEnabled };
+                    enableProductImprovement = new ApplicationConfigurationService(database, identity, Options.Create(appSettings))
                         .IsProductImprovementEnabled(out productRegistrationId);
                 });
 
@@ -124,14 +160,30 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Configuration
             });
         }
 
-        private void EnableProductImprovement(bool enableProductImprovement, string productRegistrationId)
+        private void EnableProductImprovement(bool enableProductImprovement, string productRegistrationId,
+            bool enableProductImprovementSettings = true)
         {
+            var appSettings = new AppSettings { EnableProductImprovementSettings = enableProductImprovementSettings };
+
             Transaction(database =>
             {
                 Scoped<AdminAppIdentityDbContext>(identity =>
                 {
-                    new ApplicationConfigurationService(database, identity).EnableProductImprovement(
+                    new ApplicationConfigurationService(database, identity, Options.Create(appSettings)).EnableProductImprovement(
                         enableProductImprovement, productRegistrationId);
+                });
+            });
+        }
+
+        private void CompleteFirstTimeSetUpStatus(bool enableProductImprovementSettings)
+        {
+            EnsureZeroApplicationConfiguration();
+            var appSettings = new AppSettings { EnableProductImprovementSettings = enableProductImprovementSettings };
+            Transaction(database =>
+            {
+                Scoped<AdminAppIdentityDbContext>(identity =>
+                {
+                    new ApplicationConfigurationService(database, identity, Options.Create(appSettings)).UpdateFirstTimeSetUpStatus(true);
                 });
             });
         }

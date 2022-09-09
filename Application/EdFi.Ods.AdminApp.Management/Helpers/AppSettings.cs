@@ -28,6 +28,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string AwsCurrentVersion { get; set; }
         public string Log4NetConfigPath { get; set; }
         public string EncryptionKey { get; set; }
+        public bool EnableProductImprovementSettings { get; set; }
 
         public string GoogleAnalyticsMeasurementId { get; set; }
         public string ProductRegistrationUrl { get; set; }

@@ -4,7 +4,7 @@ Licensed to the Ed-Fi Alliance under one or more agreements.
 The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 See the LICENSE and NOTICES files in the project root for more information.
 *@
-
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.FirstTimeSetupModel
 
 @{
     ViewBag.Title = "First Time Setup";
@@ -36,7 +36,7 @@ See the LICENSE and NOTICES files in the project root for more information.
                 <strong>Note:</strong> Waiting for setup processes to complete. Will continue re-trying.
             </div>
         </div>
-    </div>    
+    </div>
     <div>
         <a href="#" class="btn btn-primary" id="finish-setup-link">Continue <span class="padding-left"><i class="fa fa-chevron-circle-right"></i></span></a>
     </div>
@@ -60,13 +60,21 @@ See the LICENSE and NOTICES files in the project root for more information.
         var handleSuccess = function() {
             $('#finish-setup-link').removeClass('btn-primary btn-danger').addClass('btn-success');
             $('#finish-setup-link').html('Success <span class="padding-left"><i class="fa fa-check-circle"></i></span>');
-            window.location = '@Url.Action("EnableProductImprovementFirstTimeSetup", "ProductImprovement")';
+
+            @if (Model.AreProductImprovementSettingsEnabled)
+            {
+              @: window.location = '@Url.Action("EnableProductImprovementFirstTimeSetup", "ProductImprovement")';
+            }
+            else
+            {
+              @: window.location = '@Url.Action("PostSetup", "Home", new {setupCompleted = true})';
+            }
         };
 
         var handleFailure = function (data) {
             if (data.responseJSON && data.responseJSON.isTransientError) {
                 $('#transient-error-note').show();
-              
+
                 $.ajax(ajaxSettings)
                     .done(function() {
                         handleSuccess();

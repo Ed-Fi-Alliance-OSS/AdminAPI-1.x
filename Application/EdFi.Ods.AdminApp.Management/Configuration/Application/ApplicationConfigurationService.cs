@@ -6,6 +6,8 @@
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Ods.AdminApp.Management.Database.Models;
+using EdFi.Ods.AdminApp.Management.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApp.Management.Configuration.Application
 {
@@ -13,11 +15,13 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
     {
         private readonly AdminAppDbContext _database;
         private readonly AdminAppIdentityDbContext _identity;
+        private readonly AppSettings _appSettings;
 
-        public ApplicationConfigurationService(AdminAppDbContext database, AdminAppIdentityDbContext identity)
+        public ApplicationConfigurationService(AdminAppDbContext database, AdminAppIdentityDbContext identity, IOptions<AppSettings> appSettings)
         {
             _database = database;
             _identity = identity;
+            _appSettings = appSettings.Value;
         }
 
         public bool AllowUserRegistration()
@@ -35,7 +39,7 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
         {
             var config = _database.EnsureSingle<ApplicationConfiguration>();
             config.FirstTimeSetUpCompleted = setUpCompleted;
-            config.EnableProductImprovement = true;
+            config.EnableProductImprovement = _appSettings.EnableProductImprovementSettings;
            _database.SaveChanges();
         }
 
@@ -51,13 +55,13 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Application
 
             productRegistrationId = config.ProductRegistrationId;
 
-            return enableProductImprovement;
+            return _appSettings.EnableProductImprovementSettings && enableProductImprovement;
         }
 
         public void EnableProductImprovement(bool enableProductImprovement, string productRegistrationId)
         {
             var config = _database.EnsureSingle<ApplicationConfiguration>();
-            config.EnableProductImprovement = enableProductImprovement;
+            config.EnableProductImprovement = _appSettings.EnableProductImprovementSettings && enableProductImprovement;
             config.ProductRegistrationId = (productRegistrationId ?? "").Trim();
             _database.SaveChanges();
         }

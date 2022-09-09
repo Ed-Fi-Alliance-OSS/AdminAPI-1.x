@@ -11,17 +11,26 @@ namespace EdFi.Ods.AdminApp.Management.Api
     public class OdsRestClientFactory : IOdsRestClientFactory
     {
         private readonly IOdsApiConnectionInformationProvider _odsApiConnectionInformationProvider;
+        private readonly IOdsApiValidator _odsApiValidator;
         private TokenRetriever _tokenRetriever;
         private RestClient _restClient;
 
-        public OdsRestClientFactory(IOdsApiConnectionInformationProvider odsApiConnectionInformationProvider)
+        public OdsRestClientFactory(IOdsApiConnectionInformationProvider odsApiConnectionInformationProvider, IOdsApiValidator odsApiValidator)
         {
             _odsApiConnectionInformationProvider = odsApiConnectionInformationProvider;
+            _odsApiValidator = odsApiValidator;
         }
 
         public async Task<IOdsRestClient> Create()
         {
             var connectionInfo = await _odsApiConnectionInformationProvider.GetConnectionInformationForEnvironment();
+            var validatorResult = await _odsApiValidator.Validate(connectionInfo.ApiServerUrl);
+
+            if (!validatorResult.IsValidOdsApi)
+            {
+                throw validatorResult.Exception;
+            }
+
             _tokenRetriever = new TokenRetriever(connectionInfo);
             _restClient = new RestClient(connectionInfo.ApiBaseUrl);
             return new OdsRestClient(connectionInfo, _restClient, _tokenRetriever);

@@ -32,21 +32,30 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly InstanceContext _instanceContext;
         private readonly ITabDisplayService _tabDisplayService;
         private readonly IInferExtensionDetails _inferExtensionDetails;
+        private readonly IOdsApiValidator _odsApiValidator;
 
         public EducationOrganizationsController(IOdsApiFacadeFactory odsApiFacadeFactory
             , IMapper mapper, InstanceContext instanceContext, ITabDisplayService tabDisplayService
-            , IInferExtensionDetails inferExtensionDetails)
+            , IInferExtensionDetails inferExtensionDetails, IOdsApiValidator odsApiValidator)
         {
             _odsApiFacadeFactory = odsApiFacadeFactory;
             _mapper = mapper;
             _instanceContext = instanceContext;
             _tabDisplayService = tabDisplayService;
             _inferExtensionDetails = inferExtensionDetails;
+            _odsApiValidator = odsApiValidator;
         }
 
         [AddTelemetry("Local Education Agencies Index", TelemetryType.View)]
         public async Task<ActionResult> LocalEducationAgencies()
         {
+            var validatorResult = await _odsApiValidator.Validate(CloudOdsAdminAppSettings.AppSettings.ProductionApiUrl);
+            
+            if (!validatorResult.IsValidOdsApi)
+            {
+                throw validatorResult.Exception;
+            }
+
             var model = new EducationOrganizationsIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =
@@ -63,6 +72,13 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         [AddTelemetry("Post-Secondary Institutions Index", TelemetryType.View)]
         public async Task<ActionResult> PostSecondaryInstitutions()
         {
+            var validatorResult = await _odsApiValidator.Validate(CloudOdsAdminAppSettings.AppSettings.ProductionApiUrl);
+            
+            if (!validatorResult.IsValidOdsApi)
+            {
+                throw validatorResult.Exception;
+            }
+
             var model = new EducationOrganizationsIndexModel
             {
                 OdsInstanceSettingsTabEnumerations =

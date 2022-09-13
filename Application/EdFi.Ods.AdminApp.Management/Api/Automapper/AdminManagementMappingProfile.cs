@@ -106,7 +106,8 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name))
                 .ForCtorParam("addresses", opt => opt.MapFrom(AddressResolver))
                 .ForCtorParam("educationOrganizationCategories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
-                .ForCtorParam("gradeLevels", opt => opt.MapFrom(SchoolGradeLevelResolver.Resolve));
+                .ForCtorParam("gradeLevels", opt => opt.MapFrom(SchoolGradeLevelResolver.Resolve))
+                .ForCtorParam("localEducationAgencyReference", opt => opt.MapFrom(LocalEducationAgencyReferenceResolver.Resolve));
 
             CreateMap<PsiSchool, EdFiSchool>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
@@ -125,7 +126,8 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name))
                 .ForCtorParam("addresses", opt => opt.MapFrom(AddressResolver))
                 .ForCtorParam("educationOrganizationCategories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
-                .ForCtorParam("gradeLevels", opt => opt.MapFrom(SchoolGradeLevelResolver.Resolve));
+                .ForCtorParam("gradeLevels", opt => opt.MapFrom(SchoolGradeLevelResolver.Resolve))
+                .ForCtorParam("localEducationAgencyReference", opt => opt.MapFrom(LocalEducationAgencyReferenceResolver.Resolve));
 
 
             CreateMap<LocalEducationAgency, EdFiLocalEducationAgency>()
@@ -141,7 +143,8 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForCtorParam("categories", opt => opt.MapFrom(EducationOrganizationCategoryResolver.Resolve))
                 .ForCtorParam("localEducationAgencyId", opt => opt.MapFrom(src => src.LocalEducationAgencyId))
                 .ForCtorParam("localEducationAgencyCategoryDescriptor", opt => opt.MapFrom(src => src.LocalEducationAgencyCategoryType))
-                .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name));
+                .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name))
+                .ForCtorParam("stateEducationAgencyReference", opt => opt.MapFrom(StateEducationAgencyReferenceResolver.Resolve));
 
             CreateMap<PostSecondaryInstitution, EdFiPostSecondaryInstitution>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))

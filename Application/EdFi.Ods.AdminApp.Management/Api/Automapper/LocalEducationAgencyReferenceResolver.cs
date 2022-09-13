@@ -18,5 +18,12 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
 
             return id != null ? new EdFiLocalEducationAgencyReference(id) :  null;
         }
+
+        public static EdFiLocalEducationAgencyReference Resolve(School source, ResolutionContext context)
+        {
+            var id = source.LocalEducationAgencyId;
+
+            return id != null ? new EdFiLocalEducationAgencyReference(id) : null;
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IDeleteApplicationCommand _deleteApplicationCommand;
         private readonly IEditApplicationCommand _editApplicationCommand;
         private readonly GetApplicationByIdQuery _getApplicationByIdQuery;
-        private readonly GetClaimSetNamesQuery _getClaimSetNamesQuery;
+        private readonly GetAllClaimSetsQuery _getClaimSetNamesQuery;
         private readonly GetProfilesQuery _getProfilesQuery;
         private readonly IGetVendorByIdQuery _getVendorByIdQuery;
         private readonly IMapper _mapper;
@@ -47,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IEditApplicationCommand editApplicationCommand
             , GetApplicationByIdQuery getApplicationByIdQuery
             , IGetVendorByIdQuery getVendorByIdQuery
-            , GetClaimSetNamesQuery getClaimSetNamesQuery
+            , GetAllClaimSetsQuery getClaimSetNamesQuery
             , GetProfilesQuery getProfilesQuery
             , RegenerateApiClientSecretCommand regenerateApiClientSecretCommand
             , IOdsApiFacadeFactory odsApiFacadeFactory
@@ -264,7 +264,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
 
         private List<string> GetClaimSetNames()
         {
-            return _getClaimSetNamesQuery.Execute().Except(CloudOdsAdminApp.SystemReservedClaimSets).ToList();
+            return _getClaimSetNamesQuery.Execute().Select(x => x.ClaimSetName).Except(CloudOdsAdminApp.SystemReservedClaimSets).ToList();
         }
 
         private static string GetApiUrlForDisplay(string apiUrl)

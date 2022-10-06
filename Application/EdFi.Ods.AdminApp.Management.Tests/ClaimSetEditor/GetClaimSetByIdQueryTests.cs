@@ -10,6 +10,9 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using System.Net;
+using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -35,6 +38,32 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 result.Name.ShouldBe(testClaimSet.ClaimSetName);
                 result.Id.ShouldBe(testClaimSet.ClaimSetId);
             });
+        }
+
+        [Test]
+        public void ShouldThrowExceptionForNonExistingClaimSetId()
+        {
+            EnsureZeroClaimSets();
+
+            const int NonExistingClaimSetId = 1;
+
+            var adminAppException = Assert.Throws<AdminAppException>(() => Scoped<IGetClaimSetByIdQuery>(query =>
+            {
+                query.Execute(NonExistingClaimSetId);
+            }));
+            adminAppException.ShouldNotBeNull();
+            adminAppException.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+            adminAppException.Message.ShouldBe("No such claim set exists in the database.");
+
+            void EnsureZeroClaimSets()
+            {
+                Scoped<ISecurityContext>(database =>
+                {
+                    foreach (var entity in database.ClaimSets)
+                        database.ClaimSets.Remove(entity);
+                    database.SaveChanges();
+                });
+            }
         }
     }
 }

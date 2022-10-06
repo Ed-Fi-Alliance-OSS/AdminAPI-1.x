@@ -46,7 +46,8 @@ public static class WebApplicationBuilderExtensions
 
                 if (concreteClass.Namespace != null)
                 {
-                    if (concreteClass.Namespace.EndsWith("Database.Commands") || concreteClass.Namespace.EndsWith("Database.Queries"))
+                    if (concreteClass.Namespace.EndsWith("Database.Commands") || concreteClass.Namespace.EndsWith("Database.Queries")
+                        || concreteClass.Namespace.EndsWith("ClaimSetEditor"))
                     {
                         if (interfaces.Length == 1)
                         {
@@ -125,6 +126,7 @@ public static class WebApplicationBuilderExtensions
 
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
+            opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.CustomSchemaIds(x => x.FullName);
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>

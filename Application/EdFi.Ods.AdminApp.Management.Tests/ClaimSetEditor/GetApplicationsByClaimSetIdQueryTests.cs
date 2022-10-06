@@ -48,6 +48,29 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             }
         }
 
+
+        [TestCase(1)]
+        [TestCase(5)]
+        public void ShouldGetClaimSetApplicationsCount(int applicationsCount)
+        {
+            var testClaimSets = SetupApplicationWithClaimSets();
+
+            SetupApplications(testClaimSets, applicationsCount);
+
+            foreach (var testClaimSet in testClaimSets)
+            {
+                var appsCountByClaimSet = Scoped<IGetApplicationsByClaimSetIdQuery, int>(
+                    query => query.ExecuteCount(testClaimSet.ClaimSetId));
+
+                Scoped<IUsersContext>(usersContext =>
+                {
+                    var testApplicationsCount =
+                        usersContext.Applications.Count(x => x.ClaimSetName == testClaimSet.ClaimSetName);
+                    appsCountByClaimSet.ShouldBe(testApplicationsCount);
+                });
+            }
+        }
+
         private IReadOnlyCollection<ClaimSet> SetupApplicationWithClaimSets(
             string applicationName = "TestApplicationName", int claimSetCount = 5)
         {

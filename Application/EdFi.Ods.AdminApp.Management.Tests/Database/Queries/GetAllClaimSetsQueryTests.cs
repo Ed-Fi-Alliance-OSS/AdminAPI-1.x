@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
@@ -16,9 +15,9 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
     [TestFixture]
-    public class GetClaimSetNamesQueryTests : SecurityDataTestBase
+    public class GetAllClaimSetsQueryTests : SecurityDataTestBase
     {
-        public GetClaimSetNamesQueryTests()
+        public GetAllClaimSetsQueryTests()
         {
             SeedSecurityContextOnFixtureSetup = true;
         }
@@ -38,8 +37,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             var claimSetNames = Scoped<ISecurityContext, string[]>(securityContext =>
             {
-                var query = new GetClaimSetNamesQuery(securityContext);
-                return query.Execute().ToArray();
+                var query = new GetAllClaimSetsQuery(securityContext);
+                return query.Execute().Select(x => x.ClaimSetName).ToArray();
             });
 
             claimSetNames.ShouldContain(claimSet1.ClaimSetName);

@@ -8,6 +8,7 @@ using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
@@ -43,7 +44,15 @@ public class ReadClaimSets : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int id)
     {
-        var claimSet = getClaimSetByIdQuery.Execute(id);
+        ClaimSet claimSet;
+        try
+        {
+            claimSet = getClaimSetByIdQuery.Execute(id);
+        }
+        catch (AdminAppException)
+        {
+            throw new NotFoundException<int>("claimset", id);
+        }
 
         var allResources = getResourcesByClaimSetIdQuery.AllResources(id);
         var claimSetData = mapper.Map<ClaimSetDetailsModel>(claimSet);

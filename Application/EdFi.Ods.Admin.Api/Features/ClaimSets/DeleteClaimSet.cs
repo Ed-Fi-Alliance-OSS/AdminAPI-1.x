@@ -5,6 +5,7 @@
 
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using FluentValidation.Results;
@@ -25,7 +26,16 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         {
             CheckClaimSetExists(id, context);
             CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);
-            deleteClaimSetCommand.Execute(new DeleteClaimSetModel { Id = id });
+
+            try
+            {
+                deleteClaimSetCommand.Execute(new DeleteClaimSetModel { Id = id });
+            }
+            catch (AdminAppException exception)
+            {
+                throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message)});
+            }
+
             return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
         }
 
@@ -35,8 +45,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
             if (claimSetToDelete == null)
             {
-                throw new ValidationException(new[] { new ValidationFailure(nameof(id),
-                    FeatureConstants.ClaimSetNotFound) });
+                throw new NotFoundException<int>("claimset", id);
             }
         }
 

@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
@@ -29,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             if (DefaultClaimSets.Contains(existingClaimSet.ClaimSetName) ||
                         CloudOdsAdminApp.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
             {
-                throw new Exception($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
+                throw new AdminAppException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
             }
 
             if (!claimSet.ClaimSetName.Equals(existingClaimSet.ClaimSetName, StringComparison.InvariantCultureIgnoreCase))

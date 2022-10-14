@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using Moq;
 using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -99,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             deleteModel.Setup(x => x.Name).Returns(systemReservedClaimSet.ClaimSetName);
             deleteModel.Setup(x => x.Id).Returns(systemReservedClaimSet.ClaimSetId);
 
-            var exception = Assert.Throws<Exception>(() => Scoped<ISecurityContext>(securityContext =>
+            var exception = Assert.Throws<AdminAppException>(() => Scoped<ISecurityContext>(securityContext =>
             {
                 var command = new DeleteClaimSetCommand(securityContext);
                 command.Execute(deleteModel.Object);

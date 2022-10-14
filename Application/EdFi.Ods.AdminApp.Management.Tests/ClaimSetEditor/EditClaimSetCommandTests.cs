@@ -14,6 +14,7 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using EdFi.Security.DataAccess.Contexts;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
@@ -59,7 +60,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };
 
-            var exception = Assert.Throws<Exception>(() => Scoped<IUsersContext>(usersContext =>
+            var exception = Assert.Throws<AdminAppException>(() => Scoped<IUsersContext>(usersContext =>
             {
                 var command = new EditClaimSetCommand(TestContext, usersContext);
                 command.Execute(editModel);

@@ -75,11 +75,13 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
                 RuleFor(m => m).Custom((claimSet, context) =>
                 {
+                    var resourceClaimValidator = new ResourceClaimValidator();
+
                     if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
                     {
                         foreach (var resourceClaim in claimSet.ResourceClaims)
                         {
-                            ResourceClaimValidator.Validate(securityContext.ResourceClaims,
+                            resourceClaimValidator.Validate(securityContext.ResourceClaims,
                                 securityContext.AuthorizationStrategies, resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
                         }
                     }

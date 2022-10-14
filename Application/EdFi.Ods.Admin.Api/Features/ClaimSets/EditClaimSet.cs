@@ -6,8 +6,10 @@
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
+using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets
@@ -32,11 +34,22 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         {
             request.Id = id;
             await validator.GuardAsync(request);
-            var updatedClaimSetId = editClaimSetCommand.Execute(new EditClaimSetModel
+
+            var editClaimSetModel = new EditClaimSetModel
             {
                 ClaimSetName = request.Name,
                 ClaimSetId = id
-            });
+            };
+
+            int updatedClaimSetId;
+            try
+            {
+                updatedClaimSetId = editClaimSetCommand.Execute(editClaimSetModel);
+            }
+            catch (AdminAppException exception)
+            {
+                throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
+            }
 
             request.ResourceClaims?.ResolveAuthStrategies(securityContext);
             updateResourcesOnClaimSetCommand.Execute(new UpdateResourcesOnClaimSetModel
@@ -81,7 +94,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 .NotEmpty()
                 .Must(BeAUniqueName)
                 .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage)
-                .When(NameIsChanged);
+                .When(m => BeAnExistingClaimSet(m.Id) && NameIsChanged(m));
 
                 RuleFor(m => m.Name)
                     .MaximumLength(255)
@@ -89,11 +102,13 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
                 RuleFor(m => m).Custom((claimSet, context) =>
                 {
+                    var resourceClaimValidator = new ResourceClaimValidator();
+
                     if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
                     {
                         foreach (var resourceClaim in claimSet.ResourceClaims)
                         {
-                            ResourceClaimValidator.Validate(securityContext.ResourceClaims,
+                            resourceClaimValidator.Validate(securityContext.ResourceClaims,
                                 securityContext.AuthorizationStrategies, resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
                         }
                     }

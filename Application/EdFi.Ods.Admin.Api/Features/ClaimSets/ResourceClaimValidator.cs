@@ -9,7 +9,13 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class ResourceClaimValidator
     {
-        public static void Validate<T>(IQueryable<Security.DataAccess.Models.ResourceClaim> dbResourceClaims,
+        private static List<string>? _duplicateResources;
+        public ResourceClaimValidator()
+        {
+            _duplicateResources = new List<string>();
+        }
+
+        public void Validate<T>(IQueryable<Security.DataAccess.Models.ResourceClaim> dbResourceClaims,
                 IQueryable<Security.DataAccess.Models.AuthorizationStrategy> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
                 ValidationContext<T> context, string? claimSetName)
         {
@@ -19,7 +25,11 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
             if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1 )
             {
-                context.AddFailure(propertyName, FeatureConstants.ClaimSetDuplicateResourceMessage);
+                if (_duplicateResources != null && resourceClaim.Name != null && !_duplicateResources.Contains(resourceClaim.Name))
+                {
+                    _duplicateResources.Add(resourceClaim.Name);
+                    context.AddFailure(propertyName, FeatureConstants.ClaimSetDuplicateResourceMessage);
+                }
             }
 
             if(!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))

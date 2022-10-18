@@ -7,56 +7,60 @@ name: Admin API E2E Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   schedule:
-    - cron:  '0 5 * * 1'
-  pull_request:
+    - cron: "0 5 * * 1"
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "Application/EdFi.Ods.Admin.Api/**/*.cs"
+      - "Application/EdFi.Ods.Admin.Api/**/*.json"
+      - ".github/workflows/api-e2e.yml"
 
 jobs:
   run-e2e-tests:
-
     defaults:
       run:
         working-directory: ./Application/EdFi.Ods.Admin.Api/
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
-    - name: Update certificates
-      run: cp -r ../../eng/test-certs/ssl ./Docker
-    - name: Run Admin API
-      run: |
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - name: Update certificates
+        run: cp -r ../../eng/test-certs/ssl ./Docker
+      - name: Run Admin API
+        run: |
           docker-compose -f './Compose/pgsql/compose-build.yml' --env-file './E2E Tests/gh-action-setup/.automation.env' up -d
-    - name: Verify ODS Health
-      run: |
-        chmod +x './E2E Tests/gh-action-setup/inspect.sh'
-        './E2E Tests/gh-action-setup/inspect.sh'
-    - name: Setup node
-      uses: actions/setup-node@56337c425554a6be30cdef71bf441f15be286854 # v3.1.1
-      with:
-        node-version: '14'
-    - name: Install newman
-      run: npm install -g newman newman-reporter-junitfull
-    - name: Run tests
-      run: newman run './E2E Tests/Admin API E2E.postman_collection.json' -e './E2E Tests/Admin API Docker.postman_environment.json' -r junit,cli --reporter-junit-export ./reports/report.xml -k
-    - name: Get Docker logs
-      if: failure()
-      run: |
-        mkdir docker-logs
-        docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
-        docker logs adminapi > docker-logs/adminapi.log
-    - name: Upload Docker logs
-      if: failure()
-      uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
-      with:
-        name: docker-logs
-        path: Application/EdFi.Ods.Admin.Api/docker-logs/
-        retention-days: 10
-    - name: Upload results
-      uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
-      if: success() || failure()
-      with:
-        name: test-results
-        path: Application/EdFi.Ods.Admin.Api/reports
-        retention-days: 10
+      - name: Verify ODS Health
+        run: |
+          chmod +x './E2E Tests/gh-action-setup/inspect.sh'
+          './E2E Tests/gh-action-setup/inspect.sh'
+      - name: Setup node
+        uses: actions/setup-node@17f8bd926464a1afa4c6a11669539e9c1ba77048 # v3.2.0
+        with:
+          node-version: "14"
+      - name: Install newman
+        run: npm install -g newman newman-reporter-junitfull
+      - name: Run tests
+        run: newman run './E2E Tests/Admin API E2E.postman_collection.json' -e './E2E Tests/Admin API Docker.postman_environment.json' -r junit,cli --reporter-junit-export ./reports/report.xml -k
+      - name: Get Docker logs
+        if: failure()
+        run: |
+          mkdir docker-logs
+          docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
+          docker logs adminapi > docker-logs/adminapi.log
+      - name: Upload Docker logs
+        if: failure()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        with:
+          name: docker-logs
+          path: Application/EdFi.Ods.Admin.Api/docker-logs/
+          retention-days: 10
+      - name: Upload results
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        if: success() || failure()
+        with:
+          name: test-results
+          path: Application/EdFi.Ods.Admin.Api/reports
+          retention-days: 10

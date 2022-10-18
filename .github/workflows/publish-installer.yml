@@ -16,7 +16,6 @@ env:
 
 jobs:
   pack:
-
     runs-on: ubuntu-latest
 
     defaults:
@@ -24,28 +23,28 @@ jobs:
         shell: pwsh
 
     steps:
-    - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
-      with:
-        dotnet-version: 6.0.x
-    - name: Pack Installer
-      run: |
-        $parameters = @{
-          SemanticVersion = "${{ env.ADMIN_APP_VERSION }}"
-          BuildCounter = "${{ github.run_number }}"
-          NuGetFeed = "${{ env.ARTIFACTS_FEED_URL }}"
-          NuGetApiKey = "${{ env.ARTIFACTS_API_KEY }}"
-        }
-        ./EdFi.Suite3.Installer.AdminApp/build-package.ps1 @parameters
-    - name: Upload Package
-      if: success()
-      uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
-      with:
-        name: NuGetPackages
-        path: ./EdFi.Suite3.Installer.AdminApp/EdFi.Suite3.Installer.AdminApp.*.nupkg
-        if-no-files-found: error
-        retention-days: 30
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
+        with:
+          dotnet-version: 6.0.x
+      - name: Pack Installer
+        run: |
+          $parameters = @{
+            SemanticVersion = "${{ env.ADMIN_APP_VERSION }}"
+            BuildCounter = "${{ github.run_number }}"
+            NuGetFeed = "${{ env.ARTIFACTS_FEED_URL }}"
+            NuGetApiKey = "${{ env.ARTIFACTS_API_KEY }}"
+          }
+          ./EdFi.Suite3.Installer.AdminApp/build-package.ps1 @parameters
+      - name: Upload Package
+        if: success()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        with:
+          name: NuGetPackages
+          path: ./EdFi.Suite3.Installer.AdminApp/EdFi.Suite3.Installer.AdminApp.*.nupkg
+          if-no-files-found: error
+          retention-days: 30
 
   publish-artifacts:
     needs: pack

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>true</IsPackable>
+    <MinVerTagPrefix>AdminApp.Web-v</MinVerTagPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,6 +39,10 @@
     <PackageReference Include="HtmlTags" Version="8.1.1" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.357" />
     <PackageReference Include="log4net" Version="2.0.13" />
+    <PackageReference Include="MinVer" Version="4.2.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Npgsql" Version="6.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
   </ItemGroup>

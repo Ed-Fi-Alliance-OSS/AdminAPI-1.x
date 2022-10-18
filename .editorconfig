@@ -10,6 +10,9 @@ charset = utf-8
 trim_trailing_whitespace = true
 max_line_length = 110
 
+[*.yml]
+indent_size=2
+
 [**.min.js]
 # Minified JavaScript files shouldn't be changed
 indent_style = ignore

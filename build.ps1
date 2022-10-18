@@ -1,7 +1,10 @@
-# SPDX-License-Identifier: Apache-2.0
+﻿# SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
+
+# This refers to function Update-AppSettingsToAddGoogleAnalyticsMeasurementId
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Rule is irrelevant in this context', Scope = "Function")]
 
 [CmdLetBinding()]
 <#
@@ -62,10 +65,11 @@
             AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
             SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"
             ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApp;"
-            }
+        }
 
         .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminAppDockerContainer
 #>
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
 param(
     # Command to execute, defaults to "Build".
     [string]
@@ -81,12 +85,6 @@ param(
     # configured in the build automation tool and passed to this script.
     [string]
     $APIVersion = $Version,
-
-    # Build counter from the automation tool. The .NET assembly version will be
-    # composed from <$Version>.<$BuildCounter> (i.e. "0.1.1" with the default
-    # values).
-    [string]
-    $BuildCounter = "1",
 
     # .NET project build configuration, defaults to "Debug". Options are: Debug, Release.
     [string]
@@ -158,7 +156,7 @@ function Restore {
 
 function SetAdminAppAssemblyInfo {
     Invoke-Execute {
-        $assembly_version = GetAdminAppPackageVersion
+        $assembly_version = $Version
 
         Invoke-RegenerateFile "$solutionRoot/Directory.Build.props" @"
 <Project>
@@ -179,7 +177,7 @@ function SetAdminAppAssemblyInfo {
 
 function SetAdminApiAssemblyInfo {
     Invoke-Execute {
-        $assembly_version = GetAdminApiPackageVersion
+        $assembly_version = $APIVersion
 
         Invoke-RegenerateFile "$solutionRoot/EdFi.Ods.Admin.Api/Directory.Build.props" @"
 <Project>
@@ -231,12 +229,16 @@ function RunTests {
     $testAssemblies = Get-ChildItem -Path $testAssemblyPath -Filter "$Filter.dll" -Recurse
 
     if ($testAssemblies.Length -eq 0) {
-        Write-Host "no test assemblies found in $testAssemblyPath"
+        Write-Output "no test assemblies found in $testAssemblyPath"
     }
 
     $testAssemblies | ForEach-Object {
-        Write-Host "Executing: dotnet test $($_)"
-        Invoke-Execute { dotnet test $_ }
+        Write-Output "Executing: dotnet test $($_)"
+        Invoke-Execute {
+            dotnet test $_ `
+                --logger "trx;LogFileName=$($_).trx" `
+                --nologo
+        }
     }
 }
 
@@ -245,6 +247,7 @@ function UnitTests {
 }
 
 function ResetTestDatabases {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'unused', Justification = 'False positive')]
     param (
         [string]
         $OdsPackageName,
@@ -285,26 +288,22 @@ function RunNuGetPack {
         $nuspecPath
     )
 
-    dotnet pack $ProjectPath --output $PSScriptRoot -p:NuspecFile=$nuspecPath -p:NuspecProperties="version=$PackageVersion"
+    # NU5100 is the warning about DLLs outside of a "lib" folder. We're
+    # deliberately using that pattern, therefore we don't care about the
+    # warning.
+    dotnet pack $ProjectPath --output $PSScriptRoot -p:NuspecFile=$nuspecPath -p:NuspecProperties="version=$PackageVersion" /p:NoWarn=NU5100
 }
 
 function NewDevCertificate {
     Invoke-Command { dotnet dev-certs https -c }
     if ($lastexitcode) {
-        Write-Host "Generating a new Dev Certificate" -ForegroundColor Magenta
+        Write-Output "Generating a new Dev Certificate" -ForegroundColor Magenta
         Invoke-Execute { dotnet dev-certs https --clean }
         Invoke-Execute { dotnet dev-certs https -t }
-    } else {
-        Write-Host "Dev Certificate already exists" -ForegroundColor Magenta
     }
-}
-
-function GetAdminAppPackageVersion {
-    return "$Version.$BuildCounter"
-}
-
-function GetAdminApiPackageVersion {
-    return "$APIVersion.$BuildCounter"
+    else {
+        Write-Output "Dev Certificate already exists" -ForegroundColor Magenta
+    }
 }
 
 function BuildDatabasePackage {
@@ -313,7 +312,7 @@ function BuildDatabasePackage {
     $projectPath = "$mainPath/$project.csproj"
     $nugetSpecPath = "$mainPath/publish/EdFi.Ods.AdminApp.Database.nuspec"
 
-    RunNuGetPack -ProjectPath $projectPath -PackageVersion $(GetAdminAppPackageVersion) $nugetSpecPath
+    RunNuGetPack -ProjectPath $projectPath -PackageVersion $Version $nugetSpecPath
 }
 
 function BuildAdminAppPackage {
@@ -322,7 +321,7 @@ function BuildAdminAppPackage {
     $projectPath = "$mainPath/$project.csproj"
     $nugetSpecPath = "$mainPath/publish/$project.nuspec"
 
-    RunNuGetPack -ProjectPath $projectPath -PackageVersion $(GetAdminAppPackageVersion) $nugetSpecPath
+    RunNuGetPack -ProjectPath $projectPath -PackageVersion $Version $nugetSpecPath
 }
 
 function BuildApiPackage {
@@ -331,7 +330,7 @@ function BuildApiPackage {
     $projectPath = "$mainPath/$project.csproj"
     $nugetSpecPath = "$mainPath/publish/$project.nuspec"
 
-    RunNuGetPack -ProjectPath $projectPath -PackageVersion $(GetAdminApiPackageVersion) $nugetSpecPath
+    RunNuGetPack -ProjectPath $projectPath -PackageVersion $APIVersion $nugetSpecPath
 }
 
 function PushPackage {
@@ -358,25 +357,31 @@ function Invoke-Build {
     Invoke-Step { Compile }
 }
 
-function Invoke-Publish {
-    Write-Host "Building Version $Version" -ForegroundColor Cyan
+function Invoke-SetAssemblyInfo {
+    Write-Output "Setting Assembly Information" -ForegroundColor Cyan
 
     Invoke-Step { SetAdminAppAssemblyInfo }
     Invoke-Step { SetAdminApiAssemblyInfo }
+}
+
+function Invoke-Publish {
+    Write-Output "Building Version AdminApp ($Version) and AdminApi ($APIVersion)" -ForegroundColor Cyan
+
     Invoke-Step { PublishAdminApp }
     Invoke-Step { PublishAdminApi }
 }
 
 function Invoke-Run {
-    Write-Host "Running Admin App" -ForegroundColor Cyan
+    Write-Output "Running Admin App" -ForegroundColor Cyan
 
     Invoke-Step { NewDevCertificate }
 
     $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApp.Web"
 
     if ([string]::IsNullOrEmpty($LaunchProfile)) {
-        Write-Host "LaunchProfile parameter is required for running Admin App. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'" -ForegroundColor Red
-    } else {
+        Write-Output "LaunchProfile parameter is required for running Admin App. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'" -ForegroundColor Red
+    }
+    else {
         Invoke-Execute { dotnet run --project $projectFilePath --launch-profile $LaunchProfile }
     }
 }
@@ -385,15 +390,15 @@ function Invoke-Clean {
     Invoke-Step { Clean }
 }
 
-function Invoke-UnitTests {
+function Invoke-UnitTestSuite {
     Invoke-Step { UnitTests }
 }
 
-function Invoke-IntegrationTests {
+function Invoke-IntegrationTestSuite {
     Invoke-Step { InitializeNuGet }
 
     $supportedApiVersions | ForEach-Object {
-        Write-Host "Running Integration Tests for ODS Version" $_.OdsVersion -ForegroundColor Cyan
+        Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion -ForegroundColor Cyan
 
         Invoke-Step {
             $arguments = @{
@@ -467,7 +472,7 @@ function UpdateAppSettingsForAdminApiDocker {
     $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
     $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
     $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
-    
+
     $json.Authentication.IssuerUrl = $DockerEnvValues["IssuerUrl"]
     $json.Authentication.SigningKey = $DockerEnvValues["SigningKey"]
 
@@ -517,12 +522,12 @@ Invoke-Main {
             Invoke-Publish
         }
         Run { Invoke-Run }
-        UnitTest { Invoke-UnitTests }
-        IntegrationTest { Invoke-IntegrationTests }
+        UnitTest { Invoke-UnitTestSuite }
+        IntegrationTest { Invoke-IntegrationTestSuite }
         BuildAndTest {
             Invoke-Build
-            Invoke-UnitTests
-            Invoke-IntegrationTests
+            Invoke-UnitTestSuite
+            Invoke-IntegrationTestSuite
         }
         Package { Invoke-BuildPackage }
         PackageApi { Invoke-BuildApiPackage }

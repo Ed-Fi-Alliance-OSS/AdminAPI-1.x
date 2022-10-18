@@ -50,6 +50,7 @@ packages/
 /*.pdb
 /*.XML
 *.nupkg
+*.trx
 
 #nDevConfig
 .workspaceInitialized

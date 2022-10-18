@@ -1,0 +1,73 @@
+# SPDX-License-Identifier: Apache-2.0
+# Licensed to the Ed-Fi Alliance under one or more agreements.
+# The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+# See the LICENSE and NOTICES files in the project root for more information.
+
+name: Pack and Publish Installer
+
+on:
+  workflow_dispatch:
+
+env:
+  ADMIN_APP_VERSION: '2.4'
+  ARTIFACTS_API_KEY: ${{ secrets.AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN }}
+  ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
+  VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint": "${{ secrets.AZURE_ARTIFACTS_FEED_URL }}","password": "${{ secrets.AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN }}"}]}'
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
+        with:
+          dotnet-version: 6.0.x
+      - name: Pack Installer
+        run: |
+          $parameters = @{
+            SemanticVersion = "${{ env.ADMIN_APP_VERSION }}"
+            BuildCounter = "${{ github.run_number }}"
+            NuGetFeed = "${{ env.ARTIFACTS_FEED_URL }}"
+            NuGetApiKey = "${{ env.ARTIFACTS_API_KEY }}"
+          }
+          ./EdFi.Suite3.Installer.AdminApp/build-package.ps1 @parameters
+      - name: Upload Package
+        if: success()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        with:
+          name: NuGetPackages
+          path: ./EdFi.Suite3.Installer.AdminApp/EdFi.Suite3.Installer.AdminApp.*.nupkg
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-artifacts:
+    needs: pack
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - name: Get Artifact
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 #v3.0.0
+        with:
+          name: NuGetPackages
+      - name: Install-credential-handler
+        run: iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) } -AddNetfx"
+      - name: Upload Admin App Installer
+        run: |
+          $artifact = (Get-ChildItem -Path $_ -Name -Include EdFi.Suite3.Installer.AdminApp.*.nupkg)
+          $arguments = @{
+            NuGetApiKey = "${{ env.ARTIFACTS_API_KEY }}"
+          }
+          $arguments.PackageFile = $artifact
+          ./build.ps1 Push @arguments

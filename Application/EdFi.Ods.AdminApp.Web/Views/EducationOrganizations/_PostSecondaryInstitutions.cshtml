@@ -1,0 +1,80 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.EducationOrganizations
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.PostSecondaryInstitutionViewModel
+
+<div class="row margin-bottom">
+    <div class="col-lg-6">
+        <h6>Education Organizations</h6>
+    </div>
+
+    <div class="col-lg-6 text-right">
+        <button class="cta" data-toggle="modal" data-target="#add-psi-modal">
+            Add Post-Secondary Institution
+        </button>
+    </div>
+</div>
+
+@foreach (var postSecondaryInstitution in Model.PostSecondaryInstitutions.Items)
+{
+    var schools = Model.Schools.Where(x => x.PostSecondaryInstitutionId == postSecondaryInstitution.EducationOrganizationId).ToList();
+
+    <div class="panel-section">
+        <div class="row heading">
+            <div class="col-lg-6">
+                <h8>@postSecondaryInstitution.Name</h8>
+            </div>
+
+            <div class="col-lg-6 text-right">
+                <a href="javascript:void(0)" class="loads-ajax-modal" data-url="@Url.Action("EditPostSecondaryInstitutionModal", "EducationOrganizations", new {id = postSecondaryInstitution.Id})"> <span class="fa fa-pencil action-icons"></span></a>
+                @if (!schools.Any())
+                {
+                    <a href="javascript:void(0)" class="delete-psi-link" data-id="@postSecondaryInstitution.Id" data-name="@postSecondaryInstitution.Name"> <span class="fa fa-trash-o action-icons"></span></a>
+                }
+                else
+                {
+                    <a href="javascript:void(0)" data-name="@postSecondaryInstitution.Name"> <span class="fa fa-trash-o action-icons disabled"></span></a>
+                }
+                <span class="custom-divider"> |</span>
+                <a href="javascript:void(0)" data-toggle="collapse" data-target="#psi-@(postSecondaryInstitution.Id)"><span class="fa fa-chevron-up caret-custom panel-toggle"></span></a>
+            </div>
+        </div>
+        <div id="psi-@(postSecondaryInstitution.Id)" class="row content collapse in">
+            @if (!schools.Any())
+            {
+                <div class="col-lg-12">
+                    <em>There are no schools in this category</em>
+                </div>
+            }
+            @foreach (var school in schools)
+            {
+                <div class="col-lg-8">
+                    <h7>@school.Name</h7>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="javascript:void(0)" class="loads-ajax-modal" data-url="@Url.Action("EditPsiSchoolModal", "EducationOrganizations", new {id = school.Id})"> <span class="fa fa-pencil action-icons"></span></a>
+                    <a href="javascript:void(0)" class="delete-school-link" data-id="@school.Id" data-name="@school.Name"> <span class="fa fa-trash-o action-icons"></span></a>
+                </div>
+            }
+            <div class="col-lg-12 text-right padding-bottom-5">
+                <button class="ghost-button btn-sm add-psi-school-button" data-psi-id="@(postSecondaryInstitution.EducationOrganizationId)">
+                    Add School
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+
+@Html.PagingControl(Url.Action("PostSecondaryInstitutionsList", "EducationOrganizations"), Model.PostSecondaryInstitutions)
+
+@{ await Html.RenderPartialAsync("_DeleteOrganizationModal", new DeleteEducationOrganizationModel()); }
+@{ await Html.RenderPartialAsync("_AddPostSecondaryInstitutionModal", Model.AddPostSecondaryInstitutionModel); }
+@{ await Html.RenderPartialAsync("_AddPsiSchoolModal", Model.AddPsiSchoolModel); }
+

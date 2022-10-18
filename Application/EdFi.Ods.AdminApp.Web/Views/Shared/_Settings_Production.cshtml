@@ -1,0 +1,56 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@using EdFi.Ods.AdminApp.Web.Infrastructure
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.OdsInstanceSettings
+@model BaseOdsInstanceSettingsModel
+
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @if (CloudOdsAdminAppSettings.Instance.Mode.SupportsMultipleInstances)
+    {
+        <div class="col-xs-6">
+            <h2 title="@(Model.OdsInstance?.Name)">@(Model.OdsInstance?.Description)</h2>
+        </div>
+        <div class="col-xs-3 col-xs-offset-3">
+            @Html.Button("Back to ODS Instances").AddClass("back-btn back-ajax").Data("back-url", Url.Action("Index", "OdsInstances"))
+        </div>
+    }
+    else
+    {
+        @await Component.InvokeAsync("SingleInstanceCurrentYear")
+    }
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="tab-content" id="settings-tabs">
+            <div class="tab-pane active" id="production-tab">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ods-version-metadata" data-source-url="@Url.Action("OdsVersionMetadata", "OdsInstanceSettings")"></div>
+
+<script type="text/javascript">
+    $(function () {
+        InitializeBackNavigationalAjaxButtons();
+
+        var $odsVersionMetadata = $("#ods-version-metadata");
+        var url = $odsVersionMetadata.attr("data-source-url");
+        $.ajax(url).success(function (data) {
+            $odsVersionMetadata.html(data);
+        });
+    });
+</script>

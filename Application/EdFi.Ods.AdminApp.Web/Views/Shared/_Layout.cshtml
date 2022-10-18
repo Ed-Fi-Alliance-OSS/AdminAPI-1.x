@@ -1,0 +1,124 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@using EdFi.Ods.AdminApp.Web.Infrastructure
+@using Microsoft.Extensions.Options
+@using EdFi.Ods.AdminApp.Management.Helpers
+
+@inject IOptions<AppSettings> AppSettings
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ed-Fi ODS Admin App for Suite 3</title>
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/bundles/bootstrap-multiselect.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Content/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Content/css/toastr.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/bundles/site.min.css" asp-append-version="true" />
+    <script type="text/javascript" src="~/Scripts/jquery-2.2.3.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/toastr.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/respond.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/bundles/bootstrap-multiselect.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/clipboard.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/bundles/modernizr.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/Scripts/lodash.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/bundles/site.min.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("Tracker")
+</head>
+<body>
+    <div id="error-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Error</h4>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+    <div id="dynamic-modal-container"></div>
+    <script language="javascript">
+        toastr.options.positionClass = "toast-bottom-right";
+    </script>
+    <nav class="navbar navbar-inverse navbar-custom" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand brand" href="@Url.Action("Index", "Home")"> <img src="~/Content/images/logo-edfi@2x.png" width="132" height="70" alt="" /> </a>
+                <span class="topbar_headline"> Ed-Fi ODS Admin App for Suite 3 </span>
+            </div>
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <div class="btn-group">
+                       @{ await Html.RenderPartialAsync("_LoginPartial"); }
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    @if (TempData.ContainsKey("ToastMessage"))
+    {
+        @Html.Hidden("toast", Html.Encode(TempData["ToastMessage"]), new { data_type = TempData["ToastType"] })
+    }
+    <div class="container body-content">
+        <div class="row margin-right-30">
+            @if (User.Identity.IsAuthenticated)
+            {
+                var offsetClass = AppSettings.Value.EnableProductImprovementSettings ? "col-md-offset-10" : "col-md-offset-11";
+                <div class="col-md-1 @offsetClass nav-links">
+                    <a href="@Url.Action("Index", "Home")" class="text-nowrap">
+                        <span class="fa fa-home"></span><strong>Home</strong>
+                    </a>
+                </div>
+                @if (AppSettings.Value.EnableProductImprovementSettings)
+                {
+                    <div class="col-md-1 nav-links">
+                        <a href="@Url.Action("EditConfiguration", "ProductImprovement")" class="text-nowrap">
+                            <span class="fa fa-cog"></span><strong>Configuration</strong>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+        <section>
+            @RenderBody()
+            <div id="AntiForgeryToken">
+                @Html.AntiForgeryToken()
+            </div>
+            <div class="hidden">
+                <div id="loading-overlay" class="text-center">
+                    <div><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container container-footer">
+            <div class="row">
+                <p class="col-md-4"></p>
+                <p class="col-md-4 text-muted small"><a href="@Url.Action("Index", "Home")"><span class="fa fa-home"></span><span>Home</span></a></p>
+                <p class="col-md-4 text-right application-version">@Html.ApplicationVersion()</p>
+            </div>
+            <div class="footer-feedback"><a href="#" id="feedback-button" class="atlwdg-trigger atlwdg-SUBTLE hidden">Submit an Issue or Idea</a></div>
+        </div>
+    </footer>
+    @RenderSection("Scripts", required: false)
+    <script type="text/javascript">
+        var cacheTimeout = '@CloudOdsAdminAppSettings.Instance.SecurityMetadataCacheTimeoutMinutes';
+        GlobalInitialize();
+    </script>
+</body>
+</html>

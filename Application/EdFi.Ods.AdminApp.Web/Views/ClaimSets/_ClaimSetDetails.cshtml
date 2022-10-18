@@ -1,0 +1,136 @@
+﻿@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetDetailsModel
+
+<h3>Claim Set Information</h3>
+<div class="form-group row">
+    <label class="col-sm-4">Claim Set Name</label>
+    <div class="col-sm-8">
+        <span>@Html.DisplayFor(x => x.ClaimSet.Name)</span>
+    </div>
+</div>
+<br />
+<h3>Applications</h3>
+@if (Model.Applications.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Application Name</th>
+                <th scope="col">Vendor Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in Model.Applications)
+            {
+                <tr>
+                    <td>@application.Name</td>
+                    <td>@application.VendorName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div> No applications found.</div>
+}
+<br />
+<h3>Resources</h3>
+@if (Model.ResourceClaims.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Resource</th>
+                <th scope="col">Read</th>
+                <th scope="col">Create</th>
+                <th scope="col">Update</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var resourceClaim in Model.ResourceClaims)
+            {
+                <tr class="parent-resource-claim">
+                    <td>
+                        @if (resourceClaim.Children.Any())
+                        {<a class="claims-toggle"><span class="fa fa-chevron-down caret-custom"></span></a>}
+                    </td>
+                    <td>@resourceClaim.Name</td>
+                    <td>
+                        @Html.CheckBoxSquare(resourceClaim.Read, "read")
+                    </td>
+                    <td>
+                        @Html.CheckBoxSquare(resourceClaim.Create, "create")
+                    </td>
+                    <td>
+                        @Html.CheckBoxSquare(resourceClaim.Update, "update")
+                    </td>
+                    <td>
+                        @Html.CheckBoxSquare(resourceClaim.Delete, "delete")
+                    </td>
+                </tr>
+
+                foreach (var childResourceClaim in resourceClaim.Children)
+                {
+                    <tr class="child-resource-claim" style="display: none">
+                        <td>
+                            <span class = "child-resource-branch"></span>
+                        </td>
+                        <td>@childResourceClaim.Name</td>
+                        <td>
+                            @Html.CheckBoxSquare(childResourceClaim.Read, "read")
+                        </td>
+                        <td>
+                            @Html.CheckBoxSquare(childResourceClaim.Create, "create")
+                        </td>
+                        <td>
+                            @Html.CheckBoxSquare(childResourceClaim.Update, "update")
+                        </td>
+                        <td>
+                            @Html.CheckBoxSquare(childResourceClaim.Delete, "delete")
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+    <div> No resource claims found.</div>
+}
+    <div>
+        @Html.ActionLink("Back", "ClaimSets", "GlobalSettings", null, new { @class = "btn btn-primary cta" })
+        @if (Model.ClaimSet.IsEditable)
+        {
+            @Html.ActionLink("Edit Claim Set", "EditClaimSet", "ClaimSets", new { claimSetId = Model.ClaimSet.Id }, new { @class = "btn btn-primary cta edit-claimset" })
+        }
+    </div>
+
+<script type="text/javascript">
+    $('.claims-toggle').click(function () {
+        var toggle = $(this);
+        if (toggle.find('span:first').hasClass('fa-chevron-down')) {
+            toggle.html('<span class="fa fa-chevron-up caret-custom"></span>');
+        } else {
+            toggle.html('<span class="fa fa-chevron-down caret-custom"></span>');
+        }
+        var row = $(this).closest('.parent-resource-claim');
+        row.nextUntil('tr.parent-resource-claim').slideToggle(100, function () {
+        });
+    });
+    $(function () {
+        InitializeNavigationalAjaxButtons();
+        InitializeBackNavigationalAjaxButtons();
+    });
+</script>

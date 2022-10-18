@@ -1,0 +1,48 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.Global.VendorsListModel
+
+<table id="vendors-table" class="table table-hover table-custom">
+    <colgroup>
+        <col style="width: 20%">
+        <col style="width: 70%">
+        <col style="width: 10%">
+    </colgroup>
+    <thead class="thead-inverse">
+        <tr class="tr-custom">
+            <th scope="col">Name</th>
+            <th scope="col">Name Space Prefixes </th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var vendor in Model.Vendors)
+    {
+        <tr class="tr-custom">
+            <th>@vendor.VendorName.ToTitleCase()</th>
+            <td>@vendor.NamespacePrefixes</td>
+            <td>
+                <a title="Edit Vendor" href="javascript:void(0)" class="edit-table edit-vendor-link" data-id="@vendor.VendorId"> <span class="fa fa-pencil action-icons"></span></a>
+                <a title="Delete Vendor" href="javascript:void(0)" class="delete-vendor-link" data-id="@vendor.VendorId" data-name="@vendor.VendorName"> <span class="fa fa-trash-o action-icons"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (!Model.Vendors.Any())
+{
+    <div class="alert alert-info message center-block">
+        <em>Added vendors will appear here</em>
+    </div>
+}
+
+@{ await Html.RenderPartialAsync("_DeleteVendorModal", new DeleteVendorModel()); }
+@{ await Html.RenderPartialAsync("_EditVendorModal", new EditVendorModel()); }

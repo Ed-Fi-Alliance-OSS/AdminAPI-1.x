@@ -1,0 +1,22 @@
+@*
+    SPDX-License-Identifier: Apache-2.0
+    Licensed to the Ed-Fi Alliance under one or more agreements.
+    The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+    See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@model EdFi.Ods.AdminApp.Web.Controllers.SingleInstanceCurrentYearViewComponent.Model
+
+<div class="col-xs-6">
+    <h2>
+        @if (Model.SchoolYearDescription != null)
+        {
+            @:School Year @Model.SchoolYearDescription
+        }
+        else
+        {
+            @:Configure School Year
+        }
+        <a class="loads-ajax-modal" data-toggle="tooltip" title="Set School Year" data-url="@Url.Action("Edit", "SchoolYears", new{instanceName=Model.InstanceName})"> <span class="fa fa-pencil action-icons"></span></a>
+    </h2>
+</div>

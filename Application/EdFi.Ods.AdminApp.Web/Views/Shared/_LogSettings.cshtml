@@ -1,0 +1,24 @@
+@*
+SPDX-License-Identifier: Apache-2.0
+Licensed to the Ed-Fi Alliance under one or more agreements.
+The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+See the LICENSE and NOTICES files in the project root for more information.
+*@
+
+@using EdFi.Ods.AdminApp.Web.Helpers
+@model EdFi.Ods.AdminApp.Web.Models.ViewModels.LogSettingsModel
+
+@using (Html.BeginForm("UpdateLogSettings", "GlobalSettings"))
+{
+    <div class="row subsection">
+        <div class="col-lg-12">
+            @Html.SelectListBlock(m => m.LogLevel, "Controls the amount of information logged to the API server logs")
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-12 text-right">
+            @Html.SaveButton().AppendSpinner("log-settings-update-button")
+        </div>
+    </div>
+}

@@ -12,7 +12,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Helpers
         /// <summary>
         /// Semantic version of the admin api.
         /// </summary>
-        public const string Version = "1.0";
+        public const string Version = "1.1";
 
         /// <summary>
         /// Assembly version of the admin api.

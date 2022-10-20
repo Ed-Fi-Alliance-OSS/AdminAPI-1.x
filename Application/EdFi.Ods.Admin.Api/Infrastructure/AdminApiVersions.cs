@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -13,7 +13,7 @@ public class AdminApiVersions
 {
     private static bool _isInitialized;
 
-    public static AdminApiVersion V1 = new(1.0, "v1");
+    public static AdminApiVersion V1 = new(1.1, "v1");
     private static ApiVersionSet? _versionSet;
 
     public static void Initialize(WebApplication app)

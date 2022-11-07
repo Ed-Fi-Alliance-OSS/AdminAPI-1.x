@@ -6,17 +6,11 @@
 name: "E2E Reports"
 on:
   workflow_run:
-    workflows: ["Admin App E2E Tests", "Admin API E2E Tests"]
+    workflows: ["Admin API E2E Tests"]
     types:
       - completed
 
 env:
-  JIRA_ACCESS_TOKEN: ${{ secrets.JIRA_ACCESS_TOKEN }}
-  ADMIN_APP_VERSION: "2.4.0"
-  PROJECT_ID: "11900"
-  CYCLE_NAME: "Automation Cycle"
-  TASK_NAME: "Playwright Automation Task"
-  FOLDER_NAME: "Playwright Automation Run"
   RESULTS_FILE: "test-results"
 
 jobs:
@@ -38,12 +32,3 @@ jobs:
           fail-on-error: false
       - name: Extract Artifact
         run: Expand-Archive "${{ env.RESULTS_FILE }}.zip"
-      - name: Send report to Zephyr
-        if: github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.name != 'Admin API E2E Tests'
-        run: |
-          $parameters = @{
-              cycleName = '${{ env.CYCLE_NAME }}'
-              taskName = '${{ env.TASK_NAME }}'
-              folderName = '${{ env.FOLDER_NAME }}'
-          }
-          .\eng\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminAppVersion '${{ env.ADMIN_APP_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/${{ env.RESULTS_FILE }}.xml' -ConfigParams $parameters

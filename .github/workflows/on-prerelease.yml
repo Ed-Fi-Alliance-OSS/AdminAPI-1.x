@@ -26,7 +26,6 @@ jobs:
     outputs:
       hash-code: ${{ steps.hash-code.outputs.hash-code }}
       package-name: ${{ steps.package-name.outputs.package-name }}
-      admin-app-version: ${{ steps.versions.outputs.admin-app }}
       admin-api-version: ${{ steps.versions.outputs.admin-api }}
 
     steps:
@@ -37,21 +36,17 @@ jobs:
       - name: Set Version Numbers
         id: versions
         run: |
-          $webPrefix = "AdminApp.Web-v"
           $apiPRefix = "Admin.Api-v"
 
           # Install the MinVer CLI tool
           &dotnet tool install --global minver-cli
 
-          $appVersion = $(minver -t $webPrefix)
           $apiVersion = $(minver -t $apiPRefix)
 
           # Full release name
-          "::set-output name=admin-app::$appVersion" | Write-Output
           "::set-output name=admin-api::$apiVersion" | Write-Output
 
           # SemVer
-          "::set-output name=admin-app-semver::$($appVersion -Replace $webPrefix)" | Write-Output
           "::set-output name=admin-api-semver::$($apiVersion -Replace $apiPRefix)" | Write-Output
 
       - name: Determine which product to build
@@ -61,8 +56,8 @@ jobs:
           $repo = "${{ github.repository }}"
           $token = "${{ secrets.GITHUB_TOKEN }}"
 
-          # example: "AdminApp.Web-v2.4.49-alpha.0.140"
-          # output: packageName = "AdminApp.Web"
+          # example: "Admin.Api-v1.0.13-alpha.0.9.1.9"
+          # output: packageName = "Admin.Api"
           $packageName = ($release -split "-")[2]
 
           "::set-output name=package-name::$packageName" | Write-Output
@@ -74,12 +69,10 @@ jobs:
 
       - name: Publish .NET Assemblies
         run: |
-          $appVersion = "${{ steps.versions.outputs.admin-app-semver }}"
           $apiVersion = "${{ steps.versions.outputs.admin-api-semver }}"
 
           ./build.ps1 -Command BuildAndPublish `
               -Configuration Release `
-              -Version $appVersion `
               -APIVersion $apiVersion
 
       - name: Populate Google Analytics ID
@@ -88,26 +81,13 @@ jobs:
       - name: Create NuGet Packages
         if: success()
         run: |
-          $appVersion = "${{ steps.versions.outputs.admin-app-semver }}"
           $apiVersion = "${{ steps.versions.outputs.admin-api-semver }}"
 
           "Building ${{ steps.package-name.outputs.package-name }} NuGet Package" | Write-Output
-          if ("${{ steps.package-name.outputs.package-name }}" -eq "AdminApp.Web") {
-            # Web, DB, and Installer
-            ./build.ps1 -Command Package `
-                -Version $appVersion `
-                -Configuration Release
-
-            ./build.ps1 -Command PackageDatabase `
-                -Version $appVersion `
-                -Configuration Release
-          }
-          else {
-            # Admin API
-            ./build.ps1 -Command PackageApi `
-                -Version  $apiVersion `
-                -Configuration Release
-          }
+          # Admin API
+          ./build.ps1 -Command PackageApi `
+              -Version  $apiVersion `
+              -Configuration Release
 
       - name: Generate hash for NuGet package
         id: hash-code
@@ -154,10 +134,7 @@ jobs:
           Get-ChildItem -Include "EdFi.Suite3.ODS.$packageName.*.nupkg" -Recurse | ForEach-Object { $_.FullName } > buildfilelist.txt
           New-Item -Path manifest -Type Directory
 
-          $version = "${{ needs.pack.outputs.admin-app-version }}"
-          if ($packageName -eq "Admin.Api") {
-            $version = "${{ needs.pack.outputs.admin-api-version }}"
-          }
+          $version = "${{ needs.pack.outputs.admin-api-version }}"
 
           &$out generate `
               -b ./ `

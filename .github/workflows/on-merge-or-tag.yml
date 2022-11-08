@@ -9,7 +9,7 @@ on:
     branches:
       - main
     tags:
-      - "Admin.Api-v*.*.*"
+      - "v*.*.*"
 
 env:
   API_URL: https://api.github.com/repos/${{ github.repository }}
@@ -37,17 +37,17 @@ jobs:
       - name: Set Version Numbers
         id: versions
         run: |
-          $apiPRefix = "Admin.Api-v"
+          $apiPrefix = "v"
 
           # Install the MinVer CLI tool
           &dotnet tool install --global minver-cli
 
-          "::set-output name=admin-api::$($apiPRefix)$(minver -t $apiPRefix)" | Write-Output
+          "::set-output name=admin-api::$($apiPrefix)$(minver -t $apiPrefix)" | Write-Output
 
       - name: Create Admin API Pre-Release
         run: |
           $version = "${{ steps.versions.outputs.admin-api }}"
-          $tag = $version -replace "-v","-Pre-Release-v"
+          $tag = $version -replace "v","Pre-Release-v"
 
           $body = @{
             tag_name = "$tag"

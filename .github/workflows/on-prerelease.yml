@@ -15,7 +15,7 @@ env:
   ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
   VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint": "${{ secrets.AZURE_ARTIFACTS_FEED_URL }}","password": "${{ secrets.AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN }}"}]}'
   MANIFEST_FILE: "_manifest/spdx_2.2/manifest.spdx.json"
-
+  PACKAGE_NAME: "Admin.Api"
 jobs:
   pack:
     name: Build and Pack
@@ -25,7 +25,6 @@ jobs:
         shell: pwsh
     outputs:
       hash-code: ${{ steps.hash-code.outputs.hash-code }}
-      package-name: ${{ steps.package-name.outputs.package-name }}
       admin-api-version: ${{ steps.versions.outputs.admin-api }}
 
     steps:
@@ -49,19 +48,6 @@ jobs:
           # SemVer
           "::set-output name=admin-api-semver::$($apiVersion -Replace $apiPRefix)" | Write-Output
 
-      - name: Determine which product to build
-        id: package-name
-        run: |
-          $release = "${{ github.ref_name }}"
-          $repo = "${{ github.repository }}"
-          $token = "${{ secrets.GITHUB_TOKEN }}"
-
-          # example: "Admin.Api-v1.0.13-alpha.0.9.1.9"
-          # output: packageName = "Admin.Api"
-          $packageName = ($release -split "-")[2]
-
-          "::set-output name=package-name::$packageName" | Write-Output
-
       - name: Setup .NET
         uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
         with:
@@ -83,7 +69,7 @@ jobs:
         run: |
           $apiVersion = "${{ steps.versions.outputs.admin-api-semver }}"
 
-          "Building ${{ steps.package-name.outputs.package-name }} NuGet Package" | Write-Output
+          "Building ${{ env.PACKAGE_NAME }} NuGet Package" | Write-Output
           # Admin API
           ./build.ps1 -Command PackageApi `
               -Version  $apiVersion `
@@ -99,7 +85,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
         with:
-          name: "${{ steps.package-name.outputs.package-name }}-NuGet"
+          name: "${{ env.PACKAGE_NAME }}-NuGet"
           path: ./*.nupkg
           if-no-files-found: error
           retention-days: 30
@@ -119,12 +105,12 @@ jobs:
       - name: Get Artifacts
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 #v3.0.0
         with:
-          name: ${{ needs.pack.outputs.package-name }}-NuGet
+          name: ${{ env.PACKAGE_NAME }}-NuGet
 
       - name: Generate Software Bill of Materials (SBOM) - API
         shell: pwsh
         run: |
-          $packageName = "${{ needs.pack.outputs.package-name }}"
+          $packageName = "${{ env.PACKAGE_NAME }}"
 
           $url = "https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-linux-x64"
           $out = "$($env:RUNNER_TEMP)/sbom-tool"
@@ -150,7 +136,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
         with:
-          name: ${{ needs.pack.outputs.package-name }}-SBOM
+          name: ${{ env.PACKAGE_NAME }}-SBOM
           path: ./manifest
           if-no-files-found: error
           retention-days: 30
@@ -176,7 +162,7 @@ jobs:
       - name: Download the SBOM
         uses: slsa-framework/slsa-github-generator/.github/actions/secure-download-artifact@1d646d70aeba1516af69fb0ef48206580122449b
         with:
-          name: "${{ needs.pack.outputs.package-name }}-SBOM"
+          name: "${{ env.PACKAGE_NAME }}-SBOM"
           path: ${{ env.MANIFEST_FILE }}
           sha256: "${{ needs.sbom-create.outputs.sbom-hash-code }}"
 
@@ -187,7 +173,7 @@ jobs:
           $repo = "${{ github.repository }}"
           $token = "${{ secrets.GITHUB_TOKEN }}"
           $file = "${{ env.MANIFEST_FILE }}"
-          $uploadName = "${{ needs.pack.outputs.package-name }}-SBOM.zip"
+          $uploadName = "${{ env.PACKAGE_NAME }}-SBOM.zip"
 
           $url = "https://api.github.com/repos/$repo/releases/tags/$release"
 
@@ -219,7 +205,7 @@ jobs:
     uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
     with:
       base64-subjects: ${{ needs.pack.outputs.hash-code }}
-      attestation-name: ${{ needs.pack.outputs.package-name }}.intoto.jsonl
+      attestation-name: ${{ env.PACKAGE_NAME }}.intoto.jsonl
       upload-assets: true
       # TODO: remove this after this issue is resolved: https://github.com/slsa-framework/slsa-github-generator/issues/876
       compile-generator: true
@@ -237,7 +223,7 @@ jobs:
       - name: Get Artifact
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 #v3.0.0
         with:
-          name: ${{ needs.pack.outputs.package-name }}-NuGet
+          name: ${{ env.PACKAGE_NAME }}-NuGet
 
       - name: Install-credential-handler
         run: iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) } -AddNetfx"

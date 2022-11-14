@@ -309,6 +309,92 @@ function Install-AdminApi {
     }
 }
 
+function Uninstall-AdminApi {
+    <#
+    .SYNOPSIS
+        Removes the Ed-Fi ODS/API AdminApi web application from IIS.
+    .DESCRIPTION
+        Removes the Ed-Fi ODS/API AdminApi web application from IIS, including its application
+        pool (if not used for any other application). Removes the web site as well if
+        there are no remaining applications, and the site's app pool.
+
+        Does not remove IIS or the URL Rewrite module.
+
+    .EXAMPLE
+        PS c:\> Uninstall-AdminApi
+
+        Uninstall using all default values.
+    .EXAMPLE
+        PS c:\> $p = @{
+            WebSiteName="Ed-Fi-3"
+            WebApplicationPath="c:/inetpub/Ed-Fi-3/AdminApi-3"
+            WebApplicationName = "AdminApi-3"
+        }
+        PS c:\> Uninstall-AdminApi @p
+
+        Uninstall when the web application and web site were setup with non-default values.
+    #>
+    [CmdletBinding()]
+    param (
+        # Path for storing installation tools, e.g. nuget.exe. Default: "./tools".
+        [string]
+        $ToolsPath = "$PSScriptRoot/tools",
+
+        # Path for the web application. Default: "c:\inetpub\Ed-Fi\AdminApi".
+        [string]
+        $WebApplicationPath = "C:\inetpub\Ed-Fi\AdminApi",
+
+        # Web application name. Default: "AdminApi".
+        [string]
+        $WebApplicationName = "AdminApi",
+
+        # Web site name. Default: "Ed-Fi".
+        [string]
+        $WebSiteName = "Ed-Fi",
+
+        # Turns off display of script run-time duration.
+        [switch]
+        $NoDuration
+    )
+
+    $config = @{
+        ToolsPath = $ToolsPath
+        WebApplicationPath = $WebApplicationPath
+        WebApplicationName = $WebApplicationName
+        WebSiteName = $WebSiteName
+    }
+
+    $result = @()
+
+    $elapsed = Use-StopWatch {
+
+        Invoke-ResetIIS
+
+        UninstallAdminApi $config
+
+        $result
+    }
+
+    Test-Error
+
+    if (-not $NoDuration) {
+        $result += New-TaskResult -name "-" -duration "-"
+        $result += New-TaskResult -name $MyInvocation.MyCommand.Name -duration $elapsed.format
+        $result | Format-Table
+    }
+}
+
+function UninstallAdminApi($config)
+{
+    $parameters = @{
+        WebApplicationPath = $config.WebApplicationPath
+        WebApplicationName = $config.WebApplicationName
+        WebSiteName = $config.WebSiteName
+    }
+
+    Uninstall-EdFiApplicationFromIIS @parameters
+}
+
 function Invoke-InstallationPreCheck{
     [CmdletBinding()]
     param (
@@ -718,4 +804,4 @@ function Set-SqlLogins {
     }
 }
 
-Export-ModuleMember -Function Install-AdminApi
+Export-ModuleMember -Function Install-AdminApi, Uninstall-AdminApi

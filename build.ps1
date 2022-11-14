@@ -144,6 +144,9 @@ $supportedApiVersions = @(
 )
 $maintainers = "Ed-Fi Alliance, LLC and contributors"
 
+$appCommonPackageName = "EdFi.Installer.AppCommon"
+$appCommonPackageVersion = "3.0.0"
+
 Import-Module -Name "$PSScriptRoot/eng/build-helpers.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/package-manager.psm1" -Force
 Import-Module -Name "$PSScriptRoot/eng/database-manager.psm1" -Force
@@ -310,6 +313,21 @@ function NewDevCertificate {
     }
 }
 
+function AddAppCommonPackageForInstaller {
+    $project = "EdFi.Ods.Admin.Api"
+    $mainPath = "$solutionRoot/$project"
+    $destinationPath = "$mainPath/publish"
+
+    $arguments = @{
+        AppCommonPackageName = $appCommonPackageName
+        AppCommonPackageVersion = $appCommonPackageVersion
+        NuGetFeed = $EdFiNuGetFeed
+        DestinationPath = $destinationPath
+    }
+
+    Add-AppCommon @arguments
+}
+
 function BuildDatabasePackage {
     $project = "EdFi.Ods.AdminApp.Web"
     $mainPath = "$solutionRoot/$project"
@@ -423,6 +441,7 @@ function Invoke-BuildPackage {
 }
 
 function Invoke-BuildApiPackage {
+    Invoke-Step { AddAppCommonPackageForInstaller }
     Invoke-Step { BuildApiPackage }
 }
 
@@ -484,7 +503,7 @@ function UpdateAppSettingsForAdminApiDocker {
     $json.ConnectionStrings.Security = $DockerEnvValues["SecurityDB"]
     $json.ConnectionStrings.ProductionOds = $DockerEnvValues["ProductionOdsDB"]
     $json.Log4NetCore.Log4NetConfigFileName =  "./log4net.config"
-    $json | ConvertTo-Json | Set-Content $filePath
+    $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
 }
 
 function CopyLatestFilesToAdminAppContainer {

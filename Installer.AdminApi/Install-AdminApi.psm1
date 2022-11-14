@@ -309,6 +309,146 @@ function Install-AdminApi {
     }
 }
 
+function Update-AdminApi {
+    <#
+    .SYNOPSIS
+        Upgrade the Ed-Fi ODS/API AdminApi application in IIS.
+
+    .DESCRIPTION
+        Upgrades and configures the Ed-Fi ODS/API AdminApi application in IIS running in Windows 10 or
+        Windows Server 2016+. Admin Api will be upgraded and reside under "Ed-Fi" website in IIS.
+        Appsettings values and connection strings will be copied over from existing Admin Api application.
+        Invokes dbup migrations for updating the EdFi_Admin database accordingly.
+    .EXAMPLE
+        PS c:\> $parameters = @{
+            PackageVersion = '2.2.1'
+        }
+        PS c:\> Upgrade-AdminApi @parameters
+
+        Upgrades Admin Api to specified version and preseve the appsettings values and connection strings from existing application.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
+    param (
+        # NuGet package name. Default: EdFi.Suite3.ODS.Admin.Api.
+        [string]
+        $PackageName = "EdFi.Suite3.ODS.Admin.Api",
+
+        # NuGet package version. If not set, will retrieve the latest full release package.
+        [string]
+        $PackageVersion,
+
+        # NuGet package source. Please specify the path to the AdminApi sub-directory within the Admin.Api nuget package.
+        [Parameter(Mandatory=$true)]
+        [string]
+        $PackageSource,
+
+        # Path for storing installation tools, e.g. nuget.exe. Default: "C:\temp\tools".
+        [string]
+        $ToolsPath = "C:\temp\tools",
+
+        # Path for storing downloaded packages
+        [string]
+        $DownloadPath = "C:\temp\downloads",
+
+        # Path for the IIS WebSite. Default: c:\inetpub\Ed-Fi.
+        [string]
+        $WebSitePath = "c:\inetpub\Ed-Fi",
+
+        # Web site name. Default: "Ed-Fi".
+        [string]
+        $WebsiteName = "Ed-Fi",
+
+        # Web site port number. Default: 443.
+        [int]
+        $WebSitePort = 443,
+
+        # Web application name. Default: "AdminApi".
+        [string]
+        $WebApplicationName = "AdminApi",
+
+        # TLS certificiate thumbprint, optional. When not set, a self-signed certificate will be created.
+        [string]
+        $CertThumbprint,
+
+        # Install Credentials: User
+        [Parameter(ParameterSetName="InstallCredentials")]
+        [string]
+        $InstallCredentialsUser,
+
+        # Install Credentials: Password
+        [Parameter(ParameterSetName="InstallCredentials")]
+        [string]
+        $InstallCredentialsPassword,
+
+        # Install Credentials: UseIntegratedSecurity setting
+        [Parameter(ParameterSetName="InstallCredentials")]
+        [switch]
+        $InstallCredentialsUseIntegratedSecurity,
+
+        # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
+        # either UseIntegratedSecurity or Username and Password (Password can be skipped
+        # for PostgreSQL when using pgconf file). Optionally can include Port and
+        # DatabaseName.
+        [hashtable]
+        [Parameter(Mandatory=$true, ParameterSetName="InstallCredentials")]
+        $AdminDbConnectionInfo,
+
+        # Database Config
+        [switch]
+        $NoDuration
+    )
+
+    Write-InvocationInfo $MyInvocation
+
+    Clear-Error
+
+    $result = @()
+
+    $Config = @{
+        WebApplicationPath = (Join-Path $WebSitePath $WebApplicationName)
+        PackageName = $PackageName
+        PackageVersion = $PackageVersion
+        PackageSource = $PackageSource
+        DatabaseInstallCredentials = @{
+            DatabaseUser = $InstallCredentialsUser
+            DatabasePassword = $InstallCredentialsPassword
+            UseIntegratedSecurity = $InstallCredentialsUseIntegratedSecurity
+        }
+        ToolsPath = $ToolsPath
+        DownloadPath = $DownloadPath
+        WebSitePath = $WebSitePath
+        WebSiteName = $WebsiteName
+        WebSitePort = $WebsitePort
+        CertThumbprint = $CertThumbprint
+        WebApplicationName = $WebApplicationName
+        NoDuration = $NoDuration
+        ApplicationInstallType = "Upgrade"
+        AdminDbConnectionInfo = $AdminDbConnectionInfo
+    }
+
+    $elapsed = Use-StopWatch {
+        $result += Invoke-ResetIIS
+        $result += Invoke-ApplicationUpgrade -Config $Config
+        $result += Set-AdminApiPackageSource -Config $Config
+        $result += Get-DbDeploy -Config $Config
+        $result += Invoke-TransferAppsettings -Config $Config
+        $result += Invoke-TransferConnectionStrings -Config $Config
+        $result += Install-Application -Config $Config
+        $result += Invoke-DbUpScripts -Config $Config
+        $result += Invoke-StartWebSite $Config.WebSiteName $Config.WebSitePort
+
+        $result
+    }
+
+    Test-Error
+
+    if (-not $NoDuration) {
+        $result += New-TaskResult -name "-" -duration "-"
+        $result += New-TaskResult -name $MyInvocation.MyCommand.Name -duration $elapsed.format
+        $result | Format-Table
+    }
+}
+
 function Uninstall-AdminApi {
     <#
     .SYNOPSIS
@@ -452,6 +592,93 @@ function Invoke-InstallationPreCheck{
     }
 }
 
+function Invoke-ApplicationUpgrade {
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+
+        $existingWebSiteName = $Config.WebsiteName
+        $webSite = Get-Website | Where-Object { $_.name -eq $existingWebSiteName }
+        if($null -eq $webSite)
+        {
+            Write-Warning "Unable to find $existingWebSiteName on IIS."
+            $customWebSiteName = Request-Information -DefaultValue "Ed-Fi" -Prompt "Ed-Fi applications are usually deployed in IIS underneath a 'Ed-Fi' website entry. If you previously installed with a custom name for that entry other than 'Ed-Fi', please enter that custom name"
+            $customWebSite = Get-Website | Where-Object { $_.name -eq $customWebSiteName }
+            if($null -eq $customWebSite)
+            {
+                throw "Unable to find $customWebSite on IIS. Please use install.ps1 for installing Ed-Fi website."
+            }
+            $webSite = $customWebSite
+            $existingWebSiteName =  $customWebSiteName
+        }
+        $existingWebSitePath = ($webSite).PhysicalPath
+
+        $existingAppName = $Config.WebApplicationName
+        $existingAdminApi = get-webapplication $existingAppName
+        if($null -eq $existingAdminApi)
+        {
+            Write-Warning "Unable to find $existingAppName on IIS."
+            $customApplicationName = Request-Information -DefaultValue "AdminApi" -Prompt "If you previously installed AdminApi with a custom name, please enter that custom name"
+            $customAdminApiApplication = get-webapplication $customApplicationName
+            if($null -eq $customAdminApiApplication)
+            {
+                throw "Unable to find $customAdminApiApplication on IIS. Please use install.ps1 for installing AdminApi application."
+            }
+            $existingAdminApi =  $customAdminApiApplication
+            $existingAppName = $customApplicationName
+        }
+
+        $existingApplicationPath, $versionString = CheckForCompatibleUpdate $existingWebSitePath $existingAdminApi $Config.PackageVersion
+
+        Write-Host "Stopping the $existingWebSiteName before taking application files back up."
+        Stop-IISSite -Name $existingWebSiteName
+
+        Write-Host "Taking back up on existing application folder $existingApplicationPath"
+        $date = Get-Date -Format yyyy-MM-dd-hh-mm
+        $backupApplicationFolderName = "$existingAppName-$versionString-$date"
+        $basePath = (get-item $existingApplicationPath).parent.FullName
+        $destinationBackupPath = "$basePath\$backupApplicationFolderName\"
+
+        if(Test-Path -Path $destinationBackupPath)
+        {
+            Write-Warning "Back up folder already exists $destinationBackupPath."
+            $overwriteConfirmation = Request-Information -DefaultValue 'y' -Prompt "Please enter 'y' to overwrite the content. Else enter 'n' to create new back up folder"
+            if($overwriteConfirmation -ieq 'y')
+            {
+                Get-ChildItem -Path $destinationBackupPath -Force -Recurse | Sort-Object -Property FullName -Descending | Remove-Item
+            }
+            else {
+                $newDirectory = Request-Information -DefaultValue "\" -Prompt "Please enter back up folder name"
+                $destinationBackupPath = "$basePath\$newDirectory\"
+                New-Item -ItemType directory -Path $destinationBackupPath
+            }
+        }
+        else {
+            New-Item -ItemType directory -Path $destinationBackupPath
+        }
+
+        Copy-Item -Path "$existingApplicationPath\*" -Destination $destinationBackupPath  -Recurse
+        Write-Host "Completed application files back up on $destinationBackupPath"
+
+        $Config.ApplicationBackupPath = $destinationBackupPath
+        $Config.WebApplicationName = $existingAppName
+        $Config.WebApplicationPath = $existingApplicationPath
+        $Config.WebSiteName = $existingWebSiteName
+        $Config.WebSitePath = $existingWebSitePath
+
+        $parameters = @{
+            WebApplicationPath = $existingApplicationPath
+            WebApplicationName = $existingAppName
+            WebSiteName = $existingWebSiteName
+        }
+        UninstallAdminApi $parameters
+    }
+}
+
 function GetExistingAppVersion($webSitePath,  $existingAdminApi) {
     $existingApplicationPath = ($existingAdminApi).PhysicalPath
     if(!$existingApplicationPath)
@@ -462,6 +689,20 @@ function GetExistingAppVersion($webSitePath,  $existingAdminApi) {
     }
 
     $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.Admin.Api.dll").FileVersion
+
+    return $existingApplicationPath, $versionString
+}
+
+function CheckForCompatibleUpdate($webSitePath,  $existingAdminApi, $targetVersionString) {
+    $existingApplicationPath, $versionString = GetExistingAppVersion $webSitePath $existingAdminApi
+
+    $targetIsNewer = IsVersionHigherThanOther $targetVersionString $versionString
+
+    if(-not $targetIsNewer)
+    {
+        Write-Warning "Upgrade version $targetVersionString is the same or lower than existing installation $versionString. Downgrades are not supported. Instead,  fully uninstall the existing Admin Api and install the desired version."
+        exit
+    }
 
     return $existingApplicationPath, $versionString
 }
@@ -499,6 +740,125 @@ function ParseVersion($versionString) {
     {
         Write-Warning "Failed to parse version configuration $versionString. Please correct and try again."
         exit
+    }
+}
+
+function Invoke-TransferAppsettings {
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+
+
+        $backUpPath = $Config.ApplicationBackupPath
+        Write-Warning "The following appsettings will be copied over from existing application: "
+        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName')
+        foreach ($property in $appSettings) {
+           Write-Host $property;
+        }
+        $oldSettingsFile =  Join-Path $backUpPath "appsettings.json"
+        $oldSettings = Get-Content $oldSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $newSettingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $newSettings.AppSettings.ProductionApiUrl = $oldSettings.AppSettings.ProductionApiUrl
+        $newSettings.AppSettings.SecurityMetadataCacheTimeoutMinutes = $oldSettings.AppSettings.SecurityMetadataCacheTimeoutMinutes
+        $newSettings.AppSettings.DatabaseEngine = $oldSettings.AppSettings.DatabaseEngine
+        $newSettings.AppSettings.ApiStartupType = $oldSettings.AppSettings.ApiStartupType
+        $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
+        $newSettings.AppSettings.PathBase = $oldSettings.AppSettings.PathBase
+        $newSettings.Log4NetCore.Log4NetConfigFileName = $oldSettings.Log4NetCore.Log4NetConfigFileName
+
+        $EmptyHashTable=@{}
+        $mergedSettings = Merge-Hashtables $newSettings, $EmptyHashTable
+        New-JsonFile $newSettingsFile $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-TransferConnectionStrings{
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $backUpPath = $Config.ApplicationBackupPath
+        Write-Warning "Connection strings will be copied over from existing appsettings ($backUpPath)."
+        $oldSettingsFile =  Join-Path $backUpPath "appsettings.json"
+        $oldSettings = Get-Content $oldSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $newSettingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $connectionstrings = @{
+            ConnectionStrings = @{
+                ProductionOds = $oldSettings.ConnectionStrings.ProductionOds
+                Admin = $oldSettings.ConnectionStrings.Admin
+                Security = $oldSettings.ConnectionStrings.Security
+            }
+        }
+
+        $Config.AdminConnectionString = $oldSettings.ConnectionStrings.Admin
+        $Config.engine = $oldSettings.AppSettings.DatabaseEngine
+        $mergedSettings = Merge-Hashtables $newSettings, $connectionstrings
+        New-JsonFile $newSettingsFile  $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-StartWebSite($webSiteName, $portNumber){
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $webSite = Get-Website | Where-Object { $_.name -eq $webSiteName -and $_.State -eq 'Stopped'}
+        if($webSite)
+        {
+            $Websites = Get-ChildItem IIS:\Sites
+            foreach ($Site in $Websites)
+            {
+                if($Site.Name -ne $webSiteName -and $Site.State -eq 'Started')
+                {
+                    $webBinding = Get-WebBinding -Port $portNumber -Name $Site.Name -Protocol 'HTTPS'
+                    if($webBinding)
+                    {
+                        $webSiteUsingSamePort = $true
+                        break
+                    }
+                }
+            }
+
+            if(-not $webSiteUsingSamePort)
+            {
+                Write-Host "Starting $webSiteName."
+                Start-IISSite -Name $webSiteName
+            }
+            else
+            {
+                Write-Warning "Can not start the website: $webSiteName. Since, the same port: $portNumber is in use."
+            }
+        }
+    }
+}
+
+function Invoke-ResetIIS {
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        $default = 'n'
+        Write-Warning "NOTICE: In order to upgrade or uninstall, Information Internet Service (IIS) needs to be stopped during the process. This will impact availability if users are using applications hosted with IIS."
+        $confirmation = Request-Information -DefaultValue 'y' -Prompt "Please enter 'y' to proceed with an IIS reset or enter 'n' to stop the upgrade or uninstall. [Default Action: '$default']"
+
+        if (!$confirmation) { $confirmation = $default}
+        if ($confirmation -ieq 'y') {
+            & {iisreset}
+        }
+        else {
+            Write-Warning "Exiting the uninstall/upgrade process."
+            exit
+        }
     }
 }
 
@@ -804,4 +1164,4 @@ function Set-SqlLogins {
     }
 }
 
-Export-ModuleMember -Function Install-AdminApi, Uninstall-AdminApi
+Export-ModuleMember -Function Install-AdminApi, Uninstall-AdminApi, Update-AdminApi

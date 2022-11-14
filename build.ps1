@@ -119,7 +119,11 @@ param(
     # Only required with the Run command.
     [string]
     [ValidateSet("mssql-district", "mssql-shared", "mssql-year", "pg-district", "pg-shared", "pg-year")]
-    $LaunchProfile
+    $LaunchProfile,
+
+    # Only required with local builds and testing.
+    [switch]
+    $IsLocalBuild
 )
 
 $Env:MSBUILDDISABLENODEREUSE = "1"
@@ -514,6 +518,11 @@ function Invoke-AdminApiDockerDeploy {
 }
 
 Invoke-Main {
+    if($IsLocalBuild)
+    {
+        $nugetExePath = Install-NugetCli       
+        Set-Alias nuget $nugetExePath -Scope Global -Verbose
+    }
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }

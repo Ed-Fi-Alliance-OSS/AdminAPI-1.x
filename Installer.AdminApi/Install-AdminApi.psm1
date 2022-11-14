@@ -238,11 +238,16 @@ function Install-AdminApi {
         [Parameter(Mandatory=$true, ParameterSetName="SeparateCredentials")]
         $SecurityDbConnectionInfo,
 
-        # Optional overrides for features and settings in the web.config.
+        # Authentication settings for Admin Api.
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $AuthenticationSettings,
+
+        # Optional overrides for features and settings in the appsettings.
         #
         # The hashtable can include: ApiMode and SecurityMetadataCacheTimeoutMinutes. By
         # default, AdminApi is installed in Shared
-        # Instance mode with AD Authentication and a 10 minute security metadata cache timeout.
+        # Instance mode and a 10 minute security metadata cache timeout.
         [hashtable]
         $AdminApiFeatures,
 
@@ -282,6 +287,7 @@ function Install-AdminApi {
         AdminDbConnectionInfo = $AdminDbConnectionInfo
         OdsDbConnectionInfo = $OdsDbConnectionInfo
         SecurityDbConnectionInfo = $SecurityDbConnectionInfo
+        AuthenticationSettings = $AuthenticationSettings
         AdminApiFeatures = $AdminApiFeatures
         NoDuration = $NoDuration
     }
@@ -756,7 +762,7 @@ function Invoke-TransferAppsettings {
 
         $backUpPath = $Config.ApplicationBackupPath
         Write-Warning "The following appsettings will be copied over from existing application: "
-        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName')
+        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
         foreach ($property in $appSettings) {
            Write-Host $property;
         }
@@ -773,6 +779,11 @@ function Invoke-TransferAppsettings {
         $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
         $newSettings.AppSettings.PathBase = $oldSettings.AppSettings.PathBase
         $newSettings.Log4NetCore.Log4NetConfigFileName = $oldSettings.Log4NetCore.Log4NetConfigFileName
+
+        $newSettings.Authentication.Authority = $oldSettings.Authentication.Authority
+        $newSettings.Authentication.IssuerUrl = $oldSettings.Authentication.IssuerUrl
+        $newSettings.Authentication.SigningKey = $oldSettings.Authentication.SigningKey
+        $newSettings.Authentication.AllowRegistration = $oldSettings.Authentication.AllowRegistration
 
         $EmptyHashTable=@{}
         $mergedSettings = Merge-Hashtables $newSettings, $EmptyHashTable
@@ -972,6 +983,39 @@ function Invoke-TransformAppSettings {
             }
             if ($Config.AdminApiFeatures.ContainsKey("SecurityMetadataCacheTimeoutMinutes")) {
                 $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = $Config.AdminApiFeatures.SecurityMetadataCacheTimeoutMinutes
+            }
+        }
+
+        $missingAuthenticationSettings = @()
+        if ($Config.AuthenticationSettings.ContainsKey("Authority")) {
+            $settings.Authentication.Authority = $Config.AuthenticationSettings.Authority
+        } else {
+            $missingAuthenticationSettings += 'Authority'
+        }
+
+        if ($Config.AuthenticationSettings.ContainsKey("IssuerUrl")) {
+            $settings.Authentication.IssuerUrl = $Config.AuthenticationSettings.IssuerUrl
+        } else {
+            $missingAuthenticationSettings += 'IssuerUrl'
+        }
+
+        if ($Config.AuthenticationSettings.ContainsKey("SigningKey")) {
+            $settings.Authentication.SigningKey = $Config.AuthenticationSettings.SigningKey
+        } else {
+            $missingAuthenticationSettings += 'SigningKey'
+        }
+
+        if ($Config.AuthenticationSettings.ContainsKey("AllowRegistration")) {
+            $settings.Authentication.AllowRegistration = $Config.AuthenticationSettings.AllowRegistration
+        } else {
+            $missingAuthenticationSettings += 'AllowRegistration'
+        }
+
+
+        if ($missingAuthenticationSettings -gt 0) {
+            Write-Warning "Please ensure all Admin Api authentication settings are configured correctly. The following Admin Api authentication settings are missing from the configuration: "
+            foreach ($property in $missingAuthenticationSettings) {
+               Write-Host $property;
             }
         }
 

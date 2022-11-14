@@ -33,12 +33,12 @@ $DbDeployVersion = "3.0.1"
 function Install-AdminApi {
     <#
     .SYNOPSIS
-        Installs the Ed-Fi ODS/API AdminApi application into IIS.
+        Installs the AdminApi application into IIS.
 
     .DESCRIPTION
-        Installs and configures the Ed-Fi ODS/API AdminApi application in IIS running in Windows 10 or
+        Installs and configures the AdminApi application in IIS running in Windows 10 or
         Windows Server 2016+. As needed, will create a new "Ed-Fi" website in IIS, configure it
-        for HTTPS, and load the Admin Api binaries as an an application. Transforms the web.config
+        for HTTPS, and load the Admin Api binaries as an an application. Transforms the appsettings
         and invokes dbup migrations.
     .EXAMPLE
         PS c:\> $dbConnectionInfo = @{
@@ -318,10 +318,10 @@ function Install-AdminApi {
 function Update-AdminApi {
     <#
     .SYNOPSIS
-        Upgrade the Ed-Fi ODS/API AdminApi application in IIS.
+        Upgrade the AdminApi application in IIS.
 
     .DESCRIPTION
-        Upgrades and configures the Ed-Fi ODS/API AdminApi application in IIS running in Windows 10 or
+        Upgrades and configures the AdminApi application in IIS running in Windows 10 or
         Windows Server 2016+. Admin Api will be upgraded and reside under "Ed-Fi" website in IIS.
         Appsettings values and connection strings will be copied over from existing Admin Api application.
         Invokes dbup migrations for updating the EdFi_Admin database accordingly.
@@ -458,9 +458,9 @@ function Update-AdminApi {
 function Uninstall-AdminApi {
     <#
     .SYNOPSIS
-        Removes the Ed-Fi ODS/API AdminApi web application from IIS.
+        Removes the AdminApi web application from IIS.
     .DESCRIPTION
-        Removes the Ed-Fi ODS/API AdminApi web application from IIS, including its application
+        Removes the AdminApi web application from IIS, including its application
         pool (if not used for any other application). Removes the web site as well if
         there are no remaining applications, and the site's app pool.
 

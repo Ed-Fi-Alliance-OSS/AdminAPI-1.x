@@ -30,10 +30,6 @@ jobs:
           $repo = "${{ github.repository }}"
           $token = "${{ secrets.GITHUB_TOKEN }}"
 
-          # example: "AdminApp.Web-v2.5.1"
-          # output: "AdminApp.Web"
-          $packageName = ($release -split "-")[0]
-
           $page = 1
           $release_list = @()
 
@@ -48,7 +44,7 @@ jobs:
             $release_list = Invoke-RestMethod $url -Headers $gh_headers
 
             $release_list | ForEach-Object {
-                if ($_.tag_name -like "$($packageName)-Pre-Release-*" -and $_.prerelease) {
+                if ($_.tag_name -like "Pre-Release-*" -and $_.prerelease) {
                     "Deleting pre-release $($_.tag_name)" | Write-Output
                     Invoke-RestMethod -Method Delete -Uri $_.url -Headers $gh_headers
                 }

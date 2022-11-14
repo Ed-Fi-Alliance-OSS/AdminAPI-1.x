@@ -46,7 +46,7 @@ Configure Admin Api to manage an ODS API with url "https://localhost:54746"
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
         OdsApiUrl = "https://localhost:54746"
-        PackageVersion = '2.3.2'
+        PackageVersion = '1.1.0'
     }
 
 .EXAMPLE
@@ -60,7 +60,7 @@ Deploy Admin Api for use with a "District Specific" ODS API
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
         OdsApiUrl = "http://web-api.example.com/WebApi"
-        PackageVersion = '2.3.2'
+        PackageVersion = '1.1.0'
         AdminApiFeatures = $adminApiFeatures
     }
 #>
@@ -83,7 +83,7 @@ $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
     OdsApiUrl = ""
-    PackageVersion = '3.0.1.0'
+    PackageVersion = '1.1.0.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
     AdminApiFeatures = $adminApiFeatures

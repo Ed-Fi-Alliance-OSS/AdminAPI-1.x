@@ -12,14 +12,14 @@ Your existing appsettings.json config values and connection strings will be copi
 .EXAMPLE
     $p = @{
     ToolsPath = "C:/temp/tools"
-    PackageVersion = '2.3.2' }
+    PackageVersion = '1.1.0' }
 #>
 $packageSource = Split-Path $PSScriptRoot -Parent
 $adminApiSource = "$packageSource/AdminApi"
 
 $p = @{
     ToolsPath = "C:/temp/tools"
-    PackageVersion = '2.3.2'
+    PackageVersion = '1.1.0.0'
     PackageSource = $adminApiSource
 }
 

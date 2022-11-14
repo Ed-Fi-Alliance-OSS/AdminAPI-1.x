@@ -327,7 +327,7 @@ function Update-AdminApi {
         Invokes dbup migrations for updating the EdFi_Admin database accordingly.
     .EXAMPLE
         PS c:\> $parameters = @{
-            PackageVersion = '2.2.1'
+            PackageVersion = '1.1.0'
         }
         PS c:\> Upgrade-AdminApi @parameters
 
@@ -562,7 +562,7 @@ function Invoke-InstallationPreCheck{
             $targetIsNewer = IsVersionHigherThanOther $installVersionString $versionString
 
             if($targetIsNewer) {
-                Write-Host "We found a preexisting Admin Api $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
+                Write-Host "We found a preexisting Admin Api package version $versionString installation. If you are seeking to upgrade to the new version, consider using the included upgrade script instead." -ForegroundColor Green
                 Write-Host "Note: Using the upgrade script, all the appsettings and database connection string values would be copied forward from the existing installation, so only continue if you are you seeking to change the configuration." -ForegroundColor Yellow
 
                 $confirmation = Request-Information -DefaultValue 'y' -Prompt "Please enter 'y' to continue the installation process, or enter 'n' to cancel the installation so that you can instead run the upgrade script"
@@ -579,10 +579,10 @@ function Invoke-InstallationPreCheck{
                     }
                 }
             }elseif ($targetIsNewer) {
-                Write-Warning "We found a preexisting Admin Api $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApi. Exiting."
+                Write-Warning "We found a preexisting Admin Api package version $versionString installation. That version cannot be automatically upgraded in-place by this script. Please refer to https://techdocs.ed-fi.org/display/ADMIN/Upgrading+Admin+App+from+1.x+Line for setting up the newer version of AdminApi. Exiting."
                 exit
             }else {
-                Write-Warning "We found a preexisting Admin Api $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin Api first and retry. Exiting."
+                Write-Warning "We found a preexisting Admin Api package version $versionString installation newer than the target version $installVersionString. Downgrades are not supported. Please fully uninstall the existing Admin Api first and retry. Exiting."
                 exit
             }
         }

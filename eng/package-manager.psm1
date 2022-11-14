@@ -51,21 +51,21 @@ function Install-NugetCli {
         $SourceNugetExe = "https://dist.nuget.org/win-x86-commandline/v5.4.0/nuget.exe"
     )
 
+    $exePath = "$ToolsPath/nuget.exe"
     # See if NuGet >= 5.4.0 already in the path
     $info = Get-Command nuget.exe -ErrorAction SilentlyContinue
     if (MeetsMinimumNuGetVersion -Version $info.Version) {
-        return $info
+        return $info.path
     }
 
     # Next see if it is in the .tools directory
-    $info = Get-Command "$ToolsPath/nuget.exe" -ErrorAction SilentlyContinue
+    $info = Get-Command $exePath -ErrorAction SilentlyContinue
     if (MeetsMinimumNuGetVersion -Version $info.Version) {
-        return $info
+        return $exePath
     }
 
     # Not found, therefore remove any older version and download the current version
     New-Item -Path $ToolsPath -Type Directory -Force | Out-Null
-    $exePath = "$ToolsPath/nuget.exe"
     Remove-Item -Path $exePath -Force -ErrorAction SilentlyContinue | Out-Null
 
     Write-Host "Downloading nuget.exe official distribution from " $sourceNugetExe
@@ -90,6 +90,34 @@ function Push-Package {
 
     Write-Host "Pushing $PackageFile to $NuGetFeed"
     dotnet nuget push $PackageFile --api-key $NuGetApiKey --source $NuGetFeed
+}
+
+function Move-AppCommon {
+    param (
+        [string]
+        [Parameter(Mandatory=$true)]
+        $AppCommonSourceDirectory,
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $AppCommonDestinationDirectory
+    )
+
+    # Move AppCommon's modules to a destination directory
+    @(
+        "Application"
+        "Environment"
+        "IIS"
+        "Utility"
+    ) | ForEach-Object {
+        $parameters = @{
+            Recurse = $true
+            Force = $true
+            Path = "$AppCommonSourceDirectory/$_"
+            Destination = "$AppCommonDestinationDirectory/AppCommon/$_"
+        }
+        Copy-Item @parameters
+    }
 }
 
 function Get-RestApiPackage {
@@ -117,8 +145,6 @@ function Get-RestApiPackage {
         $ToolsPath = "$PSScriptRoot/.tools"
     )
 
-    $nugetExe = Install-NugetCli -ToolsPath $ToolsPath
-
     $wildcardPath = "$PackagesPath/$RestApiPackageName.$RestApiPackageVersion*"
 
     # Remove anything that already exists, so that it is always easy to
@@ -145,8 +171,8 @@ function Get-RestApiPackage {
         $arguments += "$RestApiPackageVersion"
     }
 
-    Write-Host "Executing: nuget.exe $arguments" -ForegroundColor Magenta
-    &$nugetExe @arguments | Out-Null
+    Write-Host "Executing: nuget $arguments" -ForegroundColor Magenta
+    nuget @arguments | Out-Null
 
     if ($LASTEXITCODE -ne 0) {
         throw "NuGet package install failed for RestApi.Databases"
@@ -155,10 +181,68 @@ function Get-RestApiPackage {
     return (Resolve-Path $wildcardPath)
 }
 
+function Add-AppCommon {
+    param (
+        [string]
+        [Parameter(Mandatory=$true)]
+        $AppCommonPackageName,
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $AppCommonPackageVersion,
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $NuGetFeed,
+
+        [string]
+        [Parameter(Mandatory=$true)]
+        $DestinationPath,
+
+        [string]
+        $PackagesPath = "$PSScriptRoot/.packages",
+
+        [string]
+        $ToolsPath = "$PSScriptRoot/.tools"
+    )
+
+    $wildcardPath = "$PackagesPath/$AppCommonPackageName.$AppCommonPackageVersion*"
+
+    # Remove anything that already exists, so that it is always easy to
+    # use Resolve-Path with a wildcard to find the installed path without
+    # having to parse pre-release number of the package.
+    $existing = Resolve-Path $wildcardPath -ErrorAction SilentlyContinue
+    if ($existing) {
+        Remove-Item -Path $existing -Force -ErrorAction SilentlyContinue -Recurse | Out-Null
+    }
+
+    New-Item -Path $PackagesPath -ItemType Directory -Force | Out-Null
+
+    $parameters = @(
+        "install", $AppCommonPackageName,
+        "-source", $NuGetFeed,
+        "-outputDirectory", $PackagesPath
+        "-version", $AppCommonPackageVersion
+    )
+
+    Write-Host "Downloading AppCommon"
+    Write-Host -ForegroundColor Magenta "Executing nuget: $parameters"
+    nuget $parameters | Out-Null
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "NuGet package install failed for AppCommon"
+    }
+
+    $appCommonDirectory = Resolve-Path $wildcardPath | Select-Object -Last 1
+
+    Move-AppCommon $appCommonDirectory $DestinationPath
+}
+
 $functions = @(
     "Install-NugetCli",
     "Get-RestApiPackage",
-    "Push-Package"
+    "Push-Package",
+    "Add-AppCommon"
 )
 
 Export-ModuleMember -Function $functions

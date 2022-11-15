@@ -100,5 +100,5 @@ elseif ([string]::IsNullOrWhiteSpace($p.Authentication.Authority) -or [string]::
     Write-Error "Authentication Settings have not been configured correctly. Edit install.ps1 to pass in valid authentication settings for Admin Api."
 }
 else {
-    Install-AdminApi @p
+    Install-EdFiOdsAdminApi @p
 }

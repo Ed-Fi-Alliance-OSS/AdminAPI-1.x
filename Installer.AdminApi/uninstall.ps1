@@ -21,5 +21,5 @@ $p = @{
     ToolsPath = "C:/temp/tools"
 }
 
-Uninstall-AdminApi @p
+Uninstall-EdFiOdsAdminApi @p
 

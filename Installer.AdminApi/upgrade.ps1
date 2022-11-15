@@ -23,5 +23,5 @@ $p = @{
     PackageSource = $adminApiSource
 }
 
-Update-AdminApi @p
+Update-EdFiOdsAdminApi @p
 

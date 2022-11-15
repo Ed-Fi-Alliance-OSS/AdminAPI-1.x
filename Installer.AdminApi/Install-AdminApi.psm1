@@ -30,7 +30,7 @@ Import-Module -Force "$appCommonDirectory/Application/Configuration.psm1" -Scope
 
 $DbDeployVersion = "3.0.1"
 
-function Install-AdminApi {
+function Install-EdFiOdsAdminApi {
     <#
     .SYNOPSIS
         Installs the AdminApi application into IIS.
@@ -52,7 +52,7 @@ function Install-AdminApi {
             OdsDatabaseName = "EdFi_Ods_Sandbox"
             OdsApiUrl = "http://example-web-api.com/WebApi"
         }
-        PS c:\> Install-AdminApi @parameters
+        PS c:\> Install-EdFiOdsAdminApi @parameters
 
         Installs Admin Api to SQL Server with mainly defaults, except for the custom Sandbox ODS
         and the required ODS/API URL.
@@ -79,7 +79,7 @@ function Install-AdminApi {
                 UseIntegratedSecurity=$true
             }
         }
-        PS c:\> Install-AdminApi @parameters
+        PS c:\> Install-EdFiOdsAdminApi @parameters
 
         Installs Admin Api to multiple SQL Servers for each of the databases with some
         using integrated security and some using username and password credentials,
@@ -98,7 +98,7 @@ function Install-AdminApi {
             InstallCredentialsUseIntegratedSecurity = $true
             OdsApiUrl = "http://example-web-api.com/WebApi"
         }
-        PS c:\> Install-AdminApi @parameters
+        PS c:\> Install-EdFiOdsAdminApi @parameters
 
         Installs Admin Api to PostgreSQL Server with integrated security install credentials and
         username and password application credentials, along with the required ODS/API URL.
@@ -118,7 +118,7 @@ function Install-AdminApi {
                 SecurityMetadataCacheTimeoutMinutes="5"
             }
         }
-        PS c:\> Install-AdminApi @parameters
+        PS c:\> Install-EdFiOdsAdminApi @parameters
 
         Installs Admin Api to SQL Server in Year Specific mode for 2020. The installer will also
         install Admin Api in ASP.NET Identity mode, rather than AD Authentication, and will set the
@@ -315,7 +315,7 @@ function Install-AdminApi {
     }
 }
 
-function Update-AdminApi {
+function Update-EdFiOdsAdminApi {
     <#
     .SYNOPSIS
         Upgrade the AdminApi application in IIS.
@@ -455,7 +455,7 @@ function Update-AdminApi {
     }
 }
 
-function Uninstall-AdminApi {
+function Uninstall-EdFiOdsAdminApi {
     <#
     .SYNOPSIS
         Removes the AdminApi web application from IIS.
@@ -467,7 +467,7 @@ function Uninstall-AdminApi {
         Does not remove IIS or the URL Rewrite module.
 
     .EXAMPLE
-        PS c:\> Uninstall-AdminApi
+        PS c:\> Uninstall-EdFiOdsAdminApi
 
         Uninstall using all default values.
     .EXAMPLE
@@ -476,7 +476,7 @@ function Uninstall-AdminApi {
             WebApplicationPath="c:/inetpub/Ed-Fi-3/AdminApi-3"
             WebApplicationName = "AdminApi-3"
         }
-        PS c:\> Uninstall-AdminApi @p
+        PS c:\> Uninstall-EdFiOdsAdminApi @p
 
         Uninstall when the web application and web site were setup with non-default values.
     #>
@@ -1208,4 +1208,4 @@ function Set-SqlLogins {
     }
 }
 
-Export-ModuleMember -Function Install-AdminApi, Uninstall-AdminApi, Update-AdminApi
+Export-ModuleMember -Function Install-EdFiOdsAdminApi, Uninstall-EdFiOdsAdminApi, Update-EdFiOdsAdminApi

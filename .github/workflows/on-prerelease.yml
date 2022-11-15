@@ -64,6 +64,9 @@ jobs:
       - name: Populate Google Analytics ID
         run: .\build.ps1 -Command PopulateGoogleAnalyticsAppSettings -GoogleAnalyticsMeasurementId ${{env.GA_MEASUREMENT_ID}}
 
+      - name: Setup Nuget.exe
+        uses: nuget/setup-nuget@b2bc17b761a1d88cab755a776c7922eb26eefbfa #v1.0.6
+
       - name: Create NuGet Packages
         if: success()
         run: |

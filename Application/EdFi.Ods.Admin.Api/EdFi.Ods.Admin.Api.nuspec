@@ -12,6 +12,12 @@
     <license type="expression">Apache-2.0</license>
   </metadata>
   <files>
-       <file src="**" exclude="E2E Tests/**;Docker/**;Compose/**;**/*.sql" />
+       <file src="**" target="AdminApi" exclude="AppCommon/**/*.*;E2E Tests/**;Docker/**;Compose/**;**/*.sql"/>
+       <file src="..\..\..\Installer.AdminApi\install.ps1" target="installer"/>
+       <file src="..\..\..\Installer.AdminApi\upgrade.ps1" target="installer"/>
+       <file src="..\..\..\Installer.AdminApi\uninstall.ps1" target="installer"/>
+       <file src="..\..\..\Installer.AdminApi\global.json" target="installer"/>
+       <file src="..\..\..\Installer.AdminApi\Install-AdminApi.psm1" target="installer"/>
+       <file src="AppCommon\**" target="installer/AppCommon/"/>
   </files>
 </package>

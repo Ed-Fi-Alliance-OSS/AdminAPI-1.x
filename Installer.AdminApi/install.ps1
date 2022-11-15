@@ -96,7 +96,7 @@ $p = @{
 if ([string]::IsNullOrWhiteSpace($p.OdsApiUrl)) {
     Write-Error "ODS API URL has not been configured. Edit install.ps1 to pass in a valid url for the ODS API."
 }
-elseif ([string]::IsNullOrWhiteSpace($p.Authentication.Authority) -or [string]::IsNullOrWhiteSpace($p.Authentication.IssuerUrl) -or [string]::IsNullOrWhiteSpace($p.Authentication.SigningKey) -or $p.Authentication.AllowRegistration -isnot [bool]) {
+elseif ([string]::IsNullOrWhiteSpace($p.AuthenticationSettings.Authority) -or [string]::IsNullOrWhiteSpace($p.AuthenticationSettings.IssuerUrl) -or [string]::IsNullOrWhiteSpace($p.AuthenticationSettings.SigningKey) -or $p.AuthenticationSettings.AllowRegistration -isnot [bool]) {
     Write-Error "Authentication Settings have not been configured correctly. Edit install.ps1 to pass in valid authentication settings for Admin Api."
 }
 else {

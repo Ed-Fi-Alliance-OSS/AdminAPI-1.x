@@ -36,7 +36,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         public AuthorizationStrategyModel[]? AuthStrategyOverridesForCRUD { get; set; }
 
         [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-        public List<ResourceClaimModel>? Children { get; set; }
+        public List<ResourceClaimModel> Children { get; set; }
         public ResourceClaimModel()
         {
             Children = new List<ResourceClaimModel>();

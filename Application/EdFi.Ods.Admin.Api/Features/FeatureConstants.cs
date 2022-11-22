@@ -27,12 +27,6 @@ namespace EdFi.Ods.Admin.Api.Features
         public const string BadRequestResponseDescription = "Bad Request. The request was invalid and cannot be completed. See the response body for details.";
         public const string ClaimSetAlreadyExistsMessage = "A claim set with this name already exists in the database. Please enter a unique name.";
         public const string ClaimSetNameMaxLengthMessage = "The claim set name must be less than 255 characters.";
-        public const string ClaimSetResourceNotFoundMessage = "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}'.\n";
-        public const string ClaimSetAuthStrategyNotFoundMessage = "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n";
         public const string ClaimSetNotFound = "No such claim set exists in the database.";
-        public const string ClaimSetResourceClaimWithNoActionMessage = "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'";
-        public const string ClaimSetDuplicateResourceMessage = "Only unique resource claims can be added. The following is a duplicate resource: '{ResourceClaimName}'";
-        public const string WrongChildResourceMessage = "'{ChildResource}' can not be added as a child resource.";
-        public const string ChildToWrongParentResourceMessage = "Child resource: '{ChildResource}' added to the wrong parent resource. Correct parent resource is: '{CorrectParentResource}'";
     }
 }

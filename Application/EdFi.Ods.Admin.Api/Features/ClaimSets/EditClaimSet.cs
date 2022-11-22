@@ -29,7 +29,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
             IGetApplicationsByClaimSetIdQuery getApplications,
-            IMapper mapper, ISecurityContext securityContext,
+            IAuthStrategyResolver strategyResolver,
+            IMapper mapper,
             Request request, int id)
         {
             request.Id = id;
@@ -51,9 +52,11 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
             }
 
-            request.ResourceClaims?.ResolveAuthStrategies(securityContext);
-            updateResourcesOnClaimSetCommand.Execute(new UpdateResourcesOnClaimSetModel
-            { ClaimSetId = updatedClaimSetId, ResourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims) } );
+            var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
+            var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
+
+            updateResourcesOnClaimSetCommand.Execute(
+                new UpdateResourcesOnClaimSetModel { ClaimSetId = updatedClaimSetId, ResourceClaims = resolvedResourceClaims });
 
             var claimSet = getClaimSetByIdQuery.Execute(updatedClaimSetId);
             var allResources = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId);

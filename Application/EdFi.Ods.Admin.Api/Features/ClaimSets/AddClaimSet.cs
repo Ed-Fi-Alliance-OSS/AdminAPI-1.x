@@ -27,8 +27,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
             IGetApplicationsByClaimSetIdQuery getApplications,
+            IAuthStrategyResolver strategyResolver,
             IMapper mapper,
-            ISecurityContext securityContext,
             Request request)
         {
             await validator.GuardAsync(request);
@@ -37,8 +37,10 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 ClaimSetName = request.Name
             });
 
-            request.ResourceClaims?.ResolveAuthStrategies(securityContext);
-            addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, mapper.Map<List<ResourceClaim>>(request.ResourceClaims));
+            var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
+            var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
+
+            addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, resolvedResourceClaims);
 
             var claimSet = getClaimSetByIdQuery.Execute(addedClaimSetId);
             var allResources = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId);

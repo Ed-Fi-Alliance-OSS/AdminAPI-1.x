@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
 using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 
@@ -90,45 +89,5 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         public string? Name { get; set; }
 
         public int Id { get; set; }
-    }
-
-    public static class ResourceClaimsModelExtensions
-    {
-        public static void ResolveAuthStrategies(this List<ResourceClaimModel> resourceClaims, ISecurityContext securityContext)
-        {
-            var dbAuthStrategies = securityContext.AuthorizationStrategies;
-
-            foreach (var claim in resourceClaims)
-            {
-                if (claim.DefaultAuthStrategiesForCRUD != null && claim.DefaultAuthStrategiesForCRUD.Any())
-                {
-                    foreach (var defaultAS in claim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
-                    {
-                        var authStrategy = dbAuthStrategies.SingleOrDefault(x => x.AuthorizationStrategyName.Equals(defaultAS.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
-                        if (authStrategy != null)
-                        {
-                            defaultAS.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                            defaultAS.DisplayName = authStrategy.DisplayName;
-                        }
-                    }
-                }
-                if (claim.AuthStrategyOverridesForCRUD != null && claim.AuthStrategyOverridesForCRUD.Any())
-                {
-                    foreach (var authStrategyOverride in claim.AuthStrategyOverridesForCRUD.Where(x => x != null))
-                    {
-                        var authStrategy = dbAuthStrategies.SingleOrDefault(x => x.AuthorizationStrategyName.Equals(authStrategyOverride.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
-                        if (authStrategy != null)
-                        {
-                            authStrategyOverride.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                            authStrategyOverride.DisplayName = authStrategy.DisplayName;
-                        }
-                    }
-                }
-                if (claim.Children != null && claim.Children.Any())
-                {
-                    ResolveAuthStrategies(claim.Children, securityContext);
-                }
-            }
-        }
     }
 }

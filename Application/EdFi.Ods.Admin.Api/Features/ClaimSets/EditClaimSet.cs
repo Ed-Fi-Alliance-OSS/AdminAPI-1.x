@@ -59,10 +59,11 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 new UpdateResourcesOnClaimSetModel { ClaimSetId = updatedClaimSetId, ResourceClaims = resolvedResourceClaims });
 
             var claimSet = getClaimSetByIdQuery.Execute(updatedClaimSetId);
-            var allResources = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId);
+
             var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
             model.ApplicationsCount = getApplications.ExecuteCount(updatedClaimSetId);
-            model.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
+            model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
+                .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
             return AdminApiResponse<ClaimSetDetailsModel>.Updated(model, "ClaimSet");
         }

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>EdFi.Suite3.Security.DataAccess</id>
+    <version>5.3.43</version>
+    <authors>EdFi.Security.DataAccess</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <copyright>Copyright © 2020 Ed-Fi Alliance, LLC and Contributors</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="EdFi.Suite3.Common" version="5.3.3" exclude="Build,Analyzers" />
+        <dependency id="EntityFramework" version="6.4.4" exclude="Build,Analyzers" />
+        <dependency id="EntityFramework6.Npgsql" version="6.4.1" exclude="Build,Analyzers" />
+        <dependency id="Npgsql" version="4.1.5" exclude="Build,Analyzers" />
+        <dependency id="System.Buffers" version="4.5.1" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.4" exclude="Build,Analyzers" />
+        <dependency id="System.Numerics.Vectors" version="4.5.0" exclude="Build,Analyzers" />
+        <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.7.1" exclude="Build,Analyzers" />
+        <dependency id="System.Threading.Tasks.Extensions" version="4.5.4" exclude="Build,Analyzers" />
+        <dependency id="System.ValueTuple" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

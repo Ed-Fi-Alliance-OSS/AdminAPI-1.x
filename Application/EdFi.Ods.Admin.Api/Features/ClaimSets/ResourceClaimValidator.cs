@@ -21,6 +21,10 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         {
             context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
             context.MessageFormatter.AppendArgument("ResourceClaimName", resourceClaim.Name);
+
+            var dbResourceClaimsAsDict = dbResourceClaims.ToDictionary(x => x.ResourceName.ToLower());
+            var dbAuthStrategiesAsList = dbAuthStrategies.Select(a => a.AuthorizationStrategyName.ToLower()).ToList();
+
             var propertyName = "ResourceClaims";
 
             if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1 )
@@ -36,8 +40,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 context.AddFailure(propertyName, FeatureConstants.ClaimSetResourceClaimWithNoActionMessage);
             }
-            var resource = dbResourceClaims.SingleOrDefault(x => x.ResourceName.Equals(resourceClaim.Name, StringComparison.InvariantCultureIgnoreCase));
-            if (resource == null)
+
+            if (!dbResourceClaimsAsDict.TryGetValue(resourceClaim.Name.ToLower(), out var resource))
             {
                 context.AddFailure(propertyName, FeatureConstants.ClaimSetResourceNotFoundMessage);
             } 
@@ -45,7 +49,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
                 {
-                    if (!dbAuthStrategies.Any(x => x.AuthorizationStrategyName.Equals(defaultAS.AuthStrategyName,StringComparison.InvariantCultureIgnoreCase)))
+                    if (!dbAuthStrategiesAsList.Contains(defaultAS.AuthStrategyName.ToLower()))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
                         context.AddFailure(propertyName, FeatureConstants.ClaimSetAuthStrategyNotFoundMessage);
@@ -56,7 +60,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD.Where(x => x != null))
                 {
-                    if (!dbAuthStrategies.Any(x => x.AuthorizationStrategyName.Equals(authStrategyOverride.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase)))
+                    if (!dbAuthStrategiesAsList.Contains(authStrategyOverride.AuthStrategyName.ToLower()))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
                         context.AddFailure(propertyName, FeatureConstants.ClaimSetAuthStrategyNotFoundMessage);
@@ -68,8 +72,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 foreach (var child in resourceClaim.Children)
                 {
-                    var childResource = dbResourceClaims.FirstOrDefault(x => x.ResourceName.Equals(child.Name, StringComparison.InvariantCultureIgnoreCase));
-                    if (childResource != null)
+                    if (dbResourceClaimsAsDict.TryGetValue(child.Name.ToLower(), out var childResource))
                     {
                         context.MessageFormatter.AppendArgument("ChildResource", childResource.ResourceName);
                         if (childResource.ParentResourceClaimId == null)

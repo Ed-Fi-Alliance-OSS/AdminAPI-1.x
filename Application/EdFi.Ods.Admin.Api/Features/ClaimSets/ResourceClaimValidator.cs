@@ -44,9 +44,9 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}'.\n");
             }
-            if (resourceClaim.DefaultAuthStrategiesForCRUD != null && resourceClaim.DefaultAuthStrategiesForCRUD.Any())
+            if (resourceClaim.DefaultAuthStrategiesForCRUD.Any())
             {
-                foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
+                foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
                 {
                     if (defaultAS.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
                     {
@@ -55,9 +55,9 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                     }
                 }
             }
-            if (resourceClaim.AuthStrategyOverridesForCRUD != null && resourceClaim.AuthStrategyOverridesForCRUD.Any())
+            if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
             {
-                foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD.Where(x => x != null))
+                foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
                 {
                     if (authStrategyOverride.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
                     {

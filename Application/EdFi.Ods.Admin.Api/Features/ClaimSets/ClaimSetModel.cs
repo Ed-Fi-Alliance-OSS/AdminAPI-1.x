@@ -21,7 +21,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
     [SwaggerSchema(Title = "ClaimSetWithResources")]
     public class ClaimSetDetailsModel : ClaimSetModel
     {
-        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+        public List<ResourceClaimModel> ResourceClaims { get; set; } = new();
     }
 
     [SwaggerSchema(Title = "ResourceClaim")]
@@ -32,14 +32,16 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         public bool Create { get; set; }
         public bool Update { get; set; }
         public bool Delete { get; set; }
-        public AuthorizationStrategyModel[]? DefaultAuthStrategiesForCRUD { get; set; }
-        public AuthorizationStrategyModel[]? AuthStrategyOverridesForCRUD { get; set; }
+        public AuthorizationStrategyModel[] DefaultAuthStrategiesForCRUD { get; set; }
+        public AuthorizationStrategyModel[] AuthStrategyOverridesForCRUD { get; set; }
 
         [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
         public List<ResourceClaimModel> Children { get; set; }
         public ResourceClaimModel()
         {
             Children = new List<ResourceClaimModel>();
+            DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategyModel>();
+            AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategyModel>();
         }
     }
 

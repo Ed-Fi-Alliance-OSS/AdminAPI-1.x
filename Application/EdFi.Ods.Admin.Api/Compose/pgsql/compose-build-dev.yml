@@ -14,7 +14,7 @@ services:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
     ports:
       - "443:443"
-      - "88:80"
+      - "80:80"
     container_name: ed-fi-adminapi-gateway
     restart: always
     hostname: nginx

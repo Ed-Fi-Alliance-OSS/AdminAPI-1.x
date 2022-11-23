@@ -18,7 +18,7 @@ COPY ./Application/EdFi.Ods.AdminApp.Management EdFi.Ods.AdminApp.Management/
 WORKDIR /source/EdFi.Ods.Admin.Api
 RUN dotnet build -c Release
 FROM build AS publish
-RUN dotnet publish -c Release --no-build -o /app/EdFi.Ods.Admin.Api
+RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.Admin.Api
 
 #tag aspnet:6.0-alpine
 FROM mcr.microsoft.com/dotnet/aspnet@sha256:5d7911e8485a58ac50eefa09e2cea8f3d59268fd7f1501f72324e37e29d9d6ee
@@ -26,7 +26,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false  
-ENV ASPNETCORE_ENVIRONMENT Development
+ENV ASPNETCORE_ENVIRONMENT Production
 
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.Admin.Api .

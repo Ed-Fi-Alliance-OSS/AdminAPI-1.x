@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using FluentValidation;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets
@@ -15,15 +16,12 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             _duplicateResources = new List<string>();
         }
 
-        public void Validate<T>(IQueryable<Security.DataAccess.Models.ResourceClaim> dbResourceClaims,
-                IQueryable<Security.DataAccess.Models.AuthorizationStrategy> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
-                ValidationContext<T> context, string? claimSetName)
+        public void Validate<T>(Dictionary<string, ResourceClaim> dbResourceClaims,
+            List<string> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+            ValidationContext<T> context, string? claimSetName)
         {
             context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
             context.MessageFormatter.AppendArgument("ResourceClaimName", resourceClaim.Name);
-
-            var dbResourceClaimsAsDict = dbResourceClaims.ToDictionary(x => x.ResourceName.ToLower());
-            var dbAuthStrategiesAsList = dbAuthStrategies.Select(a => a.AuthorizationStrategyName.ToLower()).ToList();
 
             var propertyName = "ResourceClaims";
 
@@ -41,7 +39,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 context.AddFailure(propertyName, FeatureConstants.ClaimSetResourceClaimWithNoActionMessage);
             }
 
-            if (!dbResourceClaimsAsDict.TryGetValue(resourceClaim.Name.ToLower(), out var resource))
+            if (!dbResourceClaims.TryGetValue(resourceClaim.Name!.ToLower(), out var resource))
             {
                 context.AddFailure(propertyName, FeatureConstants.ClaimSetResourceNotFoundMessage);
             } 
@@ -49,7 +47,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
                 {
-                    if (!dbAuthStrategiesAsList.Contains(defaultAS.AuthStrategyName.ToLower()))
+                    if (!dbAuthStrategies.Contains(defaultAS.AuthStrategyName!.ToLower()))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
                         context.AddFailure(propertyName, FeatureConstants.ClaimSetAuthStrategyNotFoundMessage);
@@ -60,7 +58,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD.Where(x => x != null))
                 {
-                    if (!dbAuthStrategiesAsList.Contains(authStrategyOverride.AuthStrategyName.ToLower()))
+                    if (!dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName!.ToLower()))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
                         context.AddFailure(propertyName, FeatureConstants.ClaimSetAuthStrategyNotFoundMessage);
@@ -72,16 +70,16 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 foreach (var child in resourceClaim.Children)
                 {
-                    if (dbResourceClaimsAsDict.TryGetValue(child.Name.ToLower(), out var childResource))
+                    if (dbResourceClaims.TryGetValue(child.Name!.ToLower(), out var childResource))
                     {
-                        context.MessageFormatter.AppendArgument("ChildResource", childResource.ResourceName);
-                        if (childResource.ParentResourceClaimId == null)
+                        context.MessageFormatter.AppendArgument("ChildResource", childResource.Name);
+                        if (childResource.ParentId == 0)
                         {
                             context.AddFailure(propertyName, FeatureConstants.WrongChildResourceMessage);
                         }
-                        else if (childResource.ParentResourceClaimId != resource?.ResourceClaimId)
+                        else if (childResource.ParentId != resource?.Id)
                         {
-                            context.MessageFormatter.AppendArgument("CorrectParentResource", childResource.ParentResourceClaim?.ResourceName);
+                            context.MessageFormatter.AppendArgument("CorrectParentResource", childResource.ParentName);
                             context.AddFailure(propertyName, FeatureConstants.ChildToWrongParentResourceMessage);
                         }
                     }

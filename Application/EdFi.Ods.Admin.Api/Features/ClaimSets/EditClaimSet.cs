@@ -6,8 +6,8 @@
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
@@ -82,10 +82,22 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
         public class Validator : AbstractValidator<Request>
         {
-            private readonly ISecurityContext _securityContext;
-            public Validator(ISecurityContext securityContext)
+            private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
+            private readonly GetAllClaimSetsQuery _getAllClaimSetsQuery;
+
+            public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
+                GetAllClaimSetsQuery getAllClaimSetsQuery,
+                GetResourceClaimsQuery getResourceClaimsQuery,
+                GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
             {
-                _securityContext = securityContext;
+                _getClaimSetByIdQuery = getClaimSetByIdQuery;
+                _getAllClaimSetsQuery = getAllClaimSetsQuery;
+
+                var resourceClaims = getResourceClaimsQuery.Execute()
+                    .ToDictionary(rc => rc.Name.ToLower());
+
+                var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
+                    .Select(a => a.AuthStrategyName).ToList();
 
                 RuleFor(m => m.Id).NotEmpty();
 
@@ -111,8 +123,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                     {
                         foreach (var resourceClaim in claimSet.ResourceClaims)
                         {
-                            resourceClaimValidator.Validate(securityContext.ResourceClaims,
-                                securityContext.AuthorizationStrategies, resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
+                            resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
+                                resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
                         }
                     }
                 });
@@ -120,17 +132,25 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
             private bool BeAnExistingClaimSet(int id)
             {
-                return _securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == id) != null;
+                try
+                {
+                    _getClaimSetByIdQuery.Execute(id);
+                    return true;
+                }
+                catch (AdminAppException)
+                {
+                    return false;
+                }
             }
 
             private bool NameIsChanged(Request model)
             {
-                return _securityContext.ClaimSets.Single(x => x.ClaimSetId == model.Id).ClaimSetName != model.Name;
+                return _getClaimSetByIdQuery.Execute(model.Id).Name != model.Name;
             }
 
             private bool BeAUniqueName(string? name)
             {
-                return !_securityContext.ClaimSets.Any(x => x.ClaimSetName == name);
+                return _getAllClaimSetsQuery.Execute().All(x => x.ClaimSetName != name);
             }
         }
     }

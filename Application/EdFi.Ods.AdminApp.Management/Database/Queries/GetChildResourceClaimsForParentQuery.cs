@@ -21,6 +21,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
 
         public IEnumerable<ResourceClaim> Execute(int parentResourceClaimId)
         {
+            var parentResourceClaim = _securityContext.ResourceClaims.SingleOrDefault(
+                    rc => rc.ResourceClaimId == parentResourceClaimId);
+
             var childResourcesForParent = _securityContext.ResourceClaims
                 .Where(x => x.ParentResourceClaimId == parentResourceClaimId).ToList();
             return childResourcesForParent
@@ -28,11 +31,12 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
                 {
                     Name = x.ResourceName,
                     Id = x.ResourceClaimId,
-                    ParentId = parentResourceClaimId
+                    ParentId = parentResourceClaimId,
+                    ParentName = parentResourceClaim?.ResourceName,
                 })
                 .Distinct()
                 .OrderBy(x => x.Name)
                 .ToList();
-        } 
+        }
     }
 }

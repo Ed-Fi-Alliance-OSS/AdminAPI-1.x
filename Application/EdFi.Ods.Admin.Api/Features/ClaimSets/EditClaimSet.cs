@@ -69,7 +69,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         }
 
         [SwaggerSchema(Title = "EditClaimSetRequest")]
-        public class Request : IEditClaimSetAndResourcesModel
+        public class Request
         {
             [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
             public int Id { get; set; }

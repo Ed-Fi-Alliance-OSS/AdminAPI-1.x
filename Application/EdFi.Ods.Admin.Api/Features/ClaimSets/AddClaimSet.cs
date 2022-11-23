@@ -53,7 +53,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         }
 
         [SwaggerSchema(Title = "AddClaimSetRequest")]
-        public class Request : IAddClaimSetModel
+        public class Request
         {
             [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
             public string? Name { get; set; }

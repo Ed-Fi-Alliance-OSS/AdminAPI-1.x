@@ -57,19 +57,6 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         public bool IsInheritedFromParent { get; set; }
     }
 
-    public interface IAddClaimSetModel
-    {
-        string? Name { get; set; }
-        List<ResourceClaimModel>? ResourceClaims { set; get; }
-    }
-
-    public interface IEditClaimSetAndResourcesModel
-    {
-        int Id { get; set; }
-        string? Name { get; set; }
-        List<ResourceClaimModel>? ResourceClaims { get; set; }
-    }
-
     public class EditClaimSetModel : IEditClaimSetModel
     {
         public string? ClaimSetName { get; set; }

@@ -8,7 +8,6 @@ using Profile = AutoMapper.Profile;
 using EdFi.Ods.Admin.Api.Features.Vendors;
 using EdFi.Ods.Admin.Api.Features.Applications;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
-using EdFi.Security.DataAccess.Models;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure
@@ -44,20 +43,10 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
                 .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
 
-
-            CreateMap<AuthorizationStrategy, AdminApp.Management.ClaimSetEditor.AuthorizationStrategy>()
-                .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
-                .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
-                .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
-
             CreateMap<AdminApp.Management.ClaimSetEditor.ClaimSet, ClaimSetDetailsModel>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.IsSystemReserved, opt => opt.MapFrom(src => !src.IsEditable));
-
-            CreateMap<ClaimSet, ClaimSetModel>()
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ClaimSetId))
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ClaimSetName));
 
             CreateMap<AdminApp.Management.ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
@@ -90,8 +79,6 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
                 .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
                 .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
-
-
         }
 
         private string ToCommaSeparated(ICollection<VendorNamespacePrefix> vendorNamespacePrefixes)

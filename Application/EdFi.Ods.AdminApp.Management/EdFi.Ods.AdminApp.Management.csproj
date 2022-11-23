@@ -39,4 +39,11 @@
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdFi.Security.DataAccess">
+      <HintPath>LegacySupport\edfi.suite3.security.dataaccess\5.3.43\lib\netstandard2.1\EdFi.Security.DataAccess.dll</HintPath>
+      <Aliases>SecurityDataAccess53</Aliases>
+    </Reference>
+  </ItemGroup>
 </Project>

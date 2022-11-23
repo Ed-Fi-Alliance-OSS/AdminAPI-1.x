@@ -11,15 +11,6 @@ envsubst < /app/appsettings.Docker.json > /app/temp.json
 
 mv /app/temp.json /app/appsettings.json
 
-until PGPASSWORD=$POSTGRES_PASSWORD psql -h $ADMIN_POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c '\q';
-do
-  >&2 echo "Admin Postgres is unavailable - sleeping"
-  sleep 10
-done
-
->&2 echo "Postgres is up - executing command"
-exec $cmd
-
 cp /ssl/server.crt /usr/local/share/ca-certificates/
 update-ca-certificates
 

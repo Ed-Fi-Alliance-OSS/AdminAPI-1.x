@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
@@ -21,7 +22,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
-        public Task<IResult> Handle(DeleteClaimSetCommand deleteClaimSetCommand, GetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
+        public Task<IResult> Handle(DeleteClaimSetCommand deleteClaimSetCommand, [FromServices]GetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
         {
             CheckClaimSetExists(id, getClaimSetByIdQuery);
             CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);

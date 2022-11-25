@@ -24,7 +24,7 @@ public class GetAllAuthorizationStrategiesQueryTests : SecurityDataTestBase
             var query = new GetAllAuthorizationStrategiesQuery(securityContext);
             var resultNames = query.Execute().Select(x => x.AuthStrategyName).ToList();
 
-            resultNames.Count.ShouldBeGreaterThan(2);
+            resultNames.Count.ShouldBe(2);
 
             resultNames.ShouldContain("NamespaceBased");
             resultNames.ShouldContain("NoFurtherAuthorizationRequired");

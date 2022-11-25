@@ -50,6 +50,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
                 results.All(x => x.Update == false).ShouldBe(true);
                 results.All(x => x.Read == false).ShouldBe(true);
                 results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
+                results.All(x => x.ParentName == null).ShouldBe(true);
                 results.All(x => x.Children.Count == 0).ShouldBe(true);
             });
         }

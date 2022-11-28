@@ -102,7 +102,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
             private bool BeAUniqueName(string? name)
             {
-                return _getAllClaimSetsQuery.Execute().All(x => x.ClaimSetName != name);
+                return _getAllClaimSetsQuery.Execute().All(x => x.Name != name);
             }
         }
     }

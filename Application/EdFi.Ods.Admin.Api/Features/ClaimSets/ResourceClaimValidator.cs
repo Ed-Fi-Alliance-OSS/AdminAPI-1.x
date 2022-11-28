@@ -79,12 +79,12 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                             context.MessageFormatter.AppendArgument("ChildResource", childResource.Name);
                             if (childResource.ParentId == 0)
                             {
-                            context.AddFailure(propertyName, "'{ChildResource}' can not be added as a child resource.");
+                                context.AddFailure(propertyName, "'{ChildResource}' can not be added as a child resource.");
                             }
                             else if (!resources.Select(x => x.Id).Contains(childResource.ParentId))
                             {
                                 context.MessageFormatter.AppendArgument("CorrectParentResource", childResource.ParentName);
-                            context.AddFailure(propertyName, "Child resource: '{ChildResource}' added to the wrong parent resource. Correct parent resource is: '{CorrectParentResource}'");
+                                context.AddFailure(propertyName, "Child resource: '{ChildResource}' added to the wrong parent resource. Correct parent resource is: '{CorrectParentResource}'");
                             }
                         }
                     }

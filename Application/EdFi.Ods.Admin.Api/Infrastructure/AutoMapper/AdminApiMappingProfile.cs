@@ -9,7 +9,6 @@ using EdFi.Ods.Admin.Api.Features.Vendors;
 using EdFi.Ods.Admin.Api.Features.Applications;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
-using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure
 {
@@ -49,9 +48,9 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.IsSystemReserved, opt => opt.MapFrom(src => !src.IsEditable));
 
-            CreateMap<ClaimSet, ClaimSetModel>()
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ClaimSetId))
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ClaimSetName));
+            CreateMap<AdminApp.Management.ClaimSetEditor.ClaimSet, ClaimSetModel>()
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name));
 
             CreateMap<AdminApp.Management.ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))

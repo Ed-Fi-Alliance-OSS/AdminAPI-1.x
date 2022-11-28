@@ -22,7 +22,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
-        public Task<IResult> Handle(DeleteClaimSetCommand deleteClaimSetCommand, [FromServices]GetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
+        public Task<IResult> Handle(DeleteClaimSetCommand deleteClaimSetCommand, [FromServices]IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
         {
             CheckClaimSetExists(id, getClaimSetByIdQuery);
             CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);
@@ -39,7 +39,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
         }
 
-        private void CheckClaimSetExists(int id, GetClaimSetByIdQuery query)
+        private void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
         {
             try
             {

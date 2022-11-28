@@ -66,13 +66,13 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             private GetAllClaimSetsQuery _getAllClaimSetsQuery;
 
             public Validator(GetAllClaimSetsQuery getAllClaimSetsQuery,
-                GetResourceClaimsQuery getResourceClaimsQuery,
+                GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
                 GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
             {
                 _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
-                var resourceClaims = getResourceClaimsQuery.Execute()
-                    .ToDictionary(rc => rc.Name.ToLower());
+                var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
+                    .ToLookup(rc => rc.Name.ToLower());
 
                 var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
                     .Select(a => a.AuthStrategyName).ToList();

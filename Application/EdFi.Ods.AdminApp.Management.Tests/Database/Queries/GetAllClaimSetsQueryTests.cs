@@ -38,7 +38,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var claimSetNames = Scoped<ISecurityContext, string[]>(securityContext =>
             {
                 var query = new GetAllClaimSetsQuery(securityContext);
-                return query.Execute().Select(x => x.ClaimSetName).ToArray();
+                return query.Execute().Select(x => x.Name).ToArray();
             });
 
             claimSetNames.ShouldContain(claimSet1.ClaimSetName);

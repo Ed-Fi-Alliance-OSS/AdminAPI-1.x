@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Models;
+using ClaimSet = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
@@ -22,9 +22,14 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
         public IEnumerable<ClaimSet> Execute()
         {
             return _securityContext.ClaimSets
+                .Select(x => new ClaimSet
+                {
+                    Id = x.ClaimSetId,
+                    Name = x.ClaimSetName
+                })
                 .Distinct()
-                .OrderBy(x => x.ClaimSetName)
+                .OrderBy(x => x.Name)
                 .ToList();
-        } 
+        }
     }
 }

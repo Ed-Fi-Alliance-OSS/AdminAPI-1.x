@@ -5,23 +5,21 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
-using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
     [TestFixture]
-    public class GetResourceClaimsQueryTests : SecurityDataTestBase
+    public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
     {
         [Test]
-        public void ShouldGetResourceClaims()
+        public void ShouldGetResourceClaimsAsFlatList()
         {
             var testApplication = new Application
             {
@@ -35,7 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             Management.ClaimSetEditor.ResourceClaim[] results = null;
             Scoped<ISecurityContext>(securityContext =>
             {
-                var query = new GetResourceClaimsQuery(securityContext);
+                var query = new GetResourceClaimsAsFlatListQuery(securityContext);
 
                 results = query.Execute().ToArray();
             });
@@ -56,7 +54,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
         }
 
         [Test]
-        public void ShouldGetAlphabeticallySortedSelectListForResourceClaims()
+        public void ShouldGetAlphabeticallySortedFlatListForResourceClaims()
         {
             var testApplication = new Application
             {
@@ -71,24 +69,19 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var childResourceNames = testResourceClaims.Where(x => x.ParentResourceClaim != null)
                 .OrderBy(x => x.ResourceName).Select(x => x.ResourceName).ToList();
 
-            List<SelectListItem> results = null;
+            List<Management.ClaimSetEditor.ResourceClaim> results = null;
             Scoped<ISecurityContext>(securityContext =>
             {
-                var query = new GetResourceClaimsQuery(securityContext);
+                var query = new GetResourceClaimsAsFlatListQuery(securityContext);
 
-                var allResourceClaims = query.Execute().ToList();
-
-                results = GetSelectListForResourceClaims(allResourceClaims);
-
-                // Removing "Please select a value" SelectListItem from the results
-                results.RemoveAt(0);
+                results = query.Execute().ToList();
             });
 
             Scoped<ISecurityContext>(securityContext =>
             {
                 results.Count.ShouldBe(testResourceClaims.Count);
-                results.Where(x => x.Group.Name == "Groups").Select(x => x.Text).ToList().ShouldBe(parentResourceNames);
-                results.Where(x => x.Group.Name == "Resources").Select(x => x.Text).ToList().ShouldBe(childResourceNames);
+                results.Where(x => x.ParentId == 0).Select(x => x.Name).ToList().ShouldBe(parentResourceNames);
+                results.Where(x => x.ParentId != 0).Select(x => x.Name).ToList().ShouldBe(childResourceNames);
             });
         }
 

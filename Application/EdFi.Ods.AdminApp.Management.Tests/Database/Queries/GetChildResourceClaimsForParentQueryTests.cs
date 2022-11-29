@@ -52,6 +52,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
                 results.All(x => x.Update == false).ShouldBe(true);
                 results.All(x => x.Read == false).ShouldBe(true);
                 results.All(x => x.ParentId.Equals(testParentResource.ResourceClaimId)).ShouldBe(true);
+                results.All(x => x.ParentName.Equals(testParentResource.ResourceName)).ShouldBe(true);
             });
         }
     }

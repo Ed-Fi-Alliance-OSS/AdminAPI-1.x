@@ -6,9 +6,9 @@
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
@@ -22,9 +22,9 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 .BuildForVersions(AdminApiVersions.V1);
         }
 
-        public Task<IResult> Handle(DeleteClaimSetCommand deleteClaimSetCommand, ISecurityContext context, IGetApplicationsByClaimSetIdQuery getApplications, int id)
+        public Task<IResult> Handle(DeleteClaimSetCommand deleteClaimSetCommand, [FromServices]IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
         {
-            CheckClaimSetExists(id, context);
+            CheckClaimSetExists(id, getClaimSetByIdQuery);
             CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);
 
             try
@@ -39,11 +39,13 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
         }
 
-        private void CheckClaimSetExists(int id, ISecurityContext context)
+        private void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
         {
-            var claimSetToDelete = context.ClaimSets.SingleOrDefault(x => x.ClaimSetId == id);
-
-            if (claimSetToDelete == null)
+            try
+            {
+                query.Execute(id);
+            }
+            catch (AdminAppException)
             {
                 throw new NotFoundException<int>("claimset", id);
             }

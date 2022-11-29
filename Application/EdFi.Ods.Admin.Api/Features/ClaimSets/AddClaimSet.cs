@@ -6,7 +6,7 @@
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -27,8 +27,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
             IGetApplicationsByClaimSetIdQuery getApplications,
+            IAuthStrategyResolver strategyResolver,
             IMapper mapper,
-            ISecurityContext securityContext,
             Request request)
         {
             await validator.GuardAsync(request);
@@ -37,8 +37,10 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 ClaimSetName = request.Name
             });
 
-            request.ResourceClaims?.ResolveAuthStrategies(securityContext);
-            addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, mapper.Map<List<ResourceClaim>>(request.ResourceClaims));
+            var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
+            var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
+
+            addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, resolvedResourceClaims);
 
             var claimSet = getClaimSetByIdQuery.Execute(addedClaimSetId);
             var allResources = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId);
@@ -61,10 +63,20 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
         public class Validator : AbstractValidator<Request>
         {
-            private readonly ISecurityContext _securityContext;
-            public Validator(ISecurityContext securityContext)
+            private GetAllClaimSetsQuery _getAllClaimSetsQuery;
+
+            public Validator(GetAllClaimSetsQuery getAllClaimSetsQuery,
+                GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+                GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
             {
-                _securityContext = securityContext;
+                _getAllClaimSetsQuery = getAllClaimSetsQuery;
+
+                var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
+                    .ToLookup(rc => rc.Name.ToLower());
+
+                var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
+                    .Select(a => a.AuthStrategyName).ToList();
+
                 RuleFor(m => m.Name).NotEmpty()
                     .Must(BeAUniqueName)
                     .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage);
@@ -81,8 +93,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                     {
                         foreach (var resourceClaim in claimSet.ResourceClaims)
                         {
-                            resourceClaimValidator.Validate(securityContext.ResourceClaims,
-                                securityContext.AuthorizationStrategies, resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
+                            resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
+                                resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
                         }
                     }
                 });
@@ -90,7 +102,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
             private bool BeAUniqueName(string? name)
             {
-                return !_securityContext.ClaimSets.Any(x => x.ClaimSetName == name);
+                return _getAllClaimSetsQuery.Execute().All(x => x.Name != name);
             }
         }
     }

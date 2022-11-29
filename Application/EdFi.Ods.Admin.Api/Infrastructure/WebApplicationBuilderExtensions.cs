@@ -10,6 +10,7 @@ using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
@@ -24,7 +25,7 @@ public static class WebApplicationBuilderExtensions
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
         var executingAssembly = Assembly.GetExecutingAssembly();
-        webApplicationBuilder.Services.AddAutoMapper(executingAssembly);
+        webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
         webApplicationBuilder.Services.AddScoped<InstanceContext>();
 
         foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())

@@ -33,7 +33,8 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
                     {
                         Id = child.ResourceClaimId,
                         Name = child.ResourceName,
-                        ParentId = parentResource.ResourceClaimId
+                        ParentId = parentResource.ResourceClaimId,
+                        ParentName = parentResource.ResourceName,
                     }).ToList(),
                     Name = parentResource.ResourceName,
                     Id = parentResource.ResourceClaimId

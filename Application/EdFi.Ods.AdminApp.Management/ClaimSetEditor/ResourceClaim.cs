@@ -12,6 +12,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
     {
         public int Id { get; set; }
         public int ParentId { get; set; }
+        public string ParentName { get; set; }
         public string Name { get; set; }
         public bool Read { get; set; }
         public bool Create { get; set; }

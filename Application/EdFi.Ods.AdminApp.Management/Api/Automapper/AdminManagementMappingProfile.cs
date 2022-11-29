@@ -10,6 +10,7 @@ using LocalEducationAgency = EdFi.Ods.AdminApp.Management.Api.Models.LocalEducat
 using School = EdFi.Ods.AdminApp.Management.Api.Models.School;
 using EdFi.Ods.AdminApp.Management.Api.DomainModels;
 using EdFi.Ods.AdminApp.Management.Api.Models;
+using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApp.Management.Api.Automapper
 {
@@ -161,6 +162,11 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForCtorParam("postSecondaryInstitutionLevelDescriptor", opt => opt.MapFrom(src => src.PostSecondaryInstitutionLevel))
                 .ForCtorParam("administrativeFundingControlDescriptor", opt => opt.MapFrom(src => src.AdministrativeFundingControl))
                 .ForCtorParam("nameOfInstitution", opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<AuthorizationStrategy, ClaimSetEditor.AuthorizationStrategy>()
+                .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
+                .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
+                .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
 
             List<EdFiEducationOrganizationAddress> AddressResolver(EducationOrganization source,
                 ResolutionContext context)

@@ -5,27 +5,29 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Security.DataAccess.Contexts;
-using ClaimSet = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
-    public class GetAllClaimSetsQuery
+    public class GetResourceClaimsAsFlatListQuery
     {
         private readonly ISecurityContext _securityContext;
 
-        public GetAllClaimSetsQuery(ISecurityContext securityContext)
+        public GetResourceClaimsAsFlatListQuery(ISecurityContext securityContext)
         {
             _securityContext = securityContext;
         }
 
-        public IEnumerable<ClaimSet> Execute()
+        public IEnumerable<ResourceClaim> Execute()
         {
-            return _securityContext.ClaimSets
-                .Select(x => new ClaimSet
+            return _securityContext.ResourceClaims
+                .Select(x => new ResourceClaim
                 {
-                    Id = x.ClaimSetId,
-                    Name = x.ClaimSetName
+                    Id = x.ResourceClaimId,
+                    Name = x.ResourceName,
+                    ParentId = x.ParentResourceClaimId ?? 0,
+                    ParentName = x.ParentResourceClaim.ResourceName
                 })
                 .Distinct()
                 .OrderBy(x => x.Name)

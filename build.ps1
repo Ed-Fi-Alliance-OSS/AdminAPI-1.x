@@ -535,7 +535,7 @@ function RunAdminApiDevDockerContainer {
 }
 
 function RunAdminApiDevDockerCompose {
-    &docker compose -f "$solutionRoot/EdFi.Ods.Admin.Api/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.Admin.Api/E2E Tests/gh-action-setup/.automation.env" up -d
+    &docker compose -f "$solutionRoot/EdFi.Ods.Admin.Api/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.Admin.Api/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
 }
 
 function Invoke-AdminAppDockerDeploy {

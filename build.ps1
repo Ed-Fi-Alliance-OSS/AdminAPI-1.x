@@ -73,7 +73,9 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "Package", "PackageApi", "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToAdminAppDockerContainer", "BuildAndDeployToAdminApiDockerContainer", "PopulateGoogleAnalyticsAppSettings", "Run")]
+    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "Package", "PackageApi"
+    , "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToAdminAppDockerContainer", "BuildAndDeployToAdminApiDockerContainer"
+    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "PopulateGoogleAnalyticsAppSettings", "Run")]
     $Command = "Build",
 
     # Assembly and package version number for AdminApp Web. The current package number is
@@ -524,6 +526,18 @@ function RestartAdminApiContainer {
     &docker restart adminapi
 }
 
+function BuildAdminApiDevDockerImage {
+    &docker build -t adminapi-dev --no-cache -f "$solutionRoot/EdFi.Ods.Admin.Api/dev.Dockerfile" .
+}
+
+function RunAdminApiDevDockerContainer {
+    &docker run --env-file "$solutionRoot/EdFi.Ods.Admin.Api/.env" -p 80:80 -v "$solutionRoot/EdFi.Ods.Admin.Api/Docker/ssl:/ssl/" adminapi-dev
+}
+
+function RunAdminApiDevDockerCompose {
+    &docker compose -f "$solutionRoot/EdFi.Ods.Admin.Api/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.Admin.Api/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
+}
+
 function Invoke-AdminAppDockerDeploy {
    Invoke-Step { UpdateAppSettingsForAdminAppDocker }
    Invoke-Step { CopyLatestFilesToAdminAppContainer }
@@ -534,6 +548,18 @@ function Invoke-AdminApiDockerDeploy {
    Invoke-Step { UpdateAppSettingsForAdminApiDocker }
    Invoke-Step { CopyLatestFilesToAdminApiContainer }
    Invoke-Step { RestartAdminApiContainer }
+}
+
+function Invoke-BuildAdminApiDevDockerImage {
+   Invoke-Step { BuildAdminApiDevDockerImage }
+}
+
+function Invoke-RunAdminApiDevDockerContainer {
+   Invoke-Step { RunAdminApiDevDockerContainer }
+}
+
+function Invoke-RunAdminApiDevDockerCompose {
+   Invoke-Step { RunAdminApiDevDockerCompose }
 }
 
 Invoke-Main {
@@ -569,6 +595,16 @@ Invoke-Main {
         BuildAndDeployToAdminApiDockerContainer {
             Invoke-Build
             Invoke-AdminApiDockerDeploy
+        }
+        BuildAndRunAdminApiDevDocker{
+            Invoke-BuildAdminApiDevDockerImage
+            Invoke-RunAdminApiDevDockerContainer
+        }
+        RunAdminApiDevDockerContainer{
+            Invoke-RunAdminApiDevDockerContainer
+        }
+        RunAdminApiDevDockerCompose{
+            Invoke-RunAdminApiDevDockerCompose
         }
         PopulateGoogleAnalyticsAppSettings {
             Update-AppSettingsToAddGoogleAnalyticsMeasurementId

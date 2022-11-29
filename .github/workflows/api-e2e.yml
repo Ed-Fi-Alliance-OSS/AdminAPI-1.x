@@ -27,7 +27,7 @@ jobs:
         run: cp -r ../../eng/test-certs/ssl ./Docker
       - name: Run Admin API
         run: |
-          docker-compose -f './Compose/pgsql/compose-build.yml' --env-file './E2E Tests/gh-action-setup/.automation.env' up -d
+          docker-compose -f './Compose/pgsql/compose-build-dev.yml' --env-file './E2E Tests/gh-action-setup/.automation.env' up -d
       - name: Verify ODS Health
         run: |
           chmod +x './E2E Tests/gh-action-setup/inspect.sh'

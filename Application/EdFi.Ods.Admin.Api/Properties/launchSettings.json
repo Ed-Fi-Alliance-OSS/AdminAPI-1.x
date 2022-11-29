@@ -36,6 +36,16 @@
         "ENABLESWAGGER": "true"
       }
     },
+    "EdFi.Ods.Admin.Api (Docker)": {
+      "commandName": "Docker",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "httpPort": 51803,
+      "useSSL": true,
+      "sslPort": 44360,
+      "DockerfileRunArguments": "adminapi-dev"
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

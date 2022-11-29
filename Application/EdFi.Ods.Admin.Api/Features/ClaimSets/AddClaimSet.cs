@@ -43,16 +43,17 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, resolvedResourceClaims);
 
             var claimSet = getClaimSetByIdQuery.Execute(addedClaimSetId);
-            var allResources = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId);
+
             var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
             model.ApplicationsCount = getApplications.ExecuteCount(addedClaimSetId);
-            model.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
+            model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
+                .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
             return AdminApiResponse<ClaimSetDetailsModel>.Created(model, "ClaimSet", $"/claimsets/{addedClaimSetId}");
         }
 
         [SwaggerSchema(Title = "AddClaimSetRequest")]
-        public class Request : IAddClaimSetModel
+        public class Request
         {
             [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
             public string? Name { get; set; }

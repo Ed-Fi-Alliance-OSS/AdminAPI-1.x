@@ -30,39 +30,39 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 if (_duplicateResources != null && resourceClaim.Name != null && !_duplicateResources.Contains(resourceClaim.Name))
                 {
                     _duplicateResources.Add(resourceClaim.Name);
-                    context.AddFailure(propertyName, FeatureConstants.ClaimSetDuplicateResourceMessage);
+                    context.AddFailure(propertyName, "Only unique resource claims can be added. The following is a duplicate resource: '{ResourceClaimName}'");
                 }
             }
 
             if(!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
             {
-                context.AddFailure(propertyName, FeatureConstants.ClaimSetResourceClaimWithNoActionMessage);
+                context.AddFailure(propertyName, "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'");
             }
 
             var resources = dbResourceClaims[resourceClaim.Name!.ToLower()].ToList();
             if (!resources.Any())
             {
-                context.AddFailure(propertyName, FeatureConstants.ClaimSetResourceNotFoundMessage);
-            } 
-            if (resourceClaim.DefaultAuthStrategiesForCRUD != null && resourceClaim.DefaultAuthStrategiesForCRUD.Any())
+                context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}'.\n");
+            }
+            if (resourceClaim.DefaultAuthStrategiesForCRUD.Any())
             {
-                foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
+                foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
                 {
-                    if (defaultAS.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
+                    if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
-                        context.AddFailure(propertyName, FeatureConstants.ClaimSetAuthStrategyNotFoundMessage);
+                        context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
                     }
                 }
             }
-            if (resourceClaim.AuthStrategyOverridesForCRUD != null && resourceClaim.AuthStrategyOverridesForCRUD.Any())
+            if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
             {
-                foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD.Where(x => x != null))
+                foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
                 {
-                    if (authStrategyOverride.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
+                    if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
-                        context.AddFailure(propertyName, FeatureConstants.ClaimSetAuthStrategyNotFoundMessage);
+                        context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
                     }
                 }
             }
@@ -79,12 +79,12 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                             context.MessageFormatter.AppendArgument("ChildResource", childResource.Name);
                             if (childResource.ParentId == 0)
                             {
-                                context.AddFailure(propertyName, FeatureConstants.WrongChildResourceMessage);
+                                context.AddFailure(propertyName, "'{ChildResource}' can not be added as a child resource.");
                             }
                             else if (!resources.Select(x => x.Id).Contains(childResource.ParentId))
                             {
                                 context.MessageFormatter.AppendArgument("CorrectParentResource", childResource.ParentName);
-                                context.AddFailure(propertyName, FeatureConstants.ChildToWrongParentResourceMessage);
+                                context.AddFailure(propertyName, "Child resource: '{ChildResource}' added to the wrong parent resource. Correct parent resource is: '{CorrectParentResource}'");
                             }
                         }
                     }

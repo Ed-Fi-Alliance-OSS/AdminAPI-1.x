@@ -13,7 +13,6 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.Global;
-using EdFi.Security.DataAccess.Models;
 using Application = EdFi.Admin.DataAccess.Models.Application;
 using Profile = AutoMapper.Profile;
 

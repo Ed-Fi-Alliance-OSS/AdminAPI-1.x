@@ -12,13 +12,23 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using System.Collections.Generic;
+using AutoMapper;
 using EdFi.Security.DataAccess.Contexts;
+using Moq;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTestBase
     {
+        private Mock<IMapper> _mockMapper;
+
+        [SetUp]
+        public void Init()
+        {
+            _mockMapper = new Mock<IMapper>();
+        }
+
         [Test]
         public void ShouldOverrideAuthorizationStrategiesForParentResourcesOnClaimSet()
         {
@@ -179,7 +189,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new OverrideDefaultAuthorizationStrategyModelValidator(securityContext);
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, _mockMapper.Object);
+
+                var validator = new OverrideDefaultAuthorizationStrategyModelValidator(getResourcesByClaimSetIdQuery);
                 var validationResults = validator.Validate(invalidOverrideModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");

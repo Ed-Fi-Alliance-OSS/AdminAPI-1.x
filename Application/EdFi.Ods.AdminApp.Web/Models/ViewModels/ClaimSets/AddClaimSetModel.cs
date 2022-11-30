@@ -5,7 +5,7 @@
 
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
@@ -17,11 +17,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
     public class AddClaimSetModelValidator : AbstractValidator<AddClaimSetModel>
     {
-        private readonly ISecurityContext _securityContext;
+        private GetAllClaimSetsQuery _getAllClaimSetsQuery;
 
-        public AddClaimSetModelValidator(ISecurityContext securityContext)
+        public AddClaimSetModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery)
         {
-            _securityContext = securityContext;
+            _getAllClaimSetsQuery = getAllClaimSetsQuery;
+
             RuleFor(m => m.ClaimSetName).NotEmpty()
                 .Must(BeAUniqueName)
                 .WithMessage("A claim set with this name already exists in the database. Please enter a unique name.");
@@ -33,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
         private bool BeAUniqueName(string newName)
         {
-            return !_securityContext.ClaimSets.Any(x => x.ClaimSetName == newName);
+            return _getAllClaimSetsQuery.Execute().All(x => x.Name != newName);
         }
     }
 }

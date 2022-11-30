@@ -3,13 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Models;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Models;
+
+using SecurityResourceClaim = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ResourceClaim;
+using SecurityAuthorizationStrategy = SecurityDataAccess53::EdFi.Security.DataAccess.Models.AuthorizationStrategy;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -95,7 +100,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             return parentResources;
         }
 
-        private Dictionary<int, AuthorizationStrategy[]> GetDefaultAuthStrategies(IReadOnlyCollection<Security.DataAccess.Models.ResourceClaim> resourceClaims)
+        private Dictionary<int, AuthorizationStrategy[]> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims)
         {
             var resultDictionary = new Dictionary<int, AuthorizationStrategy[]>();
 
@@ -154,7 +159,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         x.Action.ActionName == Action.Delete.Value)?.AuthorizationStrategy;
                     actions = AddStrategyToChildResource(deleteDefaultStrategy, Action.Delete);
 
-                    List<AuthorizationStrategy> AddStrategyToChildResource(Security.DataAccess.Models.AuthorizationStrategy defaultStrategy, Action action)
+                    List<AuthorizationStrategy> AddStrategyToChildResource(SecurityAuthorizationStrategy defaultStrategy, Action action)
                     {
                         if (defaultStrategy == null)
                         {

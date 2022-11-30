@@ -3,10 +3,14 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+
 using System.Data.Entity;
 using System.Linq;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Models;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Models;
+
+using SecurityClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -21,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
         public int Execute(ICopyClaimSetModel claimSet)
         {
-            var newClaimSet = new Security.DataAccess.Models.ClaimSet
+            var newClaimSet = new SecurityClaimSet
             {
                 ClaimSetName = claimSet.Name,
                 Application = _context.Applications.Single()

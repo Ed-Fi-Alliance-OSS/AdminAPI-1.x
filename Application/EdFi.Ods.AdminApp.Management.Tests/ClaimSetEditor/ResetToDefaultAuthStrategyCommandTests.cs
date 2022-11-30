@@ -4,10 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
+using AutoMapper;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using EdFi.Security.DataAccess.Contexts;
+using Moq;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -18,6 +20,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
     [TestFixture]
     public class ResetToDefaultAuthStrategyCommandTests : SecurityDataTestBase
     {
+        private Mock<IMapper> _mockMapper;
+
+        [SetUp]
+        public void Init()
+        {
+            _mockMapper = new Mock<IMapper>();
+        }
+
         [Test]
         public void ShouldResetAuthorizationStrategiesForParentResourcesOnClaimSet()
         {
@@ -39,7 +49,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testResourceToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
 
             var resultResourceClaimBeforeOverride =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim>(
                     query => query.AllResources(testClaimSet.ClaimSetId)
                         .Single(x => x.Id == testResourceToEdit.ResourceClaimId));
 
@@ -53,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     .AuthorizationStrategyId);
 
             var resultResourceClaimAfterOverride =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim>(
                     query => query.AllResources(testClaimSet.ClaimSetId)
                         .Single(x => x.Id == testResourceToEdit.ResourceClaimId));
 
@@ -78,7 +88,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
 
             var resultResourceClaimAfterReset =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim>(
                     query => query.AllResources(testClaimSet.ClaimSetId)
                         .Single(x => x.Id == testResourceToEdit.ResourceClaimId));
             resultResourceClaimAfterReset.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
@@ -112,7 +122,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 x.ParentResourceClaimId == testParentResource.ResourceClaimId);
 
             var resultParentResource =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim>(
                     query => query.AllResources(testClaimSet.ClaimSetId)
                         .Single(x => x.Id == testParentResource.ResourceClaimId));
             var resultResourceBeforeOverride =
@@ -128,7 +138,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     .AuthorizationStrategyId);
 
             resultParentResource =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim>(
                     query => query.AllResources(testClaimSet.ClaimSetId)
                         .Single(x => x.Id == testParentResource.ResourceClaimId));
             var resultResourceClaimAfterOverride = resultParentResource.Children.Single(x => x.Id == testChildResourceToEdit.ResourceClaimId);
@@ -153,7 +163,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
 
             resultParentResource =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim>(
                     query => query.AllResources(testClaimSet.ClaimSetId)
                         .Single(x => x.Id == testParentResource.ResourceClaimId));
             var resultResourceClaimAfterReset = resultParentResource.Children.Single(x => x.Id == testChildResourceToEdit.ResourceClaimId);
@@ -201,7 +211,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new ResetToDefaultAuthStrategyModelValidator(securityContext);
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, _mockMapper.Object);
+
+                var validator = new ResetToDefaultAuthStrategyModelValidator(getResourcesByClaimSetIdQuery);
                 var validationResults = validator.Validate(invalidResetModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");

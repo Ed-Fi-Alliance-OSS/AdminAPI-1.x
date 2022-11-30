@@ -84,7 +84,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             TestContext.Dispose();
             SetupContext.Dispose();
         }
-        
+
         protected void Save(params object[] entities)
         {
             foreach (var entity in entities)

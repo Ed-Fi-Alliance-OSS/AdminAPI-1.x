@@ -59,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         {
                             "ParentId",
                             "Id"
-                        });                        
+                        });
                         return jsonObject;
                     }).ToList();
                 sharingClaimSets.Add(sharingClaimSet);

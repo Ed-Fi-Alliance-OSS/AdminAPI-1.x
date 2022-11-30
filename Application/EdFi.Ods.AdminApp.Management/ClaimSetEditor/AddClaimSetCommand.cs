@@ -30,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             };
             _context.ClaimSets.Add(newClaimSet);
             _context.SaveChanges();
-       
+
             return newClaimSet.ClaimSetId;
         }
     }

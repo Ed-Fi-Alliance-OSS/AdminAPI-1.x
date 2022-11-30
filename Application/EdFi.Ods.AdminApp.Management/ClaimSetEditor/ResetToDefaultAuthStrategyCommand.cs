@@ -21,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         }
 
         public void Execute(IResetToDefaultAuthStrategyModel model)
-        {         
+        {
             var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaims
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)

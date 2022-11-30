@@ -89,7 +89,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             {
                 ApplicationName = $"Test Application {DateTime.Now:O}"
             };
-            Save(testApplication);           
+            Save(testApplication);
 
             var newClaimSet = new AddClaimSetModel { ClaimSetName = "ThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255Characters" };
 

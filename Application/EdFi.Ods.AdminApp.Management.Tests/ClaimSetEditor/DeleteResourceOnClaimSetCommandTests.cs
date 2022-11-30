@@ -50,7 +50,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 testResources.Count(x => x.ResourceClaim.ParentResourceClaim == null);
 
             var testResourceToDelete = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
-            
+
             var deleteResourceOnClaimSetModel = new DeleteClaimSetResourceModel
             {
                 ClaimSetId = testClaimSet.ClaimSetId,

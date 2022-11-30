@@ -44,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 
             SetupContext.SaveChanges();
         }
-        
+
 
         [Test]
         public void ShouldPersistClaimSet()
@@ -111,7 +111,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
         public void ShouldNotErrorIfClaimSetAlreadyExists()
         {
             var application = SetupContext.Applications.Single(a => a.ApplicationName == "IntegrationTests");
-            
+
             var claimSet = new ClaimSet
             {
                 Application = application,

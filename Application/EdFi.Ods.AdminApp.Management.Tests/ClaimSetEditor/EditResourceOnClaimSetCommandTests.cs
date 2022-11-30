@@ -38,7 +38,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testResource1ToEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
             var testResource2ToNotEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim2");
-            
+
             var editedResource = new ResourceClaim
             {
                 Id = testResource1ToEdit.ResourceClaimId,
@@ -66,14 +66,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             resourceClaimsForClaimSet.Count().ShouldBe(parentResources.Count);
 
             var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == editedResource.Id);
-            
+
             resultResourceClaim1.Create.ShouldBe(editedResource.Create);
             resultResourceClaim1.Read.ShouldBe(editedResource.Read);
             resultResourceClaim1.Update.ShouldBe(editedResource.Update);
             resultResourceClaim1.Delete.ShouldBe(editedResource.Delete);
 
             var resultResourceClaim2 = resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
-            
+
             resultResourceClaim2.Create.ShouldBe(true);
             resultResourceClaim2.Read.ShouldBe(false);
             resultResourceClaim2.Update.ShouldBe(false);

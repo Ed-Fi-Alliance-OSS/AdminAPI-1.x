@@ -25,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         }
 
         public void Execute(IOverrideDefaultAuthorizationStrategyModel model)
-        {         
+        {
             var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaims
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)

@@ -70,7 +70,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     var testResourceClaim =
                         testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == "TestResourceClaim3.00").ResourceClaim;
                     var result = query.SingleResource(testClaimSet.ClaimSetId, testResourceClaim.ResourceClaimId);
-                    
+
                     result.Name.ShouldBe(testResourceClaim.ResourceName);
                     result.Id.ShouldBe(testResourceClaim.ResourceClaimId);
                     result.Create.ShouldBe(true);

@@ -58,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                             ""Read"": true,
                             ""Create"": false,
                             ""Update"": false,
-                            ""Delete"": false,	
+                            ""Delete"": false,
                             ""Children"": []
                           },
                           {
@@ -434,7 +434,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            SetupResourceClaims(testApplication);         
+            SetupResourceClaims(testApplication);
 
             var testJSON = @"{
                 ""title"": ""testfile"",

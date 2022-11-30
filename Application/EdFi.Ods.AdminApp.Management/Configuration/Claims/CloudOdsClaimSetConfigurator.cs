@@ -37,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Claims
             var apiApplication = Queryable.Single(_securityContext.Applications, a => a.ApplicationName == configuration.ApplicationName);
             var resourceClaims = _securityContext.ResourceClaims.Where(rc => Enumerable.Contains(resourceTypes, rc.ResourceName)).ToList();
             var actions = _securityContext.Actions.Where(a => actionNames.Contains(a.ActionName)).ToList();
-            
+
             var claimSet = new ClaimSet
             {
                 Application = apiApplication,
@@ -51,11 +51,11 @@ namespace EdFi.Ods.AdminApp.Management.Configuration.Claims
                 var resourceClaim = resourceClaims.Single(rc => rc.ResourceName.Equals(requiredClaim.EntityName));
                 var authOverride = requiredClaim.AuthorizationStrategy != null
                     ? Queryable.FirstOrDefault(_securityContext.AuthorizationStrategies, a =>
-                        a.Application.ApplicationId == apiApplication.ApplicationId && 
+                        a.Application.ApplicationId == apiApplication.ApplicationId &&
                         a.AuthorizationStrategyName == requiredClaim.AuthorizationStrategy.StrategyName)
                     : null;
 
-                foreach (var claimSetResourceClaim in requiredClaim.Actions.Select(action => 
+                foreach (var claimSetResourceClaim in requiredClaim.Actions.Select(action =>
                     new ClaimSetResourceClaim
                     {
                         Action = actions.Single(a => a.ActionName == action.ActionName),

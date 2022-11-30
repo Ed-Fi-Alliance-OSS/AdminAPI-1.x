@@ -6,7 +6,7 @@
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
-using EdFi.Security.DataAccess.Models;
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAction;

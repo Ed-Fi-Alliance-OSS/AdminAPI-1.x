@@ -10,7 +10,6 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Security.DataAccess.Contexts;
 using Shouldly;
 using AddClaimSetModel = EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.AddClaimSetModel;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;

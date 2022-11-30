@@ -13,7 +13,6 @@ using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using System.Collections.Generic;
 using AutoMapper;
-using EdFi.Security.DataAccess.Contexts;
 using Moq;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
@@ -51,7 +50,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testResource1ToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
             var testResource2ToNotEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim2");
-            
+
             var overrideModel = new OverrideDefaultAuthorizationStrategyModel
             {
                 ResourceClaimId = testResource1ToEdit.ResourceClaimId,
@@ -73,14 +72,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     query => query.AllResources(testClaimSet.ClaimSetId).ToList());
 
             var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
-            
+
             resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
             resultResourceClaim1.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
             resultResourceClaim1.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
             resultResourceClaim1.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
 
             var resultResourceClaim2 = resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
-            
+
             resultResourceClaim2.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
             resultResourceClaim2.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
             resultResourceClaim2.AuthStrategyOverridesForCRUD[2].ShouldBeNull();

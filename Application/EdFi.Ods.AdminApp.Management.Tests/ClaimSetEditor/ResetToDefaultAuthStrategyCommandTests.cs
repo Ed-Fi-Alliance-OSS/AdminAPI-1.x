@@ -8,7 +8,6 @@ using AutoMapper;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Security.DataAccess.Contexts;
 using Moq;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;

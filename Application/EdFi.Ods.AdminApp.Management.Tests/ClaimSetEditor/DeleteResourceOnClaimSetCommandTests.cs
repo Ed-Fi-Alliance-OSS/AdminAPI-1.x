@@ -9,7 +9,7 @@ using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.DeleteClaimSetResourceModel;
 using Application = EdFi.Security.DataAccess.Models.Application;

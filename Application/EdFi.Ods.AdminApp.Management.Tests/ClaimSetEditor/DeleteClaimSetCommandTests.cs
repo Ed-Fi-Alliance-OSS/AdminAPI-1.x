@@ -59,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             preservedClaimSet.ClaimSetName.ShouldBe(testClaimSetToPreserve.ClaimSetName);
 
             var results =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(
+                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim[]>(
                     query => query.AllResources(testClaimSetToPreserve.ClaimSetId).ToArray());
 
             var testParentResourceClaimsForId =
@@ -131,7 +131,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new DeleteClaimSetModelValidator(securityContext);
+                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+
+                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
                 var validationResults = validator.Validate(claimSetToDelete);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
@@ -159,7 +161,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new DeleteClaimSetModelValidator(securityContext);
+                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+
+                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
                 var validationResults = validator.Validate(claimSetToDelete);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
@@ -188,7 +192,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new DeleteClaimSetModelValidator(securityContext);
+                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+
+                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
                 var validationResults = validator.Validate(claimSetToDelete);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");

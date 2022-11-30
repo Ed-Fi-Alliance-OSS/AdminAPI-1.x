@@ -5,7 +5,7 @@
 
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
@@ -19,11 +19,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
     public class CopyClaimSetModelValidator : AbstractValidator<CopyClaimSetModel>
     {
-        private readonly ISecurityContext _context;
+        private GetAllClaimSetsQuery _getAllClaimSetsQuery;
 
-        public CopyClaimSetModelValidator(ISecurityContext context)
+        public CopyClaimSetModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery)
         {
-            _context = context;
+            _getAllClaimSetsQuery = getAllClaimSetsQuery;
+
             RuleFor(m => m.Name).NotEmpty().Must(BeAUniqueName).WithMessage("The new claim set must have a unique name");
 
             RuleFor(m => m.Name)
@@ -33,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
         private bool BeAUniqueName(string newName)
         {
-            return !_context.ClaimSets.Any(x => x.ClaimSetName == newName);
+            return _getAllClaimSetsQuery.Execute().All(x => x.Name != newName);
         }
     }
 }

@@ -20,6 +20,7 @@ using Moq;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileImportModel;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -393,7 +394,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ""template"": {
                     ""claimSets"": [
                       {
-                        ""name"": ""Test Claimset"",
+                        ""name"": ""Test ClaimSet"",
                         ""resourceClaims"": [
                           {
                             ""Name"": ""TestParentResourceClaim1"",
@@ -413,11 +414,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+
+                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
                 var validationResults = validator.Validate(importModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain(
-                    "This template contains a claimset with a name which already exists in the system. Please use a unique name for 'Test Claimset'.\n");
+                    "This template contains a claimset with a name which already exists in the system. Please use a unique name for 'Test ClaimSet'.\n");
             });
         }
 
@@ -457,7 +461,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+
+                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
                 var validationResults = validator.Validate(importModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim88'.\n");
@@ -471,7 +478,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+
+                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
                 var validationResults = validator.Validate(importModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Import File' must not be empty.");
@@ -490,7 +500,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new ClaimSetFileImportModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+
+                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
                 var validationResults = validator.Validate(importModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("Invalid file extension. Only '*.json' files are allowed.");

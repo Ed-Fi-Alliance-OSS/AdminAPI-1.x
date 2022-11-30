@@ -41,8 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="EdFi.Security.DataAccess">
-      <HintPath>LegacySupport\edfi.suite3.security.dataaccess\5.3.43\lib\netstandard2.1\EdFi.Security.DataAccess.dll</HintPath>
+    <Reference Include="EdFi.Security.DataAccess53">
+      <HintPath>LegacySupport\edfi.suite3.security.dataaccess\5.3.43\lib\netstandard2.1\EdFi.SecurityDataAccess53</HintPath>
       <Aliases>SecurityDataAccess53</Aliases>
     </Reference>
   </ItemGroup>

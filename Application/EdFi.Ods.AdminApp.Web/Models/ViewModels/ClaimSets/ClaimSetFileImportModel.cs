@@ -11,9 +11,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Infrastructure;
-using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 using log4net;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
@@ -33,8 +33,13 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
         public class ClaimSetFileImportModelValidator : AbstractValidator<ClaimSetFileImportModel>
         {
-            public ClaimSetFileImportModelValidator(ISecurityContext securityContext)
+            private GetAllClaimSetsQuery _getAllClaimSetsQuery;
+            private GetResourceClaimsAsFlatListQuery _getResourceClaimsQuery;
+
+            public ClaimSetFileImportModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery, GetResourceClaimsAsFlatListQuery getResourceClaimsQuery)
             {
+                _getAllClaimSetsQuery = getAllClaimSetsQuery;
+                _getResourceClaimsQuery = getResourceClaimsQuery;
                 RuleFor(m => m.ImportFile).NotEmpty();
 
                 When(m => m.ImportFile != null, () =>
@@ -42,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
                     RuleFor(x => x)
                         .SafeCustom((model, context) =>
                         {
-                            var validator = new SharingModelValidator(securityContext, context.PropertyName);
+                            var validator = new SharingModelValidator(_getAllClaimSetsQuery, _getResourceClaimsQuery, context.PropertyName);
 
                             if (Path.GetExtension(model.ImportFile.FileName)?.ToLower() != ".json")
                             {
@@ -61,19 +66,16 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
         {
             private readonly ILog _logger = LogManager.GetLogger(typeof(SharingModelValidator));
 
-            public SharingModelValidator(ISecurityContext securityContext, string propertyName)
+            public SharingModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery, GetResourceClaimsAsFlatListQuery getResourceClaimsQuery, string propertyName)
             {
                 const string missing = "This template is missing its expected {0}.";
-                var dbResourceClaims = securityContext.ResourceClaims.Select(x => x.ResourceName);
+                var dbResourceClaims = getResourceClaimsQuery.Execute().Select(x => x.Name).ToHashSet();
 
                 RuleFor(x => x.Title).NotNull().WithMessage(string.Format(missing, "title"));
                 RuleForEach(x => x.Template.ClaimSets)
                     .SafeCustom((sharingClaimSet, context) =>
                     {
-                        var isAnExistingClaimSetName =
-                            securityContext.ClaimSets.Any(c => c.ClaimSetName == sharingClaimSet.Name);
-
-                        if (isAnExistingClaimSetName)
+                        if (IsAnExistingClaimSetName(sharingClaimSet.Name))
                         {
                             context.AddFailure(propertyName, $"This template contains a claimset with a name which already exists in the system. Please use a unique name for '{sharingClaimSet.Name}'.\n");
                             return;
@@ -103,6 +105,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
                             }
                         }
                     });
+
+                bool IsAnExistingClaimSetName(string sharingClaimSetName)
+                {
+                    var claimSets = getAllClaimSetsQuery.Execute().ToList();
+                    return claimSets.Any(x => x.Name == sharingClaimSetName);
+                }
             }
         }
     }

@@ -16,12 +16,22 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using AutoMapper;
+using Moq;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class DeleteResourceOnClaimSetCommandTests : SecurityDataTestBase
     {
+        private Mock<IMapper> _mockMapper;
+
+        [SetUp]
+        public void Init()
+        {
+            _mockMapper = new Mock<IMapper>();
+        }
+
         [Test]
         public void ShouldDeleteParentResourceOnClaimSet()
         {
@@ -153,7 +163,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new DeleteClaimSetResourceModelValidator(securityContext);
+                var getResourcesByClaimSetIdQuery= new GetResourcesByClaimSetIdQuery(securityContext,_mockMapper.Object);
+
+                var validator = new DeleteClaimSetResourceModelValidator(getResourcesByClaimSetIdQuery);
                 var validationResults = validator.Validate(deleteResourceOnClaimSetModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("This resource does not exist on the claimset.");

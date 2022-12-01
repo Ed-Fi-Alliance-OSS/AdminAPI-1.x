@@ -3,9 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
@@ -20,11 +19,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
     public class DeleteClaimSetModelValidator : AbstractValidator<DeleteClaimSetModel>
     {
-        private readonly ISecurityContext _securityContext;
+        private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
 
-        public DeleteClaimSetModelValidator(ISecurityContext securityContext)
+        public DeleteClaimSetModelValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery)
         {
-            _securityContext = securityContext;
+            _getClaimSetByIdQuery = getClaimSetByIdQuery;
+
             RuleFor(m => m.Id).NotEmpty()
                 .Must(BeAnExistingClaimSet)
                 .WithMessage("No such claim set exists in the database");
@@ -36,7 +36,15 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
         private bool BeAnExistingClaimSet(int id)
         {
-            return _securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == id) != null;
+            try
+            {
+                _getClaimSetByIdQuery.Execute(id);
+                return true;
+            }
+            catch (AdminAppException)
+            {
+                return false;
+            }
         }
     }
 }

@@ -8,7 +8,6 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Web;
 using Moq;
 using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -16,6 +15,7 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -49,7 +49,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var copiedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId));
             copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
 
-            var results = Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(
+            var results = Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim[]>(
                 query => query.AllResources(copiedClaimSet.ClaimSetId).ToArray());
 
             var testParentResourceClaimsForId =
@@ -100,7 +100,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new CopyClaimSetModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
@@ -127,7 +128,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new CopyClaimSetModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");

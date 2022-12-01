@@ -3,9 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
 using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
@@ -19,11 +17,12 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
         public class DeleteClaimSetResourceModelValidator : AbstractValidator<DeleteClaimSetResourceModel>
         {
-            private readonly ISecurityContext _securityContext;
+            private readonly IGetResourcesByClaimSetIdQuery _getResourcesByClaimSetIdQuery;
 
-            public DeleteClaimSetResourceModelValidator(ISecurityContext securityContext)
+            public DeleteClaimSetResourceModelValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery)
             {
-                _securityContext = securityContext;
+                _getResourcesByClaimSetIdQuery = getResourcesByClaimSetIdQuery;
+
                 RuleFor(m => m.ClaimSetId).NotEmpty();
                 RuleFor(m => m.ResourceClaimId)
                     .NotEmpty()
@@ -33,9 +32,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
             private bool BeOnTheClaimSetAlready(DeleteClaimSetResourceModel model, int resourceClaimId)
             {
-                return _securityContext.ClaimSetResourceClaims
-                           .Count(x => x.ResourceClaim.ResourceClaimId == resourceClaimId 
-                                       && x.ClaimSet.ClaimSetId == model.ClaimSetId) > 0;
+                return _getResourcesByClaimSetIdQuery.SingleResource(model.ClaimSetId, resourceClaimId) != null;
             }
         }
     }

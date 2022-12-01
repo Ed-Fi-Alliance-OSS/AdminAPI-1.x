@@ -16,6 +16,7 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
+using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -154,7 +155,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new EditClaimSetModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+
+                var validator = new EditClaimSetModelValidator(getAllClaimSetsQuery, getClaimSetByIdQuery);
                 var validationResults = validator.Validate(editModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("A claim set with this name already exists in the database. Please enter a unique name.");
@@ -177,7 +181,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new EditClaimSetModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+
+                var validator = new EditClaimSetModelValidator(getAllClaimSetsQuery, getClaimSetByIdQuery);
                 var validationResults = validator.Validate(editModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("'Claim Set Name' must not be empty.");
@@ -200,7 +207,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var validator = new EditClaimSetModelValidator(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+
+                var validator = new EditClaimSetModelValidator(getAllClaimSetsQuery, getClaimSetByIdQuery);
                 var validationResults = validator.Validate(editModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");

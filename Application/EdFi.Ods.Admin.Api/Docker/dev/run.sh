@@ -11,7 +11,9 @@ envsubst < /app/appsettings.Docker.json > /app/temp.json
 
 mv /app/temp.json /app/appsettings.json
 
-cp /ssl/server.crt /usr/local/share/ca-certificates/
-update-ca-certificates
+if [[ -f /ssl/server.crt ]]; then
+ cp /ssl/server.crt /usr/local/share/ca-certificates/
+ update-ca-certificates
+fi
 
 dotnet EdFi.Ods.Admin.Api.dll

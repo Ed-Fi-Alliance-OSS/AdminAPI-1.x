@@ -25,7 +25,9 @@ done
 >&2 echo "Postgres is up - executing command"
 exec $cmd
 
-cp /ssl/server.crt /usr/local/share/ca-certificates/
-update-ca-certificates
+if [[ -f /ssl/server.crt ]]; then
+  cp /ssl/server.crt /usr/local/share/ca-certificates/
+  update-ca-certificates
+fi
 
 dotnet EdFi.Ods.Admin.Api.dll

@@ -38,9 +38,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet2 = new ClaimSet { ClaimSetName = "TestClaimSet2", Application = testApplication };
             Save(testClaimSet2);
 
-            SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication);
+            //TODO: Update for 6.0
+            // SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication);
 
-            SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication);
+            // SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication);
 
             var exportModel = Scoped<IGetClaimSetByIdQuery, ClaimSetFileExportModel>(getClaimSetById =>
             {

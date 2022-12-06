@@ -131,25 +131,27 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 return resourceClaim;
             }
 
-            // TODO: Update for 6.0
             void GetOrCreateResourceClaimAuthorizationMetadata(Action action,
                 AuthorizationStrategy authorizationStrategy,
                 ResourceClaim resourceClaim)
             {
-                // var resourceClaimAuthorizationMetadata = TestContext.ResourceClaimAuthorizationMetadatas.FirstOrDefault(rcm =>
-                //         rcm.Action.ActionId == action.ActionId && rcm.AuthorizationStrategy.AuthorizationStrategyId == authorizationStrategy.AuthorizationStrategyId &&
-                //         rcm.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId);
-                //
-                // if (resourceClaimAuthorizationMetadata == null)
-                // {
-                //     TestContext.ResourceClaimAuthorizationMetadatas.Add(new ResourceClaimAuthorizationMetadata
-                //     {
-                //         Action = action,
-                //         AuthorizationStrategy = authorizationStrategy,
-                //         ResourceClaim = resourceClaim,
-                //         ValidationRuleSetName = null
-                //     });
-                // }
+                var resourceClaimAuthorizationMetadata = TestContext.ResourceClaimActions.FirstOrDefault(rcm =>
+                    rcm.Action.ActionId == action.ActionId && rcm.AuthorizationStrategies.FirstOrDefault()
+                        .AuthorizationStrategyId == authorizationStrategy.AuthorizationStrategyId &&
+                    rcm.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId);
+
+                if (resourceClaimAuthorizationMetadata == null)
+                {
+                    TestContext.ResourceClaimActions.Add(new ResourceClaimAction
+                    {
+                        Action = action,
+                        AuthorizationStrategies = authorizationStrategy != null ?
+                            new List<ResourceClaimActionAuthorizationStrategies> { new ResourceClaimActionAuthorizationStrategies
+                                { AuthorizationStrategy = authorizationStrategy} } : null,
+                        ResourceClaim = resourceClaim,
+                        ValidationRuleSetName = null
+                    });
+                }
             }
         }
 
@@ -198,52 +200,58 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return parentResourceClaims;
         }
 
-        protected IReadOnlyCollection<dynamic> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
+        protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
         {
             var actions = ActionName.GetAll().Select(action => new Action {ActionName = action.Value, ActionUri = action.Value}).ToList();
             Save(actions.Cast<object>().ToArray());
 
-            var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(parentIndex => new ResourceClaim
-            {
-                ClaimName = $"TestParentResourceClaim{parentIndex}",
-                DisplayName = $"TestParentResourceClaim{parentIndex}",
-                ResourceName = $"TestParentResourceClaim{parentIndex}", Application = testApplication
+            var parentResourceClaims = parentRcNames.Select(parentRcName => {
+                return new ResourceClaim
+                {
+                    ClaimName = parentRcName,
+                    DisplayName = parentRcName,
+                    ResourceName = parentRcName,
+                    Application = testApplication
+                };
             }).ToList();
 
-            var childResourceClaims = parentResourceClaims.SelectMany(x => Enumerable.Range(1, childResourceClaimCount)
-                .Select(childIndex => new ResourceClaim
-                {
-                    ClaimName = $"TestChildResourceClaim{childIndex}",
-                    DisplayName = $"TestChildResourceClaim{childIndex}",
-                    ResourceName = $"TestChildResourceClaim{childIndex}",
-                    Application = testApplication,
-                    ParentResourceClaim = x
-                })).ToList();
+            var childResourceClaims = parentResourceClaims.SelectMany(x => childRcNames
+               .Select(childRcName =>
+               {
+                   var childName = $"{childRcName}-{x.ClaimName}";
+                   return new ResourceClaim
+                   {
+                       ClaimName = childName,
+                       DisplayName = childName,
+                       ResourceName = childName,
+                       Application = testApplication,
+                       ParentResourceClaim = x
+                   };
+               })).ToList();
 
             Save(childResourceClaims.Cast<object>().ToArray());
 
-            //TODO: Update for 6.0
-            // var claimSetResourceClaims = Enumerable.Range(1, resourceClaimCount)
-            //     .Select(index => parentResourceClaims[index - 1]).Select(parentResource => new ClaimSetResourceClaim
-            //     {
-            //         ResourceClaim = parentResource,
-            //         Action = actions.Single(x => x.ActionName == ActionName.Create.Value), ClaimSet = testClaimSet
-            //     }).ToList();
-            //
-            // var childResources = parentResourceClaims.SelectMany(x => childResourceClaims
-            //     .Where(child => child.ParentResourceClaimId == x.ResourceClaimId)
-            //     .Select(child => new ClaimSetResourceClaim
-            //     {
-            //         ResourceClaim = child,
-            //         Action = actions.Single(a => a.ActionName == ActionName.Create.Value),
-            //         ClaimSet = testClaimSet
-            //     }).ToList()).ToList();
-            //
-            // claimSetResourceClaims.AddRange(childResources);
-            //
-            // Save(claimSetResourceClaims.Cast<object>().ToArray());
+            var claimSetResourceClaims = Enumerable.Range(1, parentRcNames.Count)
+                .Select(index => parentResourceClaims[index - 1]).Select(parentResource => new ClaimSetResourceClaimAction
+                {
+                    ResourceClaim = parentResource,
+                    Action = actions.Single(x => x.ActionName == ActionName.Create.Value), ClaimSet = testClaimSet
+                }).ToList();
 
-            return (IReadOnlyCollection<dynamic>)Enumerable.Empty<dynamic>();
+            var childResources = parentResourceClaims.SelectMany(x => childResourceClaims
+                .Where(child => child.ParentResourceClaimId == x.ResourceClaimId)
+                .Select(child => new ClaimSetResourceClaimAction
+                {
+                    ResourceClaim = child,
+                    Action = actions.Single(a => a.ActionName == ActionName.Create.Value),
+                    ClaimSet = testClaimSet
+                }).ToList()).ToList();
+
+            claimSetResourceClaims.AddRange(childResources);
+
+            Save(claimSetResourceClaims.Cast<object>().ToArray());
+
+            return claimSetResourceClaims;
         }
 
         protected IReadOnlyCollection<AuthorizationStrategy> SetupApplicationAuthorizationStrategies(Application testApplication, int authStrategyCount = 5)
@@ -266,28 +274,30 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return authStrategies;
         }
 
-        //TODO: Update for 6.0
-        protected IReadOnlyCollection<dynamic> SetupResourcesWithDefaultAuthorizationStrategies(List<AuthorizationStrategy> testAuthorizationStrategies, List<dynamic> claimSetResourceClaims)
+        protected IReadOnlyCollection<ResourceClaimAction> SetupResourcesWithDefaultAuthorizationStrategies(List<AuthorizationStrategy> testAuthorizationStrategies, List<ClaimSetResourceClaimAction> claimSetResourceClaims)
         {
-            // var resourceClaimWithDefaultAuthStrategies = new List<ResourceClaimAuthorizationMetadata>();
-            // var random = new Random();
-            // foreach (var resourceClaim in claimSetResourceClaims)
-            // {
-            //     var testAuthorizationStrategy = testAuthorizationStrategies[random.Next(testAuthorizationStrategies.Count)];
-            //
-            //     var resourceClaimWithDefaultAuthStrategy = new ResourceClaimAuthorizationMetadata
-            //     {
-            //         ResourceClaim = resourceClaim.ResourceClaim,
-            //         Action = resourceClaim.Action,
-            //         AuthorizationStrategy = testAuthorizationStrategy
-            //     };
-            //     resourceClaimWithDefaultAuthStrategies.Add(resourceClaimWithDefaultAuthStrategy);
-            // }
-            //
-            // Save(resourceClaimWithDefaultAuthStrategies.Cast<object>().ToArray());
+            var resourceClaimWithDefaultAuthStrategies = new List<ResourceClaimAction>();
+            var random = new Random();
+            foreach (var resourceClaim in claimSetResourceClaims)
+            {
+                var testAuthorizationStrategy = testAuthorizationStrategies[random.Next(testAuthorizationStrategies.Count)];
 
-            // return resourceClaimWithDefaultAuthStrategies;
-            return (IReadOnlyCollection<dynamic>)Enumerable.Empty<dynamic>();
+                var rcActionAuthorizationStrategies = testAuthorizationStrategy != null ?
+                    new List<ResourceClaimActionAuthorizationStrategies> {
+                        new ResourceClaimActionAuthorizationStrategies { AuthorizationStrategy = testAuthorizationStrategy } } : null;
+
+                var resourceClaimWithDefaultAuthStrategy = new ResourceClaimAction
+                {
+                    ResourceClaim = resourceClaim.ResourceClaim,
+                    Action = resourceClaim.Action,
+                    AuthorizationStrategies = rcActionAuthorizationStrategies
+                };
+                resourceClaimWithDefaultAuthStrategies.Add(resourceClaimWithDefaultAuthStrategy);
+            }
+
+            Save(resourceClaimWithDefaultAuthStrategies.Cast<object>().ToArray());
+
+            return resourceClaimWithDefaultAuthStrategies;
         }
     }
 }

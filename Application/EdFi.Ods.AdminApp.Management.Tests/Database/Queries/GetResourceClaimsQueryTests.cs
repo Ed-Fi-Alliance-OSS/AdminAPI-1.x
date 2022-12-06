@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,10 +12,11 @@ using EdFi.Ods.AdminApp.Management.Database.Queries;
 using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using Application = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.Application;
+using ResourceClaim = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {

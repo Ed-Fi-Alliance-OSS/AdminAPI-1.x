@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ using EdFi.Ods.AdminApp.Management.OnPrem;
 using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
 using Moq;
 using NUnit.Framework;
+
 using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
@@ -55,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             mockUsersContext.Setup(c => c.Vendors).Returns(mockVendors.Object);
             mockUsersContext.Setup(c => c.Applications).Returns(mockApps.Object);
 
-            var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
+            var mockApplications = MockExtensions.EmptyMockDbSet<SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.Application>();
 
             var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;

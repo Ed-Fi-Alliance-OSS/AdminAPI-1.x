@@ -3,13 +3,16 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Models;
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
+
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries

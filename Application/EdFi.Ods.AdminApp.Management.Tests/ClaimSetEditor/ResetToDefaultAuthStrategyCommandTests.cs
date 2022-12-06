@@ -238,7 +238,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+                var command = new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyV53Service(securityContext));
                 command.Execute(overrideModel);
             });
         }

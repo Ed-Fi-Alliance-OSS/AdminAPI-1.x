@@ -22,7 +22,7 @@ using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityData53TestBase
+    public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData53TestBase
     {
         private Mock<IMapper> _mockMapper;
 
@@ -67,7 +67,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+                var command = new OverrideDefaultAuthorizationStrategyV53Service(securityContext);
                 command.Execute(overrideModel);
             });
 
@@ -131,7 +131,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+                var command = new OverrideDefaultAuthorizationStrategyV53Service(securityContext);
                 command.Execute(overrideModel);
             });
 

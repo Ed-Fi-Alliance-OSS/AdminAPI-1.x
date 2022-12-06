@@ -83,7 +83,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
                             new EditResourceOnClaimSetCommand(securityContext53),
                             new Management.Database.Queries.GetResourceClaimsQuery(securityContextLatest),
-                            new OverrideDefaultAuthorizationStrategyCommand(securityContext53));
+                            new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyV53Service(securityContext53)));
 
                         var command = new UpdateResourcesOnClaimSetCommand(
                             securityContext53, addOrEditResourcesOnClaimSetCommand);

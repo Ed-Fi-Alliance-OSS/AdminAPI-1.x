@@ -22,6 +22,7 @@
     <PackageReference Include="Asp.Versioning.Http" Version="6.0.0-preview.3" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" Aliases="SecurityDataAccessLatest" />
     <PackageReference Include="FluentValidation" Version="10.4.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
     <PackageReference Include="log4net" Version="2.0.13" />
@@ -36,6 +37,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdFi.Security.DataAccess53">
+      <HintPath>..\LegacySupport\edfi.suite3.security.dataaccess\5.3.43\lib\netstandard2.1\EdFi.Security.DataAccess53.dll</HintPath>
+      <Aliases>SecurityDataAccess53</Aliases>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -200,6 +200,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return parentResourceClaims;
         }
 
+        public IList<string> UniqueNameList(string prefix, int resourceClaimCount = 5)
+        {
+            var random = new Random();
+            var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(index => {
+                return $"{prefix}{random.Next()}";
+            }).ToList();
+
+            return parentResourceClaims;
+        }
+
         protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
         {
             var actions = ActionName.GetAll().Select(action => new Action {ActionName = action.Value, ActionUri = action.Value}).ToList();

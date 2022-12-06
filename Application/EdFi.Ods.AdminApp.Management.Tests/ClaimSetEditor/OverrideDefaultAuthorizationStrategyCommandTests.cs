@@ -3,22 +3,26 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using System.Collections.Generic;
 using AutoMapper;
 using Moq;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using Application = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTestBase
+    public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityData53TestBase
     {
         private Mock<IMapper> _mockMapper;
 
@@ -68,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
 
             var resourceClaimsForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
+                Scoped<IGetResourcesByClaimSetIdQuery, List<ResourceClaim>>(
                     query => query.AllResources(testClaimSet.ClaimSetId).ToList());
 
             var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
@@ -104,6 +108,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
             var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+
             SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
             var testParentResource = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");

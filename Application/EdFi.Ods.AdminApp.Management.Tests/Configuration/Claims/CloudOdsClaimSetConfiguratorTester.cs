@@ -3,19 +3,22 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Models;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
+
 using static EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAction;
 using static EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAuthorizationStrategy;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 {
     [TestFixture]
-    public class CloudOdsClaimSetConfiguratorTester : SecurityDataTestBase
+    public class CloudOdsClaimSetConfiguratorTester : SecurityData53TestBase
     {
         public CloudOdsClaimSetConfiguratorTester()
         {

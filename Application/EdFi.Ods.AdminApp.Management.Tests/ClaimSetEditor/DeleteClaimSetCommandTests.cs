@@ -3,6 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+extern alias SecurityDataAccess53;
+
 using System;
 using System.Linq;
 using NUnit.Framework;
@@ -10,16 +13,17 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using Moq;
 using Shouldly;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class DeleteClaimSetCommandTests : SecurityDataTestBase
+    public class DeleteClaimSetCommandTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldDeleteClaimSet()
@@ -129,7 +133,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = false
             };
 
-            Scoped<ISecurityContext>(securityContext =>
+            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
             {
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
@@ -159,7 +163,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = true
             };
 
-            Scoped<ISecurityContext>(securityContext =>
+            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
             {
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
@@ -190,7 +194,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 VendorApplicationCount = 1
             };
 
-            Scoped<ISecurityContext>(securityContext =>
+            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
             {
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 

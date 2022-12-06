@@ -12,7 +12,7 @@ using Shouldly;
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 {
     [TestFixture]
-    public class ModifyClaimSetsServiceTests : SecurityDataTestBase
+    public class ModifyClaimSetsServiceTests : SecurityData53TestBase
     {
         public ModifyClaimSetsServiceTests()
         {

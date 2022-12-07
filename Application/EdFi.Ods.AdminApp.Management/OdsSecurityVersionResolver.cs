@@ -50,6 +50,15 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
     }
 }
 
+public class EdFiOdsSecurityModelCompatibilityException : NotImplementedException
+{
+    public EdFiOdsSecurityModelCompatibilityException()
+        : base("Handling for security model not implemented") { }
+    public EdFiOdsSecurityModelCompatibilityException(EdFiOdsSecurityModelCompatibility version)
+        : base($"Handling for security model for version {version} not implemented") { }
+    public EdFiOdsSecurityModelCompatibilityException(string message) : base(message) { }
+}
+
 public enum EdFiOdsSecurityModelCompatibility
 {
     ThreeThroughFive = 1,

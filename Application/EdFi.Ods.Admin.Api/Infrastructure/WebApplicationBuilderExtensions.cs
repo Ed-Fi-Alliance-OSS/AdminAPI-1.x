@@ -171,6 +171,13 @@ public static class WebApplicationBuilderExtensions
         });
 
         webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration, webApplicationBuilder.Environment);
+
+        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
+        {
+            var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
+            var validator = sp.GetRequiredService<IOdsApiValidator>();
+            return new OdsSecurityVersionResolver(validator, apiServerUrl);
+        });
     }
 
     private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

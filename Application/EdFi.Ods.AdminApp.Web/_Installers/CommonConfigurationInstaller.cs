@@ -151,6 +151,13 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<IStringEncryptorService, AESEncryptorService>(
                     x => new AESEncryptorService(appSettings.EncryptionKey));
+
+            services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
+            {
+                var apiServerUrl = sp.GetRequiredService<AppSettings>().ProductionApiUrl;
+                var validator = sp.GetRequiredService<IOdsApiValidator>();
+                return new OdsSecurityVersionResolver(validator, apiServerUrl);
+            });
         }
 
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);

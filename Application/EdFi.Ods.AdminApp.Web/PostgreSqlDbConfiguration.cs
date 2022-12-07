@@ -3,21 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Data.Entity;
 using Npgsql;
 
 namespace EdFi.Ods.AdminApp.Web
 {
-    public class DatabaseEngineDbConfiguration : DbConfiguration
+    public class PostgreSqlDbConfiguration : DbConfiguration
     {
-        public DatabaseEngineDbConfiguration(string databaseEngine)
+        public PostgreSqlDbConfiguration()
         {
-            if ("SqlServer".Equals(databaseEngine, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return;
-            }
-
             const string name = "Npgsql";
 
             SetProviderFactory(

@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using EdFi.Common.Extensions;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
@@ -55,7 +56,18 @@ namespace EdFi.Ods.AdminApp.Web
             var executingAssembly = Assembly.GetExecutingAssembly();
 
             var databaseEngine = Configuration["AppSettings:DatabaseEngine"];
-            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(databaseEngine));
+
+            if(databaseEngine.EqualsIgnoreCase("PostgreSql"))
+            {
+                DbConfiguration.SetConfiguration(new PostgreSqlDbConfiguration());
+            }
+            else
+            {
+                DbConfiguration.SetConfiguration(
+                    new Admin.DataAccess.DbConfigurations
+                        .DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
+
+            }
 
             services.AddDbContext<AdminAppDbContext>(ConfigureForAdminDatabase);
             services.AddDbContext<AdminAppIdentityDbContext>(ConfigureForAdminDatabase);

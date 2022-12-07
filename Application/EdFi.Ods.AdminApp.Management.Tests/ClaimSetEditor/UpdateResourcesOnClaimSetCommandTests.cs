@@ -83,7 +83,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
                             new EditResourceOnClaimSetCommand(securityContext53),
                             new Management.Database.Queries.GetResourceClaimsQuery(securityContextLatest),
-                            new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyV53Service(securityContext53)));
+                            new OverrideDefaultAuthorizationStrategyCommand(
+                                new StubOdsSecurityModelVersionResolver.V3_5(),
+                                new OverrideDefaultAuthorizationStrategyV53Service(securityContext53), null));
 
                         var command = new UpdateResourcesOnClaimSetCommand(
                             securityContext53, addOrEditResourcesOnClaimSetCommand);

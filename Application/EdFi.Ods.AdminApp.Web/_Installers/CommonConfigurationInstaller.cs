@@ -154,7 +154,7 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
             {
-                var apiServerUrl = sp.GetRequiredService<AppSettings>().ProductionApiUrl;
+                var apiServerUrl = appSettings.ProductionApiUrl;
                 var validator = sp.GetRequiredService<IOdsApiValidator>();
                 return new OdsSecurityVersionResolver(validator, apiServerUrl);
             });

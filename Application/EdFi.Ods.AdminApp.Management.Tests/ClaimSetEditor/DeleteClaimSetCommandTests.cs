@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccessLatest;
 extern alias SecurityDataAccess53;
 
 using System;
@@ -133,7 +132,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = false
             };
 
-            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
@@ -163,7 +162,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = true
             };
 
-            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
@@ -194,7 +193,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 VendorApplicationCount = 1
             };
 
-            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 

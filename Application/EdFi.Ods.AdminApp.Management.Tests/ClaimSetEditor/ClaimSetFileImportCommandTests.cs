@@ -85,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
 
-            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
+            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.Select(x => new { x.ClaimSetId, x.ClaimSetName }).SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
             testClaimSet.ShouldNotBeNull();
 
             var resourcesForClaimSet =

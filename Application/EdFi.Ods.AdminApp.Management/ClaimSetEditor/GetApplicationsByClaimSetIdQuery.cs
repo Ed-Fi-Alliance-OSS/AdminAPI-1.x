@@ -32,7 +32,9 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
         private string GetClaimSetNameById(int claimSetId)
         {
-            return _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
+            return _securityContext.ClaimSets
+                .Select(x => new { x.ClaimSetId, x.ClaimSetName})
+                .Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
         }
 
         private IEnumerable<Application> GetApplicationsByClaimSetName(string claimSetName)

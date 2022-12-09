@@ -157,7 +157,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
                 var validator = new EditClaimSetModelValidator(getAllClaimSetsQuery, getClaimSetByIdQuery);
@@ -183,7 +183,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
                 var validator = new EditClaimSetModelValidator(getAllClaimSetsQuery, getClaimSetByIdQuery);
@@ -209,7 +209,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
 
                 var validator = new EditClaimSetModelValidator(getAllClaimSetsQuery, getClaimSetByIdQuery);

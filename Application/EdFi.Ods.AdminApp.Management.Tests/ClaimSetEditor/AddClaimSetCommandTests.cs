@@ -21,7 +21,7 @@ using AddClaimSetModel = EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.AddCl
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class AddClaimSetCommandTests : SecurityDataTestBase
+    public class AddClaimSetCommandTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldAddClaimSet()
@@ -62,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var validator = new AddClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
@@ -77,7 +77,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var validator = new AddClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
@@ -98,13 +98,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var validator = new AddClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
             });
         }
-
     }
 }

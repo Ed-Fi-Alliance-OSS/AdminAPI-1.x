@@ -3,23 +3,25 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+
 using System;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
 using Shouldly;
-using AddClaimSetModel = EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.AddClaimSetModel;
+
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Application;
+using AddClaimSetModel = EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.AddClaimSetModel;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class AddClaimSetCommandTests : SecurityDataTestBase
+    public class AddClaimSetCommandTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldAddClaimSet()
@@ -60,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var validator = new AddClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
@@ -75,7 +77,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var validator = new AddClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
@@ -90,19 +92,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             {
                 ApplicationName = $"Test Application {DateTime.Now:O}"
             };
-            Save(testApplication);           
+            Save(testApplication);
 
             var newClaimSet = new AddClaimSetModel { ClaimSetName = "ThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255Characters" };
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+                var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
                 var validator = new AddClaimSetModelValidator(getAllClaimSetsQuery);
                 var validationResults = validator.Validate(newClaimSet);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
             });
         }
-
     }
 }

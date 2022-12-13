@@ -3,25 +3,27 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
+extern alias SecurityDataAccess53;
+
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Models;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
-using Action = EdFi.Security.DataAccess.Models.Action;
-using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Models;
+
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using Application = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
+using ResourceClaim = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ResourceClaim;
+using Action = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Action;
+using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
+    public class GetResourcesByClaimSetIdQueryTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldGetParentResourcesByClaimSetId()
@@ -70,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     var testResourceClaim =
                         testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == "TestResourceClaim3.00").ResourceClaim;
                     var result = query.SingleResource(testClaimSet.ClaimSetId, testResourceClaim.ResourceClaimId);
-                    
+
                     result.Name.ShouldBe(testResourceClaim.ResourceName);
                     result.Id.ShouldBe(testResourceClaim.ResourceClaimId);
                     result.Create.ShouldBe(true);

@@ -3,10 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -30,7 +32,9 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
         private string GetClaimSetNameById(int claimSetId)
         {
-            return _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
+            return _securityContext.ClaimSets
+                .Select(x => new { x.ClaimSetId, x.ClaimSetName})
+                .Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
         }
 
         private IEnumerable<Application> GetApplicationsByClaimSetName(string claimSetName)

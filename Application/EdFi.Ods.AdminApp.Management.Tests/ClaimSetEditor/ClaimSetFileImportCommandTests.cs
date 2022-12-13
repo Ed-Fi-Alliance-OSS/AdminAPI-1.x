@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,15 +14,18 @@ using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Security.DataAccess.Contexts;
 using Moq;
-using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileImportModel;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
+
+using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileImportModel;
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using Application = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -58,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                             ""Read"": true,
                             ""Create"": false,
                             ""Update"": false,
-                            ""Delete"": false,	
+                            ""Delete"": false,
                             ""Children"": []
                           },
                           {
@@ -80,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
 
-            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
+            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.Select(x => new { x.ClaimSetId, x.ClaimSetName }).SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
             testClaimSet.ShouldNotBeNull();
 
             var resourcesForClaimSet =
@@ -434,7 +439,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            SetupResourceClaims(testApplication);         
+            SetupResourceClaims(testApplication);
 
             var testJSON = @"{
                 ""title"": ""testfile"",

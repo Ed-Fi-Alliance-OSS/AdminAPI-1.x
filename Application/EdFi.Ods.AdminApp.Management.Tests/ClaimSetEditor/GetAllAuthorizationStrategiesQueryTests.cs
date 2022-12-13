@@ -7,7 +7,6 @@ using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor;
 

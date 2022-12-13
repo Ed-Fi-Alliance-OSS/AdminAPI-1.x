@@ -25,10 +25,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
     public class EditClaimSetModelValidator : AbstractValidator<EditClaimSetModel>
     {
-        private GetAllClaimSetsQuery _getAllClaimSetsQuery;
+        private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
         private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
 
-        public EditClaimSetModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery, IGetClaimSetByIdQuery getClaimSetByIdQuery)
+        public EditClaimSetModelValidator(IGetAllClaimSetsQuery getAllClaimSetsQuery, IGetClaimSetByIdQuery getClaimSetByIdQuery)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
             _getClaimSetByIdQuery = getClaimSetByIdQuery;

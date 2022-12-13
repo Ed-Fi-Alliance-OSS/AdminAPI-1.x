@@ -19,9 +19,9 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
     public class CopyClaimSetModelValidator : AbstractValidator<CopyClaimSetModel>
     {
-        private GetAllClaimSetsQuery _getAllClaimSetsQuery;
+        private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
-        public CopyClaimSetModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery)
+        public CopyClaimSetModelValidator(IGetAllClaimSetsQuery getAllClaimSetsQuery)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
 

@@ -3,9 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System;
 using System.Threading.Tasks;
-using EdFi.Security.DataAccess.Contexts;
+using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -84,7 +86,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             TestContext.Dispose();
             SetupContext.Dispose();
         }
-        
+
         protected void Save(params object[] entities)
         {
             foreach (var entity in entities)

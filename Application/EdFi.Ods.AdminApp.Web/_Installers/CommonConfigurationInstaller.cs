@@ -3,6 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+extern alias SecurityDataAccessLatest;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +27,6 @@ using EdFi.Common.Security;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
-using EdFi.Security.DataAccess.Contexts;
 using Hangfire;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,14 +44,24 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
-            services.AddScoped<ISecurityContext>(x =>
+            services.AddScoped<SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.ISecurityContext>(x =>
             {
                 var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
 
                 if (appSettings.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
-                    return new SqlServerSecurityContext(connectionStrings.Value.Security);
+                    return new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(connectionStrings.Value.Security);
 
-                return new PostgresSecurityContext(connectionStrings.Value.Security);
+                return new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(connectionStrings.Value.Security);
+            });
+
+            services.AddScoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(x =>
+            {
+                var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
+
+                if (appSettings.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
+                    return new SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(connectionStrings.Value.Security);
+
+                return new SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(connectionStrings.Value.Security);
             });
 
             services.AddScoped<IUsersContext>(x =>
@@ -130,7 +142,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     else if (interfaces.Length == 0)
                     {
                         if (concreteClass.Name.EndsWith("Command") ||
-                            concreteClass.Name.EndsWith("Query"))
+                            concreteClass.Name.EndsWith("Query") ||
+                            concreteClass.Name.EndsWith("Service"))
                             services.AddTransient(concreteClass);
                     }
                 }
@@ -138,6 +151,13 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<IStringEncryptorService, AESEncryptorService>(
                     x => new AESEncryptorService(appSettings.EncryptionKey));
+
+            services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
+            {
+                var apiServerUrl = appSettings.ProductionApiUrl;
+                var validator = sp.GetRequiredService<IOdsApiValidator>();
+                return new OdsSecurityVersionResolver(validator, apiServerUrl);
+            });
         }
 
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);

@@ -124,9 +124,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         {
             var rootDocument = ExampleOdsRootDocumentV2();
 
-            var result = (await OdsApiValidationResult(ValidOdsApiUrl, rootDocument)).IsValidOdsApi;
+            var result = await OdsApiValidationResult(ValidOdsApiUrl, rootDocument);
 
-            result.ShouldBe(true);
+            result.IsValidOdsApi.ShouldBe(true);
+            result.Version.ToString().ShouldBe("3.2.0");
         }
 
         [Test]
@@ -134,17 +135,19 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         {
             var rootDocument = ExampleOdsRootDocumentV1();
 
-            var result = (await OdsApiValidationResult(ValidOdsApiUrl, rootDocument)).IsValidOdsApi;
+            var result = await OdsApiValidationResult(ValidOdsApiUrl, rootDocument);
 
-            result.ShouldBe(true);
+            result.IsValidOdsApi.ShouldBe(true);
+            result.Version.ToString().ShouldBe("6.0");
         }
 
         [Test]
         public async Task ShouldBeInvalidForNoRootDocument()
         {
-            var result = (await OdsApiValidationResult(InvalidOdsApiUrl)).IsValidOdsApi;
+            var result = await OdsApiValidationResult(InvalidOdsApiUrl);
 
-            result.ShouldBe(false);
+            result.IsValidOdsApi.ShouldBe(false);
+            result.Version.ShouldBeNull();
         }
 
         [Test]
@@ -152,9 +155,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         {
             var rootDocument = ExampleOdsRootDocumentV3();
 
-            var result = (await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument)).IsValidOdsApi;
+            var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
 
-            result.ShouldBe(false);
+            result.IsValidOdsApi.ShouldBe(false);
+            result.Version.ShouldBeNull();
         }
 
         [Test]
@@ -162,9 +166,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         {
             var rootDocument = ExampleOdsRootDocumentV4();
 
-            var result = (await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument)).IsValidOdsApi;
+            var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
 
-            result.ShouldBe(false);
+            result.IsValidOdsApi.ShouldBe(false);
+            result.Version.ShouldBeNull();
         }
 
         [Test]
@@ -172,9 +177,10 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
         {
             var rootDocument = ExampleOdsRootDocumentV5();
 
-            var result = (await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument)).IsValidOdsApi;
+            var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
 
-            result.ShouldBe(false);
+            result.IsValidOdsApi.ShouldBe(false);
+            result.Version.ShouldBeNull();
         }
     }
 }

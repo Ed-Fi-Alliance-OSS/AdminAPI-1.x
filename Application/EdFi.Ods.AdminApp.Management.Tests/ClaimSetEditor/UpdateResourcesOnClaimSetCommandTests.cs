@@ -3,22 +3,27 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+extern alias SecurityDataAccessLatest;
+
 using System;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Shouldly;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using EdFi.Security.DataAccess.Contexts;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
 using System.Collections.Generic;
 using Moq;
+
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using Application = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
+    public class UpdateResourcesOnClaimSetCommandTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldUpdateResourcesOnClaimSet()
@@ -70,14 +75,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             updateResourcesOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
             updateResourcesOnClaimSetModel.Setup(x => x.ResourceClaims).Returns(updatedResourceClaims);
 
-            Scoped<ISecurityContext>(securityContext =>
+            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContextLatest =>
             {
-                var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
-                    new EditResourceOnClaimSetCommand(securityContext),
-                    new Management.Database.Queries.GetResourceClaimsQuery(securityContext),
-                    new OverrideDefaultAuthorizationStrategyCommand(securityContext));
-                var command = new UpdateResourcesOnClaimSetCommand(securityContext, addOrEditResourcesOnClaimSetCommand);
-                command.Execute(updateResourcesOnClaimSetModel.Object);
+                Scoped<ISecurityContext>(
+                    securityContext53 =>
+                    {
+                        var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
+                            new EditResourceOnClaimSetCommand(securityContext53),
+                            new Management.Database.Queries.GetResourceClaimsQuery(securityContextLatest),
+                            new OverrideDefaultAuthorizationStrategyCommand(
+                                new StubOdsSecurityModelVersionResolver.V3_5(),
+                                new OverrideDefaultAuthorizationStrategyV53Service(securityContext53), null));
+
+                        var command = new UpdateResourcesOnClaimSetCommand(
+                            securityContext53, addOrEditResourcesOnClaimSetCommand);
+
+                        command.Execute(updateResourcesOnClaimSetModel.Object);
+                    });
             });
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
@@ -93,5 +107,4 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 query => query.AllResources(securityContextClaimSetId).ToList());
         }
     }
-
 }

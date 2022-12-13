@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccessLatest;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,8 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileExportModel;
-using Application = EdFi.Security.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.ClaimSet;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
@@ -36,9 +38,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet2 = new ClaimSet { ClaimSetName = "TestClaimSet2", Application = testApplication };
             Save(testClaimSet2);
 
-            SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication);
+            //TODO: Update for 6.0
+            // SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication);
 
-            SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication);
+            // SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication);
 
             var exportModel = Scoped<IGetClaimSetByIdQuery, ClaimSetFileExportModel>(getClaimSetById =>
             {

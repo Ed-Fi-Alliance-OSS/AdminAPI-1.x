@@ -6,7 +6,7 @@
 using System.Data.Entity;
 using Npgsql;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure
+namespace EdFi.Ods.AdminApp.Web
 {
     public class PostgreSqlDbConfiguration : DbConfiguration
     {

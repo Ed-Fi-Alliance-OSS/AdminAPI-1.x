@@ -3,6 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+
+using SecurityAction = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Action;
+
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions
 {
     public static class AuthorizationStrategiesExtension
@@ -28,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions
         }
 
         public static AuthorizationStrategy[] AddAuthorizationStrategyOverrides(this AuthorizationStrategy[] authorizationStrategies,
-            Security.DataAccess.Models.Action action, AuthorizationStrategy strategy)
+            SecurityAction action, AuthorizationStrategy strategy)
         {
             if (action.ActionName == Action.Create.Value)
                 authorizationStrategies[0] = strategy;

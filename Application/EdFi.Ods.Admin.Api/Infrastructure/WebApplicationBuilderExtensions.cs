@@ -3,16 +3,19 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+extern alias SecurityDataAccess53;
+extern alias SecurityDataAccessLatest;
+
 using System.Data.Entity;
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Admin.DataAccess.DbConfigurations;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Security.DataAccess.Contexts;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +61,9 @@ public static class WebApplicationBuilderExtensions
                         }
                         else if (interfaces.Length == 0)
                         {
-                            if (concreteClass.Name.EndsWith("Command") || concreteClass.Name.EndsWith("Query"))
+                            if (concreteClass.Name.EndsWith("Command")
+                              || concreteClass.Name.EndsWith("Query")
+                              || concreteClass.Name.EndsWith("Service"))
                             {
                                 webApplicationBuilder.Services.AddTransient(concreteClass);
                             }
@@ -167,6 +172,13 @@ public static class WebApplicationBuilderExtensions
         });
 
         webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration, webApplicationBuilder.Environment);
+
+        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
+        {
+            var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
+            var validator = sp.GetRequiredService<IOdsApiValidator>();
+            return new OdsSecurityVersionResolver(validator, apiServerUrl);
+        });
     }
 
     private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)
@@ -176,7 +188,7 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
-            DbConfiguration.SetConfiguration(new PostgreSqlDbConfiguration());
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
                 options => options.UseNpgsql(adminConnectionString));
 
@@ -187,8 +199,11 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
-            webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new PostgresSecurityContext(securityConnectionString));
+            webApplicationBuilder.Services.AddScoped<SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
+                sp => new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
+
+            webApplicationBuilder.Services.AddScoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
+                sp => new SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
                 sp => new PostgresUsersContext(adminConnectionString));
@@ -198,6 +213,8 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
+
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
                 options => options.UseSqlServer(adminConnectionString));
 
@@ -208,8 +225,11 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
-            webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new SqlServerSecurityContext(securityConnectionString));
+            webApplicationBuilder.Services.AddScoped<SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
+                sp => new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
+
+            webApplicationBuilder.Services.AddScoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
+                sp => new SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
                 sp => new SqlServerUsersContext(adminConnectionString));

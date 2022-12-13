@@ -33,10 +33,10 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
 
         public class ClaimSetFileImportModelValidator : AbstractValidator<ClaimSetFileImportModel>
         {
-            private GetAllClaimSetsQuery _getAllClaimSetsQuery;
+            private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
             private GetResourceClaimsAsFlatListQuery _getResourceClaimsQuery;
 
-            public ClaimSetFileImportModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery, GetResourceClaimsAsFlatListQuery getResourceClaimsQuery)
+            public ClaimSetFileImportModelValidator(IGetAllClaimSetsQuery getAllClaimSetsQuery, GetResourceClaimsAsFlatListQuery getResourceClaimsQuery)
             {
                 _getAllClaimSetsQuery = getAllClaimSetsQuery;
                 _getResourceClaimsQuery = getResourceClaimsQuery;
@@ -66,7 +66,7 @@ namespace EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets
         {
             private readonly ILog _logger = LogManager.GetLogger(typeof(SharingModelValidator));
 
-            public SharingModelValidator(GetAllClaimSetsQuery getAllClaimSetsQuery, GetResourceClaimsAsFlatListQuery getResourceClaimsQuery, string propertyName)
+            public SharingModelValidator(IGetAllClaimSetsQuery getAllClaimSetsQuery, GetResourceClaimsAsFlatListQuery getResourceClaimsQuery, string propertyName)
             {
                 const string missing = "This template is missing its expected {0}.";
                 var dbResourceClaims = getResourceClaimsQuery.Execute().Select(x => x.Name).ToHashSet();

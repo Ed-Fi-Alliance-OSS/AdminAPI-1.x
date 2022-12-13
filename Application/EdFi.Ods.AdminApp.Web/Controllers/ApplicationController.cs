@@ -29,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IDeleteApplicationCommand _deleteApplicationCommand;
         private readonly IEditApplicationCommand _editApplicationCommand;
         private readonly GetApplicationByIdQuery _getApplicationByIdQuery;
-        private readonly GetAllClaimSetsQuery _getClaimSetNamesQuery;
+        private readonly IGetAllClaimSetsQuery _getClaimSetNamesQuery;
         private readonly GetProfilesQuery _getProfilesQuery;
         private readonly IGetVendorByIdQuery _getVendorByIdQuery;
         private readonly IMapper _mapper;
@@ -47,7 +47,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IEditApplicationCommand editApplicationCommand
             , GetApplicationByIdQuery getApplicationByIdQuery
             , IGetVendorByIdQuery getVendorByIdQuery
-            , GetAllClaimSetsQuery getClaimSetNamesQuery
+            , IGetAllClaimSetsQuery getClaimSetNamesQuery
             , GetProfilesQuery getProfilesQuery
             , RegenerateApiClientSecretCommand regenerateApiClientSecretCommand
             , IOdsApiFacadeFactory odsApiFacadeFactory

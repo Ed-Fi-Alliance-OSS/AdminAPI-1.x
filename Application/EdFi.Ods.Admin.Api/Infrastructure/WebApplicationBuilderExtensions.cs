@@ -9,6 +9,7 @@ extern alias SecurityDataAccessLatest;
 using System.Data.Entity;
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Admin.DataAccess.DbConfigurations;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management;
@@ -187,7 +188,7 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
-            DbConfiguration.SetConfiguration(new PostgreSqlDbConfiguration());
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
                 options => options.UseNpgsql(adminConnectionString));
 
@@ -212,6 +213,8 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
+
             webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
                 options => options.UseSqlServer(adminConnectionString));
 

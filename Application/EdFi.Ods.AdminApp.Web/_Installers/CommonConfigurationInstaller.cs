@@ -2,8 +2,6 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-
-extern alias SecurityDataAccess53;
 extern alias SecurityDataAccessLatest;
 
 using System;
@@ -44,14 +42,14 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
 
-            services.AddScoped<SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.ISecurityContext>(x =>
+            services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(x =>
             {
                 var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
 
                 if (appSettings.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
-                    return new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(connectionStrings.Value.Security);
+                    return new EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(connectionStrings.Value.Security);
 
-                return new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(connectionStrings.Value.Security);
+                return new EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(connectionStrings.Value.Security);
             });
 
             services.AddScoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(x =>

@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccess53;
 extern alias SecurityDataAccessLatest;
 
 using System.Data.Entity;
@@ -199,8 +198,8 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
-            webApplicationBuilder.Services.AddScoped<SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
-                sp => new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
+            webApplicationBuilder.Services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
+                sp => new EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
                 sp => new SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
@@ -225,8 +224,8 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
-            webApplicationBuilder.Services.AddScoped<SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
-                sp => new SecurityDataAccess53::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
+            webApplicationBuilder.Services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
+                sp => new EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(
                 sp => new SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));

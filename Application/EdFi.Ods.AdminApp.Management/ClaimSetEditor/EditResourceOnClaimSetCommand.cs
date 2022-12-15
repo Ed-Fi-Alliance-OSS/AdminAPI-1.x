@@ -13,8 +13,6 @@ using SecurityClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
-    extern alias SecurityDataAccessLatest;
-
     public class EditResourceOnClaimSetCommand
     {
         private readonly ISecurityContext _context;

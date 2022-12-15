@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccessLatest;
-
 using System;
 using System.Linq;
 using NUnit.Framework;
@@ -74,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             updateResourcesOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
             updateResourcesOnClaimSetModel.Setup(x => x.ResourceClaims).Returns(updatedResourceClaims);
 
-            Scoped<SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContextLatest =>
+            Scoped<EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContextLatest =>
             {
                 Scoped<ISecurityContext>(
                     securityContext53 =>

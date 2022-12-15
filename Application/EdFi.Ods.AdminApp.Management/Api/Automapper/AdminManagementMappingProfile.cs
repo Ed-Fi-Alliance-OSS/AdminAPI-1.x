@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccessLatest;
-
 using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
@@ -169,7 +167,7 @@ namespace EdFi.Ods.AdminApp.Management.Api.Automapper
                 .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
 
-            CreateMap<SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.AuthorizationStrategy, ClaimSetEditor.AuthorizationStrategy>()
+            CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, ClaimSetEditor.AuthorizationStrategy>()
                 .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
                 .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());

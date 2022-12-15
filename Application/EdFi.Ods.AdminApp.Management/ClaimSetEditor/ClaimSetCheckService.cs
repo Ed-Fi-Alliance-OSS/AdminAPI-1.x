@@ -27,13 +27,13 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public bool RequiredClaimSetsExist()
         {
             return ClaimSetExists(CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet) && ClaimSetExists(CloudOdsAdminApp.InternalAdminAppClaimSet);
+        }
 
-            bool ClaimSetExists(string claimSetName)
-            {
-                return _securityContext.ClaimSets
-                    .Select(claimSet => claimSet.ClaimSetName)
-                    .Any(existingName => existingName == claimSetName);
-            }
+        public bool ClaimSetExists(string claimSetName)
+        {
+            return _securityContext.ClaimSets
+                .Select(claimSet => claimSet.ClaimSetName)
+                .Any(existingName => existingName == claimSetName);
         }
     }
 }

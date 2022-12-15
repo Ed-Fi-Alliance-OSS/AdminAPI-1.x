@@ -32,8 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public bool ClaimSetExists(string claimSetName)
         {
             return _securityContext.ClaimSets
-                .Select(claimSet => claimSet.ClaimSetName)
-                .Any(existingName => existingName == claimSetName);
+                .Any(cs => cs.ClaimSetName == claimSetName);
         }
     }
 }

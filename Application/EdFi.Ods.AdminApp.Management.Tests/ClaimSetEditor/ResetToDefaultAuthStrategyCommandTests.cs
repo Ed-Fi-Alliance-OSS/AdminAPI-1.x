@@ -213,7 +213,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, _mockMapper.Object);
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mockMapper.Object), null);
 
                 var validator = new ResetToDefaultAuthStrategyModelValidator(getResourcesByClaimSetIdQuery);
                 var validationResults = validator.Validate(invalidResetModel);

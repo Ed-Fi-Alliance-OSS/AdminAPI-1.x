@@ -21,7 +21,7 @@ using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class GetResourcesByClaimSetIdQueryTests : SecurityData53TestBase
+    public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldGetParentResourcesByClaimSetId()

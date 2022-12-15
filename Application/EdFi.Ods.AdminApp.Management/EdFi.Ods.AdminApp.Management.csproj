@@ -18,8 +18,9 @@
     <PackageReference Include="dbup-postgresql" Version="4.5.0" />
     <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
 
+    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.3.43" />
     <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.0.12" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" Aliases="SecurityDataAccessLatest" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Flurl" Version="3.0.4" />
@@ -38,12 +39,5 @@
   <ItemGroup>
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="EdFi.Security.DataAccess53">
-      <HintPath>..\LegacySupport\edfi.suite3.security.dataaccess\5.3.43\lib\netstandard2.1\EdFi.Security.DataAccess53.dll</HintPath>
-      <Aliases>SecurityDataAccess53</Aliases>
-    </Reference>
   </ItemGroup>
 </Project>

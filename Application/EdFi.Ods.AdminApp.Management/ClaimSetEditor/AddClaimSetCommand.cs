@@ -1,14 +1,12 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccess53;
-
 using System.Linq;
-using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
+using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
-using ClaimSetEntity = SecurityDataAccess53.EdFi.Security.DataAccess.Models.ClaimSet;
+using ClaimSetEntity = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {

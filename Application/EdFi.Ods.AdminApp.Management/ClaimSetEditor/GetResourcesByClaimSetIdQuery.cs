@@ -3,18 +3,16 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccess53;
-
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
-using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
-using SecurityDataAccess53::EdFi.Security.DataAccess.Models;
+using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.SecurityCompatiblity53.DataAccess.Models;
 
-using SecurityResourceClaim = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ResourceClaim;
-using SecurityAuthorizationStrategy = SecurityDataAccess53::EdFi.Security.DataAccess.Models.AuthorizationStrategy;
+using SecurityResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
+using SecurityAuthorizationStrategy = EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {

@@ -3,13 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccessLatest;
-
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Models;
+using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
@@ -53,7 +51,7 @@ public class OverrideDefaultAuthorizationStrategyV6Service
         }
 
         var authorizationStrategiesDictionary =
-            new Dictionary<int, SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.AuthorizationStrategy>();
+            new Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy>();
 
         foreach (var authStrategy in _context.AuthorizationStrategies.ToList())
         {
@@ -118,7 +116,7 @@ public class OverrideDefaultAuthorizationStrategyV6Service
 
     private static void AddOverrides(IOverrideDefaultAuthorizationStrategyModel model,
         IEnumerable<ClaimSetResourceClaimAction> resourceClaimsToEdit,
-        Dictionary<int, SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary,
+        Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary,
         List<ClaimSetResourceClaimAction> parentResourceClaims)
     {
         var claimSetResourceClaims = resourceClaimsToEdit.ToList();
@@ -160,7 +158,7 @@ public class OverrideDefaultAuthorizationStrategyV6Service
     private static void SetAuthorizationStrategyOverrides(
         ClaimSetResourceClaimAction claimSetResourceClaimAction,
         List<ClaimSetResourceClaimAction> parentResourceClaims, int authorizationStrategyValue,
-        Dictionary<int, SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.AuthorizationStrategy>
+        Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy>
             authorizationStrategiesDictionary, string actionName)
     {
         var authStrategyOverrides = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>

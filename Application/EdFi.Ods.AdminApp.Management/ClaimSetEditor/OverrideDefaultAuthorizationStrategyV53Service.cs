@@ -1,14 +1,13 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-extern alias SecurityDataAccess53;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using SecurityDataAccess53::EdFi.Security.DataAccess.Contexts;
-using SecurityDataAccess53::EdFi.Security.DataAccess.Models;
+using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.SecurityCompatiblity53.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
@@ -46,7 +45,7 @@ public class OverrideDefaultAuthorizationStrategyV53Service
                 .ToList();
         }
 
-        var authorizationStrategiesDictionary = new Dictionary<int, SecurityDataAccess53::EdFi.Security.DataAccess.Models.AuthorizationStrategy>();
+        var authorizationStrategiesDictionary = new Dictionary<int, EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy>();
         foreach (var authStrategy in _context.AuthorizationStrategies.ToList())
         {
             authorizationStrategiesDictionary[authStrategy.AuthorizationStrategyId] = authStrategy;
@@ -87,7 +86,7 @@ public class OverrideDefaultAuthorizationStrategyV53Service
 
     private static void AddOverrides(IOverrideDefaultAuthorizationStrategyModel model,
         IEnumerable<ClaimSetResourceClaim> resourceClaimsToEdit,
-        Dictionary<int, SecurityDataAccess53::EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary,
+        Dictionary<int, EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary,
         List<ClaimSetResourceClaim> parentResourceClaims)
     {
         var claimSetResourceClaims = resourceClaimsToEdit.ToList();

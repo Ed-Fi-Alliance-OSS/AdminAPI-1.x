@@ -7,41 +7,53 @@ using System;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using NUnit.Framework;
 using Shouldly;
+
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
-//Test using v53 ClaimSet entity against service using v6 SecurityContext
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using ConstructContext = EdFi.Security.DataAccess.Contexts.ISecurityContext;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor;
-
-[TestFixture]
-public class ClaimSetCheckServiceV53Tests : SecurityData53TestBase
+namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
-    [Test]
-    public void ShouldReturnTrueWhenClaimSetExists()
+    [TestFixture]
+    public class ClaimSetCheckServiceV53Tests : SecurityData53TestBase
     {
-        var application = new Application { ApplicationName = $"Test Application {DateTime.Now:O}" };
-        Save(application);
-
-        var claimSet = new ClaimSet { ClaimSetName = $"Test ClaimSet {DateTime.Now:O}", Application = application };
-        Save(claimSet);
-
-        Scoped<ConstructContext>(securityContext =>
+        [Test]
+        public void ShouldReturnTrueIfRequiredClaimSetsExist()
         {
-            var service = new ClaimSetCheckService(securityContext);
-            service.ClaimSetExists(claimSet.ClaimSetName).ShouldBeTrue();
-        });
-    }
+            var testApplication = new Application
+            {
+                ApplicationName = $"Test Application {DateTime.Now:O}"
+            };
+            Save(testApplication);
 
-    [Test]
-    public void ShouldReturnFalseWhenClaimSetDoesNotExist()
-    {
-        Scoped<ConstructContext>(securityContext =>
+            var testAbConnectClaimSet = new ClaimSet { ClaimSetName = CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet, Application = testApplication };
+            Save(testAbConnectClaimSet);
+
+            var testAdminAppClaimSet = new ClaimSet { ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet, Application = testApplication };
+            Save(testAdminAppClaimSet);
+
+            Scoped<IClaimSetCheckService>(service =>
+            {
+                var result = service.RequiredClaimSetsExist();
+                result.ShouldBeTrue();
+            });
+        }
+
+        [Test]
+        public void ShouldReturnFalseIfRequiredClaimSetsDoNotExist()
         {
-            var service = new ClaimSetCheckService(securityContext);
-            service.ClaimSetExists(Guid.NewGuid().ToString()).ShouldBeFalse();
-        });
+            var testApplication = new Application
+            {
+                ApplicationName = $"Test Application {DateTime.Now:O}"
+            };
+            Save(testApplication);
+
+            Scoped<IClaimSetCheckService>(service =>
+            {
+                var result = service.RequiredClaimSetsExist();
+                result.ShouldBeFalse();
+            });
+        }
     }
 }

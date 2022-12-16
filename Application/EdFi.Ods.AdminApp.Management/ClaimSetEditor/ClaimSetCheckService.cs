@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -25,11 +25,12 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public bool RequiredClaimSetsExist()
         {
             return ClaimSetExists(CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet) && ClaimSetExists(CloudOdsAdminApp.InternalAdminAppClaimSet);
+        }
 
-            bool ClaimSetExists(string claimSetName)
-            {
-                return _securityContext.ClaimSets.Any(x => x.ClaimSetName == claimSetName);
-            }
+        public bool ClaimSetExists(string claimSetName)
+        {
+            return _securityContext.ClaimSets
+                .Any(cs => cs.ClaimSetName == claimSetName);
         }
     }
 }

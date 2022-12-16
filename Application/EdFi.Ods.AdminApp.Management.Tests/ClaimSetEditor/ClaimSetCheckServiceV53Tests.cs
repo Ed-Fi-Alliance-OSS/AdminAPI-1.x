@@ -16,7 +16,8 @@ using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
-    public class ClaimSetCheckServiceTests : SecurityData53TestBase
+    [TestFixture]
+    public class ClaimSetCheckServiceV53Tests : SecurityData53TestBase
     {
         [Test]
         public void ShouldReturnTrueIfRequiredClaimSetsExist()

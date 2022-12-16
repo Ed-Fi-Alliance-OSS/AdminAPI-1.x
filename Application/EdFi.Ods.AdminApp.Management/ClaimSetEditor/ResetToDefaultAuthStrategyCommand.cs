@@ -3,37 +3,32 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.Entity;
-using System.Linq;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
     public class ResetToDefaultAuthStrategyCommand
     {
-        private readonly ISecurityContext _context;
+        private readonly IOdsSecurityModelVersionResolver _resolver;
+        private readonly ResetToDefaultAuthStrategyCommandV53Service _v53Service;
+        private readonly ResetToDefaultAuthStrategyCommandV6Service _v6Service;
 
-        public ResetToDefaultAuthStrategyCommand(ISecurityContext context)
+        public ResetToDefaultAuthStrategyCommand(IOdsSecurityModelVersionResolver resolver,
+            ResetToDefaultAuthStrategyCommandV53Service v53Service,
+            ResetToDefaultAuthStrategyCommandV6Service v6Service)
         {
-            _context = context;
+            _resolver = resolver;
+            _v53Service = v53Service;
+            _v6Service = v6Service;
         }
 
         public void Execute(IResetToDefaultAuthStrategyModel model)
         {
-            var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaims
-                .Include(x => x.ResourceClaim)
-                .Include(x => x.Action)
-                .Include(x => x.ClaimSet)
-                .Include(x => x.AuthorizationStrategyOverride)
-                .Where(x => x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId)
-                .ToList();
-
-            foreach (var claimSetResourceClaim in claimSetResourceClaimsToEdit)
-            {
-                claimSetResourceClaim.AuthorizationStrategyOverride = null;
-            }
-
-            _context.SaveChanges();
+            var securityModel = _resolver.DetermineSecurityModel();
+            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
+                _v53Service.Execute(model);
+            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
+                _v6Service.Execute(model);
+            else
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
         }
     }
 

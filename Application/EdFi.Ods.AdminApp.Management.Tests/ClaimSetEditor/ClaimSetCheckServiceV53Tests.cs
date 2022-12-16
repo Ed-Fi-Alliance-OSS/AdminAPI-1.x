@@ -1,50 +1,60 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 extern alias SecurityDataAccess53;
-extern alias SecurityDataAccessLatest;
 
 using System;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using NUnit.Framework;
 using Shouldly;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
-//Test using v53 ClaimSet entity against service using v6 SecurityContext
+using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using Application = SecurityDataAccess53::EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = SecurityDataAccess53::EdFi.Security.DataAccess.Models.ClaimSet;
-using ConstructContext = SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts.ISecurityContext;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor;
-
-[TestFixture]
-public class ClaimSetCheckServiceV53Tests : SecurityData53TestBase
+namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
-    [Test]
-    public void ShouldReturnTrueWhenClaimSetExists()
+    [TestFixture]
+    public class ClaimSetCheckServiceV53Tests : SecurityData53TestBase
     {
-        var application = new Application { ApplicationName = $"Test Application {DateTime.Now:O}" };
-        Save(application);
-
-        var claimSet = new ClaimSet { ClaimSetName = $"Test ClaimSet {DateTime.Now:O}", Application = application };
-        Save(claimSet);
-
-        Scoped<ConstructContext>(securityContext =>
+        [Test]
+        public void ShouldReturnTrueIfRequiredClaimSetsExist()
         {
-            var service = new ClaimSetCheckService(securityContext);
-            service.ClaimSetExists(claimSet.ClaimSetName).ShouldBeTrue();
-        });
-    }
+            var testApplication = new Application
+            {
+                ApplicationName = $"Test Application {DateTime.Now:O}"
+            };
+            Save(testApplication);
 
-    [Test]
-    public void ShouldReturnFalseWhenClaimSetDoesNotExist()
-    {
-        Scoped<ConstructContext>(securityContext =>
+            var testAbConnectClaimSet = new ClaimSet { ClaimSetName = CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet, Application = testApplication };
+            Save(testAbConnectClaimSet);
+
+            var testAdminAppClaimSet = new ClaimSet { ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet, Application = testApplication };
+            Save(testAdminAppClaimSet);
+
+            Scoped<IClaimSetCheckService>(service =>
+            {
+                var result = service.RequiredClaimSetsExist();
+                result.ShouldBeTrue();
+            });
+        }
+
+        [Test]
+        public void ShouldReturnFalseIfRequiredClaimSetsDoNotExist()
         {
-            var service = new ClaimSetCheckService(securityContext);
-            service.ClaimSetExists(Guid.NewGuid().ToString()).ShouldBeFalse();
-        });
+            var testApplication = new Application
+            {
+                ApplicationName = $"Test Application {DateTime.Now:O}"
+            };
+            Save(testApplication);
+
+            Scoped<IClaimSetCheckService>(service =>
+            {
+                var result = service.RequiredClaimSetsExist();
+                result.ShouldBeFalse();
+            });
+        }
     }
 }

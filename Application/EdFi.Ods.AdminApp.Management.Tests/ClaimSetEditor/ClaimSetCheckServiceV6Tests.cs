@@ -8,7 +8,6 @@ extern alias SecurityDataAccessLatest;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using NUnit.Framework;
 using System;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
 using Shouldly;
 
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -22,28 +21,40 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor;
 public class ClaimSetCheckServiceV6Tests : SecurityDataTestBase
 {
     [Test]
-    public void ShouldReturnTrueWhenClaimSetExists()
+    public void ShouldReturnTrueIfRequiredClaimSetsExist()
     {
-        var application = new Application { ApplicationName = $"Test Application {DateTime.Now:O}" };
-        Save(application);
-
-        var claimSet = new ClaimSet { ClaimSetName = $"Test ClaimSet {DateTime.Now:O}", Application = application };
-        Save(claimSet);
-
-        Scoped<ISecurityContext>(securityContext =>
+        var testApplication = new Application
         {
-            var service = new ClaimSetCheckService(securityContext);
-            service.ClaimSetExists(claimSet.ClaimSetName).ShouldBeTrue();
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
+
+        var testAbConnectClaimSet = new ClaimSet { ClaimSetName = CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet, Application = testApplication };
+        Save(testAbConnectClaimSet);
+
+        var testAdminAppClaimSet = new ClaimSet { ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet, Application = testApplication };
+        Save(testAdminAppClaimSet);
+
+        Scoped<IClaimSetCheckService>(service =>
+        {
+            var result = service.RequiredClaimSetsExist();
+            result.ShouldBeTrue();
         });
     }
 
     [Test]
-    public void ShouldReturnFalseWhenClaimSetDoesNotExist()
+    public void ShouldReturnFalseIfRequiredClaimSetsDoNotExist()
     {
-        Scoped<ISecurityContext>(securityContext =>
+        var testApplication = new Application
         {
-            var service = new ClaimSetCheckService(securityContext);
-            service.ClaimSetExists(Guid.NewGuid().ToString()).ShouldBeFalse();
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
+
+        Scoped<IClaimSetCheckService>(service =>
+        {
+            var result = service.RequiredClaimSetsExist();
+            result.ShouldBeFalse();
         });
     }
 }

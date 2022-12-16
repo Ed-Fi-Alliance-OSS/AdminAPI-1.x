@@ -13,6 +13,7 @@
         <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.0.12" />
         <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" />
         
+        <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.3.43" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Include="Moq" Version="4.17.2" />
         <PackageReference Include="NUnit" Version="3.13.3" />

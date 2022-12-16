@@ -4,17 +4,15 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 
-extern alias SecurityDataAccessLatest;
-
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Contexts;
-using SecurityDataAccessLatest::EdFi.Security.DataAccess.Models;
-using SecurityResourceClaim = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.ResourceClaim;
-using SecurityAuthorizationStrategy = SecurityDataAccessLatest::EdFi.Security.DataAccess.Models.AuthorizationStrategy;
+using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Models;
+using SecurityResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
+using SecurityAuthorizationStrategy = EdFi.Security.DataAccess.Models.AuthorizationStrategy;
 
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor

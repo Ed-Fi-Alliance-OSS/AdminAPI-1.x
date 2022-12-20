@@ -10,24 +10,25 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Shouldly;
 using System.Collections.Generic;
 using AutoMapper;
-using Moq;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData53TestBase
     {
-        private Mock<IMapper> _mockMapper;
+        private IMapper _mapper;
 
         [SetUp]
         public void Init()
         {
-            _mockMapper = new Mock<IMapper>();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            _mapper = config.CreateMapper();
         }
 
         [Test]
@@ -69,9 +70,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 command.Execute(overrideModel);
             });
 
-            var resourceClaimsForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<ResourceClaim>>(
-                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
             var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
@@ -133,9 +132,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 command.Execute(overrideModel);
             });
 
-            var resourceClaimsForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
-                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
             var resultParentResource = resourceClaimsForClaimSet.Single(x => x.Id == testParentResource.ResourceClaimId);
             var resultChildResource1 =
@@ -192,13 +189,25 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Scoped<ISecurityContext>(securityContext =>
             {
                 var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mockMapper.Object), null);
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
 
                 var validator = new OverrideDefaultAuthorizationStrategyModelValidator(getResourcesByClaimSetIdQuery);
                 var validationResults = validator.Validate(invalidOverrideModel);
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
             });
+        }
+
+        private List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
+        {
+            List<ResourceClaim> list = null;
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
+                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
+            });
+            return list;
         }
     }
 }

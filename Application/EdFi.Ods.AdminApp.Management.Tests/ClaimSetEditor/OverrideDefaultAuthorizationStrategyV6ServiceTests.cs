@@ -15,12 +15,23 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor;
 
 [TestFixture]
 public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTestBase
 {
+    private IMapper _mapper;
+
+    [SetUp]
+    public void Init()
+    {
+        var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+        _mapper = config.CreateMapper();
+    }
+
     [Test]
     public void ShouldOverrideAuthorizationStrategiesForParentResourcesOnClaimSet()
     {
@@ -65,16 +76,17 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
             AuthorizationStrategyForDelete = 0
         };
 
+        List<ResourceClaim> resourceClaimsForClaimSet = null;
         Scoped<ISecurityContext>(
             securityContext =>
             {
                 var command = new OverrideDefaultAuthorizationStrategyV6Service(securityContext);
                 command.Execute(overrideModel);
-            });
+               var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
+                        null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
+                resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
 
-        var resourceClaimsForClaimSet =
-            Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
-                query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            });
 
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);

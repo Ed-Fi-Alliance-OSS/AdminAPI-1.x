@@ -14,6 +14,7 @@ using EdFi.Ods.AdminApp.Management.Api;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
@@ -170,6 +171,10 @@ public static class WebApplicationBuilderExtensions
         });
 
         webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration, webApplicationBuilder.Environment);
+
+        webApplicationBuilder.Services.AddHttpClient();
+        webApplicationBuilder.Services.AddTransient<ISimpleGetRequest,SimpleGetRequest>();
+        webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
 
         webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
         {

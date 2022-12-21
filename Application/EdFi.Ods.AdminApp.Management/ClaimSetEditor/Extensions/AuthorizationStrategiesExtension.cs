@@ -30,15 +30,15 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions
         }
 
         public static AuthorizationStrategy[] AddAuthorizationStrategyOverrides(this AuthorizationStrategy[] authorizationStrategies,
-            SecurityAction action, AuthorizationStrategy strategy)
+            string actionName, AuthorizationStrategy strategy)
         {
-            if (action.ActionName == Action.Create.Value)
+            if (actionName == Action.Create.Value)
                 authorizationStrategies[0] = strategy;
-            else if (action.ActionName == Action.Read.Value)
+            else if (actionName == Action.Read.Value)
                 authorizationStrategies[1] = strategy;
-            else if (action.ActionName == Action.Update.Value)
+            else if (actionName == Action.Update.Value)
                 authorizationStrategies[2] = strategy;
-            else if (action.ActionName == Action.Delete.Value)
+            else if (actionName == Action.Delete.Value)
                 authorizationStrategies[3] = strategy;
 
             return authorizationStrategies;

@@ -12,25 +12,26 @@ using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using Shouldly;
 using AutoMapper;
-using Moq;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.DeleteClaimSetResourceModel;
 
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class DeleteResourceOnClaimSetCommandTests : SecurityData53TestBase
     {
-        private Mock<IMapper> _mockMapper;
+        private IMapper _mapper;
 
         [SetUp]
         public void Init()
         {
-            _mockMapper = new Mock<IMapper>();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            _mapper = config.CreateMapper();
         }
 
         [Test]
@@ -113,9 +114,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 command.Execute(deleteResourceOnClaimSetModel);
             });
 
-            var resourceClaimsForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
-                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            List<Management.ClaimSetEditor.ResourceClaim> resourceClaimsForClaimSet = null;
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
+                resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
+            });
             resourceClaimsForClaimSet.Count.ShouldBe(parentResourcesOnClaimSetOriginalCount);
 
             Transaction(securityContext =>
@@ -164,7 +169,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getResourcesByClaimSetIdQuery= new GetResourcesByClaimSetIdQuery(securityContext,_mockMapper.Object);
+                var getResourcesByClaimSetIdQuery= new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
 
                 var validator = new DeleteClaimSetResourceModelValidator(getResourcesByClaimSetIdQuery);
                 var validationResults = validator.Validate(deleteResourceOnClaimSetModel);

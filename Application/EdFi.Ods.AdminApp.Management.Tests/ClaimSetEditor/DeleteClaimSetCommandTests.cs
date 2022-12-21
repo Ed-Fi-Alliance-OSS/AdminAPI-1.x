@@ -16,12 +16,24 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using System.Collections.Generic;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class DeleteClaimSetCommandTests : SecurityData53TestBase
     {
+        private IMapper _mapper;
+
+        [SetUp]
+        public void Init()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            _mapper = config.CreateMapper();
+        }
+
         [Test]
         public void ShouldDeleteClaimSet()
         {
@@ -59,14 +71,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));
             preservedClaimSet.ClaimSetName.ShouldBe(testClaimSetToPreserve.ClaimSetName);
 
-            var results =
-                Scoped<IGetResourcesByClaimSetIdQuery, ResourceClaim[]>(
-                    query => query.AllResources(testClaimSetToPreserve.ClaimSetId).ToArray());
+            List<ResourceClaim> results = null;
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper),null );
+                results = getResourcesByClaimSetIdQuery.AllResources(testClaimSetToPreserve.ClaimSetId).ToList();
+            });
 
             var testParentResourceClaimsForId =
                 resourceClaimsForPreservedClaimSet.Where(x => x.ClaimSet.ClaimSetId == testClaimSetToPreserve.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
 
-            results.Length.ShouldBe(testParentResourceClaimsForId.Length);
+            results.Count.ShouldBe(testParentResourceClaimsForId.Length);
             results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
             results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
             results.All(x => x.Create).ShouldBe(true);

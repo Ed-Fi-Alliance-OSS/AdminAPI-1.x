@@ -16,12 +16,23 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class UpdateResourcesOnClaimSetCommandTests : SecurityData53TestBase
     {
+        private IMapper _mapper;
+
+        [SetUp]
+        public void Init()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            _mapper = config.CreateMapper();
+        }
+
         [Test]
         public void ShouldUpdateResourcesOnClaimSet()
         {
@@ -98,10 +109,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             resourceClaimsForClaimSet.First().Children.First().Name.ShouldBe(testChildResource1ToEdit.ResourceName);
         }
 
-        private static List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
+        private List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
         {
-            return Scoped<IGetResourcesByClaimSetIdQuery, List<ResourceClaim>>(
-                query => query.AllResources(securityContextClaimSetId).ToList());
+            List<ResourceClaim> list = null;
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
+                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
+            });
+            return list;
         }
     }
 }

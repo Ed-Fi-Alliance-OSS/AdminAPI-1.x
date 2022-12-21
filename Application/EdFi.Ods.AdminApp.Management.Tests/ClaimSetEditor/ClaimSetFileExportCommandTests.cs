@@ -15,12 +15,24 @@ using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileExpor
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using EdFi.Security.DataAccess.Contexts;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using AutoMapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class ClaimSetFileExportCommandTests : SecurityDataTestBase
     {
+        private IMapper _mapper;
+
+        [SetUp]
+        public void Init()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            _mapper = config.CreateMapper();
+        }
+
         [Test]
         public void ShouldExportClaimSet()
         {
@@ -60,14 +72,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 };
             });
 
-            var sharingModel = Scoped<ClaimSetFileExportCommand, SharingModel>(command => command.Execute(exportModel));
+            SharingModel sharingModel = null;
+            Scoped<ISecurityContext>( securityContext =>
+            {
+                var command = new ClaimSetFileExportCommand(securityContext, ResourcesByClaimSetIdQuery(securityContext));
+                sharingModel = command.Execute(exportModel);
+            });
 
-            var resourcesForClaimSet1 =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(
-                    query => query.AllResources(testClaimSet1.ClaimSetId).ToArray());
-            var resourcesForClaimSet2 =
-                Scoped<IGetResourcesByClaimSetIdQuery, Management.ClaimSetEditor.ResourceClaim[]>(
-                    query => query.AllResources(testClaimSet2.ClaimSetId).ToArray());
+            var resourcesForClaimSet1 = ResourceClaimsForClaimSet(testClaimSet1.ClaimSetId).ToArray();
+            var resourcesForClaimSet2 = ResourceClaimsForClaimSet(testClaimSet2.ClaimSetId).ToArray();
 
             sharingModel.Title.ShouldContain("TestDownload");
             var sharedClaimSets = sharingModel.Template.ClaimSets;
@@ -170,6 +183,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var validationResults = validator.Validate(exportModel);
             validationResults.IsValid.ShouldBe(false);
             validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Title' must not be empty.");
+        }
+
+        private List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
+        {
+            List<ResourceClaim> list = null;
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                list = ResourcesByClaimSetIdQuery(securityContext).AllResources(securityContextClaimSetId).ToList();
+            });
+            return list;
+        }
+
+        private GetResourcesByClaimSetIdQuery ResourcesByClaimSetIdQuery(ISecurityContext context)
+        {
+            return new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
+                    null, new GetResourcesByClaimSetIdQueryV6Service(context, _mapper));
         }
     }
 }

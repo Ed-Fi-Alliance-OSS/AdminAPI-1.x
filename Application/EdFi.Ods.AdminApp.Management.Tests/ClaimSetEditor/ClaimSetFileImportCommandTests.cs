@@ -24,12 +24,23 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using AutoMapper;
+using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class ClaimSetFileImportCommandTests : SecurityDataTestBase
     {
+        private IMapper _mapper;
+
+        [SetUp]
+        public void Init()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            _mapper = config.CreateMapper();
+        }
+
         [Test]
         public void ShouldImportClaimSet()
         {
@@ -86,9 +97,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
             testClaimSet.ShouldNotBeNull();
 
-            var resourcesForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<Management.ClaimSetEditor.ResourceClaim>>(
-                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            var resourcesForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
             resourcesForClaimSet.Count.ShouldBeGreaterThan(0);
             var testResources = resourcesForClaimSet.Where(x => x.ParentId == 0).ToArray();
@@ -189,9 +198,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
             testClaimSet.ShouldNotBeNull();
 
-            var resourcesForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<ResourceClaim>>(
-                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            var resourcesForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
             resourcesForClaimSet.Count.ShouldBeGreaterThan(0);
             var testResources = resourcesForClaimSet.Where(x => x.ParentId == 0).ToArray();
@@ -322,9 +329,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
             testClaimSet.ShouldNotBeNull();
 
-            var resourcesForClaimSet =
-                Scoped<IGetResourcesByClaimSetIdQuery, List<ResourceClaim>>(
-                    query => query.AllResources(testClaimSet.ClaimSetId).ToList());
+            var resourcesForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
             resourcesForClaimSet.Count.ShouldBeGreaterThan(0);
             var testResources = resourcesForClaimSet.Where(x => x.ParentId == 0).ToArray();
@@ -397,7 +402,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ""template"": {
                     ""claimSets"": [
                       {
-                        ""name"": ""Test Claimset"",
+                        ""name"": ""Test ClaimSet"",
                         ""resourceClaims"": [
                           {
                             ""Name"": ""TestParent1234"",
@@ -470,7 +475,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
                 var validationResults = validator.Validate(importModel);
                 validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim88'.\n");
+                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim-notthere'.\n");
             });
         }
 
@@ -527,6 +532,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             importModel.ImportFile = importFile.Object;
 
             return importModel;
+        }
+
+        private List<Management.ClaimSetEditor.ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
+        {
+            List<Management.ClaimSetEditor.ResourceClaim> list = null;
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
+                    null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
+                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
+            });
+            return list;
         }
     }
 }

@@ -3,27 +3,32 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
     public class DeleteResourceOnClaimSetCommand
     {
-        private readonly ISecurityContext _context;
+        private readonly IOdsSecurityModelVersionResolver _resolver;
+        private readonly DeleteResourceOnClaimSetCommandV53Service _v53Service;
+        private readonly DeleteResourceOnClaimSetCommandV6Service _v6Service;
 
-        public DeleteResourceOnClaimSetCommand(ISecurityContext context)
+        public DeleteResourceOnClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
+            DeleteResourceOnClaimSetCommandV53Service v53Service,
+            DeleteResourceOnClaimSetCommandV6Service v6Service)
         {
-            _context = context;
+            _resolver = resolver;
+            _v53Service = v53Service;
+            _v6Service = v6Service;
         }
 
         public void Execute(IDeleteResourceOnClaimSetModel model)
         {
-            var resourceClaimsToRemove = _context.ClaimSetResourceClaims.Where(x =>
-                x.ResourceClaim.ResourceClaimId == model.ResourceClaimId && x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
-
-            _context.ClaimSetResourceClaims.RemoveRange(resourceClaimsToRemove);
-            _context.SaveChanges();
+            var securityModel = _resolver.DetermineSecurityModel();
+            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
+                _v53Service.Execute(model);
+            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
+                _v6Service.Execute(model);
+            else
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
         }
     }
 

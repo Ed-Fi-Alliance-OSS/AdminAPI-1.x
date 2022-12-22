@@ -23,7 +23,7 @@ using EdFi.Ods.AdminApp.Management.Api.Automapper;
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class DeleteResourceOnClaimSetCommandTests : SecurityData53TestBase
+    public class DeleteResourceOnClaimSetCommandV53ServiceTests : SecurityData53TestBase
     {
         private IMapper _mapper;
 
@@ -63,7 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new DeleteResourceOnClaimSetCommand(securityContext);
+                var command = new DeleteResourceOnClaimSetCommandV53Service(securityContext);
                 command.Execute(deleteResourceOnClaimSetModel);
             });
 
@@ -110,7 +110,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new DeleteResourceOnClaimSetCommand(securityContext);
+                var command = new DeleteResourceOnClaimSetCommandV53Service(securityContext);
                 command.Execute(deleteResourceOnClaimSetModel);
             });
 

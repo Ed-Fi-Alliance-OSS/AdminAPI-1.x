@@ -91,23 +91,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             updateResourcesOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
             updateResourcesOnClaimSetModel.Setup(x => x.ResourceClaims).Returns(updatedResourceClaims);
 
-            Scoped<ISecurityContext>(securityContextLatest =>
-            {
-                Scoped<ISecurityContext>(
-                    securityContext6 =>
-                    {
-                        var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
-                            new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V6(),
-                            null, new EditResourceOnClaimSetCommandV6Service(securityContext6)),
-                            new Management.Database.Queries.GetResourceClaimsQuery(securityContextLatest),
-                            new OverrideDefaultAuthorizationStrategyCommand(
-                                new StubOdsSecurityModelVersionResolver.V6(), null,
-                                new OverrideDefaultAuthorizationStrategyV6Service(securityContext6)));
+            Scoped<ISecurityContext>(
+                securityContext6 =>
+                {
+                    var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
+                        new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V6(),
+                        null, new EditResourceOnClaimSetCommandV6Service(securityContext6)),
+                        new Management.Database.Queries.GetResourceClaimsQuery(securityContext6),
+                        new OverrideDefaultAuthorizationStrategyCommand(
+                            new StubOdsSecurityModelVersionResolver.V6(), null,
+                            new OverrideDefaultAuthorizationStrategyV6Service(securityContext6)));
 
-                        var command = new UpdateResourcesOnClaimSetCommandV6Service(securityContext6, addOrEditResourcesOnClaimSetCommand);
-                        command.Execute(updateResourcesOnClaimSetModel.Object);
-                    });
-            });
+                    var command = new UpdateResourcesOnClaimSetCommandV6Service(securityContext6, addOrEditResourcesOnClaimSetCommand);
+                    command.Execute(updateResourcesOnClaimSetModel.Object);
+                });
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
             resourceClaimsForClaimSet.Count.ShouldBe(1);

@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -18,23 +17,12 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResourceClaim;
-using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class EditResourceOnClaimSetCommandV53ServiceTests : SecurityData53TestBase
     {
-        private IMapper _mapper;
-
-        [SetUp]
-        public void Init()
-        {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
-            _mapper = config.CreateMapper();
-        }
-
         [Test]
         public void ShouldEditParentResourcesOnClaimSet()
         {
@@ -328,18 +316,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             resultChildResourceClaim1.Read.ShouldBe(resourceToAdd.Read);
             resultChildResourceClaim1.Update.ShouldBe(resourceToAdd.Update);
             resultChildResourceClaim1.Delete.ShouldBe(resourceToAdd.Delete);
-        }
-
-        private List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
-        {
-            List<ResourceClaim> list = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
-                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
-            });
-            return list;
         }
     }
 }

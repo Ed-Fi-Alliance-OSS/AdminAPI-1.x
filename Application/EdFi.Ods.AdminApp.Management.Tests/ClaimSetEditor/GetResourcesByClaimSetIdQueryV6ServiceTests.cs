@@ -7,32 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using Action = EdFi.Security.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Security.DataAccess.Models;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
-using AutoMapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class GetResourcesByClaimSetIdQueryV6SerivceTests : SecurityDataTestBase
     {
-        private IMapper _mapper;
-
-        [SetUp]
-        public void Init()
-        {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
-            _mapper = config.CreateMapper();
-        }
-
         [Test]
         public void ShouldGetParentResourcesByClaimSetId()
         {
@@ -375,30 +361,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(claimSetResourceClaims.Cast<object>().ToArray());
 
             return claimSetResourceClaims;
-        }
-
-        private List<Management.ClaimSetEditor.ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
-        {
-            List<Management.ClaimSetEditor.ResourceClaim> list = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                    null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
-                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
-            });
-            return list;
-        }
-
-        private Management.ClaimSetEditor.ResourceClaim SingleResourceClaimForClaimSet(int securityContextClaimSetId, int resourceClaimId)
-        {
-            Management.ClaimSetEditor.ResourceClaim resourceClaim = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                    null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
-                resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(securityContextClaimSetId, resourceClaimId);
-            });
-            return resourceClaim;
         }
     }
 }

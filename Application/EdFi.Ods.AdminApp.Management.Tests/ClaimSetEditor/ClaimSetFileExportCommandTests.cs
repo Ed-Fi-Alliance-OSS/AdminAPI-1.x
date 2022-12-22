@@ -185,16 +185,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Title' must not be empty.");
         }
 
-        private List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
-        {
-            List<ResourceClaim> list = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                list = ResourcesByClaimSetIdQuery(securityContext).AllResources(securityContextClaimSetId).ToList();
-            });
-            return list;
-        }
-
         private GetResourcesByClaimSetIdQuery ResourcesByClaimSetIdQuery(ISecurityContext context)
         {
             return new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),

@@ -8,7 +8,6 @@ using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Shouldly;
-using System.Collections.Generic;
 using AutoMapper;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -196,18 +195,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 validationResults.IsValid.ShouldBe(false);
                 validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
             });
-        }
-
-        private List<ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
-        {
-            List<ResourceClaim> list = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
-                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
-            });
-            return list;
         }
     }
 }

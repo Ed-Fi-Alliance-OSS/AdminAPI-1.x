@@ -24,23 +24,12 @@ using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
     public class ClaimSetFileImportCommandTests : SecurityDataTestBase
     {
-        private IMapper _mapper;
-
-        [SetUp]
-        public void Init()
-        {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
-            _mapper = config.CreateMapper();
-        }
-
         [Test]
         public void ShouldImportClaimSet()
         {
@@ -532,18 +521,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             importModel.ImportFile = importFile.Object;
 
             return importModel;
-        }
-
-        private List<Management.ClaimSetEditor.ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
-        {
-            List<Management.ClaimSetEditor.ResourceClaim> list = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                    null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
-                list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
-            });
-            return list;
         }
     }
 }

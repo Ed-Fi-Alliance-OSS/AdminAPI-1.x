@@ -234,17 +234,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 command.Execute(overrideModel);
             });
         }
-
-        private ResourceClaim SingleResourceClaimForClaimSet(int securityContextClaimSetId, int resourceClaimId)
-        {
-            ResourceClaim resourceClaim = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                     null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
-                resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(securityContextClaimSetId, resourceClaimId);
-            });
-            return resourceClaim;
-        }
     }
 }

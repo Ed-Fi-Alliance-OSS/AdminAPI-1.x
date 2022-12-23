@@ -19,7 +19,7 @@ using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class GetClaimSetByIdQueryTests : SecurityData53TestBase
+    public class GetClaimSetByIdQueryV53ServiceTests : SecurityData53TestBase
     {
         [Test]
         public void ShouldGetClaimSetById()
@@ -33,10 +33,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet", Application = testApplication};
             Save(testClaimSet);
 
-            Scoped<IGetClaimSetByIdQuery>(query =>
+            Scoped<GetClaimSetByIdQueryV53Service>(query =>
             {
                 var result = query.Execute(testClaimSet.ClaimSetId);
-
                 result.Name.ShouldBe(testClaimSet.ClaimSetName);
                 result.Id.ShouldBe(testClaimSet.ClaimSetId);
             });
@@ -49,7 +48,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             const int NonExistingClaimSetId = 1;
 
-            var adminAppException = Assert.Throws<AdminAppException>(() => Scoped<IGetClaimSetByIdQuery>(query =>
+            var adminAppException = Assert.Throws<AdminAppException>(() => Scoped<GetClaimSetByIdQueryV53Service>(query =>
             {
                 query.Execute(NonExistingClaimSetId);
             }));

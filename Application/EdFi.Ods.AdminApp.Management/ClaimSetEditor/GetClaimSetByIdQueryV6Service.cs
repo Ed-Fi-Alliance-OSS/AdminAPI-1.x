@@ -10,7 +10,7 @@ using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
-    public class GetClaimSetByIdQueryV6Service: IGetClaimSetByIdQuery
+    public class GetClaimSetByIdQueryV6Service
     {
         private readonly ISecurityContext _securityContext;
 

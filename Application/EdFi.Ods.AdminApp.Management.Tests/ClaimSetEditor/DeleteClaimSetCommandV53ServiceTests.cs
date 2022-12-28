@@ -146,15 +146,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = false
             };
 
-            //Scoped<ISecurityContext>(securityContext =>
-            //{
-            //    var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
 
-            //    var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            //    var validationResults = validator.Validate(claimSetToDelete);
-            //    validationResults.IsValid.ShouldBe(false);
-            //    validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
-            //});
+                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
+                var validationResults = validator.Validate(claimSetToDelete);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
+            });
         }
 
         [Test]
@@ -176,15 +176,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = true
             };
 
-            //Scoped<ISecurityContext>(securityContext =>
-            //{
-            //    var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
 
-            //    var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            //    var validationResults = validator.Validate(claimSetToDelete);
-            //    validationResults.IsValid.ShouldBe(false);
-            //    validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
-            //});
+                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
+                var validationResults = validator.Validate(claimSetToDelete);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
+            });
         }
 
         [Test]
@@ -207,15 +207,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 VendorApplicationCount = 1
             };
 
-            //Scoped<ISecurityContext>(securityContext =>
-            //{
-            //    var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+            Scoped<ISecurityContext>(securityContext =>
+            {
+                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
 
-            //    var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            //    var validationResults = validator.Validate(claimSetToDelete);
-            //    validationResults.IsValid.ShouldBe(false);
-            //    validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
-            //});
+                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
+                var validationResults = validator.Validate(claimSetToDelete);
+                validationResults.IsValid.ShouldBe(false);
+                validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
+            });
         }
+
+        private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                        new GetClaimSetByIdQueryV53Service(securityContext), null);
     }
 }

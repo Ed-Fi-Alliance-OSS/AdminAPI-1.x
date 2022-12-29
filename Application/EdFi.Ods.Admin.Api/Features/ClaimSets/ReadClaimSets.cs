@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
 
@@ -35,7 +34,7 @@ public class ReadClaimSets : IFeature
         foreach(var claimSet in model)
         {
             claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);
-            claimSet.IsSystemReserved = DefaultClaimSets.Contains(claimSet.Name);
+            claimSet.IsSystemReserved = CloudOdsAdminApp.DefaultClaimSets.Contains(claimSet.Name);
         }
         return Task.FromResult(AdminApiResponse<List<ClaimSetModel>>.Ok(model));
     }

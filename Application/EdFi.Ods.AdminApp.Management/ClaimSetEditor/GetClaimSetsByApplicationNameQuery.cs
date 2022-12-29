@@ -12,19 +12,6 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
     public class GetClaimSetsByApplicationNameQuery : IGetClaimSetsByApplicationNameQuery
     {
-        public static readonly string[] DefaultClaimSets =
-        {
-            "SIS Vendor",
-            "Ed-Fi Sandbox",
-            "Roster Vendor",
-            "Assessment Vendor",
-            "Assessment Read",
-            "District Hosted SIS Vendor",
-            "AB Connect",
-            "Bootstrap Descriptors and EdOrgs",
-            "Education Preparation Program"
-        };
-
         private readonly ISecurityContext _securityContext;
         private readonly IUsersContext _usersContext;
 
@@ -75,7 +62,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 var applicationsCount = applicationsCounts
                     .SingleOrDefault(x => x.ClaimSetName == claimSet.Name)
                     ?.ApplicationsCount;
-                claimSet.IsEditable = !DefaultClaimSets.Contains(claimSet.Name);
+                claimSet.IsEditable = !CloudOdsAdminApp.DefaultClaimSets.Contains(claimSet.Name);
                 claimSet.ApplicationsCount = applicationsCount.GetValueOrDefault();
             }
         }

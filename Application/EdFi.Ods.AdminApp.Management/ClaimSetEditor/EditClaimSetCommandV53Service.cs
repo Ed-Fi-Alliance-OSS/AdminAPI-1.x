@@ -8,7 +8,6 @@ using System.Linq;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -27,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         {
             var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
 
-            if (DefaultClaimSets.Contains(existingClaimSet.ClaimSetName) ||
+            if (CloudOdsAdminApp.DefaultClaimSets.Contains(existingClaimSet.ClaimSetName) ||
                         CloudOdsAdminApp.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
             {
                 throw new AdminAppException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");

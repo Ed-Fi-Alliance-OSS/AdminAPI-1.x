@@ -3,33 +3,32 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-
-using ClaimSetEntity = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
     public class AddClaimSetCommand
     {
-        private readonly ISecurityContext _context;
+        private readonly IOdsSecurityModelVersionResolver _resolver;
+        private readonly AddClaimSetCommandV53Service _v53Service;
+        private readonly AddClaimSetCommandV6Service _v6Service;
 
-        public AddClaimSetCommand(ISecurityContext context)
+        public AddClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
+            AddClaimSetCommandV53Service v53Service,
+            AddClaimSetCommandV6Service v6Service)
         {
-            _context = context;
+            _resolver = resolver;
+            _v53Service = v53Service;
+            _v6Service = v6Service;
         }
 
         public int Execute(IAddClaimSetModel claimSet)
         {
-            var newClaimSet = new ClaimSetEntity
-            {
-                ClaimSetName = claimSet.ClaimSetName,
-                Application = _context.Applications.Single()
-            };
-            _context.ClaimSets.Add(newClaimSet);
-            _context.SaveChanges();
-
-            return newClaimSet.ClaimSetId;
+            var securityModel = _resolver.DetermineSecurityModel();
+            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
+                return _v53Service.Execute(claimSet);
+            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
+                return _v6Service.Execute(claimSet);
+            else
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
         }
     }
 

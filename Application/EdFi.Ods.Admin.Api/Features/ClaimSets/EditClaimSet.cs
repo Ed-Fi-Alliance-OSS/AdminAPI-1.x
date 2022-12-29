@@ -24,7 +24,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             .BuildForVersions(AdminApiVersions.V1);
         }
 
-        public async Task<IResult> Handle(Validator validator, EditClaimSetCommand editClaimSetCommand,
+        public async Task<IResult> Handle(Validator validator, IEditClaimSetCommand editClaimSetCommand,
             UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
             IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,

@@ -148,7 +148,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
 
                 var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
                 var validationResults = validator.Validate(claimSetToDelete);
@@ -178,7 +178,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
 
                 var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
                 var validationResults = validator.Validate(claimSetToDelete);
@@ -209,7 +209,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var getClaimSetByIdQuery = new GetClaimSetByIdQuery(securityContext);
+                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
 
                 var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
                 var validationResults = validator.Validate(claimSetToDelete);
@@ -217,5 +217,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
             });
         }
+
+        private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                        new GetClaimSetByIdQueryV53Service(securityContext), null);
     }
 }

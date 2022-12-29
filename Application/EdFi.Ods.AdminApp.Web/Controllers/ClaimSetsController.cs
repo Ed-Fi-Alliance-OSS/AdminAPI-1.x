@@ -34,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ITabDisplayService _tabDisplayService;
         private readonly CopyClaimSetCommand _copyClaimSetCommand;
         private readonly AddClaimSetCommand _addClaimSetCommand;
-        private readonly EditClaimSetCommand _editClaimSetCommand;
+        private readonly IEditClaimSetCommand _editClaimSetCommand;
         private readonly GetResourceClaimsQuery _getResourceClaimsQuery;
         private readonly GetChildResourceClaimsForParentQuery _getChildResourceClaimsForParentQuery;
         private readonly DeleteClaimSetCommand _deleteClaimSetCommand;
@@ -53,7 +53,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , ITabDisplayService tabDisplayService
             , CopyClaimSetCommand copyClaimSetCommand
             , AddClaimSetCommand addClaimSetCommand
-            , EditClaimSetCommand editClaimSetCommand
+            , IEditClaimSetCommand editClaimSetCommand
             , GetResourceClaimsQuery getResourceClaimsQuery
             , GetChildResourceClaimsForParentQuery getChildResourceClaimsForParentQuery
             , DeleteClaimSetCommand deleteClaimSetCommand

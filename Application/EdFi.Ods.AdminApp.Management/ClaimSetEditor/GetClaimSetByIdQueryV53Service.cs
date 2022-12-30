@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -31,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 {
                     Id = securityContextClaimSet.ClaimSetId,
                     Name = securityContextClaimSet.ClaimSetName,
-                    IsEditable = !DefaultClaimSets.Contains(securityContextClaimSet.ClaimSetName)
+                    IsEditable = !CloudOdsAdminApp.DefaultClaimSets.Contains(securityContextClaimSet.ClaimSetName)
                 };
             }
 

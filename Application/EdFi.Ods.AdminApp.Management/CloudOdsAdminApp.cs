@@ -18,5 +18,18 @@ namespace EdFi.Ods.AdminApp.Management
             InternalAdminAppClaimSet,
             "Bootstrap Descriptors and EdOrgs"
         };
+
+        public static readonly string[] DefaultClaimSets =
+        {
+            "SIS Vendor",
+            "Ed-Fi Sandbox",
+            "Roster Vendor",
+            "Assessment Vendor",
+            "Assessment Read",
+            "District Hosted SIS Vendor",
+            "AB Connect",
+            "Bootstrap Descriptors and EdOrgs",
+            "Education Preparation Program"
+        };
     }
 }

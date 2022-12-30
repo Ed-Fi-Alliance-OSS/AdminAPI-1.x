@@ -10,17 +10,15 @@ using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using Application = EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class GetClaimSetsByApplicationNameQueryTests : SecurityData53TestBase
+    public class GetClaimSetsByApplicationNameQueryV6ServiceTests : SecurityDataTestBase
     {
         [Test]
         public void ShouldExcludeInternalAdminAppClaimSet()
@@ -32,10 +30,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(new ClaimSet
             {
                 ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet,
-                Application = testApplication
+                Application = testApplication,
+                ForApplicationUseOnly = true,
+                IsEdfiPreset = true
             });
 
-            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
+            Scoped<GetClaimSetsByApplicationNameQueryV6Service>(query =>
             {
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
@@ -53,16 +53,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(new ClaimSet
             {
                 ClaimSetName = "Bootstrap Descriptors and EdOrgs",
-                Application = testApplication
+                Application = testApplication,
+                ForApplicationUseOnly = true,
+                IsEdfiPreset = true
             });
 
             Save(new ClaimSet
             {
                 ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet,
-                Application = testApplication
+                Application = testApplication,
+                ForApplicationUseOnly = true,
+                IsEdfiPreset = true
             });
 
-            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
+            Scoped<GetClaimSetsByApplicationNameQueryV6Service>(query =>
             {
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
@@ -76,7 +80,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         {
             var testClaimSets = SetupApplicationClaimSets();
 
-            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
+            Scoped<GetClaimSetsByApplicationNameQueryV6Service>(query =>
             {
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
@@ -93,7 +97,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSets = SetupApplicationClaimSets();
 
-            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
+            Scoped<GetClaimSetsByApplicationNameQueryV6Service>(query =>
             {
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
@@ -111,10 +115,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(new ClaimSet
             {
                 ClaimSetName = "SIS Vendor",
-                Application = testApplication
+                Application = testApplication,
+                IsEdfiPreset = true
             });
 
-            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
+            Scoped<GetClaimSetsByApplicationNameQueryV6Service>(query =>
             {
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
@@ -151,7 +156,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 usersContext.SaveChanges();
             });
 
-            Scoped<IGetClaimSetsByApplicationNameQuery>(query =>
+            Scoped<GetClaimSetsByApplicationNameQueryV6Service>(query =>
             {
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 

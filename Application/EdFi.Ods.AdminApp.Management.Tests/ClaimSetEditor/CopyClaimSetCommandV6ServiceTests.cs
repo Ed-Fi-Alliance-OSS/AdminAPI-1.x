@@ -10,32 +10,20 @@ using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Moq;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
-using System.Collections.Generic;
-using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class CopyClaimSetCommandTests : SecurityData53TestBase
+    public class CopyClaimSetCommandV6ServiceTests : SecurityDataTestBase
     {
-        private IMapper _mapper;
-
-        [SetUp]
-        public void Init()
-        {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
-            _mapper = config.CreateMapper();
-        }
-
         [Test]
         public void ShouldCopyClaimSet()
         {
@@ -48,7 +36,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet", Application = testApplication};
             Save(testClaimSet);
 
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication,
+               UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
             var newClaimSet = new Mock<ICopyClaimSetModel>();
             newClaimSet.Setup(x => x.Name).Returns("TestClaimSet_Copy");
@@ -56,20 +45,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             int copyClaimSetId = Scoped<ISecurityContext, int>(securityContext =>
             {
-                var command = new CopyClaimSetCommand(securityContext);
+                var command = new CopyClaimSetCommandV6Service(securityContext);
                 return command.Execute(newClaimSet.Object);
             });
 
             var copiedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId));
             copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
+            copiedClaimSet.ForApplicationUseOnly.ShouldBe(false);
+            copiedClaimSet.IsEdfiPreset.ShouldBe(false);
 
-            List<ResourceClaim> results = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper),null );
-                results = getResourcesByClaimSetIdQuery.AllResources(copiedClaimSet.ClaimSetId).ToList();
-            });
+            var results = ResourceClaimsForClaimSet(copiedClaimSet.ClaimSetId).ToList();
 
             var testParentResourceClaimsForId =
                 testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
@@ -117,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 OriginalId = testClaimSet.ClaimSetId
             };
 
-            Scoped<EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
                 var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
@@ -145,7 +130,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 OriginalId = testClaimSet.ClaimSetId
             };
 
-            Scoped<EdFi.Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
+            Scoped<ISecurityContext>(securityContext =>
             {
                 var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
                 var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);

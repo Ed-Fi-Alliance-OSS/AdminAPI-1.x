@@ -10,17 +10,17 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using Moq;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class DeleteClaimSetCommandV53ServiceTests : SecurityData53TestBase
+    public class DeleteClaimSetCommandV6ServiceTests : SecurityDataTestBase
     {
 
         [Test]
@@ -33,14 +33,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(testApplication);
 
             var testClaimSetToDelete = new ClaimSet
-                {ClaimSetName = "TestClaimSet_Delete", Application = testApplication};
+            { ClaimSetName = "TestClaimSet_Delete", Application = testApplication };
             Save(testClaimSetToDelete);
-            SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication);
+            SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
             var testClaimSetToPreserve = new ClaimSet
-                {ClaimSetName = "TestClaimSet_Preserve", Application = testApplication};
+            { ClaimSetName = "TestClaimSet_Preserve", Application = testApplication };
             Save(testClaimSetToPreserve);
-            var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication);
+            var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication, UniqueNameList("ParentRc", 3),
+                UniqueNameList("ChildRc", 1));
 
             var deleteModel = new Mock<IDeleteClaimSetModel>();
             deleteModel.Setup(x => x.Name).Returns(testClaimSetToDelete.ClaimSetName);
@@ -48,13 +49,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new DeleteClaimSetCommandV53Service(securityContext);
+                var command = new DeleteClaimSetCommandV6Service(securityContext);
 
                 command.Execute(deleteModel.Object);
             });
 
             Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId)).ShouldBeNull();
-            Transaction(securityContext => securityContext.ClaimSetResourceClaims.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
+            Transaction(securityContext => securityContext.ClaimSetResourceClaimActions.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
                 .ShouldBe(0);
 
             var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));
@@ -102,7 +103,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var exception = Assert.Throws<AdminAppException>(() => Scoped<ISecurityContext>(securityContext =>
             {
-                var command = new DeleteClaimSetCommandV53Service(securityContext);
+                var command = new DeleteClaimSetCommandV6Service(securityContext);
                 command.Execute(deleteModel.Object);
             }));
             exception.ShouldNotBeNull();
@@ -201,7 +202,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
         }
 
-        private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                        new GetClaimSetByIdQueryV53Service(securityContext), null);
+        private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
+                        null, new GetClaimSetByIdQueryV6Service(securityContext));
     }
 }

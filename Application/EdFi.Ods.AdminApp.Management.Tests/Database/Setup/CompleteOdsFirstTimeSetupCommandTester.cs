@@ -74,8 +74,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockFirstTimeSetupService = new Mock<IOdsInstanceFirstTimeSetupService>();
 
-            var mockAssessmentVendorAdjustment = new Mock<IAssessmentVendorAdjustment>();
-
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
 
             var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
@@ -88,7 +86,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockSecurityContext.Object,
                 mockClaimSetConfigurator.Object,
                 mockFirstTimeSetupService.Object,
-                mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
                 mockClaimSetCheckService.Object,
                 mockInferInstanceService.Object);

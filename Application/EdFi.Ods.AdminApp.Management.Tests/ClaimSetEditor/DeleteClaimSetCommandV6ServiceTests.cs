@@ -94,7 +94,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", Application = testApplication };
+            var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", Application = testApplication, IsEdfiPreset = true };
             Save(systemReservedClaimSet);
 
             var deleteModel = new Mock<IDeleteClaimSetModel>();

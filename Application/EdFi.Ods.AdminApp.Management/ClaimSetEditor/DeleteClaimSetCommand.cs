@@ -27,19 +27,13 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
         public void Execute(IDeleteClaimSetModel claimSet)
         {
-            var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
-
-            if (DefaultClaimSets.Contains(claimSetToDelete.ClaimSetName) ||
-                        CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
-            {
-                throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
-            }
-
-            var resourceClaimsForClaimSetId =
-                _context.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == claimSet.Id).ToList();
-            _context.ClaimSetResourceClaims.RemoveRange(resourceClaimsForClaimSetId);
-            _context.ClaimSets.Remove(claimSetToDelete);
-            _context.SaveChanges();
+            var securityModel = _resolver.DetermineSecurityModel();
+            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
+                _v53Service.Execute(claimSet);
+            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
+                _v6Service.Execute(claimSet);
+            else
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
         }
     }
 

@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
-using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -23,8 +22,8 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public void Execute(IDeleteClaimSetModel claimSet)
         {
             var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
-            if (DefaultClaimSets.Contains(claimSetToDelete.ClaimSetName) ||
-                   CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
+            if (claimSetToDelete.ForApplicationUseOnly || claimSetToDelete.IsEdfiPreset ||
+                    CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
             {
                 throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
             }

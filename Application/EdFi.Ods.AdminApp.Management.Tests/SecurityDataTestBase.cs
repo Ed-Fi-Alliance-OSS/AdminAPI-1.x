@@ -25,7 +25,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                return Startup.ConfigurationConnectionStrings.Security;
+                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test_v6;Integrated Security=True;"
+                    ;//Startup.ConfigurationConnectionStrings.Security;
             }
         }
 
@@ -43,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             if (SeedSecurityContextOnFixtureSetup)
             {
-                SetupContext.Database.Initialize(true);
+                TestContext.Database.Initialize(true);
             }
         }
 

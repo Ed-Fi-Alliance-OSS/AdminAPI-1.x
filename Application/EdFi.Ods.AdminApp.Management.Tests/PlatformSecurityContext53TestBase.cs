@@ -89,10 +89,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             foreach (var entity in entities)
             {
-                SetupContext.Set(entity.GetType()).Add(entity);
+                TestContext.Set(entity.GetType()).Add(entity);
             }
 
-            SetupContext.SaveChanges();
+            TestContext.SaveChanges();
         }
 
         protected void Transaction(Action<ISecurityContext> action)

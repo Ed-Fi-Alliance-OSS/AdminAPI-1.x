@@ -10,12 +10,8 @@ using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Moq;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 
@@ -43,27 +39,25 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             newClaimSet.Setup(x => x.Name).Returns("TestClaimSet_Copy");
             newClaimSet.Setup(x => x.OriginalId).Returns(testClaimSet.ClaimSetId);
 
-            int copyClaimSetId = Scoped<ISecurityContext, int>(securityContext =>
+            var copyClaimSetId = 0;
+            ClaimSet copiedClaimSet = null;
+            using (var securityContext = TestContext)
             {
                 var command = new CopyClaimSetCommandV53Service(securityContext);
-                return command.Execute(newClaimSet.Object);
-            });
+                copyClaimSetId = command.Execute(newClaimSet.Object);
+                copiedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
+                copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
 
-            var copiedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId));
-            copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
+                var results = ResourceClaimsForClaimSet(copiedClaimSet.ClaimSetId).ToList();
 
-            var results = ResourceClaimsForClaimSet(copiedClaimSet.ClaimSetId).ToList();
+                var testParentResourceClaimsForId =
+                    testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
 
-            var testParentResourceClaimsForId =
-                testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
+                results.Count.ShouldBe(testParentResourceClaimsForId.Length);
+                results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
+                results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
+                results.All(x => x.Create).ShouldBe(true);
 
-            results.Count.ShouldBe(testParentResourceClaimsForId.Length);
-            results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
-            results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
-            results.All(x => x.Create).ShouldBe(true);
-
-            Transaction(securityContext =>
-            {
                 foreach (var testParentResourceClaim in testParentResourceClaimsForId)
                 {
                     var testChildren = securityContext.ResourceClaims.Where(x =>
@@ -73,7 +67,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                     parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
                     parentResult.Children.All(x => x.Create).ShouldBe(true);
                 }
-            });
+            }
 
             Scoped<IUsersContext>(usersContext =>
             {
@@ -100,14 +94,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 OriginalId = testClaimSet.ClaimSetId
             };
 
-            Scoped<Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
-            {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
-                var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
-                var validationResults = validator.Validate(newClaimSet);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
-            });
+            using var securityContext = TestContext;
+            var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
+            var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
+            var validationResults = validator.Validate(newClaimSet);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("The new claim set must have a unique name");
+
         }
 
         [Test]
@@ -128,14 +121,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 OriginalId = testClaimSet.ClaimSetId
             };
 
-            Scoped<Security.DataAccess.Contexts.ISecurityContext>(securityContext =>
-            {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
-                var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
-                var validationResults = validator.Validate(newClaimSet);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
-            });
+            using var securityContext = TestContext;
+            var getAllClaimSetsQuery = new GetAllClaimSets53Query(securityContext);
+            var validator = new CopyClaimSetModelValidator(getAllClaimSetsQuery);
+            var validationResults = validator.Validate(newClaimSet);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
         }
     }
 }

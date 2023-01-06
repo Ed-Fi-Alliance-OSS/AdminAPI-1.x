@@ -5,7 +5,9 @@
 
 using System;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Security.DataAccess.Contexts;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
@@ -16,7 +18,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     public abstract class PlatformSecurityContextTestBase
     {
         protected SqlServerSecurityContext TestContext { get; private set; }
-        protected SqlServerSecurityContext SetupContext { get; private set; }
+        //protected SqlServerSecurityContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
@@ -50,7 +52,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public virtual async Task FixtureSetup()
         {
             TestContext = CreateDbContext();
-            SetupContext = CreateDbContext();
+            //SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
             {
@@ -70,7 +72,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public async Task SetUp()
         {
             TestContext = CreateDbContext();
-            SetupContext = CreateDbContext();
+            //SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
             {
@@ -82,30 +84,27 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public void TearDown()
         {
             TestContext.Dispose();
-            SetupContext.Dispose();
+            //SetupContext.Dispose();
         }
 
         protected void Save(params object[] entities)
         {
             foreach (var entity in entities)
             {
-                SetupContext.Set(entity.GetType()).Add(entity);
+                TestContext.Set(entity.GetType()).Add(entity);
             }
 
-            SetupContext.SaveChanges();
+            TestContext.SaveChanges();
         }
 
         protected void Transaction(Action<ISecurityContext> action)
         {
-            Scoped<ISecurityContext>(securityContext =>
+            using (var transaction = (TestContext).Database.BeginTransaction())
             {
-                using (var transaction = ((SqlServerSecurityContext)securityContext).Database.BeginTransaction())
-                {
-                    action(securityContext);
-                    securityContext.SaveChanges();
-                    transaction.Commit();
-                }
-            });
+                action(TestContext);
+                TestContext.SaveChanges();
+                transaction.Commit();
+            } 
         }
 
         protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)

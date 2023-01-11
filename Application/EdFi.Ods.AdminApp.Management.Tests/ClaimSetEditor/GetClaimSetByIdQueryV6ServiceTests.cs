@@ -11,8 +11,6 @@ using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using System.Net;
 using EdFi.Security.DataAccess.Contexts;
 
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 
@@ -39,14 +37,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testClaimSet);
 
-            Scoped<GetClaimSetByIdQueryV6Service>(query =>
-            {
-                var result = query.Execute(testClaimSet.ClaimSetId);
-
-                result.Name.ShouldBe(testClaimSet.ClaimSetName);
-                result.Id.ShouldBe(testClaimSet.ClaimSetId);
-                result.IsEditable.ShouldBe(true);
-            });
+            using var securityContext = TestContext;
+            var query = new GetClaimSetByIdQueryV6Service(securityContext);
+            var result = query.Execute(testClaimSet.ClaimSetId);
+            result.Name.ShouldBe(testClaimSet.ClaimSetName);
+            result.Id.ShouldBe(testClaimSet.ClaimSetId);
+            result.IsEditable.ShouldBe(true);
         }
 
         [Test]
@@ -75,45 +71,42 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(edfiPresetClaimSet);
 
-            Scoped<GetClaimSetByIdQueryV6Service>(query =>
-            {
-                var result = query.Execute(systemReservedClaimSet.ClaimSetId);
+            using var securityContext = TestContext;
+            var query = new GetClaimSetByIdQueryV6Service(securityContext);
+            var result = query.Execute(systemReservedClaimSet.ClaimSetId);
+            result.Name.ShouldBe(systemReservedClaimSet.ClaimSetName);
+            result.Id.ShouldBe(systemReservedClaimSet.ClaimSetId);
+            result.IsEditable.ShouldBe(false);
 
-                result.Name.ShouldBe(systemReservedClaimSet.ClaimSetName);
-                result.Id.ShouldBe(systemReservedClaimSet.ClaimSetId);
-                result.IsEditable.ShouldBe(false);
+            result = query.Execute(edfiPresetClaimSet.ClaimSetId);
 
-                result = query.Execute(edfiPresetClaimSet.ClaimSetId);
-
-                result.Name.ShouldBe(edfiPresetClaimSet.ClaimSetName);
-                result.Id.ShouldBe(edfiPresetClaimSet.ClaimSetId);
-                result.IsEditable.ShouldBe(false);
-            });
+            result.Name.ShouldBe(edfiPresetClaimSet.ClaimSetName);
+            result.Id.ShouldBe(edfiPresetClaimSet.ClaimSetId);
+            result.IsEditable.ShouldBe(false);
         }
 
         [Test]
         public void ShouldThrowExceptionForNonExistingClaimSetId()
         {
-            EnsureZeroClaimSets();
-
             const int NonExistingClaimSetId = 1;
 
-            var adminAppException = Assert.Throws<AdminAppException>(() => Scoped<GetClaimSetByIdQueryV6Service>(query =>
+            using var securityContext = TestContext;
+            EnsureZeroClaimSets(securityContext);
+
+            var adminAppException = Assert.Throws<AdminAppException>(() =>
             {
+                var query = new GetClaimSetByIdQueryV6Service(securityContext);
                 query.Execute(NonExistingClaimSetId);
-            }));
+            });
             adminAppException.ShouldNotBeNull();
             adminAppException.StatusCode.ShouldBe(HttpStatusCode.NotFound);
             adminAppException.Message.ShouldBe("No such claim set exists in the database.");
 
-            void EnsureZeroClaimSets()
+            void EnsureZeroClaimSets(ISecurityContext database)
             {
-                Scoped<ISecurityContext>(database =>
-                {
-                    foreach (var entity in database.ClaimSets)
-                        database.ClaimSets.Remove(entity);
-                    database.SaveChanges();
-                });
+                foreach (var entity in database.ClaimSets)
+                    database.ClaimSets.Remove(entity);
+                database.SaveChanges();
             }
         }
     }

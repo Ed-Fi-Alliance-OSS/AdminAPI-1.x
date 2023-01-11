@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -18,15 +18,13 @@ public class GetAllAuthorizationStrategiesQueryTests : SecurityDataTestBase
     {
         LoadSeedData();
 
-        Transaction(securityContext =>
-        {
-            var query = new GetAllAuthorizationStrategiesQuery(securityContext);
-            var resultNames = query.Execute().Select(x => x.AuthStrategyName).ToList();
+        using var securityContext = TestContext;
+        var query = new GetAllAuthorizationStrategiesQuery(securityContext);
+        var resultNames = query.Execute().Select(x => x.AuthStrategyName).ToList();
 
-            resultNames.Count.ShouldBe(2);
+        resultNames.Count.ShouldBe(2);
 
-            resultNames.ShouldContain("NamespaceBased");
-            resultNames.ShouldContain("NoFurtherAuthorizationRequired");
-        });
+        resultNames.ShouldContain("NamespaceBased");
+        resultNames.ShouldContain("NoFurtherAuthorizationRequired");
     }
 }

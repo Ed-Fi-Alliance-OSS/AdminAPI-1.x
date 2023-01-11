@@ -34,7 +34,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly ICopyClaimSetCommand _copyClaimSetCommand;
         private readonly AddClaimSetCommand _addClaimSetCommand;
         private readonly IEditClaimSetCommand _editClaimSetCommand;
-        private readonly GetResourceClaimsQuery _getResourceClaimsQuery;
+        private readonly IGetResourceClaimsQuery _getResourceClaimsQuery;
         private readonly GetChildResourceClaimsForParentQuery _getChildResourceClaimsForParentQuery;
         private readonly IDeleteClaimSetCommand _deleteClaimSetCommand;
         private readonly EditResourceOnClaimSetCommand _editResourceOnClaimSetCommand;
@@ -53,7 +53,7 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , ICopyClaimSetCommand copyClaimSetCommand
             , AddClaimSetCommand addClaimSetCommand
             , IEditClaimSetCommand editClaimSetCommand
-            , GetResourceClaimsQuery getResourceClaimsQuery
+            , IGetResourceClaimsQuery getResourceClaimsQuery
             , GetChildResourceClaimsForParentQuery getChildResourceClaimsForParentQuery
             , IDeleteClaimSetCommand deleteClaimSetCommand
             , EditResourceOnClaimSetCommand editResourceOnClaimSetCommand

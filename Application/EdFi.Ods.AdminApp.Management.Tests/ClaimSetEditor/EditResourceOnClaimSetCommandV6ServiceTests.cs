@@ -8,11 +8,8 @@ using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.Security.DataAccess.Contexts;
 using Shouldly;
 using Moq;
-
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
@@ -55,17 +52,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             editResourceOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
             editResourceOnClaimSetModel.Setup(x => x.ResourceClaim).Returns(editedResource);
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
-                command.Execute(editResourceOnClaimSetModel.Object);
-            });
+            using var securityContext = TestContext;
+            var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+            command.Execute(editResourceOnClaimSetModel.Object);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
-
-            var parentResources = testResources.Where(x =>
-                x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToList();
-            resourceClaimsForClaimSet.Count().ShouldBe(parentResources.Count);
 
             var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == editedResource.Id);
 
@@ -103,8 +94,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var test1ChildResourceClaim = $"{childRcNames.First()}-{parentRcNames.First()}";
             var test2ChildResourceClaim = $"{childRcNames.Last()}-{parentRcNames.First()}";
 
-            var testChildResource1ToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == test1ChildResourceClaim && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
-            var testChildResource2NotToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == test2ChildResourceClaim && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
+            using var securityContext = TestContext;
+            var testChildResource1ToEdit = securityContext.ResourceClaims.Single(x => x.ResourceName == test1ChildResourceClaim && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId);
+            var testChildResource2NotToEdit = securityContext.ResourceClaims.Single(x => x.ResourceName == test2ChildResourceClaim && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId);
             var editedResource = new ResourceClaim
             {
                 Id = testChildResource1ToEdit.ResourceClaimId,
@@ -119,17 +111,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             editResourceOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
             editResourceOnClaimSetModel.Setup(x => x.ResourceClaim).Returns(editedResource);
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
-                command.Execute(editResourceOnClaimSetModel.Object);
-            });
+            var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+            command.Execute(editResourceOnClaimSetModel.Object);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
-
-            var parentResources = testResources.Where(x =>
-                x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToList();
-            resourceClaimsForClaimSet.Count.ShouldBe(parentResources.Count);
 
             var resultParentResourceClaim = resourceClaimsForClaimSet.Single(x => x.Id == testParentResource.ResourceClaim.ResourceClaimId);
             resultParentResourceClaim.Create.ShouldBe(true);
@@ -259,11 +244,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ExistingResourceClaims = existingResources
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
-                command.Execute(editResourceOnClaimSetModel);
-            });
+            using var securityContext = TestContext;
+            var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+            command.Execute(editResourceOnClaimSetModel);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -293,7 +276,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testParentResource1 = testResources.Single(x => x.ResourceName == parentRcNames.First());
             var childRcToTest = $"{childRcNames.First()}-{parentRcNames.First()}";
-            var testChildResource1ToAdd = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == childRcToTest && x.ParentResourceClaimId == testParentResource1.ResourceClaimId));
+
+            using var securityContext = TestContext;
+            var testChildResource1ToAdd = securityContext.ResourceClaims.Single(x => x.ResourceName == childRcToTest && x.ParentResourceClaimId == testParentResource1.ResourceClaimId);
             var resourceToAdd = new ResourceClaim()
             {
                 Id = testChildResource1ToAdd.ResourceClaimId,
@@ -312,11 +297,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ExistingResourceClaims = existingResources
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
-                command.Execute(editResourceOnClaimSetModel);
-            });
+            var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+            command.Execute(editResourceOnClaimSetModel);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 

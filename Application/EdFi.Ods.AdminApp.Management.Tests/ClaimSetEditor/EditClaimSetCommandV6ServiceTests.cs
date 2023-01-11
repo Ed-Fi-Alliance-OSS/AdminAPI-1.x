@@ -38,13 +38,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel {ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId};
 
+            using var securityContext = TestContext;
             Scoped<IUsersContext>((usersContext) =>
             {
-                var command = new EditClaimSetCommandV6Service(TestContext, usersContext);
+                var command = new EditClaimSetCommandV6Service(securityContext, usersContext);
                 command.Execute(editModel);
             });
 
-            var editedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == alreadyExistingClaimSet.ClaimSetId));
+            var editedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == alreadyExistingClaimSet.ClaimSetId);
             editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
         }
 
@@ -62,6 +63,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };
 
+            using var securityContext = TestContext;
             var exception = Assert.Throws<AdminAppException>(() => Scoped<IUsersContext>(usersContext =>
             {
                 var command = new EditClaimSetCommandV6Service(TestContext, usersContext);
@@ -90,20 +92,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = claimSetToBeEdited.ClaimSetId };
 
+            using var securityContext = TestContext;
             Scoped<IUsersContext>(usersContext =>
             {
-                var command = new EditClaimSetCommandV6Service(TestContext, usersContext);
+                var command = new EditClaimSetCommandV6Service(securityContext, usersContext);
                 command.Execute(editModel);
             });
 
-            var editedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetToBeEdited.ClaimSetId));
+            var editedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetToBeEdited.ClaimSetId);
             editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
-            AssertApplicationsForClaimSet(claimSetToBeEdited.ClaimSetId, editModel.ClaimSetName);
+            AssertApplicationsForClaimSet(claimSetToBeEdited.ClaimSetId, editModel.ClaimSetName, securityContext);
 
-
-            var unEditedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetNotToBeEdited.ClaimSetId));
+            var unEditedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetNotToBeEdited.ClaimSetId);
             unEditedClaimSet.ClaimSetName.ShouldBe(claimSetNotToBeEdited.ClaimSetName);
-            AssertApplicationsForClaimSet(claimSetNotToBeEdited.ClaimSetId, claimSetNotToBeEdited.ClaimSetName);
+            AssertApplicationsForClaimSet(claimSetNotToBeEdited.ClaimSetId, claimSetNotToBeEdited.ClaimSetName, securityContext);
         }
 
         private void SetupVendorApplicationsForClaimSet(ClaimSet testClaimSet, int applicationCount = 5)
@@ -123,16 +125,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             });
         }
 
-        private void AssertApplicationsForClaimSet(int claimSetId, string claimSetNameToAssert)
+        private void AssertApplicationsForClaimSet(int claimSetId, string claimSetNameToAssert, ISecurityContext securityContext)
         {
-            var results = Scoped<IGetApplicationsByClaimSetIdQuery, Management.ClaimSetEditor.Application[]>(
-                query => query.Execute(claimSetId).ToArray());
-
             Scoped<IUsersContext>(
                 usersContext =>
                 {
+                    var results = new GetApplicationsByClaimSetIdQuery(securityContext, usersContext).Execute(claimSetId);
                     var testApplications = usersContext.Applications.Where(x => x.ClaimSetName == claimSetNameToAssert).ToList();
-                    results.Length.ShouldBe(testApplications.Count());
+                    results.Count().ShouldBe(testApplications.Count());
                     results.Select(x => x.Name).ShouldBe(testApplications.Select(x => x.ApplicationName), true);
                 });
         }
@@ -154,16 +154,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSet1", ClaimSetId = testClaimSet.ClaimSetId };
 
-            Scoped<IGetAllClaimSetsQuery>(getAllQuery =>
-            {
-                Scoped<ISecurityContext>(securityContext =>
-                {
-                    var validator = new EditClaimSetModelValidator(getAllQuery, ClaimSetByIdQuery(securityContext));
-                    var validationResults = validator.Validate(editModel);
-                    validationResults.IsValid.ShouldBe(false);
-                    validationResults.Errors.Single().ErrorMessage.ShouldBe("A claim set with this name already exists in the database. Please enter a unique name.");
-                });
-            });
+            using var securityContext = TestContext;
+            var validator = new EditClaimSetModelValidator(AllClaimSetsQuery(securityContext),
+                ClaimSetByIdQuery(securityContext));
+            var validationResults = validator.Validate(editModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("A claim set with this name already exists in the database. Please enter a unique name.");
         }
 
         [Test]
@@ -180,16 +176,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "", ClaimSetId = testClaimSet.ClaimSetId };
 
-            Scoped<IGetAllClaimSetsQuery>(getAllQuery =>
-            {
-                Scoped<ISecurityContext>(securityContext =>
-                {
-                    var validator = new EditClaimSetModelValidator(getAllQuery, ClaimSetByIdQuery(securityContext));
-                    var validationResults = validator.Validate(editModel);
-                    validationResults.IsValid.ShouldBe(false);
-                    validationResults.Errors.Single().ErrorMessage.ShouldBe("'Claim Set Name' must not be empty.");
-                });
-            });
+            using var securityContext = TestContext;
+            var validator = new EditClaimSetModelValidator(AllClaimSetsQuery(securityContext),
+                ClaimSetByIdQuery(securityContext));
+            var validationResults = validator.Validate(editModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("'Claim Set Name' must not be empty.");
         }
 
         [Test]
@@ -206,19 +198,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var editModel = new EditClaimSetModel { ClaimSetName = "ThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255CharactersThisIsAClaimSetWithNameLengthGreaterThan255Characters", ClaimSetId = testClaimSet.ClaimSetId };
 
-            Scoped<IGetAllClaimSetsQuery>(getAllQuery =>
-            {
-                Scoped<ISecurityContext>(securityContext =>
-                {
-                    var validator = new EditClaimSetModelValidator(getAllQuery, ClaimSetByIdQuery(securityContext));
-                    var validationResults = validator.Validate(editModel);
-                    validationResults.IsValid.ShouldBe(false);
-                    validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
-                });
-            });
+            using var securityContext = TestContext;
+            var validator = new EditClaimSetModelValidator(AllClaimSetsQuery(securityContext),
+                ClaimSetByIdQuery(securityContext));
+            var validationResults = validator.Validate(editModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("The claim set name must be less than 255 characters.");
         }
 
         private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
                         null, new GetClaimSetByIdQueryV6Service(securityContext));
+
+        private IGetAllClaimSetsQuery AllClaimSetsQuery(ISecurityContext securityContext) => new GetAllClaimSetsQuery(securityContext);
     }
 }

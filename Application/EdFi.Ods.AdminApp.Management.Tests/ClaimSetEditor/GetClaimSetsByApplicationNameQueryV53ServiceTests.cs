@@ -35,8 +35,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Scoped<GetClaimSetsByApplicationNameQueryV53Service>(query =>
+            using var securityContext = TestContext;
+            Scoped<IUsersContext>(usersContext =>
             {
+                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
                 results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
@@ -62,8 +64,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Scoped<GetClaimSetsByApplicationNameQueryV53Service>(query =>
+            using var securityContext = TestContext;
+            Scoped<IUsersContext>(usersContext =>
             {
+                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
                 results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
@@ -76,8 +80,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         {
             var testClaimSets = SetupApplicationClaimSets();
 
-            Scoped<GetClaimSetsByApplicationNameQueryV53Service>(query =>
+            using var securityContext = TestContext;
+            Scoped<IUsersContext>(usersContext =>
             {
+                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(testClaimSets.Count);
@@ -93,8 +99,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSets = SetupApplicationClaimSets();
 
-            Scoped<GetClaimSetsByApplicationNameQueryV53Service>(query =>
+            using var securityContext = TestContext;
+            Scoped<IUsersContext>(usersContext =>
             {
+                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(testClaimSets.Count);
@@ -114,8 +122,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Application = testApplication
             });
 
-            Scoped<GetClaimSetsByApplicationNameQueryV53Service>(query =>
+            using var securityContext = TestContext;
+            Scoped<IUsersContext>(usersContext =>
             {
+                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
                 var results = query.Execute(testApplication.ApplicationName).ToArray();
 
                 results.Count(x => x.IsEditable).ShouldBe(testClaimSets.Count);
@@ -151,8 +161,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 usersContext.SaveChanges();
             });
 
-            Scoped<GetClaimSetsByApplicationNameQueryV53Service>(query =>
+            using var securityContext = TestContext;
+            Scoped<IUsersContext>(usersContext =>
             {
+                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
                 var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
                 results.Length.ShouldBe(testClaimSets.Count);

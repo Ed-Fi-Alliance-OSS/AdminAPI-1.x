@@ -9,18 +9,17 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
-using Application = EdFi.Security.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
     [TestFixture]
-    public class GetApplicationsByClaimSetIdQueryTests : SecurityDataTestBase
+    public class GetApplicationsByClaimSetIdQueryV53ServiceTests : SecurityData53TestBase
     {
         [TestCase(1)]
         [TestCase(3)]
@@ -31,20 +30,24 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             SetupApplications(testClaimSets, applicationCount);
 
+            using var securityContext = TestContext;
+
             foreach (var testClaimSet in testClaimSets)
             {
-                var results = Scoped<IGetApplicationsByClaimSetIdQuery, Management.ClaimSetEditor.Application[]>(
-                    query => query.Execute(testClaimSet.ClaimSetId).ToArray());
+                List<Management.ClaimSetEditor.Application> results = null;
 
                 Scoped<IUsersContext>(usersContext =>
                 {
+                    var query = new GetApplicationsByClaimSetId53Query(securityContext, usersContext);
+                    results = query.Execute(testClaimSet.ClaimSetId).ToList();
+
                     var testApplications =
                         usersContext.Applications.Where(x => x.ClaimSetName == testClaimSet.ClaimSetName).Select(x => new Application
                         {
                             ApplicationName = x.ApplicationName,
                             ApplicationId = x.ApplicationId
                         }).ToArray();
-                    results.Length.ShouldBe(testApplications.Length);
+                    results.Count.ShouldBe(testApplications.Length);
                     results.Select(x => x.Name).ShouldBe(testApplications.Select(x => x.ApplicationName), true);
                 });
             }
@@ -58,17 +61,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSets = SetupApplicationWithClaimSets();
 
             SetupApplications(testClaimSets, applicationsCount);
-
+            using var securityContext = TestContext;
             foreach (var testClaimSet in testClaimSets)
             {
-                var appsCountByClaimSet = Scoped<IGetApplicationsByClaimSetIdQuery, int>(
-                    query => query.ExecuteCount(testClaimSet.ClaimSetId));
-
                 Scoped<IUsersContext>(usersContext =>
                 {
+                    var query = new GetApplicationsByClaimSetId53Query(securityContext, usersContext);
+                    var appsCountByClaimSet = query.ExecuteCount(testClaimSet.ClaimSetId);
                     var testApplicationsCount =
-                        usersContext.Applications.Count(x => x.ClaimSetName == testClaimSet.ClaimSetName);
-                    appsCountByClaimSet.ShouldBe(testApplicationsCount);
+                            usersContext.Applications.Count(x => x.ClaimSetName == testClaimSet.ClaimSetName);
+                        appsCountByClaimSet.ShouldBe(testApplicationsCount);
                 });
             }
         }

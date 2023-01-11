@@ -5,12 +5,9 @@
 
 using System;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Helpers;
 using EdFi.Security.DataAccess.Contexts;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Respawn;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -18,7 +15,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     public abstract class PlatformSecurityContextTestBase
     {
         protected SqlServerSecurityContext TestContext { get; private set; }
-        //protected SqlServerSecurityContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
@@ -52,7 +48,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public virtual async Task FixtureSetup()
         {
             TestContext = CreateDbContext();
-            //SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
             {
@@ -72,7 +67,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public async Task SetUp()
         {
             TestContext = CreateDbContext();
-            //SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
             {
@@ -84,7 +78,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public void TearDown()
         {
             TestContext.Dispose();
-            //SetupContext.Dispose();
         }
 
         protected void Save(params object[] entities)
@@ -104,7 +97,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 action(TestContext);
                 TestContext.SaveChanges();
                 transaction.Commit();
-            } 
+            }
         }
 
         protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)

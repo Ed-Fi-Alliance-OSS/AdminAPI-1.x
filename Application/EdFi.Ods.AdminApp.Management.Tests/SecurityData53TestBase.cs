@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test;Integrated Security=True";//Startup.ConfigurationConnectionStrings.Security;
+                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test_v53;Integrated Security=True";
             }
         }
 

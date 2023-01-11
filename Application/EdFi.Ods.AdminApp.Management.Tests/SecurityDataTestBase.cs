@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
-using EdFi.Ods.AdminApp.Web;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -25,8 +24,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test_v6;Integrated Security=True;"
-                    ;//Startup.ConfigurationConnectionStrings.Security;
+                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test;Integrated Security=True;";
             }
         }
 

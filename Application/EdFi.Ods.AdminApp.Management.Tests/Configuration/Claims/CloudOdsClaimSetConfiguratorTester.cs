@@ -88,24 +88,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
             var configurator = new CloudOdsClaimSetConfigurator(SetupContext);
             configurator.ApplyConfiguration(testClaimSet);
 
-            var claimSet = Transaction(securityContext => securityContext.ClaimSets.Single(cs => cs.ClaimSetName == testClaimSet.ClaimSetName));
+            using var securityContext = TestContext;
+            var claimSet = securityContext.ClaimSets.Single(cs => cs.ClaimSetName == testClaimSet.ClaimSetName);
+            var claimSetResourceClaims = securityContext.ClaimSetResourceClaims
+                .Include(c => c.Action)
+                .Include(c => c.ResourceClaim)
+                .Include(c => c.AuthorizationStrategyOverride)
+                .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
 
-            Transaction(securityContext =>
+            foreach (var claim in testClaimSet.Claims)
             {
-                var claimSetResourceClaims = securityContext.ClaimSetResourceClaims
-                    .Include(c => c.Action)
-                    .Include(c => c.ResourceClaim)
-                    .Include(c => c.AuthorizationStrategyOverride)
-                    .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
-
-                foreach (var claim in testClaimSet.Claims)
+                foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
                 {
-                    foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
-                    {
-                        resourceClaim.AuthorizationStrategyOverride.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
-                    }
+                    resourceClaim.AuthorizationStrategyOverride.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
                 }
-            });
+            }
         }
 
         [Test]

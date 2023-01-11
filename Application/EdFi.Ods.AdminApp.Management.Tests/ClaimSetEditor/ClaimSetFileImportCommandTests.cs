@@ -20,8 +20,6 @@ using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileImportModel;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 
@@ -81,9 +79,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var importModel = GetImportModel(testJSON);
             var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
 
-            Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
+            using var securityContext = TestContext;
+            Command(securityContext).Execute(importSharingModel);
 
-            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
+            var testClaimSet = securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset");
             testClaimSet.ShouldNotBeNull();
 
             var resourcesForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
@@ -182,9 +181,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var importModel = GetImportModel(formattedJson);
             var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
 
-            Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
+            using var securityContext = TestContext;
+            Command(securityContext).Execute(importSharingModel);
 
-            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
+            var testClaimSet = securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset");
             testClaimSet.ShouldNotBeNull();
 
             var resourcesForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
@@ -313,9 +313,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var importModel = GetImportModel(formattedJson);
             var importSharingModel = SharingModel.DeserializeToSharingModel(importModel.ImportFile.OpenReadStream());
 
-            Scoped<ClaimSetFileImportCommand>(command => command.Execute(importSharingModel));
+            using var securityContext = TestContext;
+            Command(securityContext).Execute(importSharingModel);
 
-            var testClaimSet = Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset"));
+            var testClaimSet = securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetName == "Test Claimset");
             testClaimSet.ShouldNotBeNull();
 
             var resourcesForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
@@ -409,17 +410,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var importModel = GetImportModel(testJSON);
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
-                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+            using var securityContext = TestContext;
+            var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+            var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
 
-                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
-                var validationResults = validator.Validate(importModel);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain(
-                    "This template contains a claimset with a name which already exists in the system. Please use a unique name for 'Test ClaimSet'.\n");
-            });
+            var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
+            var validationResults = validator.Validate(importModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain(
+                "This template contains a claimset with a name which already exists in the system. Please use a unique name for 'Test ClaimSet'.\n");
         }
 
         [Test]
@@ -456,16 +455,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var importModel = GetImportModel(testJSON);
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
-                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+            using var securityContext = TestContext;
+            var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+            var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
 
-                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
-                var validationResults = validator.Validate(importModel);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim-notthere'.\n");
-            });
+            var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
+            var validationResults = validator.Validate(importModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("This template contains a resource which is not in the system. Claimset Name: Test Claimset Resource name: 'TestParentResourceClaim-notthere'.\n");
+
         }
 
         [Test]
@@ -473,16 +471,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         {
             var importModel = new ClaimSetFileImportModel();
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
-                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+            using var securityContext = TestContext;
+            var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+            var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
 
-                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
-                var validationResults = validator.Validate(importModel);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Import File' must not be empty.");
-            });
+            var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
+            var validationResults = validator.Validate(importModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("'Import File' must not be empty.");
         }
 
         [Test]
@@ -495,16 +491,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             importFile.Setup(f => f.FileName).Returns("testfile.xml");
             importModel.ImportFile = importFile.Object;
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
-                var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
+            using var securityContext = TestContext;
+            var getAllClaimSetsQuery = new GetAllClaimSetsQuery(securityContext);
+            var getResourceClaimsAsFlatListQuery = new GetResourceClaimsAsFlatListQuery(securityContext);
 
-                var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
-                var validationResults = validator.Validate(importModel);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("Invalid file extension. Only '*.json' files are allowed.");
-            });
+            var validator = new ClaimSetFileImportModelValidator(getAllClaimSetsQuery, getResourceClaimsAsFlatListQuery);
+            var validationResults = validator.Validate(importModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Select(x => x.ErrorMessage).ShouldContain("Invalid file extension. Only '*.json' files are allowed.");
         }
 
         private static ClaimSetFileImportModel GetImportModel(string testJson)
@@ -521,6 +515,22 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             importModel.ImportFile = importFile.Object;
 
             return importModel;
+        }
+
+        private ClaimSetFileImportCommand Command(ISecurityContext securityContext)
+        {
+            var editResourceCommand = new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V6(), null,
+                new EditResourceOnClaimSetCommandV6Service(securityContext));
+
+            var query = new GetResourceClaimsQuery(securityContext);
+
+            var overrideAuth = new OverrideDefaultAuthorizationStrategyCommand(new StubOdsSecurityModelVersionResolver.V6(), null,
+                new OverrideDefaultAuthorizationStrategyV6Service(securityContext));
+
+            var addOrEditCommand = new AddOrEditResourcesOnClaimSetCommand(editResourceCommand, query, overrideAuth);
+
+           return new ClaimSetFileImportCommand(new AddClaimSetCommand(new StubOdsSecurityModelVersionResolver.V6(),
+                null, new AddClaimSetCommandV6Service(securityContext)), addOrEditCommand);
         }
     }
 }

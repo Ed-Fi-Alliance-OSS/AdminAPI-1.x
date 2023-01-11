@@ -14,7 +14,6 @@ using Shouldly;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.ClaimSetFileExportModel;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
 using AutoMapper;
@@ -48,36 +47,26 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet2 = new ClaimSet { ClaimSetName = "TestClaimSet2", Application = testApplication };
             Save(testClaimSet2);
 
-            //TODO: Update for 6.0
-            // SetupParentResourceClaimsWithChildren(testClaimSet1, testApplication);
-
-            // SetupParentResourceClaimsWithChildren(testClaimSet2, testApplication);
-
-            var exportModel = Scoped<IGetClaimSetByIdQuery, ClaimSetFileExportModel>(getClaimSetById =>
+            using var securityContext = TestContext;
+            var getClaimSetById = new GetClaimSetByIdQueryV6Service(securityContext);
+            var editorClaimSets = new List<Management.ClaimSetEditor.ClaimSet>
             {
-                var editorClaimSets = new List<Management.ClaimSetEditor.ClaimSet>
-                {
-                    getClaimSetById.Execute(testClaimSet1.ClaimSetId),
-                    getClaimSetById.Execute(testClaimSet2.ClaimSetId)
-                };
-
-                return new ClaimSetFileExportModel
-                {
-                    Title = "TestDownload",
-                    ClaimSets = editorClaimSets,
-                    SelectedForExport = new List<int>
+                getClaimSetById.Execute(testClaimSet1.ClaimSetId),
+                getClaimSetById.Execute(testClaimSet2.ClaimSetId)
+            };
+            var exportModel = new ClaimSetFileExportModel
+            {
+                Title = "TestDownload",
+                ClaimSets = editorClaimSets,
+                SelectedForExport = new List<int>
                     {
                         testClaimSet1.ClaimSetId, testClaimSet2.ClaimSetId
                     }
-                };
-            });
+            };
 
             SharingModel sharingModel = null;
-            Scoped<ISecurityContext>( securityContext =>
-            {
-                var command = new ClaimSetFileExportCommand(securityContext, ResourcesByClaimSetIdQuery(securityContext));
-                sharingModel = command.Execute(exportModel);
-            });
+            var command = new ClaimSetFileExportCommand(securityContext, ResourcesByClaimSetIdQuery(securityContext));
+            sharingModel = command.Execute(exportModel);
 
             var resourcesForClaimSet1 = ResourceClaimsForClaimSet(testClaimSet1.ClaimSetId).ToArray();
             var resourcesForClaimSet2 = ResourceClaimsForClaimSet(testClaimSet2.ClaimSetId).ToArray();
@@ -132,17 +121,18 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet2 = new ClaimSet { ClaimSetName = "TestClaimSet2", Application = testApplication };
             Save(testClaimSet2);
 
-            var exportModel = Scoped<IGetClaimSetByIdQuery, ClaimSetFileExportModel>(
-                getClaimSetById => new ClaimSetFileExportModel
-                {
-                    Title = "TestDownload",
-                    ClaimSets = new List<Management.ClaimSetEditor.ClaimSet>
+            using var securityContext = TestContext;
+            var getClaimSetById = new GetClaimSetByIdQueryV6Service(securityContext);
+            var exportModel = new ClaimSetFileExportModel
+            {
+                Title = "TestDownload",
+                ClaimSets = new List<Management.ClaimSetEditor.ClaimSet>
                     {
                         getClaimSetById.Execute(testClaimSet1.ClaimSetId),
                         getClaimSetById.Execute(testClaimSet2.ClaimSetId)
                     },
-                    SelectedForExport = new List<int>()
-                });
+                SelectedForExport = new List<int>()
+            };
 
             var validator = new ClaimSetFileExportModelValidator();
             var validationResults = validator.Validate(exportModel);
@@ -165,19 +155,20 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testClaimSet2 = new ClaimSet { ClaimSetName = "TestClaimSet2", Application = testApplication };
             Save(testClaimSet2);
 
-            var exportModel = Scoped<IGetClaimSetByIdQuery, ClaimSetFileExportModel>(
-                getClaimSetById => new ClaimSetFileExportModel
-                {
-                    ClaimSets = new List<Management.ClaimSetEditor.ClaimSet>
+            using var securityContext = TestContext;
+            var getClaimSetById = new GetClaimSetByIdQueryV6Service(securityContext);
+            var exportModel = new ClaimSetFileExportModel
+            {
+                ClaimSets = new List<Management.ClaimSetEditor.ClaimSet>
                     {
                         getClaimSetById.Execute(testClaimSet1.ClaimSetId),
                         getClaimSetById.Execute(testClaimSet2.ClaimSetId)
                     },
-                    SelectedForExport = new List<int>
+                SelectedForExport = new List<int>
                     {
                         testClaimSet1.ClaimSetId, testClaimSet2.ClaimSetId
                     }
-                });
+            };
 
             var validator = new ClaimSetFileExportModelValidator();
             var validationResults = validator.Validate(exportModel);

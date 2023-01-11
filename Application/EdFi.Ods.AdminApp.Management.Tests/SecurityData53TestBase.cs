@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EdFi.Ods.AdminApp.Management.Api.Automapper;
-using EdFi.Ods.AdminApp.Web;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.SecurityCompatiblity53.DataAccess.Models;
 using NUnit.Framework;

@@ -30,12 +30,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 
             TestContext.SaveChanges();
 
-            var testAuthorizationStrat = Transaction(securityContext => securityContext.ResourceClaimAuthorizationMetadatas
+            using var securityContext = TestContext;
+
+            var testAuthorizationStrat = securityContext.ResourceClaimAuthorizationMetadatas
                 .Include(x => x.AuthorizationStrategy)
                 .Single(x =>
                     x.Action.ActionName == CloudOdsClaimAction.Read.ActionName &&
                     x.ResourceClaim.ResourceName == "educationStandards")
-                .AuthorizationStrategy);
+                .AuthorizationStrategy;
 
             testAuthorizationStrat.AuthorizationStrategyName.ShouldBe(CloudOdsClaimAuthorizationStrategy
                 .NoFurtherAuthorizationRequired.StrategyName);

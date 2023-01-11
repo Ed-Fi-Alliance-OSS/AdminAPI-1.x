@@ -3,12 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Threading.Tasks;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -93,31 +91,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
 
             TestContext.SaveChanges();
-        }
-
-        protected void Transaction(Action<ISecurityContext> action)
-        {
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                using (var transaction = ((SqlServerSecurityContext)securityContext).Database.BeginTransaction())
-                {
-                    action(securityContext);
-                    securityContext.SaveChanges();
-                    transaction.Commit();
-                }
-            });
-        }
-
-        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
-        {
-            var result = default(TResult);
-
-            Transaction(database =>
-            {
-                result = query(database);
-            });
-
-            return result;
         }
     }
 }

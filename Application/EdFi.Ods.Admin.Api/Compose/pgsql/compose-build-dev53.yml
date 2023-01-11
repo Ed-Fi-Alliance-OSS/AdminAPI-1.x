@@ -53,7 +53,7 @@ services:
       retries: 3
 
   db-admin:
-    image: "edfialliance/ods-api-db-admin:v2.1.1"
+    image: "edfialliance/ods-admin-api-db:v1.1.0"
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

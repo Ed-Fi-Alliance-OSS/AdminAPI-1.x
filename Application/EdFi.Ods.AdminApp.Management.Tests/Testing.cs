@@ -27,6 +27,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         public static void EnsureInitialized()
         {
+            var dbSetup = new SecurityTestDatabaseSetup();
+            dbSetup.EnsureSecurityDatabase(@"C:\\temp");
             ScopeFactory.ShouldNotBeNull();
         }
 

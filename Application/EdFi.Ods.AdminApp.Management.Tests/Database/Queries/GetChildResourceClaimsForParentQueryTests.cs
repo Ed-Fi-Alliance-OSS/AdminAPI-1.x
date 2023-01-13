@@ -9,8 +9,9 @@ using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
+using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -27,9 +28,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             Save(testApplication);
 
-            var testResourceClaims = SetupResourceClaims(testApplication);
+            var parentRcs = UniqueNameList("Parent", 2);
 
-            var testParentResource = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
+            var childRcs = UniqueNameList("Child", 1);
+
+            var testResourceClaims = SetupResourceClaims(testApplication, parentRcs, childRcs);
+
+            var testParentResource = testResourceClaims.Single(x => x.ResourceName == parentRcs.First());
 
             ResourceClaim[] results = null;
             Scoped<ISecurityContext>(securityContext =>
@@ -52,7 +57,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
                 results.All(x => x.Update == false).ShouldBe(true);
                 results.All(x => x.Read == false).ShouldBe(true);
                 results.All(x => x.ParentId.Equals(testParentResource.ResourceClaimId)).ShouldBe(true);
-                results.All(x => x.ParentName.Equals(testParentResource.ResourceName)).ShouldBe(true);
             });
         }
     }

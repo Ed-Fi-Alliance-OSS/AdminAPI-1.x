@@ -4,31 +4,33 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Linq;
-using EdFi.Security.DataAccess.Contexts;
-
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
     public class UpdateResourcesOnClaimSetCommand
     {
-        private readonly ISecurityContext _context;
-        private readonly AddOrEditResourcesOnClaimSetCommand _addOrEditResourcesOnClaimSetCommand;
+        private readonly IOdsSecurityModelVersionResolver _resolver;
+        private readonly UpdateResourcesOnClaimSetCommandV53Service _v53Service;
+        private readonly UpdateResourcesOnClaimSetCommandV6Service _v6Service;
 
-        public UpdateResourcesOnClaimSetCommand(ISecurityContext context, AddOrEditResourcesOnClaimSetCommand addOrEditResourcesOnClaimSetCommand)
+        public UpdateResourcesOnClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
+            UpdateResourcesOnClaimSetCommandV53Service v53Service,
+            UpdateResourcesOnClaimSetCommandV6Service v6Service)
         {
-            _context = context;
-            _addOrEditResourcesOnClaimSetCommand = addOrEditResourcesOnClaimSetCommand;
+            _resolver = resolver;
+            _v53Service = v53Service;
+            _v6Service = v6Service;
         }
 
         public void Execute(IUpdateResourcesOnClaimSetModel model)
         {
-            var resourceClaimsForClaimSet =
-                _context.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
-            _context.ClaimSetResourceClaims.RemoveRange(resourceClaimsForClaimSet);
-            _context.SaveChanges();
-
-            _addOrEditResourcesOnClaimSetCommand.Execute(model.ClaimSetId, model.ResourceClaims);
+            var securityModel = _resolver.DetermineSecurityModel();
+            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
+                _v53Service.Execute(model);
+            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
+                _v6Service.Execute(model);
+            else
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
         }
     }
 

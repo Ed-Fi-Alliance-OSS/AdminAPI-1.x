@@ -3,12 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Threading.Tasks;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -16,7 +14,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     public abstract class PlatformSecurityContextTestBase
     {
         protected SqlServerSecurityContext TestContext { get; private set; }
-        protected SqlServerSecurityContext SetupContext { get; private set; }
 
         protected enum CheckpointPolicyOptions
         {
@@ -50,7 +47,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public virtual async Task FixtureSetup()
         {
             TestContext = CreateDbContext();
-            SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
             {
@@ -70,7 +66,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public async Task SetUp()
         {
             TestContext = CreateDbContext();
-            SetupContext = CreateDbContext();
 
             if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
             {
@@ -82,42 +77,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         public void TearDown()
         {
             TestContext.Dispose();
-            SetupContext.Dispose();
         }
-        
+
         protected void Save(params object[] entities)
         {
             foreach (var entity in entities)
             {
-                SetupContext.Set(entity.GetType()).Add(entity);
+                TestContext.Set(entity.GetType()).Add(entity);
             }
 
-            SetupContext.SaveChanges();
-        }
-
-        protected void Transaction(Action<ISecurityContext> action)
-        {
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                using (var transaction = ((SqlServerSecurityContext)securityContext).Database.BeginTransaction())
-                {
-                    action(securityContext);
-                    securityContext.SaveChanges();
-                    transaction.Commit();
-                }
-            });
-        }
-
-        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
-        {
-            var result = default(TResult);
-
-            Transaction(database =>
-            {
-                result = query(database);
-            });
-
-            return result;
+            TestContext.SaveChanges();
         }
     }
 }

@@ -64,9 +64,9 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
         public class Validator : AbstractValidator<Request>
         {
-            private GetAllClaimSetsQuery _getAllClaimSetsQuery;
+            private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
-            public Validator(GetAllClaimSetsQuery getAllClaimSetsQuery,
+            public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
                 GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
                 GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
             {

@@ -24,7 +24,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             .BuildForVersions(AdminApiVersions.V1);
         }
 
-        public async Task<IResult> Handle(Validator validator, EditClaimSetCommand editClaimSetCommand,
+        public async Task<IResult> Handle(Validator validator, IEditClaimSetCommand editClaimSetCommand,
             UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
             IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
@@ -84,10 +84,10 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         public class Validator : AbstractValidator<Request>
         {
             private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
-            private readonly GetAllClaimSetsQuery _getAllClaimSetsQuery;
+            private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
             public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
-                GetAllClaimSetsQuery getAllClaimSetsQuery,
+                IGetAllClaimSetsQuery getAllClaimSetsQuery,
                 GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
                 GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
             {

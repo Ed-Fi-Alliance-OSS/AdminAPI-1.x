@@ -30,6 +30,8 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="EdFi.Admin.LearningStandards.Core" Version="1.2.27" />
     <PackageReference Include="EdFi.Suite3.LoadTools" Version="5.4.12" />
+    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.3.43" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" />
     <PackageReference Include="FluentValidation" Version="10.4.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
     <PackageReference Include="GoogleAnalyticsTracker.Simple" Version="7.0.1" />

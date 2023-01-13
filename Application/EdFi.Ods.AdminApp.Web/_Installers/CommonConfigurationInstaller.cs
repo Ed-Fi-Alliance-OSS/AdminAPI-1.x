@@ -24,13 +24,12 @@ using EdFi.Common.Security;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Services;
 using EdFi.Ods.AdminApp.Web.Display.HomeScreen;
-using EdFi.Security.DataAccess.Contexts;
 using Hangfire;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-
+using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Web._Installers
 {
@@ -41,6 +40,16 @@ namespace EdFi.Ods.AdminApp.Web._Installers
         public void Install(IServiceCollection services, AppSettings appSettings)
         {
             services.AddTransient<IFileUploadHandler, LocalFileSystemFileUploadHandler>();
+
+            services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(x =>
+            {
+                var connectionStrings = x.GetService<IOptions<ConnectionStrings>>();
+
+                if (appSettings.DatabaseEngine.EqualsIgnoreCase("SqlServer"))
+                    return new EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(connectionStrings.Value.Security);
+
+                return new EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(connectionStrings.Value.Security);
+            });
 
             services.AddScoped<ISecurityContext>(x =>
             {
@@ -130,7 +139,8 @@ namespace EdFi.Ods.AdminApp.Web._Installers
                     else if (interfaces.Length == 0)
                     {
                         if (concreteClass.Name.EndsWith("Command") ||
-                            concreteClass.Name.EndsWith("Query"))
+                            concreteClass.Name.EndsWith("Query") ||
+                            concreteClass.Name.EndsWith("Service"))
                             services.AddTransient(concreteClass);
                     }
                 }
@@ -138,6 +148,13 @@ namespace EdFi.Ods.AdminApp.Web._Installers
 
             services.AddSingleton<IStringEncryptorService, AESEncryptorService>(
                     x => new AESEncryptorService(appSettings.EncryptionKey));
+
+            services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
+            {
+                var apiServerUrl = appSettings.ProductionApiUrl;
+                var validator = sp.GetRequiredService<IOdsApiValidator>();
+                return new OdsSecurityVersionResolver(validator, apiServerUrl);
+            });
         }
 
         protected abstract void InstallHostingSpecificClasses(IServiceCollection services);

@@ -17,6 +17,7 @@ using EdFi.Ods.AdminApp.Management.OnPrem;
 using EdFi.Security.DataAccess.Contexts;
 using Moq;
 using NUnit.Framework;
+
 using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
@@ -55,7 +56,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
             mockUsersContext.Setup(c => c.Vendors).Returns(mockVendors.Object);
             mockUsersContext.Setup(c => c.Applications).Returns(mockApps.Object);
 
-            var mockApplications = MockExtensions.EmptyMockDbSet<Security.DataAccess.Models.Application>();
+            var mockApplications = MockExtensions.EmptyMockDbSet<EdFi.Security.DataAccess.Models.Application>();
 
             var mockSecurityContext = new Mock<ISecurityContext>();
             mockSecurityContext.Object.Applications = mockApplications.Object;
@@ -73,8 +74,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
 
             var mockFirstTimeSetupService = new Mock<IOdsInstanceFirstTimeSetupService>();
 
-            var mockAssessmentVendorAdjustment = new Mock<IAssessmentVendorAdjustment>();
-
             var mockLearningStandardsSetup = new Mock<ILearningStandardsSetup>();
 
             var mockClaimSetCheckService = new Mock<IClaimSetCheckService>();
@@ -87,7 +86,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Setup
                 mockSecurityContext.Object,
                 mockClaimSetConfigurator.Object,
                 mockFirstTimeSetupService.Object,
-                mockAssessmentVendorAdjustment.Object,
                 mockLearningStandardsSetup.Object,
                 mockClaimSetCheckService.Object,
                 mockInferInstanceService.Object);

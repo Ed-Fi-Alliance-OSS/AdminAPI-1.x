@@ -13,11 +13,11 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
     public class AddOrEditResourcesOnClaimSetCommand
     {
         private readonly EditResourceOnClaimSetCommand _editResourceOnClaimSetCommand;
-        private readonly GetResourceClaimsQuery _getResourceClaimsQuery;
+        private readonly IGetResourceClaimsQuery _getResourceClaimsQuery;
         private readonly OverrideDefaultAuthorizationStrategyCommand _overrideDefaultAuthorizationStrategyCommand;
 
         public AddOrEditResourcesOnClaimSetCommand(EditResourceOnClaimSetCommand editResourceOnClaimSetCommand,
-            GetResourceClaimsQuery getResourceClaimsQuery,
+            IGetResourceClaimsQuery getResourceClaimsQuery,
             OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand)
         {
             _editResourceOnClaimSetCommand = editResourceOnClaimSetCommand;

@@ -7,6 +7,7 @@ using System.Linq;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+
 using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
@@ -25,14 +26,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            Transaction(securityContext =>
-            {
-                var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
-                var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
+            using var securityContext = TestContext;
+            var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
+            var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
 
-                results.Length.ShouldBe(authStrategies.Count);
-                results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
-            });
+            results.Length.ShouldBe(authStrategies.Count);
+            results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
+
         }
 
         [Test]
@@ -61,14 +61,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            Transaction(securityContext =>
-            {
-                var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
-                var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
+            using var securityContext = TestContext;
 
-                results.Length.ShouldBe(authStrategies.Count);
-                results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
-            });
+            var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
+            var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
+
+            results.Length.ShouldBe(authStrategies.Count);
+            results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
         }
     }
 }

@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using static EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetClaimSetsByApplicationNameQuery;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
 
@@ -28,14 +27,14 @@ public class ReadClaimSets : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    internal Task<IResult> GetClaimSets(GetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
+    internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
     {
         var claimSets = getClaimSetsQuery.Execute().Where(x => !CloudOdsAdminApp.SystemReservedClaimSets.Contains(x.Name)).ToList();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach(var claimSet in model)
         {
             claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);
-            claimSet.IsSystemReserved = DefaultClaimSets.Contains(claimSet.Name);
+            claimSet.IsSystemReserved = CloudOdsAdminApp.DefaultClaimSets.Contains(claimSet.Name);
         }
         return Task.FromResult(AdminApiResponse<List<ClaimSetModel>>.Ok(model));
     }

@@ -10,7 +10,12 @@ using ClaimSet = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSet;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
-    public class GetAllClaimSetsQuery
+    public interface IGetAllClaimSetsQuery
+    {
+        IEnumerable<ClaimSet> Execute();
+    }
+
+    public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
     {
         private readonly ISecurityContext _securityContext;
 

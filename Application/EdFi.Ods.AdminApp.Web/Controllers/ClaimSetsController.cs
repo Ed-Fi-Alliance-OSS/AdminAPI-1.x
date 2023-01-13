@@ -14,7 +14,6 @@ using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.AdminApp.Web.ActionFilters;
 using EdFi.Ods.AdminApp.Web.Display.TabEnumeration;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Newtonsoft.Json;
 using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
@@ -32,12 +31,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
         private readonly IGetClaimSetsByApplicationNameQuery _getClaimSetsByApplicationNameQuery;
         private readonly IGetAuthStrategiesByApplicationNameQuery _getAuthStrategiesByApplicationNameQuery;
         private readonly ITabDisplayService _tabDisplayService;
-        private readonly CopyClaimSetCommand _copyClaimSetCommand;
+        private readonly ICopyClaimSetCommand _copyClaimSetCommand;
         private readonly AddClaimSetCommand _addClaimSetCommand;
-        private readonly EditClaimSetCommand _editClaimSetCommand;
-        private readonly GetResourceClaimsQuery _getResourceClaimsQuery;
+        private readonly IEditClaimSetCommand _editClaimSetCommand;
+        private readonly IGetResourceClaimsQuery _getResourceClaimsQuery;
         private readonly GetChildResourceClaimsForParentQuery _getChildResourceClaimsForParentQuery;
-        private readonly DeleteClaimSetCommand _deleteClaimSetCommand;
+        private readonly IDeleteClaimSetCommand _deleteClaimSetCommand;
         private readonly EditResourceOnClaimSetCommand _editResourceOnClaimSetCommand;
         private readonly DeleteResourceOnClaimSetCommand _deleteResourceOnClaimSetCommand;
         private readonly ClaimSetFileImportCommand _claimSetFileImportCommand;
@@ -51,12 +50,12 @@ namespace EdFi.Ods.AdminApp.Web.Controllers
             , IGetClaimSetsByApplicationNameQuery getClaimSetsByApplicationNameQuery
             , IGetAuthStrategiesByApplicationNameQuery getAuthStrategiesByApplicationNameQuery
             , ITabDisplayService tabDisplayService
-            , CopyClaimSetCommand copyClaimSetCommand
+            , ICopyClaimSetCommand copyClaimSetCommand
             , AddClaimSetCommand addClaimSetCommand
-            , EditClaimSetCommand editClaimSetCommand
-            , GetResourceClaimsQuery getResourceClaimsQuery
+            , IEditClaimSetCommand editClaimSetCommand
+            , IGetResourceClaimsQuery getResourceClaimsQuery
             , GetChildResourceClaimsForParentQuery getChildResourceClaimsForParentQuery
-            , DeleteClaimSetCommand deleteClaimSetCommand
+            , IDeleteClaimSetCommand deleteClaimSetCommand
             , EditResourceOnClaimSetCommand editResourceOnClaimSetCommand
             , DeleteResourceOnClaimSetCommand deleteResourceOnClaimSetCommand
             , ClaimSetFileExportCommand claimSetFileExportCommand

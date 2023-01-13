@@ -6,7 +6,7 @@
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management
 {

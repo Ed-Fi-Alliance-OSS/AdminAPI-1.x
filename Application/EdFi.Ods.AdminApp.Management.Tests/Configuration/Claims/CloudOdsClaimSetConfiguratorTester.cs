@@ -6,16 +6,17 @@
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;
-using EdFi.Security.DataAccess.Models;
+using EdFi.SecurityCompatiblity53.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
+
 using static EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAction;
 using static EdFi.Ods.AdminApp.Management.Configuration.Claims.CloudOdsClaimAuthorizationStrategy;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 {
     [TestFixture]
-    public class CloudOdsClaimSetConfiguratorTester : SecurityDataTestBase
+    public class CloudOdsClaimSetConfiguratorTester : SecurityData53TestBase
     {
         public CloudOdsClaimSetConfiguratorTester()
         {
@@ -44,7 +45,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
 
             SetupContext.SaveChanges();
         }
-        
+
 
         [Test]
         public void ShouldPersistClaimSet()
@@ -87,31 +88,28 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Configuration.Claims
             var configurator = new CloudOdsClaimSetConfigurator(SetupContext);
             configurator.ApplyConfiguration(testClaimSet);
 
-            var claimSet = Transaction(securityContext => securityContext.ClaimSets.Single(cs => cs.ClaimSetName == testClaimSet.ClaimSetName));
+            using var securityContext = TestContext;
+            var claimSet = securityContext.ClaimSets.Single(cs => cs.ClaimSetName == testClaimSet.ClaimSetName);
+            var claimSetResourceClaims = securityContext.ClaimSetResourceClaims
+                .Include(c => c.Action)
+                .Include(c => c.ResourceClaim)
+                .Include(c => c.AuthorizationStrategyOverride)
+                .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
 
-            Transaction(securityContext =>
+            foreach (var claim in testClaimSet.Claims)
             {
-                var claimSetResourceClaims = securityContext.ClaimSetResourceClaims
-                    .Include(c => c.Action)
-                    .Include(c => c.ResourceClaim)
-                    .Include(c => c.AuthorizationStrategyOverride)
-                    .Where(c => c.ClaimSet.ClaimSetId == claimSet.ClaimSetId).ToList();
-
-                foreach (var claim in testClaimSet.Claims)
+                foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
                 {
-                    foreach (var resourceClaim in claim.Actions.Select(action => claimSetResourceClaims.Single(rc => rc.ResourceClaim.ResourceName == claim.EntityName && rc.Action.ActionName == action.ActionName)))
-                    {
-                        resourceClaim.AuthorizationStrategyOverride.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
-                    }
+                    resourceClaim.AuthorizationStrategyOverride.AuthorizationStrategyName.ShouldBe(claim.AuthorizationStrategy.StrategyName);
                 }
-            });
+            }
         }
 
         [Test]
         public void ShouldNotErrorIfClaimSetAlreadyExists()
         {
             var application = SetupContext.Applications.Single(a => a.ApplicationName == "IntegrationTests");
-            
+
             var claimSet = new ClaimSet
             {
                 Application = application,

@@ -6,12 +6,24 @@
 version: "3.8"
 
 services:
+  db-ods:
+    image: edfialliance/ods-api-db-ods:v2.2.0
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      TPDM_ENABLED: "${TPDM_ENABLED:-true}"
+    volumes:
+      - vol-db-ods:/var/lib/postgresql/data
+    restart: always
+    container_name: ed-fi-db-ods
+
   nginx:
     build:
       context: ../../Docker/gateway/
       dockerfile: Dockerfile
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+      ODS_VIRTUAL_NAME: "${ODS_VIRTUAL_NAME:-api}"
     ports:
       - "443:443"
       - "80:80"
@@ -22,7 +34,38 @@ services:
       - ../../Docker/ssl:/ssl/
     depends_on:
       - adminapi
-  
+      - api
+
+  api:
+    image: edfialliance/ods-api-web-api:v2.2.0
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
+      ODS_POSTGRES_HOST: pb-ods
+      ADMIN_POSTGRES_HOST: pb-admin
+      API_MODE: "SharedInstance"
+      ApiSettings__PathBase: "${ODS_VIRTUAL_NAME:-api}"
+      TPDM_ENABLED: "${TPDM_ENABLED:-true}"
+    depends_on:
+      - pb-ods
+      - pb-admin
+    restart: always
+    hostname: api
+    container_name: ed-fi-ods-api
+
+  pb-ods:
+    image: pgbouncer/pgbouncer
+    environment:
+      DATABASES: "* = host = db-ods port=5432 user=${POSTGRES_USER} password=${POSTGRES_PASSWORD}"
+      PGBOUNCER_LISTEN_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
+    ports:
+      - "5402:${PGBOUNCER_LISTEN_PORT:-6432}"
+    restart: always
+    container_name: ed-fi-pb-ods
+    depends_on:
+      - db-ods
+
   adminapi:
     build:
       context: ../../../../
@@ -38,14 +81,14 @@ services:
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
-      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi} 
+      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
     volumes:
       - ../../Docker/ssl:/ssl/
     depends_on:
       - pb-admin
     restart: always
-    hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi} 
+    hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
     container_name: adminapi
     healthcheck:
       test: $$ADMIN_API_HEALTHCHECK_TEST
@@ -83,3 +126,6 @@ volumes:
   vol-db-admin:
     driver: local
     name: vol-db-admin
+  vol-db-ods:
+    driver: local
+    name: vol-db-ods

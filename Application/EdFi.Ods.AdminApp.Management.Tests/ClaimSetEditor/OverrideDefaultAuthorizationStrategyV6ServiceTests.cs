@@ -77,16 +77,13 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
         };
 
         List<ResourceClaim> resourceClaimsForClaimSet = null;
-        Scoped<ISecurityContext>(
-            securityContext =>
-            {
-                var command = new OverrideDefaultAuthorizationStrategyV6Service(securityContext);
-                command.Execute(overrideModel);
-               var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                        null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
-                resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
 
-            });
+        using var securityContext = TestContext;
+        var command = new OverrideDefaultAuthorizationStrategyV6Service(securityContext);
+            command.Execute(overrideModel);
+            var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
+                    null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, _mapper));
+            resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
 
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);

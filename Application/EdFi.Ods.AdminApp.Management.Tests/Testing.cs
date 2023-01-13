@@ -9,7 +9,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public static class Testing
     {
-        private static readonly IServiceScopeFactory ScopeFactory;
+        public static readonly IServiceScopeFactory ScopeFactory;
 
         static Testing()
         {
@@ -27,6 +27,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         public static void EnsureInitialized()
         {
+            var dbSetup = new SecurityTestDatabaseSetup();
+            dbSetup.EnsureSecurityDatabase(@"C:\\temp");
             ScopeFactory.ShouldNotBeNull();
         }
 

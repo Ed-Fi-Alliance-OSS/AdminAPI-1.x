@@ -12,7 +12,6 @@ using Moq;
 using Shouldly;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
@@ -47,18 +46,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             deleteModel.Setup(x => x.Name).Returns(testClaimSetToDelete.ClaimSetName);
             deleteModel.Setup(x => x.Id).Returns(testClaimSetToDelete.ClaimSetId);
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new DeleteClaimSetCommandV6Service(securityContext);
+            using var securityContext = TestContext;
+            var command = new DeleteClaimSetCommandV6Service(securityContext);
+            command.Execute(deleteModel.Object);
+            var deletedClaimSet = securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId);
+            deletedClaimSet.ShouldBeNull();
+            var deletedClaimSetResourceActions = securityContext.ClaimSetResourceClaimActions.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId);
+            deletedClaimSetResourceActions.ShouldBe(0);
 
-                command.Execute(deleteModel.Object);
-            });
-
-            Transaction(securityContext => securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId)).ShouldBeNull();
-            Transaction(securityContext => securityContext.ClaimSetResourceClaimActions.Count(x => x.ClaimSet.ClaimSetId == testClaimSetToDelete.ClaimSetId))
-                .ShouldBe(0);
-
-            var preservedClaimSet = Transaction(securityContext => securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId));
+            var preservedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == testClaimSetToPreserve.ClaimSetId);
             preservedClaimSet.ClaimSetName.ShouldBe(testClaimSetToPreserve.ClaimSetName);
 
             var results = ResourceClaimsForClaimSet(testClaimSetToPreserve.ClaimSetId);
@@ -71,18 +67,15 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
             results.All(x => x.Create).ShouldBe(true);
 
-            Transaction(securityContext =>
+            foreach (var testParentResourceClaim in testParentResourceClaimsForId)
             {
-                foreach (var testParentResourceClaim in testParentResourceClaimsForId)
-                {
-                    var testChildren = securityContext.ResourceClaims.Where(x =>
-                        x.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId).ToList();
-                    var parentResult = results.First(x => x.Id == testParentResourceClaim.ResourceClaimId);
-                    parentResult.Children.Select(x => x.Name).ShouldBe(testChildren.Select(x => x.ResourceName), true);
-                    parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
-                    parentResult.Children.All(x => x.Create).ShouldBe(true);
-                }
-            });
+                var testChildren = securityContext.ResourceClaims.Where(x =>
+                    x.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId).ToList();
+                var parentResult = results.First(x => x.Id == testParentResourceClaim.ResourceClaimId);
+                parentResult.Children.Select(x => x.Name).ShouldBe(testChildren.Select(x => x.ResourceName), true);
+                parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
+                parentResult.Children.All(x => x.Create).ShouldBe(true);
+            }
         }
 
         [Test]
@@ -100,12 +93,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var deleteModel = new Mock<IDeleteClaimSetModel>();
             deleteModel.Setup(x => x.Name).Returns(systemReservedClaimSet.ClaimSetName);
             deleteModel.Setup(x => x.Id).Returns(systemReservedClaimSet.ClaimSetId);
-
-            var exception = Assert.Throws<AdminAppException>(() => Scoped<ISecurityContext>(securityContext =>
-            {
+            using var securityContext = TestContext;
+            var exception = Assert.Throws<AdminAppException>(() => {
                 var command = new DeleteClaimSetCommandV6Service(securityContext);
                 command.Execute(deleteModel.Object);
-            }));
+            });
             exception.ShouldNotBeNull();
             exception.Message.ShouldBe($"Claim set({systemReservedClaimSet.ClaimSetName}) is system reserved.Can not be deleted.");
         }
@@ -130,15 +122,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 IsEditable = false
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-
-                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-                var validationResults = validator.Validate(claimSetToDelete);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
-            });
+            using var securityContext = TestContext;
+            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
+            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
+            var validationResults = validator.Validate(claimSetToDelete);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
         }
 
         [Test]
@@ -159,16 +148,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 Id = 99,
                 IsEditable = true
             };
-
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-
-                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-                var validationResults = validator.Validate(claimSetToDelete);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
-            });
+            using var securityContext = TestContext;
+            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
+            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
+            var validationResults = validator.Validate(claimSetToDelete);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
         }
 
         [Test]
@@ -191,15 +176,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 VendorApplicationCount = 1
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-
-                var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-                var validationResults = validator.Validate(claimSetToDelete);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
-            });
+            using var securityContext = TestContext;
+            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
+            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
+            var validationResults = validator.Validate(claimSetToDelete);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
         }
 
         private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V6(),

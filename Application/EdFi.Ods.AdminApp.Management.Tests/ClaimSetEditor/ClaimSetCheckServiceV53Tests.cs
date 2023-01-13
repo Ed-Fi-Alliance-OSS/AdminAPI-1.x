@@ -4,11 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using NUnit.Framework;
 using Shouldly;
-
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
@@ -33,11 +30,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testAdminAppClaimSet = new ClaimSet { ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet, Application = testApplication };
             Save(testAdminAppClaimSet);
 
-            Scoped<IClaimSetCheckService>(service =>
-            {
-                var result = service.RequiredClaimSetsExist();
-                result.ShouldBeTrue();
-            });
+            using var securityContext = TestContext;
+            var service = new ClaimSetCheck53Service(securityContext);
+            var result = service.RequiredClaimSetsExist();
+            result.ShouldBeTrue();
         }
 
         [Test]
@@ -49,11 +45,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             Save(testApplication);
 
-            Scoped<IClaimSetCheckService>(service =>
-            {
-                var result = service.RequiredClaimSetsExist();
-                result.ShouldBeFalse();
-            });
-        }
+            using var securityContext = TestContext;
+            var service = new ClaimSetCheck53Service(securityContext);
+            var result = service.RequiredClaimSetsExist();
+            result.ShouldBeFalse();
+         }
     }
 }

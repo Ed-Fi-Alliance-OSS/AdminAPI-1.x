@@ -9,10 +9,8 @@ using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using Shouldly;
 using AutoMapper;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using static EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets.DeleteClaimSetResourceModel;
 
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
@@ -61,22 +59,16 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ResourceName = testResourceToDelete.ResourceName
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new DeleteResourceOnClaimSetCommandV53Service(securityContext);
-                command.Execute(deleteResourceOnClaimSetModel);
-            });
+            using var securityContext = TestContext;
+            var command = new DeleteResourceOnClaimSetCommandV53Service(securityContext);
+            command.Execute(deleteResourceOnClaimSetModel);
+            var resourceClaimsForClaimSet =
+                securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
+            resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount - 1);
 
-            Transaction(securityContext =>
-            {
-                var resourceClaimsForClaimSet =
-                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == null);
-                resourceClaimsForClaimSet.Count().ShouldBe(parentResourcesOnClaimSetOriginalCount - 1);
+            var resultResourceClaim = resourceClaimsForClaimSet.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testResourceToDelete.ResourceClaimId);
 
-                var resultResourceClaim = resourceClaimsForClaimSet.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testResourceToDelete.ResourceClaimId);
-
-                resultResourceClaim.ShouldBeNull();
-            });
+            resultResourceClaim.ShouldBeNull();
         }
 
         [Test]
@@ -108,31 +100,23 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ResourceName = testChildResourceToDelete.ResourceName
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var command = new DeleteResourceOnClaimSetCommandV53Service(securityContext);
+            using var securityContext = TestContext;
+            var command = new DeleteResourceOnClaimSetCommandV53Service(securityContext);
                 command.Execute(deleteResourceOnClaimSetModel);
-            });
 
             List<Management.ClaimSetEditor.ResourceClaim> resourceClaimsForClaimSet = null;
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
-                resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
-            });
+            var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+                new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
+            resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
+
             resourceClaimsForClaimSet.Count.ShouldBe(parentResourcesOnClaimSetOriginalCount);
+            var resultChildResources =
+                securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
+            resultChildResources.Count().ShouldBe(childResourcesForParentOriginalCount - 1);
 
-            Transaction(securityContext =>
-            {
-                var resultChildResources =
-                    securityContext.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaimId == testParentResource.ResourceClaimId);
-                resultChildResources.Count().ShouldBe(childResourcesForParentOriginalCount - 1);
+            var resultResourceClaim = resultChildResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testChildResourceToDelete.ResourceClaimId);
 
-                var resultResourceClaim = resultChildResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == testChildResourceToDelete.ResourceClaimId);
-
-                resultResourceClaim.ShouldBeNull();
-            });
+            resultResourceClaim.ShouldBeNull();
         }
 
         [Test]
@@ -146,8 +130,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
             Save(testClaimSet);
-
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
+            SetupParentResourceClaimsWithChildren(testClaimSet, testApplication);
 
             var resourceNotOnClaimSet = new ResourceClaim
             {
@@ -167,16 +150,13 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 ResourceName = resourceNotOnClaimSet.ResourceName
             };
 
-            Scoped<ISecurityContext>(securityContext =>
-            {
-                var getResourcesByClaimSetIdQuery= new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
+            using var securityContext = TestContext;
+            var getResourcesByClaimSetIdQuery= new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
                     new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
-
-                var validator = new DeleteClaimSetResourceModelValidator(getResourcesByClaimSetIdQuery);
-                var validationResults = validator.Validate(deleteResourceOnClaimSetModel);
-                validationResults.IsValid.ShouldBe(false);
-                validationResults.Errors.Single().ErrorMessage.ShouldBe("This resource does not exist on the claimset.");
-            });
+            var validator = new DeleteClaimSetResourceModelValidator(getResourcesByClaimSetIdQuery);
+            var validationResults = validator.Validate(deleteResourceOnClaimSetModel);
+            validationResults.IsValid.ShouldBe(false);
+            validationResults.Errors.Single().ErrorMessage.ShouldBe("This resource does not exist on the claimset.");
         }
     }
 }

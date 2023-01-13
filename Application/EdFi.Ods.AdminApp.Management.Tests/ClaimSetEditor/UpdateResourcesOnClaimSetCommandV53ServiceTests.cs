@@ -8,11 +8,8 @@ using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using System.Collections.Generic;
 using Moq;
-
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
@@ -39,7 +36,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == "TestParentResourceClaim1");
             var secondTestParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == "TestParentResourceClaim2");
 
-            var testChildResource1ToEdit = Transaction(securityContext => securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId));
+            using var securityContext = TestContext;
+            var testChildResource1ToEdit = securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId);
 
             var addedResourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
             addedResourceClaimsForClaimSet.Count().ShouldBe(2);
@@ -74,23 +72,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             updateResourcesOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
             updateResourcesOnClaimSetModel.Setup(x => x.ResourceClaims).Returns(updatedResourceClaims);
 
-            Scoped<Security.DataAccess.Contexts.ISecurityContext>(securityContextLatest =>
-            {
-                Scoped<ISecurityContext>(
-                    securityContext53 =>
-                    {
-                        var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
-                            new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V3_5(),
-                            new EditResourceOnClaimSetCommandV53Service(securityContext53), null),
-                            new Management.Database.Queries.GetResourceClaimsQuery(securityContextLatest),
-                            new OverrideDefaultAuthorizationStrategyCommand(
-                                new StubOdsSecurityModelVersionResolver.V3_5(),
-                                new OverrideDefaultAuthorizationStrategyV53Service(securityContext53), null));
+            using var securityContext53 = CreateDbContext();
+            var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
+            new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V3_5(),
+            new EditResourceOnClaimSetCommandV53Service(securityContext53), null),
+            new GetResourceClaims53Query(securityContext53),
+            new OverrideDefaultAuthorizationStrategyCommand(
+                new StubOdsSecurityModelVersionResolver.V3_5(),
+                new OverrideDefaultAuthorizationStrategyV53Service(securityContext53), null));
 
-                        var command = new UpdateResourcesOnClaimSetCommandV53Service(securityContext53, addOrEditResourcesOnClaimSetCommand);
-                        command.Execute(updateResourcesOnClaimSetModel.Object);
-                    });
-            });
+            var command = new UpdateResourcesOnClaimSetCommandV53Service(securityContext53, addOrEditResourcesOnClaimSetCommand);
+            command.Execute(updateResourcesOnClaimSetModel.Object);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
             resourceClaimsForClaimSet.Count.ShouldBe(1);

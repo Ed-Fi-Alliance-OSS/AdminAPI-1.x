@@ -205,7 +205,7 @@ jobs:
       actions: read
       id-token: write
       contents: write
-    uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.2
     with:
       base64-subjects: ${{ needs.pack.outputs.hash-code }}
       attestation-name: Admin.Api.intoto.jsonl

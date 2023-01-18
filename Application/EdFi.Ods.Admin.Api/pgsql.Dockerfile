@@ -20,8 +20,10 @@ COPY ./Docker/pgsql/log4net.config /app/log4net.txt
 
 RUN apk --no-cache add curl unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.8-r0 jq=~1.6 icu=~67.1 gcompat && \
     wget -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.Admin.Api/versions/${VERSION}/content && \
-    unzip /app/AdminApi.zip -d /app && \
+    unzip /app/AdminApi.zip AdminApi/* -d /app/ && \
+    cp -r /app/AdminApi/. /app/ && \
     rm -f /app/AdminApi.zip && \
+    rm -r /app/AdminApi && \
     cp /app/log4net.txt /app/log4net.config && \
     dos2unix /app/*.json && \
     dos2unix /app/*.sh && \

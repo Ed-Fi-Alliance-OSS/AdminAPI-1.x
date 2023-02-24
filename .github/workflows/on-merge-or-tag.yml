@@ -42,7 +42,7 @@ jobs:
           # Install the MinVer CLI tool
           &dotnet tool install --global minver-cli
 
-          "::set-output name=admin-api::$($apiPrefix)$(minver -t $apiPrefix)" | Write-Output
+          echo "name=admin-api::$($apiPrefix)$(minver -t $apiPrefix)" >>$GITHUB_OUTPUT
 
       - name: Create Admin API Pre-Release
         run: |

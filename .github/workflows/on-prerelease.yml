@@ -43,10 +43,10 @@ jobs:
           $apiVersion = $(minver -t $apiPrefix)
 
           # Full release name
-          echo "name=admin-api::$apiVersion" >>$GITHUB_OUTPUT
+          echo "name=admin-api::$apiVersion" >>$env:GITHUB_OUTPUT
 
           # SemVer
-          echo "name=admin-api-semver::$($apiVersion -Replace $apiPrefix)" >>$GITHUB_OUTPUT
+          echo "name=admin-api-semver::$($apiVersion -Replace $apiPrefix)" >>$env:GITHUB_OUTPUT
 
       - name: Setup .NET
         uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
@@ -82,7 +82,7 @@ jobs:
         id: hash-code
         shell: bash
         run: |
-          echo "name=hash-code::$(sha256sum *.nupkg | base64 -w0)" >>$GITHUB_OUTPUT
+          echo "name=hash-code::$(sha256sum *.nupkg | base64 -w0)" >>$env:GITHUB_OUTPUT
 
       - name: Upload Packages as Artifacts
         if: success()

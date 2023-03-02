@@ -28,7 +28,7 @@ jobs:
       admin-api-version: ${{ steps.versions.outputs.admin-api }}
 
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           fetch-depth: 0
 
@@ -49,7 +49,7 @@ jobs:
           "admin-api-semver=$($apiVersion -Replace $apiPrefix)" >> $env:GITHUB_OUTPUT
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@9211491ffb35dd6a6657ca4f45d43dfe6e97c829 # v2.0.0
+        uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
         with:
           dotnet-version: 6.0.x
 
@@ -65,7 +65,7 @@ jobs:
         run: .\build.ps1 -Command PopulateGoogleAnalyticsAppSettings -GoogleAnalyticsMeasurementId ${{env.GA_MEASUREMENT_ID}}
 
       - name: Setup Nuget.exe
-        uses: nuget/setup-nuget@b2bc17b761a1d88cab755a776c7922eb26eefbfa #v1.0.6
+        uses: nuget/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37 #v1.1.1
 
       - name: Create NuGet Packages
         if: success()
@@ -86,7 +86,7 @@ jobs:
 
       - name: Upload Packages as Artifacts
         if: success()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: "${{ env.PACKAGE_NAME }}-NuGet"
           path: ./*.nupkg
@@ -103,10 +103,10 @@ jobs:
     outputs:
       sbom-hash-code: ${{ steps.sbom-hash-code.outputs.sbom-hash-code }}
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Get Artifacts
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 #v3.0.0
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a #v3.0.2
         with:
           name: ${{ env.PACKAGE_NAME }}-NuGet
 
@@ -137,7 +137,7 @@ jobs:
 
       - name: Upload SBOM
         if: success()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: ${{ env.PACKAGE_NAME }}-SBOM
           path: ./manifest
@@ -221,10 +221,10 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Get Artifact
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 #v3.0.0
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a #v3.0.2
         with:
           name: ${{ env.PACKAGE_NAME }}-NuGet
 

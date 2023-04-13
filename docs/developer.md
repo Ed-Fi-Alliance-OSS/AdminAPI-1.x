@@ -1,4 +1,4 @@
-# Admin App Developer Instructions
+# Admin API Developer Instructions
 
 ## Contents
 
@@ -26,18 +26,9 @@ For debugging on Azure, see [CloudODS Debugging](cloudods-debugging.md)
     Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
     (install the ".NET Build Tools" component)
 * Clone [this
-  repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp) locally
+  repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApi) locally
 * To work with the official Ed-Fi Docker solution, also clone the [Docker
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker).
-
-:warning: some situations may require changing Windows to handle file names
-longer than 256 characters:
-
-  1. Start the registry editor (regedit.exe)
-  2. Navigate to
-     `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem`
-  3. Double click LongPathsEnabled
-  4. Set to 1 and click OK
 
 ## Build Script
 
@@ -46,25 +37,23 @@ running standard build operations at the command line . This script assumes that
 .NET 6.0 SDK or newer is installed. Other dependencies tools are downloaded
 as needed (nuget, nunit).
 
-Available commands:
+Available command (e.g. `./build.ps1 clean`):
 
-* `.\build.ps1 clean` runs the MSBuild `clean` task
-* `.\build.ps1 build` runs the MSBuild `build` task with several implicit steps,
-  including NuGet restore and temporary injection of version numbers into the
-  AssemblyInfo.cs files.
-* `.\build.ps1 unittest` executes NUnit tests in projects named `*.UnitTest`,
-  which do not connect to a database.
-* `.\build.ps1 integrationtest` executes NUnit tests in projects named `*.Test`,
-  which connect to a database (does not include the Azure integration test
-  project).
-* `.\build.ps1 buildandtest` executes the Build, UnitTest, and IntegrationTest
-  commands.
-* `.\build.ps1 package` builds pre-release and release NuGet packages for the
-  Admin App web application.
-* `.\build.ps1 push` uploads a NuGet package to the NuGet feed.
-* `.\build.ps1 run` launches the Admin App from the build script. The LaunchProfile
-  parameter is required for running Admin App. Valid values include 'mssql-district'
-  , 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'
+* Clean: runs `dotnet clean`
+* Build: runs `dotnet build` with several implicit steps
+    (clean, restore, inject version information).
+* UnitTest: executes NUnit tests in projects named `*.UnitTests`, which
+    do not connect to a database.
+* IntegrationTest: executes NUnit tests in projects named `*.Test`,
+    which connect to a database. Includes drop and deploy operations for
+    installing fresh test databases compatible with Ed-Fi ODS/API 3.4 and 5.3.
+* BuildAndTest: executes the Build, UnitTest, and IntegrationTest
+    commands.
+* Package: builds pre-release and release NuGet packages for the Admin
+    App web application.
+* Push: uploads a NuGet package to the NuGet feed.
+* BuildAndDeployToAdminApiDockerContainer: runs the build operation, update the appsettings.json with provided
+    DockerEnvValues and copy over the latest files to existing AdminApi docker container for testing.
 
 Note: IsLocalBuild switch is expected when user tries to run build.ps1 locally.
 

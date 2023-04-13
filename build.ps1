@@ -3,9 +3,6 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-# This refers to function Update-AppSettingsToAddGoogleAnalyticsMeasurementId
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Rule is irrelevant in this context', Scope = "Function")]
-
 [CmdLetBinding()]
 <#
     .SYNOPSIS
@@ -27,11 +24,8 @@
         * Package: builds pre-release and release NuGet packages for the Admin
           App web application.
         * Push: uploads a NuGet package to the NuGet feed.
-        * BuildAndDeployToAdminAppDockerContainer: runs the build operation, update the appsettings.json with provided
-          DockerEnvValues and copy over the latest files to existing AdminApp docker container for testing.
         * BuildAndDeployToAdminApiDockerContainer: runs the build operation, update the appsettings.json with provided
           DockerEnvValues and copy over the latest files to existing AdminApi docker container for testing.
-        * PopulateGoogleAnalyticsAppSettings: update the appsettings.json with provided GoogleAnalyticsMeasurementId.
 
     .EXAMPLE
         .\build.ps1 build -Configuration Release -Version "2.0" -BuildCounter 45
@@ -62,31 +56,26 @@
             DatabaseEngine = "PostgreSql"
             BulkUploadHashCache = "/app/BulkUploadHashCache/"
             EncryptionKey = "<Generated encryption key>"
-            AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApp;"
-            SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApp;"
-            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApp;"
+            AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
+            SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
+            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApi;"
         }
 
-        .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminAppDockerContainer
+        .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
 #>
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "Package", "PackageApi"
-    , "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToAdminAppDockerContainer", "BuildAndDeployToAdminApiDockerContainer"
-    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "PopulateGoogleAnalyticsAppSettings", "Run")]
+    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest",  "PackageApi"
+    , "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
+    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run")]
     $Command = "Build",
-
-    # Assembly and package version number for AdminApp Web. The current package number is
-    # configured in the build automation tool and passed to this script.
-    [string]
-    $Version = "0.1",
 
     # Assembly and package version number for Admin API. The current package number is
     # configured in the build automation tool and passed to this script.
     [string]
-    $APIVersion = $Version,
+    $APIVersion = "0.1",
 
     # .NET project build configuration, defaults to "Debug". Options are: Debug, Release.
     [string]
@@ -104,7 +93,7 @@ param(
 
     # Full path of a package file to push to the NuGet feed. Optional, only
     # applies with the Push command. If not set, then the script looks for a
-    # NuGet package corresponding to the provided $Version and $BuildCounter.
+    # NuGet package corresponding to the provided $APIVersion and $BuildCounter.
     [string]
     $PackageFile,
 
@@ -113,10 +102,6 @@ param(
     # Only required with the BuildAndDeployToAdminAppDockerContainer or BuildAndDeployToAdminApiDockerContainer commands.
     [hashtable]
     $DockerEnvValues,
-
-    # Only required with the PopulateGoogleAnalyticsAppSettings command.
-    [string]
-    $GoogleAnalyticsMeasurementId,
 
     # Only required with the Run command.
     [string]
@@ -163,27 +148,6 @@ function Restore {
     Invoke-Execute { dotnet restore $solutionRoot }
 }
 
-function SetAdminAppAssemblyInfo {
-    Invoke-Execute {
-        $assembly_version = $Version
-
-        Invoke-RegenerateFile "$solutionRoot/Directory.Build.props" @"
-<Project>
-    <!-- This file is generated by the build script. -->
-    <PropertyGroup>
-        <Product>Ed-Fi ODS Admin App</Product>
-        <Authors>$maintainers</Authors>
-        <Company>$maintainers</Company>
-        <Copyright>Copyright © 2016 Ed-Fi Alliance</Copyright>
-        <VersionPrefix>$assembly_version</VersionPrefix>
-        <VersionSuffix></VersionSuffix>
-    </PropertyGroup>
-</Project>
-
-"@
-    }
-}
-
 function SetAdminApiAssemblyInfo {
     Invoke-Execute {
         $assembly_version = $APIVersion
@@ -195,12 +159,11 @@ function SetAdminApiAssemblyInfo {
         <Product>Ed-Fi ODS Admin API</Product>
         <Authors>$maintainers</Authors>
         <Company>$maintainers</Company>
-        <Copyright>Copyright © 2022 Ed-Fi Alliance</Copyright>
+        <Copyright>Copyright © ${(Get-Date).year)} Ed-Fi Alliance</Copyright>
         <VersionPrefix>$assembly_version</VersionPrefix>
         <VersionSuffix></VersionSuffix>
     </PropertyGroup>
 </Project>
-
 "@
     }
 }
@@ -208,14 +171,6 @@ function SetAdminApiAssemblyInfo {
 function Compile {
     Invoke-Execute {
         dotnet build $solutionRoot -c $Configuration --nologo --no-restore
-    }
-}
-
-function PublishAdminApp {
-    Invoke-Execute {
-        $project = "$solutionRoot/EdFi.Ods.AdminApp.Web/"
-        $outputPath = "$project/publish"
-        dotnet publish $project -c $Configuration /p:EnvironmentName=Production -o $outputPath --no-build --nologo
     }
 }
 
@@ -306,12 +261,12 @@ function RunNuGetPack {
 function NewDevCertificate {
     Invoke-Command { dotnet dev-certs https -c }
     if ($lastexitcode) {
-        Write-Output "Generating a new Dev Certificate" -ForegroundColor Magenta
+        Write-Output "Generating a new Dev Certificate"
         Invoke-Execute { dotnet dev-certs https --clean }
         Invoke-Execute { dotnet dev-certs https -t }
     }
     else {
-        Write-Output "Dev Certificate already exists" -ForegroundColor Magenta
+        Write-Output "Dev Certificate already exists" 
     }
 }
 
@@ -336,16 +291,7 @@ function BuildDatabasePackage {
     $projectPath = "$mainPath/$project.csproj"
     $nugetSpecPath = "$mainPath/publish/EdFi.Ods.AdminApp.Database.nuspec"
 
-    RunNuGetPack -ProjectPath $projectPath -PackageVersion $Version $nugetSpecPath
-}
-
-function BuildAdminAppPackage {
-    $project = "EdFi.Ods.AdminApp.Web"
-    $mainPath = "$solutionRoot/$project"
-    $projectPath = "$mainPath/$project.csproj"
-    $nugetSpecPath = "$mainPath/publish/$project.nuspec"
-
-    RunNuGetPack -ProjectPath $projectPath -PackageVersion $Version $nugetSpecPath
+    RunNuGetPack -ProjectPath $projectPath -PackageVersion $APIVersion $nugetSpecPath
 }
 
 function BuildApiPackage {
@@ -357,24 +303,6 @@ function BuildApiPackage {
     RunNuGetPack -ProjectPath $projectPath -PackageVersion $APIVersion $nugetSpecPath
 }
 
-function PushPackage {
-    if (-not $NuGetApiKey) {
-        throw "Cannot push a NuGet package without providing an API key in the `NuGetApiKey` argument."
-    }
-
-    if (-not $PackageFile) {
-        $PackageFile = "$PSScriptRoot/EdFi.Ods.AdminApp.Web.$(GetPackageVersion).nupkg"
-    }
-
-    $arguments = @{
-        PackageFile = $PackageFile
-        NuGetApiKey = $NuGetApiKey
-        NuGetFeed = $EdFiNuGetFeed
-    }
-
-    Invoke-Execute { Push-Package @arguments }
-}
-
 function Invoke-Build {
     Invoke-Step { Clean }
     Invoke-Step { Restore }
@@ -382,32 +310,16 @@ function Invoke-Build {
 }
 
 function Invoke-SetAssemblyInfo {
-    Write-Output "Setting Assembly Information" -ForegroundColor Cyan
+    Write-Output "Setting Assembly Information"
 
-    Invoke-Step { SetAdminAppAssemblyInfo }
+    Invoke-Step { SetAssemblyInfo }
     Invoke-Step { SetAdminApiAssemblyInfo }
 }
 
 function Invoke-Publish {
-    Write-Output "Building Version AdminApp ($Version) and AdminApi ($APIVersion)" -ForegroundColor Cyan
+    Write-Output "Building Version AdminApi ($APIVersion)"
 
-    Invoke-Step { PublishAdminApp }
     Invoke-Step { PublishAdminApi }
-}
-
-function Invoke-Run {
-    Write-Output "Running Admin App" -ForegroundColor Cyan
-
-    Invoke-Step { NewDevCertificate }
-
-    $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApp.Web"
-
-    if ([string]::IsNullOrEmpty($LaunchProfile)) {
-        Write-Output "LaunchProfile parameter is required for running Admin App. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'" -ForegroundColor Red
-    }
-    else {
-        Invoke-Execute { dotnet run --project $projectFilePath --launch-profile $LaunchProfile }
-    }
 }
 
 function Invoke-Clean {
@@ -422,7 +334,7 @@ function Invoke-IntegrationTestSuite {
     Invoke-Step { InitializeNuGet }
 
     $supportedApiVersions | ForEach-Object {
-        Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion -ForegroundColor Cyan
+        Write-Output "Running Integration Tests for ODS Version" $_.OdsVersion
 
         Invoke-Step {
             $arguments = @{
@@ -438,10 +350,6 @@ function Invoke-IntegrationTestSuite {
     }
 }
 
-function Invoke-BuildPackage {
-    Invoke-Step { BuildAdminAppPackage }
-}
-
 function Invoke-BuildApiPackage {
     Invoke-Step { AddAppCommonPackageForInstaller }
     Invoke-Step { BuildApiPackage }
@@ -449,44 +357,6 @@ function Invoke-BuildApiPackage {
 
 function Invoke-BuildDatabasePackage {
     Invoke-Step { BuildDatabasePackage }
-}
-
-function Invoke-PushPackage {
-    Invoke-Step { PushPackage }
-}
-
-function Update-AppSettingsToAddGoogleAnalyticsMeasurementId {
-    $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
-    $json = (Get-Content -Path $filePath) | ConvertFrom-Json
-    $json.AppSettings.GoogleAnalyticsMeasurementId = $GoogleAnalyticsMeasurementId
-    $json | ConvertTo-Json | Set-Content $filePath
-}
-
-function UpdateAppSettingsForAdminAppDocker {
-    $filePath = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/appsettings.json"
-    $json = (Get-Content -Path $filePath) | ConvertFrom-Json
-    $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
-    $json.AppSettings.ApiExternalUrl = $DockerEnvValues["ApiExternalUrl"]
-    $json.AppSettings.AppStartup = $DockerEnvValues["AppStartup"]
-    $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
-    $json.AppSettings.XsdFolder = $DockerEnvValues["XsdFolder"]
-    $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
-    $json.AppSettings.BulkUploadHashCache = $DockerEnvValues["BulkUploadHashCache"]
-    $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
-
-    if ($null -eq $json.AppSettings.EncryptionKey) {
-        $json.AppSettings | Add-Member -NotePropertyName EncryptionKey -NotePropertyValue $DockerEnvValues["EncryptionKey"]
-    }
-    else
-    {
-        $json.AppSettings.EncryptionKey = $DockerEnvValues["EncryptionKey"]
-    }
-
-    $json.ConnectionStrings.Admin = $DockerEnvValues["AdminDB"]
-    $json.ConnectionStrings.Security = $DockerEnvValues["SecurityDB"]
-    $json.ConnectionStrings.ProductionOds = $DockerEnvValues["ProductionOdsDB"]
-    $json.Log4NetCore.Log4NetConfigFileName =  "./log4net.config"
-    $json | ConvertTo-Json | Set-Content $filePath
 }
 
 function UpdateAppSettingsForAdminApiDocker {
@@ -508,18 +378,9 @@ function UpdateAppSettingsForAdminApiDocker {
     $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
 }
 
-function CopyLatestFilesToAdminAppContainer {
-    $source = "$solutionRoot/EdFi.Ods.AdminApp.Web/publish/."
-    docker cp $source ed-fi-ods-adminapp:/app
-}
-
 function CopyLatestFilesToAdminApiContainer {
     $source = "$solutionRoot/EdFi.Ods.Admin.Api/publish/."
     &docker cp $source adminapi:/app/AdminApi
-}
-
-function RestartAdminAppContainer {
-    &docker restart ed-fi-ods-adminapp
 }
 
 function RestartAdminApiContainer {
@@ -536,12 +397,6 @@ function RunAdminApiDevDockerContainer {
 
 function RunAdminApiDevDockerCompose {
     &docker compose -f "$solutionRoot/EdFi.Ods.Admin.Api/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.Admin.Api/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
-}
-
-function Invoke-AdminAppDockerDeploy {
-   Invoke-Step { UpdateAppSettingsForAdminAppDocker }
-   Invoke-Step { CopyLatestFilesToAdminAppContainer }
-   Invoke-Step { RestartAdminAppContainer }
 }
 
 function Invoke-AdminApiDockerDeploy {
@@ -588,10 +443,6 @@ Invoke-Main {
         PackageApi { Invoke-BuildApiPackage }
         PackageDatabase { Invoke-BuildDatabasePackage }
         Push { Invoke-PushPackage }
-        BuildAndDeployToAdminAppDockerContainer {
-            Invoke-Build
-            Invoke-AdminAppDockerDeploy
-        }
         BuildAndDeployToAdminApiDockerContainer {
             Invoke-Build
             Invoke-AdminApiDockerDeploy

@@ -60,10 +60,7 @@ jobs:
           ./build.ps1 -Command BuildAndPublish `
               -Configuration Release `
               -APIVersion $apiVersion
-
-      - name: Populate Google Analytics ID
-        run: .\build.ps1 -Command PopulateGoogleAnalyticsAppSettings -GoogleAnalyticsMeasurementId ${{env.GA_MEASUREMENT_ID}}
-
+              
       - name: Setup Nuget.exe
         uses: nuget/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37 #v1.1.1
 

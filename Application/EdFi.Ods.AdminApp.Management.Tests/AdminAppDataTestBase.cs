@@ -10,7 +10,7 @@ using EdFi.Ods.AdminApp.Management.Database;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using EdFi.Ods.AdminApp.Web;
+using System.Configuration;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -33,7 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                return Startup.ConfigurationConnectionStrings.Admin;
+                return ConfigurationManager.ConnectionStrings["Admin"].ConnectionString;
             }
         }
 

@@ -6,7 +6,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
-        <ProjectReference Include="..\EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.csproj" />
     </ItemGroup>
 
     <ItemGroup>

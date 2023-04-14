@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string AppStartup { get; set; }
         public string DatabaseEngine { get; set; }
         public string ApplicationInsightsInstrumentationKey { get; set; }
-        public string XsdFolder { get; set; }
+        //public string XsdFolder { get; set; }
         public string DefaultOdsInstance { get; set; }
         public string ProductionApiUrl { get; set; }
         public string ApiExternalUrl { get; set; }
@@ -28,9 +28,8 @@ namespace EdFi.Ods.AdminApp.Management.Helpers
         public string AwsCurrentVersion { get; set; }
         public string Log4NetConfigPath { get; set; }
         public string EncryptionKey { get; set; }
-        public bool EnableProductImprovementSettings { get; set; }
+        //public bool EnableProductImprovementSettings { get; set; }
 
-        public string GoogleAnalyticsMeasurementId { get; set; }
-        public string ProductRegistrationUrl { get; set; }
+        //public string ProductRegistrationUrl { get; set; }
     }
 }

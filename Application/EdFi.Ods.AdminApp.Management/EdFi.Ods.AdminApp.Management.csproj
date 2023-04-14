@@ -5,8 +5,118 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Api\**" />
+    <Compile Remove="Configuration\**" />
+    <Compile Remove="Database\**" />
+    <Compile Remove="ErrorHandling\**" />
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="Identity\**" />
+    <Compile Remove="Instances\**" />
+    <Compile Remove="OdsInstanceServices\**" />
+    <Compile Remove="Services\**" />
+    <Compile Remove="Settings\**" />
+    <Compile Remove="User\**" />
+    <Compile Remove="Workflow\**" />
+    <EmbeddedResource Remove="Api\**" />
+    <EmbeddedResource Remove="Configuration\**" />
+    <EmbeddedResource Remove="Database\**" />
+    <EmbeddedResource Remove="ErrorHandling\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Identity\**" />
+    <EmbeddedResource Remove="Instances\**" />
+    <EmbeddedResource Remove="OdsInstanceServices\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="Settings\**" />
+    <EmbeddedResource Remove="User\**" />
+    <EmbeddedResource Remove="Workflow\**" />
     <None Remove="**\*.sql" />
+    <None Remove="Api\**" />
+    <None Remove="Configuration\**" />
+    <None Remove="Database\**" />
+    <None Remove="ErrorHandling\**" />
+    <None Remove="Helpers\**" />
+    <None Remove="Identity\**" />
+    <None Remove="Instances\**" />
+    <None Remove="OdsInstanceServices\**" />
+    <None Remove="Services\**" />
+    <None Remove="Settings\**" />
+    <None Remove="User\**" />
+    <None Remove="Workflow\**" />
     <EmbeddedResource Include="**\*.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="AdminAppUserContext.cs" />
+    <Compile Remove="ApiClientFactory.cs" />
+    <Compile Remove="CloudOdsDatabaseNames.cs" />
+    <Compile Remove="CloudOdsDatabases.cs" />
+    <Compile Remove="CloudOdsEnvironment.cs" />
+    <Compile Remove="CloudOdsInstance.cs" />
+    <Compile Remove="CloudOdsOperationContext.cs" />
+    <Compile Remove="CloudOdsRole.cs" />
+    <Compile Remove="CloudOdsStatus.cs" />
+    <Compile Remove="CloudOdsTags.cs" />
+    <Compile Remove="CloudOdsWebsite.cs" />
+    <Compile Remove="CloudOdsWebsiteExtensions.cs" />
+    <Compile Remove="GetOdsAdminAppApiCredentialsQuery.cs" />
+    <Compile Remove="GetOdsStatusQuery.cs" />
+    <Compile Remove="ICloudOdsDatabaseSqlServerSecurityConfiguration.cs" />
+    <Compile Remove="ICompleteOdsFirstTimeSetupCommand.cs" />
+    <Compile Remove="ICompleteOdsPostUpdateSetupCommand.cs" />
+    <Compile Remove="IFirstTimeSetupService.cs" />
+    <Compile Remove="IGetCloudOdsApiWebsiteSettingsQuery.cs" />
+    <Compile Remove="IGetCloudOdsInstanceQuery.cs" />
+    <Compile Remove="IGetOdsAdminAppApiCredentialsQuery.cs" />
+    <Compile Remove="IGetOdsStatusQuery.cs" />
+    <Compile Remove="IOdsSecretConfigurationProvider.cs" />
+    <Compile Remove="IRestartAppServicesCommand.cs" />
+    <Compile Remove="IUpdateCloudOdsApiWebsiteSettingsCommand.cs" />
+    <Compile Remove="ModifyClaimSetsService.cs" />
+    <Compile Remove="OdsApiCredentials.cs" />
+    <Compile Remove="OdsComponent.cs" />
+    <Compile Remove="OdsFirstTimeSetupConfiguration.cs" />
+    <Compile Remove="OdsPostUpdateSetupConfiguration.cs" />
+    <Compile Remove="OdsSecretConfiguration.cs" />
+    <Compile Remove="OdsSecretConfigurationProvider.cs" />
+    <Compile Remove="OdsSqlConfiguration.cs" />
+    <Compile Remove="OdsSqlCredential.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Database\Ods\Reports\PgSql\0010-Schemas.sql" />
+    <EmbeddedResource Remove="Database\Ods\Reports\PgSql\0020-AdminAppReportsViews.sql" />
+    <EmbeddedResource Remove="Database\Ods\Reports\Sql\0010-Schemas.sql" />
+    <EmbeddedResource Remove="Database\Ods\Reports\Sql\0020-AdminAppReportsViews.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Api\OdsApiValidator.cs" />
+    <Compile Include="Database\Commands\AddApplicationCommand.cs" />
+    <Compile Include="Database\Commands\AddVendorCommand.cs" />
+    <Compile Include="Database\Commands\DeleteApplicationCommand.cs" />
+    <Compile Include="Database\Commands\DeleteVendorCommand.cs" />
+    <Compile Include="Database\Commands\EditApplicationCommand.cs" />
+    <Compile Include="Database\Commands\EditVendorCommand.cs" />
+    <Compile Include="Database\Commands\RegenerateApiClientSecretCommand.cs" />
+    <Compile Include="Database\Commands\ValidationConstants.cs" />
+    <Compile Include="Database\EntityFrameworkCoreDatabaseModelBuilderExtensions.cs" />
+    <Compile Include="Database\Queries\GetAllClaimSetsQuery.cs" />
+    <Compile Include="Database\Queries\GetApplicationByIdQuery.cs" />
+    <Compile Include="Database\Queries\GetApplicationsByVendorIdQuery.cs" />
+    <Compile Include="Database\Queries\GetChildResourceClaimsForParentQuery.cs" />
+    <Compile Include="Database\Queries\GetOdsInstanceQuery.cs" />
+    <Compile Include="Database\Queries\GetProfilesQuery.cs" />
+    <Compile Include="Database\Queries\GetResourceClaimsAsFlatListQuery.cs" />
+    <Compile Include="Database\Queries\GetResourceClaimsQuery.cs" />
+    <Compile Include="Database\Queries\GetVendorByIdQuery.cs" />
+    <Compile Include="Database\Queries\GetVendorsQuery.cs" />
+    <Compile Include="Database\Queries\VendorExtensions.cs" />
+    <Compile Include="ErrorHandling\AdminAppException.cs" />
+    <Compile Include="ErrorHandling\NotFoundException.cs" />
+    <Compile Include="ErrorHandling\OdsApiConnectionException.cs" />
+    <Compile Include="Helpers\AppSettings.cs" />
+    <Compile Include="Helpers\HealthCheckServiceExtensions.cs" />
+    <Compile Include="Services\SimpleGetRequest.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,5 +149,9 @@
   <ItemGroup>
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\Models\" />
   </ItemGroup>
 </Project>

@@ -1,15 +1,15 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30517.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management", "EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj", "{FBBA172C-6F81-4753-92B9-C31277B032DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.OnPrem", "EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj", "{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D317139-CB19-4D7F-91AC-9A560189C55B}"
 	ProjectSection(SolutionItems) = preProject
+		..\build.ps1 = ..\build.ps1
 		..\CONTRIBUTORS.md = ..\CONTRIBUTORS.md
+		..\docs\developer.md = ..\docs\developer.md
+		Directory.Build.props = Directory.Build.props
 		EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.nuspec = EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.nuspec
 		..\NOTICES.md = ..\NOTICES.md
 		..\README.md = ..\README.md
@@ -19,11 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.UnitTests", "EdFi.Ods.AdminApp.Management.UnitTests\EdFi.Ods.AdminApp.Management.UnitTests.csproj", "{F62C9CF6-A632-4894-B61A-674198DAB86E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Web", "EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.csproj", "{7B0859A2-C153-461A-ACC1-D5874994030E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management.Tests", "EdFi.Ods.AdminApp.Management.Tests\EdFi.Ods.AdminApp.Management.Tests.csproj", "{6F2B44AA-A760-4083-8124-B380D91D5086}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.Admin.Api", "EdFi.Ods.Admin.Api\EdFi.Ods.Admin.Api.csproj", "{FBFFA828-316C-43C8-B52A-4D64C51DF6EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.Admin.Api", "EdFi.Ods.Admin.Api\EdFi.Ods.Admin.Api.csproj", "{FBFFA828-316C-43C8-B52A-4D64C51DF6EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{7CB216FE-901B-4D36-9F97-495CB22E0104}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,14 +41,6 @@ Global
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.ActiveCfg = Release|Any CPU
 		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.Build.0 = Release|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Debug|x64.Build.0 = Debug|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Release|x64.ActiveCfg = Release|Any CPU
-		{9E893DD8-A114-4C7E-968C-34C2C2C41AA3}.Release|x64.Build.0 = Release|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -57,14 +49,6 @@ Global
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Release|x64.ActiveCfg = Release|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Release|x64.Build.0 = Release|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Debug|x64.Build.0 = Debug|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Release|x64.ActiveCfg = Release|Any CPU
-		{7B0859A2-C153-461A-ACC1-D5874994030E}.Release|x64.Build.0 = Release|Any CPU
 		{6F2B44AA-A760-4083-8124-B380D91D5086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6F2B44AA-A760-4083-8124-B380D91D5086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F2B44AA-A760-4083-8124-B380D91D5086}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -87,6 +71,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F62C9CF6-A632-4894-B61A-674198DAB86E} = {9A9D18B4-718D-4681-BAFE-A1C42E18A7CC}
+		{6F2B44AA-A760-4083-8124-B380D91D5086} = {7CB216FE-901B-4D36-9F97-495CB22E0104}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30CF2BE4-58CA-4598-9B59-D334FC971A0F}

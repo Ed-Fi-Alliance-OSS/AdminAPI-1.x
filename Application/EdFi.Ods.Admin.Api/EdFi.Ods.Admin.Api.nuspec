@@ -6,9 +6,9 @@
     <title>Ed-Fi ODS Admin API</title>
     <authors>Ed-Fi Alliance</authors>
     <projectUrl>https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApp</projectUrl>
-    <copyright>Copyright © 2022, Ed-Fi Alliance, LLC.</copyright>
-    <summary>Ed-Fi Admin Api for the ODS</summary>
-    <description>Ed-Fi Admin Api for the ODS</description>
+    <copyright>Copyright © 2023, Ed-Fi Alliance, LLC.</copyright>
+    <summary>Ed-Fi Admin API for the ODS/API</summary>
+    <description>Ed-Fi Admin API for the ODS/API</description>
     <license type="expression">Apache-2.0</license>
   </metadata>
   <files>

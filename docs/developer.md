@@ -2,11 +2,10 @@
 
 ## Contents
 
-- [Admin App Developer Instructions](#admin-app-developer-instructions)
+- [Admin API Developer Instructions](#admin-api-developer-instructions)
   - [Contents](#contents)
   - [Development Pre-Requisites](#development-pre-requisites)
   - [Build Script](#build-script)
-  - [TeamCity Automation](#teamcity-automation)
   - [Running on Localhost](#running-on-localhost)
     - [Shared Instance](#shared-instance)
     - [Year-Specific Mode](#year-specific-mode)
@@ -60,10 +59,9 @@ Note: IsLocalBuild switch is expected when user tries to run build.ps1 locally.
 Review the parameters at the top of `build.ps1` for additional command line
 arguments.
 
-## TeamCity Automation
-
-See [.teamcity/readme.md](../.teamcity/readme.md) for information on how to use
-the TeamCity build configurations.
+| :exclamation REVIEW :exclamation |
+| -- | 
+| All of the notes below need to be reviewed / edited for relevancy in the Admin API repository. |
 
 ## Running on Localhost
 

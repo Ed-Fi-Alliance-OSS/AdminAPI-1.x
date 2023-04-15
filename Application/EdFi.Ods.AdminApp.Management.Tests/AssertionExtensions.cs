@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;
 using FluentValidation;
 using FluentValidation.Results;
 using Shouldly;
@@ -44,13 +43,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                 .Select(x => x.ErrorMessage)
                 .ToArray()
                 .ShouldBe(expectedErrors.OrderBy(x => x).ToArray());
-        }
-
-        public static void ShouldBeSchoolYear(this SchoolYearType actual, short expectedSchoolYear, bool isCurrent = false)
-        {
-            actual.SchoolYear.ShouldBe(expectedSchoolYear);
-            actual.SchoolYearDescription.ShouldBe((expectedSchoolYear - 1) + "-" + expectedSchoolYear);
-            actual.CurrentSchoolYear.ShouldBe(isCurrent);
         }
 
         public static void ShouldSatisfy<T>(this IEnumerable<T> actual, params Action<T>[] itemExpectations)

@@ -9,11 +9,10 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using NUnit.Framework;
 using Shouldly;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
+using EdFi.Ods.Admin.Api.Features.Applications;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -29,14 +28,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorName = "Integration Tests"
             };
 
-            var user = new Admin.DataAccess.Models.User
-            {
-                Email = "nobody@nowhere.com",
-                FullName = "Integration Tests",
-                Vendor = vendor
-            };
-
-            Save(vendor, user);
+            Save(vendor);
 
             Scoped<IUsersContext>(usersContext =>
             {
@@ -62,18 +54,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorName = "Integration Tests"
             };
 
-            var user = new Admin.DataAccess.Models.User
-            {
-                Email = "nobody@nowhere.com",
-                FullName = "Integration Tests",
-                Vendor = vendor
-            };
+            Save(vendor);
 
-            Save(vendor, user);
+            const string applicationName = "Test Application";
 
-            var applicationName = Sample("Test Application", 51);
-
-            var newApplication = new AddApplicationModel
+            var newApplication = new TestApplication
             {
                 ApplicationName = applicationName,
                 ClaimSetName = "FakeClaimSet",
@@ -95,14 +80,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorName = "Integration Tests"
             };
 
-            var user = new Admin.DataAccess.Models.User
-            {
-                Email = "nobody@nowhere.com",
-                FullName = "Integration Tests",
-                Vendor = vendor
-            };
-
-            Save(vendor, user);
+            Save(vendor);
 
             AddApplicationResult result = null;
 
@@ -152,13 +130,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorName = "Integration Tests"
             };
 
-            var user = new Admin.DataAccess.Models.User
-            {
-                Email = "nobody@nowhere.com",
-                FullName = "Integration Tests",
-                Vendor = vendor
-            };
-
             var profile = new Profile
             {
                 ProfileName = "Test Profile"
@@ -173,7 +144,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 Version = "1.0.0"
             };
 
-            Save(vendor, user, profile, odsInstance);
+            Save(vendor, profile, odsInstance);
 
             var instanceContext = new InstanceContext
             {

@@ -34,16 +34,6 @@ public static class WebApplicationBuilderExtensions
             if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
             {
                 var concreteClass = type;
-
-                //if (concreteClass == typeof(OdsApiFacade))
-                //    continue; //IOdsApiFacade is never resolved. Instead, classes inject IOdsApiFacadeFactory.
-
-                //if (concreteClass == typeof(OdsRestClient))
-                //    continue; //IOdsRestClient is never resolved. Instead, classes inject IOdsRestClientFactory.
-
-                //if (concreteClass == typeof(TokenRetriever))
-                //    continue; //ITokenRetriever is never resolved. Instead, other dependencies construct TokenRetriever directly.
-
                 var interfaces = concreteClass.GetInterfaces().ToArray();
 
                 if (concreteClass.Namespace != null)
@@ -191,8 +181,6 @@ public static class WebApplicationBuilderExtensions
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
-            //webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
-            //    options => options.UseNpgsql(adminConnectionString));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>
@@ -216,9 +204,6 @@ public static class WebApplicationBuilderExtensions
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
-
-            //webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
-            //    options => options.UseSqlServer(adminConnectionString));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>

@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -312,7 +312,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return resourceClaimWithDefaultAuthStrategies;
         }
 
-        private IMapper Mapper() => new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>()).CreateMapper();
+        private IMapper Mapper() => new MapperConfiguration(cfg => cfg.AddProfile<AdminApiMappingProfile>()).CreateMapper();
 
         protected List<ClaimSetEditorTypes.ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
         {

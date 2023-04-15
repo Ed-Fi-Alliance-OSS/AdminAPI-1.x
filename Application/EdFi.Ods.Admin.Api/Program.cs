@@ -6,47 +6,63 @@
 using EdFi.Ods.Admin.Api.Infrastructure;
 using log4net;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.AddServices();
-
-// logging
-ILog _logger = LogManager.GetLogger("Program");
-_logger.Info("Starting Admin API");
-
-var app = builder.Build();
-
-var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
-if (!string.IsNullOrEmpty(pathBase))
+namespace EdFi.Ods.Admin.Api
 {
-    app.UsePathBase("/" + pathBase.Trim('/'));
-    app.UseForwardedHeaders();
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+            StartApplication(args);
+        }
+
+        public static IServiceProvider StartApplication(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+            builder.AddServices();
+
+            // logging
+            var _logger = LogManager.GetLogger("Program");
+            _logger.Info("Starting Admin API");
+
+            var app = builder.Build();
+
+            var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                app.UsePathBase("/" + pathBase.Trim('/'));
+                app.UseForwardedHeaders();
+            }
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
+
+            AdminApiVersions.Initialize(app);
+
+            //The ordering here is meaningful: Routing -> Auth -> Endpoints
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapFeatureEndpoints();
+            app.MapControllers();
+            app.UseHealthChecks("/health");
+
+            if (app.Configuration.GetValue<bool>("EnableSwagger"))
+            {
+                app.UseSwagger();
+                app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());
+            }
+
+            app.Run();
+
+            return app.Services;
+        }
+
+    }
 }
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-else
-{
-    app.UseExceptionHandler("/error");
-}
-
-AdminApiVersions.Initialize(app);
-
-//The ordering here is meaningful: Routing -> Auth -> Endpoints
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapFeatureEndpoints();
-app.MapControllers();
-app.UseHealthChecks("/health");
-
-if (app.Configuration.GetValue<bool>("EnableSwagger"))
-{
-    app.UseSwagger();
-    app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());
-}
-
-app.Run();

@@ -11,5 +11,14 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Extensions
         {
             return input.Remove(input.Length - 1, 1);
         }
+
+        public static string ToDelimiterSeparated(this IEnumerable<string> inputStrings, string separator = ",")
+        {
+            var listOfStrings = inputStrings.ToList();
+
+            return listOfStrings.Any()
+                ? string.Join(separator, listOfStrings)
+                : string.Empty;
+        }
     }
 }

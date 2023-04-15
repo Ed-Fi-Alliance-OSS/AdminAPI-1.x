@@ -9,6 +9,7 @@ using EdFi.Ods.Admin.Api.Features.Vendors;
 using EdFi.Ods.Admin.Api.Features.Applications;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
+using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure
 {
@@ -94,11 +95,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
 
         public string ToDelimiterSeparated(IEnumerable<string> inputStrings, string separator = ",")
         {
-            var listOfStrings = inputStrings.ToList();
-
-            return listOfStrings.Any()
-                ? string.Join(separator, listOfStrings)
-                : string.Empty;
+            return inputStrings.ToDelimiterSeparated(separator);
         }
     }
 }

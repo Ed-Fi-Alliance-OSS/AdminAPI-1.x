@@ -4,12 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using EdFi.Ods.AdminApp.Web;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -32,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
         {
             get
             {
-                return Startup.ConfigurationConnectionStrings.Admin;
+                return ConfigurationManager.ConnectionStrings["Admin"].ConnectionString;
             }
         }
 

@@ -8,12 +8,11 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.Application;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using static EdFi.Ods.AdminApp.Management.Tests.TestingHelper;
+using EdFi.Ods.Admin.Api.Features.Applications;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -166,9 +165,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         {
             SetupTestEntities();
 
-            var newApplicationName = Sample("New Application", 51);
+            const string newApplicationName = "New Application";
 
-            var editApplication = new EditApplicationModel
+            var editApplication = new EdFi.Ods.Admin.Api.Features.Applications.EditApplication.Request()
             {
                 ApplicationId = _application.ApplicationId,
                 ApplicationName = newApplicationName,
@@ -179,7 +178,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             new EditApplicationModelValidator()
-                .ShouldNotValidate<EditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
+                .ShouldNotValidate<IEditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
         }
 
         private class TestEditApplicationModel : IEditApplicationModel

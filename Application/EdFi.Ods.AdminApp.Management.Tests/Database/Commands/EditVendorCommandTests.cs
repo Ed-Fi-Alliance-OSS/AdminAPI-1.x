@@ -11,9 +11,9 @@ using Shouldly;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Web.Helpers;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {

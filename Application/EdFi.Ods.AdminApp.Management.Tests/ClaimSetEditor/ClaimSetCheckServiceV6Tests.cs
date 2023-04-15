@@ -25,9 +25,6 @@ public class ClaimSetCheckServiceV6Tests : SecurityDataTestBase
         };
         Save(testApplication);
 
-        var testAbConnectClaimSet = new ClaimSet { ClaimSetName = CloudsOdsAcademicBenchmarksConnectApp.DefaultClaimSet, Application = testApplication };
-        Save(testAbConnectClaimSet);
-
         var testAdminAppClaimSet = new ClaimSet { ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet, Application = testApplication };
         Save(testAdminAppClaimSet);
 

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Web;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
+using EdFi.Ods.Admin.Api;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
@@ -13,14 +12,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         static Testing()
         {
-            var serviceProvider = Program.CreateHostBuilder(new string[] { })
-                .ConfigureServices((context, services) =>
-                {
-                    // Test-specific IoC modifications here.
-                    services.AddTransient<ITelemetry, StubTelemetry>();
-                })
-                .Build()
-                .Services;
+            var serviceProvider = Program.StartApplication(Array.Empty<string>());
 
             ScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
         }

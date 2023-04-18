@@ -1,31 +1,21 @@
-# Ed-Fi-ODS-AdminApp
+# Ed-Fi-ODS-AdminAPI
 
-The Ed-Fi ODS/API Admin App for Suite 3 is a web-based administrative interface
-for the Ed-Fi ODS/API. The Admin App is available as a standalone application
-for installation on-premises or in the cloud.
+The Ed-Fi ODS/API Admin API is a programmatic interface to administrate ODS/API platform instances.  For Admin API 1.2, it will support ODS/API versions 3.4 through 6.1.
 
 For more information, see:
 
-* For a detailed description see [ODS/API Admin
-  App](https://techdocs.ed-fi.org/pages/viewpage.action?pageId=53773581) in Tech
+* For a detailed description see [Ed-Fi Admin API](https://techdocs.ed-fi.org/display/ADMINAPI) in Tech
   Docs.
-* [How to Submit an
-  Issue](https://techdocs.ed-fi.org/display/ETKB/How+To%3A+Submit+an+Issue)
-* [How Submit a Feature
-  Request](https://techdocs.ed-fi.org/display/ETKB/How+To%3A+Submit+a+Feature+Request)
+* [Submit an
+  Issue](https://support.ed-fi.org)
 * Review on-going development work at
-  [Tracker](https://tracker.ed-fi.org/issues/?filter=14106)
+  [Tracker](https://tracker.ed-fi.org/projects/ADMINAPI/issues)
 
 ## Install Instructions
 
 See [Tech Docs: Admin
-App](https://techdocs.ed-fi.org/display/EDFITOOLS/Admin+App) for general
-information on installation of the Ed-Fi ODS Admin App for Suite 3.
-
-## Developer Documentation
-
-* [Admin App Developer Instructions](docs/developer.md)
-* [Cloud ODS Debugging](docs/cloudods-debugging.md)
+App](https://techdocs.ed-fi.org/display/ADMINAPI) for general
+information on installation of the Ed-Fi Admin API.
 
 ## Contributing
 
@@ -41,7 +31,7 @@ knowledge of the code base and architecture.
 
 ## Legal Information
 
-Copyright (c) 2020 Ed-Fi Alliance, LLC and contributors.
+Copyright (c) 2023 Ed-Fi Alliance, LLC and contributors.
 
 Licensed under the [Apache License, Version 2.0](LICENSE) (the "License").
 

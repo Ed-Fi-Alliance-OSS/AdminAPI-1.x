@@ -16,7 +16,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database.Ods.SchoolYears;

@@ -6,44 +6,71 @@
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
+using System;
+using System.Net;
+using System.Text;
+using System.Text.Json;
 
 namespace EdFi.Ods.Admin.Api.Features;
 
-public class ErrorHandler : IFeature
+public class RequestLoggingMiddleware
 {
-    public void MapEndpoints(IEndpointRouteBuilder endpoints)
+    private readonly RequestDelegate _next;
+
+    public RequestLoggingMiddleware(RequestDelegate next)
     {
-        endpoints.Map("/error", Handle);
+        _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
-    public Task<IResult> Handle(HttpContext context, ILogger<ErrorHandler> logger)
+    public async Task Invoke(HttpContext context, ILogger<RequestLoggingMiddleware> logger)
     {
-        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-        var exception = exceptionHandlerFeature?.Error ?? new Exception();
-
-        if (exception is ValidationException validationException)
+        try
         {
-            logger.LogDebug(exception, "Validation error");
-            return Task.FromResult(AdminApiError.Validation(validationException.Errors));
+            if (context.Request.Path.StartsWithSegments(new PathString("/.well-known")))
+            {
+                // Requests to the OpenId Connect ".well-known" endpoint are too chatty for informational logging, but could be useful in debug logging.
+                logger.LogDebug(JsonSerializer.Serialize(new { path = context.Request.Path.Value, traceId = context.TraceIdentifier }));
+            }
+            else
+            {
+                logger.LogInformation(JsonSerializer.Serialize(new { path = context.Request.Path.Value, traceId = context.TraceIdentifier }));
+            }
+            await _next(context);
         }
+        catch (Exception ex)
+        {
+            var response = context.Response;
+            response.ContentType = "application/json";
 
-        if (exception is NotFoundException<int>)
-            return HandleNotFound<int>(logger, exception);
-        if (exception is NotFoundException<Guid>)
-            return HandleNotFound<Guid>(logger, exception);
-        if (exception is NotFoundException<string>)
-            return HandleNotFound<string>(logger, exception);
+            switch (ex)
+            {
+                case ValidationException validationException:
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        logger.LogError(exception, "An uncaught error has occurred");
-        return Task.FromResult(AdminApiError.Unexpected(exception));
-    }
+                    var message = new
+                    {
+                        message = "Validation failed",
+                        errors = validationException.Errors.Select(x => new
+                        {
+                            property = x.PropertyName,
+                            message = x.ErrorMessage.Replace("\u0027", "'")
+                        })
+                    };
+                    logger.LogDebug(JsonSerializer.Serialize(new { message, traceId = context.TraceIdentifier }));
 
-    private Task<IResult> HandleNotFound<T>(ILogger<ErrorHandler> logger, Exception exception)
-    {
-        if(exception is not NotFoundException<T> notFoundException)
-            throw new ArgumentException("HandleNotFound<T>() must be called with a NotFoundException");
+                    await response.WriteAsync(JsonSerializer.Serialize(message));
+                    break;
 
-        logger.LogDebug(notFoundException, "Resource not found");
-        return Task.FromResult(AdminApiError.NotFound(notFoundException.ResourceName, notFoundException.Id));
+                case INotFoundException notFoundException:
+                    logger.LogDebug(JsonSerializer.Serialize(new { message = notFoundException.Message, traceId = context.TraceIdentifier }));
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    break;
+
+                default:
+                    logger.LogError(JsonSerializer.Serialize(new { message = "An uncaught error has occurred", error = ex, traceId = context.TraceIdentifier }));
+                    await response.WriteAsync(JsonSerializer.Serialize(new { message = ex?.Message }));
+                    break;
+            }
+        }
     }
 }

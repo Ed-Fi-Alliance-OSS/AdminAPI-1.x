@@ -7,7 +7,12 @@ using System;
 
 namespace EdFi.Ods.AdminApp.Management.ErrorHandling
 {
-    public class NotFoundException<T> : Exception
+    public interface INotFoundException
+    {
+        public string Message { get; }
+    }
+
+    public class NotFoundException<T> : Exception, INotFoundException
     {
         public string ResourceName { get; }
         public T Id { get; }

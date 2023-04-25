@@ -3,9 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Common.Utils.Extensions;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Net;
 using System.Text;
@@ -45,29 +48,40 @@ public class RequestLoggingMiddleware
             switch (ex)
             {
                 case ValidationException validationException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-                    var message = new
+                    var validationResponse = new
                     {
-                        message = "Validation failed",
-                        errors = validationException.Errors.Select(x => new
-                        {
-                            property = x.PropertyName,
-                            message = x.ErrorMessage.Replace("\u0027", "'")
-                        })
+                        title = "Validation failed",
+                        status = (int)HttpStatusCode.BadRequest,
+                        errors = new Dictionary<string, List<string>>()
                     };
-                    logger.LogDebug(JsonSerializer.Serialize(new { message, traceId = context.TraceIdentifier }));
+                                        
+                    validationException.Errors.ForEach(x => {
+                        if (!validationResponse.errors.ContainsKey(x.PropertyName)) {
+                            validationResponse.errors[x.PropertyName] = new List<string>();
+                        }
+                        validationResponse.errors[x.PropertyName].Add(x.ErrorMessage.Replace("\u0027", "'"));
+                    });
 
-                    await response.WriteAsync(JsonSerializer.Serialize(message));
+                    logger.LogDebug(JsonSerializer.Serialize(new { message = validationResponse, traceId = context.TraceIdentifier }));
+
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    await response.WriteAsync(JsonSerializer.Serialize(validationResponse));
                     break;
 
                 case INotFoundException notFoundException:
-                    logger.LogDebug(JsonSerializer.Serialize(new { message = notFoundException.Message, traceId = context.TraceIdentifier }));
+                    var notFoundResponse = new
+                    {
+                        title = notFoundException.Message,
+                        status = (int)HttpStatusCode.NotFound
+                    };
+                    logger.LogDebug(JsonSerializer.Serialize(new { message = notFoundResponse, traceId = context.TraceIdentifier }));
+
                     response.StatusCode = (int)HttpStatusCode.NotFound;
+                    await response.WriteAsync(JsonSerializer.Serialize(notFoundResponse));
                     break;
 
                 default:
-                    logger.LogError(JsonSerializer.Serialize(new { message = "An uncaught error has occurred", error = ex, traceId = context.TraceIdentifier }));
+                    logger.LogError(JsonSerializer.Serialize(new { message = "An uncaught error has occurred", error = new { ex.Message, ex.StackTrace }, traceId = context.TraceIdentifier }));
                     await response.WriteAsync(JsonSerializer.Serialize(new { message = ex?.Message }));
                     break;
             }

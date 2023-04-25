@@ -9,7 +9,7 @@ using NUnit.Framework;
 using Respawn;
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApp.Management.Database.Ods.Reports;

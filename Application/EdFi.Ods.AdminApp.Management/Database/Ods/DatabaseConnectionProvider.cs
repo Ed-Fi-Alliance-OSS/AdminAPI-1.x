@@ -8,7 +8,7 @@ using EdFi.Common.Configuration;
 using EdFi.Ods.AdminApp.Management.Helpers;
 using Microsoft.Extensions.Options;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Services;
 using Npgsql;
 using ApiMode = EdFi.Ods.AdminApp.Management.Instances.ApiMode;

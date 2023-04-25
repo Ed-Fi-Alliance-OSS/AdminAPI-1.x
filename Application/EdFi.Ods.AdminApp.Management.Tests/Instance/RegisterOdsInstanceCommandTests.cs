@@ -5,7 +5,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using EdFi.Ods.AdminApp.Management.Database.Ods;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Configuration.Claims;

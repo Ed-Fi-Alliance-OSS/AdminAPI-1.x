@@ -140,7 +140,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 }
                 catch (AdminAppException)
                 {
-                    return false;
+                    throw new NotFoundException<int>("claimSet", id);
                 }
             }
 

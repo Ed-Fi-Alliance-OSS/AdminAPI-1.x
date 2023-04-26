@@ -20,13 +20,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     {
-        protected override string ConnectionString
-        {
-            get
-            {
-                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test;Integrated Security=True;";
-            }
-        }
 
         protected override SqlServerSecurityContext CreateDbContext()
         {

@@ -9,7 +9,6 @@ using System.IO.Compression;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
@@ -22,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public class SecurityTestDatabaseSetup
     {
-        public void EnsureSecurityDatabase(string downloadPath,
+        public void EnsureSecurityV53DatabaseExists(string downloadPath,
             string version = "5.3.1146",
             string nugetSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
             string packageName = "EdFi.Suite3.RestApi.Databases",

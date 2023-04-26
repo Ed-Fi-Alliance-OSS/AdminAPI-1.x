@@ -3,12 +3,22 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Management.Tests;
+using EdFi.Admin.DataAccess.DbConfigurations;
 using NUnit.Framework;
+using System.Data.Entity;
+using EdFi.Common.Configuration;
 
-[SetUpFixture]
-public class SetUpFixture
+namespace EdFi.Ods.AdminApp.Management.Tests
 {
-    [OneTimeSetUp]
-    public void GlobalSetUp() => Testing.EnsureInitialized();
+    [SetUpFixture]
+    public class SetUpFixture
+    {
+        [OneTimeSetUp]
+        public void GlobalSetUp()
+        {
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(DatabaseEngine.SqlServer));
+
+            new SecurityTestDatabaseSetup().EnsureSecurityV53DatabaseExists(@"C:\\temp");
+        }
+    }
 }

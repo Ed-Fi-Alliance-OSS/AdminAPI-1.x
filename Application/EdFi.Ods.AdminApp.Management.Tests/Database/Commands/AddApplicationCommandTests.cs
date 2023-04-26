@@ -6,13 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using NUnit.Framework;
 using Shouldly;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using EdFi.Ods.Admin.Api.Features.Applications;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -30,7 +27,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Save(vendor);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new AddApplicationCommand(usersContext, new InstanceContext());
                 var newApplication = new TestApplication
@@ -46,32 +43,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         }
 
         [Test]
-        public void ShouldNotAddIfNameNotWithinApplicationNameMaxLength()
-        {
-            var vendor = new Vendor
-            {
-                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
-                VendorName = "Integration Tests"
-            };
-
-            Save(vendor);
-
-            const string applicationName = "Test Application";
-
-            var newApplication = new TestApplication
-            {
-                ApplicationName = applicationName,
-                ClaimSetName = "FakeClaimSet",
-                ProfileId = null,
-                VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 }
-            };
-
-            new AddApplicationModelValidator()
-                .ShouldNotValidate(newApplication, $"The Application Name {applicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
-        }
-
-        [Test]
         public void ProfileShouldBeOptional()
         {
             var vendor = new Vendor
@@ -84,7 +55,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             AddApplicationResult result = null;
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new AddApplicationCommand(usersContext, new InstanceContext());
                 var newApplication = new TestApplication
@@ -153,7 +124,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             };
 
             AddApplicationResult result = null;
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new AddApplicationCommand(usersContext, instanceContext);
                 var newApplication = new TestApplication

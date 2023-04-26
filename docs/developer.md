@@ -257,3 +257,12 @@ DLLs are what runs inside of Docker.
   .\BuildDockerDevelopment.ps1
   ```
   
+
+
+## Postman Tips
+
+* Link to the postman readme
+* Run manually - create client first with "User Management > Register". Then
+  clear existing `TOKEN` variable: click the "..." button for "Admin API E2E"
+  in the collection pane; select "Edit"; click on the "Variables" tab; clear
+  out the value for `TOKEN`.

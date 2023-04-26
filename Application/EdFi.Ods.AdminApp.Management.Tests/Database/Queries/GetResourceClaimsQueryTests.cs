@@ -5,14 +5,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
-using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {

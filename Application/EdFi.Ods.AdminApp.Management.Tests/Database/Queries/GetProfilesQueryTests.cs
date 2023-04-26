@@ -6,12 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -27,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             Save(profile1, profile2);
 
             List<Profile> results = null;
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var query = new GetProfilesQuery(usersContext);
                 results = query.Execute();

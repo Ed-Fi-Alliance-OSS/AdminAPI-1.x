@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
-
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
@@ -93,30 +92,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             return resourceClaims;
         }
-
-        //private IReadOnlyCollection<ResourceClaim> SetupParentResourceClaimsWithChildren(Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
-        //{
-        //    var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(parentIndex => new ResourceClaim
-        //    {
-        //        ClaimName = $"TestParentResourceClaim{parentIndex}",
-        //        DisplayName = $"TestParentResourceClaim{parentIndex}",
-        //        ResourceName = $"TestParentResourceClaim{parentIndex}",
-        //        Application = testApplication
-        //    }).ToList();
-
-        //    var childResourceClaims = parentResourceClaims.SelectMany(x => Enumerable.Range(1, childResourceClaimCount)
-        //        .Select(childIndex => new ResourceClaim
-        //        {
-        //            ClaimName = $"TestChildResourceClaim{childIndex}",
-        //            DisplayName = $"TestChildResourceClaim{childIndex}",
-        //            ResourceName = $"TestChildResourceClaim{childIndex}",
-        //            Application = testApplication,
-        //            ParentResourceClaim = x
-        //        })).ToList();
-
-        //    Save(childResourceClaims.Cast<object>().ToArray());
-        //    parentResourceClaims.AddRange(childResourceClaims);
-        //    return parentResourceClaims;
-        //}
     }
 }

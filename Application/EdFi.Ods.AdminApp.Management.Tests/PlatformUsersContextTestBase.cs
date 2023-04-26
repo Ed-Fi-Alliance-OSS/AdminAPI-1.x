@@ -4,12 +4,10 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -28,13 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        protected string ConnectionString
-        {
-            get
-            {
-                return ConfigurationManager.ConnectionStrings["Admin"].ConnectionString;
-            }
-        }
+        protected string ConnectionString => Config.AdminConnectionString;
 
         [OneTimeTearDown]
         public async Task FixtureTearDown()
@@ -53,21 +45,17 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             Transaction(usersContext =>
             {
                 foreach (var entity in entities)
-                    ((SqlServerUsersContext) usersContext).Set(entity.GetType()).Add(entity);
+                    ((SqlServerUsersContext)usersContext).Set(entity.GetType()).Add(entity);
             });
         }
 
         protected void Transaction(Action<IUsersContext> action)
         {
-            Scoped<IUsersContext>(usersContext =>
-            {
-                using (var transaction = ((SqlServerUsersContext)usersContext).Database.BeginTransaction())
-                {
-                    action(usersContext);
-                    usersContext.SaveChanges();
-                    transaction.Commit();
-                }
-            });
+            using var usersContext = new SqlServerUsersContext(ConnectionString);
+            using var transaction = (usersContext).Database.BeginTransaction();
+            action(usersContext);
+            usersContext.SaveChanges();
+            transaction.Commit();
         }
 
         protected TResult Transaction<TResult>(Func<IUsersContext, TResult> query)

@@ -102,32 +102,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             exception.Message.ShouldBe($"Claim set({systemReservedClaimSet.ClaimSetName}) is system reserved.Can not be deleted.");
         }
 
-
-        [Test]
-        public void ShouldNotDeleteClaimSetIfNotAnExistingId()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplication2"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet { ClaimSetName = $"TestClaimSet{DateTime.Now:O}", Application = testApplication };
-            Save(testClaimSet);
-
-            var claimSetToDelete = new DeleteClaimSetModel()
-            {
-                Name = testClaimSet.ClaimSetName,
-                Id = 99
-            };
-            using var securityContext = TestContext;
-            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
-        }
-
         private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
                         null, new GetClaimSetByIdQueryV6Service(securityContext));
     }

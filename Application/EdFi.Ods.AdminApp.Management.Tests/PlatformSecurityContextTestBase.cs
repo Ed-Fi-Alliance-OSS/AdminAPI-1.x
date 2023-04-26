@@ -3,7 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
@@ -35,7 +37,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
+        protected virtual string ConnectionString => Config.SecurityConnectionString;
 
         protected virtual void AdditionalFixtureSetup()
         {
@@ -81,12 +83,32 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         protected void Save(params object[] entities)
         {
-            foreach (var entity in entities)
+            Transaction(usersContext =>
             {
-                TestContext.Set(entity.GetType()).Add(entity);
-            }
-
-            TestContext.SaveChanges();
+                foreach (var entity in entities)
+                    TestContext.Set(entity.GetType()).Add(entity);
+            });
         }
+
+        protected void Transaction(Action<ISecurityContext> action)
+        {
+            using var transaction = TestContext.Database.BeginTransaction();
+            action(TestContext);
+            TestContext.SaveChanges();
+            transaction.Commit();
+        }
+
+        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
+        {
+            var result = default(TResult);
+
+            Transaction(database =>
+            {
+                result = query(database);
+            });
+
+            return result;
+        }
+
     }
 }

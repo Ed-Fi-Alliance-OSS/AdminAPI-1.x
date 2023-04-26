@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -9,7 +9,12 @@ using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
-public class GetAllAuthorizationStrategiesQuery
+public interface IGetAllAuthorizationStrategiesQuery
+{
+    IReadOnlyList<AuthorizationStrategy> Execute();
+}
+
+public class GetAllAuthorizationStrategiesQuery : IGetAllAuthorizationStrategiesQuery
 {
     private ISecurityContext _securityContext;
 
@@ -18,7 +23,7 @@ public class GetAllAuthorizationStrategiesQuery
         _securityContext = securityContext;
     }
 
-    public List<AuthorizationStrategy> Execute()
+    public IReadOnlyList<AuthorizationStrategy> Execute()
     {
         return _securityContext.AuthorizationStrategies
             .OrderBy(x => x.AuthorizationStrategyName)

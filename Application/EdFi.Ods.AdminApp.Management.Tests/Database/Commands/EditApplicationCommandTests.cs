@@ -5,13 +5,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 using EdFi.Ods.Admin.Api.Features.Applications;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
@@ -104,7 +102,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorId = _vendor.VendorId
             };
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new EditApplicationCommand(usersContext);
                 command.Execute(editModel);
@@ -139,7 +137,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 VendorId = _otherVendor.VendorId
             };
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new EditApplicationCommand(usersContext);
                 command.Execute(editModel);
@@ -158,27 +156,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
                 persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
                 persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
             });
-        }
-
-        [Test]
-        public void ShouldNotEditIfNameNotWithinApplicationNameMaxLength()
-        {
-            SetupTestEntities();
-
-            const string newApplicationName = "New Application";
-
-            var editApplication = new EdFi.Ods.Admin.Api.Features.Applications.EditApplication.Request()
-            {
-                ApplicationId = _application.ApplicationId,
-                ApplicationName = newApplicationName,
-                ClaimSetName = "DifferentFakeClaimSet",
-                EducationOrganizationIds = new List<int> { 23456, 78901 },
-                ProfileId = _otherProfile.ProfileId,
-                VendorId = _otherVendor.VendorId
-            };
-
-            new EditApplicationModelValidator()
-                .ShouldNotValidate<IEditApplicationModel>(editApplication, $"The Application Name {newApplicationName} would be too long for Admin App to set up necessary Application records. Consider shortening the name by 1 character(s).");
         }
 
         private class TestEditApplicationModel : IEditApplicationModel

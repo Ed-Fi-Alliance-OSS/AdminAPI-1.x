@@ -6,10 +6,8 @@
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 
@@ -37,14 +35,14 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var testParentResource = testResourceClaims.Single(x => x.ResourceName == parentRcs.First());
 
             ResourceClaim[] results = null;
-            Scoped<ISecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var query = new GetChildResourceClaimsForParentQuery(securityContext);
 
                 results = query.Execute(testParentResource.ResourceClaimId).ToArray();
             });
 
-            Scoped<ISecurityContext>(securityContext =>
+            Transaction(securityContext =>
             {
                 var testChildResourceClaims = securityContext.ResourceClaims.Where(x =>
                     x.ParentResourceClaimId == testParentResource.ResourceClaimId);

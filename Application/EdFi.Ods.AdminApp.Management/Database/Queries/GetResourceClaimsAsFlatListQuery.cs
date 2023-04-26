@@ -10,7 +10,12 @@ using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApp.Management.Database.Queries
 {
-    public class GetResourceClaimsAsFlatListQuery
+    public interface IGetResourceClaimsAsFlatListQuery
+    {
+        IReadOnlyList<ResourceClaim> Execute();
+    }
+
+    public class GetResourceClaimsAsFlatListQuery : IGetResourceClaimsAsFlatListQuery
     {
         private readonly ISecurityContext _securityContext;
 
@@ -19,7 +24,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
             _securityContext = securityContext;
         }
 
-        public IEnumerable<ResourceClaim> Execute()
+        public IReadOnlyList<ResourceClaim> Execute()
         {
             return _securityContext.ResourceClaims
                 .Select(x => new ResourceClaim

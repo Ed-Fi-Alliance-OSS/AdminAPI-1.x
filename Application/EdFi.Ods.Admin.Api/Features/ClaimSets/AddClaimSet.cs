@@ -67,8 +67,8 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
             public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
-                GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-                GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+                IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+                IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
             {
                 _getAllClaimSetsQuery = getAllClaimSetsQuery;
 

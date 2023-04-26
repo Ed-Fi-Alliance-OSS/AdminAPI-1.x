@@ -90,36 +90,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Api\OdsApiValidator.cs" />
-    <Compile Include="Database\Commands\AddApplicationCommand.cs" />
-    <Compile Include="Database\Commands\AddVendorCommand.cs" />
-    <Compile Include="Database\Commands\DeleteApplicationCommand.cs" />
-    <Compile Include="Database\Commands\DeleteVendorCommand.cs" />
-    <Compile Include="Database\Commands\EditApplicationCommand.cs" />
-    <Compile Include="Database\Commands\EditVendorCommand.cs" />
-    <Compile Include="Database\Commands\RegenerateApiClientSecretCommand.cs" />
-    <Compile Include="Database\Commands\ValidationConstants.cs" />
-    <Compile Include="Database\EntityFrameworkCoreDatabaseModelBuilderExtensions.cs" />
-    <Compile Include="Database\Queries\GetAllClaimSetsQuery.cs" />
-    <Compile Include="Database\Queries\GetApplicationByIdQuery.cs" />
-    <Compile Include="Database\Queries\GetApplicationsByVendorIdQuery.cs" />
-    <Compile Include="Database\Queries\GetChildResourceClaimsForParentQuery.cs" />
-    <Compile Include="Database\Queries\GetOdsInstanceQuery.cs" />
-    <Compile Include="Database\Queries\GetProfilesQuery.cs" />
-    <Compile Include="Database\Queries\GetResourceClaimsAsFlatListQuery.cs" />
-    <Compile Include="Database\Queries\GetResourceClaimsQuery.cs" />
-    <Compile Include="Database\Queries\GetVendorByIdQuery.cs" />
-    <Compile Include="Database\Queries\GetVendorsQuery.cs" />
-    <Compile Include="Database\Queries\VendorExtensions.cs" />
-    <Compile Include="ErrorHandling\AdminAppException.cs" />
-    <Compile Include="ErrorHandling\NotFoundException.cs" />
-    <Compile Include="ErrorHandling\OdsApiConnectionException.cs" />
-    <Compile Include="Helpers\AppSettings.cs" />
-    <Compile Include="Helpers\HealthCheckServiceExtensions.cs" />
-    <Compile Include="Services\SimpleGetRequest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
@@ -149,5 +119,15 @@
   <ItemGroup>
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Api\" />
+    <Folder Include="ClaimSetEditor\" />
+    <Folder Include="Database\Commands\" />
+    <Folder Include="Database\Queries\" />
+    <Folder Include="ErrorHandling\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@
 Param(
     $config =
     @{
-        "engine" = "sql"
+        "engine" = "mssql"
         "databaseServer" = "(local)"
         "databasePort" = ""
         "databaseUser" = ""
@@ -34,9 +34,9 @@ $arguments = @{
     NuGetFeed = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json"
 }
 
-Write-Host "Installing the Admin App tables to $($arguments.DatabaseName)" -ForegroundColor Cyan
-Install-AdminAppTables @arguments
+Write-Output "Installing the Admin API tables to $($arguments.DatabaseName)"
+Install-AdminApiTables @arguments
 
 $arguments.DatabaseName = "EdFi_Admin_Test"
-Write-Host "Installing the Admin App tables to $($arguments.DatabaseName)" -ForegroundColor Cyan
-Install-AdminAppTables @arguments
+Write-Output "Installing the Admin API tables to $($arguments.DatabaseName)"
+Install-AdminApiTables @arguments

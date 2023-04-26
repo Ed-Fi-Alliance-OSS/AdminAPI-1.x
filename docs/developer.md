@@ -65,6 +65,10 @@ arguments.
 
 ## Running on Localhost
 
+TODO: REWRITE MORE CLEARLY FOR API TESTING. Require setting up v6.1 test databases. V5.3 setup is automatic. 
+Maybe create ticket for automating v6.1 setup.
+
+
 To run the ODS/API locally (not in Docker), follow the Getting Started
 instructions for the desired version of the [Operational Data Store (ODS) and
 API](https://techdocs.ed-fi.org/display/ETKB/Ed-Fi+Operational+Data+Store+and+API).
@@ -84,21 +88,21 @@ instructions](#running-on-docker) use PostgreSQL.
 
 1. Get started with the ODS/API until the point where you are ready to have the
    ODS/API running in Visual Studio.
-2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
+2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5+) to run in
    "SharedInstance" mode and ensure that the ODS connection string points to
    database `EdFi_{0}`. At runtime, the software will substitute "Ods" for
    the replacement token `{0}`.
-3. Install the AdminApp database support by running the following command in a
+3. Install the Admin API database support by running the following command in a
    PowerShell window:
 
    ```powershell
-   # From AdminApp clone directory
+   # From AdminApi clone directory
    cd eng
    .\run-dbup-migrations.ps1
    ```
 
    :warning: you may wish to review the default configuration at the top of this
-   script to ensure that it is appropriate for your situation.
+   script file to ensure that it is appropriate for your situation.
 
 4. Run the build script and exercise tests to verify your setup:
 
@@ -111,12 +115,13 @@ instructions](#running-on-docker) use PostgreSQL.
    built-in web server).
 
 To reset the databases so that you start from a clean slate, re-run `initdev`
-and return to step 3 above.
+and return to step 3 above. For faster reset of the databases, without recompiling
+the ODS/API, just run: `Reset-TestAdminDatabase` and `Reset-TestSecurityDatabase`.
 
 ### Year-Specific Mode
 
 1. Stop the ODS/API and/or Admin App if running in Visual Studio.
-2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5.x) to run in
+2. Change the ODS/API `web.config` (v3.x) or `appsettings.json` (v5+) to run in
    "YearSpecific" mode and ensure that the ODS connection string points to
    database `EdFi_{0}`. At runtime, the software will substitute "Ods_yyyy" for
    the replacement token `{0}`, where "yyyy" is the four digit year of a given

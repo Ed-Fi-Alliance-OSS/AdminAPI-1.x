@@ -10,15 +10,7 @@ using System.Net;
 using System.Reflection;
 using EdFi.Common.Extensions;
 using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
-using EdFi.Ods.AdminApp.Management.Database;
-using EdFi.Ods.AdminApp.Management.Database.Models;
 using EdFi.Ods.AdminApp.Management.Helpers;
-using EdFi.Ods.AdminApp.Web._Installers;
-using EdFi.Ods.AdminApp.Web.ActionFilters;
-using EdFi.Ods.AdminApp.Web.Hubs;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
-using EdFi.Ods.AdminApp.Web.Infrastructure.HangFire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,16 +18,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
-using Hangfire;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using NUglify.Css;
 using NUglify.JavaScript;
 
@@ -69,24 +56,12 @@ namespace EdFi.Ods.AdminApp.Web
 
             }
 
-            services.AddDbContext<AdminAppDbContext>(ConfigureForAdminDatabase);
-            services.AddDbContext<AdminAppIdentityDbContext>(ConfigureForAdminDatabase);
-            services.AddDbContext<AdminAppDataProtectionKeysDbContext>(ConfigureForAdminDatabase);
-
-            services.AddIdentity<AdminAppUser, IdentityRole>()
-                .AddEntityFrameworkStores<AdminAppIdentityDbContext>()
-                .AddDefaultTokenProviders();
-
+       
             services.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new AuthorizeFilter("UserMustExistPolicy"));
                         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
-                        options.Filters.Add<JsonValidationFilter>();
-                        options.Filters.Add<SetupRequiredFilter>();
-                        options.Filters.Add<UserContextFilter>();
-                        options.Filters.Add<PasswordChangeRequiredFilter>();
-                        options.Filters.Add<InstanceContextFilter>();
-                    })
+                       })
                     .AddFluentValidation(
                         opt =>
                         {
@@ -120,22 +95,6 @@ namespace EdFi.Ods.AdminApp.Web
                     pipeline.AddJavaScriptBundle("/bundles/authstrategy.min.js", minifyJsSettings, "/Scripts/auth-editor.js");
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("UserMustExistPolicy",
-                    policyBuilder =>
-                    {
-                        policyBuilder.AddRequirements(new UserMustExistRequirement());
-                    });
-            });
-
-            services.AddScoped<IAuthorizationHandler, UserMustExistHandler>();
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-            });
-
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Login";
@@ -143,42 +102,22 @@ namespace EdFi.Ods.AdminApp.Web
                 options.AccessDeniedPath = "/Identity/Login";
             });
 
-            services.AddDataProtection().PersistKeysToDbContext<AdminAppDataProtectionKeysDbContext>();
-
-            services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
-
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
             services.AddSignalR();
 
             services.AddHttpClient();
 
-            var appSettings = new AppSettings();
-            Configuration.GetSection("AppSettings").Bind(appSettings);
-            ConfigurationAppSettings = appSettings;
-
+      
             var connectionStrings = new ConnectionStrings();
             Configuration.GetSection("ConnectionStrings").Bind(connectionStrings);
             ConfigurationConnectionStrings = connectionStrings;
 
-            var appStartup = appSettings.AppStartup;
-
-            if (appStartup == "OnPrem")
-                new OnPremInstaller().Install(services, appSettings);
-
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings());
-            HangFireInstance.EnableWithoutSchemaMigration();
-            services.AddHangfireServer();
-
+        
+    
             services.AddHealthCheck(Configuration.GetConnectionString("Admin"), IsSqlServer(databaseEngine));
 
-            // This statement should be kept last to ensure that the IHttpClientFactory and IInferOdsApiVersion services are registered.
-            CommonConfigurationInstaller.ConfigureLearningStandards(services).Wait();
-        }
+            }
 
         private void ConfigureForAdminDatabase(DbContextOptionsBuilder options)
         {
@@ -231,9 +170,7 @@ namespace EdFi.Ods.AdminApp.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<ProductionLearningStandardsHub>("/productionLearningStandardsHub");
-                endpoints.MapHub<BulkUploadHub>("/bulkUploadHub");
-
+      
                 if (!env.IsProduction())
                 {
                     endpoints.MapPost(
@@ -246,14 +183,8 @@ namespace EdFi.Ods.AdminApp.Web
                             var logger = LogManager.GetLogger(typeof(Startup));
                             logger.Debug($"Development Product Registration Sink Received Message: {Environment.NewLine}{body}");
 
-                            var model = JsonConvert.DeserializeObject<ProductRegistrationModel>(body);
-
+                   
                             context.Response.StatusCode = (int)HttpStatusCode.OK;
-
-                            await context.Response.WriteAsync(
-                                "Development Product Registration Sink received registration " +
-                                $"notification with ProductRegistrationId {model.ProductRegistrationId}. " +
-                                "This notification will NOT be reported to the Production registration endpoint.");
                         });
                 }
 
@@ -261,7 +192,6 @@ namespace EdFi.Ods.AdminApp.Web
             });
         }
 
-        public static AppSettings ConfigurationAppSettings { get; set; }
         public static ConnectionStrings ConfigurationConnectionStrings { get; set; }
     }
 }

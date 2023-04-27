@@ -25,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             if (claimSetToDelete.ForApplicationUseOnly || claimSetToDelete.IsEdfiPreset ||
                     CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
             {
-                throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
+                throw new AdminAppException($"Claim set `{claimSetToDelete.ClaimSetName}` cannot be deleted.");
             }
 
             var resourceClaimsForClaimSetId =

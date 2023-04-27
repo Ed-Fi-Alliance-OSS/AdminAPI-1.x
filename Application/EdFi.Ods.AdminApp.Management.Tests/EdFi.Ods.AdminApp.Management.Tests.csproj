@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\EdFi.Ods.Admin.Api\EdFi.Ods.Admin.Api.csproj" />
         <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
         <ProjectReference Include="..\EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.csproj" />
     </ItemGroup>
@@ -30,6 +31,10 @@
       <None Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infrastructure\" />
     </ItemGroup>
 
 </Project>

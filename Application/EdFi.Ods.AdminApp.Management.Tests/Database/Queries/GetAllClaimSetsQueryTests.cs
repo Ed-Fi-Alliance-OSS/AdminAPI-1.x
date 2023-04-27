@@ -6,12 +6,9 @@
 using System;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
-
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -36,7 +33,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var claimSet2 = GetClaimSet(application);
             Save(claimSet1, claimSet2);
 
-            var claimSetNames = Scoped<ISecurityContext, string[]>(securityContext =>
+            var claimSetNames = Transaction<string[]>(securityContext =>
             {
                 var query = new GetAllClaimSetsQuery(securityContext);
                 return query.Execute().Select(x => x.Name).ToArray();

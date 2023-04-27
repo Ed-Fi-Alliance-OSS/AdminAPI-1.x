@@ -5,15 +5,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using static EdFi.Ods.AdminApp.Web.Infrastructure.ResourceClaimSelectListBuilder;
-
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
-using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -46,41 +42,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
             results.All(x => x.ParentName == null).ShouldBe(true);
             results.All(x => x.Children.Count == 0).ShouldBe(true);
-        }
-
-        [Test]
-        public void ShouldGetAlphabeticallySortedSelectListForResourceClaims()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplicationName"
-            };
-
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet
-            { ClaimSetName = "TestClaimSet_test", Application = testApplication };
-            Save(testClaimSet);
-
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1)).ToList();
-            var parentResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim == null)
-                .OrderBy(x => x.ResourceClaim.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
-            var childResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim != null)
-                .OrderBy(x => x.ResourceClaim?.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
-
-            List<SelectListItem> results = null;
-            using var securityContext = TestContext;
-            var query = new GetResourceClaimsQuery(securityContext);
-
-            var allResourceClaims = query.Execute().ToList();
-
-            results = GetSelectListForResourceClaims(allResourceClaims);
-
-            // Removing "Please select a value" SelectListItem from the results
-            results.RemoveAt(0);
-            results.Count.ShouldBe(testResourceClaims.Count);
-            results.Where(x => x.Group.Name == "Groups").Select(x => x.Text).ToList().ShouldBe(parentResourceNames);
-            results.Where(x => x.Group.Name == "Resources").Select(x => x.Text).ToList().ShouldBe(childResourceNames);
         }
 
         private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, int resourceClaimCount = 5)

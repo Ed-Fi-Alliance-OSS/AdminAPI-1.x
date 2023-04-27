@@ -6,12 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
-
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
@@ -36,7 +32,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             {
                 List<Management.ClaimSetEditor.Application> results = null;
 
-                Scoped<IUsersContext>(usersContext =>
+                UsersTransaction(usersContext =>
                 {
                     var query = new GetApplicationsByClaimSetId53Query(securityContext, usersContext);
                     results = query.Execute(testClaimSet.ClaimSetId).ToList();
@@ -64,7 +60,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             using var securityContext = TestContext;
             foreach (var testClaimSet in testClaimSets)
             {
-                Scoped<IUsersContext>(usersContext =>
+                UsersTransaction(usersContext =>
                 {
                     var query = new GetApplicationsByClaimSetId53Query(securityContext, usersContext);
                     var appsCountByClaimSet = query.ExecuteCount(testClaimSet.ClaimSetId);
@@ -102,9 +98,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             return testClaimSets;
         }
 
-        private static void SetupApplications(IEnumerable<ClaimSet> testClaimSets, int applicationCount = 5)
+        private void SetupApplications(IEnumerable<ClaimSet> testClaimSets, int applicationCount = 5)
         {
-            Scoped<IUsersContext>(usersContext =>
+            UsersTransaction(usersContext =>
             {
                 foreach (var claimSet in testClaimSets)
                 {

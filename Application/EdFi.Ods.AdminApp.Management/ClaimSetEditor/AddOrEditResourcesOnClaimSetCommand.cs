@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
+using FluentValidation;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {

@@ -6,14 +6,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -23,7 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
         [Test]
         public void ShouldFailIfApplicationDoesNotExist()
         {
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new RegenerateApiClientSecretCommand(usersContext);
                 Assert.Throws<NotFoundException<int>>(() => command.Execute(0));
@@ -41,7 +39,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 
             Save(application);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new RegenerateApiClientSecretCommand(usersContext);
                 Assert.Throws<InvalidOperationException>(() => command.Execute(application.ApplicationId));
@@ -101,7 +99,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             });
 
             RegenerateApiClientSecretResult result = null;
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new RegenerateApiClientSecretCommand(usersContext);
                 result = command.Execute(application.ApplicationId);

@@ -11,8 +11,6 @@ using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
 using EdFi.Ods.AdminApp.Management;
 using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
-using EdFi.Ods.AdminApp.Management.Database;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Services;
 using FluentValidation.AspNetCore;
@@ -27,7 +25,7 @@ public static class WebApplicationBuilderExtensions
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
         var executingAssembly = Assembly.GetExecutingAssembly();
-        webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminManagementMappingProfile).Assembly);
+        webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminApiMappingProfile).Assembly);
         webApplicationBuilder.Services.AddScoped<InstanceContext>();
 
         foreach (var type in typeof(IMarkerForEdFiOdsAdminAppManagement).Assembly.GetTypes())
@@ -35,15 +33,6 @@ public static class WebApplicationBuilderExtensions
             if (type.IsClass && !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
             {
                 var concreteClass = type;
-
-                if (concreteClass == typeof(OdsApiFacade))
-                    continue; //IOdsApiFacade is never resolved. Instead, classes inject IOdsApiFacadeFactory.
-
-                if (concreteClass == typeof(OdsRestClient))
-                    continue; //IOdsRestClient is never resolved. Instead, classes inject IOdsRestClientFactory.
-
-                if (concreteClass == typeof(TokenRetriever))
-                    continue; //ITokenRetriever is never resolved. Instead, other dependencies construct TokenRetriever directly.
 
                 var interfaces = concreteClass.GetInterfaces().ToArray();
 
@@ -192,8 +181,6 @@ public static class WebApplicationBuilderExtensions
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
-            webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
-                options => options.UseNpgsql(adminConnectionString));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>
@@ -217,9 +204,6 @@ public static class WebApplicationBuilderExtensions
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
-
-            webApplicationBuilder.Services.AddDbContext<AdminAppDbContext>(
-                options => options.UseSqlServer(adminConnectionString));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>

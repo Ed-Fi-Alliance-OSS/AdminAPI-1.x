@@ -24,7 +24,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             Save(newVendor);
             var vendorId = newVendor.VendorId;
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
                 deleteVendorCommand.Execute(vendorId);
@@ -44,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var applicationId = newApplication.ApplicationId;
             applicationId.ShouldBeGreaterThan(0);
             
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
                 var deleteVendorCommand = new DeleteVendorCommand(usersContext, deleteApplicationCommand);
@@ -67,7 +67,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             userId.ShouldBeGreaterThan(0);
 
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
                 deleteVendorCommand.Execute(vendorId);

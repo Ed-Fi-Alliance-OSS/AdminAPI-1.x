@@ -8,10 +8,8 @@ using NUnit.Framework;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -32,7 +30,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             vendor.Applications.Add(application);
             Save(vendor);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
                 var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
@@ -60,7 +58,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var organizationId = applicationOrganization.ApplicationEducationOrganizationId;
             organizationId.ShouldBeGreaterThan(0);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
                 var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
@@ -84,7 +82,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var profileId = profile.ProfileId;
             profileId.ShouldBeGreaterThan(0);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
                 var results = getApplicationsByVendorIdQuery.Execute(vendor.VendorId);
@@ -95,7 +93,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
         [Test]
         public void ShouldThrowWhenVendorIdIsInvalid()
         {
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var getApplicationsByVendorIdQuery = new GetApplicationsByVendorIdQuery(usersContext);
                 Should.Throw<NotFoundException<int>>(() =>

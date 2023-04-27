@@ -6,21 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="EdFi.Ods.AdminApp.Web.nuspec" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
-    <Content Include="EdFi.Ods.AdminApp.Database.nuspec" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
     <Content Include="../../LICENSE" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
     <Content Include="../../NOTICES.md" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
 
     <Content Include="Artifacts\**" CopyToPublishDirectory="Always" CopyToOutputDirectory="Never" />
     <Content Include="Schema/**/*.*" CopyToPublishDirectory="Always" />
-    <Content Include="uploads\placeholder.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
 
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management.OnPrem\EdFi.Ods.AdminApp.Management.OnPrem.csproj" />
     <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
   </ItemGroup>
 

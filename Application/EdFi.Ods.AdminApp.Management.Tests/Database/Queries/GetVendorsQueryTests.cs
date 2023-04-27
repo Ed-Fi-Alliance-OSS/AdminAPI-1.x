@@ -8,9 +8,7 @@ using EdFi.Ods.AdminApp.Management.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 {
@@ -28,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             Save(newVendor);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new GetVendorsQuery(usersContext);
                 var allVendors = command.Execute();
@@ -57,7 +55,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             Save(vendors);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new GetVendorsQuery(usersContext);
 

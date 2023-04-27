@@ -9,11 +9,9 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApp.Web.Helpers;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -61,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);
@@ -87,7 +85,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);
@@ -113,7 +111,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);
@@ -151,7 +149,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);
@@ -186,7 +184,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);
@@ -219,7 +217,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendorData.Setup(v => v.ContactName).Returns("new contact name");
             newVendorData.Setup(v => v.ContactEmailAddress).Returns("new contact email");
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var editVendorCommand = new EditVendorCommand(usersContext);
                 editVendorCommand.Execute(newVendorData.Object);

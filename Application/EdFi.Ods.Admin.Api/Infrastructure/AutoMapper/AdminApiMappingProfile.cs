@@ -74,6 +74,16 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
 
+            CreateMap<SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy, AdminApp.Management.ClaimSetEditor.AuthorizationStrategy>()
+                .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
+                .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
+                .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
+
+            CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, AdminApp.Management.ClaimSetEditor.AuthorizationStrategy>()
+                .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
+                .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
+                .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
+
             CreateMap<ResourceClaimModel, AdminApp.Management.ClaimSetEditor.ResourceClaim>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))

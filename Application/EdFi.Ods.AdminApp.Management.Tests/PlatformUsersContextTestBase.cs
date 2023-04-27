@@ -9,7 +9,6 @@ using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApp.Management.Tests.Testing;
-using EdFi.Ods.AdminApp.Web;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
@@ -28,13 +27,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         };
 
-        protected string ConnectionString
-        {
-            get
-            {
-                return Startup.ConfigurationConnectionStrings.Admin;
-            }
-        }
+        protected string ConnectionString => AdminConnectionString;
 
         [OneTimeTearDown]
         public async Task FixtureTearDown()
@@ -59,15 +52,11 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
         protected void Transaction(Action<IUsersContext> action)
         {
-            Scoped<IUsersContext>(usersContext =>
-            {
-                using (var transaction = ((SqlServerUsersContext)usersContext).Database.BeginTransaction())
-                {
-                    action(usersContext);
-                    usersContext.SaveChanges();
-                    transaction.Commit();
-                }
-            });
+            using var usersContext = new SqlServerUsersContext(ConnectionString);
+            using var transaction = (usersContext).Database.BeginTransaction();
+            action(usersContext);
+            usersContext.SaveChanges();
+            transaction.Commit();
         }
 
         protected TResult Transaction<TResult>(Func<IUsersContext, TResult> query)

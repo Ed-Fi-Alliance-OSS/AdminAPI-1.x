@@ -7,10 +7,8 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Shouldly;
 using Moq;
-
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResourceClaim;
@@ -139,77 +137,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             resultChildResourceClaim2.Delete.ShouldBe(false);
         }
 
-        [Test]
-        public void ShouldNotAddInvalidResourcesToClaimSetDuringEdit()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
-            Save(testClaimSet);
-
-            var parentRcNames = UniqueNameList("Parent", 1);
-            var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
-            var testResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First()).ResourceClaim;
-
-            var invalidResource = new ResourceClaim
-            {
-                Id = testResource.ResourceClaimId,
-                Name = testResource.ResourceName,
-                Create = false,
-                Read = false,
-                Update = false,
-                Delete = false
-            };
-
-            var editResourceOnClaimSetModel = new EditClaimSetResourceModel
-            {
-                ClaimSetId = testClaimSet.ClaimSetId,
-                ResourceClaim = invalidResource,
-                ExistingResourceClaims = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId)
-            };
-
-            var validator = new EditClaimSetResourceModelValidator();
-            var validationResults = validator.Validate(editResourceOnClaimSetModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource:\n{parentRcNames.First()}");
-        }
-
-        [Test]
-        public void ShouldNotAddDuplicateResourcesToClaimSetDuringEdit()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
-            Save(testClaimSet);
-
-            var parentRcNames = UniqueNameList("Parent", 1);
-
-            SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
-
-            var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
-
-            var duplicateResource = existingResources.Single(x => x.Name == parentRcNames.First());
-
-            var editResourceOnClaimSetModel = new EditClaimSetResourceModel
-            {
-                ClaimSetId = testClaimSet.ClaimSetId,
-                ResourceClaim = duplicateResource,
-                ExistingResourceClaims = existingResources
-            };
-
-            var validator = new EditClaimSetResourceModelValidator();
-            var validationResults = validator.Validate(editResourceOnClaimSetModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Only unique resource claims can be added. The following is a duplicate resource:\n{parentRcNames.First()}");
-        }
 
         [Test]
         public void ShouldAddParentResourceToClaimSet()
@@ -237,11 +164,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
-            var editResourceOnClaimSetModel = new EditClaimSetResourceModel
+            var editResourceOnClaimSetModel = new EditResourceOnClaimSetModel
             {
                 ClaimSetId = testClaimSet.ClaimSetId,
-                ResourceClaim = resourceToAdd,
-                ExistingResourceClaims = existingResources
+                ResourceClaim = resourceToAdd
             };
 
             using var securityContext = TestContext;
@@ -290,11 +216,10 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             };
             var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
-            var editResourceOnClaimSetModel = new EditClaimSetResourceModel
+            var editResourceOnClaimSetModel = new EditResourceOnClaimSetModel
             {
                 ClaimSetId = testClaimSet.ClaimSetId,
-                ResourceClaim = resourceToAdd,
-                ExistingResourceClaims = existingResources
+                ResourceClaim = resourceToAdd
             };
 
             var command = new EditResourceOnClaimSetCommandV6Service(securityContext);

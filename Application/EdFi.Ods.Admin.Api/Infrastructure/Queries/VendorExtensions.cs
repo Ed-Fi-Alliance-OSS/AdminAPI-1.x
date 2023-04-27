@@ -3,10 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Queries
 {
     public static class VendorExtensions
     {
@@ -15,7 +14,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Queries
             CloudOdsAdminApp.VendorName,
         };
 
-        public static bool IsSystemReservedVendorName(string vendorName)
+        public static bool IsSystemReservedVendorName(string? vendorName)
         {
             return ReservedNames.Contains(vendorName?.Trim());
         }

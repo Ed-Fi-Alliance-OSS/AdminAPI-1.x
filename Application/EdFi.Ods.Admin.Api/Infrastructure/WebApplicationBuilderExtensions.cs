@@ -9,16 +9,15 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.DbConfigurations;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
-using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.Admin.Api.Infrastructure.Services;
 using EdFi.Security.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
+
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
 public static class WebApplicationBuilderExtensions

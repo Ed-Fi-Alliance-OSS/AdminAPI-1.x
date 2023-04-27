@@ -1,5 +1,5 @@
 using EdFi.Ods.Admin.Api.Features.Applications;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 using FakeItEasy;
 
 namespace EdFi.Ods.Admin.Api.UnitTests.Features.Applications

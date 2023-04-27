@@ -3,14 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands
 {
     public interface IAddApplicationCommand
     {
@@ -94,17 +91,17 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
     public interface IAddApplicationModel
     {
-        string ApplicationName { get; }
+        string? ApplicationName { get; }
         int VendorId { get; }
-        string ClaimSetName { get; }
+        string? ClaimSetName { get; }
         int? ProfileId { get; }
-        IEnumerable<int> EducationOrganizationIds { get; } 
+        IEnumerable<int>? EducationOrganizationIds { get; } 
     }
 
     public class AddApplicationResult
     {
         public int ApplicationId { get; set; }
-        public string Key { get; set; }
-        public string Secret { get; set; }
+        public string? Key { get; set; }
+        public string? Secret { get; set; }
     }
 }

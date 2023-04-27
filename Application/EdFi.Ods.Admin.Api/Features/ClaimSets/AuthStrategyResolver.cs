@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
 
 public interface IAuthStrategyResolver
 {

@@ -8,7 +8,7 @@ using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
 using ClaimSetEntity = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class AddClaimSetCommandV53Service
     {

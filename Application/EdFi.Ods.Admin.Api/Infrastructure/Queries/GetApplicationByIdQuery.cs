@@ -6,9 +6,9 @@
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Queries
 {
     public class GetApplicationByIdQuery
     {

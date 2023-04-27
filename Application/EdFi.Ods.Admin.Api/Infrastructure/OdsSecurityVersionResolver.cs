@@ -3,11 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using EdFi.Ods.AdminApp.Management.Api;
+using EdFi.Ods.Admin.Api.Infrastructure.Services;
 using log4net;
 
-namespace EdFi.Ods.AdminApp.Management;
+namespace EdFi.Ods.Admin.Api.Infrastructure;
 
 public interface IOdsSecurityModelVersionResolver
 {

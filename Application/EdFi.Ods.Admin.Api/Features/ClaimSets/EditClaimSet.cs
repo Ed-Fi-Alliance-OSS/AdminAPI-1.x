@@ -5,9 +5,9 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Features.ClaimSets;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
@@ -95,7 +95,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
                 var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                    .ToLookup(rc => rc.Name.ToLower());
+                    .ToLookup(rc => rc.Name?.ToLower());
 
                 var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
                     .Select(a => a.AuthStrategyName).ToList();

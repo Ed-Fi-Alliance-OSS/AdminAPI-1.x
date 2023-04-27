@@ -9,7 +9,7 @@ using System.Linq;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.SecurityCompatiblity53.DataAccess.Models;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
 
 public class OverrideDefaultAuthorizationStrategyV53Service
 {

@@ -5,10 +5,8 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.AdminApp.Management;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
 

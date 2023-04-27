@@ -9,7 +9,7 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands
 {
     public class AddVendorCommand
     {
@@ -32,14 +32,14 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
             var vendor = new Vendor
             {
-                VendorName = newVendor.Company.Trim(),
+                VendorName = newVendor.Company?.Trim(),
                 VendorNamespacePrefixes = namespacePrefixes
             };
 
             var user = new VendorUser
             {
-                FullName = newVendor.ContactName.Trim(),
-                Email = newVendor.ContactEmailAddress.Trim()
+                FullName = newVendor.ContactName?.Trim(),
+                Email = newVendor.ContactEmailAddress?.Trim()
             };
 
             vendor.Users.Add(user);
@@ -52,9 +52,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
     public interface IAddVendorModel
     {
-        string Company { get; }
-        string NamespacePrefixes { get; }
-        string ContactName { get; }
-        string ContactEmailAddress { get; }
+        string? Company { get; }
+        string? NamespacePrefixes { get; }
+        string? ContactName { get; }
+        string? ContactEmailAddress { get; }
     }
 }

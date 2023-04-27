@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands
 {
     public class EditVendorCommand
     {
@@ -83,9 +83,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
     public interface IEditVendor
     {
         int VendorId { get; set; }
-        string Company { get; set; }
-        string NamespacePrefixes { get; set; }
-        string ContactName { get; set; }
-        string ContactEmailAddress { get; set; }
+        string? Company { get; set; }
+        string? NamespacePrefixes { get; set; }
+        string? ContactName { get; set; }
+        string? ContactEmailAddress { get; set; }
     }
 }

@@ -3,7 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Features.ClaimSets;
 using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
 
@@ -70,7 +70,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
     {
         public int ClaimSetId { get; set; }
 
-        public List<ResourceClaim>? ResourceClaims { get; set; }
+        public List<ResourceClaim> ResourceClaims { get; set; } = new List<ResourceClaim>();
     }
 
     public class DeleteClaimSetModel : IDeleteClaimSetModel

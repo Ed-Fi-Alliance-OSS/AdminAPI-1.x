@@ -5,10 +5,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Features.ClaimSets;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Queries
 {
     public interface IGetResourceClaimsAsFlatListQuery
     {

@@ -10,10 +10,10 @@ using System.Data.Entity;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands
 {
     public interface IEditApplicationCommand
     {
@@ -38,10 +38,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
                 .Include(a => a.Profiles)
                 .SingleOrDefault(a => a.ApplicationId == model.ApplicationId);
 
-            if (application == null)
-            {
-                throw new NotFoundException<int>("application", model.ApplicationId);
-            }
+            if (application == null) throw new NotFoundException<int>("application", model.ApplicationId);
 
             if(application.Vendor.IsSystemReservedVendor())
             {
@@ -66,12 +63,9 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
             }
 
             application.ApplicationEducationOrganizations.Clear();
-            model.EducationOrganizationIds.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
+            model.EducationOrganizationIds?.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
 
-            if (application.Profiles == null)
-            {
-                application.Profiles = new Collection<Profile>();
-            }
+            application.Profiles ??= new Collection<Profile>();
 
             application.Profiles.Clear();
 
@@ -88,10 +82,10 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
     public interface IEditApplicationModel
     {
         int ApplicationId { get; }
-        string ApplicationName { get; }
+        string? ApplicationName { get; }
         int VendorId { get; }
-        string ClaimSetName { get; }
+        string? ClaimSetName { get; }
         int? ProfileId { get; }
-        IEnumerable<int> EducationOrganizationIds { get; }
+        IEnumerable<int>? EducationOrganizationIds { get; }
     }
 }

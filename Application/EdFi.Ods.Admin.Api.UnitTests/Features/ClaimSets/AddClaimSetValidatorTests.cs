@@ -1,6 +1,5 @@
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
 using FakeItEasy;
 using Shouldly;
 

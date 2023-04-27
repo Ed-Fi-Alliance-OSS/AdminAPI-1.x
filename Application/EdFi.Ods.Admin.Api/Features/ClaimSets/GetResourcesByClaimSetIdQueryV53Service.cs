@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
+using EdFi.Ods.Admin.Api.Features.ClaimSets.Extensions;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.SecurityCompatiblity53.DataAccess.Models;
 
 using SecurityResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
 using SecurityAuthorizationStrategy = EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class GetResourcesByClaimSetIdQueryV53Service
     {
@@ -55,17 +55,17 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             var authStrategyOverrides = GetAuthStrategyOverrides(dbParentResources.ToList());
 
             var parentResources = dbParentResources.GroupBy(x => x.ResourceClaim).Select(x => new ResourceClaim
-                {
-                    Id = x.Key.ResourceClaimId,
-                    Name = x.Key.ResourceName,
-                    Create = x.Any(a => a.Action.ActionName == Action.Create.Value),
-                    Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
-                    Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
-                    Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
-                    IsParent = true,
-                    DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
-                    AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].ToArray()
-                })
+            {
+                Id = x.Key.ResourceClaimId,
+                Name = x.Key.ResourceName,
+                Create = x.Any(a => a.Action.ActionName == Action.Create.Value),
+                Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
+                Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
+                Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                IsParent = true,
+                DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
+                AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].ToArray()
+            })
                 .ToList();
 
             parentResources.ForEach(x => x.Children = new List<ResourceClaim>());
@@ -85,12 +85,12 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             var defaultAuthStrategiesForChildren = defaultAuthStrategies
                 .Where(x => x.ResourceClaim.ParentResourceClaimId != null).ToList();
 
-            foreach (var resourceClaim  in resourceClaims)
+            foreach (var resourceClaim in resourceClaims)
             {
                 var actions = new List<AuthorizationStrategy>();
                 if (resourceClaim.ParentResourceClaimId == null)
                 {
-                    var createDefaultStrategy =  defaultAuthStrategiesForParents.SingleOrDefault(x =>
+                    var createDefaultStrategy = defaultAuthStrategiesForParents.SingleOrDefault(x =>
                             x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
                             x.Action.ActionName == Action.Create.Value)?.AuthorizationStrategy;
                     actions.Add(_mapper.Map<AuthorizationStrategy>(createDefaultStrategy));
@@ -131,16 +131,17 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         x.Action.ActionName == Action.Delete.Value)?.AuthorizationStrategy;
                     actions = AddStrategyToChildResource(deleteDefaultStrategy, Action.Delete);
 
-                    List<AuthorizationStrategy> AddStrategyToChildResource(SecurityAuthorizationStrategy defaultStrategy, Action action)
+                    List<AuthorizationStrategy> AddStrategyToChildResource(SecurityAuthorizationStrategy? defaultStrategy, Action action)
                     {
                         if (defaultStrategy == null)
                         {
                             defaultStrategy = defaultAuthStrategiesForParents.SingleOrDefault(x =>
                                 x.ResourceClaim.ResourceClaimId == resourceClaim.ParentResourceClaimId &&
                                 x.Action.ActionName == action.Value)?.AuthorizationStrategy;
+
                             var mappedStrategy = _mapper.Map<AuthorizationStrategy>(defaultStrategy);
                             if (mappedStrategy != null) mappedStrategy.IsInheritedFromParent = true;
-                            actions.Add(mappedStrategy);
+                            actions.Add(mappedStrategy!);
                         }
                         else
                         {
@@ -161,10 +162,10 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         {
             var resultDictionary = new Dictionary<int, AuthorizationStrategy[]>();
             resourceClaims =
-                new List<ClaimSetResourceClaim>(resourceClaims.OrderBy(i => new List<string> {Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value}.IndexOf(i.Action.ActionName)));
+                new List<ClaimSetResourceClaim>(resourceClaims.OrderBy(i => new List<string> { Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value }.IndexOf(i.Action.ActionName)));
             foreach (var resourceClaim in resourceClaims)
             {
-                AuthorizationStrategy authStrategy = null;
+                var authStrategy = new AuthorizationStrategy();
                 if (resourceClaim.ResourceClaim.ParentResourceClaim == null)
                 {
                     authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverride);
@@ -187,11 +188,12 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                         {
                             authStrategy.IsInheritedFromParent = true;
                         }
+                        authStrategy ??= new AuthorizationStrategy();
                     }
 
-                    if(resourceClaim.AuthorizationStrategyOverride != null)
+                    if (resourceClaim.AuthorizationStrategyOverride != null)
                     {
-                        authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverride);
+                        authStrategy = _mapper.Map<AuthorizationStrategy>(resourceClaim.AuthorizationStrategyOverride) ?? new AuthorizationStrategy(); ;
                     }
                 }
 
@@ -202,7 +204,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 }
                 else
                 {
-                    var actions = new AuthorizationStrategy[]{null, null, null, null};
+                    var actions = new AuthorizationStrategy[4];
                     resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = actions.AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
                 }
             }
@@ -224,7 +226,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                 .Select(x => new ResourceClaim
                 {
                     Id = x.Key.ResourceClaimId,
-                    ParentId = x.Key.ParentResourceClaimId.Value,
+                    ParentId = x.Key.ParentResourceClaimId ?? 0,
                     Name = x.Key.ResourceName,
                     Create = x.Any(a => a.Action.ActionName == Action.Create.Value),
                     Read = x.Any(a => a.Action.ActionName == Action.Read.Value),

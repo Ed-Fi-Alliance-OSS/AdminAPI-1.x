@@ -3,13 +3,14 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 using NUnit.Framework;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {

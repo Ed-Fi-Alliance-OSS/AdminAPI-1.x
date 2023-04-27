@@ -6,15 +6,13 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Features.ClaimSets;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 using Moq;
 using Shouldly;
 using EdFi.Security.DataAccess.Contexts;
-
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
-using EdFi.Ods.Admin.Api.Features.ClaimSets;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -101,8 +99,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             exception.ShouldNotBeNull();
             exception.Message.ShouldBe($"Claim set({systemReservedClaimSet.ClaimSetName}) is system reserved.Can not be deleted.");
         }
-
-        private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                        null, new GetClaimSetByIdQueryV6Service(securityContext));
     }
 }

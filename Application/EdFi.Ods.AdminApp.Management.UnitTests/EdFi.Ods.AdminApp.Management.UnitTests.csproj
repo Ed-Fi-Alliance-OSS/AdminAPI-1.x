@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
+    <ProjectReference Include="..\EdFi.Ods.Admin.Api\EdFi.Ods.Admin.Api.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,56 +3,55 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
+
+public class EditClaimSetCommandV6Service
 {
-    public class EditClaimSetCommandV6Service
-    {
-        private readonly ISecurityContext _securityContext;
-        private readonly IUsersContext _usersContext;
+    private readonly ISecurityContext _securityContext;
+    private readonly IUsersContext _usersContext;
 
-        public EditClaimSetCommandV6Service(ISecurityContext securityContext, IUsersContext usersContext)
+    public EditClaimSetCommandV6Service(ISecurityContext securityContext, IUsersContext usersContext)
+    {
+        _securityContext = securityContext;
+        _usersContext = usersContext;
+    }
+
+    public int Execute(IEditClaimSetModel claimSet)
+    {
+        var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
+
+        if (existingClaimSet.ForApplicationUseOnly || existingClaimSet.IsEdfiPreset ||
+                CloudOdsAdminApp.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
         {
-            _securityContext = securityContext;
-            _usersContext = usersContext;
+            throw new AdminAppException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
         }
 
-        public int Execute(IEditClaimSetModel claimSet)
+        if (claimSet.ClaimSetName is null) throw new InvalidOperationException("Cannot have a null ClaimSetName");
+        if (!claimSet.ClaimSetName.Equals(existingClaimSet.ClaimSetName, StringComparison.InvariantCultureIgnoreCase))
         {
-            var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
+            ReAssociateApplicationsToRenamedClaimSet(existingClaimSet.ClaimSetName, claimSet.ClaimSetName);
+        }
 
-            if (existingClaimSet.ForApplicationUseOnly || existingClaimSet.IsEdfiPreset ||
-                    CloudOdsAdminApp.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
+        existingClaimSet.ClaimSetName = claimSet.ClaimSetName;
+
+        _securityContext.SaveChanges();
+        _usersContext.SaveChanges();
+
+        return existingClaimSet.ClaimSetId;
+
+        void ReAssociateApplicationsToRenamedClaimSet(string existingClaimSetName, string newClaimSetName)
+        {
+            var associatedApplications = _usersContext.Applications
+                .Where(x => x.ClaimSetName == existingClaimSetName);
+
+            foreach (var application in associatedApplications)
             {
-                throw new AdminAppException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
-            }
-
-            if (!claimSet.ClaimSetName.Equals(existingClaimSet.ClaimSetName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                ReAssociateApplicationsToRenamedClaimSet(existingClaimSet.ClaimSetName, claimSet.ClaimSetName);
-            }
-
-            existingClaimSet.ClaimSetName = claimSet.ClaimSetName;
-
-            _securityContext.SaveChanges();
-            _usersContext.SaveChanges();
-
-            return existingClaimSet.ClaimSetId;
-
-            void ReAssociateApplicationsToRenamedClaimSet(string existingClaimSetName, string newClaimSetName)
-            {
-                var associatedApplications = _usersContext.Applications
-                    .Where(x => x.ClaimSetName == existingClaimSetName);
-
-                foreach (var application in associatedApplications)
-                {
-                    application.ClaimSetName = newClaimSetName;
-                }
+                application.ClaimSetName = newClaimSetName;
             }
         }
     }

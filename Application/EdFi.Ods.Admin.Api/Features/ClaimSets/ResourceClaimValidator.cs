@@ -3,7 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Features.ClaimSets;
 using FluentValidation;
 
 namespace EdFi.Ods.Admin.Api.Features.ClaimSets
@@ -17,7 +17,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
         }
 
         public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-            List<string> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+            List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
             ValidationContext<T> context, string? claimSetName)
         {
             context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);

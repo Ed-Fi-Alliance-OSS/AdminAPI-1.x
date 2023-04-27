@@ -3,37 +3,35 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
+
+public class DeleteClaimSetCommandV53Service
 {
-    public class DeleteClaimSetCommandV53Service
+    private readonly ISecurityContext _context;
+
+    public DeleteClaimSetCommandV53Service(ISecurityContext context)
     {
-        private readonly ISecurityContext _context;
+        _context = context;
+    }
 
-        public DeleteClaimSetCommandV53Service(ISecurityContext context)
+    public void Execute(IDeleteClaimSetModel claimSet)
+    {
+        var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
+
+        if (CloudOdsAdminApp.DefaultClaimSets.Contains(claimSetToDelete.ClaimSetName) ||
+                    CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
         {
-            _context = context;
+            throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
         }
 
-        public void Execute(IDeleteClaimSetModel claimSet)
-        {
-            var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
-
-            if (CloudOdsAdminApp.DefaultClaimSets.Contains(claimSetToDelete.ClaimSetName) ||
-                        CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
-            {
-                throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
-            }
-
-            var resourceClaimsForClaimSetId =
-                _context.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == claimSet.Id).ToList();
-            _context.ClaimSetResourceClaims.RemoveRange(resourceClaimsForClaimSetId);
-            _context.ClaimSets.Remove(claimSetToDelete);
-            _context.SaveChanges();
-        }
+        var resourceClaimsForClaimSetId =
+            _context.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == claimSet.Id).ToList();
+        _context.ClaimSetResourceClaims.RemoveRange(resourceClaimsForClaimSetId);
+        _context.ClaimSets.Remove(claimSetToDelete);
+        _context.SaveChanges();
     }
 }

@@ -6,7 +6,7 @@
 using System.Linq;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class UpdateResourcesOnClaimSetCommandV53Service
     {

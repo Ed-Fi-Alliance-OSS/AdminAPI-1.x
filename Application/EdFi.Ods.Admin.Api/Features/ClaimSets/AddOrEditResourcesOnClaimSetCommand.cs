@@ -5,10 +5,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor.Extensions;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Features.ClaimSets.Extensions;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class AddOrEditResourcesOnClaimSetCommand
     {
@@ -36,7 +36,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             resources.AddRange(childResources);
             var currentResources = resources.Select(r =>
                 {
-                    var resource = allResources.FirstOrDefault(dr => dr.Name.Equals(r.Name));
+                    var resource = allResources.FirstOrDefault(dr => dr.Name is not null && dr.Name.Equals(r.Name));
                     if (resource != null)
                     {
                         resource.Create = r.Create;
@@ -48,7 +48,8 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     return resource;
                 }).ToList();
             currentResources.RemoveAll(x => x == null);
-            foreach (var resource in currentResources)
+
+            foreach (var resource in currentResources.Where(x => x is not null))
             {
                 var editResourceModel = new EditResourceOnClaimSetModel
                 {
@@ -58,7 +59,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
                 _editResourceOnClaimSetCommand.Execute(editResourceModel);
 
-                if (resource.AuthStrategyOverridesForCRUD != null && resource.AuthStrategyOverridesForCRUD.Any())
+                if (resource!.AuthStrategyOverridesForCRUD != null && resource.AuthStrategyOverridesForCRUD.Any())
                 {
                     var overrideAuthStrategyModel = new OverrideAuthorizationStrategyModel
                     {
@@ -95,13 +96,13 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
     public class AddClaimSetModel : IAddClaimSetModel
     {
-        public string ClaimSetName { get; set; }
+        public string? ClaimSetName { get; set; }
     }
 
     public class EditResourceOnClaimSetModel : IEditResourceOnClaimSetModel
     {
         public int ClaimSetId { get; set; }
-        public ResourceClaim ResourceClaim { get; set; }
+        public ResourceClaim? ResourceClaim { get; set; }
     }
 
     public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationStrategyModel

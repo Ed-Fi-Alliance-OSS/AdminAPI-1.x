@@ -7,7 +7,7 @@ using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.Admin.Api.Infrastructure.Documentation;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
@@ -36,7 +36,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
             return AdminApiResponse<ApplicationModel>.Updated(model, "Application");
         }
 
-        private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
+        private static void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
         {
             if(null == db.Vendors.Find(request.VendorId))
                 throw new ValidationException(new []{ new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
@@ -89,7 +89,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
             }
 
-            private bool BeWithinApplicationNameMaxLength<T>(Request model, string? applicationName, ValidationContext<T> context)
+            private static bool BeWithinApplicationNameMaxLength<T>(Request model, string? applicationName, ValidationContext<T> context)
             {
                 var extraCharactersInName = applicationName!.Length - ValidationConstants.MaximumApplicationNameLength;
                 if (extraCharactersInName <= 0)

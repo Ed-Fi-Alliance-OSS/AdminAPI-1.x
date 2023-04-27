@@ -7,10 +7,10 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands
 {
     public interface IDeleteApplicationCommand
     {

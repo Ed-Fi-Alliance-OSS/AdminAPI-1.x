@@ -7,7 +7,7 @@ using EdFi.Admin.DataAccess.Models;
 using Profile = AutoMapper.Profile;
 using EdFi.Ods.Admin.Api.Features.Vendors;
 using EdFi.Ods.Admin.Api.Features.Applications;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
 using EdFi.Ods.Admin.Api.Infrastructure.Extensions;
 
@@ -44,16 +44,16 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
                 .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
 
-            CreateMap<AdminApp.Management.ClaimSetEditor.ClaimSet, ClaimSetDetailsModel>()
+            CreateMap<ClaimSet, ClaimSetDetailsModel>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.IsSystemReserved, opt => opt.MapFrom(src => !src.IsEditable));
 
-            CreateMap<AdminApp.Management.ClaimSetEditor.ClaimSet, ClaimSetModel>()
+            CreateMap<ClaimSet, ClaimSetModel>()
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name));
 
-            CreateMap<AdminApp.Management.ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
+            CreateMap<ResourceClaim, ResourceClaimModel>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
                 .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
@@ -63,29 +63,29 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
                 .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
-            CreateMap<AdminApp.Management.ClaimSetEditor.AuthorizationStrategy, AuthorizationStrategyModel>()
+            CreateMap<AuthorizationStrategy, AuthorizationStrategyModel>()
                 .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))
                 .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
                 .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
 
-            CreateMap<AuthorizationStrategyModel, AdminApp.Management.ClaimSetEditor.AuthorizationStrategy>()
+            CreateMap<AuthorizationStrategyModel, AuthorizationStrategy>()
                 .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))
                 .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
                 .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
 
-            CreateMap<SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy, AdminApp.Management.ClaimSetEditor.AuthorizationStrategy>()
+            CreateMap<SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy, AuthorizationStrategy>()
                 .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
                 .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
             
-            CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, AdminApp.Management.ClaimSetEditor.AuthorizationStrategy>()
+            CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, AuthorizationStrategy>()
                 .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
                 .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
                 .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
 
-            CreateMap<ResourceClaimModel, AdminApp.Management.ClaimSetEditor.ResourceClaim>()
+            CreateMap<ResourceClaimModel, ResourceClaim>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
                 .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))

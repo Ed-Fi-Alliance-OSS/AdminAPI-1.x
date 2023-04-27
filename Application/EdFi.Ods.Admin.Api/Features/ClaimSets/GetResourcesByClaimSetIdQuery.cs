@@ -3,10 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class GetResourcesByClaimSetIdQuery : IGetResourcesByClaimSetIdQuery
     {
@@ -23,7 +22,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             _v6Service = v6Service;
         }
 
-        public IEnumerable<ResourceClaim> AllResources(int claimSetId)
+        public IReadOnlyList<ResourceClaim> AllResources(int claimSetId)
         {
             List<ResourceClaim> parentResources;
             var securityModel = _resolver.DetermineSecurityModel();
@@ -45,7 +44,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             return parentResources;
         }
 
-        public ResourceClaim SingleResource(int claimSetId, int resourceClaimId)
+        public ResourceClaim? SingleResource(int claimSetId, int resourceClaimId)
         {
             var parentResources = AllResources(claimSetId).ToList();
             var parentResourceClaim = parentResources
@@ -63,7 +62,8 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 
     public interface IGetResourcesByClaimSetIdQuery
     {
-        IEnumerable<ResourceClaim> AllResources(int securityContextClaimSetId);
-        ResourceClaim SingleResource(int claimSetId, int resourceClaimId);
+        IReadOnlyList<ResourceClaim> AllResources(int securityContextClaimSetId);
+
+        ResourceClaim? SingleResource(int claimSetId, int resourceClaimId);
     }
 }

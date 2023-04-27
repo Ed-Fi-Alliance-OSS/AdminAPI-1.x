@@ -3,12 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 
-namespace EdFi.Ods.AdminApp.Management.Services
+namespace EdFi.Ods.Admin.Api.Infrastructure.Services
 {
     public interface ISimpleGetRequest
     {

@@ -6,9 +6,9 @@
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands
 {
     public class RegenerateApiClientSecretCommand
     {
@@ -21,12 +21,7 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
         public RegenerateApiClientSecretResult Execute(int applicationId)
         {
-            var application = _context.Applications.SingleOrDefault(a => a.ApplicationId == applicationId);
-            if(application == null)
-            {
-                throw new NotFoundException<int>("application", applicationId);
-            }
-
+            var application = _context.Applications.SingleOrDefault(a => a.ApplicationId == applicationId) ?? throw new NotFoundException<int>("application", applicationId);
             var apiClient = application.ApiClients.First();
 
             apiClient.GenerateSecret();
@@ -44,8 +39,8 @@ namespace EdFi.Ods.AdminApp.Management.Database.Commands
 
     public class RegenerateApiClientSecretResult
     {
-        public string Key { get; set; }
-        public string Secret { get; set; }
-        public Application Application { get; set; }
+        public string? Key { get; set; }
+        public string? Secret { get; set; }
+        public Application Application { get; set; } = new();
     }
 }

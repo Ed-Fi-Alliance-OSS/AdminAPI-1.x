@@ -6,11 +6,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using EdFi.Ods.Admin.Api.Features.Applications;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {

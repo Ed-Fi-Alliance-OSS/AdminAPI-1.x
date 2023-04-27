@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 using FluentValidation;
 
 namespace EdFi.Ods.Admin.Api.Features.Applications
@@ -15,7 +15,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
         {
             RuleFor(m => m.ApplicationId).NotEmpty();
             RuleFor(m => m.ApplicationName).NotEmpty();
-            RuleFor(m => m.ApplicationName)
+            RuleFor(m => m.ApplicationName!)
                 .Must(BeWithinApplicationNameMaxLength)
                 .WithMessage("The Application Name {ApplicationName} would be too long for Admin App to set up necessary Application records." +
                              " Consider shortening the name by {ExtraCharactersInName} character(s).")

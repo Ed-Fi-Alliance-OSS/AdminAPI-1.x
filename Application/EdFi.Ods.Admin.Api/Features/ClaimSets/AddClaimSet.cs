@@ -5,8 +5,8 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Features.ClaimSets;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -34,7 +34,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             await validator.GuardAsync(request);
             var addedClaimSetId = addClaimSetCommand.Execute(new AddClaimSetModel
             {
-                ClaimSetName = request.Name
+                ClaimSetName = request.Name ?? string.Empty
             });
 
             var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
@@ -64,7 +64,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 
         public class Validator : AbstractValidator<Request>
         {
-            private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
+            private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
             public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
                 IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
@@ -73,7 +73,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                 _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
                 var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                    .ToLookup(rc => rc.Name.ToLower());
+                    .ToLookup(rc => rc.Name?.ToLower());
 
                 var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
                     .Select(a => a.AuthStrategyName).ToList();

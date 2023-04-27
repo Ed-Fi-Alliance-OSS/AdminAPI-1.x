@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApp.Management", "EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj", "{FBBA172C-6F81-4753-92B9-C31277B032DD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D317139-CB19-4D7F-91AC-9A560189C55B}"
 	ProjectSection(SolutionItems) = preProject
 		..\build.ps1 = ..\build.ps1
@@ -25,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.Admin.Api", "EdFi.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{7CB216FE-901B-4D36-9F97-495CB22E0104}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.Admin.Api.UnitTests", "EdFi.Ods.Admin.Api.UnitTests\EdFi.Ods.Admin.Api.UnitTests.csproj", "{8F2834EA-0385-4DF0-80E4-32E85EECAD1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.Admin.Api.UnitTests", "EdFi.Ods.Admin.Api.UnitTests\EdFi.Ods.Admin.Api.UnitTests.csproj", "{8F2834EA-0385-4DF0-80E4-32E85EECAD1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +33,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Debug|x64.Build.0 = Debug|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.ActiveCfg = Release|Any CPU
-		{FBBA172C-6F81-4753-92B9-C31277B032DD}.Release|x64.Build.0 = Release|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F62C9CF6-A632-4894-B61A-674198DAB86E}.Debug|x64.ActiveCfg = Debug|Any CPU

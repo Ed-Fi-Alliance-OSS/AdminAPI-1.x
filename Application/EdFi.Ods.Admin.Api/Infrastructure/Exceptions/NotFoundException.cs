@@ -3,25 +3,22 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
+namespace EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-namespace EdFi.Ods.AdminApp.Management.ErrorHandling
+public interface INotFoundException
 {
-    public interface INotFoundException
-    {
-        public string Message { get; }
-    }
+    public string Message { get; }
+}
 
-    public class NotFoundException<T> : Exception, INotFoundException
-    {
-        public string ResourceName { get; }
-        public T Id { get; }
+public class NotFoundException<T> : Exception, INotFoundException
+{
+    public string ResourceName { get; }
+    public T Id { get; }
 
-        public NotFoundException(string resourceName, T id)
-            : base($"Not found: {resourceName} with ID {id}. It may have been recently deleted.")
-        {
-            ResourceName = resourceName;
-            Id = id;
-        }
+    public NotFoundException(string resourceName, T id)
+        : base($"Not found: {resourceName} with ID {id}. It may have been recently deleted.")
+    {
+        ResourceName = resourceName;
+        Id = id;
     }
 }

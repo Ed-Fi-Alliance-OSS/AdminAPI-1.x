@@ -1,14 +1,12 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 
-namespace EdFi.Ods.AdminApp.Management
+namespace EdFi.Ods.Admin.Api.Infrastructure
 {
     [Serializable]
     [DebuggerDisplay("{DisplayName} - {Value}")]
@@ -20,12 +18,12 @@ namespace EdFi.Ods.AdminApp.Management
         {
         }
 
-        public static TEnumeration FromInt32(int value)
+        public static TEnumeration? FromInt32(int value)
         {
             return FromValue(value);
         }
 
-        public static bool TryFromInt32(int listItemValue, out TEnumeration result)
+        public static bool TryFromInt32(int listItemValue, out TEnumeration? result)
         {
             return TryParse(listItemValue, out result);
         }
@@ -37,10 +35,10 @@ namespace EdFi.Ods.AdminApp.Management
         where TEnumeration : Enumeration<TEnumeration, TValue>
         where TValue : IComparable
     {
-        readonly string _displayName;
-        readonly TValue _value;
+        private readonly string _displayName;
+        private readonly TValue _value;
 
-        private static Lazy<TEnumeration[]> _enumerations = new Lazy<TEnumeration[]>(GetEnumerations);
+        private readonly static Lazy<TEnumeration[]> _enumerations = new(GetEnumerations);
 
         protected Enumeration(TValue value, string displayName)
         {
@@ -58,9 +56,9 @@ namespace EdFi.Ods.AdminApp.Management
             get { return _displayName; }
         }
 
-        public int CompareTo(TEnumeration other)
+        public int CompareTo(TEnumeration? other)
         {
-            return Value.CompareTo(other.Value);
+            return other is null ? 0 : Value.CompareTo(other.Value);
         }
 
         public override sealed string ToString()
@@ -84,14 +82,14 @@ namespace EdFi.Ods.AdminApp.Management
                 .ToArray();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as TEnumeration);
         }
 
-        public bool Equals(TEnumeration other)
+        public bool Equals(TEnumeration? other)
         {
-            return other != null && Value.Equals(other.Value);
+            return other is not null && Value.Equals(other.Value);
         }
 
         public override int GetHashCode()
@@ -109,41 +107,39 @@ namespace EdFi.Ods.AdminApp.Management
             return !Equals(left, right);
         }
 
-        public static TEnumeration FromValue(TValue value)
+        public static TEnumeration? FromValue(TValue value)
         {
             return Parse(value, "value", item => item.Value.Equals(value));
         }
 
-        public static TEnumeration Parse(string displayName)
+        public static TEnumeration? Parse(string displayName)
         {
             return Parse(displayName, "display name", item => item.DisplayName == displayName);
         }
 
-        public static bool TryParse(Func<TEnumeration, bool> predicate, out TEnumeration result)
+        public static bool TryParse(Func<TEnumeration, bool> predicate, out TEnumeration? result)
         {
             result = GetAll().FirstOrDefault(predicate);
-            return result != null;
+            return result is not null;
         }
 
-        private static TEnumeration Parse(object value, string description, Func<TEnumeration, bool> predicate)
+        private static TEnumeration? Parse(object value, string description, Func<TEnumeration, bool> predicate)
         {
-            TEnumeration result;
-
-            if (!TryParse(predicate, out result))
+            if (!TryParse(predicate, out var result))
             {
-                string message = string.Format("'{0}' is not a valid {1} in {2}", value, description, typeof(TEnumeration));
+                var message = string.Format("'{0}' is not a valid {1} in {2}", value, description, typeof(TEnumeration));
                 throw new ArgumentException(message, "value");
             }
 
             return result;
         }
 
-        public static bool TryParse(TValue value, out TEnumeration result)
+        public static bool TryParse(TValue value, out TEnumeration? result)
         {
             return TryParse(e => e.Value.Equals(value), out result);
         }
 
-        public static bool TryParse(string displayName, out TEnumeration result)
+        public static bool TryParse(string displayName, out TEnumeration? result)
         {
             return TryParse(e => e.DisplayName == displayName, out result);
         }

@@ -5,8 +5,8 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -53,7 +53,7 @@ namespace EdFi.Ods.Admin.Api.Features.Vendors
             {
                 RuleFor(m => m.Company).NotEmpty();
                 RuleFor(m => m.Company)
-                    .Must(name => !VendorExtensions.IsSystemReservedVendorName(name))
+                    .Must(name => !VendorExtensions.IsSystemReservedVendorName(name!))
                     .WithMessage(p => $"'{p.Company}' is a reserved name and may not be used. Please choose another name.");
 
                 RuleFor(m => m.ContactName).NotEmpty();

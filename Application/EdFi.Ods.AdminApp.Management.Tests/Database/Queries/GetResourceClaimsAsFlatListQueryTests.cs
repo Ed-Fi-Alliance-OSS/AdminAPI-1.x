@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Queries;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
@@ -29,7 +29,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
 
             var testResourceClaims = SetupResourceClaims(testApplication);
 
-            Management.ClaimSetEditor.ResourceClaim[] results = null;
+            Admin.Api.Features.ClaimSets.ResourceClaim[] results = null;
             using var securityContext = TestContext;
             var query = new GetResourceClaimsAsFlatListQuery(securityContext);
             results = query.Execute().ToArray();
@@ -64,8 +64,9 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
             var childResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim != null)
                 .OrderBy(x => x.ResourceClaim?.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
 
-            List<Management.ClaimSetEditor.ResourceClaim> results = null;
+            List<Admin.Api.Features.ClaimSets.ResourceClaim> results = null;
             using var securityContext = TestContext;
+
             var query = new GetResourceClaimsAsFlatListQuery(securityContext);
             results = query.Execute().ToList();
             results.Count.ShouldBe(testResourceClaims.Count);

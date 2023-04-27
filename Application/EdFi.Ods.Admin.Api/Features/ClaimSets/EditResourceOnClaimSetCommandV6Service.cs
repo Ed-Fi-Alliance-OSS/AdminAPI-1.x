@@ -9,7 +9,7 @@ using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets
 {
     public class EditResourceOnClaimSetCommandV6Service
     {
@@ -23,6 +23,7 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
         public void Execute(IEditResourceOnClaimSetModel model)
         {
             var resourceClaimToEdit = model.ResourceClaim;
+            if (resourceClaimToEdit is null) throw new InvalidOperationException($"{nameof(resourceClaimToEdit)} cannot be null.");
 
             var claimSetToEdit = _context.ClaimSets.Single(x => x.ClaimSetId == model.ClaimSetId);
 

@@ -47,7 +47,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
             {
                 updatedClaimSetId = editClaimSetCommand.Execute(editClaimSetModel);
             }
-            catch (AdminAppException exception)
+            catch (AdminApiException exception)
             {
                 throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
             }
@@ -138,7 +138,7 @@ namespace EdFi.Ods.Admin.Api.Features.ClaimSets
                     _getClaimSetByIdQuery.Execute(id);
                     return true;
                 }
-                catch (AdminAppException)
+                catch (AdminApiException)
                 {
                     throw new NotFoundException<int>("claimSet", id);
                 }

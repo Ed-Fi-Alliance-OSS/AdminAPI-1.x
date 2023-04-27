@@ -31,11 +31,11 @@ public class GetClaimSetByIdQueryV6Service
                 Id = securityContextClaimSet.ClaimSetId,
                 Name = securityContextClaimSet.ClaimSetName,
                 IsEditable = !securityContextClaimSet.ForApplicationUseOnly && !securityContextClaimSet.IsEdfiPreset &&
-                !CloudOdsAdminApp.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
+                !Constants.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
             };
         }
 
-        throw new AdminAppException("No such claim set exists in the database.")
+        throw new AdminApiException("No such claim set exists in the database.")
         {
             StatusCode = HttpStatusCode.NotFound
         };

@@ -8,89 +8,88 @@ using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.Tests;
+
+[TestFixture]
+public abstract class PlatformSecurityContextTestBase53
 {
-    [TestFixture]
-    public abstract class PlatformSecurityContextTestBase53
+    protected SqlServerSecurityContext TestContext { get; private set; }
+    protected SqlServerSecurityContext SetupContext { get; private set; }
+
+    protected enum CheckpointPolicyOptions
     {
-        protected SqlServerSecurityContext TestContext { get; private set; }
-        protected SqlServerSecurityContext SetupContext { get; private set; }
+        BeforeEachTest,
+        BeforeAnyTest
+    }
 
-        protected enum CheckpointPolicyOptions
+    protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
+
+    private readonly Checkpoint _checkpoint = new Checkpoint
+    {
+        TablesToIgnore = new[]
         {
-            BeforeEachTest,
-            BeforeAnyTest
+            "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
+        },
+        SchemasToExclude = new[]
+        {
+            "HangFire", "adminapp_HangFire"
         }
+    };
 
-        protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
+    protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
 
-        private readonly Checkpoint _checkpoint = new Checkpoint
-        {
-            TablesToIgnore = new[]
-            {
-                "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
-            },
-            SchemasToExclude = new[]
-            {
-                "HangFire", "adminapp_HangFire"
-            }
-        };
+    protected virtual void AdditionalFixtureSetup()
+    {
+    }
 
-        protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
+    protected abstract SqlServerSecurityContext CreateDbContext();
 
-        protected virtual void AdditionalFixtureSetup()
-        {
-        }
+    [OneTimeSetUp]
+    public virtual async Task FixtureSetup()
+    {
+        TestContext = CreateDbContext();
+        SetupContext = CreateDbContext();
 
-        protected abstract SqlServerSecurityContext CreateDbContext();
-
-        [OneTimeSetUp]
-        public virtual async Task FixtureSetup()
-        {
-            TestContext = CreateDbContext();
-            SetupContext = CreateDbContext();
-
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
-
-            AdditionalFixtureSetup();
-        }
-
-        [OneTimeTearDown]
-        public async Task FixtureTearDown()
+        if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
         {
             await _checkpoint.Reset(ConnectionString);
         }
 
-        [SetUp]
-        public async Task SetUp()
-        {
-            TestContext = CreateDbContext();
-            SetupContext = CreateDbContext();
+        AdditionalFixtureSetup();
+    }
 
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
+    [OneTimeTearDown]
+    public async Task FixtureTearDown()
+    {
+        await _checkpoint.Reset(ConnectionString);
+    }
+
+    [SetUp]
+    public async Task SetUp()
+    {
+        TestContext = CreateDbContext();
+        SetupContext = CreateDbContext();
+
+        if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
+        {
+            await _checkpoint.Reset(ConnectionString);
+        }
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        TestContext.Dispose();
+        SetupContext.Dispose();
+    }
+
+    protected void Save(params object[] entities)
+    {
+        foreach (var entity in entities)
+        {
+            TestContext.Set(entity.GetType()).Add(entity);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            TestContext.Dispose();
-            SetupContext.Dispose();
-        }
-
-        protected void Save(params object[] entities)
-        {
-            foreach (var entity in entities)
-            {
-                TestContext.Set(entity.GetType()).Add(entity);
-            }
-
-            TestContext.SaveChanges();
-        }
+        TestContext.SaveChanges();
     }
 }

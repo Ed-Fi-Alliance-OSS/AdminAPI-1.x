@@ -11,69 +11,68 @@ using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using EdFi.Ods.Admin.Api.Infrastructure;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
+namespace EdFi.Ods.Admin.Api.Tests.Database.Commands;
+
+[TestFixture]
+public class DeleteVendorCommandTests : PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public class DeleteVendorCommandTests : PlatformUsersContextTestBase
+    [Test]
+    public void ShouldDeleteVendor()
     {
-        [Test]
-        public void ShouldDeleteVendor()
+        var newVendor = new Vendor();
+        Save(newVendor);
+        var vendorId = newVendor.VendorId;
+
+        Transaction(usersContext =>
         {
-            var newVendor = new Vendor();
-            Save(newVendor);
-            var vendorId = newVendor.VendorId;
+            var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
+            deleteVendorCommand.Execute(vendorId);
+        });
 
-            Transaction(usersContext =>
-            {
-                var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
-                deleteVendorCommand.Execute(vendorId);
-            });
-            
-            Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
-        }
+        Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
+    }
 
-        [Test]
-        public void ShouldDeleteVendorWithApplication()
+    [Test]
+    public void ShouldDeleteVendorWithApplication()
+    {
+        var newVendor = new Vendor { VendorName = "test vendor" };
+        var newApplication = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+        newVendor.Applications.Add(newApplication);
+        Save(newVendor);
+        var vendorId = newVendor.VendorId;
+        var applicationId = newApplication.ApplicationId;
+        applicationId.ShouldBeGreaterThan(0);
+
+        Transaction(usersContext =>
         {
-            var newVendor = new Vendor {VendorName = "test vendor"};
-            var newApplication = new Application {ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
-            newVendor.Applications.Add(newApplication);
-            Save(newVendor);
-            var vendorId = newVendor.VendorId;
-            var applicationId = newApplication.ApplicationId;
-            applicationId.ShouldBeGreaterThan(0);
-            
-            Transaction(usersContext =>
-            {
-                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
-                var deleteVendorCommand = new DeleteVendorCommand(usersContext, deleteApplicationCommand);
-                deleteVendorCommand.Execute(vendorId);
-            });
-            
-            Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
-            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
-        }
+            var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+            var deleteVendorCommand = new DeleteVendorCommand(usersContext, deleteApplicationCommand);
+            deleteVendorCommand.Execute(vendorId);
+        });
 
-        [Test]
-        public void ShouldDeleteVendorWithUser()
+        Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+    }
+
+    [Test]
+    public void ShouldDeleteVendorWithUser()
+    {
+        var newVendor = new Vendor { VendorName = "test vendor" };
+        var newUser = new VendorUser { FullName = "test user" };
+        newVendor.Users.Add(newUser);
+        Save(newVendor);
+        var vendorId = newVendor.VendorId;
+        var userId = newUser.UserId;
+        userId.ShouldBeGreaterThan(0);
+
+
+        Transaction(usersContext =>
         {
-            var newVendor = new Vendor { VendorName = "test vendor" };
-            var newUser = new VendorUser { FullName = "test user" };
-            newVendor.Users.Add(newUser);
-            Save(newVendor);
-            var vendorId = newVendor.VendorId;
-            var userId = newUser.UserId;
-            userId.ShouldBeGreaterThan(0);
+            var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
+            deleteVendorCommand.Execute(vendorId);
+        });
 
-
-            Transaction(usersContext =>
-            {
-                var deleteVendorCommand = new DeleteVendorCommand(usersContext, null);
-                deleteVendorCommand.Execute(vendorId);
-            });
-            
-            Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
-            Transaction(usersContext => usersContext.Users.Where(u => u.UserId == userId).ToArray()).ShouldBeEmpty();
-        }
+        Transaction(usersContext => usersContext.Vendors.Where(v => v.VendorId == vendorId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext => usersContext.Users.Where(u => u.UserId == userId).ToArray()).ShouldBeEmpty();
     }
 }

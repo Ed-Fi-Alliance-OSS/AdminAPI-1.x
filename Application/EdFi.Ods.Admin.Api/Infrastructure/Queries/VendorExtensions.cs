@@ -11,7 +11,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Queries
     {
         public static readonly string[] ReservedNames =
         {
-            CloudOdsAdminApp.VendorName,
+            Constants.VendorName,
         };
 
         public static bool IsSystemReservedVendorName(string? vendorName)

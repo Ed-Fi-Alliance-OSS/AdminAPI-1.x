@@ -6,6 +6,6 @@
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
 // Exists solely to support Assembly loading during dependency injection setup
-public interface IMarkerForEdFiOdsAdminAppManagement
+public interface IMarkerForEdFiOdsAdminApiManagement
 {
 }

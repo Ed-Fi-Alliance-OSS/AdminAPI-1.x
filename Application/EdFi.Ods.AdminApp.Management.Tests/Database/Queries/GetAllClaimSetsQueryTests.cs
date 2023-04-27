@@ -10,48 +10,47 @@ using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
+namespace EdFi.Ods.Admin.Api.Tests.Database.Queries;
+
+[TestFixture]
+public class GetAllClaimSetsQueryTests : SecurityDataTestBase
 {
-    [TestFixture]
-    public class GetAllClaimSetsQueryTests : SecurityDataTestBase
+    public GetAllClaimSetsQueryTests()
     {
-        public GetAllClaimSetsQueryTests()
+        SeedSecurityContextOnFixtureSetup = true;
+    }
+
+    [Test]
+    public void Should_Retreive_ClaimSetNames()
+    {
+        var application = new Application
         {
-            SeedSecurityContextOnFixtureSetup = true;
-        }
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(application);
 
-        [Test]
-        public void Should_Retreive_ClaimSetNames()
+        var claimSet1 = GetClaimSet(application);
+        var claimSet2 = GetClaimSet(application);
+        Save(claimSet1, claimSet2);
+
+        var claimSetNames = Transaction(securityContext =>
         {
-            var application = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(application);
+            var query = new GetAllClaimSetsQuery(securityContext);
+            return query.Execute().Select(x => x.Name).ToArray();
+        });
 
-            var claimSet1 = GetClaimSet(application);
-            var claimSet2 = GetClaimSet(application);
-            Save(claimSet1, claimSet2);
+        claimSetNames.ShouldContain(claimSet1.ClaimSetName);
+        claimSetNames.ShouldContain(claimSet2.ClaimSetName);
+    }
 
-            var claimSetNames = Transaction(securityContext =>
-            {
-                var query = new GetAllClaimSetsQuery(securityContext);
-                return query.Execute().Select(x => x.Name).ToArray();
-            });
+    private static int _claimSetId = 0;
 
-            claimSetNames.ShouldContain(claimSet1.ClaimSetName);
-            claimSetNames.ShouldContain(claimSet2.ClaimSetName);
-        }
-
-        private static int _claimSetId = 0;
-
-        private ClaimSet GetClaimSet(Application application)
+    private ClaimSet GetClaimSet(Application application)
+    {
+        return new ClaimSet
         {
-            return new ClaimSet
-            {
-                Application = application,
-                ClaimSetName = $"Test Claim Set {_claimSetId++} - {DateTime.Now:O}"
-            };
-        }
+            Application = application,
+            ClaimSetName = $"Test Claim Set {_claimSetId++} - {DateTime.Now:O}"
+        };
     }
 }

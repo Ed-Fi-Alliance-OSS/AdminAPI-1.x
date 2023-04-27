@@ -11,59 +11,58 @@ using FluentValidation.Results;
 using Shouldly;
 using static System.Environment;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.Tests;
+
+public static class AssertionExtensions
 {
-    public static class AssertionExtensions
+    public static void ShouldValidate<TModel>(this AbstractValidator<TModel> validator, TModel model)
+        => validator.Validate(model).ShouldBeSuccessful();
+
+    public static void ShouldNotValidate<TModel>(this AbstractValidator<TModel> validator, TModel model, params string[] expectedErrors)
+        => validator.Validate(model).ShouldBeFailure(expectedErrors);
+
+    private static void ShouldBeSuccessful(this ValidationResult result)
     {
-        public static void ShouldValidate<TModel>(this AbstractValidator<TModel> validator, TModel model)
-            => validator.Validate(model).ShouldBeSuccessful();
+        var indentedErrorMessages = result
+            .Errors
+            .OrderBy(x => x.ErrorMessage)
+            .Select(x => "    " + x.ErrorMessage)
+            .ToArray();
 
-        public static void ShouldNotValidate<TModel>(this AbstractValidator<TModel> validator, TModel model, params string[] expectedErrors)
-            => validator.Validate(model).ShouldBeFailure(expectedErrors);
+        var actual = string.Join(NewLine, indentedErrorMessages);
 
-        private static void ShouldBeSuccessful(this ValidationResult result)
+        result.IsValid.ShouldBeTrue($"Expected no validation errors, but found {result.Errors.Count}:{NewLine}{actual}");
+    }
+
+    private static void ShouldBeFailure(this ValidationResult result, params string[] expectedErrors)
+    {
+        result.IsValid.ShouldBeFalse("Expected validation errors, but the message passed validation.");
+
+        result.Errors
+            .OrderBy(x => x.ErrorMessage)
+            .Select(x => x.ErrorMessage)
+            .ToArray()
+            .ShouldBe(expectedErrors.OrderBy(x => x).ToArray());
+    }
+
+    public static void ShouldSatisfy<T>(this IEnumerable<T> actual, params Action<T>[] itemExpectations)
+    {
+        var actualItems = actual.ToArray();
+
+        if (actualItems.Length != itemExpectations.Length)
+            throw new Exception(
+                $"Expected the collection to have {itemExpectations.Length} " +
+                $"items, but there were {actualItems.Length} items.");
+
+        for (var i = 0; i < actualItems.Length; i++)
         {
-            var indentedErrorMessages = result
-                .Errors
-                .OrderBy(x => x.ErrorMessage)
-                .Select(x => "    " + x.ErrorMessage)
-                .ToArray();
-
-            var actual = String.Join(NewLine, indentedErrorMessages);
-
-            result.IsValid.ShouldBeTrue($"Expected no validation errors, but found {result.Errors.Count}:{NewLine}{actual}");
-        }
-
-        private static void ShouldBeFailure(this ValidationResult result, params string[] expectedErrors)
-        {
-            result.IsValid.ShouldBeFalse("Expected validation errors, but the message passed validation.");
-
-            result.Errors
-                .OrderBy(x => x.ErrorMessage)
-                .Select(x => x.ErrorMessage)
-                .ToArray()
-                .ShouldBe(expectedErrors.OrderBy(x => x).ToArray());
-        }
-
-        public static void ShouldSatisfy<T>(this IEnumerable<T> actual, params Action<T>[] itemExpectations)
-        {
-            var actualItems = actual.ToArray();
-
-            if (actualItems.Length != itemExpectations.Length)
-                throw new Exception(
-                    $"Expected the collection to have {itemExpectations.Length} " +
-                    $"items, but there were {actualItems.Length} items.");
-
-            for (var i = 0; i < actualItems.Length; i++)
+            try
             {
-                try
-                {
-                    itemExpectations[i](actualItems[i]);
-                }
-                catch (Exception failure)
-                {
-                    throw new Exception($"Assertion failed for item at position [{i}].", failure);
-                }
+                itemExpectations[i](actualItems[i]);
+            }
+            catch (Exception failure)
+            {
+                throw new Exception($"Assertion failed for item at position [{i}].", failure);
             }
         }
     }

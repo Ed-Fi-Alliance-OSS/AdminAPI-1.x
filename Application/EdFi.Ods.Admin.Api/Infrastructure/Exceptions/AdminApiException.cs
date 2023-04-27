@@ -3,7 +3,7 @@ using System.Net;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.Exceptions;
 
-public interface IAdminAppException
+public interface IAdminApiException
 {
     string? Message { get; }
     string? StackTrace { get; }
@@ -12,10 +12,10 @@ public interface IAdminAppException
     bool IsStackTraceRelevant { get; }
 }
 
-public class AdminAppException : Exception, IAdminAppException
+public class AdminApiException : Exception, IAdminApiException
 {
-    public AdminAppException(string message) : base(message) { }
-    public AdminAppException(string message, Exception innerException) : base(message, innerException) { }
+    public AdminApiException(string message) : base(message) { }
+    public AdminApiException(string message, Exception innerException) : base(message, innerException) { }
 
     public HttpStatusCode? StatusCode { get; set; }
     public bool AllowFeedback { get; set; } = true;

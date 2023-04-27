@@ -5,7 +5,7 @@
 
 using EdFi.Ods.Admin.Api.Infrastructure;
 
-namespace EdFi.Ods.AdminApp.Management.Tests;
+namespace EdFi.Ods.Admin.Api.Tests;
 
 public static class StubOdsSecurityModelVersionResolver
 {

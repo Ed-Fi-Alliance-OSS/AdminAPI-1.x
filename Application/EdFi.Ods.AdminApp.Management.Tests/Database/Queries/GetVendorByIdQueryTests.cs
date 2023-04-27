@@ -8,33 +8,32 @@ using EdFi.Ods.Admin.Api.Infrastructure.Queries;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
+namespace EdFi.Ods.Admin.Api.Tests.Database.Queries;
+
+[TestFixture]
+public class GetVendorByIdQueryTests : PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public class GetVendorByIdQueryTests : PlatformUsersContextTestBase
+    [Test]
+    public void ShouldGetVendorById()
     {
-        [Test]
-        public void ShouldGetVendorById()
+        Vendor nullResult = null;
+        Transaction(usersContext =>
         {
-            Vendor nullResult = null;
-            Transaction(usersContext =>
-            {
-                var query = new GetVendorByIdQuery(usersContext);
-                nullResult = query.Execute(0);
-            });
-            nullResult.ShouldBeNull();
+            var query = new GetVendorByIdQuery(usersContext);
+            nullResult = query.Execute(0);
+        });
+        nullResult.ShouldBeNull();
 
-            var vendor = new Vendor {VendorName = "test vendor"};
-            Save(vendor);
+        var vendor = new Vendor { VendorName = "test vendor" };
+        Save(vendor);
 
-            Vendor results = null;
-            Transaction(usersContext =>
-            {
-                var query = new GetVendorByIdQuery(usersContext);
-                results = query.Execute(vendor.VendorId);
-            });
-            results.VendorId.ShouldBe(vendor.VendorId);
-            results.VendorName.ShouldBe("test vendor");
-        }
+        Vendor results = null;
+        Transaction(usersContext =>
+        {
+            var query = new GetVendorByIdQuery(usersContext);
+            results = query.Execute(vendor.VendorId);
+        });
+        results.VendorId.ShouldBe(vendor.VendorId);
+        results.VendorName.ShouldBe("test vendor");
     }
 }

@@ -3,16 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using System.Text.Json;
-using System.Threading.Tasks;
 using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.Admin.Api.Infrastructure.Services;
-using NUnit.Framework;
 using Shouldly;
 
-
-namespace EdFi.Ods.AdminApp.Management.UnitTests.Api;
+namespace EdFi.Ods.Admin.Api.UnitTests.Infrastructure;
 
 [TestFixture]
 public class OdsSecurityVersionResolverTests

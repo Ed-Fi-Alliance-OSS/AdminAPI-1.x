@@ -12,37 +12,36 @@ using NUnit.Framework;
 using Shouldly;
 
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
+namespace EdFi.Ods.Admin.Api.Tests.Database.Queries;
+
+[TestFixture]
+public class GetProfilesQueryTests : PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public class GetProfilesQueryTests : PlatformUsersContextTestBase
+    [Test]
+    public void Should_retreive_profiles()
     {
-        [Test]
-        public void Should_retreive_profiles()
+        var profile1 = CreateProfile();
+        var profile2 = CreateProfile();
+
+        Save(profile1, profile2);
+
+        List<Profile> results = null;
+        Transaction(usersContext =>
         {
-            var profile1 = CreateProfile();
-            var profile2 = CreateProfile();
+            var query = new GetProfilesQuery(usersContext);
+            results = query.Execute();
+        });
 
-            Save(profile1, profile2);
+        results.Any(p => p.ProfileName == profile1.ProfileName).ShouldBeTrue();
+        results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
+    }
 
-            List<Profile> results = null;
-            Transaction(usersContext =>
-            {
-                var query = new GetProfilesQuery(usersContext);
-                results = query.Execute();
-            });
-            
-            results.Any(p => p.ProfileName == profile1.ProfileName).ShouldBeTrue();
-            results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
-        }
-
-        private static int _profileId = 0;
-        private Profile CreateProfile()
+    private static int _profileId = 0;
+    private Profile CreateProfile()
+    {
+        return new Profile
         {
-            return new Profile
-            {
-                ProfileName = $"Test Profile {_profileId++}-{DateTime.Now:O}"
-            };
-        }
+            ProfileName = $"Test Profile {_profileId++}-{DateTime.Now:O}"
+        };
     }
 }

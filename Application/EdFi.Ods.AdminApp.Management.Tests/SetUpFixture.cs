@@ -8,17 +8,16 @@ using NUnit.Framework;
 using System.Data.Entity;
 using EdFi.Common.Configuration;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
-{
-    [SetUpFixture]
-    public class SetUpFixture
-    {
-        [OneTimeSetUp]
-        public void GlobalSetUp()
-        {
-            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(DatabaseEngine.SqlServer));
+namespace EdFi.Ods.Admin.Api.Tests;
 
-            new SecurityTestDatabaseSetup().EnsureSecurityV53DatabaseExists(@"C:\\temp");
-        }
+[SetUpFixture]
+public class SetUpFixture
+{
+    [OneTimeSetUp]
+    public void GlobalSetUp()
+    {
+        DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(DatabaseEngine.SqlServer));
+
+        new SecurityTestDatabaseSetup().EnsureSecurityV53DatabaseExists(@"C:\\temp");
     }
 }

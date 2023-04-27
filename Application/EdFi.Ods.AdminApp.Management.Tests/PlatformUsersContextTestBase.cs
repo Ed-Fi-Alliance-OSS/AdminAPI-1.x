@@ -9,65 +9,64 @@ using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.Tests;
+
+[TestFixture]
+public abstract class PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public abstract class PlatformUsersContextTestBase
+    private readonly Checkpoint _checkpoint = new Checkpoint
     {
-        private readonly Checkpoint _checkpoint = new Checkpoint
+        TablesToIgnore = new[]
         {
-            TablesToIgnore = new[]
-            {
-                "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
-            },
-            SchemasToExclude = new[]
-            {
-                "HangFire", "adminapp_HangFire"
-            }
-        };
-
-        protected string ConnectionString => Config.AdminConnectionString;
-
-        [OneTimeTearDown]
-        public async Task FixtureTearDown()
+            "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
+        },
+        SchemasToExclude = new[]
         {
-            await _checkpoint.Reset(ConnectionString);
+            "HangFire", "adminapp_HangFire"
         }
+    };
 
-        [SetUp]
-        public async Task SetUp()
+    protected string ConnectionString => Config.AdminConnectionString;
+
+    [OneTimeTearDown]
+    public async Task FixtureTearDown()
+    {
+        await _checkpoint.Reset(ConnectionString);
+    }
+
+    [SetUp]
+    public async Task SetUp()
+    {
+        await _checkpoint.Reset(ConnectionString);
+    }
+
+    protected void Save(params object[] entities)
+    {
+        Transaction(usersContext =>
         {
-            await _checkpoint.Reset(ConnectionString);
-        }
+            foreach (var entity in entities)
+                ((SqlServerUsersContext)usersContext).Set(entity.GetType()).Add(entity);
+        });
+    }
 
-        protected void Save(params object[] entities)
+    protected void Transaction(Action<IUsersContext> action)
+    {
+        using var usersContext = new SqlServerUsersContext(ConnectionString);
+        using var transaction = (usersContext).Database.BeginTransaction();
+        action(usersContext);
+        usersContext.SaveChanges();
+        transaction.Commit();
+    }
+
+    protected TResult Transaction<TResult>(Func<IUsersContext, TResult> query)
+    {
+        var result = default(TResult);
+
+        Transaction(database =>
         {
-            Transaction(usersContext =>
-            {
-                foreach (var entity in entities)
-                    ((SqlServerUsersContext)usersContext).Set(entity.GetType()).Add(entity);
-            });
-        }
+            result = query(database);
+        });
 
-        protected void Transaction(Action<IUsersContext> action)
-        {
-            using var usersContext = new SqlServerUsersContext(ConnectionString);
-            using var transaction = (usersContext).Database.BeginTransaction();
-            action(usersContext);
-            usersContext.SaveChanges();
-            transaction.Commit();
-        }
-
-        protected TResult Transaction<TResult>(Func<IUsersContext, TResult> query)
-        {
-            var result = default(TResult);
-
-            Transaction(database =>
-            {
-                result = query(database);
-            });
-
-            return result;
-        }
+        return result;
     }
 }

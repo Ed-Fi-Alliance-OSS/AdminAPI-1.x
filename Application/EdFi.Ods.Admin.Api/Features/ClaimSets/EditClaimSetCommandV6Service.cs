@@ -26,9 +26,9 @@ public class EditClaimSetCommandV6Service
         var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
 
         if (existingClaimSet.ForApplicationUseOnly || existingClaimSet.IsEdfiPreset ||
-                CloudOdsAdminApp.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
+                Constants.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
         {
-            throw new AdminAppException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
+            throw new AdminApiException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
         }
 
         if (claimSet.ClaimSetName is null) throw new InvalidOperationException("Cannot have a null ClaimSetName");

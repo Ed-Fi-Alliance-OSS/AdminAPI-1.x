@@ -12,86 +12,85 @@ using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries
+namespace EdFi.Ods.Admin.Api.Tests.Database.Queries;
+
+[TestFixture]
+public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
 {
-    [TestFixture]
-    public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
+    [Test]
+    public void ShouldGetResourceClaimsAsFlatList()
     {
-        [Test]
-        public void ShouldGetResourceClaimsAsFlatList()
+        var testApplication = new Application
         {
-            var testApplication = new Application
+            ApplicationName = "TestApplicationName"
+        };
+
+        Save(testApplication);
+
+        var testResourceClaims = SetupResourceClaims(testApplication);
+
+        Features.ClaimSets.ResourceClaim[] results = null;
+        using var securityContext = TestContext;
+        var query = new GetResourceClaimsAsFlatListQuery(securityContext);
+        results = query.Execute().ToArray();
+        results.Length.ShouldBe(testResourceClaims.Count);
+        results.Select(x => x.Name).ShouldBe(testResourceClaims.Select(x => x.ResourceName), true);
+        results.Select(x => x.Id).ShouldBe(testResourceClaims.Select(x => x.ResourceClaimId), true);
+        results.All(x => x.Create == false).ShouldBe(true);
+        results.All(x => x.Delete == false).ShouldBe(true);
+        results.All(x => x.Update == false).ShouldBe(true);
+        results.All(x => x.Read == false).ShouldBe(true);
+        results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
+        results.All(x => x.ParentName == null).ShouldBe(true);
+        results.All(x => x.Children.Count == 0).ShouldBe(true);
+    }
+
+    [Test]
+    public void ShouldGetAlphabeticallySortedFlatListForResourceClaims()
+    {
+        var testApplication = new Application
+        {
+            ApplicationName = "TestApplicationName"
+        };
+
+        Save(testApplication);
+
+        var testClaimSet = new ClaimSet
+        { ClaimSetName = "TestClaimSet_test", Application = testApplication };
+        Save(testClaimSet);
+        var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1)).ToList();
+        var parentResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim == null)
+            .OrderBy(x => x.ResourceClaim.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
+        var childResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim != null)
+            .OrderBy(x => x.ResourceClaim?.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
+
+        List<Features.ClaimSets.ResourceClaim> results = null;
+        using var securityContext = TestContext;
+
+        var query = new GetResourceClaimsAsFlatListQuery(securityContext);
+        results = query.Execute().ToList();
+        results.Count.ShouldBe(testResourceClaims.Count);
+        results.Where(x => x.ParentId == 0).Select(x => x.Name).ToList().ShouldBe(parentResourceNames);
+        results.Where(x => x.ParentId != 0).Select(x => x.Name).ToList().ShouldBe(childResourceNames);
+    }
+
+    private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, int resourceClaimCount = 5)
+    {
+        var resourceClaims = new List<ResourceClaim>();
+        foreach (var index in Enumerable.Range(1, resourceClaimCount))
+        {
+            var resourceClaim = new ResourceClaim
             {
-                ApplicationName = "TestApplicationName"
+                ClaimName = $"TestResourceClaim{index:N}",
+                DisplayName = $"TestResourceClaim{index:N}",
+                ResourceName = $"TestResourceClaim{index:N}",
+                Application = testApplication
             };
-
-            Save(testApplication);
-
-            var testResourceClaims = SetupResourceClaims(testApplication);
-
-            Admin.Api.Features.ClaimSets.ResourceClaim[] results = null;
-            using var securityContext = TestContext;
-            var query = new GetResourceClaimsAsFlatListQuery(securityContext);
-            results = query.Execute().ToArray();
-            results.Length.ShouldBe(testResourceClaims.Count);
-            results.Select(x => x.Name).ShouldBe(testResourceClaims.Select(x => x.ResourceName), true);
-            results.Select(x => x.Id).ShouldBe(testResourceClaims.Select(x => x.ResourceClaimId), true);
-            results.All(x => x.Create == false).ShouldBe(true);
-            results.All(x => x.Delete == false).ShouldBe(true);
-            results.All(x => x.Update == false).ShouldBe(true);
-            results.All(x => x.Read == false).ShouldBe(true);
-            results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
-            results.All(x => x.ParentName == null).ShouldBe(true);
-            results.All(x => x.Children.Count == 0).ShouldBe(true);
+            resourceClaims.Add(resourceClaim);
         }
 
-        [Test]
-        public void ShouldGetAlphabeticallySortedFlatListForResourceClaims()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplicationName"
-            };
+        Save(resourceClaims.Cast<object>().ToArray());
 
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet
-            { ClaimSetName = "TestClaimSet_test", Application = testApplication };
-            Save(testClaimSet);
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1)).ToList();
-            var parentResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim == null)
-                .OrderBy(x => x.ResourceClaim.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
-            var childResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim != null)
-                .OrderBy(x => x.ResourceClaim?.ResourceName).Select(x => x.ResourceClaim?.ResourceName).ToList();
-
-            List<Admin.Api.Features.ClaimSets.ResourceClaim> results = null;
-            using var securityContext = TestContext;
-
-            var query = new GetResourceClaimsAsFlatListQuery(securityContext);
-            results = query.Execute().ToList();
-            results.Count.ShouldBe(testResourceClaims.Count);
-            results.Where(x => x.ParentId == 0).Select(x => x.Name).ToList().ShouldBe(parentResourceNames);
-            results.Where(x => x.ParentId != 0).Select(x => x.Name).ToList().ShouldBe(childResourceNames);
-        }
-
-        private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, int resourceClaimCount = 5)
-        {
-            var resourceClaims = new List<ResourceClaim>();
-            foreach (var index in Enumerable.Range(1, resourceClaimCount))
-            {
-                var resourceClaim = new ResourceClaim
-                {
-                    ClaimName = $"TestResourceClaim{index:N}",
-                    DisplayName = $"TestResourceClaim{index:N}",
-                    ResourceName = $"TestResourceClaim{index:N}",
-                    Application = testApplication
-                };
-                resourceClaims.Add(resourceClaim);
-            }
-
-            Save(resourceClaims.Cast<object>().ToArray());
-
-            return resourceClaims;
-        }
+        return resourceClaims;
     }
 }

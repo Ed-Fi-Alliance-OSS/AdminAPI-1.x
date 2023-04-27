@@ -5,13 +5,15 @@
 
 namespace EdFi.Ods.Admin.Api.Infrastructure;
 
-public static class CloudOdsAdminApp
+public static class Constants
 {
     public const string ApplicationName = "Ed-Fi ODS Admin Api";
     public const string SecurityContextApplicationName = "Ed-Fi ODS API";
     public const string VendorName = "EdFi";
     public const string VendorNamespacePrefix = "http://ed-fi.org";
-    public const string InternalAdminAppClaimSet = "Ed-Fi ODS Admin ApI";
+
+    // This SHOULD STAY as "Admin App", not "Admin Api"
+    public const string InternalAdminAppClaimSet = "Ed-Fi ODS Admin App";
 
     public static readonly string[] SystemReservedClaimSets =
     {

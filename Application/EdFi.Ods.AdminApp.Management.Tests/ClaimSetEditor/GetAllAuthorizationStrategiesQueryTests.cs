@@ -8,7 +8,7 @@ using EdFi.Ods.Admin.Api.Features.ClaimSets;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor;
+namespace EdFi.Ods.Admin.Api.Tests.ClaimSetEditor;
 
 [TestFixture]
 public class GetAllAuthorizationStrategiesQueryTests : SecurityDataTestBase

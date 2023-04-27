@@ -12,131 +12,130 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.Admin.Api.Infrastructure;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
+namespace EdFi.Ods.Admin.Api.Tests.Database.Commands;
+
+[TestFixture]
+public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
+    [Test]
+    public void ShouldDeleteApplication()
     {
-        [Test]
-        public void ShouldDeleteApplication()
+        var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+        Save(application);
+        var applicationId = application.ApplicationId;
+
+        Transaction(usersContext =>
         {
-            var application = new Application {ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
-            Save(application);
-            var applicationId = application.ApplicationId;
+            var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+            deleteApplicationCommand.Execute(applicationId);
+        });
 
-            Transaction(usersContext =>
-            {
-                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
-                deleteApplicationCommand.Execute(applicationId);
-            });
-            
-            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
-        }
+        Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+    }
 
-        [Test]
-        public void ShouldDeleteApplicationWithClient()
+    [Test]
+    public void ShouldDeleteApplicationWithClient()
+    {
+        var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+
+        var client = new ApiClient
         {
-            var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+            Name = "test client",
+            Key = "n/a",
+            Secret = "n/a",
+            ActivationCode = "fake activation code"
+        };
 
-            var client = new ApiClient
-            {
-                Name = "test client",
-                Key = "n/a",
-                Secret = "n/a",
-                ActivationCode = "fake activation code"
-            };
-
-            var clientAccessToken = new ClientAccessToken
-            {
-                ApiClient = client,
-                Expiration = DateTime.Now.AddDays(1)
-            };
-
-            client.ClientAccessTokens.Add(clientAccessToken);
-            
-            application.ApiClients.Add(client);
-            Save(application);
-
-            var applicationId = application.ApplicationId;
-            applicationId.ShouldBeGreaterThan(0);
-
-            var clientId = client.ApiClientId;
-            clientId.ShouldBeGreaterThan(0);
-
-            var tokenId = clientAccessToken.Id;
-            tokenId.ShouldNotBe(Guid.Empty);
-
-            Transaction(usersContext =>
-            {
-                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
-                deleteApplicationCommand.Execute(applicationId);
-            });
-            
-            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
-            Transaction(usersContext => usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray()).ShouldBeEmpty();
-        }
-
-        [Test]
-        public void ShouldDeleteApplicationWithOrganization()
+        var clientAccessToken = new ClientAccessToken
         {
-            var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+            ApiClient = client,
+            Expiration = DateTime.Now.AddDays(1)
+        };
 
-            var client = new ApiClient
-            {
-                Name = "test client",
-                Key = "n/a",
-                Secret = "n/a",
-            };
+        client.ClientAccessTokens.Add(clientAccessToken);
 
-            var organization = new ApplicationEducationOrganization
-            {
-                Application = application,
-                Clients = new List<ApiClient> {client}
-            };
+        application.ApiClients.Add(client);
+        Save(application);
 
-            application.ApiClients.Add(client);
-            application.ApplicationEducationOrganizations.Add(organization);
-            Save(application);
+        var applicationId = application.ApplicationId;
+        applicationId.ShouldBeGreaterThan(0);
 
-            var applicationId = application.ApplicationId;
-            applicationId.ShouldBeGreaterThan(0);
+        var clientId = client.ApiClientId;
+        clientId.ShouldBeGreaterThan(0);
 
-            var organizationId = organization.ApplicationEducationOrganizationId;
-            organizationId.ShouldBeGreaterThan(0);
+        var tokenId = clientAccessToken.Id;
+        tokenId.ShouldNotBe(Guid.Empty);
 
-            Transaction(usersContext =>
-            {
-                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
-                deleteApplicationCommand.Execute(applicationId);
-            });
-
-            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
-            Transaction(usersContext => usersContext.ApplicationEducationOrganizations.Where(o => o.ApplicationEducationOrganizationId == organizationId).ToArray()).ShouldBeEmpty();
-        }
-
-        [Test]
-        public void ShouldDeleteApplicationWithProfile()
+        Transaction(usersContext =>
         {
-            var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
-            var profile = new Profile {ProfileName = "test profile"};
-            application.Profiles.Add(profile);
+            var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+            deleteApplicationCommand.Execute(applicationId);
+        });
 
-            Save(application);
+        Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext => usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray()).ShouldBeEmpty();
+    }
 
-            var applicationId = application.ApplicationId;
-            applicationId.ShouldBeGreaterThan(0);
+    [Test]
+    public void ShouldDeleteApplicationWithOrganization()
+    {
+        var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
 
-            var profileId = profile.ProfileId;
-            profileId.ShouldBeGreaterThan(0);
+        var client = new ApiClient
+        {
+            Name = "test client",
+            Key = "n/a",
+            Secret = "n/a",
+        };
 
-            Transaction(usersContext =>
-            {
-                var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
-                deleteApplicationCommand.Execute(applicationId);
-            });
+        var organization = new ApplicationEducationOrganization
+        {
+            Application = application,
+            Clients = new List<ApiClient> { client }
+        };
 
-            Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
-            Transaction(usersContext => usersContext.Profiles.Where(p => p.ProfileId == profileId).ToArray()).ShouldNotBeEmpty();
-        }
+        application.ApiClients.Add(client);
+        application.ApplicationEducationOrganizations.Add(organization);
+        Save(application);
+
+        var applicationId = application.ApplicationId;
+        applicationId.ShouldBeGreaterThan(0);
+
+        var organizationId = organization.ApplicationEducationOrganizationId;
+        organizationId.ShouldBeGreaterThan(0);
+
+        Transaction(usersContext =>
+        {
+            var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+            deleteApplicationCommand.Execute(applicationId);
+        });
+
+        Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext => usersContext.ApplicationEducationOrganizations.Where(o => o.ApplicationEducationOrganizationId == organizationId).ToArray()).ShouldBeEmpty();
+    }
+
+    [Test]
+    public void ShouldDeleteApplicationWithProfile()
+    {
+        var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+        var profile = new Profile { ProfileName = "test profile" };
+        application.Profiles.Add(profile);
+
+        Save(application);
+
+        var applicationId = application.ApplicationId;
+        applicationId.ShouldBeGreaterThan(0);
+
+        var profileId = profile.ProfileId;
+        profileId.ShouldBeGreaterThan(0);
+
+        Transaction(usersContext =>
+        {
+            var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
+            deleteApplicationCommand.Execute(applicationId);
+        });
+
+        Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext => usersContext.Profiles.Where(p => p.ProfileId == profileId).ToArray()).ShouldNotBeEmpty();
     }
 }

@@ -14,108 +14,107 @@ using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
+namespace EdFi.Ods.Admin.Api.Tests.Database.Commands;
+
+[TestFixture]
+public class RegenerateApiClientSecretCommandTests : PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public class RegenerateApiClientSecretCommandTests : PlatformUsersContextTestBase
+    [Test]
+    public void ShouldFailIfApplicationDoesNotExist()
     {
-        [Test]
-        public void ShouldFailIfApplicationDoesNotExist()
+        Transaction(usersContext =>
         {
-            Transaction(usersContext =>
-            {
-                var command = new RegenerateApiClientSecretCommand(usersContext);
-                Assert.Throws<NotFoundException<int>>(() => command.Execute(0));
-            });
-        }
+            var command = new RegenerateApiClientSecretCommand(usersContext);
+            Assert.Throws<NotFoundException<int>>(() => command.Execute(0));
+        });
+    }
 
-        [Test]
-        public void ShouldReportFailureIfApiClientDoesNotExist()
+    [Test]
+    public void ShouldReportFailureIfApiClientDoesNotExist()
+    {
+        var application = new Application
         {
-            var application = new Application
-            {
-                ApplicationName = "Api Client Secret Test App",
-                OperationalContextUri = OperationalContext.DefaultOperationalContextUri
-            };
+            ApplicationName = "Api Client Secret Test App",
+            OperationalContextUri = OperationalContext.DefaultOperationalContextUri
+        };
 
-            Save(application);
+        Save(application);
 
-            Transaction(usersContext =>
-            {
-                var command = new RegenerateApiClientSecretCommand(usersContext);
-                Assert.Throws<InvalidOperationException>(() => command.Execute(application.ApplicationId));
-            });
-        }
-
-        [Test]
-        public void ShouldUpdateApiClientSecret()
+        Transaction(usersContext =>
         {
-            var vendor = new Vendor
-            {
-                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
-                VendorName = "Integration Tests"
-            };
+            var command = new RegenerateApiClientSecretCommand(usersContext);
+            Assert.Throws<InvalidOperationException>(() => command.Execute(application.ApplicationId));
+        });
+    }
 
-            var user = new VendorUser
-            {
-                Email = "nobody@nowhere.com",
-                FullName = "Integration Tests",
-                Vendor = vendor
-            };
+    [Test]
+    public void ShouldUpdateApiClientSecret()
+    {
+        var vendor = new Vendor
+        {
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Integration Tests"
+        };
 
-            var profile = new Profile
-            {
-                ProfileName = "Test Profile"
-            };
+        var user = new VendorUser
+        {
+            Email = "nobody@nowhere.com",
+            FullName = "Integration Tests",
+            Vendor = vendor
+        };
 
-            var apiClient = new ApiClient(true)
-            {
-                Name = "Integration Test"
-            };
+        var profile = new Profile
+        {
+            ProfileName = "Test Profile"
+        };
 
-            var application = new Application
-            {
-                ApplicationName = "Test Application",
-                ClaimSetName = "FakeClaimSet",
-                ApiClients = new List<ApiClient>(),
-                Vendor = vendor,
-                Profiles = new List<Profile>(),
-                OperationalContextUri = OperationalContext.DefaultOperationalContextUri
-            };
+        var apiClient = new ApiClient(true)
+        {
+            Name = "Integration Test"
+        };
 
-            application.ApiClients.Add(apiClient);
-            application.Profiles.Add(profile);
+        var application = new Application
+        {
+            ApplicationName = "Test Application",
+            ClaimSetName = "FakeClaimSet",
+            ApiClients = new List<ApiClient>(),
+            Vendor = vendor,
+            Profiles = new List<Profile>(),
+            OperationalContextUri = OperationalContext.DefaultOperationalContextUri
+        };
 
-            Save(vendor, user, profile, application);
+        application.ApiClients.Add(apiClient);
+        application.Profiles.Add(profile);
 
-            var orignalKey = apiClient.Key;
-            var originalSecret = apiClient.Secret;
+        Save(vendor, user, profile, application);
 
-            //Simulate the automatic hashing performed by using the key/secret on the API.
-            Transaction(usersContext =>
-            {
-                var odsSideApiClient = usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId);
-                odsSideApiClient.Secret = "SIMULATED HASH OF " + originalSecret;
-                odsSideApiClient.SecretIsHashed = true;
-            });
+        var orignalKey = apiClient.Key;
+        var originalSecret = apiClient.Secret;
 
-            RegenerateApiClientSecretResult result = null;
-            Transaction(usersContext =>
-            {
-                var command = new RegenerateApiClientSecretCommand(usersContext);
-                result = command.Execute(application.ApplicationId);
-            });
+        //Simulate the automatic hashing performed by using the key/secret on the API.
+        Transaction(usersContext =>
+        {
+            var odsSideApiClient = usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId);
+            odsSideApiClient.Secret = "SIMULATED HASH OF " + originalSecret;
+            odsSideApiClient.SecretIsHashed = true;
+        });
 
-            var updatedApiClient = Transaction(usersContext => usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId));
+        RegenerateApiClientSecretResult result = null;
+        Transaction(usersContext =>
+        {
+            var command = new RegenerateApiClientSecretCommand(usersContext);
+            result = command.Execute(application.ApplicationId);
+        });
 
-            result.Key.ShouldBe(orignalKey);
-            result.Secret.ShouldNotBe(originalSecret);
-            result.Secret.ShouldNotBe("SIMULATED HASH OF " + originalSecret);
-            result.Secret.ShouldNotBeEmpty();
+        var updatedApiClient = Transaction(usersContext => usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId));
 
-            updatedApiClient.Key.ShouldBe(result.Key);
-            updatedApiClient.Secret.ShouldBe(result.Secret);
-            updatedApiClient.SecretIsHashed.ShouldBe(false);
-        }
+        result.Key.ShouldBe(orignalKey);
+        result.Secret.ShouldNotBe(originalSecret);
+        result.Secret.ShouldNotBe("SIMULATED HASH OF " + originalSecret);
+        result.Secret.ShouldNotBeEmpty();
+
+        updatedApiClient.Key.ShouldBe(result.Key);
+        updatedApiClient.Secret.ShouldBe(result.Secret);
+        updatedApiClient.SecretIsHashed.ShouldBe(false);
     }
 }

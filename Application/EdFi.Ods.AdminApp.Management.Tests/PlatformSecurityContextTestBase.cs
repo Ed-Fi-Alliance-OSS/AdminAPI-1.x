@@ -5,110 +5,108 @@
 
 using System;
 using System.Threading.Tasks;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.Tests;
+
+[TestFixture]
+public abstract class PlatformSecurityContextTestBase
 {
-    [TestFixture]
-    public abstract class PlatformSecurityContextTestBase
+    protected SqlServerSecurityContext TestContext { get; private set; }
+
+    protected enum CheckpointPolicyOptions
     {
-        protected SqlServerSecurityContext TestContext { get; private set; }
+        BeforeEachTest,
+        BeforeAnyTest
+    }
 
-        protected enum CheckpointPolicyOptions
+    protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
+
+    private readonly Checkpoint _checkpoint = new()
+    {
+        TablesToIgnore = new[]
         {
-            BeforeEachTest,
-            BeforeAnyTest
+            "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
+        },
+        SchemasToExclude = new[]
+        {
+            "HangFire", "adminapp_HangFire"
         }
+    };
 
-        protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
+    protected virtual string ConnectionString => Config.SecurityConnectionString;
 
-        private readonly Checkpoint _checkpoint = new Checkpoint
-        {
-            TablesToIgnore = new[]
-            {
-                "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
-            },
-            SchemasToExclude = new[]
-            {
-                "HangFire", "adminapp_HangFire"
-            }
-        };
+    protected virtual void AdditionalFixtureSetup()
+    {
+    }
 
-        protected virtual string ConnectionString => Config.SecurityConnectionString;
+    protected abstract SqlServerSecurityContext CreateDbContext();
 
-        protected virtual void AdditionalFixtureSetup()
-        {
-        }
+    [OneTimeSetUp]
+    public virtual async Task FixtureSetup()
+    {
+        TestContext = CreateDbContext();
 
-        protected abstract SqlServerSecurityContext CreateDbContext();
-
-        [OneTimeSetUp]
-        public virtual async Task FixtureSetup()
-        {
-            TestContext = CreateDbContext();
-
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
-
-            AdditionalFixtureSetup();
-        }
-
-        [OneTimeTearDown]
-        public async Task FixtureTearDown()
+        if (CheckpointPolicy == CheckpointPolicyOptions.BeforeAnyTest)
         {
             await _checkpoint.Reset(ConnectionString);
         }
 
-        [SetUp]
-        public async Task SetUp()
-        {
-            TestContext = CreateDbContext();
-
-            if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
-            {
-                await _checkpoint.Reset(ConnectionString);
-            }
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            TestContext.Dispose();
-        }
-
-        protected void Save(params object[] entities)
-        {
-            Transaction(usersContext =>
-            {
-                foreach (var entity in entities)
-                    TestContext.Set(entity.GetType()).Add(entity);
-            });
-        }
-
-        protected void Transaction(Action<ISecurityContext> action)
-        {
-            using var transaction = TestContext.Database.BeginTransaction();
-            action(TestContext);
-            TestContext.SaveChanges();
-            transaction.Commit();
-        }
-
-        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
-        {
-            var result = default(TResult);
-
-            Transaction(database =>
-            {
-                result = query(database);
-            });
-
-            return result;
-        }
-
+        AdditionalFixtureSetup();
     }
+
+    [OneTimeTearDown]
+    public async Task FixtureTearDown()
+    {
+        await _checkpoint.Reset(ConnectionString);
+    }
+
+    [SetUp]
+    public async Task SetUp()
+    {
+        TestContext = CreateDbContext();
+
+        if (CheckpointPolicy == CheckpointPolicyOptions.BeforeEachTest)
+        {
+            await _checkpoint.Reset(ConnectionString);
+        }
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        TestContext.Dispose();
+    }
+
+    protected void Save(params object[] entities)
+    {
+        Transaction(usersContext =>
+        {
+            foreach (var entity in entities)
+                TestContext.Set(entity.GetType()).Add(entity);
+        });
+    }
+
+    protected void Transaction(Action<ISecurityContext> action)
+    {
+        using var transaction = TestContext.Database.BeginTransaction();
+        action(TestContext);
+        TestContext.SaveChanges();
+        transaction.Commit();
+    }
+
+    protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
+    {
+        var result = default(TResult);
+
+        Transaction(database =>
+        {
+            result = query(database);
+        });
+
+        return result;
+    }
+
 }

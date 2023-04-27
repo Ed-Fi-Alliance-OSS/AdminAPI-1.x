@@ -11,7 +11,7 @@ using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
-namespace EdFi.Ods.AdminApp.Management.Tests.Database.Queries;
+namespace EdFi.Ods.Admin.Api.Tests.Database.Queries;
 
 [TestFixture]
 public class GetResourceClaimsQueryTests : SecurityDataTestBase
@@ -28,7 +28,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         var testResourceClaims = SetupResourceClaims(testApplication);
 
-        Admin.Api.Features.ClaimSets.ResourceClaim[] results = null;
+        Features.ClaimSets.ResourceClaim[] results = null;
         using var securityContext = TestContext;
         var query = new GetResourceClaimsQuery(securityContext);
         results = query.Execute().ToArray();

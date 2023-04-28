@@ -96,7 +96,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 command.Execute(deleteModel.Object);
             });
             exception.ShouldNotBeNull();
-            exception.Message.ShouldBe($"Claim set `{systemReservedClaimSet.ClaimSetName}` cannot be deleted.");
+            exception.Message.ShouldBe($"Claim set({systemReservedClaimSet.ClaimSetName}) is system reserved.Can not be deleted.");
         }
 
         // TODO: move these to UnitTests, using appropriate validator from the API project

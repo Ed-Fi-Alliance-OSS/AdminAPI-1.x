@@ -6,12 +6,11 @@
 using System;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Web;
 using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     [TestFixture]
     public abstract class PlatformSecurityContextTestBase

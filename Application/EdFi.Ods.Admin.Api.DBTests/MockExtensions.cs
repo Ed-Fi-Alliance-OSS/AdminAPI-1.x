@@ -10,7 +10,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Moq;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     public static class MockExtensions
     {

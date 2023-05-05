@@ -9,6 +9,7 @@ using EdFi.Ods.Admin.Api.Features.Vendors;
 using EdFi.Ods.Admin.Api.Features.Applications;
 using EdFi.Ods.AdminApp.Management.Database.Commands;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
+using EdFi.Ods.AdminApp.Management.Helpers;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure
 {
@@ -21,13 +22,13 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.Company, opt => opt.MapFrom(src => src.VendorName))
                 .ForMember(dst => dst.ContactName, opt => opt.MapFrom(src => src.ContactName()))
                 .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))
-                .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => ToCommaSeparated(src.VendorNamespacePrefixes)));
+                .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
             CreateMap<Vendor, VendorModel>()
                 .ForMember(dst => dst.Company, opt => opt.MapFrom(src => src.VendorName))
                 .ForMember(dst => dst.ContactName, opt => opt.MapFrom(src => src.ContactName()))
                 .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))
-                .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => ToCommaSeparated(src.VendorNamespacePrefixes)));
+                .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
             CreateMap<EdFi.Admin.DataAccess.Models.Application, ApplicationModel>()
                 .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.ApplicationEducationOrganizations.First().EducationOrganizationId))
@@ -93,22 +94,6 @@ namespace EdFi.Ods.Admin.Api.Infrastructure
                 .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
                 .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
                 .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
-        }
-
-        private string ToCommaSeparated(ICollection<VendorNamespacePrefix> vendorNamespacePrefixes)
-        {
-            return vendorNamespacePrefixes != null && vendorNamespacePrefixes.Any()
-                            ? ToDelimiterSeparated(vendorNamespacePrefixes.Select(x => x.NamespacePrefix))
-                            : string.Empty;
-        }
-
-        public string ToDelimiterSeparated(IEnumerable<string> inputStrings, string separator = ",")
-        {
-            var listOfStrings = inputStrings.ToList();
-
-            return listOfStrings.Any()
-                ? string.Join(separator, listOfStrings)
-                : string.Empty;
         }
     }
 }

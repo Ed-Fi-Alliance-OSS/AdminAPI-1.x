@@ -10,7 +10,7 @@ using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     [TestFixture]
     public abstract class PlatformSecurityContextTestBase53

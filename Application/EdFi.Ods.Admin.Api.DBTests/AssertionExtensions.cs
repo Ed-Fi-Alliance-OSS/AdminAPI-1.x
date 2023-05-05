@@ -11,7 +11,7 @@ using FluentValidation.Results;
 using Shouldly;
 using static System.Environment;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     public static class AssertionExtensions
     {

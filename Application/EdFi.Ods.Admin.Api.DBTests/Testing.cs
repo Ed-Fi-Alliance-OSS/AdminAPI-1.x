@@ -7,7 +7,7 @@ using EdFi.Admin.DataAccess.DbConfigurations;
 using Microsoft.Extensions.Configuration;
 using System.Data.Entity;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     public static class Testing
     {
@@ -17,7 +17,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 
             var dbSetup = new SecurityTestDatabaseSetup();
             dbSetup.EnsureSecurityDatabase(@"C:\\temp");
-            //ScopeFactory.ShouldNotBeNull();
         }
 
         private static IConfigurationRoot _config;

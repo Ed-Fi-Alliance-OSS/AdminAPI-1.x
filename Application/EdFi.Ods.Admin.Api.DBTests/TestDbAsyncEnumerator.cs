@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     //Classes to assist with mocking a DBSet -- see https://msdn.microsoft.com/en-us/library/dn314429.aspx
 

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
+using static EdFi.Ods.Admin.Api.DBTests.Testing;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     [TestFixture]
     public abstract class PlatformUsersContextTestBase

@@ -15,7 +15,7 @@ using Action = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
 using ClaimSetEditorTypes = EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
-namespace EdFi.Ods.AdminApp.Management.Tests
+namespace EdFi.Ods.Admin.Api.DBTests
 {
     [TestFixture]
     public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53

@@ -14,187 +14,186 @@ using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using EdFi.Ods.AdminApp.Management;
 
-namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests
+namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
+
+[TestFixture]
+public class GetClaimSetsByApplicationNameQueryV53ServiceTests : SecurityData53TestBase
 {
-    [TestFixture]
-    public class GetClaimSetsByApplicationNameQueryV53ServiceTests : SecurityData53TestBase
+    [Test]
+    public void ShouldExcludeInternalAdminAppClaimSet()
     {
-        [Test]
-        public void ShouldExcludeInternalAdminAppClaimSet()
+        var testClaimSets = SetupApplicationClaimSets();
+
+        var testApplication = testClaimSets.First().Application;
+
+        Save(new ClaimSet
         {
-            var testClaimSets = SetupApplicationClaimSets();
+            ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet,
+            Application = testApplication
+        });
 
-            var testApplication = testClaimSets.First().Application;
-
-            Save(new ClaimSet
-            {
-                ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet,
-                Application = testApplication
-            });
-
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
-                var results = query.Execute(testApplication.ApplicationName).ToArray();
-
-                results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
-            });
-        }
-
-        [Test]
-        public void ShouldExcludeSystemReservedClaimSets()
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
         {
-            var testClaimSets = SetupApplicationClaimSets();
+            var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
+            var results = query.Execute(testApplication.ApplicationName).ToArray();
 
-            var testApplication = testClaimSets.First().Application;
+            results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
+        });
+    }
 
-            Save(new ClaimSet
-            {
-                ClaimSetName = "Bootstrap Descriptors and EdOrgs",
-                Application = testApplication
-            });
+    [Test]
+    public void ShouldExcludeSystemReservedClaimSets()
+    {
+        var testClaimSets = SetupApplicationClaimSets();
 
-            Save(new ClaimSet
-            {
-                ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet,
-                Application = testApplication
-            });
+        var testApplication = testClaimSets.First().Application;
 
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
-                var results = query.Execute(testApplication.ApplicationName).ToArray();
-
-                results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
-                results.ShouldNotContain(x => x.Name == "Bootstrap Descriptors and EdOrgs");
-            });
-        }
-
-        [Test]
-        public void ShouldGetAllTheClaimSetsFromAnApplication()
+        Save(new ClaimSet
         {
-            var testClaimSets = SetupApplicationClaimSets();
+            ClaimSetName = "Bootstrap Descriptors and EdOrgs",
+            Application = testApplication
+        });
 
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
-                var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
-
-                results.Length.ShouldBe(testClaimSets.Count);
-                results.Select(x => x.Name).ShouldBe(testClaimSets.Select(x => x.ClaimSetName), true);
-            });
-        }
-
-        [Test]
-        public void ShouldNotGetClaimSetsFromOtherApplications()
+        Save(new ClaimSet
         {
-            SetupApplicationClaimSets("OtherApplication");
-            SetupApplicationClaimSets("YetAnotherApplication");
+            ClaimSetName = CloudOdsAdminApp.InternalAdminAppClaimSet,
+            Application = testApplication
+        });
 
-            var testClaimSets = SetupApplicationClaimSets();
-
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
-                var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
-
-                results.Length.ShouldBe(testClaimSets.Count);
-                results.Select(x => x.Name).ShouldBe(testClaimSets.Select(x => x.ClaimSetName), true);
-            });
-        }
-
-        [Test]
-        public void ShouldGetTheClaimSetsWithTheExpectedIsEditableValue()
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
         {
-            var testClaimSets = SetupApplicationClaimSets();
-            var testApplication = testClaimSets.First().Application;
+            var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
+            var results = query.Execute(testApplication.ApplicationName).ToArray();
 
-            Save(new ClaimSet
-            {
-                ClaimSetName = "SIS Vendor",
-                Application = testApplication
-            });
+            results.ShouldNotContain(x => x.Name == CloudOdsAdminApp.InternalAdminAppClaimSet);
+            results.ShouldNotContain(x => x.Name == "Bootstrap Descriptors and EdOrgs");
+        });
+    }
 
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
-                var results = query.Execute(testApplication.ApplicationName).ToArray();
+    [Test]
+    public void ShouldGetAllTheClaimSetsFromAnApplication()
+    {
+        var testClaimSets = SetupApplicationClaimSets();
 
-                results.Count(x => x.IsEditable).ShouldBe(testClaimSets.Count);
-                results.Single(x => !x.IsEditable).Name.ShouldBe("SIS Vendor");
-                results.Count(x => !x.IsEditable).ShouldBe(1);
-            });
-        }
-
-        [TestCase(1)]
-        [TestCase(3)]
-        [TestCase(5)]
-        public void ShouldGetTheCorrectApplicationCount(int applicationCount)
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
         {
-            SetupApplicationClaimSets("OtherApplication");
+            var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
+            var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
 
-            var testClaimSets = SetupApplicationClaimSets();
+            results.Length.ShouldBe(testClaimSets.Count);
+            results.Select(x => x.Name).ShouldBe(testClaimSets.Select(x => x.ClaimSetName), true);
+        });
+    }
 
-            UsersTransaction(usersContext =>
+    [Test]
+    public void ShouldNotGetClaimSetsFromOtherApplications()
+    {
+        SetupApplicationClaimSets("OtherApplication");
+        SetupApplicationClaimSets("YetAnotherApplication");
+
+        var testClaimSets = SetupApplicationClaimSets();
+
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
+        {
+            var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
+            var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
+
+            results.Length.ShouldBe(testClaimSets.Count);
+            results.Select(x => x.Name).ShouldBe(testClaimSets.Select(x => x.ClaimSetName), true);
+        });
+    }
+
+    [Test]
+    public void ShouldGetTheClaimSetsWithTheExpectedIsEditableValue()
+    {
+        var testClaimSets = SetupApplicationClaimSets();
+        var testApplication = testClaimSets.First().Application;
+
+        Save(new ClaimSet
+        {
+            ClaimSetName = "SIS Vendor",
+            Application = testApplication
+        });
+
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
+        {
+            var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
+            var results = query.Execute(testApplication.ApplicationName).ToArray();
+
+            results.Count(x => x.IsEditable).ShouldBe(testClaimSets.Count);
+            results.Single(x => !x.IsEditable).Name.ShouldBe("SIS Vendor");
+            results.Count(x => !x.IsEditable).ShouldBe(1);
+        });
+    }
+
+    [TestCase(1)]
+    [TestCase(3)]
+    [TestCase(5)]
+    public void ShouldGetTheCorrectApplicationCount(int applicationCount)
+    {
+        SetupApplicationClaimSets("OtherApplication");
+
+        var testClaimSets = SetupApplicationClaimSets();
+
+        UsersTransaction(usersContext =>
+        {
+            foreach (var claimSet in testClaimSets)
             {
-                foreach (var claimSet in testClaimSets)
+                foreach (var _ in Enumerable.Range(1, applicationCount))
                 {
-                    foreach (var _ in Enumerable.Range(1, applicationCount))
+                    usersContext.Applications.Add(new VendorApplication
                     {
-                        usersContext.Applications.Add(new VendorApplication
-                        {
-                            ApplicationName = $"TestAppVendorName{Guid.NewGuid():N}",
-                            ClaimSetName = claimSet.ClaimSetName,
-                            OperationalContextUri = OperationalContext.DefaultOperationalContextUri
-                        });
-                    }
+                        ApplicationName = $"TestAppVendorName{Guid.NewGuid():N}",
+                        ClaimSetName = claimSet.ClaimSetName,
+                        OperationalContextUri = OperationalContext.DefaultOperationalContextUri
+                    });
                 }
+            }
 
-                usersContext.SaveChanges();
-            });
+            usersContext.SaveChanges();
+        });
 
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
-                var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
-
-                results.Length.ShouldBe(testClaimSets.Count);
-                results.Select(x => x.Name).ShouldBe(testClaimSets.Select(x => x.ClaimSetName), true);
-                results.Select(x => x.ApplicationsCount).Distinct().Single().ShouldBe(applicationCount);
-            });
-        }
-
-        private IReadOnlyCollection<ClaimSet> SetupApplicationClaimSets(
-            string applicationName = "TestApplicationName", int claimSetCount = 5)
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
         {
-            var testApplication = new Application
+            var query = new GetClaimSetsByApplicationNameQueryV53Service(securityContext, usersContext);
+            var results = query.Execute(testClaimSets.First().Application.ApplicationName).ToArray();
+
+            results.Length.ShouldBe(testClaimSets.Count);
+            results.Select(x => x.Name).ShouldBe(testClaimSets.Select(x => x.ClaimSetName), true);
+            results.Select(x => x.ApplicationsCount).Distinct().Single().ShouldBe(applicationCount);
+        });
+    }
+
+    private IReadOnlyCollection<ClaimSet> SetupApplicationClaimSets(
+        string applicationName = "TestApplicationName", int claimSetCount = 5)
+    {
+        var testApplication = new Application
+        {
+            ApplicationName = applicationName
+        };
+
+        Save(testApplication);
+
+        var testClaimSetNames = Enumerable.Range(1, claimSetCount)
+            .Select(x => $"TestClaimSetName{Guid.NewGuid():N}")
+            .ToArray();
+
+        var testClaimSets = testClaimSetNames
+            .Select(x => new ClaimSet
             {
-                ApplicationName = applicationName
-            };
+                ClaimSetName = x,
+                Application = testApplication
+            })
+            .ToArray();
 
-            Save(testApplication);
+        Save(testClaimSets.Cast<object>().ToArray());
 
-            var testClaimSetNames = Enumerable.Range(1, claimSetCount)
-                .Select(x => $"TestClaimSetName{Guid.NewGuid():N}")
-                .ToArray();
-
-            var testClaimSets = testClaimSetNames
-                .Select(x => new ClaimSet
-                {
-                    ClaimSetName = x,
-                    Application = testApplication
-                })
-                .ToArray();
-
-            Save(testClaimSets.Cast<object>().ToArray());
-
-            return testClaimSets;
-        }
+        return testClaimSets;
     }
 }

@@ -10,64 +10,63 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 
-namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests
+namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
+
+[TestFixture]
+public class GetAuthStrategiesByApplicationNameQueryTests : SecurityDataTestBase
 {
-    [TestFixture]
-    public class GetAuthStrategiesByApplicationNameQueryTests : SecurityDataTestBase
+    [Test]
+    public void ShouldGetAllTheAuthorizationStrategiesFromAnApplication()
     {
-        [Test]
-        public void ShouldGetAllTheAuthorizationStrategiesFromAnApplication()
+        var testApplication = new Application
         {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplicationName"
-            };
-            Save(testApplication);
+            ApplicationName = "TestApplicationName"
+        };
+        Save(testApplication);
 
-            var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
+        var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            using var securityContext = TestContext;
-            var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
-            var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
+        using var securityContext = TestContext;
+        var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
+        var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
 
-            results.Length.ShouldBe(authStrategies.Count);
-            results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
+        results.Length.ShouldBe(authStrategies.Count);
+        results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
 
-        }
+    }
 
-        [Test]
-        public void ShouldNotGetAuthStrategiesFromOtherApplications()
+    [Test]
+    public void ShouldNotGetAuthStrategiesFromOtherApplications()
+    {
+        var otherApplication = new Application
         {
-            var otherApplication = new Application
-            {
-                ApplicationName = "OtherApplication"
-            };
-            Save(otherApplication);
+            ApplicationName = "OtherApplication"
+        };
+        Save(otherApplication);
 
-            var yetAnotherApplication = new Application
-            {
-                ApplicationName = "YetAnotherApplication"
-            };
-            Save(yetAnotherApplication);
+        var yetAnotherApplication = new Application
+        {
+            ApplicationName = "YetAnotherApplication"
+        };
+        Save(yetAnotherApplication);
 
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplicationName"
-            };
-            Save(testApplication);
+        var testApplication = new Application
+        {
+            ApplicationName = "TestApplicationName"
+        };
+        Save(testApplication);
 
-            SetupApplicationAuthorizationStrategies(otherApplication);
-            SetupApplicationAuthorizationStrategies(yetAnotherApplication);
+        SetupApplicationAuthorizationStrategies(otherApplication);
+        SetupApplicationAuthorizationStrategies(yetAnotherApplication);
 
-            var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
+        var authStrategies = SetupApplicationAuthorizationStrategies(testApplication);
 
-            using var securityContext = TestContext;
+        using var securityContext = TestContext;
 
-            var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
-            var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
+        var query = new GetAuthStrategiesByApplicationNameQuery(securityContext);
+        var results = query.Execute(authStrategies.First().Application.ApplicationName).ToArray();
 
-            results.Length.ShouldBe(authStrategies.Count);
-            results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
-        }
+        results.Length.ShouldBe(authStrategies.Count);
+        results.Select(x => x.AuthStrategyName).ShouldBe(authStrategies.Select(x => x.AuthorizationStrategyName), true);
     }
 }

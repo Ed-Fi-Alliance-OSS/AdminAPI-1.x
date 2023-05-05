@@ -10,51 +10,50 @@ using NUnit.Framework;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
 
-namespace EdFi.Ods.Admin.Api.DBTests.Database.QueryTests
+namespace EdFi.Ods.Admin.Api.DBTests.Database.QueryTests;
+
+[TestFixture]
+public class GetChildResourceClaimsForParentQueryTests : SecurityDataTestBase
 {
-    [TestFixture]
-    public class GetChildResourceClaimsForParentQueryTests : SecurityDataTestBase
+    [Test]
+    public void ShouldGetResourceClaims()
     {
-        [Test]
-        public void ShouldGetResourceClaims()
+        var testApplication = new Application
         {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplicationName"
-            };
+            ApplicationName = "TestApplicationName"
+        };
 
-            Save(testApplication);
+        Save(testApplication);
 
-            var parentRcs = UniqueNameList("Parent", 2);
+        var parentRcs = UniqueNameList("Parent", 2);
 
-            var childRcs = UniqueNameList("Child", 1);
+        var childRcs = UniqueNameList("Child", 1);
 
-            var testResourceClaims = SetupResourceClaims(testApplication, parentRcs, childRcs);
+        var testResourceClaims = SetupResourceClaims(testApplication, parentRcs, childRcs);
 
-            var testParentResource = testResourceClaims.Single(x => x.ResourceName == parentRcs.First());
+        var testParentResource = testResourceClaims.Single(x => x.ResourceName == parentRcs.First());
 
-            ResourceClaim[] results = null;
-            Transaction(securityContext =>
-            {
-                var query = new GetChildResourceClaimsForParentQuery(securityContext);
+        ResourceClaim[] results = null;
+        Transaction(securityContext =>
+        {
+            var query = new GetChildResourceClaimsForParentQuery(securityContext);
 
-                results = query.Execute(testParentResource.ResourceClaimId).ToArray();
-            });
+            results = query.Execute(testParentResource.ResourceClaimId).ToArray();
+        });
 
-            Transaction(securityContext =>
-            {
-                var testChildResourceClaims = securityContext.ResourceClaims.Where(x =>
-                    x.ParentResourceClaimId == testParentResource.ResourceClaimId);
+        Transaction(securityContext =>
+        {
+            var testChildResourceClaims = securityContext.ResourceClaims.Where(x =>
+                x.ParentResourceClaimId == testParentResource.ResourceClaimId);
 
-                results.Length.ShouldBe(testChildResourceClaims.Count());
-                results.Select(x => x.Name).ShouldBe(testChildResourceClaims.Select(x => x.ResourceName), true);
-                results.Select(x => x.Id).ShouldBe(testChildResourceClaims.Select(x => x.ResourceClaimId), true);
-                results.All(x => x.Create == false).ShouldBe(true);
-                results.All(x => x.Delete == false).ShouldBe(true);
-                results.All(x => x.Update == false).ShouldBe(true);
-                results.All(x => x.Read == false).ShouldBe(true);
-                results.All(x => x.ParentId.Equals(testParentResource.ResourceClaimId)).ShouldBe(true);
-            });
-        }
+            results.Length.ShouldBe(testChildResourceClaims.Count());
+            results.Select(x => x.Name).ShouldBe(testChildResourceClaims.Select(x => x.ResourceName), true);
+            results.Select(x => x.Id).ShouldBe(testChildResourceClaims.Select(x => x.ResourceClaimId), true);
+            results.All(x => x.Create == false).ShouldBe(true);
+            results.All(x => x.Delete == false).ShouldBe(true);
+            results.All(x => x.Update == false).ShouldBe(true);
+            results.All(x => x.Read == false).ShouldBe(true);
+            results.All(x => x.ParentId.Equals(testParentResource.ResourceClaimId)).ShouldBe(true);
+        });
     }
 }

@@ -11,31 +11,30 @@ using Shouldly;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 
-namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests
+namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
+
+[TestFixture]
+public class AddClaimSetCommandV53ServiceTests : SecurityData53TestBase
 {
-    [TestFixture]
-    public class AddClaimSetCommandV53ServiceTests : SecurityData53TestBase
+    [Test]
+    public void ShouldAddClaimSet()
     {
-        [Test]
-        public void ShouldAddClaimSet()
+        var testApplication = new Application
         {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
 
-            var newClaimSet = new AddClaimSetModel {ClaimSetName = "TestClaimSet"};
+        var newClaimSet = new AddClaimSetModel {ClaimSetName = "TestClaimSet"};
 
-            var addedClaimSetId = 0;
-            ClaimSet addedClaimSet = null;
-            using (var context = base.TestContext)
-            {
-                var command = new AddClaimSetCommandV53Service(context);
-                addedClaimSetId = command.Execute(newClaimSet);
-                addedClaimSet = context.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
-            }
-            addedClaimSet.ClaimSetName.ShouldBe(newClaimSet.ClaimSetName);
+        var addedClaimSetId = 0;
+        ClaimSet addedClaimSet = null;
+        using (var context = base.TestContext)
+        {
+            var command = new AddClaimSetCommandV53Service(context);
+            addedClaimSetId = command.Execute(newClaimSet);
+            addedClaimSet = context.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
         }
+        addedClaimSet.ClaimSetName.ShouldBe(newClaimSet.ClaimSetName);
     }
 }

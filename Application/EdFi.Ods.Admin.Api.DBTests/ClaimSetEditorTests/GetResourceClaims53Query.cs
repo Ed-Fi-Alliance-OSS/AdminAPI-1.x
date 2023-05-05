@@ -4,6 +4,8 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Management.Database.Queries;
 
+namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
+
 public class GetResourceClaims53Query : IGetResourceClaimsQuery
 {
     private readonly ISecurityContext _securityContext;

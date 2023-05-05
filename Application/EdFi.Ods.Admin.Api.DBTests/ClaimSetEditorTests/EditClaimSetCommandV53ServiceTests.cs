@@ -16,123 +16,122 @@ using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
 using EdFi.Ods.AdminApp.Management;
 
-namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests
+namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
+
+[TestFixture]
+public class EditClaimSetCommandV53ServiceTests : SecurityData53TestBase
 {
-    [TestFixture]
-    public class EditClaimSetCommandV53ServiceTests : SecurityData53TestBase
+    [Test]
+    public void ShouldEditClaimSet()
     {
-        [Test]
-        public void ShouldEditClaimSet()
+        var testApplication = new Application
         {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
 
-            var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
-            Save(alreadyExistingClaimSet);
+        var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        Save(alreadyExistingClaimSet);
 
-            var editModel = new EditClaimSetModel {ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId};
+        var editModel = new EditClaimSetModel {ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId};
 
-            using var securityContext = TestContext;
-            UsersTransaction((usersContext) =>
-            {
-                var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
-                command.Execute(editModel);
-            });
-
-            var editedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == alreadyExistingClaimSet.ClaimSetId);
-            editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
-        }
-
-        [Test]
-        public void ShouldThrowExceptionOnEditSystemReservedClaimSet()
+        using var securityContext = TestContext;
+        UsersTransaction((usersContext) =>
         {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
+            var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
+            command.Execute(editModel);
+        });
 
-            var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", Application = testApplication };
-            Save(systemReservedClaimSet);
+        var editedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == alreadyExistingClaimSet.ClaimSetId);
+        editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
+    }
 
-            var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };
-
-            using var securityContext = TestContext;
-            var exception = Assert.Throws<AdminAppException>(() => UsersTransaction(usersContext =>
-            {
-                var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
-                command.Execute(editModel);
-            }));
-            exception.ShouldNotBeNull();
-            exception.Message.ShouldBe($"Claim set ({systemReservedClaimSet.ClaimSetName}) is system reserved.May not be modified.");
-        }
-
-        [Test]
-        public void ShouldEditClaimSetWithVendorApplications()
+    [Test]
+    public void ShouldThrowExceptionOnEditSystemReservedClaimSet()
+    {
+        var testApplication = new Application
         {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
 
-            var claimSetToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}", Application = testApplication };
-            Save(claimSetToBeEdited);
-            SetupVendorApplicationsForClaimSet(claimSetToBeEdited);
+        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", Application = testApplication };
+        Save(systemReservedClaimSet);
 
-            var claimSetNotToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}", Application = testApplication };
-            Save(claimSetNotToBeEdited);
-            SetupVendorApplicationsForClaimSet(claimSetNotToBeEdited);
+        var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };
 
-            var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = claimSetToBeEdited.ClaimSetId };
-
-            using var securityContext = TestContext;
-            UsersTransaction(usersContext =>
-            {
-                var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
-                command.Execute(editModel);
-            });
-
-            var editedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetToBeEdited.ClaimSetId);
-            editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
-            AssertApplicationsForClaimSet(claimSetToBeEdited.ClaimSetId, editModel.ClaimSetName, securityContext);
-
-
-            var unEditedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetNotToBeEdited.ClaimSetId);
-            unEditedClaimSet.ClaimSetName.ShouldBe(claimSetNotToBeEdited.ClaimSetName);
-            AssertApplicationsForClaimSet(claimSetNotToBeEdited.ClaimSetId, claimSetNotToBeEdited.ClaimSetName, securityContext);
-        }
-
-        private void SetupVendorApplicationsForClaimSet(ClaimSet testClaimSet, int applicationCount = 5)
+        using var securityContext = TestContext;
+        var exception = Assert.Throws<AdminAppException>(() => UsersTransaction(usersContext =>
         {
-            UsersTransaction(usersContext =>
+            var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
+            command.Execute(editModel);
+        }));
+        exception.ShouldNotBeNull();
+        exception.Message.ShouldBe($"Claim set ({systemReservedClaimSet.ClaimSetName}) is system reserved.May not be modified.");
+    }
+
+    [Test]
+    public void ShouldEditClaimSetWithVendorApplications()
+    {
+        var testApplication = new Application
+        {
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
+
+        var claimSetToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}", Application = testApplication };
+        Save(claimSetToBeEdited);
+        SetupVendorApplicationsForClaimSet(claimSetToBeEdited);
+
+        var claimSetNotToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}", Application = testApplication };
+        Save(claimSetNotToBeEdited);
+        SetupVendorApplicationsForClaimSet(claimSetNotToBeEdited);
+
+        var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = claimSetToBeEdited.ClaimSetId };
+
+        using var securityContext = TestContext;
+        UsersTransaction(usersContext =>
+        {
+            var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
+            command.Execute(editModel);
+        });
+
+        var editedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetToBeEdited.ClaimSetId);
+        editedClaimSet.ClaimSetName.ShouldBe(editModel.ClaimSetName);
+        AssertApplicationsForClaimSet(claimSetToBeEdited.ClaimSetId, editModel.ClaimSetName, securityContext);
+
+
+        var unEditedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSetNotToBeEdited.ClaimSetId);
+        unEditedClaimSet.ClaimSetName.ShouldBe(claimSetNotToBeEdited.ClaimSetName);
+        AssertApplicationsForClaimSet(claimSetNotToBeEdited.ClaimSetId, claimSetNotToBeEdited.ClaimSetName, securityContext);
+    }
+
+    private void SetupVendorApplicationsForClaimSet(ClaimSet testClaimSet, int applicationCount = 5)
+    {
+        UsersTransaction(usersContext =>
+        {
+            foreach (var _ in Enumerable.Range(1, applicationCount))
             {
-                foreach (var _ in Enumerable.Range(1, applicationCount))
+                usersContext.Applications.Add(new VendorApplication
                 {
-                    usersContext.Applications.Add(new VendorApplication
-                    {
-                        ApplicationName = $"TestAppVendorName{Guid.NewGuid():N}",
-                        ClaimSetName = testClaimSet.ClaimSetName,
-                        OperationalContextUri = OperationalContext.DefaultOperationalContextUri
-                    });
-                }
-                usersContext.SaveChanges();
-            });
-        }
-
-        private void AssertApplicationsForClaimSet(int claimSetId, string claimSetNameToAssert, ISecurityContext securityContext)
-        {
-            UsersTransaction(
-                usersContext =>
-                {
-                    var results = new GetApplicationsByClaimSetId53Query(securityContext, usersContext).Execute(claimSetId);
-                    var testApplications = usersContext.Applications.Where(x => x.ClaimSetName == claimSetNameToAssert).ToList();
-                    results.Count().ShouldBe(testApplications.Count());
-                    results.Select(x => x.Name).ShouldBe(testApplications.Select(x => x.ApplicationName), true);
+                    ApplicationName = $"TestAppVendorName{Guid.NewGuid():N}",
+                    ClaimSetName = testClaimSet.ClaimSetName,
+                    OperationalContextUri = OperationalContext.DefaultOperationalContextUri
                 });
-        }
+            }
+            usersContext.SaveChanges();
+        });
+    }
+
+    private void AssertApplicationsForClaimSet(int claimSetId, string claimSetNameToAssert, ISecurityContext securityContext)
+    {
+        UsersTransaction(
+            usersContext =>
+            {
+                var results = new GetApplicationsByClaimSetId53Query(securityContext, usersContext).Execute(claimSetId);
+                var testApplications = usersContext.Applications.Where(x => x.ClaimSetName == claimSetNameToAssert).ToList();
+                results.Count().ShouldBe(testApplications.Count);
+                results.Select(x => x.Name).ShouldBe(testApplications.Select(x => x.ApplicationName), true);
+            });
     }
 }

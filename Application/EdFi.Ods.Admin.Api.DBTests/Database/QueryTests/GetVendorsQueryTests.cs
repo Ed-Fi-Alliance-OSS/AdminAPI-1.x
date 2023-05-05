@@ -10,84 +10,83 @@ using Shouldly;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 
-namespace EdFi.Ods.Admin.Api.DBTests.Database.QueryTests
+namespace EdFi.Ods.Admin.Api.DBTests.Database.QueryTests;
+
+[TestFixture]
+public class GetVendorsQueryTests : PlatformUsersContextTestBase
 {
-    [TestFixture]
-    public class GetVendorsQueryTests : PlatformUsersContextTestBase
+    [Test]
+    public void Should_retrieve_vendors()
     {
-        [Test]
-        public void Should_retrieve_vendors()
+        var newVendor = new Vendor
         {
-            var newVendor = new Vendor
+            VendorName = "test vendor",
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } },
+        };
+
+        Save(newVendor);
+
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+            var allVendors = command.Execute();
+
+            allVendors.ShouldNotBeEmpty();
+
+            var vendor = allVendors.Single(v => v.VendorId == newVendor.VendorId);
+            vendor.VendorName.ShouldBe("test vendor");
+            vendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("http://testvendor.net");
+        });
+    }
+
+    [Test]
+    public void Should_retrieve_vendors_with_offset_and_limit()
+    {
+        var vendors = new Vendor[5];
+
+        for (var vendorIndex = 0; vendorIndex < 5; vendorIndex++)
+        {
+            vendors[vendorIndex] = new Vendor
             {
-                VendorName = "test vendor",
-                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } },
+                VendorName = $"test vendor {vendorIndex+1}",
+                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } }
             };
-
-            Save(newVendor);
-
-            Transaction(usersContext =>
-            {
-                var command = new GetVendorsQuery(usersContext);
-                var allVendors = command.Execute();
-
-                allVendors.ShouldNotBeEmpty();
-
-                var vendor = allVendors.Single(v => v.VendorId == newVendor.VendorId);
-                vendor.VendorName.ShouldBe("test vendor");
-                vendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("http://testvendor.net");
-            });
         }
 
-        [Test]
-        public void Should_retrieve_vendors_with_offset_and_limit()
+        Save(vendors);
+
+        Transaction(usersContext =>
         {
-            var vendors = new Vendor[5];
+            var command = new GetVendorsQuery(usersContext);
 
-            for (var vendorIndex = 0; vendorIndex < 5; vendorIndex++)
-            {
-                vendors[vendorIndex] = new Vendor
-                {
-                    VendorName = $"test vendor {vendorIndex+1}",
-                    VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } }
-                };
-            }
+            var offset = 0;
+            var limit = 2;
 
-            Save(vendors);
+            var vendorsAfterOffset = command.Execute(offset, limit);
 
-            Transaction(usersContext =>
-            {
-                var command = new GetVendorsQuery(usersContext);
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(2);
 
-                var offset = 0;
-                var limit = 2;
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 1");
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
 
-                var vendorsAfterOffset = command.Execute(offset, limit);
+            offset = 2;
 
-                vendorsAfterOffset.ShouldNotBeEmpty();
-                vendorsAfterOffset.Count.ShouldBe(2);
+            vendorsAfterOffset = command.Execute(offset, limit);
 
-                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 1");
-                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(2);
 
-                offset = 2;
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 3");
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 4");
+            offset = 4;
 
-                vendorsAfterOffset = command.Execute(offset, limit);
+            vendorsAfterOffset = command.Execute(offset, limit);
 
-                vendorsAfterOffset.ShouldNotBeEmpty();
-                vendorsAfterOffset.Count.ShouldBe(2);
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
 
-                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 3");
-                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 4");
-                offset = 4;
-
-                vendorsAfterOffset = command.Execute(offset, limit);
-
-                vendorsAfterOffset.ShouldNotBeEmpty();
-                vendorsAfterOffset.Count.ShouldBe(1);
-
-                vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 5");
-            });
-        }
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 5");
+        });
     }
 }

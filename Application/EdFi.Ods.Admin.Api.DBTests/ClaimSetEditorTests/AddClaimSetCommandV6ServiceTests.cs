@@ -11,33 +11,32 @@ using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using Application = EdFi.Security.DataAccess.Models.Application;
 
-namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests
+namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
+
+[TestFixture]
+public class AddClaimSetCommandV6ServiceTests : SecurityDataTestBase
 {
-    [TestFixture]
-    public class AddClaimSetCommandV6ServiceTests : SecurityDataTestBase
+    [Test]
+    public void ShouldAddClaimSet()
     {
-        [Test]
-        public void ShouldAddClaimSet()
+        var testApplication = new Application
         {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(testApplication);
 
-            var newClaimSet = new AddClaimSetModel { ClaimSetName = "TestClaimSet" };
+        var newClaimSet = new AddClaimSetModel { ClaimSetName = "TestClaimSet" };
 
-            var addedClaimSetId = 0;
-            ClaimSet addedClaimSet = null;
-            using (var securityContext = TestContext)
-            {
-                var command = new AddClaimSetCommandV6Service(securityContext);
-                addedClaimSetId = command.Execute(newClaimSet);
-                addedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
-            }
-            addedClaimSet.ClaimSetName.ShouldBe(newClaimSet.ClaimSetName);
-            addedClaimSet.ForApplicationUseOnly.ShouldBe(false);
-            addedClaimSet.IsEdfiPreset.ShouldBe(false);
+        var addedClaimSetId = 0;
+        ClaimSet addedClaimSet = null;
+        using (var securityContext = TestContext)
+        {
+            var command = new AddClaimSetCommandV6Service(securityContext);
+            addedClaimSetId = command.Execute(newClaimSet);
+            addedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
         }
+        addedClaimSet.ClaimSetName.ShouldBe(newClaimSet.ClaimSetName);
+        addedClaimSet.ForApplicationUseOnly.ShouldBe(false);
+        addedClaimSet.IsEdfiPreset.ShouldBe(false);
     }
 }

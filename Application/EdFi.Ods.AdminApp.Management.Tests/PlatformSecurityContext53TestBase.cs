@@ -3,7 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using NUnit.Framework;
 using Respawn;
@@ -91,6 +93,48 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
 
             TestContext.SaveChanges();
+        }
+
+        protected void UsersTransaction(Action<IUsersContext> action)
+        {
+            using var usersContext = new SqlServerUsersContext(Testing.AdminConnectionString);
+            using var transaction = usersContext.Database.BeginTransaction();
+            action(usersContext);
+            TestContext.SaveChanges();
+            transaction.Commit();
+        }
+
+        protected TResult UsersTransaction<TResult>(Func<IUsersContext, TResult> query)
+        {
+            var result = default(TResult);
+
+            UsersTransaction(database =>
+            {
+                result = query(database);
+            });
+
+            return result;
+        }
+
+        protected void Transaction(Action<ISecurityContext> action)
+        {
+            using var usersContext = new SqlServerSecurityContext(Testing.SecurityV53ConnectionString);
+            using var usersTransaction = usersContext.Database.BeginTransaction();
+            action(usersContext);
+            TestContext.SaveChanges();
+            usersTransaction.Commit();
+        }
+
+        protected TResult Transaction<TResult>(Func<ISecurityContext, TResult> query)
+        {
+            var result = default(TResult);
+
+            Transaction((usersContext) =>
+            {
+                result = query(usersContext);
+            });
+
+            return result;
         }
     }
 }

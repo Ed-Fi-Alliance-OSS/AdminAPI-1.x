@@ -7,11 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.SecurityCompatiblity53.DataAccess.Models;
 using NUnit.Framework;
-
 using Action = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
 using ClaimSetEditorTypes = EdFi.Ods.AdminApp.Management.ClaimSetEditor;
@@ -21,13 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
     {
-        protected override string ConnectionString
-        {
-            get
-            {
-                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test_v53;Integrated Security=True";
-            }
-        }
+        protected override string ConnectionString => Testing.SecurityV53ConnectionString;
 
         protected override SqlServerSecurityContext CreateDbContext()
         {
@@ -286,7 +279,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return resourceClaimWithDefaultAuthStrategies;
         }
 
-        private IMapper Mapper() => new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>()).CreateMapper();
+        private static IMapper Mapper() => new MapperConfiguration(cfg => cfg.AddProfile<AdminApiMappingProfile>()).CreateMapper();
 
         protected List<ClaimSetEditorTypes.ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
         {

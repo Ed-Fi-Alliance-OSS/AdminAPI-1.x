@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -20,13 +20,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
     [TestFixture]
     public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     {
-        protected override string ConnectionString
-        {
-            get
-            {
-                return "Data Source=.\\;Initial Catalog=EdFi_Security_Test;Integrated Security=True;";
-            }
-        }
+        protected override string ConnectionString => Testing.SecurityConnectionString;
 
         protected override SqlServerSecurityContext CreateDbContext()
         {
@@ -312,7 +306,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return resourceClaimWithDefaultAuthStrategies;
         }
 
-        private IMapper Mapper() => new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>()).CreateMapper();
+        protected static IMapper Mapper() => new MapperConfiguration(cfg => cfg.AddProfile<AdminApiMappingProfile>()).CreateMapper();
 
         protected List<ClaimSetEditorTypes.ResourceClaim> ResourceClaimsForClaimSet(int securityContextClaimSetId)
         {

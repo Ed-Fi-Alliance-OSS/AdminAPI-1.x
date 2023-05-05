@@ -68,7 +68,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
             public IEnumerable<int>? EducationOrganizationIds { get; set; }
         }
 
-        public class Validator : AbstractValidator<Request>
+        public class Validator : AbstractValidator<IEditApplicationModel>
         {
             public Validator()
             {
@@ -89,7 +89,7 @@ namespace EdFi.Ods.Admin.Api.Features.Applications
                 RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
             }
 
-            private bool BeWithinApplicationNameMaxLength<T>(Request model, string? applicationName, ValidationContext<T> context)
+            private bool BeWithinApplicationNameMaxLength<T>(IEditApplicationModel model, string? applicationName, ValidationContext<T> context)
             {
                 var extraCharactersInName = applicationName!.Length - ValidationConstants.MaximumApplicationNameLength;
                 if (extraCharactersInName <= 0)

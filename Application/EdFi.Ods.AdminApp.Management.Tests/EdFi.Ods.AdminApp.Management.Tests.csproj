@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\EdFi.Ods.Admin.Api\EdFi.Ods.Admin.Api.csproj" />
         <ProjectReference Include="..\EdFi.Ods.AdminApp.Management\EdFi.Ods.AdminApp.Management.csproj" />
         <ProjectReference Include="..\EdFi.Ods.AdminApp.Web\EdFi.Ods.AdminApp.Web.csproj" />
     </ItemGroup>
@@ -31,5 +32,4 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
-
 </Project>

@@ -9,7 +9,6 @@ using System.IO.Compression;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
@@ -22,17 +21,24 @@ namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public class SecurityTestDatabaseSetup
     {
+        private static SqlConnectionStringBuilder ConnectionStringBuilder
+        {
+            get
+            {
+                return new SqlConnectionStringBuilder() { ConnectionString = Testing.SecurityV53ConnectionString };
+            }
+        }
+
         public void EnsureSecurityDatabase(string downloadPath,
             string version = "5.3.1146",
             string nugetSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
-            string packageName = "EdFi.Suite3.RestApi.Databases",
-            string databaseName= "EdFi_Security_Test_v53")
+            string packageName = "EdFi.Suite3.RestApi.Databases")
         {
-            if (!CheckSecurityDbExists(databaseName))
+            if (!CheckSecurityDbExists())
             {
                 var task = Task.Run(async () => await DownloadDbPackage(packageName, version, nugetSource, downloadPath));
                 var scriptsPath = task.GetAwaiter().GetResult();
-                ExecuteSqlScripts(databaseName, scriptsPath);
+                ExecuteSqlScripts(scriptsPath);
             }
         }
 
@@ -75,17 +81,21 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             return packageContentDir;
         }
 
-        private void ExecuteSqlScripts(string dbName, string scriptsPath, string serverName = "(local)")
+        private static SqlConnectionStringBuilder MasterConnection
         {
-            var connectionStringBuilder = new SqlConnectionStringBuilder
+            get
             {
-                DataSource = serverName,
-                InitialCatalog = "master",
-                Encrypt = false,
-                IntegratedSecurity = true
-            };
+                var csb = new SqlConnectionStringBuilder
+                {
+                    ConnectionString = ConnectionStringBuilder.ConnectionString, InitialCatalog = "master"
+                };
+                return csb;
+            }
+        }
 
-            using (var connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+        private void ExecuteSqlScripts(string scriptsPath)
+        {
+            using (var connection = new SqlConnection(MasterConnection.ConnectionString))
             {
                 connection.Open();
                 try
@@ -94,7 +104,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                                 EXEC('CREATE DATABASE ' + @database + '')";
                     using var command = new SqlCommand(sql, connection);
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@databaseName", dbName);
+                    command.Parameters.AddWithValue("@databaseName", ConnectionStringBuilder.InitialCatalog);
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -102,8 +112,8 @@ namespace EdFi.Ods.AdminApp.Management.Tests
                     throw new Exception(ex.Message);
                 }
             }
-            connectionStringBuilder.InitialCatalog = dbName;
-            using var conn = new SqlConnection(connectionStringBuilder.ConnectionString);
+            
+            using var conn = new SqlConnection(ConnectionStringBuilder.ConnectionString);
             var server = new Server(new ServerConnection(conn));
             var scriptFilesPath = Path.Combine(scriptsPath, @"Ed-Fi-ODS\Artifacts\MsSql\Structure\Security");
 
@@ -114,20 +124,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             }
         }
 
-        private bool CheckSecurityDbExists(string dbName, string serverName = "(local)")
+        private bool CheckSecurityDbExists()
         {
-            var masterConnectionStringBuilder = new SqlConnectionStringBuilder
-            {
-                DataSource = serverName,
-                InitialCatalog = "master",
-                Encrypt = false,
-                IntegratedSecurity = true
-            };
-
             try
             {
-                var sqlCreateDBQuery = $"SELECT database_id FROM sys.databases WHERE Name = '{dbName}'";
-                using var connection = new SqlConnection(masterConnectionStringBuilder.ConnectionString);
+                var sqlCreateDBQuery = $"SELECT database_id FROM sys.databases WHERE Name = '{ConnectionStringBuilder.InitialCatalog}'";
+                using var connection = new SqlConnection(MasterConnection.ConnectionString);
                 using var sqlCmd = new SqlCommand(sqlCreateDBQuery, connection);
                 connection.Open();
                 var result = sqlCmd.ExecuteScalar();
@@ -141,7 +143,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests
             catch
             {
                 return false;
-            } 
+            }
         }
     }
 }

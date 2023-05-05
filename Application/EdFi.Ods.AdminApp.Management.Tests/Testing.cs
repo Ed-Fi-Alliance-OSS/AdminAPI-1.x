@@ -1,65 +1,44 @@
-using System;
-using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Web;
-using EdFi.Ods.AdminApp.Web.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
+// SPDX-License-Identifier: Apache-2.0
+// Licensed to the Ed-Fi Alliance under one or more agreements.
+// The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+// See the LICENSE and NOTICES files in the project root for more information.
+
+using EdFi.Admin.DataAccess.DbConfigurations;
+using Microsoft.Extensions.Configuration;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApp.Management.Tests
 {
     public static class Testing
     {
-        public static readonly IServiceScopeFactory ScopeFactory;
-
-        static Testing()
-        {
-            var serviceProvider = Program.CreateHostBuilder(new string[] { })
-                .ConfigureServices((context, services) =>
-                {
-                    // Test-specific IoC modifications here.
-                    services.AddTransient<ITelemetry, StubTelemetry>();
-                })
-                .Build()
-                .Services;
-
-            ScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-        }
-
         public static void EnsureInitialized()
         {
+            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
+
             var dbSetup = new SecurityTestDatabaseSetup();
             dbSetup.EnsureSecurityDatabase(@"C:\\temp");
-            ScopeFactory.ShouldNotBeNull();
+            //ScopeFactory.ShouldNotBeNull();
         }
 
-        public static void Scoped<TService>(Action<TService> action)
-        {
-            using (var scope = ScopeFactory.CreateScope())
-                action(scope.ServiceProvider.GetRequiredService<TService>());
-        }
+        private static IConfigurationRoot _config;
 
-        public static TResult Scoped<TService, TResult>(Func<TService, TResult> func)
+        public static IConfiguration Configuration()
         {
-            var result = default(TResult);
-
-            Scoped<TService>(service =>
+            if (_config == null)
             {
-                result = func(service);
-            });
+                _config = new ConfigurationBuilder()
+                   .AddJsonFile("appsettings.json")
+                    .AddEnvironmentVariables()
+                    .Build();
 
-            return result;
+            }
+            return _config;
         }
 
-        public static async Task ScopedAsync<TService>(Func<TService, Task> actionAsync)
-        {
-            using (var scope = ScopeFactory.CreateScope())
-                await actionAsync(scope.ServiceProvider.GetRequiredService<TService>());
-        }
+        public static string AdminConnectionString { get { return Configuration().GetConnectionString("Admin"); } }
 
-        public static async Task<TResult> ScopedAsync<TService, TResult>(Func<TService, Task<TResult>> actionAsync)
-        {
-            using (var scope = ScopeFactory.CreateScope())
-                return await actionAsync(scope.ServiceProvider.GetRequiredService<TService>());
-        }
+        public static string SecurityConnectionString { get { return Configuration().GetConnectionString("Security"); } }
+
+        public static string SecurityV53ConnectionString { get { return Configuration().GetConnectionString("SecurityV53"); } }
     }
 }

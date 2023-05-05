@@ -6,13 +6,11 @@
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
 using Shouldly;
 using AutoMapper;
-
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using EdFi.Ods.AdminApp.Management.Api.Automapper;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 {
@@ -24,7 +22,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
         [SetUp]
         public void Init()
         {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminManagementMappingProfile>());
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AdminApiMappingProfile>());
             _mapper = config.CreateMapper();
         }
 
@@ -51,7 +49,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             var testResource1ToEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim1");
             var testResource2ToNotEdit = testResourceClaims.Select(x => x.ResourceClaim).Single(x => x.ResourceName == "TestParentResourceClaim2");
 
-            var overrideModel = new OverrideDefaultAuthorizationStrategyModel
+            var overrideModel = new OverrideAuthorizationStrategyModel
             {
                 ResourceClaimId = testResource1ToEdit.ResourceClaimId,
                 ClaimSetId = testClaimSet.ClaimSetId,
@@ -63,7 +61,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             using var securityContext = TestContext;
             var command = new OverrideDefaultAuthorizationStrategyV53Service(securityContext);
-                command.Execute(overrideModel);
+            command.Execute(overrideModel);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
@@ -111,7 +109,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
                 x.ResourceName == "TestChildResourceClaim2" &&
                 x.ParentResourceClaimId == testParentResource.ResourceClaimId);
 
-            var overrideModel = new OverrideDefaultAuthorizationStrategyModel
+            var overrideModel = new OverrideAuthorizationStrategyModel
             {
                 ResourceClaimId = testChildResourceToEdit.ResourceClaimId,
                 ClaimSetId = testClaimSet.ClaimSetId,
@@ -123,7 +121,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
 
             using var securityContext = TestContext;
             var command = new OverrideDefaultAuthorizationStrategyV53Service(securityContext);
-                command.Execute(overrideModel);
+            command.Execute(overrideModel);
 
             var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
@@ -142,51 +140,6 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             resultResourceClaim2.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
             resultResourceClaim2.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
             resultResourceClaim2.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
-        }
-
-        [Test]
-        public void ShouldNotOverrideWhenResourceActionsDoNotExist()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplicationName"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet
-            {
-                ClaimSetName = "TestClaimSet",
-                Application = testApplication
-            };
-            Save(testClaimSet);
-
-            var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-            var testResourceClaims = SetupResourceClaims(testApplication);
-
-            var testResource1ToEdit = testResourceClaims.Single(x => x.ResourceName == "TestParentResourceClaim1");
-
-            using var securityContext = TestContext;
-            securityContext.ClaimSetResourceClaims
-                .Any(x => x.ResourceClaim.ResourceClaimId == testResource1ToEdit.ResourceClaimId && x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId)
-                .ShouldBe(false);
-
-            var invalidOverrideModel = new OverrideDefaultAuthorizationStrategyModel
-            {
-                ResourceClaimId = testResource1ToEdit.ResourceClaimId,
-                ClaimSetId = testClaimSet.ClaimSetId,
-                AuthorizationStrategyForCreate = appAuthorizationStrategies.Single(x => x.AuthorizationStrategyName == "TestAuthStrategy4").AuthorizationStrategyId,
-                AuthorizationStrategyForRead = appAuthorizationStrategies.Single(x => x.AuthorizationStrategyName == "TestAuthStrategy2").AuthorizationStrategyId,
-                AuthorizationStrategyForUpdate = appAuthorizationStrategies.Single(x => x.AuthorizationStrategyName == "TestAuthStrategy2").AuthorizationStrategyId,
-                AuthorizationStrategyForDelete = appAuthorizationStrategies.Single(x => x.AuthorizationStrategyName == "TestAuthStrategy2").AuthorizationStrategyId
-            };
-
-            var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                    new GetResourcesByClaimSetIdQueryV53Service(securityContext, _mapper), null);
-
-            var validator = new OverrideDefaultAuthorizationStrategyModelValidator(getResourcesByClaimSetIdQuery);
-            var validationResults = validator.Validate(invalidOverrideModel);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("No actions for this claimset and resource exist in the system");
         }
     }
 }

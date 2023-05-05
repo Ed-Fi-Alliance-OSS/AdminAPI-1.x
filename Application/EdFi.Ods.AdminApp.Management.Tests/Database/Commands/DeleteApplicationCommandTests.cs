@@ -25,7 +25,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             Save(application);
             var applicationId = application.ApplicationId;
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
                 deleteApplicationCommand.Execute(applicationId);
@@ -67,7 +67,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var tokenId = clientAccessToken.Id;
             tokenId.ShouldNotBe(Guid.Empty);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
                 deleteApplicationCommand.Execute(applicationId);
@@ -105,7 +105,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var organizationId = organization.ApplicationEducationOrganizationId;
             organizationId.ShouldBeGreaterThan(0);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
                 deleteApplicationCommand.Execute(applicationId);
@@ -130,7 +130,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             var profileId = profile.ProfileId;
             profileId.ShouldBeGreaterThan(0);
 
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var deleteApplicationCommand = new DeleteApplicationCommand(usersContext);
                 deleteApplicationCommand.Execute(applicationId);

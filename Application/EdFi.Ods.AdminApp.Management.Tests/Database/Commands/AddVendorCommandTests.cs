@@ -9,9 +9,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApp.Web.Helpers;
-using static EdFi.Ods.AdminApp.Management.Tests.Testing;
 
 namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
 {
@@ -28,7 +26,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendor.Setup(x => x.ContactEmailAddress).Returns("test@test.com");
 
             int id = 0;
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new AddVendorCommand(usersContext);
 
@@ -62,7 +60,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendor.Setup(x => x.ContactEmailAddress).Returns("test@test.com");
 
             int id = 0;
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new AddVendorCommand(usersContext);
 
@@ -93,7 +91,7 @@ namespace EdFi.Ods.AdminApp.Management.Tests.Database.Commands
             newVendor.Setup(x => x.ContactEmailAddress).Returns("test@test.com");
 
             int id = 0;
-            Scoped<IUsersContext>(usersContext =>
+            Transaction(usersContext =>
             {
                 var command = new AddVendorCommand(usersContext);
 

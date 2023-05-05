@@ -10,9 +10,6 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using EdFi.Ods.AdminApp.Management.ErrorHandling;
 using Moq;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Web.Models.ViewModels.ClaimSets;
-
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 
@@ -32,12 +29,12 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             Save(testApplication);
 
             var testClaimSetToDelete = new ClaimSet
-                {ClaimSetName = "TestClaimSet_Delete", Application = testApplication};
+            { ClaimSetName = "TestClaimSet_Delete", Application = testApplication };
             Save(testClaimSetToDelete);
             SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication);
 
             var testClaimSetToPreserve = new ClaimSet
-                {ClaimSetName = "TestClaimSet_Preserve", Application = testApplication};
+            { ClaimSetName = "TestClaimSet_Preserve", Application = testApplication };
             Save(testClaimSetToPreserve);
             var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication);
 
@@ -102,92 +99,5 @@ namespace EdFi.Ods.AdminApp.Management.Tests.ClaimSetEditor
             exception.ShouldNotBeNull();
             exception.Message.ShouldBe($"Claim set({systemReservedClaimSet.ClaimSetName}) is system reserved.Can not be deleted.");
         }
-
-
-        [Test]
-        public void ShouldNotDeleteClaimSetIfNotEditable()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplication1"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet {ClaimSetName = $"TestClaimSet{DateTime.Now:O}", Application = testApplication};
-            Save(testClaimSet);
-
-            var claimSetToDelete = new DeleteClaimSetModel()
-            {
-                Name = testClaimSet.ClaimSetName,
-                Id = testClaimSet.ClaimSetId,
-                IsEditable = false
-            };
-
-            using var securityContext = TestContext;
-            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-
-            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("Only user created claim sets can be deleted");
-        }
-
-        [Test]
-        public void ShouldNotDeleteClaimSetIfNotAnExistingId()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplication2"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet { ClaimSetName = $"TestClaimSet{DateTime.Now:O}", Application = testApplication };
-            Save(testClaimSet);
-
-            var claimSetToDelete = new DeleteClaimSetModel()
-            {
-                Name = testClaimSet.ClaimSetName,
-                Id = 99,
-                IsEditable = true
-            };
-
-            using var securityContext = TestContext;
-            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe("No such claim set exists in the database");
-        }
-
-        [Test]
-        public void ShouldNotDeleteClaimSetHasAnAssociatedApplication()
-        {
-            var testApplication = new Application
-            {
-                ApplicationName = "TestApplication3"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet { ClaimSetName = $"TestClaimSet{DateTime.Now:O}", Application = testApplication };
-            Save(testClaimSet);
-
-            var claimSetToDelete = new DeleteClaimSetModel()
-            {
-                Name = testClaimSet.ClaimSetName,
-                Id = testClaimSet.ClaimSetId,
-                IsEditable = true,
-                VendorApplicationCount = 1
-            };
-
-            using var securityContext = TestContext;
-            var getClaimSetByIdQuery = ClaimSetByIdQuery(securityContext);
-            var validator = new DeleteClaimSetModelValidator(getClaimSetByIdQuery);
-            var validationResults = validator.Validate(claimSetToDelete);
-            validationResults.IsValid.ShouldBe(false);
-            validationResults.Errors.Single().ErrorMessage.ShouldBe($"Cannot delete this claim set. This claim set has {claimSetToDelete.VendorApplicationCount} associated application(s).");
-        }
-
-        private GetClaimSetByIdQuery ClaimSetByIdQuery(ISecurityContext securityContext) => new GetClaimSetByIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
-                        new GetClaimSetByIdQueryV53Service(securityContext), null);
     }
 }

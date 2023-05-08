@@ -92,7 +92,7 @@ services:
     hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
     container_name: adminapi
     healthcheck:
-      test: $$ADMIN_API_HEALTHCHECK_TEST
+      test: ${ADMIN_API_HEALTHCHECK_TEST}
       start_period: "60s"
       retries: 3
 

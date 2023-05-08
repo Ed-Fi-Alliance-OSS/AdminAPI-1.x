@@ -15,22 +15,22 @@ services:
     ports:
       - "443:443"
       - "80:80"
-    container_name: ed-fi-adminapi-gateway
+    container_name: ed-fi-gateway-adminapi-packaged
     restart: always
     hostname: nginx
     volumes:
       - ../../Docker/ssl:/ssl/
+      - ../../Docker/gateway/adminapi-packaged.conf:/etc/nginx/templates/default.conf.template
     depends_on:
       - adminapi
-  
+
   adminapi:
     build:
       context: ../../
       dockerfile: pgsql.Dockerfile
-    image: adminapi
     environment:
-      ADMIN_POSTGRES_HOST: pb-admin
-      POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
+      ADMIN_POSTGRES_HOST: db-admin
+      POSTGRES_PORT: 5432
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       DATABASEENGINE: "PostgreSql"
@@ -38,17 +38,15 @@ services:
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
-      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi} 
+      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
-    volumes:
-      - ../../Docker/ssl:/ssl/
     depends_on:
-      - pb-admin
+      - db-admin
     restart: always
-    hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi} 
-    container_name: adminapi
+    hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
+    container_name: adminapi-packaged
     healthcheck:
-      test: $$ADMIN_API_HEALTHCHECK_TEST
+      test: ${ADMIN_API_HEALTHCHECK_TEST}
       start_period: "60s"
       retries: 3
 
@@ -61,25 +59,13 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       API_MODE: ${API_MODE}
     ports:
-      - "5880:5432"
+      - "5401:5432"
     volumes:
-      - vol-db-admin:/var/lib/postgresql/data
+      - vol-db-admin-adminapi:/var/lib/postgresql/data
     restart: always
-    container_name: ed-fi-db-admin
-
-  pb-admin:
-    image: pgbouncer/pgbouncer@sha256:aa8a38b7b33e5fe70c679053f97a8e55c74d52b00c195f0880845e52b50ce516 #pgbouncer:1.15.0
-    environment:
-      DATABASES: "* = host = db-admin port=5432 user=${POSTGRES_USER} password=${POSTGRES_PASSWORD}"
-      PGBOUNCER_LISTEN_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
-    ports:
-      - "5401:${PGBOUNCER_LISTEN_PORT:-6432}"
-    restart: always
-    container_name: ed-fi-pb-admin
-    depends_on:
-      - db-admin
+    container_name: ed-fi-db-admin-adminapi
 
 volumes:
-  vol-db-admin:
+  vol-db-admin-adminapi:
     driver: local
-    name: vol-db-admin
+    name: vol-db-admin-adminapi

@@ -90,4 +90,4 @@ jobs:
               taskName = '${{ env.TASK_NAME }}'
               folderName = '${{ env.FOLDER_NAME }}'
           }
-          .\eng\send-test-results.ps1 -PersonalAccessToken ${{env.JIRA_ACCESS_TOKEN}} -ProjectId ${{ env.PROJECT_ID }} -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' -ConfigParams $parameters
+          .\eng\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' -ConfigParams $parameters

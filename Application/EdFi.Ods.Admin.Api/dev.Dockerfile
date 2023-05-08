@@ -3,6 +3,10 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
+# First layer uses a dotnet/sdk image to build the Admin API from source code
+# Second layer uses the dotnet/aspnet image to run the built code
+
+
 #tag sdk:6.0-alpine
 FROM mcr.microsoft.com/dotnet/sdk@sha256:c1a73b72c02e7b837e9a93030d545bc4181193e1bab1033364ed2d00986d78ff AS build
 WORKDIR /source
@@ -25,7 +29,7 @@ FROM mcr.microsoft.com/dotnet/aspnet@sha256:5d7911e8485a58ac50eefa09e2cea8f3d592
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false  
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_ENVIRONMENT Production
 
 WORKDIR /app
@@ -40,7 +44,7 @@ RUN apk --no-cache add curl dos2unix=~7.4 bash=~5.1 gettext=~0.21 icu=~67.1 gcom
     dos2unix /app/*.sh && \
     dos2unix /app/log4net.config && \
     chmod 700 /app/*.sh -- **
-    
+
 EXPOSE 443
 WORKDIR /app
 

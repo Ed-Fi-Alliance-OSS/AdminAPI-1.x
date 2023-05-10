@@ -34,7 +34,7 @@
             folderName = "New Folder"
         }
 
-        .\SendTestResults.ps1 -PersonalAccessToken ** -ProjectId 1 -AdminAppVersion 2.3.0 -ResultsFile "C:/results.xml" -ConfigParams $parameters
+        .\SendTestResults.ps1 -PersonalAccessToken ** -ProjectId 1 -AdminApiVersion 1.2 -ResultsFile "C:/results.xml" -ConfigParams $parameters
 
         Sends the results to the main Jira server
 #>
@@ -53,7 +53,7 @@ param(
 
     # Numeric part of the fix version field on Jira
     [string]
-    $AdminAppVersion,
+    $AdminApiVersion,
 
     # Full path of an XML file with JUnit format to upload the results
     [string]
@@ -69,14 +69,14 @@ param(
 
 $headers = @{Authorization = "Bearer $PersonalAccessToken"}
 
-function ObtainAdminAppVersionId {
+function ObtainAdminApiVersionId {
     param (
         [string]
-        $AdminAppVersion
+        $AdminApiVersion
     )
 
-    if(-not $AdminAppVersion) {
-        throw "Please specify a valid Admin App version defined in Jira."
+    if(-not $AdminApiVersion) {
+        throw "Please specify a valid Admin Api version defined in Jira."
     }
 
     $getVersionURL = "$JiraURL/rest/zapi/latest/util/versionBoard-list?projectId=$ProjectId"
@@ -86,19 +86,19 @@ function ObtainAdminAppVersionId {
         throw $response.errorDesc
     }
 
-    $unreleasedVersions = $response.unreleasedVersions | where { $_.label -like "*$AdminAppVersion*"}
+    $unreleasedVersions = $response.unreleasedVersions | where { $_.label -like "*$AdminApiVersion*"}
     if($unreleasedVersions) {
-        Write-Host "Unreleased Admin App version found: $unreleasedVersions.value"
+        Write-Host "Unreleased Admin Api version found: $unreleasedVersions.value"
         return $unreleasedVersions.value
     }
 
-    $releasedVersions = $response.releasedVersions | where { $_.label -like "*$AdminAppVersion*"}
+    $releasedVersions = $response.releasedVersions | where { $_.label -like "*$AdminApiVersion*"}
     if($releasedVersions) {
-        Write-Host "Released Admin App version found: $releasedVersions.value"
+        Write-Host "Released Admin Api version found: $releasedVersions.value"
         return $releasedVersions.value
     }
 
-    throw "Please specify a valid Admin App version defined in Jira."
+    throw "Please specify a valid Admin Api version defined in Jira."
 
 }
 
@@ -242,10 +242,10 @@ function GetJobStatus {
 }
 
 try {
-    $versionId = ObtainAdminAppVersionId -AdminAppVersion $AdminAppVersion
+    $versionId = ObtainAdminApiVersionId -AdminApiVersion $AdminApiVersion
     SetCycleId -VersionId $versionId
     $jobId = CreateAutomationJob -VersionId $versionId
-    Write-Host "Created Zephyr run for Admin App version: $versionId with job: $jobId"
+    Write-Host "Created Zephyr run for Admin Api version: $versionId with job: $jobId"
     UploadResultsFile -JobId $jobId
     ExecuteJob -JobId $jobId
     GetJobStatus -JobId $jobId
@@ -255,3 +255,4 @@ try {
     Write-Host "Please check info and try again. See full exception below`n"
     throw $_
 }
+

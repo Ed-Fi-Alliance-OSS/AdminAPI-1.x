@@ -14,6 +14,15 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  JIRA_ACCESS_TOKEN: ${{ secrets.JIRA_ACCESS_TOKEN }}
+  ADMIN_API_VERSION: "1.2"
+  PROJECT_ID: "13401"
+  CYCLE_NAME: "Automation Cycle"
+  TASK_NAME: "API Automation Task"
+  FOLDER_NAME: "API Automation Run"
+  RESULTS_FILE: "test-results"
+
 jobs:
   run-e2e-tests:
     defaults:
@@ -58,5 +67,27 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: Application/EdFi.Ods.Admin.Api/reports
+          path: Application/EdFi.Ods.Admin.Api/reports/report.xml
           retention-days: 10
+
+  report:
+    defaults:
+      run:
+        shell: pwsh
+    needs:
+      - run-e2e-tests
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - name: Download artifacts
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a #v3.0.2
+
+      - name: Send report to Zephyr
+        run: |
+          $parameters = @{
+              cycleName = '${{ env.CYCLE_NAME }}'
+              taskName = '${{ env.TASK_NAME }}'
+              folderName = '${{ env.FOLDER_NAME }}'
+          }
+          .\eng\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' -ConfigParams $parameters

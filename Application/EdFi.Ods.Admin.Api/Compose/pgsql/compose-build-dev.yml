@@ -7,15 +7,16 @@ version: "3.8"
 
 services:
   db-ods:
-    image: edfialliance/ods-api-db-ods:v2.2.0
+    # 2.3.1 corresponds to ODS/API 6.1
+    image: edfialliance/ods-api-db-ods:v2.3.1
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       TPDM_ENABLED: "${TPDM_ENABLED:-true}"
     volumes:
-      - vol-db-ods:/var/lib/postgresql/data
+      - vol-db-ods-adminapi:/var/lib/postgresql/data
     restart: always
-    container_name: ed-fi-db-ods
+    container_name: ed-fi-db-ods-adminapi
 
   nginx:
     build:
@@ -27,7 +28,7 @@ services:
     ports:
       - "443:443"
       - "80:80"
-    container_name: ed-fi-adminapi-gateway
+    container_name: ed-fi-gateway-adminapi
     restart: always
     hostname: nginx
     volumes:
@@ -37,7 +38,7 @@ services:
       - api
 
   api:
-    image: edfialliance/ods-api-web-api:v2.2.0
+    image: edfialliance/ods-api-web-api:v2.3.1
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
@@ -51,26 +52,28 @@ services:
       - pb-ods
       - pb-admin
     restart: always
-    hostname: api
-    container_name: ed-fi-ods-api
+    hostname: webapi
+    container_name: ed-fi-ods-api-adminapi
 
   pb-ods:
-    image: pgbouncer/pgbouncer
+    image: pgbouncer/pgbouncer@sha256:aa8a38b7b33e5fe70c679053f97a8e55c74d52b00c195f0880845e52b50ce516 #pgbouncer:1.15.0
     environment:
       DATABASES: "* = host = db-ods port=5432 user=${POSTGRES_USER} password=${POSTGRES_PASSWORD}"
       PGBOUNCER_LISTEN_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
     ports:
       - "5402:${PGBOUNCER_LISTEN_PORT:-6432}"
     restart: always
-    container_name: ed-fi-pb-ods
+    container_name: ed-fi-pb-ods-adminapi
     depends_on:
       - db-ods
 
   adminapi:
     build:
+      # Important to set the context to the root, rather than setting it to the
+      # EdFi.Ods.Admin.Api directory, so that the Dockerfile has access to other
+      # C# projects.
       context: ../../../../
       dockerfile: Application/EdFi.Ods.Admin.Api/dev.Dockerfile
-    image: adminapi
     environment:
       ADMIN_POSTGRES_HOST: pb-admin
       POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
@@ -83,15 +86,13 @@ services:
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
-    volumes:
-      - ../../Docker/ssl:/ssl/
     depends_on:
       - pb-admin
     restart: always
     hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
     container_name: adminapi
     healthcheck:
-      test: $$ADMIN_API_HEALTHCHECK_TEST
+      test: ${ADMIN_API_HEALTHCHECK_TEST}
       start_period: "60s"
       retries: 3
 
@@ -106,9 +107,9 @@ services:
     ports:
       - "5880:5432"
     volumes:
-      - vol-db-admin:/var/lib/postgresql/data
+      - vol-db-admin-adminapi:/var/lib/postgresql/data
     restart: always
-    container_name: ed-fi-db-admin
+    container_name: ed-fi-db-admin-adminapi
 
   pb-admin:
     image: pgbouncer/pgbouncer@sha256:aa8a38b7b33e5fe70c679053f97a8e55c74d52b00c195f0880845e52b50ce516 #pgbouncer:1.15.0
@@ -118,14 +119,14 @@ services:
     ports:
       - "5401:${PGBOUNCER_LISTEN_PORT:-6432}"
     restart: always
-    container_name: ed-fi-pb-admin
+    container_name: ed-fi-pb-admin-adminapi
     depends_on:
       - db-admin
 
 volumes:
-  vol-db-admin:
+  vol-db-admin-adminapi:
     driver: local
-    name: vol-db-admin
-  vol-db-ods:
+    name: vol-db-admin-adminapi
+  vol-db-ods-adminapi:
     driver: local
-    name: vol-db-ods
+    name: vol-db-ods-adminapi

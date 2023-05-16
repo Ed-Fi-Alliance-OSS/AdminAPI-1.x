@@ -25,7 +25,7 @@ FROM build AS publish
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.Admin.Api
 
 #tag aspnet:6.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:5d7911e8485a58ac50eefa09e2cea8f3d59268fd7f1501f72324e37e29d9d6ee
+FROM mcr.microsoft.com/dotnet/aspnet@sha256:201cedd60cb295b2ebea7184561a45c5c0ee337e37300ea0f25cff5a2c762538
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)
@@ -38,7 +38,7 @@ COPY --from=publish /app/EdFi.Ods.Admin.Api .
 COPY ./Application/EdFi.Ods.Admin.Api/Docker/dev/run.sh /app/run.sh
 COPY ./Application/EdFi.Ods.Admin.Api/Docker/dev/log4net.config /app/log4net.txt
 
-RUN apk --no-cache add curl dos2unix=~7.4 bash=~5.1 gettext=~0.21 icu=~67.1 gcompat && \
+RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 gcompat && \
     cp /app/log4net.txt /app/log4net.config && \
     dos2unix /app/*.json && \
     dos2unix /app/*.sh && \

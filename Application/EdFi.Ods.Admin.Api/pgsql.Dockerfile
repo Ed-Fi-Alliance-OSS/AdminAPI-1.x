@@ -18,7 +18,7 @@ COPY ./Docker/pgsql/appsettings.template.json /app/appsettings.template.json
 COPY ./Docker/pgsql/run.sh /app/run.sh
 COPY ./Docker/pgsql/log4net.config /app/log4net.txt
 
-RUN apk --no-cache add unzip=~6 dos2unix=~7 bash=~5 gettext=~0 postgresql13-client=~13 jq=~1 icu=~72 curl=~8 && \
+RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 postgresql13-client=~13 jq=~1 icu=~72 gcompat && \
     wget -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.Admin.Api/versions/${VERSION}/content && \
     unzip /app/AdminApi.zip AdminApi/* -d /app/ && \
     cp -r /app/AdminApi/. /app/ && \

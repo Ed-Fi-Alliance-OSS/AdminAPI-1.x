@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -23,34 +23,34 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
             switch (token.Type)
             {
                 case JTokenType.Object:
-                {
-                    foreach (var prop in token.Children<JProperty>().ToList())
                     {
-                        var removed = false;
-                        foreach (var name in propertyNames)
+                        foreach (var prop in token.Children<JProperty>().ToList())
                         {
-                            if (!name.Equals(prop.Name)) continue;
-                            prop.Remove();
-                            removed = true;
-                            break;
+                            var removed = false;
+                            foreach (var name in propertyNames)
+                            {
+                                if (!name.Equals(prop.Name)) continue;
+                                prop.Remove();
+                                removed = true;
+                                break;
+                            }
+                            if (!removed)
+                            {
+                                RemoveProperties(prop.Value, propertyNames);
+                            }
                         }
-                        if (!removed)
-                        {
-                            RemoveProperties(prop.Value, propertyNames);
-                        }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
                 case JTokenType.Array:
-                {
-                    foreach (var child in token.Children())
                     {
-                        RemoveProperties(child, propertyNames);
-                    }
+                        foreach (var child in token.Children())
+                        {
+                            RemoveProperties(child, propertyNames);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
     }

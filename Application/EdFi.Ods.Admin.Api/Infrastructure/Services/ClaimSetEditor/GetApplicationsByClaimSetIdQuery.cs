@@ -31,7 +31,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
         private string GetClaimSetNameById(int claimSetId)
         {
             return _securityContext.ClaimSets
-                .Select(x => new { x.ClaimSetId, x.ClaimSetName})
+                .Select(x => new { x.ClaimSetId, x.ClaimSetName })
                 .Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
         }
 

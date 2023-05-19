@@ -25,5 +25,5 @@ public class OdsApiConnectionException : Exception, IAdminAppException
     public HttpStatusCode? StatusCode { get; }
     public string ResponseMessage { get; }
     public bool AllowFeedback { get; set; }
-    public bool IsStackTraceRelevant { get => false;  }
+    public bool IsStackTraceRelevant { get => false; }
 }

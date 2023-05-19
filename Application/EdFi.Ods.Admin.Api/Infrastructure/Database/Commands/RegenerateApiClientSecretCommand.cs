@@ -21,7 +21,7 @@ public class RegenerateApiClientSecretCommand
     public RegenerateApiClientSecretResult Execute(int applicationId)
     {
         var application = _context.Applications.SingleOrDefault(a => a.ApplicationId == applicationId);
-        if(application == null)
+        if (application == null)
         {
             throw new NotFoundException<int>("application", applicationId);
         }

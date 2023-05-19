@@ -22,7 +22,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
     {
         var vendor = new Vendor
         {
-            VendorNamespacePrefixes = new List<VendorNamespacePrefix> {new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
             VendorName = "Integration Tests"
         };
 
@@ -91,7 +91,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             apiClient.Secret.ShouldBe(result.Secret);
         });
     }
-    
+
     [Test]
     public void ShouldExecute()
     {

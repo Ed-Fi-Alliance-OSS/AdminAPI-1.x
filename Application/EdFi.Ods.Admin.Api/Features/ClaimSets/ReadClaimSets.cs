@@ -31,7 +31,7 @@ public class ReadClaimSets : IFeature
     {
         var claimSets = getClaimSetsQuery.Execute().Where(x => !CloudOdsAdminApp.SystemReservedClaimSets.Contains(x.Name)).ToList();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
-        foreach(var claimSet in model)
+        foreach (var claimSet in model)
         {
             claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);
             claimSet.IsSystemReserved = CloudOdsAdminApp.DefaultClaimSets.Contains(claimSet.Name);

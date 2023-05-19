@@ -40,7 +40,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
                 _v6Service.AddChildResourcesToParents(childResources, parentResources);
             }
             else
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);    
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
 
             return parentResources;
         }

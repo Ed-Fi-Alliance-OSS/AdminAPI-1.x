@@ -23,7 +23,7 @@ public class EditVendorCommand
     public Vendor Execute(IEditVendor changedVendorData)
     {
         var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.VendorId);
-        if(vendor == null)
+        if (vendor == null)
         {
             throw new NotFoundException<int>("vendor", changedVendorData.VendorId);
         }
@@ -38,7 +38,7 @@ public class EditVendorCommand
         {
             foreach (var vendorNamespacePrefix in vendor.VendorNamespacePrefixes.ToList())
             {
-                 _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);
+                _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);
             }
         }
 

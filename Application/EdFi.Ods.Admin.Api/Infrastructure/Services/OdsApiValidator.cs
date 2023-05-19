@@ -71,7 +71,7 @@ public class OdsApiValidator : IOdsApiValidator
         }
         catch (HttpRequestException exception)
         {
-            return InvalidOdsApiValidatorResult(exception.Message, exception.StatusCode??HttpStatusCode.ServiceUnavailable);
+            return InvalidOdsApiValidatorResult(exception.Message, exception.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception exception)
         {
@@ -170,7 +170,7 @@ public class OdsApiValidator : IOdsApiValidator
                 IsValidOdsApi = false,
                 Exception = new OdsApiConnectionException(
                         statusCode, "Invalid ODS API configured.", message)
-                    { AllowFeedback = false }
+                { AllowFeedback = false }
             };
         }
     }

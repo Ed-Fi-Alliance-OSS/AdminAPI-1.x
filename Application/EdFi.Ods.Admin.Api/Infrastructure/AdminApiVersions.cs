@@ -18,7 +18,7 @@ public class AdminApiVersions
 
     public static void Initialize(WebApplication app)
     {
-        if(_isInitialized) throw new InvalidOperationException("Versions are already initialized");
+        if (_isInitialized) throw new InvalidOperationException("Versions are already initialized");
 
         _versionSet = app.NewApiVersionSet()
             .HasApiVersion(V1.Version)

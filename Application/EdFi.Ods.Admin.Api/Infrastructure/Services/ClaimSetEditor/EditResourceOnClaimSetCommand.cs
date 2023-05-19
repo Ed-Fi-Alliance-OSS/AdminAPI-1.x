@@ -19,7 +19,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
             _v53Service = v53Service;
             _v6Service = v6Service;
         }
-        
+
         public void Execute(IEditResourceOnClaimSetModel model)
         {
             var securityModel = _resolver.DetermineSecurityModel();

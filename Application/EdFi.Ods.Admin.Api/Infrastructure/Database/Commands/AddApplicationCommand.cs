@@ -34,7 +34,7 @@ public class AddApplicationCommand : IAddApplicationCommand
             ? _usersContext.Profiles.SingleOrDefault(p => p.ProfileId == applicationModel.ProfileId.Value)
             : null;
 
-        var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);            
+        var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
 
         var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
             x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
@@ -55,13 +55,13 @@ public class AddApplicationCommand : IAddApplicationCommand
             User = user
         };
 
-        var applicationEdOrgs = applicationModel.EducationOrganizationIds == null 
+        var applicationEdOrgs = applicationModel.EducationOrganizationIds == null
             ? Enumerable.Empty<ApplicationEducationOrganization>()
             : applicationModel.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
-                {
-                    Clients = new List<ApiClient> { apiClient },
-                    EducationOrganizationId = id
-                });
+            {
+                Clients = new List<ApiClient> { apiClient },
+                EducationOrganizationId = id
+            });
 
         var application = new Application
         {
@@ -98,7 +98,7 @@ public interface IAddApplicationModel
     int VendorId { get; }
     string ClaimSetName { get; }
     int? ProfileId { get; }
-    IEnumerable<int> EducationOrganizationIds { get; } 
+    IEnumerable<int> EducationOrganizationIds { get; }
 }
 
 public class AddApplicationResult

@@ -33,7 +33,7 @@ public class EditClaimSetCommandV53ServiceTests : SecurityData53TestBase
         var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
         Save(alreadyExistingClaimSet);
 
-        var editModel = new EditClaimSetModel {ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId};
+        var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId };
 
         using var securityContext = TestContext;
         UsersTransaction((usersContext) =>

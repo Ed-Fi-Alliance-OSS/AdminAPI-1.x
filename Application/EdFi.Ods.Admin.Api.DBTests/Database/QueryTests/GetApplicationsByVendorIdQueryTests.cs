@@ -71,7 +71,7 @@ public class GetApplicationsByVendorIdQueryTests : PlatformUsersContextTestBase
     public void ShouldGetApplicationProfile()
     {
         var vendor = new Vendor { VendorName = "test vendor" };
-        var application = new Application {ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+        var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
         var profile = new Profile
         {
             Applications = new List<Application> { application },

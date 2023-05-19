@@ -192,7 +192,7 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
 
     protected IReadOnlyCollection<ClaimSetResourceClaim> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
     {
-        var actions = ActionName.GetAll().Select(action => new Action {ActionName = action.Value, ActionUri = action.Value}).ToList();
+        var actions = ActionName.GetAll().Select(action => new Action { ActionName = action.Value, ActionUri = action.Value }).ToList();
         Save(actions.Cast<object>().ToArray());
 
         var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(parentIndex => new ResourceClaim
@@ -289,7 +289,7 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
             var getResourcesByClaimSetIdQuery = new ClaimSetEditorTypes.GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V3_5(),
                 new ClaimSetEditorTypes.GetResourcesByClaimSetIdQueryV53Service(securityContext, Mapper()), null);
             list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
-        } 
+        }
         return list;
     }
 

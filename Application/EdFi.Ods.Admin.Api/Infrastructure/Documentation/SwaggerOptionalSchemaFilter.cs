@@ -33,7 +33,7 @@ public class SwaggerOptionalSchemaFilter : ISchemaFilter
             {
                 if (schema.Required == null)
                 {
-                    schema.Required = new HashSet<string>() {propertyNameInCamelCasing};
+                    schema.Required = new HashSet<string>() { propertyNameInCamelCasing };
                 }
                 else
                 {

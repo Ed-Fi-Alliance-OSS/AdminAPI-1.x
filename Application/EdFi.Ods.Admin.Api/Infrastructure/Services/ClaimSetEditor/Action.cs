@@ -5,7 +5,7 @@
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 
-public class Action: Enumeration<Action, string>
+public class Action : Enumeration<Action, string>
 {
     public static readonly Action Create = new Action("Create", "Create");
     public static readonly Action Read = new Action("Read", "Read");

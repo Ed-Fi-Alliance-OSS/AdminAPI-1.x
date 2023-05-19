@@ -48,8 +48,8 @@ public class TokenService : ITokenService
             .ToList();
 
         var missingScopes = requestedScopes.Where(s => !appScopes.Contains(s)).ToList();
-        if(missingScopes.Any())
-            throw new AuthenticationException($"Client is not allowed access to requested scope(s): {string.Join(", " , missingScopes)}");
+        if (missingScopes.Any())
+            throw new AuthenticationException($"Client is not allowed access to requested scope(s): {string.Join(", ", missingScopes)}");
 
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
 

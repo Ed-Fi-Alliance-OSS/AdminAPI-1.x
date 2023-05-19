@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -24,12 +24,12 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
         public static SharingModel DeserializeToSharingModel(Stream jsonStream)
         {
             using (var streamReader = new StreamReader(jsonStream))
-                using (JsonReader jsonReader = new JsonTextReader(streamReader))
-                {
-                    return JsonSerializer
-                        .Create(UsingIndentedCamelCase())
-                        .Deserialize<SharingModel>(jsonReader);
-                }
+            using (JsonReader jsonReader = new JsonTextReader(streamReader))
+            {
+                return JsonSerializer
+                    .Create(UsingIndentedCamelCase())
+                    .Deserialize<SharingModel>(jsonReader);
+            }
         }
 
         private static JsonSerializerSettings UsingIndentedCamelCase()

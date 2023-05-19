@@ -33,7 +33,7 @@ public class EditClaimSetCommandV6ServiceTests : SecurityDataTestBase
         var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
         Save(alreadyExistingClaimSet);
 
-        var editModel = new EditClaimSetModel {ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId};
+        var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId };
 
         using var securityContext = TestContext;
         UsersTransaction((usersContext) =>
@@ -55,7 +55,7 @@ public class EditClaimSetCommandV6ServiceTests : SecurityDataTestBase
         };
         Save(testApplication);
 
-        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", Application = testApplication, IsEdfiPreset=true};
+        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", Application = testApplication, IsEdfiPreset = true };
         Save(systemReservedClaimSet);
 
         var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };

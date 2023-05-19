@@ -90,7 +90,7 @@ public abstract class PlatformSecurityContextTestBase
 
         TestContext.SaveChanges();
     }
-    
+
     protected void UsersTransaction(Action<IUsersContext> action)
     {
         using var usersContext = new SqlServerUsersContext(Testing.AdminConnectionString);

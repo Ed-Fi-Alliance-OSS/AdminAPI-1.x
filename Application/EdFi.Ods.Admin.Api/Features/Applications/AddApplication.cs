@@ -35,11 +35,11 @@ public class AddApplication : IFeature
 
     private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
     {
-        if(null == db.Vendors.Find(request.VendorId))
-            throw new ValidationException(new []{ new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
+        if (null == db.Vendors.Find(request.VendorId))
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
         if (request.ProfileId.HasValue && db.Profiles.Find(request.ProfileId) == null)
-            throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
     }
 
     [SwaggerSchema(Title = "AddApplicationRequest")]

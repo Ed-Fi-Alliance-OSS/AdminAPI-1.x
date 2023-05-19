@@ -47,7 +47,7 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
         {
             return;
         }
-        
+
         application.ApiClients.ToList().ForEach(a =>
         {
             a.ClientAccessTokens.ToList().ForEach(t => _context.ClientAccessTokens.Remove(t));

@@ -25,7 +25,7 @@ public class ResourceClaimValidator
 
         var propertyName = "ResourceClaims";
 
-        if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1 )
+        if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1)
         {
             if (_duplicateResources != null && resourceClaim.Name != null && !_duplicateResources.Contains(resourceClaim.Name))
             {
@@ -34,7 +34,7 @@ public class ResourceClaimValidator
             }
         }
 
-        if(!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
         {
             context.AddFailure(propertyName, "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'");
         }

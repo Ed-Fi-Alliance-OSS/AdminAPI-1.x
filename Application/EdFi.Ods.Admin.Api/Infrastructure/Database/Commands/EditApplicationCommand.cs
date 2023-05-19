@@ -40,7 +40,7 @@ public class EditApplicationCommand : IEditApplicationCommand
             throw new NotFoundException<int>("application", model.ApplicationId);
         }
 
-        if(application.Vendor.IsSystemReservedVendor())
+        if (application.Vendor.IsSystemReservedVendor())
         {
             throw new Exception("This Application is required for proper system function and may not be modified");
         }

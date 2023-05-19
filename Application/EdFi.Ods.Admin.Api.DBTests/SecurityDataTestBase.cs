@@ -165,7 +165,8 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
             parentResourceClaims.Add(resourceClaim);
 
             childResourceClaims.AddRange(childRcNames
-                .Select(childName => {
+                .Select(childName =>
+                {
                     var childRcName = $"{childName}-{parentName}";
                     return new ResourceClaim
                     {
@@ -199,7 +200,8 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     public static IList<string> UniqueNameList(string prefix, int resourceClaimCount = 5)
     {
         var random = new Random();
-        var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(index => {
+        var parentResourceClaims = Enumerable.Range(1, resourceClaimCount).Select(index =>
+        {
             return $"{prefix}{random.Next()}";
         }).ToList();
 
@@ -211,7 +213,8 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         var actions = ActionName.GetAll().Select(action => new Action { ActionName = action.Value, ActionUri = action.Value }).ToList();
         Save(actions.Cast<object>().ToArray());
 
-        var parentResourceClaims = parentRcNames.Select(parentRcName => {
+        var parentResourceClaims = parentRcNames.Select(parentRcName =>
+        {
             return new ResourceClaim
             {
                 ClaimName = parentRcName,

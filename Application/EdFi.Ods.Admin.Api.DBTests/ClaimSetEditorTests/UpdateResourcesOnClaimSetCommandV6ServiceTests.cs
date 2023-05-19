@@ -35,7 +35,7 @@ public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBa
         var parentRcNames = UniqueNameList("ParentRc", 2);
         var childName = "ChildRc098";
         var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames,
-            new List<string>{ childName });
+            new List<string> { childName });
 
         var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First());
         var secondTestParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.Last());

@@ -54,7 +54,7 @@ public class AuthorizationStrategyModel
     public string? AuthStrategyName { get; set; }
 
     [SwaggerExclude]
-    public string? DisplayName { get;set; }
+    public string? DisplayName { get; set; }
 
     public bool IsInheritedFromParent { get; set; }
 }

@@ -40,7 +40,7 @@ public class ErrorHandler : IFeature
 
     private Task<IResult> HandleNotFound<T>(ILogger<ErrorHandler> logger, Exception exception)
     {
-        if(exception is not NotFoundException<T> notFoundException)
+        if (exception is not NotFoundException<T> notFoundException)
             throw new ArgumentException("HandleNotFound<T>() must be called with a NotFoundException");
 
         logger.LogDebug(notFoundException, "Resource not found");

@@ -11,16 +11,12 @@
 FROM mcr.microsoft.com/dotnet/sdk@sha256:c1a73b72c02e7b837e9a93030d545bc4181193e1bab1033364ed2d00986d78ff AS build
 WORKDIR /source
 
-COPY ./Application/NuGet.Config ./
-COPY ./Application/EdFi.Ods.Admin.Api/*.csproj EdFi.Ods.Admin.Api/
-COPY ./Application/EdFi.Ods.AdminApp.Management/*.csproj EdFi.Ods.AdminApp.Management/
-RUN dotnet restore EdFi.Ods.Admin.Api/EdFi.Ods.Admin.Api.csproj
-
+COPY ./Application/NuGet.Config EdFi.Ods.Admin.Api/
 COPY ./Application/EdFi.Ods.Admin.Api EdFi.Ods.Admin.Api/
-COPY ./Application/EdFi.Ods.AdminApp.Management EdFi.Ods.AdminApp.Management/
 
 WORKDIR /source/EdFi.Ods.Admin.Api
-RUN dotnet build -c Release
+RUN dotnet restore && dotnet build -c Release
+
 FROM build AS publish
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.Admin.Api
 

@@ -3,33 +3,31 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+
+public class AddClaimSetCommandV6Service
 {
-    public class AddClaimSetCommandV6Service
+    private readonly ISecurityContext _context;
+
+    public AddClaimSetCommandV6Service(ISecurityContext context)
     {
-        private readonly ISecurityContext _context;
+        _context = context;
+    }
 
-        public AddClaimSetCommandV6Service(ISecurityContext context)
+    public int Execute(IAddClaimSetModel claimSet)
+    {
+        var newClaimSet = new EdFi.Security.DataAccess.Models.ClaimSet
         {
-            _context = context;
-        }
+            ClaimSetName = claimSet.ClaimSetName,
+            Application = _context.Applications.Single(),
+            IsEdfiPreset = false,
+            ForApplicationUseOnly = false
+        };
+        _context.ClaimSets.Add(newClaimSet);
+        _context.SaveChanges();
 
-        public int Execute(IAddClaimSetModel claimSet)
-        {
-            var newClaimSet = new Security.DataAccess.Models.ClaimSet
-            {
-                ClaimSetName = claimSet.ClaimSetName,
-                Application = _context.Applications.Single(),
-                IsEdfiPreset = false,
-                ForApplicationUseOnly = false
-            };
-            _context.ClaimSets.Add(newClaimSet);
-            _context.SaveChanges();
-
-            return newClaimSet.ClaimSetId;
-        }
+        return newClaimSet.ClaimSetId;
     }
 }

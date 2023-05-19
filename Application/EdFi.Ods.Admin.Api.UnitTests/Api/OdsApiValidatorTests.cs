@@ -4,40 +4,40 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Api;
-using EdFi.Ods.AdminApp.Management.Services;
+using EdFi.Ods.Admin.Api.Infrastructure.Api;
+using EdFi.Ods.Admin.Api.Infrastructure.Services;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
+namespace EdFi.Ods.Admin.Api.UnitTests.Api;
+
+[TestFixture]
+public class OdsApiValidatorTests
 {
-    [TestFixture]
-    public class OdsApiValidatorTests
+    private const string ValidOdsApiUrl = "https://valid/api";
+    private const string InvalidOdsApiUrl = "https://invalid/api";
+
+    class StubGetRequest : ISimpleGetRequest
     {
-        private const string ValidOdsApiUrl = "https://valid/api";
-        private const string InvalidOdsApiUrl = "https://invalid/api";
+        private readonly string _expectedAddress;
+        private readonly string _jsonResponse;
 
-        class StubGetRequest : ISimpleGetRequest
+        public StubGetRequest(string expectedAddress, string jsonResponse)
         {
-            private readonly string _expectedAddress;
-            private readonly string _jsonResponse;
-
-            public StubGetRequest(string expectedAddress, string jsonResponse)
-            {
-                _expectedAddress = expectedAddress;
-                _jsonResponse = jsonResponse;
-            }
-
-            public Task<string> DownloadString(string address)
-            {
-                address.ShouldBe(_expectedAddress);
-                return Task.FromResult(_jsonResponse);
-            }
+            _expectedAddress = expectedAddress;
+            _jsonResponse = jsonResponse;
         }
 
-        private static string ExampleOdsRootDocumentV1()
+        public Task<string> DownloadString(string address)
         {
-            return @"{
+            address.ShouldBe(_expectedAddress);
+            return Task.FromResult(_jsonResponse);
+        }
+    }
+
+    private static string ExampleOdsRootDocumentV1()
+    {
+        return @"{
                       ""version"": ""6.0"",
                       ""informationalVersion"": ""6.0"",
                       ""suite"": ""3"",
@@ -66,11 +66,11 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
                         ""identity"": ""https://api.ed-fi.org/v6.0/api/identity/v2/""
                       }
                     }";
-        }
+    }
 
-        private static string ExampleOdsRootDocumentV2()
-        {
-            return @"{
+    private static string ExampleOdsRootDocumentV2()
+    {
+        return @"{
                         ""version"": ""3.2.0"",
                         ""informationalVersion"": ""3.2.0"",
                         ""build"": ""3.2.0.4982"",
@@ -80,26 +80,26 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
                             { ""name"": ""GrandBend"", ""version"": ""1.0.0"" }
                         ]
                     }";
-        }
+    }
 
-        private static string ExampleOdsRootDocumentV3()
-        {
-            return @"{
+    private static string ExampleOdsRootDocumentV3()
+    {
+        return @"{
                     ""version"": ""5.2"",
                     ""informationalVersion"": ""5.2""
                    }";
-        }
+    }
 
-        private static string ExampleOdsRootDocumentV4()
-        {
-            return @"{
+    private static string ExampleOdsRootDocumentV4()
+    {
+        return @"{
                     "",""5.2""
                    }";
-        }
+    }
 
-        private static string ExampleOdsRootDocumentV5()
-        {
-            return @"{
+    private static string ExampleOdsRootDocumentV5()
+    {
+        return @"{
                         ""version"": ""3.2.0"",
                         ""informationalVersion"": ""3.2.0"",
                         ""build"": ""3.2.0.4982"",
@@ -108,79 +108,78 @@ namespace EdFi.Ods.AdminApp.Management.UnitTests.Api
                             { ""name"": ""GrandBend"", ""version"": ""1.0.0"" }
                         ]
                     }";
-        }
+    }
 
-        private static async Task<OdsApiValidatorResult> OdsApiValidationResult(string odsApiUrl, string rootDocument = null)
-        {
-            var getRootDocument = new StubGetRequest(odsApiUrl, rootDocument);
+    private static async Task<OdsApiValidatorResult> OdsApiValidationResult(string odsApiUrl, string rootDocument = null)
+    {
+        var getRootDocument = new StubGetRequest(odsApiUrl, rootDocument);
 
-            var validator = new OdsApiValidator(getRootDocument);
+        var validator = new OdsApiValidator(getRootDocument);
 
-            return await validator.Validate(odsApiUrl);
-        }
+        return await validator.Validate(odsApiUrl);
+    }
 
-        [Test]
-        public async Task ShouldBeValidForValidRootDocument()
-        {
-            var rootDocument = ExampleOdsRootDocumentV2();
+    [Test]
+    public async Task ShouldBeValidForValidRootDocument()
+    {
+        var rootDocument = ExampleOdsRootDocumentV2();
 
-            var result = await OdsApiValidationResult(ValidOdsApiUrl, rootDocument);
+        var result = await OdsApiValidationResult(ValidOdsApiUrl, rootDocument);
 
-            result.IsValidOdsApi.ShouldBe(true);
-            result.Version.ToString().ShouldBe("3.2.0");
-        }
+        result.IsValidOdsApi.ShouldBe(true);
+        result.Version.ToString().ShouldBe("3.2.0");
+    }
 
-        [Test]
-        public async Task ShouldBeValidForValidRootDocumentWithMinimumRequiredFields()
-        {
-            var rootDocument = ExampleOdsRootDocumentV1();
+    [Test]
+    public async Task ShouldBeValidForValidRootDocumentWithMinimumRequiredFields()
+    {
+        var rootDocument = ExampleOdsRootDocumentV1();
 
-            var result = await OdsApiValidationResult(ValidOdsApiUrl, rootDocument);
+        var result = await OdsApiValidationResult(ValidOdsApiUrl, rootDocument);
 
-            result.IsValidOdsApi.ShouldBe(true);
-            result.Version.ToString().ShouldBe("6.0");
-        }
+        result.IsValidOdsApi.ShouldBe(true);
+        result.Version.ToString().ShouldBe("6.0");
+    }
 
-        [Test]
-        public async Task ShouldBeInvalidForNoRootDocument()
-        {
-            var result = await OdsApiValidationResult(InvalidOdsApiUrl);
+    [Test]
+    public async Task ShouldBeInvalidForNoRootDocument()
+    {
+        var result = await OdsApiValidationResult(InvalidOdsApiUrl);
 
-            result.IsValidOdsApi.ShouldBe(false);
-            result.Version.ShouldBeNull();
-        }
+        result.IsValidOdsApi.ShouldBe(false);
+        result.Version.ShouldBeNull();
+    }
 
-        [Test]
-        public async Task ShouldBeInValidForRootDocumentWithMissingFields()
-        {
-            var rootDocument = ExampleOdsRootDocumentV3();
+    [Test]
+    public async Task ShouldBeInValidForRootDocumentWithMissingFields()
+    {
+        var rootDocument = ExampleOdsRootDocumentV3();
 
-            var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
+        var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
 
-            result.IsValidOdsApi.ShouldBe(false);
-            result.Version.ShouldBeNull();
-        }
+        result.IsValidOdsApi.ShouldBe(false);
+        result.Version.ShouldBeNull();
+    }
 
-        [Test]
-        public async Task ShouldBeInValidForMalformedRootDocument()
-        {
-            var rootDocument = ExampleOdsRootDocumentV4();
+    [Test]
+    public async Task ShouldBeInValidForMalformedRootDocument()
+    {
+        var rootDocument = ExampleOdsRootDocumentV4();
 
-            var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
+        var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
 
-            result.IsValidOdsApi.ShouldBe(false);
-            result.Version.ShouldBeNull();
-        }
+        result.IsValidOdsApi.ShouldBe(false);
+        result.Version.ShouldBeNull();
+    }
 
-        [Test]
-        public async Task ShouldBeInValidForRootDocumentWithMissingEdFiDataModel()
-        {
-            var rootDocument = ExampleOdsRootDocumentV5();
+    [Test]
+    public async Task ShouldBeInValidForRootDocumentWithMissingEdFiDataModel()
+    {
+        var rootDocument = ExampleOdsRootDocumentV5();
 
-            var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
+        var result = await OdsApiValidationResult(InvalidOdsApiUrl, rootDocument);
 
-            result.IsValidOdsApi.ShouldBe(false);
-            result.Version.ShouldBeNull();
-        }
+        result.IsValidOdsApi.ShouldBe(false);
+        result.Version.ShouldBeNull();
     }
 }

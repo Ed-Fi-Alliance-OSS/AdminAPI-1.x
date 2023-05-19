@@ -5,18 +5,17 @@
 
 using System;
 
-namespace EdFi.Ods.AdminApp.Management.ErrorHandling
-{
-    public class NotFoundException<T> : Exception
-    {
-        public string ResourceName { get; }
-        public T Id { get; }
+namespace EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 
-        public NotFoundException(string resourceName, T id)
-            : base($"Not found: {resourceName} with ID {id}. It may have been recently deleted.")
-        {
-            ResourceName = resourceName;
-            Id = id;
-        }
+public class NotFoundException<T> : Exception
+{
+    public string ResourceName { get; }
+    public T Id { get; }
+
+    public NotFoundException(string resourceName, T id)
+        : base($"Not found: {resourceName} with ID {id}. It may have been recently deleted.")
+    {
+        ResourceName = resourceName;
+        Id = id;
     }
 }

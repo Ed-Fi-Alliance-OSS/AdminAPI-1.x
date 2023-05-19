@@ -4,59 +4,58 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EdFi.Ods.Admin.Api.Features.ClaimSets
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
+
+public class DeleteClaimSet : IFeature
 {
-    public class DeleteClaimSet : IFeature
+    public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        public void MapEndpoints(IEndpointRouteBuilder endpoints)
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/claimsets/{id}", Handle)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
+            .BuildForVersions(AdminApiVersions.V1);
+    }
+
+    public Task<IResult> Handle(IDeleteClaimSetCommand deleteClaimSetCommand, [FromServices]IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
+    {
+        CheckClaimSetExists(id, getClaimSetByIdQuery);
+        CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);
+
+        try
         {
-            AdminApiEndpointBuilder.MapDelete(endpoints, "/claimsets/{id}", Handle)
-                .WithDefaultDescription()
-                .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
-                .BuildForVersions(AdminApiVersions.V1);
+            deleteClaimSetCommand.Execute(new DeleteClaimSetModel { Id = id });
+        }
+        catch (AdminAppException exception)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message)});
         }
 
-        public Task<IResult> Handle(IDeleteClaimSetCommand deleteClaimSetCommand, [FromServices]IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
+        return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
+    }
+
+    private void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
+    {
+        try
         {
-            CheckClaimSetExists(id, getClaimSetByIdQuery);
-            CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);
-
-            try
-            {
-                deleteClaimSetCommand.Execute(new DeleteClaimSetModel { Id = id });
-            }
-            catch (AdminAppException exception)
-            {
-                throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message)});
-            }
-
-            return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
+            query.Execute(id);
         }
-
-        private void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
+        catch (AdminAppException)
         {
-            try
-            {
-                query.Execute(id);
-            }
-            catch (AdminAppException)
-            {
-                throw new NotFoundException<int>("claimset", id);
-            }
+            throw new NotFoundException<int>("claimset", id);
         }
+    }
 
-        private void CheckAgainstDeletingClaimSetsWithApplications(int id, IGetApplicationsByClaimSetIdQuery getApplications)
-        {
-            var associatedApplicationsCount = getApplications.Execute(id).Count();
-            if (associatedApplicationsCount > 0)
-                throw new ValidationException(new[] { new ValidationFailure(nameof(id),
-                    $"Cannot delete this claim set. This claim set has {associatedApplicationsCount} associated application(s).") });
-        }
+    private void CheckAgainstDeletingClaimSetsWithApplications(int id, IGetApplicationsByClaimSetIdQuery getApplications)
+    {
+        var associatedApplicationsCount = getApplications.Execute(id).Count();
+        if (associatedApplicationsCount > 0)
+            throw new ValidationException(new[] { new ValidationFailure(nameof(id),
+                $"Cannot delete this claim set. This claim set has {associatedApplicationsCount} associated application(s).") });
     }
 }

@@ -12,8 +12,8 @@ using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Action = EdFi.Security.DataAccess.Models.Action;
-using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
-using ClaimSetEditorTypes = EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using ActionName = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.Action;
+using ClaimSetEditorTypes = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 
 namespace EdFi.Ods.Admin.Api.DBTests;
 

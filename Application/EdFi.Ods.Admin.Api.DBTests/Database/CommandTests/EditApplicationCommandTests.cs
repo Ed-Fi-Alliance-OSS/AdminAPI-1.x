@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using static EdFi.Ods.Admin.Api.DBTests.Testing;
 using EdFi.Ods.Admin.Api.Features.Applications;
-using EdFi.Ods.AdminApp.Management;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
 namespace EdFi.Ods.Admin.Api.DBTests.Database.CommandTests;
 

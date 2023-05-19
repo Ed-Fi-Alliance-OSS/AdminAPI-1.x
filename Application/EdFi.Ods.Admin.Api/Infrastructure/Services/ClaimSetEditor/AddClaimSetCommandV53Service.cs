@@ -8,28 +8,27 @@ using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
 using ClaimSetEntity = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+
+public class AddClaimSetCommandV53Service
 {
-    public class AddClaimSetCommandV53Service
+    private readonly ISecurityContext _context;
+
+    public AddClaimSetCommandV53Service(ISecurityContext context)
     {
-        private readonly ISecurityContext _context;
+        _context = context;
+    }
 
-        public AddClaimSetCommandV53Service(ISecurityContext context)
+    public int Execute(IAddClaimSetModel claimSet)
+    {
+        var newClaimSet = new ClaimSetEntity
         {
-            _context = context;
-        }
+            ClaimSetName = claimSet.ClaimSetName,
+            Application = _context.Applications.Single()
+        };
+        _context.ClaimSets.Add(newClaimSet);
+        _context.SaveChanges();
 
-        public int Execute(IAddClaimSetModel claimSet)
-        {
-            var newClaimSet = new ClaimSetEntity
-            {
-                ClaimSetName = claimSet.ClaimSetName,
-                Application = _context.Applications.Single()
-            };
-            _context.ClaimSets.Add(newClaimSet);
-            _context.SaveChanges();
-
-            return newClaimSet.ClaimSetId;
-        }
+        return newClaimSet.ClaimSetId;
     }
 }

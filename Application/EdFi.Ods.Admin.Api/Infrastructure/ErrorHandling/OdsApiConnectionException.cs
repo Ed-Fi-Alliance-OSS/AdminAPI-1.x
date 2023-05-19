@@ -6,25 +6,24 @@
 using System;
 using System.Net;
 
-namespace EdFi.Ods.AdminApp.Management.ErrorHandling
+namespace EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
+
+public class OdsApiConnectionException : Exception, IAdminAppException
 {
-    public class OdsApiConnectionException : Exception, IAdminAppException
+    public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage) : base(exceptionMessage)
     {
-        public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage) : base(exceptionMessage)
-        {
-            StatusCode = responseCode;
-            ResponseMessage = responseMessage;
-        }
-
-        public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage, Exception innerException) : base(exceptionMessage, innerException)
-        {
-            StatusCode = responseCode;
-            ResponseMessage = responseMessage;
-        }
-
-        public HttpStatusCode? StatusCode { get; }
-        public string ResponseMessage { get; }
-        public bool AllowFeedback { get; set; }
-        public bool IsStackTraceRelevant { get => false;  }
+        StatusCode = responseCode;
+        ResponseMessage = responseMessage;
     }
+
+    public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage, Exception innerException) : base(exceptionMessage, innerException)
+    {
+        StatusCode = responseCode;
+        ResponseMessage = responseMessage;
+    }
+
+    public HttpStatusCode? StatusCode { get; }
+    public string ResponseMessage { get; }
+    public bool AllowFeedback { get; set; }
+    public bool IsStackTraceRelevant { get => false;  }
 }

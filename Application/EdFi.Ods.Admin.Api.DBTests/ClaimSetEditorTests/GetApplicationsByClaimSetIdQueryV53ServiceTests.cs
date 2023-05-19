@@ -11,8 +11,8 @@ using Shouldly;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
-using ClaimSetEditor = EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management;
+using ClaimSetEditor = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 

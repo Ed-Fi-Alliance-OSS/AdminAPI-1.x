@@ -9,52 +9,51 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
+
+public class AddVendorCommand
 {
-    public class AddVendorCommand
+    private readonly IUsersContext _context;
+
+    public AddVendorCommand(IUsersContext context)
     {
-        private readonly IUsersContext _context;
-
-        public AddVendorCommand(IUsersContext context)
-        {
-            _context = context;
-        }
-
-        public Vendor Execute(IAddVendorModel newVendor)
-        {
-            var namespacePrefixes = newVendor.NamespacePrefixes?.Split(",")
-                .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
-                .Select(namespacePrefix => new VendorNamespacePrefix
-                {
-                    NamespacePrefix = namespacePrefix.Trim()
-                })
-                .ToList();
-
-            var vendor = new Vendor
-            {
-                VendorName = newVendor.Company.Trim(),
-                VendorNamespacePrefixes = namespacePrefixes
-            };
-
-            var user = new VendorUser
-            {
-                FullName = newVendor.ContactName.Trim(),
-                Email = newVendor.ContactEmailAddress.Trim()
-            };
-
-            vendor.Users.Add(user);
-
-            _context.Vendors.Add(vendor);
-            _context.SaveChanges();
-            return vendor;
-        }
+        _context = context;
     }
 
-    public interface IAddVendorModel
+    public Vendor Execute(IAddVendorModel newVendor)
     {
-        string Company { get; }
-        string NamespacePrefixes { get; }
-        string ContactName { get; }
-        string ContactEmailAddress { get; }
+        var namespacePrefixes = newVendor.NamespacePrefixes?.Split(",")
+            .Where(namespacePrefix => !string.IsNullOrWhiteSpace(namespacePrefix))
+            .Select(namespacePrefix => new VendorNamespacePrefix
+            {
+                NamespacePrefix = namespacePrefix.Trim()
+            })
+            .ToList();
+
+        var vendor = new Vendor
+        {
+            VendorName = newVendor.Company.Trim(),
+            VendorNamespacePrefixes = namespacePrefixes
+        };
+
+        var user = new VendorUser
+        {
+            FullName = newVendor.ContactName.Trim(),
+            Email = newVendor.ContactEmailAddress.Trim()
+        };
+
+        vendor.Users.Add(user);
+
+        _context.Vendors.Add(vendor);
+        _context.SaveChanges();
+        return vendor;
     }
+}
+
+public interface IAddVendorModel
+{
+    string Company { get; }
+    string NamespacePrefixes { get; }
+    string ContactName { get; }
+    string ContactEmailAddress { get; }
 }

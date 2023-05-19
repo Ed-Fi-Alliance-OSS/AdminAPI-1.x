@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
@@ -6,28 +6,27 @@
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+
+public class GetApplicationByIdQuery
 {
-    public class GetApplicationByIdQuery
+    private readonly IUsersContext _context;
+
+    public GetApplicationByIdQuery(IUsersContext context)
     {
-        private readonly IUsersContext _context;
+        _context = context;
+    }
 
-        public GetApplicationByIdQuery(IUsersContext context)
+    public Application Execute(int applicationId)
+    {
+        var application = _context.Applications.SingleOrDefault(app => app.ApplicationId == applicationId);
+        if (application == null)
         {
-            _context = context;
+            throw new NotFoundException<int>("application", applicationId);
         }
 
-        public Application Execute(int applicationId)
-        {
-            var application = _context.Applications.SingleOrDefault(app => app.ApplicationId == applicationId);
-            if (application == null)
-            {
-                throw new NotFoundException<int>("application", applicationId);
-            }
-
-            return application;
-        }
+        return application;
     }
 }

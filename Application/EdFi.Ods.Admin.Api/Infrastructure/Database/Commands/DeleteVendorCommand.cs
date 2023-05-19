@@ -6,47 +6,46 @@
 using System;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
+
+public class DeleteVendorCommand
 {
-    public class DeleteVendorCommand
+    private readonly IUsersContext _context;
+    private readonly IDeleteApplicationCommand _deleteApplicationCommand;
+
+    public DeleteVendorCommand(IUsersContext context, IDeleteApplicationCommand deleteApplicationCommand)
     {
-        private readonly IUsersContext _context;
-        private readonly IDeleteApplicationCommand _deleteApplicationCommand;
+        _context = context;
+        _deleteApplicationCommand = deleteApplicationCommand;
+    }
 
-        public DeleteVendorCommand(IUsersContext context, IDeleteApplicationCommand deleteApplicationCommand)
+    public void Execute(int id)
+    {
+        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == id);
+
+        if (vendor == null)
         {
-            _context = context;
-            _deleteApplicationCommand = deleteApplicationCommand;
+            throw new NotFoundException<int>("vendor", id);
+        }
+        if (vendor.IsSystemReservedVendor())
+        {
+            throw new Exception("This Vendor is required for proper system function and may not be deleted");
         }
 
-        public void Execute(int id)
+        foreach (var application in vendor.Applications.ToList())
         {
-            var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == id);
-
-            if (vendor == null)
-            {
-                throw new NotFoundException<int>("vendor", id);
-            }
-            if (vendor.IsSystemReservedVendor())
-            {
-                throw new Exception("This Vendor is required for proper system function and may not be deleted");
-            }
-
-            foreach (var application in vendor.Applications.ToList())
-            {
-                _deleteApplicationCommand.Execute(application.ApplicationId);
-            }
-
-            foreach (var user in vendor.Users.ToList())
-            {
-                _context.Users.Remove(user);
-            }
-
-            _context.Vendors.Remove(vendor);
-            _context.SaveChanges();
+            _deleteApplicationCommand.Execute(application.ApplicationId);
         }
+
+        foreach (var user in vendor.Users.ToList())
+        {
+            _context.Users.Remove(user);
+        }
+
+        _context.Vendors.Remove(vendor);
+        _context.SaveChanges();
     }
 }

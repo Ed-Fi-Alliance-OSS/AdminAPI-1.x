@@ -8,74 +8,73 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace EdFi.Ods.AdminApp.Management.Services
+namespace EdFi.Ods.Admin.Api.Infrastructure.Services;
+
+public interface ISimpleGetRequest
 {
-    public interface ISimpleGetRequest
+    public Task<string> DownloadString(string address);
+}
+
+public class SimpleGetRequest : ISimpleGetRequest
+{
+    private readonly IHttpClientFactory _clientFactory;
+
+    public SimpleGetRequest(IHttpClientFactory clientFactory)
     {
-        public Task<string> DownloadString(string address);
+        _clientFactory = clientFactory;
     }
 
-    public class SimpleGetRequest : ISimpleGetRequest
+    public async Task<string> DownloadString(string address)
     {
-        private readonly IHttpClientFactory _clientFactory;
+        var httpClient = _clientFactory.CreateClient();
 
-        public SimpleGetRequest(IHttpClientFactory clientFactory)
+        using (var response = await httpClient.GetAsync(address))
         {
-            _clientFactory = clientFactory;
+            await CheckResponseStatusCode(address, response);
+
+            using (var content = response.Content)
+            {
+                return await content.ReadAsStringAsync();
+            }
         }
 
-        public async Task<string> DownloadString(string address)
+        async Task CheckResponseStatusCode(string requestUrl, HttpResponseMessage response)
         {
-            var httpClient = _clientFactory.CreateClient();
-
-            using (var response = await httpClient.GetAsync(address))
+            switch (response.StatusCode)
             {
-                await CheckResponseStatusCode(address, response);
+                case HttpStatusCode.OK:
+                    break;
+                case 0:
+                    throw new HttpRequestException($"No response from {requestUrl}.");
+                case HttpStatusCode.NotFound:
+                    throw new HttpRequestException($"{requestUrl} not found.", null, HttpStatusCode.NotFound);
+                case HttpStatusCode.ServiceUnavailable:
+                    throw new HttpRequestException(
+                        $"{requestUrl} is unavailable", null, HttpStatusCode.ServiceUnavailable);
+                case HttpStatusCode.BadGateway:
+                    throw new HttpRequestException(
+                        $"{requestUrl} was acting as a gateway or proxy and received an invalid response from the upstream server.",
+                        null, HttpStatusCode.BadGateway);
+                case (HttpStatusCode)495:
+                    throw new HttpRequestException(
+                        $"Invalid SSL client certificate for {requestUrl}.", null, (HttpStatusCode)495);
+                case (HttpStatusCode)496:
+                    throw new HttpRequestException(
+                        $"Missing SSL client certificate for {requestUrl}.", null, (HttpStatusCode)496);
+                case HttpStatusCode.BadRequest:
+                    throw new InvalidOperationException($"Malformed request for {requestUrl}.");
+                default:
+                    var message = $"Unexpected response from {requestUrl}";
 
-                using (var content = response.Content)
-                {
-                    return await content.ReadAsStringAsync();
-                }
-            }
+                    using (var content = response.Content)
+                    {
+                        var details = await content.ReadAsStringAsync();
 
-            async Task CheckResponseStatusCode(string requestUrl, HttpResponseMessage response)
-            {
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
-                        break;
-                    case 0:
-                        throw new HttpRequestException($"No response from {requestUrl}.");
-                    case HttpStatusCode.NotFound:
-                        throw new HttpRequestException($"{requestUrl} not found.", null, HttpStatusCode.NotFound);
-                    case HttpStatusCode.ServiceUnavailable:
-                        throw new HttpRequestException(
-                            $"{requestUrl} is unavailable", null, HttpStatusCode.ServiceUnavailable);
-                    case HttpStatusCode.BadGateway:
-                        throw new HttpRequestException(
-                            $"{requestUrl} was acting as a gateway or proxy and received an invalid response from the upstream server.",
-                            null, HttpStatusCode.BadGateway);
-                    case (HttpStatusCode)495:
-                        throw new HttpRequestException(
-                            $"Invalid SSL client certificate for {requestUrl}.", null, (HttpStatusCode)495);
-                    case (HttpStatusCode)496:
-                        throw new HttpRequestException(
-                            $"Missing SSL client certificate for {requestUrl}.", null, (HttpStatusCode)496);
-                    case HttpStatusCode.BadRequest:
-                        throw new InvalidOperationException($"Malformed request for {requestUrl}.");
-                    default:
-                        var message = $"Unexpected response from {requestUrl}";
+                        if (!string.IsNullOrEmpty(details))
+                            message += $": {details}";
+                    }
 
-                        using (var content = response.Content)
-                        {
-                            var details = await content.ReadAsStringAsync();
-
-                            if (!string.IsNullOrEmpty(details))
-                                message += $": {details}";
-                        }
-
-                        throw new HttpRequestException(message, null, HttpStatusCode.ServiceUnavailable);
-                }
+                    throw new HttpRequestException(message, null, HttpStatusCode.ServiceUnavailable);
             }
         }
     }

@@ -6,12 +6,12 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using Shouldly;
 using Moq;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using ResourceClaim = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ResourceClaim;
+using ResourceClaim = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.ResourceClaim;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 

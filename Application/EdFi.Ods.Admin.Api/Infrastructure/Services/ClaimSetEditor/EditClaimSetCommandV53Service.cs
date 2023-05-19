@@ -7,9 +7,9 @@ using System;
 using System.Linq;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class EditClaimSetCommandV53Service
     {

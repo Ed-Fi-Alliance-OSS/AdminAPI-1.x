@@ -6,23 +6,22 @@
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+
+public static class VendorExtensions
 {
-    public static class VendorExtensions
+    public static readonly string[] ReservedNames =
     {
-        public static readonly string[] ReservedNames =
-        {
-            CloudOdsAdminApp.VendorName
-        };
+        CloudOdsAdminApp.VendorName
+    };
 
-        public static bool IsSystemReservedVendorName(string vendorName)
-        {
-            return ReservedNames.Contains(vendorName?.Trim());
-        }
+    public static bool IsSystemReservedVendorName(string vendorName)
+    {
+        return ReservedNames.Contains(vendorName?.Trim());
+    }
 
-        public static bool IsSystemReservedVendor(this Vendor vendor)
-        {
-            return IsSystemReservedVendorName(vendor?.VendorName);
-        }
+    public static bool IsSystemReservedVendor(this Vendor vendor)
+    {
+        return IsSystemReservedVendorName(vendor?.VendorName);
     }
 }

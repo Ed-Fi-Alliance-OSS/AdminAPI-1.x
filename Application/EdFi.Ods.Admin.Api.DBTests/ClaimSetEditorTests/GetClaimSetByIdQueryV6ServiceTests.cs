@@ -6,8 +6,8 @@
 using System;
 using NUnit.Framework;
 using Shouldly;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using System.Net;
 using EdFi.Security.DataAccess.Contexts;
 

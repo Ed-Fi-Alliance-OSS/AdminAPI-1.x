@@ -5,20 +5,19 @@
 
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace EdFi.Ods.Admin.Api.Features.Information
-{
-    [SwaggerSchema(Title = "Information")]
-    public class InformationResult
-    {
-        public InformationResult(string version, string build)
-        {
-            Build = build;
-            Version = version;
-        }
+namespace EdFi.Ods.Admin.Api.Features.Information;
 
-        [SwaggerSchema("Application version", Nullable = false)]
-        public string Version { get; }
-        [SwaggerSchema("Build / release version", Nullable = false)]
-        public string Build { get;  }
+[SwaggerSchema(Title = "Information")]
+public class InformationResult
+{
+    public InformationResult(string version, string build)
+    {
+        Build = build;
+        Version = version;
     }
+
+    [SwaggerSchema("Application version", Nullable = false)]
+    public string Version { get; }
+    [SwaggerSchema("Build / release version", Nullable = false)]
+    public string Build { get;  }
 }

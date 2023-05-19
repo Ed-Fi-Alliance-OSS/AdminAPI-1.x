@@ -10,101 +10,100 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
+
+public interface IAddApplicationCommand
 {
-    public interface IAddApplicationCommand
+    AddApplicationResult Execute(IAddApplicationModel applicationModel);
+}
+
+public class AddApplicationCommand : IAddApplicationCommand
+{
+    private readonly IUsersContext _usersContext;
+    private readonly InstanceContext _instanceContext;
+
+    public AddApplicationCommand(IUsersContext usersContext, InstanceContext instanceContext)
     {
-        AddApplicationResult Execute(IAddApplicationModel applicationModel);
+        _usersContext = usersContext;
+        _instanceContext = instanceContext;
     }
 
-    public class AddApplicationCommand : IAddApplicationCommand
+    public AddApplicationResult Execute(IAddApplicationModel applicationModel)
     {
-        private readonly IUsersContext _usersContext;
-        private readonly InstanceContext _instanceContext;
+        var profile = applicationModel.ProfileId.HasValue
+            ? _usersContext.Profiles.SingleOrDefault(p => p.ProfileId == applicationModel.ProfileId.Value)
+            : null;
 
-        public AddApplicationCommand(IUsersContext usersContext, InstanceContext instanceContext)
+        var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);            
+
+        var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
+            x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
+
+        var user = new VendorUser
         {
-            _usersContext = usersContext;
-            _instanceContext = instanceContext;
+            Email = "",
+            FullName = applicationModel.ApplicationName,
+            Vendor = vendor
+        };
+
+        var apiClient = new ApiClient(true)
+        {
+            Name = applicationModel.ApplicationName,
+            IsApproved = true,
+            UseSandbox = false,
+            KeyStatus = "Active",
+            User = user
+        };
+
+        var applicationEdOrgs = applicationModel.EducationOrganizationIds == null 
+            ? Enumerable.Empty<ApplicationEducationOrganization>()
+            : applicationModel.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
+                {
+                    Clients = new List<ApiClient> { apiClient },
+                    EducationOrganizationId = id
+                });
+
+        var application = new Application
+        {
+            ApplicationName = applicationModel.ApplicationName,
+            ApiClients = new List<ApiClient> { apiClient },
+            ApplicationEducationOrganizations = new List<ApplicationEducationOrganization>(applicationEdOrgs),
+            ClaimSetName = applicationModel.ClaimSetName,
+            Profiles = new List<Profile>(),
+            Vendor = vendor,
+            OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
+            OdsInstance = odsInstance
+        };
+
+        if (profile != null)
+        {
+            application.Profiles.Add(profile);
         }
 
-        public AddApplicationResult Execute(IAddApplicationModel applicationModel)
+        _usersContext.Applications.Add(application);
+        _usersContext.SaveChanges();
+
+        return new AddApplicationResult
         {
-            var profile = applicationModel.ProfileId.HasValue
-                ? _usersContext.Profiles.SingleOrDefault(p => p.ProfileId == applicationModel.ProfileId.Value)
-                : null;
-
-            var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);            
-
-            var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
-                x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
-
-            var user = new VendorUser
-            {
-                Email = "",
-                FullName = applicationModel.ApplicationName,
-                Vendor = vendor
-            };
-
-            var apiClient = new ApiClient(true)
-            {
-                Name = applicationModel.ApplicationName,
-                IsApproved = true,
-                UseSandbox = false,
-                KeyStatus = "Active",
-                User = user
-            };
-
-            var applicationEdOrgs = applicationModel.EducationOrganizationIds == null 
-                ? Enumerable.Empty<ApplicationEducationOrganization>()
-                : applicationModel.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
-                    {
-                        Clients = new List<ApiClient> { apiClient },
-                        EducationOrganizationId = id
-                    });
-
-            var application = new Application
-            {
-                ApplicationName = applicationModel.ApplicationName,
-                ApiClients = new List<ApiClient> { apiClient },
-                ApplicationEducationOrganizations = new List<ApplicationEducationOrganization>(applicationEdOrgs),
-                ClaimSetName = applicationModel.ClaimSetName,
-                Profiles = new List<Profile>(),
-                Vendor = vendor,
-                OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
-                OdsInstance = odsInstance
-            };
-
-            if (profile != null)
-            {
-                application.Profiles.Add(profile);
-            }
-
-            _usersContext.Applications.Add(application);
-            _usersContext.SaveChanges();
-
-            return new AddApplicationResult
-            {
-                ApplicationId = application.ApplicationId,
-                Key = apiClient.Key,
-                Secret = apiClient.Secret
-            };
-        }
+            ApplicationId = application.ApplicationId,
+            Key = apiClient.Key,
+            Secret = apiClient.Secret
+        };
     }
+}
 
-    public interface IAddApplicationModel
-    {
-        string ApplicationName { get; }
-        int VendorId { get; }
-        string ClaimSetName { get; }
-        int? ProfileId { get; }
-        IEnumerable<int> EducationOrganizationIds { get; } 
-    }
+public interface IAddApplicationModel
+{
+    string ApplicationName { get; }
+    int VendorId { get; }
+    string ClaimSetName { get; }
+    int? ProfileId { get; }
+    IEnumerable<int> EducationOrganizationIds { get; } 
+}
 
-    public class AddApplicationResult
-    {
-        public int ApplicationId { get; set; }
-        public string Key { get; set; }
-        public string Secret { get; set; }
-    }
+public class AddApplicationResult
+{
+    public int ApplicationId { get; set; }
+    public string Key { get; set; }
+    public string Secret { get; set; }
 }

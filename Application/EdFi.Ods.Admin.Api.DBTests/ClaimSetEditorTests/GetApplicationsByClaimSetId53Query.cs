@@ -6,13 +6,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 
 /// <summary>
-/// Compatibility copy of EdFi.Ods.AdminApp.Management.ClaimSetEditor.GetApplicationsByClaimSetIdQuery
+/// Compatibility copy of EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.GetApplicationsByClaimSetIdQuery
 ///
 /// Since the projected ClaimSet does not include the new columns from v6.1, this query does not
 /// require multiple versions. However, in order to preserve consistent test results, we must

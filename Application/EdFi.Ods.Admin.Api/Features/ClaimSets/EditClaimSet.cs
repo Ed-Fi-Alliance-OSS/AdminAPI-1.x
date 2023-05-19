@@ -5,154 +5,153 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace EdFi.Ods.Admin.Api.Features.ClaimSets
+namespace EdFi.Ods.Admin.Api.Features.ClaimSets;
+
+public class EditClaimSet : IFeature
 {
-    public class EditClaimSet : IFeature
+    public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        public void MapEndpoints(IEndpointRouteBuilder endpoints)
+        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{id}", Handle)
+        .WithDefaultDescription()
+        .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
+        .BuildForVersions(AdminApiVersions.V1);
+    }
+
+    public async Task<IResult> Handle(Validator validator, IEditClaimSetCommand editClaimSetCommand,
+        UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
+        IGetClaimSetByIdQuery getClaimSetByIdQuery,
+        IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
+        IGetApplicationsByClaimSetIdQuery getApplications,
+        IAuthStrategyResolver strategyResolver,
+        IMapper mapper,
+        Request request, int id)
+    {
+        request.Id = id;
+        await validator.GuardAsync(request);
+
+        var editClaimSetModel = new EditClaimSetModel
         {
-            AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{id}", Handle)
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+            ClaimSetName = request.Name,
+            ClaimSetId = id
+        };
+
+        int updatedClaimSetId;
+        try
+        {
+            updatedClaimSetId = editClaimSetCommand.Execute(editClaimSetModel);
+        }
+        catch (AdminAppException exception)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
 
-        public async Task<IResult> Handle(Validator validator, IEditClaimSetCommand editClaimSetCommand,
-            UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
-            IGetClaimSetByIdQuery getClaimSetByIdQuery,
-            IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-            IGetApplicationsByClaimSetIdQuery getApplications,
-            IAuthStrategyResolver strategyResolver,
-            IMapper mapper,
-            Request request, int id)
+        var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
+        var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
+
+        updateResourcesOnClaimSetCommand.Execute(
+            new UpdateResourcesOnClaimSetModel { ClaimSetId = updatedClaimSetId, ResourceClaims = resolvedResourceClaims });
+
+        var claimSet = getClaimSetByIdQuery.Execute(updatedClaimSetId);
+
+        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
+        model.ApplicationsCount = getApplications.ExecuteCount(updatedClaimSetId);
+        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
+            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
+
+        return AdminApiResponse<ClaimSetDetailsModel>.Updated(model, "ClaimSet");
+    }
+
+    [SwaggerSchema(Title = "EditClaimSetRequest")]
+    public class Request
+    {
+        [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
+        public int Id { get; set; }
+
+        [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
+        public string? Name { get; set; }
+
+        [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
+        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+    }
+
+    public class Validator : AbstractValidator<Request>
+    {
+        private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
+        private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
+
+        public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
+            IGetAllClaimSetsQuery getAllClaimSetsQuery,
+            GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+            GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
         {
-            request.Id = id;
-            await validator.GuardAsync(request);
+            _getClaimSetByIdQuery = getClaimSetByIdQuery;
+            _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
-            var editClaimSetModel = new EditClaimSetModel
+            var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
+                .ToLookup(rc => rc.Name.ToLower());
+
+            var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
+                .Select(a => a.AuthStrategyName).ToList();
+
+            RuleFor(m => m.Id).NotEmpty();
+
+            RuleFor(m => m.Id)
+                .Must(BeAnExistingClaimSet)
+                .WithMessage(FeatureConstants.ClaimSetNotFound);
+
+            RuleFor(m => m.Name)
+            .NotEmpty()
+            .Must(BeAUniqueName)
+            .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage)
+            .When(m => BeAnExistingClaimSet(m.Id) && NameIsChanged(m));
+
+            RuleFor(m => m.Name)
+                .MaximumLength(255)
+                .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);
+
+            RuleFor(m => m).Custom((claimSet, context) =>
             {
-                ClaimSetName = request.Name,
-                ClaimSetId = id
-            };
+                var resourceClaimValidator = new ResourceClaimValidator();
 
-            int updatedClaimSetId;
+                if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
+                {
+                    foreach (var resourceClaim in claimSet.ResourceClaims)
+                    {
+                        resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
+                            resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
+                    }
+                }
+            });
+        }
+
+        private bool BeAnExistingClaimSet(int id)
+        {
             try
             {
-                updatedClaimSetId = editClaimSetCommand.Execute(editClaimSetModel);
+                _getClaimSetByIdQuery.Execute(id);
+                return true;
             }
-            catch (AdminAppException exception)
+            catch (AdminAppException)
             {
-                throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
+                return false;
             }
-
-            var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
-            var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
-
-            updateResourcesOnClaimSetCommand.Execute(
-                new UpdateResourcesOnClaimSetModel { ClaimSetId = updatedClaimSetId, ResourceClaims = resolvedResourceClaims });
-
-            var claimSet = getClaimSetByIdQuery.Execute(updatedClaimSetId);
-
-            var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
-            model.ApplicationsCount = getApplications.ExecuteCount(updatedClaimSetId);
-            model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
-                .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
-
-            return AdminApiResponse<ClaimSetDetailsModel>.Updated(model, "ClaimSet");
         }
 
-        [SwaggerSchema(Title = "EditClaimSetRequest")]
-        public class Request
+        private bool NameIsChanged(Request model)
         {
-            [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
-            public int Id { get; set; }
-
-            [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
-            public string? Name { get; set; }
-
-            [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-            public List<ResourceClaimModel>? ResourceClaims { get; set; }
+            return _getClaimSetByIdQuery.Execute(model.Id).Name != model.Name;
         }
 
-        public class Validator : AbstractValidator<Request>
+        private bool BeAUniqueName(string? name)
         {
-            private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
-            private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
-
-            public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
-                IGetAllClaimSetsQuery getAllClaimSetsQuery,
-                GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-                GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
-            {
-                _getClaimSetByIdQuery = getClaimSetByIdQuery;
-                _getAllClaimSetsQuery = getAllClaimSetsQuery;
-
-                var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                    .ToLookup(rc => rc.Name.ToLower());
-
-                var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
-                    .Select(a => a.AuthStrategyName).ToList();
-
-                RuleFor(m => m.Id).NotEmpty();
-
-                RuleFor(m => m.Id)
-                    .Must(BeAnExistingClaimSet)
-                    .WithMessage(FeatureConstants.ClaimSetNotFound);
-
-                RuleFor(m => m.Name)
-                .NotEmpty()
-                .Must(BeAUniqueName)
-                .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage)
-                .When(m => BeAnExistingClaimSet(m.Id) && NameIsChanged(m));
-
-                RuleFor(m => m.Name)
-                    .MaximumLength(255)
-                    .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);
-
-                RuleFor(m => m).Custom((claimSet, context) =>
-                {
-                    var resourceClaimValidator = new ResourceClaimValidator();
-
-                    if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
-                    {
-                        foreach (var resourceClaim in claimSet.ResourceClaims)
-                        {
-                            resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
-                                resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
-                        }
-                    }
-                });
-            }
-
-            private bool BeAnExistingClaimSet(int id)
-            {
-                try
-                {
-                    _getClaimSetByIdQuery.Execute(id);
-                    return true;
-                }
-                catch (AdminAppException)
-                {
-                    return false;
-                }
-            }
-
-            private bool NameIsChanged(Request model)
-            {
-                return _getClaimSetByIdQuery.Execute(model.Id).Name != model.Name;
-            }
-
-            private bool BeAUniqueName(string? name)
-            {
-                return _getAllClaimSetsQuery.Execute().All(x => x.Name != name);
-            }
+            return _getAllClaimSetsQuery.Execute().All(x => x.Name != name);
         }
     }
 }

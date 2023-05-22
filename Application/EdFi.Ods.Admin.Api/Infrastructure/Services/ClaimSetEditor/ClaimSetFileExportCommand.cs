@@ -8,7 +8,7 @@ using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 using Newtonsoft.Json.Linq;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class ClaimSetFileExportCommand
     {

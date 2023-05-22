@@ -6,11 +6,11 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApp.Management.Api;
+using EdFi.Ods.Admin.Api.Infrastructure.Api;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApp.Management.UnitTests.Api;
+namespace EdFi.Ods.Admin.Api.Infrastructure.UnitTests.Api;
 
 [TestFixture]
 public class OdsSecurityVersionResolverTests

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class SharingModel
     {

@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
-using EdFi.Ods.AdminApp.Management.Database;
+using EdFi.Ods.Admin.Api.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure;

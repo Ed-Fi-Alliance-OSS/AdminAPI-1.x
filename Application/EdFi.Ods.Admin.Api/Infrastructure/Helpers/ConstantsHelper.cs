@@ -5,20 +5,19 @@
 
 using System.Reflection;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.Helpers
-{
-    public static class ConstantsHelpers
-    {
-        /// <summary>
-        /// Semantic version of the admin api.
-        /// </summary>
-        public const string Version = "1.1";
+namespace EdFi.Ods.Admin.Api.Infrastructure.Helpers;
 
-        /// <summary>
-        /// Assembly version of the admin api.
-        /// </summary>
-        public static readonly string Build = Assembly.GetExecutingAssembly()
-            .GetName()
-            .Version?.ToString() ?? Version;
-    }
+public static class ConstantsHelpers
+{
+    /// <summary>
+    /// Semantic version of the admin api.
+    /// </summary>
+    public const string Version = "1.1";
+
+    /// <summary>
+    /// Assembly version of the admin api.
+    /// </summary>
+    public static readonly string Build = Assembly.GetExecutingAssembly()
+        .GetName()
+        .Version?.ToString() ?? Version;
 }

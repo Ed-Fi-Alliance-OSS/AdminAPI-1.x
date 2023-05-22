@@ -7,57 +7,56 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
+
+public interface IDeleteApplicationCommand
 {
-    public interface IDeleteApplicationCommand
+    void Execute(int id);
+}
+
+public class DeleteApplicationCommand : IDeleteApplicationCommand
+{
+    private readonly IUsersContext _context;
+
+    public DeleteApplicationCommand(IUsersContext context)
     {
-        void Execute(int id);
+        _context = context;
     }
 
-    public class DeleteApplicationCommand : IDeleteApplicationCommand
+    public void Execute(int id)
     {
-        private readonly IUsersContext _context;
+        var application = _context.Applications
+            .Include(a => a.ApiClients)
+            .Include(a => a.ApiClients.Select(c => c.ClientAccessTokens))
+            .Include(a => a.ApplicationEducationOrganizations)
+            .SingleOrDefault(a => a.ApplicationId == id);
 
-        public DeleteApplicationCommand(IUsersContext context)
+        if (application == null)
         {
-            _context = context;
+            throw new NotFoundException<int>("application", id);
+        }
+        if (application != null && application.Vendor.IsSystemReservedVendor())
+        {
+            throw new Exception("This Application is required for proper system function and may not be modified");
         }
 
-        public void Execute(int id)
+        if (application == null)
         {
-            var application = _context.Applications
-                .Include(a => a.ApiClients)
-                .Include(a => a.ApiClients.Select(c => c.ClientAccessTokens))
-                .Include(a => a.ApplicationEducationOrganizations)
-                .SingleOrDefault(a => a.ApplicationId == id);
-
-            if (application == null)
-            {
-                throw new NotFoundException<int>("application", id);
-            }
-            if (application != null && application.Vendor.IsSystemReservedVendor())
-            {
-                throw new Exception("This Application is required for proper system function and may not be modified");
-            }
-
-            if (application == null)
-            {
-                return;
-            }
-            
-            application.ApiClients.ToList().ForEach(a =>
-            {
-                a.ClientAccessTokens.ToList().ForEach(t => _context.ClientAccessTokens.Remove(t));
-                _context.Clients.Remove(a);
-            });
-
-            application.ApplicationEducationOrganizations.ToList().ForEach(o => _context.ApplicationEducationOrganizations.Remove(o));
-
-            _context.Applications.Remove(application);
-            _context.SaveChanges();
+            return;
         }
+        
+        application.ApiClients.ToList().ForEach(a =>
+        {
+            a.ClientAccessTokens.ToList().ForEach(t => _context.ClientAccessTokens.Remove(t));
+            _context.Clients.Remove(a);
+        });
+
+        application.ApplicationEducationOrganizations.ToList().ForEach(o => _context.ApplicationEducationOrganizations.Remove(o));
+
+        _context.Applications.Remove(application);
+        _context.SaveChanges();
     }
 }

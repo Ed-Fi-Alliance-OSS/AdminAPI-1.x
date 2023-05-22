@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
 using Application = EdFi.Security.DataAccess.Models.Application;
@@ -28,7 +28,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         var testResourceClaims = SetupResourceClaims(testApplication);
 
-        AdminApp.Management.ClaimSetEditor.ResourceClaim[] results = null;
+        Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
         var query = new GetResourceClaimsQuery(securityContext);
         results = query.Execute().ToArray();

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class JsonObjectManipulation
     {

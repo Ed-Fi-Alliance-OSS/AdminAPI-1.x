@@ -5,23 +5,22 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EdFi.Ods.AdminApp.Management
-{
-    public static class HealthCheckServiceExtensions
-    {
-        public static IServiceCollection AddHealthCheck(this IServiceCollection services, string connectionString, bool isSqlServer)
-        {
-            var hcBuilder = services.AddHealthChecks();
-            if (isSqlServer)
-            {
-                hcBuilder.AddSqlServer(connectionString);
-            }
-            else
-            {
-                hcBuilder.AddNpgSql(connectionString);
-            }
+namespace EdFi.Ods.Admin.Api.Infrastructure;
 
-            return services;
+public static class HealthCheckServiceExtensions
+{
+    public static IServiceCollection AddHealthCheck(this IServiceCollection services, string connectionString, bool isSqlServer)
+    {
+        var hcBuilder = services.AddHealthChecks();
+        if (isSqlServer)
+        {
+            hcBuilder.AddSqlServer(connectionString);
         }
+        else
+        {
+            hcBuilder.AddNpgSql(connectionString);
+        }
+
+        return services;
     }
 }

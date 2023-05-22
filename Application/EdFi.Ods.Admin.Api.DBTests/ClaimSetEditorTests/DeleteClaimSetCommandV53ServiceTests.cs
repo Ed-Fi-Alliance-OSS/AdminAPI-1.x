@@ -6,8 +6,8 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using Moq;
 using Shouldly;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;

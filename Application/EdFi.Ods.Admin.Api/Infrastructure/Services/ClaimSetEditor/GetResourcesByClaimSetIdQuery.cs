@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class GetResourcesByClaimSetIdQuery : IGetResourcesByClaimSetIdQuery
     {

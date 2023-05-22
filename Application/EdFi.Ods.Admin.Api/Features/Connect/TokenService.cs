@@ -6,7 +6,7 @@
 using System.Security.Authentication;
 using System.Security.Claims;
 using EdFi.Ods.Admin.Api.Infrastructure.Security;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using OpenIddict.Abstractions;
 

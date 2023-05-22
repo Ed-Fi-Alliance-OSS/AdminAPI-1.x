@@ -6,35 +6,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
-using ClaimSet = EdFi.Ods.AdminApp.Management.ClaimSetEditor.ClaimSet;
+using ClaimSet = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.ClaimSet;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+
+public interface IGetAllClaimSetsQuery
 {
-    public interface IGetAllClaimSetsQuery
+    IEnumerable<ClaimSet> Execute();
+}
+
+public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
+{
+    private readonly ISecurityContext _securityContext;
+
+    public GetAllClaimSetsQuery(ISecurityContext securityContext)
     {
-        IEnumerable<ClaimSet> Execute();
+        _securityContext = securityContext;
     }
 
-    public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
+    public IEnumerable<ClaimSet> Execute()
     {
-        private readonly ISecurityContext _securityContext;
-
-        public GetAllClaimSetsQuery(ISecurityContext securityContext)
-        {
-            _securityContext = securityContext;
-        }
-
-        public IEnumerable<ClaimSet> Execute()
-        {
-            return _securityContext.ClaimSets
-                .Select(x => new ClaimSet
-                {
-                    Id = x.ClaimSetId,
-                    Name = x.ClaimSetName
-                })
-                .Distinct()
-                .OrderBy(x => x.Name)
-                .ToList();
-        }
+        return _securityContext.ClaimSets
+            .Select(x => new ClaimSet
+            {
+                Id = x.ClaimSetId,
+                Name = x.ClaimSetName
+            })
+            .Distinct()
+            .OrderBy(x => x.Name)
+            .ToList();
     }
 }

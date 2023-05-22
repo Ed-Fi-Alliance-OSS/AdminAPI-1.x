@@ -6,15 +6,15 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using Shouldly;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using EdFi.Ods.Admin.Api.Features.ClaimSets;
-using EdFi.Ods.AdminApp.Management;
+using EdFi.Ods.Admin.Api.Infrastructure;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 

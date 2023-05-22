@@ -5,23 +5,22 @@
 
 using EdFi.Admin.DataAccess.Models;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure
+namespace EdFi.Ods.Admin.Api.Infrastructure;
+
+public static class AdminModelExtensions
 {
-    public static class AdminModelExtensions
+    public static string? ContactName(this Vendor vendor)
     {
-        public static string? ContactName(this Vendor vendor)
-        {
-            return vendor?.Users?.FirstOrDefault()?.FullName;
-        }
+        return vendor?.Users?.FirstOrDefault()?.FullName;
+    }
 
-        public static string? ContactEmail(this Vendor vendor)
-        {
-            return vendor?.Users?.FirstOrDefault()?.Email;
-        }
+    public static string? ContactEmail(this Vendor vendor)
+    {
+        return vendor?.Users?.FirstOrDefault()?.Email;
+    }
 
-        public static string? ProfileName(this Application application)
-        {
-            return application?.Profiles?.FirstOrDefault()?.ProfileName;
-        }
+    public static string? ProfileName(this Application application)
+    {
+        return application?.Profiles?.FirstOrDefault()?.ProfileName;
     }
 }

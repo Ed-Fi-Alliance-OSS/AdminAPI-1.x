@@ -11,7 +11,7 @@ using EdFi.SecurityCompatiblity53.DataAccess.Models;
 
 using SecurityClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class EditResourceOnClaimSetCommandV53Service
     {

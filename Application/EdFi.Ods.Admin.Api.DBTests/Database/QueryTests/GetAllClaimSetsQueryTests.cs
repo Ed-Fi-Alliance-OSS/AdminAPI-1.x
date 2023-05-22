@@ -5,7 +5,7 @@
 
 using System;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;

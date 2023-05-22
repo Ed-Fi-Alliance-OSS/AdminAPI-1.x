@@ -6,13 +6,14 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using Shouldly;
 using System.Collections.Generic;
 using Moq;
 
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 
@@ -80,7 +81,7 @@ public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBa
         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
             new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V6(),
             null, new EditResourceOnClaimSetCommandV6Service(securityContext6)),
-            new AdminApp.Management.Database.Queries.GetResourceClaimsQuery(securityContext6),
+            new GetResourceClaimsQuery(securityContext6),
             new OverrideDefaultAuthorizationStrategyCommand(
                 new StubOdsSecurityModelVersionResolver.V6(), null,
                 new OverrideDefaultAuthorizationStrategyV6Service(securityContext6)));

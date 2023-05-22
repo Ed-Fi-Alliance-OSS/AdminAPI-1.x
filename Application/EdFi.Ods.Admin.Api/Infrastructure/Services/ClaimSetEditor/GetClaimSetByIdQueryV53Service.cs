@@ -5,10 +5,10 @@
 
 using System.Linq;
 using System.Net;
-using EdFi.Ods.AdminApp.Management.ErrorHandling;
+using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class GetClaimSetByIdQueryV53Service
     {

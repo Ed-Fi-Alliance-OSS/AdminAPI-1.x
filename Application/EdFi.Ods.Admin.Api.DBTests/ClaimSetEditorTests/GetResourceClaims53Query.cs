@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.Ods.AdminApp.Management.Database.Queries;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 

@@ -13,7 +13,7 @@ using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
 using Action = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
-using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
+using ActionName = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.Action;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 

@@ -3,12 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-namespace EdFi.Ods.AdminApp.Management.Helpers
+namespace EdFi.Ods.Admin.Api.Infrastructure.Helpers;
+
+public class ConnectionStrings
 {
-    public class ConnectionStrings
-    {
-        public string Admin { get; set; }
-        public string Security { get; set; }
-        public string ProductionOds { get; set; }
-    }
+    public string Admin { get; set; }
+    public string Security { get; set; }
+    public string ProductionOds { get; set; }
 }

@@ -5,33 +5,32 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.Database.Queries
+namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
+
+public class GetResourceClaimsAsFlatListQuery
 {
-    public class GetResourceClaimsAsFlatListQuery
+    private readonly ISecurityContext _securityContext;
+
+    public GetResourceClaimsAsFlatListQuery(ISecurityContext securityContext)
     {
-        private readonly ISecurityContext _securityContext;
+        _securityContext = securityContext;
+    }
 
-        public GetResourceClaimsAsFlatListQuery(ISecurityContext securityContext)
-        {
-            _securityContext = securityContext;
-        }
-
-        public IEnumerable<ResourceClaim> Execute()
-        {
-            return _securityContext.ResourceClaims
-                .Select(x => new ResourceClaim
-                {
-                    Id = x.ResourceClaimId,
-                    Name = x.ResourceName,
-                    ParentId = x.ParentResourceClaimId ?? 0,
-                    ParentName = x.ParentResourceClaim.ResourceName
-                })
-                .Distinct()
-                .OrderBy(x => x.Name)
-                .ToList();
-        }
+    public IEnumerable<ResourceClaim> Execute()
+    {
+        return _securityContext.ResourceClaims
+            .Select(x => new ResourceClaim
+            {
+                Id = x.ResourceClaimId,
+                Name = x.ResourceName,
+                ParentId = x.ParentResourceClaimId ?? 0,
+                ParentName = x.ParentResourceClaim.ResourceName
+            })
+            .Distinct()
+            .OrderBy(x => x.Name)
+            .ToList();
     }
 }

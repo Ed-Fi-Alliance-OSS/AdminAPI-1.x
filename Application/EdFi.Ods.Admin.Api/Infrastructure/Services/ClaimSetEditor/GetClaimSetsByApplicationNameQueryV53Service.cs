@@ -8,7 +8,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
-namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class GetClaimSetsByApplicationNameQueryV53Service
     {

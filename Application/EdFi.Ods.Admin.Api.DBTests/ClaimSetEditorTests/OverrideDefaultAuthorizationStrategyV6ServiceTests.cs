@@ -5,7 +5,7 @@
 
 using System.Linq;
 using NUnit.Framework;
-using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
+using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using Shouldly;
 using System.Collections.Generic;
 using Application = EdFi.Security.DataAccess.Models.Application;

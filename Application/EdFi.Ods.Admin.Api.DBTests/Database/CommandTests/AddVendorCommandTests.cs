@@ -4,12 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using EdFi.Ods.AdminApp.Management.Database.Commands;
+using EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
-using EdFi.Ods.AdminApp.Management.Helpers;
+using EdFi.Ods.Admin.Api.Infrastructure.Helpers;
 
 namespace EdFi.Ods.Admin.Api.DBTests.Database.CommandTests;
 

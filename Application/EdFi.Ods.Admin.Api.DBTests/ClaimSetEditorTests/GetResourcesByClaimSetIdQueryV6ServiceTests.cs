@@ -11,7 +11,7 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using Action = EdFi.Security.DataAccess.Models.Action;
-using ActionName = EdFi.Ods.AdminApp.Management.ClaimSetEditor.Action;
+using ActionName = EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.Action;
 using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;

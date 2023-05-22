@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace EdFi.Ods.AdminApp.Management
+namespace EdFi.Ods.Admin.Api.Infrastructure
 {
     [Serializable]
     [DebuggerDisplay("{DisplayName} - {Value}")]

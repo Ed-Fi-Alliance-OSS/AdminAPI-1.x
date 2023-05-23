@@ -17,7 +17,7 @@ public interface IOdsSecurityModelVersionResolver
 public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
 {
     private readonly ILog _log;
-    private Lazy<EdFiOdsSecurityModelCompatibility> _modelVersion;
+    private readonly Lazy<EdFiOdsSecurityModelCompatibility> _modelVersion;
     private readonly IOdsApiValidator _apiValidator;
     private readonly string _apiServerUrl;
 

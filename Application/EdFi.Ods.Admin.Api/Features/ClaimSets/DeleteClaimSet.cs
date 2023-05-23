@@ -39,7 +39,7 @@ public class DeleteClaimSet : IFeature
         return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
     }
 
-    private void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
+    private static void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
     {
         try
         {
@@ -51,7 +51,7 @@ public class DeleteClaimSet : IFeature
         }
     }
 
-    private void CheckAgainstDeletingClaimSetsWithApplications(int id, IGetApplicationsByClaimSetIdQuery getApplications)
+    private static void CheckAgainstDeletingClaimSetsWithApplications(int id, IGetApplicationsByClaimSetIdQuery getApplications)
     {
         var associatedApplicationsCount = getApplications.Execute(id).Count();
         if (associatedApplicationsCount > 0)

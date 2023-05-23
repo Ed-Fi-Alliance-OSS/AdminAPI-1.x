@@ -17,7 +17,7 @@ public class OdsApiValidatorTests
     private const string ValidOdsApiUrl = "https://valid/api";
     private const string InvalidOdsApiUrl = "https://invalid/api";
 
-    class StubGetRequest : ISimpleGetRequest
+    private class StubGetRequest : ISimpleGetRequest
     {
         private readonly string _expectedAddress;
         private readonly string _jsonResponse;

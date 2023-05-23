@@ -43,10 +43,7 @@ public class ConnectController : Controller
     [SwaggerResponse(200, "Sign-in successful.")]
     public async Task<ActionResult> Token()
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
-        if (request == null)
-            throw new ValidationException("Failed to parse token request");
-
+        var request = HttpContext.GetOpenIddictServerRequest() ?? throw new ValidationException("Failed to parse token request");
         var principal = await _tokenService.Handle(request);
 
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);

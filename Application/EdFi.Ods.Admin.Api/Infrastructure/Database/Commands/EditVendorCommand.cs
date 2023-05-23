@@ -22,11 +22,8 @@ public class EditVendorCommand
 
     public Vendor Execute(IEditVendor changedVendorData)
     {
-        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.VendorId);
-        if (vendor == null)
-        {
-            throw new NotFoundException<int>("vendor", changedVendorData.VendorId);
-        }
+        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.VendorId) ?? throw new NotFoundException<int>("vendor", changedVendorData.VendorId);
+
         if (vendor.IsSystemReservedVendor())
         {
             throw new Exception("This vendor is required for proper system function and may not be modified.");

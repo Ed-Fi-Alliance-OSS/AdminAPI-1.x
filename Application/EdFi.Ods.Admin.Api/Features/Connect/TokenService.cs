@@ -44,7 +44,7 @@ public class TokenService : ITokenService
         var requestedScopes = request.GetScopes();
         var appScopes = (await _applicationManager.GetPermissionsAsync(application))
             .Where(p => p.StartsWith(OpenIddictConstants.Permissions.Prefixes.Scope))
-            .Select(p => p.Substring(OpenIddictConstants.Permissions.Prefixes.Scope.Length))
+            .Select(p => p[OpenIddictConstants.Permissions.Prefixes.Scope.Length..])
             .ToList();
 
         var missingScopes = requestedScopes.Where(s => !appScopes.Contains(s)).ToList();

@@ -33,12 +33,7 @@ public class EditApplicationCommand : IEditApplicationCommand
             .Include(a => a.ApplicationEducationOrganizations)
             .Include(a => a.ApiClients)
             .Include(a => a.Profiles)
-            .SingleOrDefault(a => a.ApplicationId == model.ApplicationId);
-
-        if (application == null)
-        {
-            throw new NotFoundException<int>("application", model.ApplicationId);
-        }
+            .SingleOrDefault(a => a.ApplicationId == model.ApplicationId) ?? throw new NotFoundException<int>("application", model.ApplicationId);
 
         if (application.Vendor.IsSystemReservedVendor())
         {
@@ -57,18 +52,12 @@ public class EditApplicationCommand : IEditApplicationCommand
         application.ClaimSetName = model.ClaimSetName;
         application.Vendor = newVendor;
 
-        if (application.ApplicationEducationOrganizations == null)
-        {
-            application.ApplicationEducationOrganizations = new Collection<ApplicationEducationOrganization>();
-        }
+        application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
 
         application.ApplicationEducationOrganizations.Clear();
         model.EducationOrganizationIds.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
 
-        if (application.Profiles == null)
-        {
-            application.Profiles = new Collection<Profile>();
-        }
+        application.Profiles ??= new Collection<Profile>();
 
         application.Profiles.Clear();
 

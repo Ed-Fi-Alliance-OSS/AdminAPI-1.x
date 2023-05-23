@@ -11,6 +11,7 @@ using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using EdFi.Ods.Admin.Api.Infrastructure.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NJsonSchema;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.Api;
 
@@ -23,9 +24,9 @@ public class OdsApiValidatorResult
 {
     public bool IsValidOdsApi { get; set; }
 
-    public Version Version { get; set; }
+    public Version? Version { get; set; }
 
-    public Exception Exception { get; set; }
+    public Exception? Exception { get; set; }
 }
 
 public class OdsApiValidator : IOdsApiValidator
@@ -42,7 +43,7 @@ public class OdsApiValidator : IOdsApiValidator
 
             var schemaJson = GetSchemaJson();
 
-            var schema = await NJsonSchema.JsonSchema.FromJsonAsync(schemaJson);
+            var schema = await JsonSchema.FromJsonAsync(schemaJson);
 
             var parsedContent = ParseJson(contentAsString);
 
@@ -71,7 +72,7 @@ public class OdsApiValidator : IOdsApiValidator
         }
         catch (HttpRequestException exception)
         {
-            return InvalidOdsApiValidatorResult(exception.Message, exception.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            return InvalidOdsApiValidatorResult(exception.Message, exception.StatusCode??HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception exception)
         {
@@ -170,7 +171,7 @@ public class OdsApiValidator : IOdsApiValidator
                 IsValidOdsApi = false,
                 Exception = new OdsApiConnectionException(
                         statusCode, "Invalid ODS API configured.", message)
-                { AllowFeedback = false }
+                    { AllowFeedback = false }
             };
         }
     }
@@ -178,7 +179,7 @@ public class OdsApiValidator : IOdsApiValidator
     private static JObject ParseJson(string contentAsString)
     {
         return string.IsNullOrEmpty(contentAsString)
-            ? null
+            ? new JObject()
             : JObject.Parse(contentAsString);
     }
 }

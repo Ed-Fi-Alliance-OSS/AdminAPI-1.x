@@ -28,7 +28,7 @@ public class TokenEndpointBodyDescriptionFilter : IOperationFilter
         };
     }
 
-    private OpenApiMediaType BuildTokenRequestBodyDescription() => new OpenApiMediaType
+    private static OpenApiMediaType BuildTokenRequestBodyDescription() => new()
     {
         Schema = new OpenApiSchema
         {

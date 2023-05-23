@@ -23,7 +23,7 @@ public class SwaggerExcludeSchemaFilter : ISchemaFilter
         foreach (var property in properties)
         {
             var attribute = property.GetCustomAttribute(typeof(SwaggerExcludeAttribute));
-            var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
+            var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name[1..];
 
             if (attribute != null)
             {

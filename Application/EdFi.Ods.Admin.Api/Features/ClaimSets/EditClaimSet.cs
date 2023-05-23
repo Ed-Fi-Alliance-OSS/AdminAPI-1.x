@@ -88,14 +88,14 @@ public class EditClaimSet : IFeature
 
         public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetAllClaimSetsQuery getAllClaimSetsQuery,
-            GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-            GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
         {
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
             var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                .ToLookup(rc => rc.Name.ToLower());
+                .ToLookup(rc => rc.Name?.ToLower());
 
             var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
                 .Select(a => a.AuthStrategyName).ToList();
@@ -140,7 +140,7 @@ public class EditClaimSet : IFeature
             }
             catch (AdminAppException)
             {
-                return false;
+                throw new NotFoundException<int>("claimSet", id);
             }
         }
 

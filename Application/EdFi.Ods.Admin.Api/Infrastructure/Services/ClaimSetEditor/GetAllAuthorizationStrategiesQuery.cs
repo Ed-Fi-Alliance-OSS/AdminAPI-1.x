@@ -3,22 +3,24 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
-
-public class GetAllAuthorizationStrategiesQuery
+public interface IGetAllAuthorizationStrategiesQuery
 {
-    private ISecurityContext _securityContext;
+    IReadOnlyList<AuthorizationStrategy> Execute();
+}
+
+public class GetAllAuthorizationStrategiesQuery : IGetAllAuthorizationStrategiesQuery
+{
+    private readonly ISecurityContext _securityContext;
 
     public GetAllAuthorizationStrategiesQuery(ISecurityContext securityContext)
     {
         _securityContext = securityContext;
     }
 
-    public List<AuthorizationStrategy> Execute()
+    public IReadOnlyList<AuthorizationStrategy> Execute()
     {
         return _securityContext.AuthorizationStrategies
             .OrderBy(x => x.AuthorizationStrategyName)

@@ -11,7 +11,7 @@ public static class OdsInstanceIdentityHelper
     {
         var index = odsInstanceName.LastIndexOf("_", StringComparison.InvariantCulture);
 
-        var identityValue = odsInstanceName.Substring(index + 1);
+        var identityValue = odsInstanceName[(index + 1)..];
 
         return int.Parse(identityValue);
     }

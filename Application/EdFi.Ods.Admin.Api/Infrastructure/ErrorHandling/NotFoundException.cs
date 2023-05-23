@@ -5,9 +5,12 @@
 
 using System;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
+public interface INotFoundException
+{
+    public string Message { get; }
+}
 
-public class NotFoundException<T> : Exception
+public class NotFoundException<T> : Exception, INotFoundException
 {
     public string ResourceName { get; }
     public T Id { get; }

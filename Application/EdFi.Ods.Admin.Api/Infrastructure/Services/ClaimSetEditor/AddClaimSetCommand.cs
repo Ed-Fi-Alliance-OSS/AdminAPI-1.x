@@ -34,5 +34,5 @@ public class AddClaimSetCommand
 
 public interface IAddClaimSetModel
 {
-    string ClaimSetName { get; }
+    string? ClaimSetName { get; }
 }

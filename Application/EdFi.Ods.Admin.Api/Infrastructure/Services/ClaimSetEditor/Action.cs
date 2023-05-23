@@ -7,10 +7,10 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 
 public class Action : Enumeration<Action, string>
 {
-    public static readonly Action Create = new Action("Create", "Create");
-    public static readonly Action Read = new Action("Read", "Read");
-    public static readonly Action Update = new Action("Update", "Update");
-    public static readonly Action Delete = new Action("Delete", "Delete");
+    public static readonly Action Create = new("Create", "Create");
+    public static readonly Action Read = new("Read", "Read");
+    public static readonly Action Update = new("Update", "Update");
+    public static readonly Action Delete = new("Delete", "Delete");
 
     private Action(string value, string displayName) : base(value, displayName) { }
 }

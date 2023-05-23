@@ -12,7 +12,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 
 public interface IGetAllClaimSetsQuery
 {
-    IEnumerable<ClaimSet> Execute();
+    IReadOnlyList<ClaimSet> Execute();
 }
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
@@ -24,7 +24,7 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
         _securityContext = securityContext;
     }
 
-    public IEnumerable<ClaimSet> Execute()
+    public IReadOnlyList<ClaimSet> Execute()
     {
         return _securityContext.ClaimSets
             .Select(x => new ClaimSet

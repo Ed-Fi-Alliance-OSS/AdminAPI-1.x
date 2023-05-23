@@ -3,34 +3,32 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using SecurityAction = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
-
 namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.Extensions;
 
 public static class AuthorizationStrategiesExtension
 {
-    public static AuthorizationStrategy Create(this AuthorizationStrategy[] authorizationStrategies)
+    public static AuthorizationStrategy? Create(this AuthorizationStrategy?[] authorizationStrategies)
     {
         return authorizationStrategies[0];
     }
 
-    public static AuthorizationStrategy Read(this AuthorizationStrategy[] authorizationStrategies)
+    public static AuthorizationStrategy? Read(this AuthorizationStrategy?[] authorizationStrategies)
     {
         return authorizationStrategies[1];
     }
 
-    public static AuthorizationStrategy Update(this AuthorizationStrategy[] authorizationStrategies)
+    public static AuthorizationStrategy? Update(this AuthorizationStrategy?[] authorizationStrategies)
     {
         return authorizationStrategies[2];
     }
 
-    public static AuthorizationStrategy Delete(this AuthorizationStrategy[] authorizationStrategies)
+    public static AuthorizationStrategy? Delete(this AuthorizationStrategy?[] authorizationStrategies)
     {
         return authorizationStrategies[3];
     }
 
-    public static AuthorizationStrategy[] AddAuthorizationStrategyOverrides(this AuthorizationStrategy[] authorizationStrategies,
-        string actionName, AuthorizationStrategy strategy)
+    public static AuthorizationStrategy?[] AddAuthorizationStrategyOverrides(this AuthorizationStrategy?[] authorizationStrategies,
+        string actionName, AuthorizationStrategy? strategy)
     {
         if (actionName == Action.Create.Value)
             authorizationStrategies[0] = strategy;

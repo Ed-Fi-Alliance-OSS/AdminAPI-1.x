@@ -37,6 +37,6 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
     public interface IUpdateResourcesOnClaimSetModel
     {
         int ClaimSetId { get; }
-        List<ResourceClaim> ResourceClaims { get; }
+        List<ResourceClaim>? ResourceClaims { get; }
     }
 }

@@ -15,7 +15,7 @@ public static class VendorExtensions
         CloudOdsAdminApp.VendorName
     };
 
-    public static bool IsSystemReservedVendorName(string vendorName)
+    public static bool IsSystemReservedVendorName(string? vendorName)
     {
         return ReservedNames.Contains(vendorName?.Trim());
     }

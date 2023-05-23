@@ -32,14 +32,14 @@ public class AddVendorCommand
 
         var vendor = new Vendor
         {
-            VendorName = newVendor.Company.Trim(),
+            VendorName = newVendor.Company?.Trim(),
             VendorNamespacePrefixes = namespacePrefixes
         };
 
         var user = new VendorUser
         {
-            FullName = newVendor.ContactName.Trim(),
-            Email = newVendor.ContactEmailAddress.Trim()
+            FullName = newVendor.ContactName?.Trim(),
+            Email = newVendor.ContactEmailAddress?.Trim()
         };
 
         vendor.Users.Add(user);
@@ -52,8 +52,8 @@ public class AddVendorCommand
 
 public interface IAddVendorModel
 {
-    string Company { get; }
-    string NamespacePrefixes { get; }
-    string ContactName { get; }
-    string ContactEmailAddress { get; }
+    string? Company { get; }
+    string? NamespacePrefixes { get; }
+    string? ContactName { get; }
+    string? ContactEmailAddress { get; }
 }

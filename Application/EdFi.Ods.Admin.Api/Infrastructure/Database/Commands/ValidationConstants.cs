@@ -3,10 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Commands
+namespace EdFi.Ods.Admin.Api.Infrastructure.Commands;
+
+public static class ValidationConstants
 {
-    public static class ValidationConstants
-    {
-        public static int MaximumApplicationNameLength = 50;
-    }
+    public static int MaximumApplicationNameLength = 50;
 }

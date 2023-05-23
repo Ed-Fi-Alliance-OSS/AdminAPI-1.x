@@ -11,6 +11,7 @@ using EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 
 namespace EdFi.Ods.Admin.Api.Features.Applications;
 
@@ -36,7 +37,7 @@ public class EditApplication : IFeature
         return AdminApiResponse<ApplicationModel>.Updated(model, "Application");
     }
 
-    private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
+    private static void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
     {
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
@@ -87,18 +88,18 @@ public class EditApplication : IFeature
                 .WithMessage(FeatureConstants.EdOrgIdsValidationMessage);
 
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
-        }
 
-        private bool BeWithinApplicationNameMaxLength<T>(IEditApplicationModel model, string? applicationName, ValidationContext<T> context)
-        {
-            var extraCharactersInName = applicationName!.Length - ValidationConstants.MaximumApplicationNameLength;
-            if (extraCharactersInName <= 0)
+            static bool BeWithinApplicationNameMaxLength<T>(IEditApplicationModel model, string? applicationName, ValidationContext<T> context)
             {
-                return true;
+                var extraCharactersInName = applicationName!.Length - ValidationConstants.MaximumApplicationNameLength;
+                if (extraCharactersInName <= 0)
+                {
+                    return true;
+                }
+                context.MessageFormatter.AppendArgument("ApplicationName", applicationName);
+                context.MessageFormatter.AppendArgument("ExtraCharactersInName", extraCharactersInName);
+                return false;
             }
-            context.MessageFormatter.AppendArgument("ApplicationName", applicationName);
-            context.MessageFormatter.AppendArgument("ExtraCharactersInName", extraCharactersInName);
-            return false;
         }
     }
 }

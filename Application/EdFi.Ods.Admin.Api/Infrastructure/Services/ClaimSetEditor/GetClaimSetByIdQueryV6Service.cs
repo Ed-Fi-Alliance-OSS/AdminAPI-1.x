@@ -3,42 +3,40 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using System.Net;
 using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+
+public class GetClaimSetByIdQueryV6Service
 {
-    public class GetClaimSetByIdQueryV6Service
+    private readonly ISecurityContext _securityContext;
+
+    public GetClaimSetByIdQueryV6Service(ISecurityContext securityContext)
     {
-        private readonly ISecurityContext _securityContext;
+        _securityContext = securityContext;
+    }
 
-        public GetClaimSetByIdQueryV6Service(ISecurityContext securityContext)
+    public ClaimSet Execute(int claimSetId)
+    {
+        var securityContextClaimSet = _securityContext.ClaimSets
+           .SingleOrDefault(x => x.ClaimSetId == claimSetId);
+
+        if (securityContextClaimSet != null)
         {
-            _securityContext = securityContext;
-        }
-
-        public ClaimSet Execute(int claimSetId)
-        {
-            var securityContextClaimSet = _securityContext.ClaimSets
-               .SingleOrDefault(x => x.ClaimSetId == claimSetId);
-
-            if (securityContextClaimSet != null)
+            return new ClaimSet
             {
-                return new ClaimSet
-                {
-                    Id = securityContextClaimSet.ClaimSetId,
-                    Name = securityContextClaimSet.ClaimSetName,
-                    IsEditable = !securityContextClaimSet.ForApplicationUseOnly && !securityContextClaimSet.IsEdfiPreset &&
-                    !CloudOdsAdminApp.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
-                };
-            }
-
-            throw new AdminAppException("No such claim set exists in the database.")
-            {
-                StatusCode = HttpStatusCode.NotFound
+                Id = securityContextClaimSet.ClaimSetId,
+                Name = securityContextClaimSet.ClaimSetName,
+                IsEditable = !securityContextClaimSet.ForApplicationUseOnly && !securityContextClaimSet.IsEdfiPreset &&
+                !CloudOdsAdminApp.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
             };
         }
+
+        throw new AdminAppException("No such claim set exists in the database.")
+        {
+            StatusCode = HttpStatusCode.NotFound
+        };
     }
 }

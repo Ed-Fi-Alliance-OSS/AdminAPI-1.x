@@ -11,6 +11,7 @@ using EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 using FluentValidation.Results;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 
 namespace EdFi.Ods.Admin.Api.Features.Applications;
 
@@ -85,7 +86,7 @@ public class AddApplication : IFeature
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
         }
 
-        private bool BeWithinApplicationNameMaxLength<T>(Request model, string? applicationName, ValidationContext<T> context)
+        private bool BeWithinApplicationNameMaxLength<T>(IAddApplicationModel model, string? applicationName, ValidationContext<T> context)
         {
             var extraCharactersInName = applicationName!.Length - ValidationConstants.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)

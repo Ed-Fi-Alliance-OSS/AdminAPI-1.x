@@ -27,7 +27,7 @@ internal class GetAllClaimSets53Query : IGetAllClaimSetsQuery
         _securityContext = securityContext;
     }
 
-    public IEnumerable<ClaimSet> Execute()
+    public IReadOnlyList<ClaimSet> Execute()
     {
         return _securityContext.ClaimSets
             .Select(x => new ClaimSet

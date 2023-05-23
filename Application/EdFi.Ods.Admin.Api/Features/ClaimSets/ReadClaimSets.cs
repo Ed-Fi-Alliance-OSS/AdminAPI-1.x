@@ -5,7 +5,6 @@
 
 using AutoMapper;
 using EdFi.Ods.Admin.Api.Infrastructure;
-using EdFi.Ods.Admin.Api.Infrastructure;
 using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;

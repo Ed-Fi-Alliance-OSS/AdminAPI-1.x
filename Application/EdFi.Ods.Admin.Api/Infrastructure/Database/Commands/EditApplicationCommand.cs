@@ -55,7 +55,7 @@ public class EditApplicationCommand : IEditApplicationCommand
         application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
 
         application.ApplicationEducationOrganizations.Clear();
-        model.EducationOrganizationIds.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
+        model.EducationOrganizationIds?.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
 
         application.Profiles ??= new Collection<Profile>();
 
@@ -74,9 +74,9 @@ public class EditApplicationCommand : IEditApplicationCommand
 public interface IEditApplicationModel
 {
     int ApplicationId { get; }
-    string ApplicationName { get; }
+    string? ApplicationName { get; }
     int VendorId { get; }
-    string ClaimSetName { get; }
+    string? ClaimSetName { get; }
     int? ProfileId { get; }
-    IEnumerable<int> EducationOrganizationIds { get; }
+    IEnumerable<int>? EducationOrganizationIds { get; }
 }

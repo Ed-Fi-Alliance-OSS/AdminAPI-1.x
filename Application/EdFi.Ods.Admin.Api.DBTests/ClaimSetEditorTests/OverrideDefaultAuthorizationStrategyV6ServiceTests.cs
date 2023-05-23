@@ -10,7 +10,6 @@ using Shouldly;
 using System.Collections.Generic;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using AutoMapper;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 

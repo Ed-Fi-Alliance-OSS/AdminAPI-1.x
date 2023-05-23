@@ -7,7 +7,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Helpers;
 
 public class ConnectionStrings
 {
-    public string Admin { get; set; }
-    public string Security { get; set; }
-    public string ProductionOds { get; set; }
+    public string? Admin { get; set; }
+    public string? Security { get; set; }
+    public string? ProductionOds { get; set; }
 }

@@ -8,39 +8,38 @@ using System.Linq;
 using EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+public class DeleteClaimSetCommandV6Service
 {
-    public class DeleteClaimSetCommandV6Service
+    private readonly ISecurityContext _context;
+
+    public DeleteClaimSetCommandV6Service(ISecurityContext context)
     {
-        private readonly ISecurityContext _context;
-
-        public DeleteClaimSetCommandV6Service(ISecurityContext context)
-        {
-            _context = context;
-        }
-
-        public void Execute(IDeleteClaimSetModel claimSet)
-        {
-            var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
-            if (claimSetToDelete.ForApplicationUseOnly || claimSetToDelete.IsEdfiPreset ||
-                    CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
-            {
-                throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
-            }
-
-            var resourceClaimsForClaimSetId =
-                      _context.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == claimSet.Id).ToList();
-            foreach (var resourceClaimAction in resourceClaimsForClaimSetId)
-            {
-                var resourceClaimActionAuthorizationStrategyOverrides = _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.
-                    Where(x => x.ClaimSetResourceClaimActionId == resourceClaimAction.ClaimSetResourceClaimActionId);
-
-                _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.RemoveRange(resourceClaimActionAuthorizationStrategyOverrides);
-            }
-
-            _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSetId);
-            _context.ClaimSets.Remove(claimSetToDelete);
-            _context.SaveChanges();
-        }
+        _context = context;
     }
+
+    public void Execute(IDeleteClaimSetModel claimSet)
+    {
+        var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
+        if (claimSetToDelete.ForApplicationUseOnly || claimSetToDelete.IsEdfiPreset ||
+                CloudOdsAdminApp.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
+        {
+            throw new AdminAppException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
+        }
+
+        var resourceClaimsForClaimSetId =
+                  _context.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == claimSet.Id).ToList();
+        foreach (var resourceClaimAction in resourceClaimsForClaimSetId)
+        {
+            var resourceClaimActionAuthorizationStrategyOverrides = _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.
+                Where(x => x.ClaimSetResourceClaimActionId == resourceClaimAction.ClaimSetResourceClaimActionId);
+
+            _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.RemoveRange(resourceClaimActionAuthorizationStrategyOverrides);
+        }
+
+        _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSetId);
+        _context.ClaimSets.Remove(claimSetToDelete);
+        _context.SaveChanges();
+    }
+
 }

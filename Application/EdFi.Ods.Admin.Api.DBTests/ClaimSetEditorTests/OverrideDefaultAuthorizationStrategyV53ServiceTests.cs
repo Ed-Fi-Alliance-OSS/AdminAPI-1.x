@@ -26,6 +26,7 @@ public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData5
     [Test]
     public void ShouldOverrideAuthorizationStrategiesForParentResourcesOnClaimSet()
     {
+        // Arrange
         var testApplication = new Application
         {
             ApplicationName = "TestApplicationName"
@@ -56,10 +57,12 @@ public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData5
             AuthorizationStrategyForDelete = 0
         };
 
+        // Act
         using var securityContext = TestContext;
         var command = new OverrideDefaultAuthorizationStrategyV53Service(securityContext);
         command.Execute(overrideModel);
 
+        // Assert
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
         var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
@@ -80,6 +83,7 @@ public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData5
     [Test]
     public void ShouldOverrideAuthorizationStrategiesForChildResourcesOnClaimSet()
     {
+        // Arrange
         var testApplication = new Application
         {
             ApplicationName = "TestApplicationName"
@@ -116,10 +120,12 @@ public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData5
             AuthorizationStrategyForDelete = 0
         };
 
+        // Act
         using var securityContext = TestContext;
         var command = new OverrideDefaultAuthorizationStrategyV53Service(securityContext);
         command.Execute(overrideModel);
 
+        // Assert
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToList();
 
         var resultParentResource = resourceClaimsForClaimSet.Single(x => x.Id == testParentResource.ResourceClaimId);

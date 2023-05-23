@@ -77,8 +77,8 @@ public class EditVendorCommand
 public interface IEditVendor
 {
     int VendorId { get; set; }
-    string Company { get; set; }
-    string NamespacePrefixes { get; set; }
-    string ContactName { get; set; }
-    string ContactEmailAddress { get; set; }
+    string? Company { get; set; }
+    string? NamespacePrefixes { get; set; }
+    string? ContactName { get; set; }
+    string? ContactEmailAddress { get; set; }
 }

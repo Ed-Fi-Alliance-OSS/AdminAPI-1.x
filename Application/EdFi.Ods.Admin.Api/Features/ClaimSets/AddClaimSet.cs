@@ -34,7 +34,7 @@ public class AddClaimSet : IFeature
         await validator.GuardAsync(request);
         var addedClaimSetId = addClaimSetCommand.Execute(new AddClaimSetModel
         {
-            ClaimSetName = request.Name
+            ClaimSetName = request.Name ?? string.Empty
         });
 
         var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
@@ -64,16 +64,16 @@ public class AddClaimSet : IFeature
 
     public class Validator : AbstractValidator<Request>
     {
-        private IGetAllClaimSetsQuery _getAllClaimSetsQuery;
+        private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
         public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
-            GetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-            GetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
             var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                .ToLookup(rc => rc.Name.ToLower());
+                .ToLookup(rc => rc.Name?.ToLower());
 
             var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
                 .Select(a => a.AuthStrategyName).ToList();

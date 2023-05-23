@@ -32,8 +32,10 @@ public class SimpleGetRequest : ISimpleGetRequest
         {
             await CheckResponseStatusCode(address, response);
 
-            using var content = response.Content;
-            return await content.ReadAsStringAsync();
+            using (var content = response.Content)
+            {
+                return await content.ReadAsStringAsync();
+            }
         }
 
         static async Task CheckResponseStatusCode(string requestUrl, HttpResponseMessage response)

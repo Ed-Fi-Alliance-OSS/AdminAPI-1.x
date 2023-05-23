@@ -43,7 +43,7 @@ public class RegenerateApiClientSecretCommand
 
 public class RegenerateApiClientSecretResult
 {
-    public string Key { get; set; }
-    public string Secret { get; set; }
-    public Application Application { get; set; }
+    public string? Key { get; set; }
+    public string? Secret { get; set; }
+    public Application Application { get; set; } = new();
 }

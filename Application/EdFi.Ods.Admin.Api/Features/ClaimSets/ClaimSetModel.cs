@@ -70,7 +70,7 @@ public class UpdateResourcesOnClaimSetModel : IUpdateResourcesOnClaimSetModel
 {
     public int ClaimSetId { get; set; }
 
-    public List<ResourceClaim>? ResourceClaims { get; set; }
+    public List<ResourceClaim>? ResourceClaims { get; set; } = new List<ResourceClaim>();
 }
 
 public class DeleteClaimSetModel : IDeleteClaimSetModel

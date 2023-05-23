@@ -8,7 +8,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
     public class ClaimSet
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public bool IsEditable { get; set; }
         public int ApplicationsCount { get; set; }
     }

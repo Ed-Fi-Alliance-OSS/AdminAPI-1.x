@@ -94,16 +94,16 @@ public class AddApplicationCommand : IAddApplicationCommand
 
 public interface IAddApplicationModel
 {
-    string ApplicationName { get; }
+    string? ApplicationName { get; }
     int VendorId { get; }
-    string ClaimSetName { get; }
+    string? ClaimSetName { get; }
     int? ProfileId { get; }
-    IEnumerable<int> EducationOrganizationIds { get; }
+    IEnumerable<int>? EducationOrganizationIds { get; }
 }
 
 public class AddApplicationResult
 {
     public int ApplicationId { get; set; }
-    public string Key { get; set; }
-    public string Secret { get; set; }
+    public string? Key { get; set; }
+    public string? Secret { get; set; }
 }

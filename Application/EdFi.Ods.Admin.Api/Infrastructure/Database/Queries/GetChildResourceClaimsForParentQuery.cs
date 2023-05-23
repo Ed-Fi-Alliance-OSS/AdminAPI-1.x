@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 using EdFi.Security.DataAccess.Contexts;
 
@@ -26,13 +24,14 @@ public class GetChildResourceClaimsForParentQuery
 
         var childResourcesForParent = _securityContext.ResourceClaims
             .Where(x => x.ParentResourceClaimId == parentResourceClaimId).ToList();
+
         return childResourcesForParent
             .Select(x => new ResourceClaim()
             {
                 Name = x.ResourceName,
                 Id = x.ResourceClaimId,
                 ParentId = parentResourceClaimId,
-                ParentName = parentResourceClaim?.ResourceName,
+                ParentName = parentResourceClaim?.ResourceName ?? string.Empty,
             })
             .Distinct()
             .OrderBy(x => x.Name)

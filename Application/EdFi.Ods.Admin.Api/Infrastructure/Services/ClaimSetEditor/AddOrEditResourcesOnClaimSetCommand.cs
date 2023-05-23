@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 using FluentValidation;
@@ -37,7 +35,7 @@ public class AddOrEditResourcesOnClaimSetCommand
         resources.AddRange(childResources);
         var currentResources = resources.Select(r =>
             {
-                var resource = allResources.FirstOrDefault(dr => dr.Name.Equals(r.Name));
+                var resource = allResources.FirstOrDefault(dr => (dr.Name ?? string.Empty).Equals(r.Name, StringComparison.Ordinal));
                 if (resource != null)
                 {
                     resource.Create = r.Create;
@@ -48,8 +46,10 @@ public class AddOrEditResourcesOnClaimSetCommand
                 }
                 return resource;
             }).ToList();
-        currentResources.RemoveAll(x => x == null);
-        foreach (var resource in currentResources)
+
+        currentResources.RemoveAll(x => x is null);
+
+        foreach (var resource in currentResources.Where(x => x is not null))
         {
             var editResourceModel = new EditResourceOnClaimSetModel
             {
@@ -59,7 +59,7 @@ public class AddOrEditResourcesOnClaimSetCommand
 
             _editResourceOnClaimSetCommand.Execute(editResourceModel);
 
-            if (resource.AuthStrategyOverridesForCRUD != null && resource.AuthStrategyOverridesForCRUD.Any())
+            if (resource!.AuthStrategyOverridesForCRUD != null && resource.AuthStrategyOverridesForCRUD.Any())
             {
                 var overrideAuthStrategyModel = new OverrideAuthorizationStrategyModel
                 {
@@ -74,7 +74,7 @@ public class AddOrEditResourcesOnClaimSetCommand
             }
         }
 
-        static int AuthStrategyOverrideForAction(AuthorizationStrategy authorizationStrategy)
+        static int AuthStrategyOverrideForAction(AuthorizationStrategy? authorizationStrategy)
         {
             return authorizationStrategy != null ? authorizationStrategy.AuthStrategyId : 0;
         }
@@ -96,13 +96,13 @@ public class AddOrEditResourcesOnClaimSetCommand
 
 public class AddClaimSetModel : IAddClaimSetModel
 {
-    public string ClaimSetName { get; set; }
+    public string? ClaimSetName { get; set; }
 }
 
 public class EditResourceOnClaimSetModel : IEditResourceOnClaimSetModel
 {
     public int ClaimSetId { get; set; }
-    public ResourceClaim ResourceClaim { get; set; }
+    public ResourceClaim? ResourceClaim { get; set; }
 }
 
 public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationStrategyModel

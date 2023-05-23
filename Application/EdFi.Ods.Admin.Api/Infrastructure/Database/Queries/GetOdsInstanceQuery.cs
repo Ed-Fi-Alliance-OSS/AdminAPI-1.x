@@ -18,7 +18,7 @@ public class GetOdsInstanceQuery
         _usersContext = userContext;
     }
 
-    public OdsInstance Execute(string instanceName)
+    public OdsInstance? Execute(string instanceName)
     {
         return _usersContext.OdsInstances.SingleOrDefault(i => i.Name == instanceName);
     }

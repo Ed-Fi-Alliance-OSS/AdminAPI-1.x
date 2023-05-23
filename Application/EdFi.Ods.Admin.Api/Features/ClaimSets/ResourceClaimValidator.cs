@@ -17,7 +17,7 @@ public class ResourceClaimValidator
     }
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-        List<string> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+        List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
@@ -81,7 +81,8 @@ public class ResourceClaimValidator
                         {
                             context.AddFailure(propertyName, "'{ChildResource}' can not be added as a child resource.");
                         }
-                        else if (!resources.Select(x => x.Id).Contains(childResource.ParentId))
+
+                        else if (!resources.Where(x => x is not null).Select(x => x.Id).Contains(childResource.ParentId))
                         {
                             context.MessageFormatter.AppendArgument("CorrectParentResource", childResource.ParentName);
                             context.AddFailure(propertyName, "Child resource: '{ChildResource}' added to the wrong parent resource. Correct parent resource is: '{CorrectParentResource}'");

@@ -7,39 +7,38 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+
+public class GetAuthStrategiesByApplicationNameQuery : IGetAuthStrategiesByApplicationNameQuery
 {
-    public class GetAuthStrategiesByApplicationNameQuery : IGetAuthStrategiesByApplicationNameQuery
+
+    private readonly ISecurityContext _securityContext;
+
+    public GetAuthStrategiesByApplicationNameQuery(ISecurityContext securityContext)
     {
-
-        private readonly ISecurityContext _securityContext;
-
-        public GetAuthStrategiesByApplicationNameQuery(ISecurityContext securityContext)
-        {
-            _securityContext = securityContext;
-        }
-
-        public List<AuthorizationStrategy> Execute(string applicationName)
-        {
-            var authStrategies = GetAuthStrategiesByApplicationName(applicationName);
-            return authStrategies.ToList();
-        }
-
-        private AuthorizationStrategy[] GetAuthStrategiesByApplicationName(string applicationName)
-        {
-            return _securityContext.AuthorizationStrategies
-                .Where(x => x.Application.ApplicationName == applicationName)
-                .OrderBy(x => x.AuthorizationStrategyName)
-                .Select(x => new AuthorizationStrategy
-                {
-                    AuthStrategyId = x.AuthorizationStrategyId,
-                    AuthStrategyName = x.DisplayName
-                }).ToArray();
-        }
+        _securityContext = securityContext;
     }
 
-    public interface IGetAuthStrategiesByApplicationNameQuery
+    public List<AuthorizationStrategy> Execute(string applicationName)
     {
-        List<AuthorizationStrategy> Execute(string securityContextApplicationName);
+        var authStrategies = GetAuthStrategiesByApplicationName(applicationName);
+        return authStrategies.ToList();
     }
+
+    private AuthorizationStrategy[] GetAuthStrategiesByApplicationName(string applicationName)
+    {
+        return _securityContext.AuthorizationStrategies
+            .Where(x => x.Application.ApplicationName == applicationName)
+            .OrderBy(x => x.AuthorizationStrategyName)
+            .Select(x => new AuthorizationStrategy
+            {
+                AuthStrategyId = x.AuthorizationStrategyId,
+                AuthStrategyName = x.DisplayName
+            }).ToArray();
+    }
+}
+
+public interface IGetAuthStrategiesByApplicationNameQuery
+{
+    List<AuthorizationStrategy> Execute(string securityContextApplicationName);
 }

@@ -17,7 +17,7 @@ public class ResourceClaimValidator
     }
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-        List<string> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+        List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
@@ -25,7 +25,7 @@ public class ResourceClaimValidator
 
         var propertyName = "ResourceClaims";
 
-        if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1 )
+        if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1)
         {
             if (_duplicateResources != null && resourceClaim.Name != null && !_duplicateResources.Contains(resourceClaim.Name))
             {
@@ -34,7 +34,7 @@ public class ResourceClaimValidator
             }
         }
 
-        if(!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
         {
             context.AddFailure(propertyName, "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'");
         }
@@ -81,7 +81,8 @@ public class ResourceClaimValidator
                         {
                             context.AddFailure(propertyName, "'{ChildResource}' can not be added as a child resource.");
                         }
-                        else if (!resources.Select(x => x.Id).Contains(childResource.ParentId))
+
+                        else if (!resources.Where(x => x is not null).Select(x => x.Id).Contains(childResource.ParentId))
                         {
                             context.MessageFormatter.AppendArgument("CorrectParentResource", childResource.ParentName);
                             context.AddFailure(propertyName, "Child resource: '{ChildResource}' added to the wrong parent resource. Correct parent resource is: '{CorrectParentResource}'");

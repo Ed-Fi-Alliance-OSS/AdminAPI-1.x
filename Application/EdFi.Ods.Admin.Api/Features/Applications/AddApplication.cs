@@ -11,6 +11,7 @@ using EdFi.Ods.Admin.Api.Infrastructure.Database.Commands;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 using FluentValidation.Results;
+using EdFi.Ods.Admin.Api.Infrastructure.Commands;
 
 namespace EdFi.Ods.Admin.Api.Features.Applications;
 
@@ -35,11 +36,11 @@ public class AddApplication : IFeature
 
     private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
     {
-        if(null == db.Vendors.Find(request.VendorId))
-            throw new ValidationException(new []{ new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
+        if (null == db.Vendors.Find(request.VendorId))
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
         if (request.ProfileId.HasValue && db.Profiles.Find(request.ProfileId) == null)
-            throw new ValidationException(new []{ new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
     }
 
     [SwaggerSchema(Title = "AddApplicationRequest")]
@@ -85,7 +86,7 @@ public class AddApplication : IFeature
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
         }
 
-        private bool BeWithinApplicationNameMaxLength<T>(Request model, string? applicationName, ValidationContext<T> context)
+        private bool BeWithinApplicationNameMaxLength<T>(IAddApplicationModel model, string? applicationName, ValidationContext<T> context)
         {
             var extraCharactersInName = applicationName!.Length - ValidationConstants.MaximumApplicationNameLength;
             if (extraCharactersInName <= 0)

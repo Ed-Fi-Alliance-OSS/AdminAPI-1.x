@@ -10,7 +10,6 @@ using Shouldly;
 using System.Collections.Generic;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using AutoMapper;
 
 namespace EdFi.Ods.Admin.Api.DBTests.ClaimSetEditorTests;
 
@@ -65,10 +64,10 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
 
         using var securityContext = TestContext;
         var command = new OverrideDefaultAuthorizationStrategyV6Service(securityContext);
-            command.Execute(overrideModel);
-            var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                    null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, SecurityDataTestBase.Mapper()));
-            resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
+        command.Execute(overrideModel);
+        var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
+                null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, SecurityDataTestBase.Mapper()));
+        resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
 
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);

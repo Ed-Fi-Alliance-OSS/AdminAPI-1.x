@@ -31,7 +31,7 @@ public class ConnectController : Controller
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Registers new client", "Registers new client")]
     [SwaggerResponse(200, "Application registered successfully.")]
-    public async Task<IActionResult> Register([FromForm]RegisterService.Request request)
+    public async Task<IActionResult> Register([FromForm] RegisterService.Request request)
     {
         var message = await _registerService.Handle(request);
         return Ok(new { Title = message, Status = 200 });
@@ -43,10 +43,7 @@ public class ConnectController : Controller
     [SwaggerResponse(200, "Sign-in successful.")]
     public async Task<ActionResult> Token()
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
-        if (request == null)
-            throw new ValidationException("Failed to parse token request");
-
+        var request = HttpContext.GetOpenIddictServerRequest() ?? throw new ValidationException("Failed to parse token request");
         var principal = await _tokenService.Handle(request);
 
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);

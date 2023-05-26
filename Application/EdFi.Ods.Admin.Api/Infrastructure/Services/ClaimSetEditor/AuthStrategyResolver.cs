@@ -1,11 +1,8 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
@@ -34,6 +31,8 @@ public class AuthStrategyResolver : IAuthStrategyResolver
             {
                 foreach (var defaultStrategy in claim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
                 {
+                    if (defaultStrategy is null) continue;
+
                     var authStrategy = dbAuthStrategies.SingleOrDefault(
                         x => x.AuthorizationStrategyName.Equals(
                             defaultStrategy.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
@@ -50,6 +49,8 @@ public class AuthStrategyResolver : IAuthStrategyResolver
             {
                 foreach (var authStrategyOverride in claim.AuthStrategyOverridesForCRUD.Where(x => x != null))
                 {
+                    if (authStrategyOverride is null) continue;
+
                     var authStrategy = dbAuthStrategies.SingleOrDefault(
                         x => x.AuthorizationStrategyName.Equals(
                             authStrategyOverride.AuthStrategyName,

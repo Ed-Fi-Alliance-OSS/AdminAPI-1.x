@@ -22,7 +22,7 @@ public class DeleteClaimSet : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    public Task<IResult> Handle(IDeleteClaimSetCommand deleteClaimSetCommand, [FromServices]IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
+    public Task<IResult> Handle(IDeleteClaimSetCommand deleteClaimSetCommand, [FromServices] IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)
     {
         CheckClaimSetExists(id, getClaimSetByIdQuery);
         CheckAgainstDeletingClaimSetsWithApplications(id, getApplications);
@@ -33,13 +33,13 @@ public class DeleteClaimSet : IFeature
         }
         catch (AdminAppException exception)
         {
-            throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message)});
+            throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
 
         return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
     }
 
-    private void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
+    private static void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
     {
         try
         {
@@ -51,7 +51,7 @@ public class DeleteClaimSet : IFeature
         }
     }
 
-    private void CheckAgainstDeletingClaimSetsWithApplications(int id, IGetApplicationsByClaimSetIdQuery getApplications)
+    private static void CheckAgainstDeletingClaimSetsWithApplications(int id, IGetApplicationsByClaimSetIdQuery getApplications)
     {
         var associatedApplicationsCount = getApplications.Execute(id).Count();
         if (associatedApplicationsCount > 0)

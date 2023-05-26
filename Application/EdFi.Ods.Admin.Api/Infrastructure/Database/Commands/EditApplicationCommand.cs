@@ -33,14 +33,9 @@ public class EditApplicationCommand : IEditApplicationCommand
             .Include(a => a.ApplicationEducationOrganizations)
             .Include(a => a.ApiClients)
             .Include(a => a.Profiles)
-            .SingleOrDefault(a => a.ApplicationId == model.ApplicationId);
+            .SingleOrDefault(a => a.ApplicationId == model.ApplicationId) ?? throw new NotFoundException<int>("application", model.ApplicationId);
 
-        if (application == null)
-        {
-            throw new NotFoundException<int>("application", model.ApplicationId);
-        }
-
-        if(application.Vendor.IsSystemReservedVendor())
+        if (application.Vendor.IsSystemReservedVendor())
         {
             throw new Exception("This Application is required for proper system function and may not be modified");
         }
@@ -57,18 +52,12 @@ public class EditApplicationCommand : IEditApplicationCommand
         application.ClaimSetName = model.ClaimSetName;
         application.Vendor = newVendor;
 
-        if (application.ApplicationEducationOrganizations == null)
-        {
-            application.ApplicationEducationOrganizations = new Collection<ApplicationEducationOrganization>();
-        }
+        application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
 
         application.ApplicationEducationOrganizations.Clear();
-        model.EducationOrganizationIds.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
+        model.EducationOrganizationIds?.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
 
-        if (application.Profiles == null)
-        {
-            application.Profiles = new Collection<Profile>();
-        }
+        application.Profiles ??= new Collection<Profile>();
 
         application.Profiles.Clear();
 
@@ -85,9 +74,9 @@ public class EditApplicationCommand : IEditApplicationCommand
 public interface IEditApplicationModel
 {
     int ApplicationId { get; }
-    string ApplicationName { get; }
+    string? ApplicationName { get; }
     int VendorId { get; }
-    string ClaimSetName { get; }
+    string? ClaimSetName { get; }
     int? ProfileId { get; }
-    IEnumerable<int> EducationOrganizationIds { get; }
+    IEnumerable<int>? EducationOrganizationIds { get; }
 }

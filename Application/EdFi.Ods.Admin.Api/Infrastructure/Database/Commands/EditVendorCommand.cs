@@ -22,11 +22,8 @@ public class EditVendorCommand
 
     public Vendor Execute(IEditVendor changedVendorData)
     {
-        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.VendorId);
-        if(vendor == null)
-        {
-            throw new NotFoundException<int>("vendor", changedVendorData.VendorId);
-        }
+        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.VendorId) ?? throw new NotFoundException<int>("vendor", changedVendorData.VendorId);
+
         if (vendor.IsSystemReservedVendor())
         {
             throw new Exception("This vendor is required for proper system function and may not be modified.");
@@ -38,7 +35,7 @@ public class EditVendorCommand
         {
             foreach (var vendorNamespacePrefix in vendor.VendorNamespacePrefixes.ToList())
             {
-                 _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);
+                _context.VendorNamespacePrefixes.Remove(vendorNamespacePrefix);
             }
         }
 
@@ -80,8 +77,8 @@ public class EditVendorCommand
 public interface IEditVendor
 {
     int VendorId { get; set; }
-    string Company { get; set; }
-    string NamespacePrefixes { get; set; }
-    string ContactName { get; set; }
-    string ContactEmailAddress { get; set; }
+    string? Company { get; set; }
+    string? NamespacePrefixes { get; set; }
+    string? ContactName { get; set; }
+    string? ContactEmailAddress { get; set; }
 }

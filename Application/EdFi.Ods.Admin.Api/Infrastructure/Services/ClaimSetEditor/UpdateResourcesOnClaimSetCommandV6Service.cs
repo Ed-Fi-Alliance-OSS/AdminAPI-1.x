@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
@@ -26,6 +25,8 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
                 _context.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
             _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSet);
             _context.SaveChanges();
+
+            if (model.ResourceClaims == null) return;
 
             _addOrEditResourcesOnClaimSetCommand.Execute(model.ClaimSetId, model.ResourceClaims);
         }

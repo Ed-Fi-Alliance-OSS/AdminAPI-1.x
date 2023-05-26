@@ -113,7 +113,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);                                
+            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
             persistedApplication.ApplicationName.ShouldBe("Test Application");
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.ApiClients.Count.ShouldBe(1);
@@ -148,7 +148,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);                                
+            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
             persistedApplication.ApplicationName.ShouldBe("New Application Name");
             persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
             persistedApplication.ApiClients.Count.ShouldBe(1);

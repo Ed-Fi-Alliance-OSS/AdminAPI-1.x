@@ -68,7 +68,7 @@ public class GetApplicationsByClaimSetIdQueryV53ServiceTests : SecurityData53Tes
                 var appsCountByClaimSet = query.ExecuteCount(testClaimSet.ClaimSetId);
                 var testApplicationsCount =
                         usersContext.Applications.Count(x => x.ClaimSetName == testClaimSet.ClaimSetName);
-                    appsCountByClaimSet.ShouldBe(testApplicationsCount);
+                appsCountByClaimSet.ShouldBe(testApplicationsCount);
             });
         }
     }

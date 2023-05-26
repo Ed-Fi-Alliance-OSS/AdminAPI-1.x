@@ -8,6 +8,6 @@ namespace EdFi.Ods.Admin.Api.Infrastructure;
 public class InstanceContext
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
 }

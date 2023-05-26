@@ -13,7 +13,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 public interface IGetVendorsQuery
 {
     List<Vendor> Execute();
-    List<Vendor> Execute(int offset,int limit);
+    List<Vendor> Execute(int offset, int limit);
 }
 
 public class GetVendorsQuery : IGetVendorsQuery

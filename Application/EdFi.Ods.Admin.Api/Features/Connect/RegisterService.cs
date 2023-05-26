@@ -31,7 +31,7 @@ public class RegisterService : IRegisterService
 
     public async Task<string> Handle(Request request)
     {
-        if(!await RegistrationIsEnabledOrNecessary())
+        if (!await RegistrationIsEnabledOrNecessary())
             throw new Exception("Application registration is disabled");
 
         await _validator.GuardAsync(request);
@@ -74,7 +74,7 @@ public class RegisterService : IRegisterService
         }
     }
 
-    [SwaggerSchema(Title="RegisterClientRequest")]
+    [SwaggerSchema(Title = "RegisterClientRequest")]
     public class Request
     {
         [SwaggerSchema(Description = "Client id", Nullable = false)]

@@ -8,7 +8,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 public class AuthorizationStrategy
 {
     public int AuthStrategyId { get; set; }
-    public string AuthStrategyName { get; set; }
-    public string DisplayName { get; set; }
+    public string? AuthStrategyName { get; set; }
+    public string? DisplayName { get; set; }
     public bool IsInheritedFromParent { get; set; }
 }

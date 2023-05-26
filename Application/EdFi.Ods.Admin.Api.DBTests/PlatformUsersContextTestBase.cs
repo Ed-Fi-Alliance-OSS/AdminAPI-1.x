@@ -46,7 +46,7 @@ public abstract class PlatformUsersContextTestBase
         Transaction(usersContext =>
         {
             foreach (var entity in entities)
-                ((SqlServerUsersContext) usersContext).Set(entity.GetType()).Add(entity);
+                ((SqlServerUsersContext)usersContext).Set(entity.GetType()).Add(entity);
         });
     }
 

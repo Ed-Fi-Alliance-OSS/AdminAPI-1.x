@@ -25,7 +25,7 @@ public class AddClaimSetCommandV53ServiceTests : SecurityData53TestBase
         };
         Save(testApplication);
 
-        var newClaimSet = new AddClaimSetModel {ClaimSetName = "TestClaimSet"};
+        var newClaimSet = new AddClaimSetModel { ClaimSetName = "TestClaimSet" };
 
         var addedClaimSetId = 0;
         ClaimSet addedClaimSet = null;

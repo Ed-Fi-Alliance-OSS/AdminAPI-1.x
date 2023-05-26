@@ -5,8 +5,8 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ErrorHandling;
 
 public interface IAdminAppException
 {
-    string Message { get; }
-    string StackTrace { get; }
+    string? Message { get; }
+    string? StackTrace { get; }
     HttpStatusCode? StatusCode { get; }
     bool AllowFeedback { get; }
     bool IsStackTraceRelevant { get; }

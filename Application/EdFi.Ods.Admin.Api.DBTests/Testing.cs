@@ -14,8 +14,7 @@ public static class Testing
     public static void EnsureInitialized()
     {
         DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
-
-        var dbSetup = new SecurityTestDatabaseSetup();
+        _ = new SecurityTestDatabaseSetup();
         SecurityTestDatabaseSetup.EnsureSecurityDatabase(@"C:\\temp");
     }
 

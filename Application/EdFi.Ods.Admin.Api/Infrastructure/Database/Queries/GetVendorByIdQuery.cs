@@ -11,7 +11,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.Database.Queries;
 
 public interface IGetVendorByIdQuery
 {
-    Vendor Execute(int vendorId);
+    Vendor? Execute(int vendorId);
 }
 
 public class GetVendorByIdQuery : IGetVendorByIdQuery
@@ -23,9 +23,8 @@ public class GetVendorByIdQuery : IGetVendorByIdQuery
         _context = context;
     }
 
-    public Vendor Execute(int vendorId)
+    public Vendor? Execute(int vendorId)
     {
-        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == vendorId);
-        return vendor;
+        return _context.Vendors.SingleOrDefault(v => v.VendorId == vendorId);
     }
 }

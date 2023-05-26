@@ -24,12 +24,8 @@ public class DeleteVendorCommand
 
     public void Execute(int id)
     {
-        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == id);
+        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == id) ?? throw new NotFoundException<int>("vendor", id);
 
-        if (vendor == null)
-        {
-            throw new NotFoundException<int>("vendor", id);
-        }
         if (vendor.IsSystemReservedVendor())
         {
             throw new Exception("This Vendor is required for proper system function and may not be deleted");

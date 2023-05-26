@@ -126,7 +126,7 @@ public static class WebApplicationBuilderExtensions
             opt.OrderActionsBy(x =>
             {
                 return x.HttpMethod != null && Enum.TryParse<HttpVerbOrder>(x.HttpMethod, out var verb)
-                    ? ((int) verb).ToString()
+                    ? ((int)verb).ToString()
                     : int.MaxValue.ToString();
             });
         });
@@ -162,7 +162,7 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddSecurityUsingOpenIddict(webApplicationBuilder.Configuration, webApplicationBuilder.Environment);
 
         webApplicationBuilder.Services.AddHttpClient();
-        webApplicationBuilder.Services.AddTransient<ISimpleGetRequest,SimpleGetRequest>();
+        webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
 
         webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>

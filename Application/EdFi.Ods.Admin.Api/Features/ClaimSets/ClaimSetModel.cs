@@ -54,7 +54,7 @@ public class AuthorizationStrategyModel
     public string? AuthStrategyName { get; set; }
 
     [SwaggerExclude]
-    public string? DisplayName { get;set; }
+    public string? DisplayName { get; set; }
 
     public bool IsInheritedFromParent { get; set; }
 }
@@ -70,7 +70,7 @@ public class UpdateResourcesOnClaimSetModel : IUpdateResourcesOnClaimSetModel
 {
     public int ClaimSetId { get; set; }
 
-    public List<ResourceClaim>? ResourceClaims { get; set; }
+    public List<ResourceClaim>? ResourceClaims { get; set; } = new List<ResourceClaim>();
 }
 
 public class DeleteClaimSetModel : IDeleteClaimSetModel

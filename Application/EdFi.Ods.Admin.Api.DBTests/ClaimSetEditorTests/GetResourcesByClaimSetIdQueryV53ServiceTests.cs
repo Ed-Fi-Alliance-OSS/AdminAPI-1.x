@@ -126,7 +126,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         Save(testClaimSet);
 
         var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet>{testClaimSet}, testApplication);
+        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication);
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
         results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);

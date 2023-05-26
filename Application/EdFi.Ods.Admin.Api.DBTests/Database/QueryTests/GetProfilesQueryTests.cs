@@ -30,7 +30,7 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
             var query = new GetProfilesQuery(usersContext);
             results = query.Execute();
         });
-        
+
         results.Any(p => p.ProfileName == profile1.ProfileName).ShouldBeTrue();
         results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
     }

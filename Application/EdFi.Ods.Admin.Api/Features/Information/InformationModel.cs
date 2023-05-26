@@ -19,5 +19,5 @@ public class InformationResult
     [SwaggerSchema("Application version", Nullable = false)]
     public string Version { get; }
     [SwaggerSchema("Build / release version", Nullable = false)]
-    public string Build { get;  }
+    public string Build { get; }
 }

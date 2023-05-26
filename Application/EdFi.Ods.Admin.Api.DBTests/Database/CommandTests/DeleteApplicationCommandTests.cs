@@ -20,7 +20,7 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldDeleteApplication()
     {
-        var application = new Application {ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+        var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
         Save(application);
         var applicationId = application.ApplicationId;
 
@@ -53,7 +53,7 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
         };
 
         client.ClientAccessTokens.Add(clientAccessToken);
-        
+
         application.ApiClients.Add(client);
         Save(application);
 
@@ -91,7 +91,7 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
         var organization = new ApplicationEducationOrganization
         {
             Application = application,
-            Clients = new List<ApiClient> {client}
+            Clients = new List<ApiClient> { client }
         };
 
         application.ApiClients.Add(client);
@@ -118,7 +118,7 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
     public void ShouldDeleteApplicationWithProfile()
     {
         var application = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
-        var profile = new Profile {ProfileName = "test profile"};
+        var profile = new Profile { ProfileName = "test profile" };
         application.Profiles.Add(profile);
 
         Save(application);

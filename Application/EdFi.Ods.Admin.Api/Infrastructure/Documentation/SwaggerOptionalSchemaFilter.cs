@@ -23,7 +23,7 @@ public class SwaggerOptionalSchemaFilter : ISchemaFilter
         foreach (var property in properties)
         {
             var attribute = property.GetCustomAttribute(typeof(SwaggerOptionalAttribute));
-            var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
+            var propertyNameInCamelCasing = char.ToLowerInvariant(property.Name[0]) + property.Name[1..];
 
             if (attribute != null)
             {
@@ -33,7 +33,7 @@ public class SwaggerOptionalSchemaFilter : ISchemaFilter
             {
                 if (schema.Required == null)
                 {
-                    schema.Required = new HashSet<string>() {propertyNameInCamelCasing};
+                    schema.Required = new HashSet<string>() { propertyNameInCamelCasing };
                 }
                 else
                 {

@@ -20,23 +20,26 @@ public static class EntityFrameworkCoreDatabaseModelBuilderExtensions
 
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
-            entity.SetTableName(entity.GetTableName().ToLowerInvariant());
+            if (entity is null) throw new InvalidOperationException("Entity should not be null");
+            var tableName = entity.GetTableName() ?? throw new InvalidOperationException($"Entity of type {entity.GetType()} has a null table name");
+
+            entity.SetTableName(tableName.ToLowerInvariant());
 
             foreach (var property in entity.GetProperties())
             {
-                var tableId = StoreObjectIdentifier.Table(entity.GetTableName());
+                var tableId = StoreObjectIdentifier.Table(tableName);
                 var columnName = property.GetColumnName(tableId) ?? property.GetDefaultColumnName(tableId);
                 property.SetColumnName(columnName.ToLowerInvariant());
             }
 
             foreach (var key in entity.GetKeys())
-                key.SetName(key.GetName().ToLowerInvariant());
+                key.SetName(key.GetName()?.ToLowerInvariant());
 
             foreach (var key in entity.GetForeignKeys())
-                key.SetConstraintName(key.GetConstraintName().ToLowerInvariant());
+                key.SetConstraintName(key.GetConstraintName()?.ToLowerInvariant());
 
             foreach (var index in entity.GetIndexes())
-                index.SetDatabaseName(index.GetDatabaseName().ToLowerInvariant());
+                index.SetDatabaseName(index.GetDatabaseName()?.ToLowerInvariant());
         }
     }
 }

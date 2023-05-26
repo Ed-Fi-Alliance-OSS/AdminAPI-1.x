@@ -7,6 +7,6 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
 
 public class Application
 {
-    public string Name { get; set; }
-    public string VendorName { get; set; }
+    public string? Name { get; set; }
+    public string? VendorName { get; set; }
 }

@@ -8,56 +8,55 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Contexts;
 
-namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
+namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor;
+
+public class GetApplicationsByClaimSetIdQuery : IGetApplicationsByClaimSetIdQuery
 {
-    public class GetApplicationsByClaimSetIdQuery : IGetApplicationsByClaimSetIdQuery
+    private readonly ISecurityContext _securityContext;
+    private readonly IUsersContext _usersContext;
+
+    public GetApplicationsByClaimSetIdQuery(ISecurityContext securityContext, IUsersContext usersContext)
     {
-        private readonly ISecurityContext _securityContext;
-        private readonly IUsersContext _usersContext;
-
-        public GetApplicationsByClaimSetIdQuery(ISecurityContext securityContext, IUsersContext usersContext)
-        {
-            _securityContext = securityContext;
-            _usersContext = usersContext;
-        }
-
-        public IEnumerable<Application> Execute(int claimSetId)
-        {
-            var claimSetName = GetClaimSetNameById(claimSetId);
-
-            return GetApplicationsByClaimSetName(claimSetName);
-        }
-
-        private string GetClaimSetNameById(int claimSetId)
-        {
-            return _securityContext.ClaimSets
-                .Select(x => new { x.ClaimSetId, x.ClaimSetName})
-                .Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
-        }
-
-        private IEnumerable<Application> GetApplicationsByClaimSetName(string claimSetName)
-        {
-            return _usersContext.Applications
-                .Where(x => x.ClaimSetName == claimSetName)
-                .OrderBy(x => x.ClaimSetName)
-                .Select(x => new Application
-                {
-                    Name = x.ApplicationName,
-                    VendorName = x.Vendor.VendorName
-                })
-                .ToList();
-        }
-
-        public int ExecuteCount(int claimSetId)
-        {
-            return Execute(claimSetId).Count();
-        }
+        _securityContext = securityContext;
+        _usersContext = usersContext;
     }
 
-    public interface IGetApplicationsByClaimSetIdQuery
+    public IEnumerable<Application> Execute(int claimSetId)
     {
-        IEnumerable<Application> Execute(int securityContextClaimSetId);
+        var claimSetName = GetClaimSetNameById(claimSetId);
 
-        int ExecuteCount(int claimSetId);
+        return GetApplicationsByClaimSetName(claimSetName);
     }
+
+    private string GetClaimSetNameById(int claimSetId)
+    {
+        return _securityContext.ClaimSets
+            .Select(x => new { x.ClaimSetId, x.ClaimSetName })
+            .Single(x => x.ClaimSetId == claimSetId).ClaimSetName;
+    }
+
+    private IEnumerable<Application> GetApplicationsByClaimSetName(string claimSetName)
+    {
+        return _usersContext.Applications
+            .Where(x => x.ClaimSetName == claimSetName)
+            .OrderBy(x => x.ClaimSetName)
+            .Select(x => new Application
+            {
+                Name = x.ApplicationName,
+                VendorName = x.Vendor.VendorName
+            })
+            .ToList();
+    }
+
+    public int ExecuteCount(int claimSetId)
+    {
+        return Execute(claimSetId).Count();
+    }
+}
+
+public interface IGetApplicationsByClaimSetIdQuery
+{
+    IEnumerable<Application> Execute(int securityContextClaimSetId);
+
+    int ExecuteCount(int claimSetId);
 }

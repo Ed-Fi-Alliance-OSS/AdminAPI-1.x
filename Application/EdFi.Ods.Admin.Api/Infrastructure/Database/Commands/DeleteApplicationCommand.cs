@@ -32,12 +32,8 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
             .Include(a => a.ApiClients)
             .Include(a => a.ApiClients.Select(c => c.ClientAccessTokens))
             .Include(a => a.ApplicationEducationOrganizations)
-            .SingleOrDefault(a => a.ApplicationId == id);
+            .SingleOrDefault(a => a.ApplicationId == id) ?? throw new NotFoundException<int>("application", id);
 
-        if (application == null)
-        {
-            throw new NotFoundException<int>("application", id);
-        }
         if (application != null && application.Vendor.IsSystemReservedVendor())
         {
             throw new Exception("This Application is required for proper system function and may not be modified");
@@ -47,7 +43,7 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
         {
             return;
         }
-        
+
         application.ApiClients.ToList().ForEach(a =>
         {
             a.ClientAccessTokens.ToList().ForEach(t => _context.ClientAccessTokens.Remove(t));

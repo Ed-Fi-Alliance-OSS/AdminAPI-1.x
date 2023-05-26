@@ -112,7 +112,7 @@ public class SecurityTestDatabaseSetup
                 throw new Exception(ex.Message);
             }
         }
-        
+
         using var conn = new SqlConnection(ConnectionStringBuilder.ConnectionString);
         var server = new Server(new ServerConnection(conn));
         var scriptFilesPath = Path.Combine(scriptsPath, @"Ed-Fi-ODS\Artifacts\MsSql\Structure\Security");

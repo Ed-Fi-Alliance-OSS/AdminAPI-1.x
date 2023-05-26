@@ -3,9 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 {
     public class GetResourcesByClaimSetIdQuery : IGetResourcesByClaimSetIdQuery
@@ -23,29 +20,29 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
             _v6Service = v6Service;
         }
 
-        public IEnumerable<ResourceClaim> AllResources(int claimSetId)
+        public IList<ResourceClaim> AllResources(int claimSetId)
         {
-            List<ResourceClaim> parentResources;
+            IList<ResourceClaim> parentResources;
             var securityModel = _resolver.DetermineSecurityModel();
             if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
             {
                 parentResources = _v53Service.GetParentResources(claimSetId);
                 var childResources = _v53Service.GetChildResources(claimSetId);
-                _v53Service.AddChildResourcesToParents(childResources, parentResources);
+                GetResourcesByClaimSetIdQueryV53Service.AddChildResourcesToParents(childResources, parentResources);
             }
             else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
             {
                 parentResources = _v6Service.GetParentResources(claimSetId);
                 var childResources = _v6Service.GetChildResources(claimSetId);
-                _v6Service.AddChildResourcesToParents(childResources, parentResources);
+                GetResourcesByClaimSetIdQueryV6Service.AddChildResourcesToParents(childResources, parentResources);
             }
             else
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);    
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
 
             return parentResources;
         }
 
-        public ResourceClaim SingleResource(int claimSetId, int resourceClaimId)
+        public ResourceClaim? SingleResource(int claimSetId, int resourceClaimId)
         {
             var parentResources = AllResources(claimSetId).ToList();
             var parentResourceClaim = parentResources
@@ -63,7 +60,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 
     public interface IGetResourcesByClaimSetIdQuery
     {
-        IEnumerable<ResourceClaim> AllResources(int securityContextClaimSetId);
-        ResourceClaim SingleResource(int claimSetId, int resourceClaimId);
+        IList<ResourceClaim> AllResources(int securityContextClaimSetId);
+        ResourceClaim? SingleResource(int claimSetId, int resourceClaimId);
     }
 }

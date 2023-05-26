@@ -48,7 +48,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         {
             vendors[vendorIndex] = new Vendor
             {
-                VendorName = $"test vendor {vendorIndex+1}",
+                VendorName = $"test vendor {vendorIndex + 1}",
                 VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } }
             };
         }

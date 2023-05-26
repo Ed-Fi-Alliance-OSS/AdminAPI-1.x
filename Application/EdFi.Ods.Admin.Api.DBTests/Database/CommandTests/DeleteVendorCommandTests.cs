@@ -35,8 +35,8 @@ public class DeleteVendorCommandTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldDeleteVendorWithApplication()
     {
-        var newVendor = new Vendor {VendorName = "test vendor"};
-        var newApplication = new Application {ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
+        var newVendor = new Vendor { VendorName = "test vendor" };
+        var newApplication = new Application { ApplicationName = "test application", OperationalContextUri = OperationalContext.DefaultOperationalContextUri };
         newVendor.Applications.Add(newApplication);
         Save(newVendor);
         var vendorId = newVendor.VendorId;

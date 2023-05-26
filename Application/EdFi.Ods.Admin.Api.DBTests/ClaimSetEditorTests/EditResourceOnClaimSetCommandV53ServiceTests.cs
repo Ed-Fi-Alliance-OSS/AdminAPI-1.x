@@ -105,7 +105,7 @@ public class EditResourceOnClaimSetCommandV53ServiceTests : SecurityData53TestBa
         editResourceOnClaimSetModel.Setup(x => x.ResourceClaim).Returns(editedResource);
 
         var command = new EditResourceOnClaimSetCommandV53Service(securityContext);
-            command.Execute(editResourceOnClaimSetModel.Object);
+        command.Execute(editResourceOnClaimSetModel.Object);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -165,7 +165,7 @@ public class EditResourceOnClaimSetCommandV53ServiceTests : SecurityData53TestBa
 
         using var securityContext = TestContext;
         var command = new EditResourceOnClaimSetCommandV53Service(securityContext);
-            command.Execute(editResourceOnClaimSetModel);
+        command.Execute(editResourceOnClaimSetModel);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -196,12 +196,12 @@ public class EditResourceOnClaimSetCommandV53ServiceTests : SecurityData53TestBa
         var testChildResource1ToAdd = securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource1.ResourceClaimId);
         var resourceToAdd = new ResourceClaim()
         {
-                Id = testChildResource1ToAdd.ResourceClaimId,
-                Name = testChildResource1ToAdd.ResourceName,
-                Create = true,
-                Read = false,
-                Update = true,
-                Delete = false
+            Id = testChildResource1ToAdd.ResourceClaimId,
+            Name = testChildResource1ToAdd.ResourceName,
+            Create = true,
+            Read = false,
+            Update = true,
+            Delete = false
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -211,7 +211,7 @@ public class EditResourceOnClaimSetCommandV53ServiceTests : SecurityData53TestBa
             ResourceClaim = resourceToAdd
         };
         var command = new EditResourceOnClaimSetCommandV53Service(securityContext);
-            command.Execute(editResourceOnClaimSetModel);
+        command.Execute(editResourceOnClaimSetModel);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 

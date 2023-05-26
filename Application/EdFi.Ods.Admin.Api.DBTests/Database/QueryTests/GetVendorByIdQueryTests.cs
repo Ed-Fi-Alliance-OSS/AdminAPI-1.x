@@ -24,7 +24,7 @@ public class GetVendorByIdQueryTests : PlatformUsersContextTestBase
         });
         nullResult.ShouldBeNull();
 
-        var vendor = new Vendor {VendorName = "test vendor"};
+        var vendor = new Vendor { VendorName = "test vendor" };
         Save(vendor);
 
         Vendor results = null;

@@ -28,7 +28,7 @@ public class GetClaimSetByIdQueryV53ServiceTests : SecurityData53TestBase
         };
         Save(testApplication);
 
-        var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet", Application = testApplication};
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
         Save(testClaimSet);
 
         using var securityContext = TestContext;
@@ -57,8 +57,8 @@ public class GetClaimSetByIdQueryV53ServiceTests : SecurityData53TestBase
         static void EnsureZeroClaimSets(ISecurityContext database)
         {
             foreach (var entity in database.ClaimSets)
-                    database.ClaimSets.Remove(entity);
-                database.SaveChanges();
+                database.ClaimSets.Remove(entity);
+            database.SaveChanges();
         }
     }
 }

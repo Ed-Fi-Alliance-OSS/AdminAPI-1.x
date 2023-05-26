@@ -38,7 +38,7 @@ public class SimpleGetRequest : ISimpleGetRequest
             }
         }
 
-        async Task CheckResponseStatusCode(string requestUrl, HttpResponseMessage response)
+        static async Task CheckResponseStatusCode(string requestUrl, HttpResponseMessage response)
         {
             switch (response.StatusCode)
             {

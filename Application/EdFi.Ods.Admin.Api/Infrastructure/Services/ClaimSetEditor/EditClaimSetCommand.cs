@@ -39,7 +39,7 @@ namespace EdFi.Ods.Admin.Api.Infrastructure.ClaimSetEditor
 
     public interface IEditClaimSetModel
     {
-        string ClaimSetName { get; }
+        string? ClaimSetName { get; }
         int ClaimSetId { get; }
     }
 }

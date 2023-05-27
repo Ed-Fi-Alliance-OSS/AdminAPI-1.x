@@ -35,8 +35,8 @@ $arguments = @{
 }
 
 Write-Host "Installing the Admin App tables to $($arguments.DatabaseName)" -ForegroundColor Cyan
-Install-AdminAppTables @arguments
+Install-AdminApiTables @arguments
 
 $arguments.DatabaseName = "EdFi_Admin_Test"
 Write-Host "Installing the Admin App tables to $($arguments.DatabaseName)" -ForegroundColor Cyan
-Install-AdminAppTables @arguments
+Install-AdminApiTables @arguments

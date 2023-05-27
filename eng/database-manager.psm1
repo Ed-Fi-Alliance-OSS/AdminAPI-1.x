@@ -476,7 +476,7 @@ function Install-EdFiSecurityDatabase {
     Install-EdFiDatabase @arguments
 }
 
-function Install-AdminAppTables {
+function Install-AdminApiTables {
     param  (
         # Directory path for storing downloaded tools.
         [string]
@@ -520,7 +520,7 @@ function Install-AdminAppTables {
 
         # Hierarchy of directory paths containing database install files.
         [string[]]
-        $FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.AdminApp.Web"
+        $FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.Admin.Api"
     )
 
     $arguments = @{
@@ -640,7 +640,7 @@ function Invoke-PrepareDatabasesForTesting {
 
     $installArguments.Remove("RestApiPackagePath")
     Write-Host "Installing the Admin App tables to $($installArguments.DatabaseName)" -ForegroundColor Cyan
-    Install-AdminAppTables @installArguments
+    Install-AdminApiTables @installArguments
 }
 
 $exports = @(
@@ -648,7 +648,7 @@ $exports = @(
     "Install-EdFiAdminDatabase",
     "Install-EdFiODSDatabase",
     "Install-EdFiSecurityDatabase",
-    "Install-AdminAppTables",
+    "Install-AdminApiTables",
     "Remove-SqlServerDatabase",
     "Invoke-PrepareDatabasesForTesting"
 )

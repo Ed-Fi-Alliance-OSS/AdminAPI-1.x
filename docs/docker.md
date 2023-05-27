@@ -23,16 +23,19 @@ graph LR
     J(Swagger) -->|HTTPS| B
 ```
 
-1. From a Bash prompt, generate a dev/test self-signed certificate for TLS security.
+1. From a Bash prompt, generate a dev/test self-signed certificate for TLS
+   security. This will create `server.crt` and `server.key` in the `ssl`
+   directory:
 
    ```bash
    cd Application/EdFi.Ods.Admin.Api/Docker/ssl
-   ./generate-certificate.sh
+   bash ./generate-certificate.sh
    ```
 
-2. Copy and customize the `.env.example` file
+2. Copy and customize the `.env.example` file. Importantly, be sure to change
+   the encryption key.
 
-   ```bash
+   ```shell
    cd ../../Compose/pgsql
    cp .env.example .env
    code .env
@@ -40,24 +43,27 @@ graph LR
 
 3. Build local containers
 
-   ```bash
+   ```shell
    docker compose -f compose-build-dev.yml build
    ```
 
 4. Start containers
 
-   ```bash
+   ```shell
    docker compose -f compose-build-dev.yml up -d
    ```
 
 5. Inspect containers
 
-   ```bash
+   ```shell
    # List processes
    docker compose -f compose-build-dev.yml ps
 
    # Check status of the AdminAPI
-   curl -k https://localhost/AdminApi
+   curl -k https://localhost/adminapi
+
+   # Check status of ODS/API
+   curl -k https://localhost/webapi
    ```
 
 6. Create an administrative (full access) API client (substitute in appropriate
@@ -66,26 +72,27 @@ graph LR
    Bash
 
    ```bash
-   curl -k -X POST https://localhost/AdminApi/connect/register \
+   curl -k -X POST https://localhost/adminapi/connect/register \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -d "ClientId=YourClientId&ClientSecret=YourClientSecret&DisplayName=YourDisplayName"
    ```
 
    PowerShell
 
-   ```bash
-   curl -k -X POST https://localhost/AdminApi/connect/register `
+   ```powershell
+   curl -k -X POST https://localhost/adminapi/connect/register `
     -H "Content-Type: application/x-www-form-urlencoded" `
     -d "ClientId=YourClientId&ClientSecret=YourClientSecret&DisplayName=YourDisplayName"
    ```
 
-   :exclamation: Disable new client registration and restart the containers to av
+   :exclamation: Disable new client registration in `appsettings.json` and
+   restart the containers.
 
-7. Try using [Swagger](https://localhost/AdminApi/swagger/index.html) to test
+7. Try using [Swagger UI](https://localhost/adminapi/swagger/index.html) to test
    out the AdminApi.
 8. Stop containers
 
-   ```bash
+   ```shell
    docker compose -f compose-build-dev.yml down
    ```
 
@@ -94,7 +101,9 @@ graph LR
 This configuration is not intended for live testing or production environments;
 its only intention is to simplify installation and testing of Admin API code
 that has been bundled into NuGet Packages through the normal development
-process, and published to Ed-Fi's Azure Artifacts registry.
+process, and published to Ed-Fi's Azure Artifacts registry. Note that this
+version does not include PGBouncer, though it does preserve NGiNX, and it does
+not start the ODS/API.
 
 ```mermaid
 graph LR
@@ -109,4 +118,4 @@ graph LR
 ```
 
 Instructions are similar to the localhost quickstart above, except use
-`compose-build.yml` instead of `compose-build-dev.yml`.
+`compose-build-binaries.yml` instead of `compose-build-dev.yml`.

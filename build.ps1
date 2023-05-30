@@ -68,7 +68,7 @@ param(
     # Command to execute, defaults to "Build".
     [string]
     [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest",  "PackageApi"
-    , "PackageDatabase", "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
+    , "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
     , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run")]
     $Command = "Build",
 
@@ -105,7 +105,7 @@ param(
 
     # Only required with the Run command.
     [string]
-    [ValidateSet("mssql-district", "mssql-shared", "mssql-year", "pg-district", "pg-shared", "pg-year")]
+    [ValidateSet("EdFi.Ods.AdminApi (Dev)", "EdFi.Ods.AdminApi (Prod)", "EdFi.Ods.AdminApi (Docker)", "IIS Express")]
     $LaunchProfile,
 
     # Only required with local builds and testing.
@@ -237,7 +237,7 @@ function ResetTestDatabases {
 }
 
 function IntegrationTests {
-    Invoke-Execute { RunTests -Filter "*.Tests" }
+    Invoke-Execute { RunTests -Filter "*.DBTests" }
 }
 
 function RunNuGetPack {
@@ -285,15 +285,6 @@ function AddAppCommonPackageForInstaller {
     Add-AppCommon @arguments
 }
 
-function BuildDatabasePackage {
-    $project = "EdFi.Ods.AdminApp.Web"
-    $mainPath = "$solutionRoot/$project"
-    $projectPath = "$mainPath/$project.csproj"
-    $nugetSpecPath = "$mainPath/publish/EdFi.Ods.AdminApp.Database.nuspec"
-
-    RunNuGetPack -ProjectPath $projectPath -PackageVersion $APIVersion $nugetSpecPath
-}
-
 function BuildApiPackage {
     $project = "EdFi.Ods.AdminApi"
     $mainPath = "$solutionRoot/$project"
@@ -312,7 +303,6 @@ function Invoke-Build {
 function Invoke-SetAssemblyInfo {
     Write-Output "Setting Assembly Information"
 
-    Invoke-Step { SetAssemblyInfo }
     Invoke-Step { SetAdminApiAssemblyInfo }
 }
 
@@ -320,6 +310,21 @@ function Invoke-Publish {
     Write-Output "Building Version AdminApi ($APIVersion)"
 
     Invoke-Step { PublishAdminApi }
+}
+
+function Invoke-Run {
+    Write-Output "Running Admin API"
+
+    Invoke-Step { NewDevCertificate }
+
+    $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApi"
+
+    if ([string]::IsNullOrEmpty($LaunchProfile)) {
+        Write-Error "LaunchProfile parameter is required for running Admin Api. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'"
+    }
+    else {
+        Invoke-Execute { dotnet run --project $projectFilePath --launch-profile $LaunchProfile }
+    }
 }
 
 function Invoke-Clean {
@@ -441,7 +446,6 @@ Invoke-Main {
         }
         Package { Invoke-BuildPackage }
         PackageApi { Invoke-BuildApiPackage }
-        PackageDatabase { Invoke-BuildDatabasePackage }
         Push { Invoke-PushPackage }
         BuildAndDeployToAdminApiDockerContainer {
             Invoke-Build

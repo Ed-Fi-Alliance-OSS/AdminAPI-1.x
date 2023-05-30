@@ -75,4 +75,4 @@ EdFi.Suite3.Installer.AdminApp/key-management.psm1
 
 #EdFi.Ods.AdminApp.Web minified css and script files
 /Application/EdFi.Ods.AdminApp.Web/wwwroot/bundles/
-Application/EdFi.Ods.Admin.Api/Docker/ssl/dhparam.pem
+Application/EdFi.Ods.AdminApi/Docker/ssl/dhparam.pem

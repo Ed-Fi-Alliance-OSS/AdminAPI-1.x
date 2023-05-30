@@ -694,7 +694,7 @@ function GetExistingAppVersion($webSitePath,  $existingAdminApi) {
         $existingApplicationPath = "$webSitePath\$appPath"
     }
 
-    $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.Admin.Api.dll").FileVersion
+    $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApi.dll").FileVersion
 
     return $existingApplicationPath, $versionString
 }
@@ -929,7 +929,7 @@ function Set-AdminApiPackageSource {
 
         $adminApiSource = $Config.PackageSource
         $configVersionString = $Config.PackageVersion
-        $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$adminApiSource\EdFi.Ods.Admin.Api.dll").FileVersion
+        $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$adminApiSource\EdFi.Ods.AdminApi.dll").FileVersion
 
         if (IsVersionMismatch $versionString $configVersionString) {
             Write-Warning "The specified Admin Api package version $configVersionString in the configuration does not match the file version $versionString of the package used as source. Please specify the correct version in the installer configuration or use the correct source."

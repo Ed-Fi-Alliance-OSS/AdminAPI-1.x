@@ -520,7 +520,7 @@ function Install-AdminApiTables {
 
         # Hierarchy of directory paths containing database install files.
         [string[]]
-        $FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.Admin.Api"
+        $FilePath  = "$PSScriptRoot/../Application/EdFi.Ods.AdminApi"
     )
 
     $arguments = @{

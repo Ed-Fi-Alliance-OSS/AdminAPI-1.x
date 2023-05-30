@@ -27,7 +27,7 @@ jobs:
   run-e2e-tests:
     defaults:
       run:
-        working-directory: ./Application/EdFi.Ods.Admin.Api/
+        working-directory: ./Application/EdFi.Ods.AdminApi/
 
     runs-on: ubuntu-latest
     steps:
@@ -60,14 +60,14 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: docker-logs
-          path: Application/EdFi.Ods.Admin.Api/docker-logs/
+          path: Application/EdFi.Ods.AdminApi/docker-logs/
           retention-days: 10
       - name: Upload results
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
           name: test-results
-          path: Application/EdFi.Ods.Admin.Api/reports/report.xml
+          path: Application/EdFi.Ods.AdminApi/reports/report.xml
           retention-days: 10
 
   report:

@@ -1,21 +1,24 @@
 # Ed-Fi-ODS-AdminAPI
 
-The Ed-Fi ODS/API Admin API is a programmatic interface to administrate ODS/API platform instances.  For Admin API 1.2, it will support ODS/API versions 3.4 through 6.1.
+The Ed-Fi ODS/API Admin API is a programmatic interface to administrate ODS/API
+platform instances.  For Admin API 1.2, it will support ODS/API versions 3.4
+through 6.1.
 
 For more information, see:
 
-* For a detailed description see [Ed-Fi Admin API](https://techdocs.ed-fi.org/display/ADMINAPI) in Tech
-  Docs.
+* For a detailed description see [Ed-Fi Admin
+  API](https://techdocs.ed-fi.org/display/ADMINAPI) in Tech Docs.
 * [Submit an
   Issue](https://support.ed-fi.org)
 * Review on-going development work at
   [Tracker](https://tracker.ed-fi.org/projects/ADMINAPI/issues)
 
-## Install Instructions
+## Documentation
 
-See [Tech Docs: Admin
-App](https://techdocs.ed-fi.org/display/ADMINAPI) for general
-information on installation of the Ed-Fi Admin API.
+* See [Tech Docs: Admin App](https://techdocs.ed-fi.org/display/ADMINAPI) for
+  general information on installation of the Ed-Fi Admin API.
+* [Docker testing notes](docs/docker.md)
+* [Developer notes](docs/developer.md)
 
 ## Contributing
 

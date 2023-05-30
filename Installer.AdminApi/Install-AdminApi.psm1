@@ -126,15 +126,15 @@ function Install-EdFiOdsAdminApi {
     #>
     [CmdletBinding()]
     param (
-        # NuGet package name. Default: EdFi.Suite3.ODS.Admin.Api.
+        # NuGet package name. Default: EdFi.Suite3.ODS.AdminApi.
         [string]
-        $PackageName = "EdFi.Suite3.ODS.Admin.Api",
+        $PackageName = "EdFi.Suite3.ODS.AdminApi",
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
         $PackageVersion,
 
-        # NuGet package source. Please specify the path to the AdminApi sub-directory within the Admin.Api nuget package.
+        # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]
         [string]
         $PackageSource,
@@ -335,15 +335,15 @@ function Update-EdFiOdsAdminApi {
     #>
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     param (
-        # NuGet package name. Default: EdFi.Suite3.ODS.Admin.Api.
+        # NuGet package name. Default: EdFi.Suite3.ODS.AdminApi.
         [string]
-        $PackageName = "EdFi.Suite3.ODS.Admin.Api",
+        $PackageName = "EdFi.Suite3.ODS.AdminApi",
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
         $PackageVersion,
 
-        # NuGet package source. Please specify the path to the AdminApi sub-directory within the Admin.Api nuget package.
+        # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]
         [string]
         $PackageSource,

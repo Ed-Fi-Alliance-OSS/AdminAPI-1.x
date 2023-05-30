@@ -54,8 +54,8 @@ $ErrorActionPreference = 'Stop'
 $packageName = ($ReleaseRef -split "-v")[0]
 
 switch ($packageName) {
-    "Admin.Api" {
-        $packages = @( "EdFi.Suite3.ODS.Admin.Api" )
+    "AdminApi" {
+        $packages = @( "EdFi.Suite3.ODS.AdminApi" )
     }
     "AdminApi.Installer" {
         $packages = @( "EdFi.Suite3.Installer.AdminApi" )

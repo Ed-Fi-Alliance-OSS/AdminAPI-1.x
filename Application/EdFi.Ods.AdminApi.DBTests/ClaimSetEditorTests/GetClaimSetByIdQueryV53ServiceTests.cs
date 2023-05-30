@@ -45,14 +45,14 @@ public class GetClaimSetByIdQueryV53ServiceTests : SecurityData53TestBase
 
         using var securityContext = TestContext;
         EnsureZeroClaimSets(securityContext);
-        var adminAppException = Assert.Throws<AdminApiException>(() =>
+        var adminApiException = Assert.Throws<AdminApiException>(() =>
         {
             var query = new GetClaimSetByIdQueryV53Service(securityContext);
             query.Execute(NonExistingClaimSetId);
         });
-        adminAppException.ShouldNotBeNull();
-        adminAppException.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        adminAppException.Message.ShouldBe("No such claim set exists in the database.");
+        adminApiException.ShouldNotBeNull();
+        adminApiException.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        adminApiException.Message.ShouldBe("No such claim set exists in the database.");
 
         static void EnsureZeroClaimSets(ISecurityContext database)
         {

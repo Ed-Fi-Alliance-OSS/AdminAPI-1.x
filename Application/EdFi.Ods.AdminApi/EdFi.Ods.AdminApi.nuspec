@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>EdFi.Suite3.ODS.Admin.Api</id>
+    <id>EdFi.Suite3.ODS.AdminApi</id>
     <version>1.0.0.0</version>
     <title>Ed-Fi ODS Admin API</title>
     <authors>Ed-Fi Alliance</authors>

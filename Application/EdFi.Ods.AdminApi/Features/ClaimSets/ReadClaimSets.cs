@@ -28,12 +28,12 @@ public class ReadClaimSets : IFeature
 
     internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
     {
-        var claimSets = getClaimSetsQuery.Execute().Where(x => !CloudOdsAdminApi.SystemReservedClaimSets.Contains(x.Name)).ToList();
+        var claimSets = getClaimSetsQuery.Execute().Where(x => !Constants.SystemReservedClaimSets.Contains(x.Name)).ToList();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {
             claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);
-            claimSet.IsSystemReserved = CloudOdsAdminApi.DefaultClaimSets.Contains(claimSet.Name);
+            claimSet.IsSystemReserved = Constants.DefaultClaimSets.Contains(claimSet.Name);
         }
         return Task.FromResult(AdminApiResponse<List<ClaimSetModel>>.Ok(model));
     }

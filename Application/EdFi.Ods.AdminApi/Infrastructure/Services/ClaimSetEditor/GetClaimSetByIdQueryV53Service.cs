@@ -29,7 +29,7 @@ public class GetClaimSetByIdQueryV53Service
             {
                 Id = securityContextClaimSet.ClaimSetId,
                 Name = securityContextClaimSet.ClaimSetName,
-                IsEditable = !CloudOdsAdminApi.DefaultClaimSets.Contains(securityContextClaimSet.ClaimSetName)
+                IsEditable = !Constants.DefaultClaimSets.Contains(securityContextClaimSet.ClaimSetName)
             };
         }
 

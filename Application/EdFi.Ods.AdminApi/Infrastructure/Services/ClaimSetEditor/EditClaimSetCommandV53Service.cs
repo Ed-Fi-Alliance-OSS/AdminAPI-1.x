@@ -24,8 +24,8 @@ public class EditClaimSetCommandV53Service
     {
         var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
 
-        if (CloudOdsAdminApi.DefaultClaimSets.Contains(existingClaimSet.ClaimSetName) ||
-                    CloudOdsAdminApi.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
+        if (Constants.DefaultClaimSets.Contains(existingClaimSet.ClaimSetName) ||
+                    Constants.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
         {
             throw new AdminApiException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
         }

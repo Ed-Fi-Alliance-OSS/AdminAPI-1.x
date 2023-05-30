@@ -31,10 +31,7 @@ public abstract class PlatformSecurityContextTestBase
         {
             "__MigrationHistory", "DeployJournal", "AdminApiDeployJournal"
         },
-        SchemasToExclude = new[]
-        {
-            "HangFire", "adminapi_HangFire"
-        }
+        SchemasToExclude = Array.Empty<string>()
     };
 
     protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;

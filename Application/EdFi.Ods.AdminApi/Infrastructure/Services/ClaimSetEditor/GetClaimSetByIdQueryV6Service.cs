@@ -30,7 +30,7 @@ public class GetClaimSetByIdQueryV6Service
                 Id = securityContextClaimSet.ClaimSetId,
                 Name = securityContextClaimSet.ClaimSetName,
                 IsEditable = !securityContextClaimSet.ForApplicationUseOnly && !securityContextClaimSet.IsEdfiPreset &&
-                !CloudOdsAdminApi.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
+                !Constants.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
             };
         }
 

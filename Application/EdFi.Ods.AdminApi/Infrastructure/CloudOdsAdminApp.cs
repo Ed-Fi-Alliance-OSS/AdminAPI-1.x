@@ -5,7 +5,7 @@
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
-public static class CloudOdsAdminApi
+public static class Constants
 {
     public const string ApplicationName = "Ed-Fi ODS Admin App for Suite 3";
     public const string SecurityContextApplicationName = "Ed-Fi ODS API";

@@ -23,8 +23,8 @@ public class DeleteClaimSetCommandV53Service
     {
         var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
 
-        if (CloudOdsAdminApi.DefaultClaimSets.Contains(claimSetToDelete.ClaimSetName) ||
-                    CloudOdsAdminApi.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
+        if (Constants.DefaultClaimSets.Contains(claimSetToDelete.ClaimSetName) ||
+                    Constants.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
         {
             throw new AdminApiException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved.Can not be deleted.");
         }

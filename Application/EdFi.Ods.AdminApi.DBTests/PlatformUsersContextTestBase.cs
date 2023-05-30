@@ -21,10 +21,7 @@ public abstract class PlatformUsersContextTestBase
         {
             "__MigrationHistory", "DeployJournal", "AdminApiDeployJournal"
         },
-        SchemasToExclude = new[]
-        {
-            "HangFire", "adminapi_HangFire"
-        }
+        SchemasToExclude = Array.Empty<string>()
     };
 
     protected static string ConnectionString => AdminConnectionString;

@@ -93,7 +93,7 @@ public class GetClaimSetByIdQueryV6ServiceTests : SecurityDataTestBase
         using var securityContext = TestContext;
         EnsureZeroClaimSets(securityContext);
 
-        var adminAppException = Assert.Throws<AdminAppException>(() =>
+        var adminAppException = Assert.Throws<AdminApiException>(() =>
         {
             var query = new GetClaimSetByIdQueryV6Service(securityContext);
             query.Execute(NonExistingClaimSetId);

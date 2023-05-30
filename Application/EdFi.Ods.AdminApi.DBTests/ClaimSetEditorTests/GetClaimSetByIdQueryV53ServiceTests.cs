@@ -45,7 +45,7 @@ public class GetClaimSetByIdQueryV53ServiceTests : SecurityData53TestBase
 
         using var securityContext = TestContext;
         EnsureZeroClaimSets(securityContext);
-        var adminAppException = Assert.Throws<AdminAppException>(() =>
+        var adminAppException = Assert.Throws<AdminApiException>(() =>
         {
             var query = new GetClaimSetByIdQueryV53Service(securityContext);
             query.Execute(NonExistingClaimSetId);

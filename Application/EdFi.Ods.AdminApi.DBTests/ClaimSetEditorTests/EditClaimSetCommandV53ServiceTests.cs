@@ -61,7 +61,7 @@ public class EditClaimSetCommandV53ServiceTests : SecurityData53TestBase
         var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };
 
         using var securityContext = TestContext;
-        var exception = Assert.Throws<AdminAppException>(() => UsersTransaction(usersContext =>
+        var exception = Assert.Throws<AdminApiException>(() => UsersTransaction(usersContext =>
         {
             var command = new EditClaimSetCommandV53Service(securityContext, usersContext);
             command.Execute(editModel);

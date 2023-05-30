@@ -5,6 +5,6 @@
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
-public interface IMarkerForEdFiOdsAdminAppManagement
+public interface IMarkerForEdFiOdsAdminApiManagement
 {
 }

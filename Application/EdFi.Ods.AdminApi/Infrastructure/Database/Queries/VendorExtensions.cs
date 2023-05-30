@@ -12,7 +12,7 @@ public static class VendorExtensions
 {
     public static readonly string[] ReservedNames =
     {
-        CloudOdsAdminApp.VendorName
+        CloudOdsAdminApi.VendorName
     };
 
     public static bool IsSystemReservedVendorName(string? vendorName)

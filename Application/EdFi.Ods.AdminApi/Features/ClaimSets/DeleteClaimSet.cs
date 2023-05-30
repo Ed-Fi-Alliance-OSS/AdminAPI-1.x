@@ -31,7 +31,7 @@ public class DeleteClaimSet : IFeature
         {
             deleteClaimSetCommand.Execute(new DeleteClaimSetModel { Id = id });
         }
-        catch (AdminAppException exception)
+        catch (AdminApiException exception)
         {
             throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
@@ -45,7 +45,7 @@ public class DeleteClaimSet : IFeature
         {
             query.Execute(id);
         }
-        catch (AdminAppException)
+        catch (AdminApiException)
         {
             throw new NotFoundException<int>("claimset", id);
         }

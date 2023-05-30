@@ -30,11 +30,11 @@ public abstract class PlatformSecurityContextTestBase53
     {
         TablesToIgnore = new[]
         {
-            "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
+            "__MigrationHistory", "DeployJournal", "AdminApiDeployJournal"
         },
         SchemasToExclude = new[]
         {
-            "HangFire", "adminapp_HangFire"
+            "HangFire", "adminapi_HangFire"
         }
     };
 

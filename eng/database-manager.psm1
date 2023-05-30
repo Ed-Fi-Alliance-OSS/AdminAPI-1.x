@@ -543,7 +543,7 @@ function Install-AdminApiTables {
 
 function Invoke-PrepareDatabasesForTesting {
     # This script installs the Ed-Fi databases in preparation for execution of
-    # AdminApp integration tests. Requries a SQL Server database.
+    # AdminApi integration tests. Requries a SQL Server database.
 
     param(
         [string]

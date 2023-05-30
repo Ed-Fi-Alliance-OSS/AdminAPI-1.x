@@ -91,7 +91,7 @@ public class DeleteClaimSetCommandV6ServiceTests : SecurityDataTestBase
         deleteModel.Setup(x => x.Name).Returns(systemReservedClaimSet.ClaimSetName);
         deleteModel.Setup(x => x.Id).Returns(systemReservedClaimSet.ClaimSetId);
         using var securityContext = TestContext;
-        var exception = Assert.Throws<AdminAppException>(() =>
+        var exception = Assert.Throws<AdminApiException>(() =>
         {
             var command = new DeleteClaimSetCommandV6Service(securityContext);
             command.Execute(deleteModel.Object);

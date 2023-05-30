@@ -19,11 +19,11 @@ public abstract class PlatformUsersContextTestBase
     {
         TablesToIgnore = new[]
         {
-            "__MigrationHistory", "DeployJournal", "AdminAppDeployJournal"
+            "__MigrationHistory", "DeployJournal", "AdminApiDeployJournal"
         },
         SchemasToExclude = new[]
         {
-            "HangFire", "adminapp_HangFire"
+            "HangFire", "adminapi_HangFire"
         }
     };
 

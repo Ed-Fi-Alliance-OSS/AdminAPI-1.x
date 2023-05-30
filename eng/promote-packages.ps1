@@ -49,22 +49,16 @@ function Get-PackagesFromAzure {
 
 $ErrorActionPreference = 'Stop'
 
-# example: "AdminApp.Web-v2.5.1"
-# output: "AdminApp.Web"
+# example: "AdminApi-v2.5.1"
+# output: "AdminApi"
 $packageName = ($ReleaseRef -split "-v")[0]
 
 switch ($packageName) {
-    "AdminApp.Web" {
-        $packages = @(
-            "EdFi.Suite3.ODS.AdminApp.Database",
-            "EdFi.Suite3.ODS.AdminApp.Web"
-        )
-    }
     "Admin.Api" {
         $packages = @( "EdFi.Suite3.ODS.Admin.Api" )
     }
-    "AdminApp.Installer" {
-        $packages = @( "EdFi.Suite3.Installer.AdminApp" )
+    "AdminApi.Installer" {
+        $packages = @( "EdFi.Suite3.Installer.AdminApi" )
     }
 }
 

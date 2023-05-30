@@ -5,17 +5,17 @@
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
-public static class CloudOdsAdminApp
+public static class CloudOdsAdminApi
 {
     public const string ApplicationName = "Ed-Fi ODS Admin App for Suite 3";
     public const string SecurityContextApplicationName = "Ed-Fi ODS API";
     public const string VendorName = "EdFi";
     public const string VendorNamespacePrefix = "http://ed-fi.org";
-    public const string InternalAdminAppClaimSet = "Ed-Fi ODS Admin App";
+    public const string InternalAdminApiClaimSet = "Ed-Fi ODS Admin App";
 
     public static readonly string[] SystemReservedClaimSets =
     {
-        InternalAdminAppClaimSet,
+        InternalAdminApiClaimSet,
         "Bootstrap Descriptors and EdOrgs"
     };
 

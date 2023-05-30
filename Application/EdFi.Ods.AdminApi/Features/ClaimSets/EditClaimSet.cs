@@ -47,7 +47,7 @@ public class EditClaimSet : IFeature
         {
             updatedClaimSetId = editClaimSetCommand.Execute(editClaimSetModel);
         }
-        catch (AdminAppException exception)
+        catch (AdminApiException exception)
         {
             throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
@@ -138,7 +138,7 @@ public class EditClaimSet : IFeature
                 _getClaimSetByIdQuery.Execute(id);
                 return true;
             }
-            catch (AdminAppException)
+            catch (AdminApiException)
             {
                 throw new NotFoundException<int>("claimSet", id);
             }

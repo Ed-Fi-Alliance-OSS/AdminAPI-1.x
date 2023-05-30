@@ -97,9 +97,9 @@ param(
     [string]
     $PackageFile,
 
-    # Environment values for updating the appsettings on existing AdminApp docker container.
+    # Environment values for updating the appsettings on existing AdminApi docker container.
 
-    # Only required with the BuildAndDeployToAdminAppDockerContainer or BuildAndDeployToAdminApiDockerContainer commands.
+    # Only required with the BuildAndDeployToAdminApiDockerContainer or BuildAndDeployToAdminApiDockerContainer commands.
     [hashtable]
     $DockerEnvValues,
 

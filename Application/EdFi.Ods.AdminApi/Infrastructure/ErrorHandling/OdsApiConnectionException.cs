@@ -8,7 +8,7 @@ using System.Net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
-public class OdsApiConnectionException : Exception, IAdminAppException
+public class OdsApiConnectionException : Exception, IAdminApiException
 {
     public OdsApiConnectionException(HttpStatusCode responseCode, string responseMessage, string exceptionMessage) : base(exceptionMessage)
     {

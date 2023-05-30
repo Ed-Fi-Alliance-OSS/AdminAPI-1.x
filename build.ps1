@@ -320,7 +320,9 @@ function Invoke-Run {
     $projectFilePath = "$solutionRoot/EdFi.Ods.AdminApi"
 
     if ([string]::IsNullOrEmpty($LaunchProfile)) {
-        Write-Error "LaunchProfile parameter is required for running Admin Api. Please specify the LaunchProfile parameter. Valid values include 'mssql-district', 'mssql-shared', 'mssql-year', 'pg-district', 'pg-shared' and 'pg-year'"
+        Write-Error "LaunchProfile parameter is required for running Admin Api. Please " +
+                    "specify the LaunchProfile parameter. Valid values include ""EdFi.Ods.AdminApi (Dev)""" +
+                    ", ""EdFi.Ods.AdminApi (Prod)"", ""EdFi.Ods.AdminApi (Docker)"", and ""IIS Express"""
     }
     else {
         Invoke-Execute { dotnet run --project $projectFilePath --launch-profile $LaunchProfile }

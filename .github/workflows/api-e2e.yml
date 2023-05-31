@@ -54,10 +54,10 @@ jobs:
         run: npm install -g newman newman-reporter-junitfull
 
       - name: Run tests
-        run: newman run './E2E Tests/Admin API E2E.postman_collection.json' `
-                -e './E2E Tests/Admin API Docker.postman_environment.json' `
-                -r junit,cli `
-                --reporter-junit-export ./reports/report.xml `
+        run: newman run './E2E Tests/Admin API E2E.postman_collection.json' \
+                -e './E2E Tests/Admin API Docker.postman_environment.json' \
+                -r junit,cli \
+                --reporter-junit-export ./reports/report.xml \
                 -k
 
       - name: Get Docker logs

@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
 using log4net;
 
@@ -23,22 +24,13 @@ if (!string.IsNullOrEmpty(pathBase))
     app.UseForwardedHeaders();
 }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-else
-{
-    app.UseExceptionHandler("/error");
-}
-
 AdminApiVersions.Initialize(app);
 
 //The ordering here is meaningful: Routing -> Auth -> Endpoints
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.MapFeatureEndpoints();
 app.MapControllers();
 app.UseHealthChecks("/health");

@@ -5,15 +5,9 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 set -e
-set -x
+set +x
 
 envsubst < /app/AdminApi/appsettings.template.json > /app/temp.json
-
-measurementId=`jq -r '.AppSettings.GoogleAnalyticsMeasurementId' /app/appsettings.json`
-
-tmp=$(mktemp)
-jq --arg variable "$measurementId" '.AppSettings.GoogleAnalyticsMeasurementId = $variable' /app/temp.json > "$tmp" && mv "$tmp" /app/temp.json
-
 mv /app/temp.json /app/appsettings.json
 
 if [[ -f /ssl/server.crt ]]; then

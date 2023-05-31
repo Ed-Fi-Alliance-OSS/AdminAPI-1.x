@@ -98,8 +98,8 @@ services:
 
   db-admin:
     build:
-      context: ../../Docker/DB-Admin/pgsql/
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: dbadmin.Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

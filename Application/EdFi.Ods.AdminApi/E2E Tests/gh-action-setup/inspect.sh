@@ -14,3 +14,13 @@ else
     echo "--- Operation timed out. Review container status ---"
     exit 1
 fi
+
+status=`curl -k --silent --output /dev/null -w '%{http_code}' https://localhost/adminapi`
+
+if [[ $status -eq "200" ]]
+then
+    echo "--- Admin API application is running ---"
+else
+    echo "--- Admin API application is failing with status code ${status}"
+    exit 2
+fi

@@ -38,7 +38,10 @@ jobs:
 
       - name: Run Admin API
         run: |
-          docker-compose -f './Compose/pgsql/compose-build-dev.yml' --env-file './E2E Tests/gh-action-setup/.automation.env' up -d
+          docker-compose \
+            -f './Compose/pgsql/compose-build-dev.yml' \
+            --env-file './E2E Tests/gh-action-setup/.automation.env' \
+            up -d
 
       - name: Verify containers are running
         run: |
@@ -54,11 +57,12 @@ jobs:
         run: npm install -g newman newman-reporter-junitfull
 
       - name: Run tests
-        run: newman run './E2E Tests/Admin API E2E.postman_collection.json' \
-                -e './E2E Tests/Admin API Docker.postman_environment.json' \
-                -r junit,cli \
-                --reporter-junit-export ./reports/report.xml \
-                -k
+        run: |
+          newman run './E2E Tests/Admin API E2E.postman_collection.json' \
+            -e './E2E Tests/Admin API Docker.postman_environment.json' \
+            -r junit,cli \
+            --reporter-junit-export ./reports/report.xml \
+            -k
 
       - name: Get Docker logs
         if: failure()

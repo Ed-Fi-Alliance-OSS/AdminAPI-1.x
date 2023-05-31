@@ -3,7 +3,7 @@
 -- The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 -- See the LICENSE and NOTICES files in the project root for more information.
 
-CREATE TABLE adminapi.Applications (
+CREATE TABLE IF NOT EXISTS adminapi.Applications (
     Id INT NOT NULL GENERATED ALWAYS AS IDENTITY,
     ConcurrencyToken VARCHAR(128) NULL,
     ClientId VARCHAR(256) NULL,
@@ -20,7 +20,7 @@ CREATE TABLE adminapi.Applications (
     CONSTRAINT PK_Applications PRIMARY KEY (Id)
 );
 
-CREATE TABLE adminapi.Scopes (
+CREATE TABLE IF NOT EXISTS adminapi.Scopes (
     Id INT NOT NULL GENERATED ALWAYS AS IDENTITY,
     Name VARCHAR(256) NULL,
     ConcurrencyToken VARCHAR(128) NULL,
@@ -33,7 +33,7 @@ CREATE TABLE adminapi.Scopes (
     CONSTRAINT PK_Scopes PRIMARY KEY (Id)
 );
 
-CREATE TABLE adminapi.Authorizations (
+CREATE TABLE IF NOT EXISTS adminapi.Authorizations (
     Id INT NOT NULL GENERATED ALWAYS AS IDENTITY,
     ConcurrencyToken VARCHAR(128) NULL,
     ApplicationId int NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE adminapi.Authorizations (
     CONSTRAINT FK_AuthorizationsId_ApplicationId FOREIGN KEY (ApplicationId) REFERENCES adminapi.Applications (Id) ON DELETE RESTRICT
 );
 
-CREATE TABLE adminapi.Tokens (
+CREATE TABLE IF NOT EXISTS adminapi.Tokens (
     Id INT NOT NULL GENERATED ALWAYS AS IDENTITY,
     ConcurrencyToken VARCHAR(128) NULL,
     ApplicationId int NULL,

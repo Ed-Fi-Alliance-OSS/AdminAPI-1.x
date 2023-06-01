@@ -9,7 +9,6 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.DbConfigurations;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
-using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Services;
@@ -18,6 +17,9 @@ using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using FluentValidation;
+using EdFi.Common.Extensions;
+
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
 public static class WebApplicationBuilderExtensions
@@ -136,15 +138,12 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Logging.AddLog4Net(loggingOptions);
 
         // Fluent validation
-        webApplicationBuilder.Services.AddFluentValidation(
-            opt =>
-            {
-                opt.RegisterValidatorsFromAssembly(executingAssembly);
-
-                opt.ValidatorOptions.DisplayNameResolver = (type, memberInfo, expression)
+        webApplicationBuilder.Services
+            .AddValidatorsFromAssembly(executingAssembly)
+            .AddFluentValidationAutoValidation();
+        ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression)
                     => memberInfo?
                         .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
-            });
 
         //Databases
         var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];

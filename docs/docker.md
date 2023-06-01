@@ -6,21 +6,50 @@ Must already have Docker Desktop or equivalent running on your workstation.
 
 ```mermaid
 graph LR
-    A(Admin Client) -->|HTTPS| B[NGiNX]
+    A(Admin Client) -->|HTTPS| B[nginx]
 
     subgraph Container Network
-        B --> |HTTP| C[Admin API]
-        B --> |HTTP| D[ODS/API]
+        B --> |HTTP| C[adminapi]
+        B --> |HTTP| D[api]
         C --> |HTTP| D
         C --> E[(PGBouncer)]
-        E --> F[(Admin)]
-        E --> G[(Security)]
+        E --> F[(EdFi_Admin)]
+        E --> G[(EdFi_Security)]
         D --> H[(PGBouncer)]
-        H --> I[(ODS\nInstance)]
-        D --> E      
+        H --> I[(EdFi_ODS{0})]
+        D --> E
+
+        subgraph pb-admin
+            E
+        end
+
+        subgraph db-admin
+            F
+            G
+        end
+        
+        subgraph pb-ods
+            H
+        end
+
+        subgraph db-ods
+            I
+        end
     end
 
     J(Swagger) -->|HTTPS| B
+
+style pb-admin fill:#ECECFF
+style pb-ods fill:#ECECFF
+style pb-ods fill:#ECECFF
+style db-admin fill:#ECECFF
+style db-ods fill:#ECECFF
+
+style E fill:#fff
+style F fill:#fff
+style G fill:#fff
+style H fill:#fff
+style I fill:#fff
 ```
 
 1. From a Bash prompt, generate a dev/test self-signed certificate for TLS
@@ -41,7 +70,7 @@ graph LR
    code .env
    ```
 
-3. Build local containers
+3. Build local containers (optional step; next step will run the build implicitly)
 
    ```shell
    docker compose -f compose-build-dev.yml build
@@ -107,14 +136,21 @@ not start the ODS/API.
 
 ```mermaid
 graph LR
-    A(Admin Client) -->|HTTPS| B[NGiNX]
+    A(Admin Client) -->|HTTPS| B[nginx]
 
     subgraph Container Network
-        B --> |HTTP| C[Admin API]
-        C --> D[(Admin)]
+        B --> |HTTP| C[adminapi]
+        C --> D[(EdFi_Admin)]
+
+        subgraph db-admin
+            D
+        end
     end
 
     J(Swagger) -->|HTTPS| B
+
+style db-admin fill:#ECECFF
+style D fill:#fff
 ```
 
 Instructions are similar to the localhost quickstart above, except use

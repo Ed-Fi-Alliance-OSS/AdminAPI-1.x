@@ -11,6 +11,9 @@
     - [Resetting the Database State](#resetting-the-database-state)
     - [Running Locally in Docker](#running-locally-in-docker)
   - [Testing Admin API](#testing-admin-api)
+  - [Application Architecture](#application-architecture)
+    - [Database Layer](#database-layer)
+    - [Validation](#validation)
 
 ## Development Pre-Requisites
 
@@ -168,3 +171,31 @@ more information on these tests.
 
 All three of these test suites should be 100% green before merging new code into
 the `main` branch.
+
+## Application Architecture
+
+The Admin API source code uses ASP.NET but it does not follow the traditional
+ASP.NET model-view-controller (MVC) approach. Instead it relies on defining
+Features and then automating the API routing to those features. Conceptually,
+each Feature _is_ a Controller, though it does not inherit from the .NET
+`Controller` class.
+
+Each Feature implements the `IFeature` interface, which has a single function.
+That function enables the feature to define its own HTTP endpoint route. The
+Feature then has `Handle` function the contains the normal controller logic. Its
+arguments are automatically interpreted and handled by the ASP.NET Core
+dependency injection framework.
+
+### Database Layer
+
+Database interaction is mediated through [Entity Framework
+Core](https://learn.microsoft.com/en-us/ef/core/) with two interfaces:
+`IUsersContext` handles the `EdFi_Admin` database and `ISecurityContext` handles
+the `EdFi_Security` database. The name "IUsersContext" derives from the admin
+database being used to hold Admin App users and now Admin API client
+credentials.
+
+### Validation
+
+Validation of API requests is configured via
+[FluentValidation](https://docs.fluentvalidation.net/en/latest/).

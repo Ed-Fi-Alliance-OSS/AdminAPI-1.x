@@ -126,15 +126,15 @@ function Install-EdFiOdsAdminApi {
     #>
     [CmdletBinding()]
     param (
-        # NuGet package name. Default: EdFi.Suite3.ODS.Admin.Api.
+        # NuGet package name. Default: EdFi.Suite3.ODS.AdminApi.
         [string]
-        $PackageName = "EdFi.Suite3.ODS.Admin.Api",
+        $PackageName = "EdFi.Suite3.ODS.AdminApi",
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
         $PackageVersion,
 
-        # NuGet package source. Please specify the path to the AdminApi sub-directory within the Admin.Api nuget package.
+        # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]
         [string]
         $PackageSource,
@@ -335,15 +335,15 @@ function Update-EdFiOdsAdminApi {
     #>
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     param (
-        # NuGet package name. Default: EdFi.Suite3.ODS.Admin.Api.
+        # NuGet package name. Default: EdFi.Suite3.ODS.AdminApi.
         [string]
-        $PackageName = "EdFi.Suite3.ODS.Admin.Api",
+        $PackageName = "EdFi.Suite3.ODS.AdminApi",
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
         $PackageVersion,
 
-        # NuGet package source. Please specify the path to the AdminApi sub-directory within the Admin.Api nuget package.
+        # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]
         [string]
         $PackageSource,
@@ -694,7 +694,7 @@ function GetExistingAppVersion($webSitePath,  $existingAdminApi) {
         $existingApplicationPath = "$webSitePath\$appPath"
     }
 
-    $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.Admin.Api.dll").FileVersion
+    $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$existingApplicationPath\EdFi.Ods.AdminApi.dll").FileVersion
 
     return $existingApplicationPath, $versionString
 }
@@ -929,7 +929,7 @@ function Set-AdminApiPackageSource {
 
         $adminApiSource = $Config.PackageSource
         $configVersionString = $Config.PackageVersion
-        $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$adminApiSource\EdFi.Ods.Admin.Api.dll").FileVersion
+        $versionString = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$adminApiSource\EdFi.Ods.AdminApi.dll").FileVersion
 
         if (IsVersionMismatch $versionString $configVersionString) {
             Write-Warning "The specified Admin Api package version $configVersionString in the configuration does not match the file version $versionString of the package used as source. Please specify the correct version in the installer configuration or use the correct source."

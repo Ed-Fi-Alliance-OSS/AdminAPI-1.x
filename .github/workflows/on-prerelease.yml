@@ -15,7 +15,7 @@ env:
   ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
   VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint": "${{ secrets.AZURE_ARTIFACTS_FEED_URL }}","password": "${{ secrets.AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN }}"}]}'
   MANIFEST_FILE: "_manifest/spdx_2.2/manifest.spdx.json"
-  PACKAGE_NAME: "Admin.Api"
+  PACKAGE_NAME: "AdminApi"
 jobs:
   pack:
     name: Build and Pack
@@ -208,7 +208,7 @@ jobs:
     uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.5.0
     with:
       base64-subjects: ${{ needs.pack.outputs.hash-code }}
-      provenance-name: Admin.Api.intoto.jsonl
+      provenance-name: AdminApi.intoto.jsonl
       upload-assets: true
       # TODO: remove this after this issue is resolved: https://github.com/slsa-framework/slsa-github-generator/issues/876
       compile-generator: true

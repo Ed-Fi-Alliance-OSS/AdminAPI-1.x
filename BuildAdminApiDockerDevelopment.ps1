@@ -21,7 +21,7 @@ $p = @{
         ApiExternalUrl = "https://localhost:5001"
         ApiStartupType = "SharedInstance"
         DatabaseEngine = "PostgreSql"
-        PathBase = "adminapp"
+        PathBase = "adminapi"
         IssuerUrl = "https://localhost:8001"
         SigningKey = ""
         AdminDB = "host=db-admin;port=5432;username=username;password=root@321;database=EdFi_Admin;pooling=false"

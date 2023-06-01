@@ -27,47 +27,64 @@ jobs:
   run-e2e-tests:
     defaults:
       run:
-        working-directory: ./Application/EdFi.Ods.Admin.Api/
+        working-directory: ./Application/EdFi.Ods.AdminApi/
 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
       - name: Update certificates
         run: cp -r ../../eng/test-certs/ssl ./Docker
+
       - name: Run Admin API
         run: |
-          docker-compose -f './Compose/pgsql/compose-build-dev.yml' --env-file './E2E Tests/gh-action-setup/.automation.env' up -d
-      - name: Verify ODS Health
+          docker-compose \
+            -f './Compose/pgsql/compose-build-dev.yml' \
+            --env-file './E2E Tests/gh-action-setup/.automation.env' \
+            up -d
+
+      - name: Verify containers are running
         run: |
           chmod +x './E2E Tests/gh-action-setup/inspect.sh'
           './E2E Tests/gh-action-setup/inspect.sh'
+
       - name: Setup node
         uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
         with:
-          node-version: "14"
+          node-version: "16"
+
       - name: Install newman
         run: npm install -g newman newman-reporter-junitfull
+
       - name: Run tests
-        run: newman run './E2E Tests/Admin API E2E.postman_collection.json' -e './E2E Tests/Admin API Docker.postman_environment.json' -r junit,cli --reporter-junit-export ./reports/report.xml -k
+        run: |
+          newman run './E2E Tests/Admin API E2E.postman_collection.json' \
+            -e './E2E Tests/Admin API Docker.postman_environment.json' \
+            -r junit,cli \
+            --reporter-junit-export ./reports/report.xml \
+            -k
+
       - name: Get Docker logs
         if: failure()
         run: |
           mkdir docker-logs
           docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
           docker logs adminapi > docker-logs/adminapi.log
+
       - name: Upload Docker logs
         if: failure()
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: docker-logs
-          path: Application/EdFi.Ods.Admin.Api/docker-logs/
+          path: Application/EdFi.Ods.AdminApi/docker-logs/
           retention-days: 10
+
       - name: Upload results
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
           name: test-results
-          path: Application/EdFi.Ods.Admin.Api/reports/report.xml
+          path: Application/EdFi.Ods.AdminApi/reports/report.xml
           retention-days: 10
 
   report:
@@ -80,6 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
       - name: Download artifacts
         uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a #v3.0.2
 
@@ -90,4 +108,9 @@ jobs:
               taskName = '${{ env.TASK_NAME }}'
               folderName = '${{ env.FOLDER_NAME }}'
           }
-          .\eng\send-test-results.ps1 -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} -ProjectId ${{ env.PROJECT_ID }} -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' -ConfigParams $parameters
+          .\eng\send-test-results.ps1 `
+              -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} `
+              -ProjectId ${{ env.PROJECT_ID }} `
+              -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' `
+              -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' `
+              -ConfigParams $parameters

@@ -28,7 +28,7 @@ graph LR
    directory:
 
    ```bash
-   cd Application/EdFi.Ods.Admin.Api/Docker/ssl
+   cd Application/EdFi.Ods.AdminApi/Docker/ssl
    bash ./generate-certificate.sh
    ```
 

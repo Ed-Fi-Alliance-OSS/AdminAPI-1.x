@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
 using log4net;
 
@@ -39,7 +38,7 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
         if (!validationResult.IsValidOdsApi || validationResult.Version == null)
         {
             _log.Error("Unable to determine security model from ODS API Response");
-            throw validationResult.Exception ?? new Exception("No version reported from ODS API");
+            throw validationResult.Exception ?? new Exception("No version reported from the Ed-Fi API");
         }
 
         var serverVersion = validationResult.Version;

@@ -26,11 +26,11 @@ if (!string.IsNullOrEmpty(pathBase))
 
 AdminApiVersions.Initialize(app);
 
-//The ordering here is meaningful: Routing -> Auth -> Endpoints
+//The ordering here is meaningful: Logging -> Routing -> Auth -> Endpoints
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<RequestLoggingMiddleware>();
 app.MapFeatureEndpoints();
 app.MapControllers();
 app.UseHealthChecks("/health");

@@ -86,7 +86,7 @@ public static class WebApplicationBuilderExtensions
                     {
                         ClientCredentials = new OpenApiOAuthFlow
                         {
-                            TokenUrl = new Uri($"{issuer}{SecurityConstants.TokenEndpointUri}"),
+                            TokenUrl = new Uri($"{issuer}/{SecurityConstants.TokenEndpoint}"),
                             Scopes = new Dictionary<string, string>
                             {
                                 { SecurityConstants.Scopes.AdminApiFullAccess, "Unrestricted access to all Admin API endpoints" },

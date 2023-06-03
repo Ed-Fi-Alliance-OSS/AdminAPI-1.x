@@ -27,7 +27,7 @@ public class ConnectController : Controller
         _registerService = registerService;
     }
 
-    [HttpPost("/connect/register")]
+    [HttpPost(SecurityConstants.RegisterEndpoint)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Registers new client", "Registers new client")]
     [SwaggerResponse(200, "Application registered successfully.")]
@@ -37,7 +37,7 @@ public class ConnectController : Controller
         return Ok(new { Title = message, Status = 200 });
     }
 
-    [HttpPost(SecurityConstants.TokenEndpointUri)]
+    [HttpPost(SecurityConstants.TokenEndpoint)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
     [SwaggerResponse(200, "Sign-in successful.")]

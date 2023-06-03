@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Common.Utils.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using System.Net;
 using System.Text.Json;
@@ -76,9 +77,15 @@ public class RequestLoggingMiddleware
                     await response.WriteAsync(JsonSerializer.Serialize(notFoundResponse));
                     break;
 
+                case IAdminApiException adminApiException:
+                    logger.LogError(JsonSerializer.Serialize(new { message = "An uncaught error has occurred", error = new { ex.Message, ex.StackTrace }, traceId = context.TraceIdentifier }));
+                    response.StatusCode = adminApiException.StatusCode.HasValue ? (int)adminApiException.StatusCode : 500;
+                    await response.WriteAsync(JsonSerializer.Serialize(new { message = "The server encountered an unexpected condition that prevented it from fulfilling the request." }));
+                    break;
+
                 default:
                     logger.LogError(JsonSerializer.Serialize(new { message = "An uncaught error has occurred", error = new { ex.Message, ex.StackTrace }, traceId = context.TraceIdentifier }));
-                    await response.WriteAsync(JsonSerializer.Serialize(new { message = ex?.Message }));
+                    await response.WriteAsync(JsonSerializer.Serialize(new { message = "The server encountered an unexpected condition that prevented it from fulfilling the request." }));
                     break;
             }
         }

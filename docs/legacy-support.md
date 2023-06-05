@@ -1,16 +1,33 @@
-# AdminApp.Management Legacy Support
+# Admin API Legacy Support
 
-Historically, Admin App has supported backwards or cross-compatibility between versions of the ODS/API. The release of ODS/API 6.0 includes a breaking change in the security model found in `EdFi.Security.DataAccess`. In order to continue support for older versions of the ODS/API, the Admin App library code (`EdFi.Ods.AdminApp.Management`) must in turn reference both versions of `EdFi.Security.DataAccess`.
+Currently, Admin API supports ODS/API versions 3.4 through 6.x. The release of
+ODS/API 6.0 included a breaking change in the security model found in the
+`EdFi.Security.DataAccess` NuGet package. In order to continue support for older
+versions of the ODS/API, the Admin API code must in turn reference both versions
+of `EdFi.Security.DataAccess`.
 
 ## Referencing Both Assemblies
 
-The current `EdFi.Security.DataAccess` assembly is referenced using NuGet, as typical for dependencies. 
-The legacy `EdFi.SecurityCompatiblity53.DataAccess` assembly is also referenced using NuGet. 
-In order to serve the `EdFi.SecurityCompatiblity53.DataAccess.dll` as a NuGet package, we created a new packaging pipeline. Given the stability of the previous release and one-off nature of this package, we copied the "legacy" library code into a new repository: [Ed-Fi-Compatibility-Libraries](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-Compatibility-Libraries). We avoid _code_ collisions using different namespaces. 
+The current `EdFi.Security.DataAccess` assembly is referenced using NuGet, as
+typical for dependencies. The legacy `EdFi.SecurityCompatiblity53.DataAccess`
+assembly is also referenced using NuGet. In order to serve the
+`EdFi.SecurityCompatiblity53.DataAccess.dll` as a NuGet package, we created a
+new packaging pipeline. Given the stability of the previous release and one-off
+nature of this package, we copied the "legacy" library code into a new
+repository:
+[Ed-Fi-Compatibility-Libraries](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-Compatibility-Libraries).
+We avoid _code_ collisions using different namespaces.
 
 ### "Renaming" Namespaces for EdFi.Security.DataAccess 5.3.43
 
-In order to avoid collisions with the current EdFi.Security.DataAccess, we needed to rename the project and namespaces within. The copied "legacy" library code with the changed namespaces resides in a new repository: [Ed-Fi-Compatibility-Libraries](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-Compatibility-Libraries). We use a github action workflow to pack and publish the library to Azure Artifacts. The `PackageId`, `AssemblyName` and `RootNamespace` have been changed or hard-set before publishing. The package is versioned as the original. The library's code is the same as `v5.3-patch2` / `v5.3.43`.
+In order to avoid collisions with the current EdFi.Security.DataAccess, we
+needed to rename the project and namespaces within. The copied "legacy" library
+code with the changed namespaces resides in a new repository:
+[Ed-Fi-Compatibility-Libraries](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-Compatibility-Libraries).
+We use a github action workflow to pack and publish the library to Azure
+Artifacts. The `PackageId`, `AssemblyName` and `RootNamespace` have been changed
+or hard-set before publishing. The package is versioned as the original. The
+library's code is the same as `v5.3-patch2` / `v5.3.43`.
 
 #### EdFi.SecurityCompatiblity53.DataAccess.csproj
 
@@ -41,13 +58,17 @@ In order to avoid collisions with the current EdFi.Security.DataAccess, we neede
 
 ### References in csproj
 
-Referencing both versions of the library in a csproj is similar to typical scenarios of using different NuGet packages
+Referencing both versions of the library in a csproj is similar to typical
+scenarios of using different NuGet packages
 
 The latest package can be added and updated as normal
+
 ```xml
 <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="A.B.C"/>
 ```
+
 The legacy package can be added with the fixed version
+
 ```xml
 <PackageReference Include="EdFi.SecurityCompatibility53.DataAccess" Version="5.3.43"/>
 ```
@@ -93,18 +114,25 @@ public class ClaimSetService
 }
 ```
 
-## Avoiding Dealing with different using directives 
+## Avoiding Dealing with different using directives
 
-If at all possible, we want to minimize the need to write code like the above, which uses multiple types or methods from both versions in tandem. There are a few ways we can do this:
+If at all possible, we want to minimize the need to write code like the above,
+which uses multiple types or methods from both versions in tandem. There are a
+few ways we can do this:
 
-- limit `EdFi.Security.DataAccess` references to within the `EdFi.Ods.AdminApp.Management` project
-  - (with the exception of registering `ISecurityContext` with service providers)
-- use models from `EdFi.Ods.AdminApp.Management` rather than entities for parameters or return types
+- limit `EdFi.Security.DataAccess` references to within the
+  `EdFi.Ods.AdminApp.Management` project
+  - (with the exception of registering `ISecurityContext` with service
+    providers)
+- use models from `EdFi.Ods.AdminApp.Management` rather than entities for
+  parameters or return types
 - avoid "chaining" `Command` or `Query` types as dependencies
   - pragmatism in applying "Don't Repeat Yourself" will go a long way
 
-These three principals should help isolate interactions with the `Security` database and subsequently the need to reference `EdFi.Security.DataAccess`.
-Once obscured, the publicly available services need only determine which versioned service to call, without care for what models are being used "under the hood:"
+These three principals should help isolate interactions with the `Security`
+database and subsequently the need to reference `EdFi.Security.DataAccess`. Once
+obscured, the publicly available services need only determine which versioned
+service to call, without care for what models are being used "under the hood:"
 
 ```csharp
 namespace EdFi.Ods.AdminApp.Management.ClaimSets;

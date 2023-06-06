@@ -461,9 +461,6 @@ Invoke-Main {
         RunAdminApiDevDockerCompose{
             Invoke-RunAdminApiDevDockerCompose
         }
-        PopulateGoogleAnalyticsAppSettings {
-            Update-AppSettingsToAddGoogleAnalyticsMeasurementId
-        }
         default { throw "Command '$Command' is not recognized" }
     }
 }

@@ -58,7 +58,6 @@
             EncryptionKey = "<Generated encryption key>"
             AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
             SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
-            ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApi;"
         }
 
         .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
@@ -266,7 +265,7 @@ function NewDevCertificate {
         Invoke-Execute { dotnet dev-certs https -t }
     }
     else {
-        Write-Output "Dev Certificate already exists" 
+        Write-Output "Dev Certificate already exists"
     }
 }
 
@@ -380,7 +379,6 @@ function UpdateAppSettingsForAdminApiDocker {
 
     $json.ConnectionStrings.Admin = $DockerEnvValues["AdminDB"]
     $json.ConnectionStrings.Security = $DockerEnvValues["SecurityDB"]
-    $json.ConnectionStrings.ProductionOds = $DockerEnvValues["ProductionOdsDB"]
     $json.Log4NetCore.Log4NetConfigFileName =  "./log4net.config"
     $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
 }
@@ -427,7 +425,7 @@ function Invoke-RunAdminApiDevDockerCompose {
 Invoke-Main {
     if($IsLocalBuild)
     {
-        $nugetExePath = Install-NugetCli       
+        $nugetExePath = Install-NugetCli
         Set-Alias nuget $nugetExePath -Scope Global -Verbose
     }
     switch ($Command) {

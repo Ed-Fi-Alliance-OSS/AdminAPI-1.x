@@ -810,7 +810,6 @@ function Invoke-TransferConnectionStrings{
 
         $connectionstrings = @{
             ConnectionStrings = @{
-                ProductionOds = $oldSettings.ConnectionStrings.ProductionOds
                 Admin = $oldSettings.ConnectionStrings.Admin
                 Security = $oldSettings.ConnectionStrings.Security
             }
@@ -1066,7 +1065,6 @@ function Invoke-TransformConnectionStrings {
 
         $connectionstrings = @{
             ConnectionStrings = @{
-                ProductionOds = $odsconnString
                 Admin = $adminconnString
                 Security = $securityConnString
             }

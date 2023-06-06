@@ -26,7 +26,6 @@ $p = @{
         SigningKey = ""
         AdminDB = "host=db-admin;port=5432;username=username;password=root@321;database=EdFi_Admin;pooling=false"
         SecurityDB = "host=db-admin;port=5432;username=username;password=root@321;database=EdFi_Security;pooling=false"
-        ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};pooling=false"
     }
 
 .\build.ps1 -APIVersion 1.0.6 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer

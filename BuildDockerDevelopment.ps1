@@ -28,7 +28,6 @@ $p = @{
         EncryptionKey = "<Generated encryption key>"
         AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
         SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
-        ProductionOdsDB = "host=db-ods;port=5432;username=username;password=password;database=EdFi_{0};Application Name=EdFi.Ods.AdminApi;"
     }
 
 .\build.ps1 -Version 2.1.1 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer

@@ -90,7 +90,9 @@ public class ClaimSetService
 }
 ```
 
-It is possible to use both the libraries in the same file, but as with name overlap in other situations, ambiguous references must be fully qualified for clarity:
+It is possible to use both the libraries in the same file, but as with name
+overlap in other situations, ambiguous references must be fully qualified for
+clarity:
 
 ```csharp
 using EdFi.SecurityCompatibility53.DataAccess.Models;
@@ -112,51 +114,4 @@ public class ClaimSetService
         var valid3 = new ClaimSet53();
     }
 }
-```
-
-## Avoiding Dealing with different using directives
-
-If at all possible, we want to minimize the need to write code like the above,
-which uses multiple types or methods from both versions in tandem. There are a
-few ways we can do this:
-
-- limit `EdFi.Security.DataAccess` references to within the
-  `EdFi.Ods.AdminApp.Management` project
-  - (with the exception of registering `ISecurityContext` with service
-    providers)
-- use models from `EdFi.Ods.AdminApp.Management` rather than entities for
-  parameters or return types
-- avoid "chaining" `Command` or `Query` types as dependencies
-  - pragmatism in applying "Don't Repeat Yourself" will go a long way
-
-These three principals should help isolate interactions with the `Security`
-database and subsequently the need to reference `EdFi.Security.DataAccess`. Once
-obscured, the publicly available services need only determine which versioned
-service to call, without care for what models are being used "under the hood:"
-
-```csharp
-namespace EdFi.Ods.AdminApp.Management.ClaimSets;
-
-public class ClaimSetService
-{
-    private readonly IOdsSecurityModelVersionResolver _resolver;
-    private readonly ClaimSetOldService _oldService; //references EdFi.SecurityCompatibility53.DataAccess
-    private readonly ClaimSetNewService _newService; //references EdFi.Security.DataAccess
-
-    public OverrideDefaultAuthorizationStrategyCommand() { } //initialize dependencies...
-
-    public ClaimSetResult Execute(IClaimSetRequest request)
-    {
-        return _resolver.GetModelVersion() switch
-        {
-            EdFiOdsSecurityModelVersion.Old => _oldService.Execute(request),
-            EdFiOdsSecurityModelVersion.New => _newService.Execute(request),
-            _ => throw new NotImplementedException("Compatibility for version not supported"),
-       };
-    }
-}
-
-//use types which can be used by either version of the service, and by any outside consumer
-public interface IClaimSetRequest { }
-public class ClaimSetResult { }
 ```

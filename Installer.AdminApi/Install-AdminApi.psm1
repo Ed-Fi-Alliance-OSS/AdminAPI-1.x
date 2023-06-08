@@ -115,14 +115,12 @@ function Install-EdFiOdsAdminApi {
             OdsApiUrl = "http://example-web-api.com/WebApi"
             AdminApiFeatures = @{
                 ApiMode="yearspecific"
-                SecurityMetadataCacheTimeoutMinutes="5"
             }
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
         Installs Admin Api to SQL Server in Year Specific mode for 2020. The installer will also
-        install Admin Api in ASP.NET Identity mode, rather than AD Authentication, and will set the
-        SecurityMetadataCacheTimeoutMinutes to 5 minutes.
+        install Admin Api in ASP.NET Identity mode, rather than AD Authentication.
     #>
     [CmdletBinding()]
     param (
@@ -245,9 +243,8 @@ function Install-EdFiOdsAdminApi {
 
         # Optional overrides for features and settings in the appsettings.
         #
-        # The hashtable can include: ApiMode and SecurityMetadataCacheTimeoutMinutes. By
-        # default, AdminApi is installed in Shared
-        # Instance mode and a 10 minute security metadata cache timeout.
+        # The hashtable can include: ApiMode. By default, AdminApi is installed
+        # inShared Instance mode.
         [hashtable]
         $AdminApiFeatures,
 
@@ -762,7 +759,7 @@ function Invoke-TransferAppsettings {
 
         $backUpPath = $Config.ApplicationBackupPath
         Write-Warning "The following appsettings will be copied over from existing application: "
-        $appSettings = @('ProductionApiUrl','SecurityMetadataCacheTimeoutMinutes','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
+        $appSettings = @('ProductionApiUrl','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
         foreach ($property in $appSettings) {
            Write-Host $property;
         }
@@ -773,7 +770,6 @@ function Invoke-TransferAppsettings {
         $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
 
         $newSettings.AppSettings.ProductionApiUrl = $oldSettings.AppSettings.ProductionApiUrl
-        $newSettings.AppSettings.SecurityMetadataCacheTimeoutMinutes = $oldSettings.AppSettings.SecurityMetadataCacheTimeoutMinutes
         $newSettings.AppSettings.DatabaseEngine = $oldSettings.AppSettings.DatabaseEngine
         $newSettings.AppSettings.ApiStartupType = $oldSettings.AppSettings.ApiStartupType
         $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
@@ -810,7 +806,6 @@ function Invoke-TransferConnectionStrings{
 
         $connectionstrings = @{
             ConnectionStrings = @{
-                ProductionOds = $oldSettings.ConnectionStrings.ProductionOds
                 Admin = $oldSettings.ConnectionStrings.Admin
                 Security = $oldSettings.ConnectionStrings.Security
             }
@@ -967,7 +962,6 @@ function Invoke-TransformAppSettings {
         $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
         $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
-        $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = '10'
         $settings.AppSettings.DatabaseEngine = $config.engine
 
         if ($Config.AdminApiFeatures) {
@@ -980,9 +974,6 @@ function Invoke-TransformAppSettings {
                         $Config.OdsDatabaseName = $Config.OdsDatabaseName -replace "_Ods_\{0\}", "_{0}"
                     }
                 }
-            }
-            if ($Config.AdminApiFeatures.ContainsKey("SecurityMetadataCacheTimeoutMinutes")) {
-                $settings.AppSettings.SecurityMetadataCacheTimeoutMinutes = $Config.AdminApiFeatures.SecurityMetadataCacheTimeoutMinutes
             }
         }
 
@@ -1066,7 +1057,6 @@ function Invoke-TransformConnectionStrings {
 
         $connectionstrings = @{
             ConnectionStrings = @{
-                ProductionOds = $odsconnString
                 Admin = $adminconnString
                 Security = $securityConnString
             }

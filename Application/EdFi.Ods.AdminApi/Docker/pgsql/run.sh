@@ -25,4 +25,4 @@ if [[ -f /ssl/server.crt ]]; then
   update-ca-certificates
 fi
 
-dotnet EdFi.Ods.Admin.Api.dll
+dotnet EdFi.Ods.AdminApi.dll

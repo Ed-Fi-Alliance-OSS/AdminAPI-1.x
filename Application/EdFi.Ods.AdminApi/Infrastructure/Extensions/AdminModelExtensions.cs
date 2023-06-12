@@ -23,4 +23,14 @@ public static class AdminModelExtensions
     {
         return application?.Profiles?.FirstOrDefault()?.ProfileName;
     }
+
+    public static int? ProfileId(this Application application)
+    {
+        return application?.Profiles?.FirstOrDefault()?.ProfileId;
+    }
+
+    public static int? VendorId(this Application application)
+    {
+        return application?.Vendor?.VendorId;
+    }
 }

@@ -17,7 +17,7 @@ public class ApplicationModel
     public int EducationOrganizationId { get; set; }
     public string? OdsInstanceName { get; set; }
     public int? VendorId { get; set; }
-    public int? ProfileId { get; set; }
+    public IList<int>? ProfileIds { get; set; }
 }
 
 [SwaggerSchema(Title = "ApplicationKeySecret")]

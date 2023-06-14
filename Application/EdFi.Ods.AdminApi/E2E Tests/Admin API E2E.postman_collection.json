@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "53597835-f470-4b3a-9f2f-14a52dab1752",
+		"_postman_id": "eb480eb8-51f4-4454-b376-9b35a5b1ad7a",
 		"name": "Admin API E2E refactor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1644,7 +1644,7 @@
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
-											"    pm.expect(result.profileId).to.equal(null);\r",
+											"    pm.expect(result.profileIds).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
 											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
 											"});\r",
@@ -1707,7 +1707,7 @@
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
-											"    pm.expect(result.profileId).to.equal(null);\r",
+											"    pm.expect(result.profileIds).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
 											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
 											"});\r",
@@ -1772,6 +1772,9 @@
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.profileIds).to.length(0);\r",
+											"    pm.expect(result.vendorId).to.not.equal(null);\r",
+											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response result is filtered by vendor\", function () {\r",

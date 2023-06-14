@@ -24,9 +24,15 @@ public static class AdminModelExtensions
         return application?.Profiles?.FirstOrDefault()?.ProfileName;
     }
 
-    public static int? ProfileId(this Application application)
+    public static IList<int>? ProfileIds(this Application application)
     {
-        return application?.Profiles?.FirstOrDefault()?.ProfileId;
+        var profileIds = new List<int>();
+        foreach (var profile in application.Profiles)
+        {
+            profileIds.Add(profile.ProfileId);
+        }
+        
+        return profileIds;
     }
 
     public static int? VendorId(this Application application)

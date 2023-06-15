@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
+using Profile = EdFi.Ods.AdminApi.Features.Applications.Profile;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -24,15 +25,15 @@ public static class AdminModelExtensions
         return application?.Profiles?.FirstOrDefault()?.ProfileName;
     }
 
-    public static IList<int>? ProfileIds(this Application application)
+    public static IList<Profile>? Profiles(this Application application)
     {
-        var profileIds = new List<int>();
+        var profiles = new List<Profile>();
         foreach (var profile in application.Profiles)
         {
-            profileIds.Add(profile.ProfileId);
+            profiles.Add(new Profile { ProfileId =  profile.ProfileId });
         }
         
-        return profileIds;
+        return profiles;
     }
 
     public static int? VendorId(this Application application)

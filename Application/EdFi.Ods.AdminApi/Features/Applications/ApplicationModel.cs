@@ -16,6 +16,8 @@ public class ApplicationModel
     public string? ProfileName { get; set; }
     public int EducationOrganizationId { get; set; }
     public string? OdsInstanceName { get; set; }
+    public int? VendorId { get; set; }
+    public IList<Profile>? Profiles { get; set; }
 }
 
 [SwaggerSchema(Title = "ApplicationKeySecret")]
@@ -24,4 +26,10 @@ public class ApplicationResult
     public int ApplicationId { get; set; }
     public string? Key { get; set; }
     public string? Secret { get; set; }
+}
+
+[SwaggerSchema(Title = "Profile")]
+public class Profile
+{
+    public int? Id { get; set; }
 }

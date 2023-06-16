@@ -5,15 +5,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
-using static EdFi.Ods.AdminApi.DBTests.Testing;
-using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure;
+using Profile = EdFi.Admin.DataAccess.Models.Profile;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 

@@ -32,7 +32,6 @@ public static class AdminModelExtensions
         {
             profiles.Add(new Profile { Id =  profile.ProfileId });
         }
-        
         return profiles;
     }
 

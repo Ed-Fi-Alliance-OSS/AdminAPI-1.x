@@ -30,9 +30,12 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))
             .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
-        CreateMap<EdFi.Admin.DataAccess.Models.Application, ApplicationModel>()
+        CreateMap<Application, ApplicationModel>()
             .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.ApplicationEducationOrganizations.First().EducationOrganizationId))
-            .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()));
+            .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
+            .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
+            .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()));
+
 
         CreateMap<AddApplicationResult, ApplicationResult>()
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
@@ -44,16 +47,16 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
             .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
 
-        CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet, ClaimSetDetailsModel>()
+        CreateMap<ClaimSetEditor.ClaimSet, ClaimSetDetailsModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.IsSystemReserved, opt => opt.MapFrom(src => !src.IsEditable));
 
-        CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet, ClaimSetModel>()
+        CreateMap<ClaimSetEditor.ClaimSet, ClaimSetModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name));
 
-        CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
+        CreateMap<ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
             .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))

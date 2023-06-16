@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2d00f92d-ca7d-4600-96b8-653f930d0e2a",
+		"_postman_id": "eb480eb8-51f4-4454-b376-9b35a5b1ad7a",
 		"name": "Admin API E2E refactor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1644,6 +1644,9 @@
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.profiles).to.length(0);\r",
+											"    pm.expect(result.vendorId).to.not.equal(null);\r",
+											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response results do not include key or secret\", function () {\r",
@@ -1704,6 +1707,9 @@
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.profiles).to.length(0);\r",
+											"    pm.expect(result.vendorId).to.not.equal(null);\r",
+											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response result does not include key or secret\", function () {  \r",
@@ -1766,6 +1772,9 @@
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.profiles).to.length(0);\r",
+											"    pm.expect(result.vendorId).to.not.equal(null);\r",
+											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response result is filtered by vendor\", function () {\r",

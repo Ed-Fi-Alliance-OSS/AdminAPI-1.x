@@ -31,5 +31,5 @@ public class ApplicationResult
 [SwaggerSchema(Title = "Profile")]
 public class Profile
 {
-    public int? ProfileId { get; set; }
+    public int? Id { get; set; }
 }

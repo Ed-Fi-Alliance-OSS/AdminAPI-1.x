@@ -25,12 +25,12 @@ public static class AdminModelExtensions
         return application?.Profiles?.FirstOrDefault()?.ProfileName;
     }
 
-    public static IList<Profile>? Profiles(this Application application)
+    public static IList<Profile> Profiles(this Application application)
     {
         var profiles = new List<Profile>();
         foreach (var profile in application.Profiles)
         {
-            profiles.Add(new Profile { ProfileId =  profile.ProfileId });
+            profiles.Add(new Profile { Id =  profile.ProfileId });
         }
         
         return profiles;

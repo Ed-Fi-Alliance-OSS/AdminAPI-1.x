@@ -52,7 +52,16 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             VendorName = "Integration Tests"
         };
 
-        Save(vendor);
+        var odsInstance = new OdsInstance
+        {
+            Name = "Test Instance",
+            InstanceType = "Ods",
+            IsExtended = false,
+            Status = "OK",
+            Version = "1.0.0"
+        };
+
+        Save(vendor, odsInstance);
 
         AddApplicationResult result = null;
 
@@ -65,7 +74,8 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ClaimSetName = "FakeClaimSet",
                 ProfileId = null,
                 VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 }
+                EducationOrganizationIds = new List<int> { 12345, 67890 },
+                OdsInstanceId = odsInstance.OdsInstanceId
             };
 
             result = command.Execute(newApplication);
@@ -134,7 +144,8 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ClaimSetName = "FakeClaimSet",
                 ProfileId = profile.ProfileId,
                 VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 }
+                EducationOrganizationIds = new List<int> { 12345, 67890 },
+                OdsInstanceId = odsInstance.OdsInstanceId
             };
 
             result = command.Execute(newApplication);
@@ -172,5 +183,6 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
         public string ClaimSetName { get; set; }
         public int? ProfileId { get; set; }
         public IEnumerable<int> EducationOrganizationIds { get; set; }
+        public int OdsInstanceId { get; set; }
     }
 }

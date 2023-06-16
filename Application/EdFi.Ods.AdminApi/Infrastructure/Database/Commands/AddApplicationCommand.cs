@@ -3,9 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
@@ -35,9 +32,7 @@ public class AddApplicationCommand : IAddApplicationCommand
             : null;
 
         var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
-
-        var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
-            x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
+        var odsInstance = _usersContext.OdsInstances.Single(o => o.OdsInstanceId == applicationModel.OdsInstanceId);
 
         var user = new VendorUser
         {
@@ -99,6 +94,7 @@ public interface IAddApplicationModel
     string? ClaimSetName { get; }
     int? ProfileId { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
+    int OdsInstanceId { get; }
 }
 
 public class AddApplicationResult

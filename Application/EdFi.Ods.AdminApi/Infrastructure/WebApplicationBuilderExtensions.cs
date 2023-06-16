@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
-using EdFi.Common.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -75,7 +74,7 @@ public static class WebApplicationBuilderExtensions
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
-            opt.CustomSchemaIds(x => x.FullName);
+            opt.CustomSchemaIds(x => x.FullName?.Replace("+", "."));
             opt.OperationFilter<TokenEndpointBodyDescriptionFilter>();
             opt.OperationFilter<TagByResourceUrlFilter>();
             opt.AddSecurityDefinition(
@@ -123,7 +122,6 @@ public static class WebApplicationBuilderExtensions
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
-            opt.CustomSchemaIds(x => x.FullName);
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {

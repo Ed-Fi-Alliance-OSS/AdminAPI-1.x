@@ -39,4 +39,9 @@ public static class AdminModelExtensions
     {
         return application?.Vendor?.VendorId;
     }
+
+    public static int? EducationOrganizationId(this Application application)
+    {
+        return application?.ApplicationEducationOrganizations?.FirstOrDefault()?.EducationOrganizationId;
+    }
 }

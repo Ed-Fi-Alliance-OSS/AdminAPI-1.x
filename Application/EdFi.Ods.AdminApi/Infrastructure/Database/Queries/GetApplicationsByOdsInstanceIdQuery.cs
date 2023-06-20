@@ -8,7 +8,12 @@ using EdFi.Admin.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public class GetApplicationsByOdsInstanceIdQuery
+public interface IGetApplicationsByOdsInstanceIdQuery
+{
+    List<Application> Execute(int odsInstanceId);
+}
+
+public class GetApplicationsByOdsInstanceIdQuery : IGetApplicationsByOdsInstanceIdQuery
 {
     private readonly IUsersContext _context;
 

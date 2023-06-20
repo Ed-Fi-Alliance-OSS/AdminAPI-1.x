@@ -6,10 +6,12 @@
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
+using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using Profile = AutoMapper.Profile;
+
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -98,5 +100,12 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
+
+        CreateMap<OdsInstance, OdsInstanceModel>()
+            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.Version, opt => opt.MapFrom(src => src.Version))
+            .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
     }
 }

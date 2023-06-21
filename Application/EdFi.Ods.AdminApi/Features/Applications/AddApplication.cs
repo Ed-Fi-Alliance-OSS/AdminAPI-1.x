@@ -6,12 +6,12 @@
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using FluentValidation;
-using Swashbuckle.AspNetCore.Annotations;
-using FluentValidation.Results;
 using EdFi.Ods.AdminApi.Infrastructure.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using FluentValidation;
+using FluentValidation.Results;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
 
@@ -41,6 +41,9 @@ public class AddApplication : IFeature
 
         if (request.ProfileId.HasValue && db.Profiles.Find(request.ProfileId) == null)
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
+
+        if (null == db.OdsInstances.Find(request.OdsInstanceId))
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"ODS instance with ID {request.OdsInstanceId} not found.") });
     }
 
     [SwaggerSchema(Title = "AddApplicationRequest")]
@@ -61,6 +64,9 @@ public class AddApplication : IFeature
 
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<int>? EducationOrganizationIds { get; set; }
+
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdDescription, Nullable = false)]
+        public int OdsInstanceId { get; set; }
     }
 
     public class Validator : AbstractValidator<Request>
@@ -84,6 +90,7 @@ public class AddApplication : IFeature
                 .WithMessage(FeatureConstants.EdOrgIdsValidationMessage);
 
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
+            RuleFor(m => m.OdsInstanceId).Must(id => id > 0).WithMessage(FeatureConstants.OdsInstanceIdValidationMessage);
         }
 
         private bool BeWithinApplicationNameMaxLength<T>(IAddApplicationModel model, string? applicationName, ValidationContext<T> context)

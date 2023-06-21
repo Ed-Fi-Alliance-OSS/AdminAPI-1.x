@@ -26,10 +26,20 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
     private Profile _otherProfile;
     private ApiClient _apiClient;
     private Application _application;
+    private OdsInstance _odsInstance;
 
 
     private void SetupTestEntities()
     {
+        _odsInstance = new OdsInstance
+        {
+            Name = "Test Instance",
+            InstanceType = "Ods",
+            IsExtended = false,
+            Status = "OK",
+            Version = "1.0.0"
+        };
+
         _vendor = new Vendor
         {
             VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
@@ -85,7 +95,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(12345));
         _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(67890));
 
-        Save(_vendor, _otherVendor, _user, _otherUser, _profile, _otherProfile, _application);
+        Save(_vendor, _otherVendor, _user, _otherUser, _profile, _otherProfile, _application, _odsInstance);
     }
 
     [Test]
@@ -100,7 +110,8 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             ClaimSetName = _application.ClaimSetName,
             EducationOrganizationIds = new List<int> { 12345, 67890 },
             ProfileId = null,
-            VendorId = _vendor.VendorId
+            VendorId = _vendor.VendorId,
+            OdsInstanceId = _odsInstance.OdsInstanceId
         };
 
         Transaction(usersContext =>
@@ -135,7 +146,8 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             ClaimSetName = "DifferentFakeClaimSet",
             EducationOrganizationIds = new List<int> { 23456, 78901 },
             ProfileId = _otherProfile.ProfileId,
-            VendorId = _otherVendor.VendorId
+            VendorId = _otherVendor.VendorId,
+            OdsInstanceId = _odsInstance.OdsInstanceId
         };
 
         Transaction(usersContext =>
@@ -167,5 +179,6 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         public string ClaimSetName { get; set; }
         public int? ProfileId { get; set; }
         public IEnumerable<int> EducationOrganizationIds { get; set; }
+        public int OdsInstanceId { get; set; }
     }
 }

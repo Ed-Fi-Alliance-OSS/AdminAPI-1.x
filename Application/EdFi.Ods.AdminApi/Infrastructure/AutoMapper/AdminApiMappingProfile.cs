@@ -4,13 +4,14 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
-using Profile = AutoMapper.Profile;
-using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Features.Applications;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
-using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
+using EdFi.Ods.AdminApi.Features.Vendors;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers; 
+using Profile = AutoMapper.Profile;
+
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -32,11 +33,12 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
         CreateMap<Application, ApplicationModel>()
-            .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.ApplicationEducationOrganizations.First().EducationOrganizationId))
+            .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.EducationOrganizationId()))
             .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
-            .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()));
-
+            .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()))
+            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()))
+            .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()));
 
         CreateMap<AddApplicationResult, ApplicationResult>()
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))

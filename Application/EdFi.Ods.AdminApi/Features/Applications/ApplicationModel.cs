@@ -18,6 +18,7 @@ public class ApplicationModel
     public string? OdsInstanceName { get; set; }
     public int? VendorId { get; set; }
     public IList<Profile>? Profiles { get; set; }
+    public int? OdsInstanceId { get; set; }
 }
 
 [SwaggerSchema(Title = "ApplicationKeySecret")]

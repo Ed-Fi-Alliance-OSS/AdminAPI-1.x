@@ -3,12 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.ObjectModel;
-using System.Data.Entity;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -33,6 +32,7 @@ public class EditApplicationCommand : IEditApplicationCommand
             .Include(a => a.ApplicationEducationOrganizations)
             .Include(a => a.ApiClients)
             .Include(a => a.Profiles)
+            .Include(a => a.OdsInstance)
             .SingleOrDefault(a => a.ApplicationId == model.ApplicationId) ?? throw new NotFoundException<int>("application", model.ApplicationId);
 
         if (application.Vendor.IsSystemReservedVendor())
@@ -44,6 +44,7 @@ public class EditApplicationCommand : IEditApplicationCommand
         var newProfile = model.ProfileId.HasValue
             ? _context.Profiles.Single(p => p.ProfileId == model.ProfileId.Value)
             : null;
+        var newOdsInstance = _context.OdsInstances.Single(o => o.OdsInstanceId == model.OdsInstanceId);
 
         var apiClient = application.ApiClients.Single();
         apiClient.Name = model.ApplicationName;
@@ -51,6 +52,7 @@ public class EditApplicationCommand : IEditApplicationCommand
         application.ApplicationName = model.ApplicationName;
         application.ClaimSetName = model.ClaimSetName;
         application.Vendor = newVendor;
+        application.OdsInstance = newOdsInstance;
 
         application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
 
@@ -79,4 +81,5 @@ public interface IEditApplicationModel
     string? ClaimSetName { get; }
     int? ProfileId { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
+    int OdsInstanceId { get; }
 }

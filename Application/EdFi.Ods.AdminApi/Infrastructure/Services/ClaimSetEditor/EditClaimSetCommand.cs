@@ -3,6 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Security.DataAccess.Contexts;
+
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
     public interface IEditClaimSetCommand
@@ -12,28 +16,48 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
     public class EditClaimSetCommand : IEditClaimSetCommand
     {
-        private readonly IOdsSecurityModelVersionResolver _resolver;
-        private readonly EditClaimSetCommandV53Service _v53Service;
-        private readonly EditClaimSetCommandV6Service _v6Service;
+        private readonly ISecurityContext _securityContext;
+        private readonly IUsersContext _usersContext;
 
-        public EditClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-            EditClaimSetCommandV53Service v53Service,
-            EditClaimSetCommandV6Service v6Service)
+        public EditClaimSetCommand(ISecurityContext securityContext, IUsersContext usersContext)
         {
-            _resolver = resolver;
-            _v53Service = v53Service;
-            _v6Service = v6Service;
+            _securityContext = securityContext;
+            _usersContext = usersContext;
         }
 
         public int Execute(IEditClaimSetModel claimSet)
         {
-            var securityModel = _resolver.DetermineSecurityModel();
-            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-                return _v53Service.Execute(claimSet);
-            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
-                return _v6Service.Execute(claimSet);
-            else
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+            var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
+
+            if (existingClaimSet.ForApplicationUseOnly || existingClaimSet.IsEdfiPreset ||
+                    Constants.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
+            {
+                throw new AdminApiException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
+            }
+
+            if (claimSet.ClaimSetName is null) throw new InvalidOperationException("Cannot have a null ClaimSetName");
+            if (!claimSet.ClaimSetName.Equals(existingClaimSet.ClaimSetName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                ReAssociateApplicationsToRenamedClaimSet(existingClaimSet.ClaimSetName, claimSet.ClaimSetName);
+            }
+
+            existingClaimSet.ClaimSetName = claimSet.ClaimSetName;
+
+            _securityContext.SaveChanges();
+            _usersContext.SaveChanges();
+
+            return existingClaimSet.ClaimSetId;
+
+            void ReAssociateApplicationsToRenamedClaimSet(string existingClaimSetName, string newClaimSetName)
+            {
+                var associatedApplications = _usersContext.Applications
+                    .Where(x => x.ClaimSetName == existingClaimSetName);
+
+                foreach (var application in associatedApplications)
+                {
+                    application.ClaimSetName = newClaimSetName;
+                }
+            }
         }
     }
 

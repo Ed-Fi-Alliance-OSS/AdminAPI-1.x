@@ -7,18 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Models;
-
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using ResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
-using Action = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
+using Application = EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
+using Action = EdFi.Security.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
+using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBase
+public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldGetParentResourcesByClaimSetId()
@@ -30,14 +29,15 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
 
         Save(testApplication);
         var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication);
+        var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication, UniqueNameList("ParentRc", 1));
+
         foreach (var testClaimSet in testClaimSets)
         {
-            var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
+            var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
 
             var testResourceClaimsForId =
                 testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId).Select(x => x.ResourceClaim).ToArray();
-            results.Count.ShouldBe(testResourceClaimsForId.Length);
+            results.Length.ShouldBe(testResourceClaimsForId.Length);
             results.Select(x => x.Name).ShouldBe(testResourceClaimsForId.Select(x => x.ResourceName), true);
             results.Select(x => x.Id).ShouldBe(testResourceClaimsForId.Select(x => x.ResourceClaimId), true);
             results.All(x => x.Create).ShouldBe(true);
@@ -54,12 +54,14 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
 
         Save(testApplication);
         var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication);
+        var rcIds = UniqueNameList("ParentRc", 1);
+        var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication, rcIds);
 
         foreach (var testClaimSet in testClaimSets)
         {
+            var rcName = $"{rcIds.First()}{testClaimSet.ClaimSetName}";
             var testResourceClaim =
-                testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == "TestResourceClaim3.00").ResourceClaim;
+                testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == rcName).ResourceClaim;
             var result = SingleResourceClaimForClaimSet(testClaimSet.ClaimSetId, testResourceClaim.ResourceClaimId);
 
             result.Name.ShouldBe(testResourceClaim.ResourceName);
@@ -69,7 +71,6 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
             result.Update.ShouldBe(false);
             result.Delete.ShouldBe(false);
         }
-
     }
 
     [Test]
@@ -87,12 +88,12 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         using var securityContext = TestContext;
         foreach (var testClaimSet in testClaimSets)
         {
-            var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
+            var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
 
             var testParentResourceClaimsForId =
                 testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
 
-            results.Count.ShouldBe(testParentResourceClaimsForId.Length);
+            results.Length.ShouldBe(testParentResourceClaimsForId.Length);
             results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
             results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
             results.All(x => x.Create).ShouldBe(true);
@@ -106,6 +107,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
                 parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
                 parentResult.Children.All(x => x.Create).ShouldBe(true);
             }
+
         }
     }
 
@@ -126,10 +128,12 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         Save(testClaimSet);
 
         var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication);
+        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication, UniqueNameList("ParentRc", 3));
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
+
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
-        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategies.Single()
+                        .AuthorizationStrategy.AuthorizationStrategyName), true);
 
     }
 
@@ -150,13 +154,16 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         Save(testClaimSet);
 
         var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication);
+        var rcIds = UniqueNameList("Parent", 1);
+        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication, rcIds);
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
+        var rcName = $"{rcIds.First()}{testClaimSet.ClaimSetName}";
         var testResourceClaim =
-            testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == "TestResourceClaim3.00").ResourceClaim;
+            testResourceClaims.Single(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ResourceName == rcName).ResourceClaim;
         var testAuthStrategy = testAuthStrategies.Single(x =>
-            x.ResourceClaim.ResourceClaimId == testResourceClaim.ResourceClaimId && x.Action.ActionName == ActionName.Create.Value).AuthorizationStrategy;
+            x.ResourceClaim.ResourceClaimId == testResourceClaim.ResourceClaimId && x.Action.ActionName == ActionName.Create.Value)
+        .AuthorizationStrategies.Single().AuthorizationStrategy;
 
         var result = SingleResourceClaimForClaimSet(testClaimSet.ClaimSetId, testResourceClaim.ResourceClaimId);
 
@@ -167,6 +174,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         result.Update.ShouldBe(false);
         result.Delete.ShouldBe(false);
         result.DefaultAuthStrategiesForCRUD[0].AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
+
     }
 
     [Test]
@@ -190,7 +198,6 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         var testResourceClaims = SetupParentResourceClaimsWithChildren(new List<ClaimSet> { testClaimSet }, testApplication);
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
-
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
 
         var testParentResourceClaimsForId =
@@ -201,7 +208,8 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         var testAuthStrategiesForParents =
             testAuthStrategies.Where(x => x.ResourceClaim.ParentResourceClaim == null);
 
-        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x =>
+        x.AuthorizationStrategies.Single().AuthorizationStrategy.AuthorizationStrategyName), true);
 
         foreach (var testParentResourceClaim in testParentResourceClaimsForId)
         {
@@ -209,9 +217,9 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
             var testAuthStrategiesForChildren =
                 testAuthStrategies.Where(x =>
                     x.ResourceClaim.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId);
-            parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+            parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategies.Single()
+            .AuthorizationStrategy.AuthorizationStrategyName), true);
         }
-
     }
 
     private IReadOnlyCollection<ClaimSet> SetupApplicationWithClaimSets(Application testApplication, int claimSetCount = 5)
@@ -233,18 +241,19 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         return testClaimSets;
     }
 
-    private IReadOnlyCollection<ClaimSetResourceClaim> SetupParentResourceClaims(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5)
+    private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaims(IEnumerable<ClaimSet> testClaimSets, Application testApplication, IList<string> resouceClaimsIds)
     {
-        var claimSetResourceClaims = new List<ClaimSetResourceClaim>();
+        var claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
         foreach (var claimSet in testClaimSets)
         {
-            foreach (var index in Enumerable.Range(1, resourceClaimCount))
+            foreach (var index in resouceClaimsIds)
             {
+                var rcName = $"{index}{claimSet.ClaimSetName}";
                 var resourceClaim = new ResourceClaim
                 {
-                    ClaimName = $"TestResourceClaim{index:N}",
-                    DisplayName = $"TestResourceClaim{index:N}",
-                    ResourceName = $"TestResourceClaim{index:N}",
+                    ClaimName = rcName,
+                    DisplayName = rcName,
+                    ResourceName = rcName,
                     Application = testApplication
                 };
                 var action = new Action
@@ -252,7 +261,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
                     ActionName = ActionName.Create.Value,
                     ActionUri = "create"
                 };
-                var claimSetResourceClaim = new ClaimSetResourceClaim
+                var claimSetResourceClaim = new ClaimSetResourceClaimAction
                 {
                     ResourceClaim = resourceClaim, Action = action, ClaimSet = claimSet
                 };
@@ -265,7 +274,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         return claimSetResourceClaims;
     }
 
-    private IReadOnlyCollection<ClaimSetResourceClaim> SetupParentResourceClaimsWithChildren(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 3)
+    private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 1)
     {
         var parentResourceClaims = new List<ResourceClaim>();
         var childResourceClaims = new List<ResourceClaim>();
@@ -283,9 +292,9 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
             childResourceClaims.AddRange(Enumerable.Range(1, childResourceClaimCount)
                 .Select(childIndex => new ResourceClaim
                 {
-                    ClaimName = $"TestChildResourceClaim{childIndex:N}",
-                    DisplayName = $"TestChildResourceClaim{childIndex:N}",
-                    ResourceName = $"TestChildResourceClaim{childIndex:N}",
+                    ClaimName = $"TestChildResourceClaim{resourceClaim.ClaimName}",
+                    DisplayName = $"TestChildResourceClaim{resourceClaim.ClaimName}",
+                    ResourceName = $"TestChildResourceClaim{resourceClaim.ClaimName}",
                     Application = testApplication,
                     ParentResourceClaim = resourceClaim,
                     ParentResourceClaimId = resourceClaim.ResourceClaimId
@@ -295,7 +304,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         Save(parentResourceClaims.Cast<object>().ToArray());
         Save(childResourceClaims.Cast<object>().ToArray());
 
-        var claimSetResourceClaims = new List<ClaimSetResourceClaim>();
+        var claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
         var claimSets = testClaimSets.ToList();
         foreach (var claimSet in claimSets)
         {
@@ -306,7 +315,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
                     ActionName = ActionName.Create.Value,
                     ActionUri = "create"
                 };
-                var claimSetResourceClaim = new ClaimSetResourceClaim
+                var claimSetResourceClaim = new ClaimSetResourceClaimAction
                 {
                     ResourceClaim = childResourceClaims[index - 1],
                     Action = action,
@@ -318,7 +327,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
 
         Save(claimSetResourceClaims.Cast<object>().ToArray());
 
-        claimSetResourceClaims = new List<ClaimSetResourceClaim>();
+        claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
         foreach (var claimSet in claimSets)
         {
             foreach (var index in Enumerable.Range(1, resourceClaimCount))
@@ -329,7 +338,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
                     ActionName = ActionName.Create.Value,
                     ActionUri = "create"
                 };
-                var claimSetResourceClaim = new ClaimSetResourceClaim
+                var claimSetResourceClaim = new ClaimSetResourceClaimAction
                 {
                     ResourceClaim = parentResource,
                     Action = action,
@@ -338,7 +347,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
                 claimSetResourceClaims.Add(claimSetResourceClaim);
                 var childResources = childResourceClaims
                     .Where(x => x.ParentResourceClaimId == parentResource.ResourceClaimId).Select(x =>
-                        new ClaimSetResourceClaim
+                        new ClaimSetResourceClaimAction
                         {
                             ResourceClaim = x,
                             Action = action,

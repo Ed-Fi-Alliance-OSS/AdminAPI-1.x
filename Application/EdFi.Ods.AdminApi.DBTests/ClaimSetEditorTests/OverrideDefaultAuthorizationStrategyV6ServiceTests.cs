@@ -65,8 +65,7 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
         using var securityContext = TestContext;
         var command = new OverrideDefaultAuthorizationStrategyV6Service(securityContext);
         command.Execute(overrideModel);
-        var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new StubOdsSecurityModelVersionResolver.V6(),
-                null, new GetResourcesByClaimSetIdQueryV6Service(securityContext, SecurityDataTestBase.Mapper()));
+        var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, SecurityDataTestBase.Mapper());
         resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
 
         var resultResourceClaim1 =

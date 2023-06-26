@@ -17,7 +17,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetApplicationsByClaimSetIdQueryV6ServiceTests : SecurityDataTestBase
+public class GetApplicationsByClaimSetIdQueryTests : SecurityDataTestBase
 {
     [TestCase(1)]
     [TestCase(3)]

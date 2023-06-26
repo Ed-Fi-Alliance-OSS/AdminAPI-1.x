@@ -45,6 +45,22 @@ public class ResourceClaimModel
     }
 }
 
+[SwaggerSchema(Title = "SimpleResourceClaimModel")]
+public class SimpleResourceClaimModel
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public int? ParentId { get; set; }
+    public string? ParentName { get; set; }
+
+    [SwaggerSchema(Description = "Children are collection of SimpleResourceClaimModel")]
+    public List<SimpleResourceClaimModel> Children { get; set; }
+    public SimpleResourceClaimModel()
+    {
+        Children = new List<SimpleResourceClaimModel>();
+    }
+}
+
 [SwaggerSchema(Title = "AuthorizationStrategy")]
 public class AuthorizationStrategyModel
 {

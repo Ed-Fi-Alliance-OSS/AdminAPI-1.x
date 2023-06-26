@@ -14,6 +14,7 @@ public class AdminApiVersions
     private static bool _isInitialized;
 
     public static AdminApiVersion V1 = new(1.1, "v1");
+    public static AdminApiVersion V2 = new(2.0, "v2");
     private static ApiVersionSet? _versionSet;
 
     public static void Initialize(WebApplication app)
@@ -22,6 +23,7 @@ public class AdminApiVersions
 
         _versionSet = app.NewApiVersionSet()
             .HasApiVersion(V1.Version)
+            .HasApiVersion(V2.Version)
             .Build();
 
         _isInitialized = true;

@@ -32,7 +32,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             if (existingClaimSet.ForApplicationUseOnly || existingClaimSet.IsEdfiPreset ||
                     Constants.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
             {
-                throw new AdminApiException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
+                throw new AdminApiException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved. May not be modified.");
             }
 
             if (claimSet.ClaimSetName is null) throw new InvalidOperationException("Cannot have a null ClaimSetName");

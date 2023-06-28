@@ -12,6 +12,7 @@ ENV POSTGRES_DB=postgres
 
 COPY Docker/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 COPY Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/
+COPY Docker/dev/adminapi-test-seeddata.sql /tmp/AdminApiScripts/adminapi-test-seeddata.sql
 
 RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0 && \
     dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \

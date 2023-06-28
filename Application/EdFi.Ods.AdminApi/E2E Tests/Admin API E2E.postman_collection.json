@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "eb480eb8-51f4-4454-b376-9b35a5b1ad7a",
-		"name": "Admin API E2E refactor",
+		"_postman_id": "26996ec4-b0aa-434d-b609-d47cb63b0d90",
+		"name": "Admin API E2E 2.0",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -689,7 +689,8 @@
 											"\r",
 											"if(result.vendorId) {\r",
 											"    pm.collectionVariables.set(\"CreatedVendorId\", result.vendorId);\r",
-											"}"
+											"}\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -1151,9 +1152,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -1200,9 +1200,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -1258,9 +1257,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -1332,6 +1330,24 @@
 											"    pm.collectionVariables.set(\"ApplicationVendorId\", json.result.vendorId);\r",
 											"  }\r",
 											"});\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsinstances`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},  \r",
+											"function (err, response) {\r",
+											"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"  const json = response.json();\r",
+											"  if(!json.result[0].odsInstanceId) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }\r",
+											"  else {\r",
+											"    pm.collectionVariables.set(\"ODSInstanceId\", json.result[0].odsInstanceId);\r",
+											"  }\r",
+											"});\r",
+											"\r",
 											""
 										],
 										"type": "text/javascript"
@@ -1384,7 +1400,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1441,6 +1457,7 @@
 											"    pm.expect(response.errors[\"ApplicationName\"].length).to.equal(1);\r",
 											"    pm.expect(response.errors[\"ClaimSetName\"].length).to.equal(1);\r",
 											"    pm.expect(response.errors[\"EducationOrganizationIds\"].length).to.equal(1);\r",
+											"     pm.expect(response.errors[\"OdsInstanceId\"].length).to.equal(1);\r",
 											"});\r",
 											""
 										],
@@ -1453,7 +1470,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": []\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [],\r\n  \"odsInstanceId\": 0\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1502,7 +1519,7 @@
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Response message is helpful and accurate\", function () {\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
 											"});\r",
 											"\r",
@@ -1521,7 +1538,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1590,7 +1607,76 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/applications/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"applications",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications - Invalid OdsInstance",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const errors = pm.response.json().errors;\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response.status).to.equal(400);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.OdsInstanceId.length).to.equal(1);\r",
+											"    pm.expect(response.errors.OdsInstanceId[0]).to.contain(\"provide valid ods instance id.\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": 0\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1643,10 +1729,7 @@
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
-											"    pm.expect(result.profiles).to.length(0);\r",
-											"    pm.expect(result.vendorId).to.not.equal(null);\r",
-											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
+											"    pm.expect(result.odsInstanceName).to.not.equal(null);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response results do not include key or secret\", function () {\r",
@@ -1706,10 +1789,7 @@
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
-											"    pm.expect(result.profiles).to.length(0);\r",
-											"    pm.expect(result.vendorId).to.not.equal(null);\r",
-											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
+											"    pm.expect(result.odsInstanceName).to.not.equal(null);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response result does not include key or secret\", function () {  \r",
@@ -1771,10 +1851,7 @@
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
 											"    pm.expect(result.educationOrganizationId).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
-											"    pm.expect(result.profiles).to.length(0);\r",
-											"    pm.expect(result.vendorId).to.not.equal(null);\r",
-											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
+											"    pm.expect(result.odsInstanceName).to.not.equal(null);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response result is filtered by vendor\", function () {\r",
@@ -1838,7 +1915,8 @@
 											"        \"vendorId\": pm.collectionVariables.get(\"OtherApplicationVendorId\"),\r",
 											"        \"claimSetName\": \"Ed-Fi Sandbox\",\r",
 											"        \"profileId\": null,\r",
-											"        \"educationOrganizationIds\": [ 255901 ]\r",
+											"        \"educationOrganizationIds\": [ 255901 ],\r",
+											"        \"odsInstanceId\": 1\r",
 											"      }),\r",
 											"    }\r",
 											"  },  \r",
@@ -1914,7 +1992,7 @@
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi ODS Admin App\");\r",
 											"    pm.expect(result.educationOrganizationId).to.equal(1234);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.odsInstanceName).to.not.equal(null);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response result does not include application key and secret\", function () {\r",
@@ -1958,7 +2036,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2027,7 +2105,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": []\r\n}\r\n",
+									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2095,7 +2173,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2164,7 +2242,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [1234]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileId\": 9999,\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2260,7 +2338,8 @@
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
-											"});"
+											"});\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -2297,9 +2376,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2346,9 +2424,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2396,9 +2473,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -2406,7 +2482,6 @@
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
 											"    pm.expect(response.title).to.contain(\"application\");\r",
-											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
 											"});\r",
 											""
 										],
@@ -2419,7 +2494,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2454,9 +2529,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -3037,41 +3111,19 @@
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
 											"\r",
-											"const findClaimSetById = function(results, claimSetId) {\r",
-											"    let found = null;\r",
-											"    results.forEach((claimSet) => {\r",
-											"        if (claimSet.id === claimSetId) found = claimSet; \r",
-											"    });\r",
-											"    return found;\r",
-											"}\r",
-											"\r",
-											"const findClaimSetByName = function(results, claimSetName) {\r",
-											"    let found = null;\r",
-											"    results.forEach((claimSet) => {\r",
-											"        if ((claimSet.name ?? \"\") === claimSetName) found = claimSet; \r",
-											"    });\r",
-											"    return found;\r",
-											"}\r",
-											"\r",
 											"pm.test(\"Response result includes claimsets\", function () {\r",
 											"    pm.expect(results.length).to.be.greaterThan(0);\r",
 											"\r",
-											"    const result = findClaimSetById(results, pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
-											"    \r",
+											"    const indexOfClaimSet = results.map(\r",
+											"        function(claimSet) { return claimSet.id; }\r",
+											"    ).indexOf(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
+											"\r",
+											"    const result = results[indexOfClaimSet];\r",
 											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
 											"    pm.expect(result.isSystemReserved).to.equal(false);\r",
 											"    pm.expect(result.applicationsCount).to.equal(0);\r",
 											"});\r",
-											"\r",
-											"// Extract ID for \"AB Connect\"\r",
-											"let abConnect = findClaimSetByName(results, \"AB Connect\");\r",
-											"console.log(\"SystemReservedClaimSetId\", abConnect);\r",
-											"pm.collectionVariables.set(\"SystemReservedClaimSetId\", abConnect.id);\r",
-											"\r",
-											"// Extract ID for \"Ed-Fi Sandbox\"\r",
-											"let sandbox = findClaimSetByName(results, \"Ed-Fi Sandbox\");\r",
-											"console.log(\"OtherExistingClaimSetId\", sandbox);\r",
-											"pm.collectionVariables.set(\"OtherExistingClaimSetId\", sandbox.id);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -3648,7 +3700,29 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											""
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/claimsets`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSets = claimSetResponse.json().result;\r",
+											"  if(!claimSets) { console.log('Error in Pre-request: ClaimSets missing from response.'); }\r",
+											"  const systemReservedClaimSetIds = claimSets.map(\r",
+											"        function(claimSet) { \r",
+											"            if(claimSet.isSystemReserved)\r",
+											"            {\r",
+											"                return claimSet.id;\r",
+											"            } \r",
+											"        }\r",
+											"    );\r",
+											"  if(!systemReservedClaimSetIds) { console.log('Error in Pre-request: System Reserved claimset IDs not found. Response is:', claimSets); }\r",
+											"  pm.collectionVariables.set(\"SystemReservedClaimSetId\", systemReservedClaimSetIds[0]);\r",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -3859,7 +3933,30 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											""
+											"  pm.sendRequest({\r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v1/applications/${pm.collectionVariables.get(\"OtherApplicationId\")}`,\r",
+											"    method: 'PUT',\r",
+											"    header: {\r",
+											"        \"Content-Type\": \"application/json\",\r",
+											"        \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"    },\r",
+											"    body: {\r",
+											"      mode: 'raw',\r",
+											"      raw:JSON.stringify({\r",
+											"        \"applicationName\": \"ClaimSet Test Vendor Application\",\r",
+											"        \"vendorId\": pm.collectionVariables.get(\"OtherApplicationVendorId\"),\r",
+											"        \"claimSetName\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
+											"        \"profileId\": null,\r",
+											"        \"educationOrganizationIds\": [ 255901 ],\r",
+											"        \"odsInstanceId\": 1\r",
+											"      }),\r",
+											"    }\r",
+											"  },  \r",
+											"  function (appErr, appResonse) {\r",
+											"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
+											"    const appJson = appResonse.json();\r",
+											"    if(!appJson.result.applicationId) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }\r",
+											"}); "
 										],
 										"type": "text/javascript"
 									}
@@ -3896,9 +3993,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -3938,20 +4034,19 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is Not Found\", function () {\r",
+											"pm.test(\"Status code is Bad Request\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"not found\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
 											"});\r",
 											""
 										],
@@ -3999,9 +4094,8 @@
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
-											"    pm.expect(response).to.have.property(\"status\");\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response.status).to.equal(404);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
@@ -4033,6 +4127,181 @@
 										"v1",
 										"claimsets",
 										"{{CreatedClaimSetId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "OdsInstances",
+					"item": [
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response matches success format\", function () {",
+											"    pm.expect(response.status).to.equal(200);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"    pm.expect(response).to.have.property(\"result\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Response matches error format\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.status).to.equal(404);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"});",
+											"",
+											"pm.test(\"Response title is helpful and accurate\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.title).to.contain(\"Not found\");",
+											"    pm.expect(response.title).to.contain(\"odsinstance\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/0",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response matches success format\", function () {",
+											"    pm.expect(response.status).to.equal(200);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"    pm.expect(response).to.have.property(\"result\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/{{ODSInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"{{ODSInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances by ID Application",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response matches success format\", function () {",
+											"    pm.expect(response.status).to.equal(200);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"    pm.expect(response).to.have.property(\"result\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/{{ODSInstanceId}}/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"{{ODSInstanceId}}",
+										"applications"
 									]
 								}
 							},
@@ -4089,8 +4358,7 @@
 					"        if(error) {",
 					"            throw res.json().error_description",
 					"        }",
-					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token);",
-					"        console.log(\"Token success\");",
+					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
 					"});"
 				]
 			}
@@ -4108,6 +4376,18 @@
 	"variable": [
 		{
 			"key": "TOKEN",
+			"value": ""
+		},
+		{
+			"key": "OtherApplicationVendorId",
+			"value": ""
+		},
+		{
+			"key": "OtherApplicationId",
+			"value": ""
+		},
+		{
+			"key": "ClaimSetGUID",
 			"value": ""
 		}
 	]

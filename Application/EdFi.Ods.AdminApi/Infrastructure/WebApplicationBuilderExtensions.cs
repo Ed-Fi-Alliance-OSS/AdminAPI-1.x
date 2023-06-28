@@ -161,13 +161,6 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddHttpClient();
         webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
-
-        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
-        {
-            var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
-            var validator = sp.GetRequiredService<IOdsApiValidator>();
-            return new OdsSecurityVersionResolver(validator, apiServerUrl);
-        });
     }
 
     private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)
@@ -185,9 +178,6 @@ public static class WebApplicationBuilderExtensions
                     options.UseNpgsql(adminConnectionString);
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
-
-            webApplicationBuilder.Services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new PostgresSecurityContext(securityConnectionString));
@@ -208,9 +198,6 @@ public static class WebApplicationBuilderExtensions
                     options.UseSqlServer(adminConnectionString);
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
-
-            webApplicationBuilder.Services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new SqlServerSecurityContext(securityConnectionString));

@@ -67,7 +67,7 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
             command.Execute(editModel);
         }));
         exception.ShouldNotBeNull();
-        exception.Message.ShouldBe($"Claim set ({systemReservedClaimSet.ClaimSetName}) is system reserved.May not be modified.");
+        exception.Message.ShouldBe($"Claim set ({systemReservedClaimSet.ClaimSetName}) is system reserved. May not be modified.");
     }
 
     [Test]

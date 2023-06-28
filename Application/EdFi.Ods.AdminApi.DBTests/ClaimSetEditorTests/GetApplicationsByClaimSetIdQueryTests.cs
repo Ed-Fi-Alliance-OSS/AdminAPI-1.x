@@ -8,16 +8,16 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using Application = EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
-using ClaimSetEditor = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetApplicationsByClaimSetIdQueryV53ServiceTests : SecurityData53TestBase
+public class GetApplicationsByClaimSetIdQueryTests : SecurityDataTestBase
 {
     [TestCase(1)]
     [TestCase(3)]
@@ -27,17 +27,14 @@ public class GetApplicationsByClaimSetIdQueryV53ServiceTests : SecurityData53Tes
         var testClaimSets = SetupApplicationWithClaimSets();
 
         SetupApplications(testClaimSets, applicationCount);
-
         using var securityContext = TestContext;
 
         foreach (var testClaimSet in testClaimSets)
         {
-            List<ClaimSetEditor.Application> results = null;
-
             UsersTransaction(usersContext =>
             {
-                var query = new GetApplicationsByClaimSetId53Query(securityContext, usersContext);
-                results = query.Execute(testClaimSet.ClaimSetId).ToList();
+                var query = new GetApplicationsByClaimSetIdQuery(securityContext, usersContext);
+                var results = query.Execute(testClaimSet.ClaimSetId).ToList();
 
                 var testApplications =
                     usersContext.Applications.Where(x => x.ClaimSetName == testClaimSet.ClaimSetName).Select(x => new Application
@@ -59,15 +56,16 @@ public class GetApplicationsByClaimSetIdQueryV53ServiceTests : SecurityData53Tes
         var testClaimSets = SetupApplicationWithClaimSets();
 
         SetupApplications(testClaimSets, applicationsCount);
+
         using var securityContext = TestContext;
         foreach (var testClaimSet in testClaimSets)
         {
             UsersTransaction(usersContext =>
             {
-                var query = new GetApplicationsByClaimSetId53Query(securityContext, usersContext);
+                var query = new GetApplicationsByClaimSetIdQuery(securityContext, usersContext);
                 var appsCountByClaimSet = query.ExecuteCount(testClaimSet.ClaimSetId);
                 var testApplicationsCount =
-                        usersContext.Applications.Count(x => x.ClaimSetName == testClaimSet.ClaimSetName);
+                    usersContext.Applications.Count(x => x.ClaimSetName == testClaimSet.ClaimSetName);
                 appsCountByClaimSet.ShouldBe(testApplicationsCount);
             });
         }

@@ -29,7 +29,6 @@
     <PackageReference Include="dbup-sqlserver" Version="5.0.8" />
     <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.0.12" />
     <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" />
-    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.3.43" />
     <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="log4net" Version="2.0.15" />

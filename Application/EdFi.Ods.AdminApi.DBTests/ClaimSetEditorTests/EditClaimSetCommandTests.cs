@@ -19,7 +19,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class EditClaimSetCommandV6ServiceTests : SecurityDataTestBase
+public class EditClaimSetCommandTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldEditClaimSet()
@@ -38,7 +38,7 @@ public class EditClaimSetCommandV6ServiceTests : SecurityDataTestBase
         using var securityContext = TestContext;
         UsersTransaction((usersContext) =>
         {
-            var command = new EditClaimSetCommandV6Service(securityContext, usersContext);
+            var command = new EditClaimSetCommand(securityContext, usersContext);
             command.Execute(editModel);
         });
 
@@ -63,7 +63,7 @@ public class EditClaimSetCommandV6ServiceTests : SecurityDataTestBase
         using var securityContext = TestContext;
         var exception = Assert.Throws<AdminApiException>(() => UsersTransaction(usersContext =>
         {
-            var command = new EditClaimSetCommandV6Service(TestContext, usersContext);
+            var command = new EditClaimSetCommand(TestContext, usersContext);
             command.Execute(editModel);
         }));
         exception.ShouldNotBeNull();
@@ -92,7 +92,7 @@ public class EditClaimSetCommandV6ServiceTests : SecurityDataTestBase
         using var securityContext = TestContext;
         UsersTransaction(usersContext =>
         {
-            var command = new EditClaimSetCommandV6Service(securityContext, usersContext);
+            var command = new EditClaimSetCommand(securityContext, usersContext);
             command.Execute(editModel);
         });
 

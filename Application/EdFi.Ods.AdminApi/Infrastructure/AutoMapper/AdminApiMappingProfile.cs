@@ -96,6 +96,13 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
+        CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim, SimpleResourceClaimModel>()
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.ParentId, opt => opt.MapFrom(src => src.ParentId))
+            .ForMember(dst => dst.ParentName, opt => opt.MapFrom(src => src.ParentName))
+            .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
+
         CreateMap<OdsInstance, OdsInstanceModel>()
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))

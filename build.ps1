@@ -404,6 +404,23 @@ function RunAdminApiDevDockerCompose {
     &docker compose -f "$solutionRoot/EdFi.Ods.AdminApi/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
 }
 
+function PushPackage {
+    if (-not $NuGetApiKey) {
+        throw "Cannot push a NuGet package without providing an API key in the `NuGetApiKey` argument."
+    }
+
+    if (-not $PackageFile) {
+        $PackageFile = "$PSScriptRoot/EdFi.Suite3.ODS.AdminApi.$APIVersion.nupkg"
+    }
+
+    $arguments = @{
+        PackageFile = $PackageFile
+        NuGetApiKey = $NuGetApiKey
+        NuGetFeed = $EdFiNuGetFeed
+    }
+
+    Invoke-Execute { Push-Package @arguments }
+}
 function Invoke-AdminApiDockerDeploy {
    Invoke-Step { UpdateAppSettingsForAdminApiDocker }
    Invoke-Step { CopyLatestFilesToAdminApiContainer }
@@ -420,6 +437,10 @@ function Invoke-RunAdminApiDevDockerContainer {
 
 function Invoke-RunAdminApiDevDockerCompose {
    Invoke-Step { RunAdminApiDevDockerCompose }
+}
+
+function Invoke-PushPackage {
+    Invoke-Step { PushPackage }
 }
 
 Invoke-Main {

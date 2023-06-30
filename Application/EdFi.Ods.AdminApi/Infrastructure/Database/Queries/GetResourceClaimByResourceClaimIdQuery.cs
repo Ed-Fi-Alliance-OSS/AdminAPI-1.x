@@ -36,7 +36,11 @@ public class GetResourceClaimByResourceClaimIdQuery : IGetResourceClaimByResourc
                 Id = resource.ResourceClaimId
             };
         }
-            
+        else
+        {
+            result = null;
+        }
+
         return result;
     }
 }

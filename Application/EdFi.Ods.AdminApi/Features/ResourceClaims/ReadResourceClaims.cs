@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -41,16 +42,22 @@ public class ReadResourceClaims : IFeature
     internal Task<IResult> GetResourceClaim(IGetResourceClaimByResourceClaimIdQuery getResourceClaimByResourceClaimIdQuery, IMapper mapper, int id)
     {
         var resourceClaim = getResourceClaimByResourceClaimIdQuery.Execute(id);
+        if (resourceClaim == null)
+        {
+            throw new NotFoundException<int>("resourceclaim", id);
+        }
         var model = mapper.Map<SimpleResourceClaimModel>(resourceClaim);
-
         return Task.FromResult(AdminApiResponse<SimpleResourceClaimModel>.Ok(model));
     }
 
     internal Task<IResult> GetResourceClaimChildren(IGetResourceClaimByResourceClaimIdQuery getResourceClaimByResourceClaimIdQuery, IMapper mapper, int id)
     {
         var resourceClaim = getResourceClaimByResourceClaimIdQuery.Execute(id);
+        if (resourceClaim == null)
+        {
+            throw new NotFoundException<int>("resourceclaim", id);
+        }
         var model = mapper.Map<SimpleResourceClaimModel>(resourceClaim);
-
         return Task.FromResult(AdminApiResponse<List<SimpleResourceClaimModel>>.Ok(model.Children));
     }
 }

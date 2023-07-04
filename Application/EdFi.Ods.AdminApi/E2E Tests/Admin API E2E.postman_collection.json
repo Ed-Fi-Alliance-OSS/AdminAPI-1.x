@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "26996ec4-b0aa-434d-b609-d47cb63b0d90",
+		"_postman_id": "487590d9-f420-4448-a645-518e0a823383",
 		"name": "Admin API E2E 2.0",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28037774"
 	},
 	"item": [
 		{
@@ -4306,6 +4307,282 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "OdsInstances Application - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Response matches error format\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.status).to.equal(404);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"});",
+											"",
+											"pm.test(\"Response title is helpful and accurate\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.title).to.contain(\"Not found\");",
+											"    pm.expect(response.title).to.contain(\"odsinstance\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/00/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"00",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "v2",
+			"item": [
+				{
+					"name": "Resourceclaims",
+					"item": [
+						{
+							"name": "Resourceclaims",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response matches success format\", function () {",
+											"    pm.expect(response.status).to.equal(200);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"    pm.expect(response).to.have.property(\"result\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceclaims",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceclaims"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resourceclaims by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response matches success format\", function () {",
+											"    pm.expect(response.status).to.equal(200);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"    pm.expect(response).to.have.property(\"result\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceclaims/1",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceclaims",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resourceclaims by ID Children",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response matches success format\", function () {",
+											"    pm.expect(response.status).to.equal(200);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"    pm.expect(response).to.have.property(\"result\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceclaims/1/children",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceclaims",
+										"1",
+										"children"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resourceclaims Children - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Response matches error format\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.status).to.equal(404);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"});",
+											"",
+											"pm.test(\"Response title is helpful and accurate\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.title).to.contain(\"Not found\");",
+											"    pm.expect(response.title).to.contain(\"resourceclaim\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceclaims/000/children",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceclaims",
+										"000",
+										"children"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resourceclaims -Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Response matches error format\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.status).to.equal(404);",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"});",
+											"",
+											"pm.test(\"Response title is helpful and accurate\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.title).to.contain(\"Not found\");",
+											"    pm.expect(response.title).to.contain(\"resourceclaim\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/resourceclaims/00",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"resourceclaims",
+										"00"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -4379,15 +4656,7 @@
 			"value": ""
 		},
 		{
-			"key": "OtherApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationId",
-			"value": ""
-		},
-		{
-			"key": "ClaimSetGUID",
+			"key": "ODSInstanceId",
 			"value": ""
 		}
 	]

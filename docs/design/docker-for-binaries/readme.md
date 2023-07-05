@@ -2,7 +2,7 @@
 
 # User Story
 
-As an Ed-Fi system administrator, I want to run the Ed-Fi ODS Admin Api in a container.
+As an Ed-Fi system administrator, I want to run the Ed-Fi ODS Admin API in a container.
 
 # Acceptance Criteria
 
@@ -33,8 +33,11 @@ Based on the notes above, this is the support matrix to test:
 
 We do not have rows for MSSQL in Docker because, while it can be done, the Alliance does not provide those images due to licensing restrictions.
 
-The dockerfiles need to accept an argument with the version number, by default will be "latest" in order to get latest version available.
+The dockerfiles need to accept an argument with the version number, which can default to latest.
 The CI build process can pass the correct argument to the docker build command (as seen in the Meadowlark on-prerelease.yml : docker-publish job).
+There is a script that can be used for reference in order to get the available versions, sort and find latest. That script would then need to be run from inside the container, or it could be run outside the container before executing `docker build`.
+`Get-NugetPackage` and `Invoke-SemnaticSort` are the appropriate commands for this scenario.
+Link Reference: https://github.com/Ed-Fi-Exchange-OSS/Meadowlark/blob/main/eng/bulkLoad/modules/Package-Management.psm1
 
 The Admin database image should no longer have a reference to the Admin App binary package. Instead, it should retrieve the NuGet package for AdminApi (there will only be one).
 Use it to setup the database, then be sure to delete the NuGet package before finalizing the image.

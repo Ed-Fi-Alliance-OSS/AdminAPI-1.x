@@ -29,7 +29,6 @@ public class ReadClaimSets : IFeature
 
     internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
     {
-        //var claimSets = getClaimSetsQuery.Execute().Where(x => !Constants.SystemReservedClaimSets.Contains(x.Name)).ToList();
         var claimSets = getClaimSetsQuery.Execute();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)

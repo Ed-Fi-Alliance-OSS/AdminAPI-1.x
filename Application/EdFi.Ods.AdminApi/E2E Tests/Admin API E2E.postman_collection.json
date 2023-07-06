@@ -3117,12 +3117,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v1/claimsets/",
+									"raw": "{{API_URL}}/v2/claimsets/",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
+										"v2",
 										"claimsets",
 										""
 									]

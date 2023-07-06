@@ -4390,6 +4390,14 @@
 		{
 			"key": "OtherApplicationId",
 			"value": ""
+		},
+		{
+			"key": "ClaimSetGUID",
+			"value": ""
+		},
+		{
+			"key": "CreatedClaimSetId",
+			"value": ""
 		}
 	]
 }

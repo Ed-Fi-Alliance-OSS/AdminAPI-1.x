@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -16,23 +17,23 @@ public class ReadClaimSets : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets", GetClaimSets)
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<List<ClaimSetModel>>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+           .WithDefaultDescription()
+           .WithRouteOptions(b => b.WithResponse<List<ClaimSetModel>>(200))
+           .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/claimsets/{id}", GetClaimSet)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
     {
-        var claimSets = getClaimSetsQuery.Execute().Where(x => !Constants.SystemReservedClaimSets.Contains(x.Name)).ToList();
+        var claimSets = getClaimSetsQuery.Execute();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {
-            claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);
+            claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));
             claimSet.IsSystemReserved = Constants.DefaultClaimSets.Contains(claimSet.Name);
         }
         return Task.FromResult(AdminApiResponse<List<ClaimSetModel>>.Ok(model));
@@ -53,9 +54,16 @@ public class ReadClaimSets : IFeature
         }
 
         var allResources = getResourcesByClaimSetIdQuery.AllResources(id);
+        var applications = getApplications.Execute(id);
         var claimSetData = mapper.Map<ClaimSetDetailsModel>(claimSet);
-        claimSetData.ApplicationsCount = getApplications.ExecuteCount(id);
-        claimSetData.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
+        if (applications != null)
+        {
+            claimSetData.Applications = mapper.Map<List<SimpleApplicationModel>>(applications);
+        }
+        if (allResources != null)
+        {
+            claimSetData.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
+        }
 
         return Task.FromResult(AdminApiResponse<ClaimSetDetailsModel>.Ok(claimSetData));
     }

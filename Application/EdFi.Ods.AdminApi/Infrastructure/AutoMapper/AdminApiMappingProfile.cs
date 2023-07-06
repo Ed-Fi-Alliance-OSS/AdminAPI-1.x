@@ -40,6 +40,9 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()))
             .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()));
 
+        CreateMap<Infrastructure.ClaimSetEditor.Application, SimpleApplicationModel>()
+            .ForMember(dst => dst.ApplicationName, opt => opt.MapFrom(src => src.Name));
+
         CreateMap<AddApplicationResult, ApplicationResult>()
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
             .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))

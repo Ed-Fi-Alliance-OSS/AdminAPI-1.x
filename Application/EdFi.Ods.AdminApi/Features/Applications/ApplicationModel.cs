@@ -21,6 +21,12 @@ public class ApplicationModel
     public int? OdsInstanceId { get; set; }
 }
 
+[SwaggerSchema(Title = "Application")]
+public class SimpleApplicationModel
+{
+    public string? ApplicationName { get; set; }
+}
+
 [SwaggerSchema(Title = "ApplicationKeySecret")]
 public class ApplicationResult
 {

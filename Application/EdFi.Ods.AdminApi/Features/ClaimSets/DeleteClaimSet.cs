@@ -19,7 +19,7 @@ public class DeleteClaimSet : IFeature
         AdminApiEndpointBuilder.MapDelete(endpoints, "/claimsets/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public Task<IResult> Handle(IDeleteClaimSetCommand deleteClaimSetCommand, [FromServices] IGetClaimSetByIdQuery getClaimSetByIdQuery, IGetApplicationsByClaimSetIdQuery getApplications, int id)

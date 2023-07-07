@@ -36,7 +36,7 @@ public class DeleteClaimSet : IFeature
             throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
 
-        return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
+        return Task.FromResult(Results.Ok());
     }
 
     private static void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)

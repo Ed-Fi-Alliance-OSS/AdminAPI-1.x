@@ -33,7 +33,7 @@ public class ReadApplication : IFeature
         {
             applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
         }
-        return Task.FromResult(AdminApiResponse<List<ApplicationModel>>.Ok(applications));
+        return Task.FromResult(Results.Ok(applications));
     }
 
     internal Task<IResult> GetApplication(GetApplicationByIdQuery getApplicationByIdQuery, IMapper mapper, int id)
@@ -44,6 +44,6 @@ public class ReadApplication : IFeature
             throw new NotFoundException<int>("application", id);
         }
         var model = mapper.Map<ApplicationModel>(application);
-        return Task.FromResult(AdminApiResponse<ApplicationModel>.Ok(model));
+        return Task.FromResult(Results.Ok(model));
     }
 }

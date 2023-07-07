@@ -46,7 +46,6 @@ public class RequestLoggingMiddleware
                     var validationResponse = new
                     {
                         title = "Validation failed",
-                        status = (int)HttpStatusCode.BadRequest,
                         errors = new Dictionary<string, List<string>>()
                     };
 
@@ -69,7 +68,6 @@ public class RequestLoggingMiddleware
                     var notFoundResponse = new
                     {
                         title = notFoundException.Message,
-                        status = (int)HttpStatusCode.NotFound
                     };
                     logger.LogDebug(JsonSerializer.Serialize(new { message = notFoundResponse, traceId = context.TraceIdentifier }));
 

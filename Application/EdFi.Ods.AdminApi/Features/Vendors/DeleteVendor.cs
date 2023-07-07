@@ -21,6 +21,6 @@ public class DeleteVendor : IFeature
     public Task<IResult> Handle(DeleteVendorCommand deleteVendorCommand, int id)
     {
         deleteVendorCommand.Execute(id);
-        return Task.FromResult(AdminApiResponse.Deleted("Vendor"));
+        return Task.FromResult(Results.Ok());
     }
 }

@@ -24,6 +24,6 @@ public class ReadApplicationsByVendor : IFeature
     internal Task<IResult> GetVendorApplications(GetApplicationsByVendorIdQuery getApplicationByVendorIdQuery, IMapper mapper, int id)
     {
         var vendorApplications = mapper.Map<List<ApplicationModel>>(getApplicationByVendorIdQuery.Execute(id));
-        return Task.FromResult(AdminApiResponse<List<ApplicationModel>>.Ok(vendorApplications));
+        return Task.FromResult(Results.Ok(vendorApplications));
     }
 }

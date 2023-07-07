@@ -21,6 +21,6 @@ public class DeleteApplication : IFeature
     public Task<IResult> Handle(IDeleteApplicationCommand deleteApplicationCommand, int id)
     {
         deleteApplicationCommand.Execute(id);
-        return Task.FromResult(AdminApiResponse.Deleted("Application"));
+        return Task.FromResult(Results.Ok());
     }
 }

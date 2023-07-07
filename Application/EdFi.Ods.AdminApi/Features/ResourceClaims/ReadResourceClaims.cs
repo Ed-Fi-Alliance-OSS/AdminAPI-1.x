@@ -36,7 +36,7 @@ public class ReadResourceClaims : IFeature
         var resourceClaims = getResourceClaimsQuery.Execute().ToList();
         var model = mapper.Map<List<SimpleResourceClaimModel>>(resourceClaims);
         
-        return Task.FromResult(AdminApiResponse<List<SimpleResourceClaimModel>>.Ok(model));
+        return Task.FromResult(Results.Ok(model));
     }
 
     internal Task<IResult> GetResourceClaim(IGetResourceClaimByResourceClaimIdQuery getResourceClaimByResourceClaimIdQuery, IMapper mapper, int id)
@@ -47,7 +47,7 @@ public class ReadResourceClaims : IFeature
             throw new NotFoundException<int>("resourceclaim", id);
         }
         var model = mapper.Map<SimpleResourceClaimModel>(resourceClaim);
-        return Task.FromResult(AdminApiResponse<SimpleResourceClaimModel>.Ok(model));
+        return Task.FromResult(Results.Ok(model));
     }
 
     internal Task<IResult> GetResourceClaimChildren(IGetResourceClaimByResourceClaimIdQuery getResourceClaimByResourceClaimIdQuery, IMapper mapper, int id)
@@ -58,6 +58,6 @@ public class ReadResourceClaims : IFeature
             throw new NotFoundException<int>("resourceclaim", id);
         }
         var model = mapper.Map<SimpleResourceClaimModel>(resourceClaim);
-        return Task.FromResult(AdminApiResponse<List<SimpleResourceClaimModel>>.Ok(model.Children));
+        return Task.FromResult(Results.Ok(model.Children));
     }
 }

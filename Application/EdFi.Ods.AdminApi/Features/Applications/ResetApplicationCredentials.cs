@@ -23,6 +23,6 @@ public class ResetApplicationCredentials : IFeature
     {
         var resetApplicationSecret = await Task.Run(() => resetSecretCommand.Execute(id));
         var model = mapper.Map<ApplicationResult>(resetApplicationSecret);
-        return AdminApiResponse<ApplicationResult>.Updated(model, "Application secret");
+        return Results.Ok(model);
     }
 }

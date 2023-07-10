@@ -11,14 +11,13 @@ namespace EdFi.Ods.AdminApi.Features;
 [SwaggerSchema(Title = "AdminApiError", Description = "Wrapper schema for all error responses")]
 public class AdminApiError
 {
-    protected AdminApiError(int status, string title)
+    protected AdminApiError(string title)
     {
-        Status = status;
         Title = title;
         Errors = new[] { title };
     }
 
-    protected AdminApiError(int status, string title, IEnumerable<string> errors) : this(status, title)
+    protected AdminApiError(string title, IEnumerable<string> errors) : this(title)
     {
         Errors = errors;
     }
@@ -41,5 +40,5 @@ public class AdminApiError
         => Results.Problem(statusCode: 500, title: exception.Message);
 
     public static IResult NotFound<T>(string resourceName, T id)
-        => Results.NotFound(new AdminApiError(404, $"Not found: {resourceName} with ID {id}"));
+        => Results.NotFound($"Not found: {resourceName} with ID {id}");
 }

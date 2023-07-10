@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Globalization;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Extensions;
@@ -19,5 +20,10 @@ public static class StringExtensions
         return listOfStrings.Any()
             ? string.Join(separator, listOfStrings)
             : string.Empty;
+    }
+
+    public static object ToJsonObjectResponseDeleted(this string input)
+    {
+        return new { title = $"{input} deleted successfully" };
     }
 }

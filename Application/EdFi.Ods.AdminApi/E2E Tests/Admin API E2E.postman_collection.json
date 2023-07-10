@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "727d6555-2ecc-4ef4-8e66-1d5d0a100a64",
-		"name": "Admin API E2E 2.0",
+		"_postman_id": "017d1d28-b5c8-4973-a581-f7dd7baa5254",
+		"name": "Admin API E2E 2.0 Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -1065,7 +1065,17 @@
 											"pm.test(\"Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
-											""
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"vendor\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -2216,6 +2226,18 @@
 											"pm.test(\"Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
+											"});\r",
+											"\r",
 											""
 										],
 										"type": "text/javascript"
@@ -3805,6 +3827,17 @@
 										"exec": [
 											"pm.test(\"Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"claimset\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
 											"});\r",
 											""
 										],

@@ -34,7 +34,7 @@ public class EditApplication : IFeature
 
         var updatedApplication = editApplicationCommand.Execute(request);
         var model = mapper.Map<ApplicationModel>(updatedApplication);
-        return AdminApiResponse<ApplicationModel>.Updated(model, "Application");
+        return Results.Ok(model);
     }
 
     private static void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)

@@ -28,7 +28,7 @@ public class AddVendor : IFeature
         await validator.GuardAsync(request);
         var addedVendor = addVendorCommand.Execute(request);
         var model = mapper.Map<VendorModel>(addedVendor);
-        return AdminApiResponse<VendorModel>.Created(model, "Vendor", $"/vendors/{model.VendorId}");
+        return Results.Created($"/vendors/{model.VendorId}", model);
     }
 
     [SwaggerSchema(Title = "AddVendorRequest")]

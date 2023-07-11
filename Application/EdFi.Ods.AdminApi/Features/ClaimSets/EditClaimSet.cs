@@ -65,7 +65,7 @@ public class EditClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
-        return AdminApiResponse<ClaimSetDetailsModel>.Updated(model, "ClaimSet");
+        return Results.Ok(model);
     }
 
 

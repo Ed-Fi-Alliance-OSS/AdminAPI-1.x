@@ -51,6 +51,6 @@ public class AddClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
-        return AdminApiResponse<ClaimSetDetailsModel>.Created(model, "ClaimSet", $"/claimsets/{addedClaimSetId}");
+        return Results.Created($"/claimsets/{addedClaimSetId}", model);
     }
 }

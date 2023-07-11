@@ -24,6 +24,6 @@ public class ReadApplicationsByOdsInstance : IFeature
     internal Task<IResult> GetOdsInstanceApplications(IGetApplicationsByOdsInstanceIdQuery getApplicationByOdsInstanceIdQuery, IMapper mapper, int id)
     {
         var odsInstanceApplications = mapper.Map<List<ApplicationModel>>(getApplicationByOdsInstanceIdQuery.Execute(id));
-        return Task.FromResult(AdminApiResponse<List<ApplicationModel>>.Ok(odsInstanceApplications));
+        return Task.FromResult(Results.Ok(odsInstanceApplications));
     }
 }

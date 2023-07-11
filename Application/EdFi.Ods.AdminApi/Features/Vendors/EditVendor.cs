@@ -29,7 +29,7 @@ public class EditVendor : IFeature
         await validator.GuardAsync(request);
         var updatedVendor = editVendorCommand.Execute(request);
         var model = mapper.Map<VendorModel>(updatedVendor);
-        return AdminApiResponse<VendorModel>.Updated(model, "Vendor");
+        return Results.Ok(model);
     }
 
     [SwaggerSchema(Title = "EditVendorRequest")]

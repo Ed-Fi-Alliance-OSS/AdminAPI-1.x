@@ -28,7 +28,7 @@ public class ReadVendor : IFeature
     internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper)
     {
         var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute());
-        return Task.FromResult(AdminApiResponse<List<VendorModel>>.Ok(vendorList));
+        return Task.FromResult(Results.Ok(vendorList));
     }
 
     internal Task<IResult> GetVendor(IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, int id)
@@ -39,6 +39,6 @@ public class ReadVendor : IFeature
             throw new NotFoundException<int>("vendor", id);
         }
         var model = mapper.Map<VendorModel>(vendor);
-        return Task.FromResult(AdminApiResponse<VendorModel>.Ok(model));
+        return Task.FromResult(Results.Ok(model));
     }
 }

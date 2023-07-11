@@ -36,7 +36,7 @@ public class ReadClaimSets : IFeature
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));
             claimSet.IsSystemReserved = Constants.DefaultClaimSets.Contains(claimSet.Name);
         }
-        return Task.FromResult(AdminApiResponse<List<ClaimSetModel>>.Ok(model));
+        return Task.FromResult(Results.Ok(model));
     }
 
     internal Task<IResult> GetClaimSet(IGetClaimSetByIdQuery getClaimSetByIdQuery,
@@ -65,6 +65,6 @@ public class ReadClaimSets : IFeature
             claimSetData.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
         }
 
-        return Task.FromResult(AdminApiResponse<ClaimSetDetailsModel>.Ok(claimSetData));
+        return Task.FromResult(Results.Ok(claimSetData));
     }
 }

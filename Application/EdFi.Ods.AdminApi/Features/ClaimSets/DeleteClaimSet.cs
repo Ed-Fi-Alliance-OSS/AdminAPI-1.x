@@ -6,6 +6,7 @@
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ public class DeleteClaimSet : IFeature
             throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
 
-        return Task.FromResult(AdminApiResponse.Deleted("ClaimSet"));
+        return Task.FromResult(Results.Ok("ClaimSet".ToJsonObjectResponseDeleted()));
     }
 
     private static void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)

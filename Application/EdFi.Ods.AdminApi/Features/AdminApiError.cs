@@ -22,7 +22,6 @@ public class AdminApiError
         Errors = errors;
     }
 
-    public int Status { get; }
     public string Title { get; }
     public IEnumerable<string> Errors { get; }
 

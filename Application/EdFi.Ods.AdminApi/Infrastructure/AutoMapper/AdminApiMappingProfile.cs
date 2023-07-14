@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Features.Vendors;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers; 
 using Profile = AutoMapper.Profile;
@@ -32,7 +33,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))
             .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
-        CreateMap<Application, ApplicationModel>()
+        CreateMap<EdFi.Admin.DataAccess.Models.Application, ApplicationModel>()
             .ForMember(dst => dst.EducationOrganizationId, opt => opt.MapFrom(src => src.EducationOrganizationId()))
             .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
@@ -71,6 +72,10 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
+
+        CreateMap<EditResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel> ()
+            .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
+            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaim));
 
         CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy, AuthorizationStrategyModel>()
             .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))

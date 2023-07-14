@@ -28,6 +28,7 @@ public class ClaimSetDetailsModel : ClaimSetModel
 [SwaggerSchema(Title = "ResourceClaim")]
 public class ResourceClaimModel
 {
+    public int Id { get; set; }
     public string? Name { get; set; }
     public bool Read { get; set; }
     public bool Create { get; set; }
@@ -119,5 +120,19 @@ public class EditClaimSetRequest
 
     [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
     public List<ResourceClaimModel>? ResourceClaims { get; set; }
+}
+
+
+[SwaggerSchema(Title = "EditResourceClaimOnClaimSetRequest")]
+public class EditResourceClaimOnClaimSetRequest
+{
+    [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
+    public int ClaimSetId { get; set; }
+
+    [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
+    public string? Name { get; set; }
+
+    [SwaggerSchema(Nullable = false)]
+    public ResourceClaimModel? ResourceClaim { get; set; }
 }
 #endregion

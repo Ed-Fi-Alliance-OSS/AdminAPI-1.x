@@ -20,6 +20,11 @@ public class EditClaimSet : IFeature
         .WithDefaultDescription()
         .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
         .BuildForVersions(AdminApiVersions.V2);
+
+        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}", HandleResourceClaims)
+        .WithDefaultDescription()
+        .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
+        .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(EditClaimSetValidator validator, IEditClaimSetCommand editClaimSetCommand,
@@ -68,6 +73,26 @@ public class EditClaimSet : IFeature
         return Results.Ok(model);
     }
 
+    public async Task<IResult> HandleResourceClaims(EditResourceClaimClaimSetValidator validator,
+        EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
+        IGetClaimSetByIdQuery getClaimSetByIdQuery,
+        IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
+        IMapper mapper,
+        EditResourceClaimOnClaimSetRequest request, int claimsetid, int resourceclaimid)
+    {
+        await validator.GuardAsync(request);
+        var editResourceOnClaimSetModel = mapper.Map<EditResourceOnClaimSetModel>(request);
+        editResourceOnClaimSetModel.ResourceClaim!.Id = resourceclaimid;
+        editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
 
-  
+        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
+
+        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
+        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid)
+            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
+
+        return Results.Ok(model);
+    }
+
+
 }

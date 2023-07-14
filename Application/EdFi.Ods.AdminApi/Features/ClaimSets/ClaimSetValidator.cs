@@ -128,3 +128,58 @@ public class EditClaimSetValidator : AbstractValidator<EditClaimSetRequest>
         return _getAllClaimSetsQuery.Execute().All(x => x.Name != name);
     }
 }
+
+public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResourceClaimOnClaimSetRequest>
+{
+    private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
+    private ClaimSet? _claimSet;
+
+    public EditResourceClaimClaimSetValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
+        IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+        IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+    {
+        _getClaimSetByIdQuery = getClaimSetByIdQuery;
+
+        var resourceClaims = getResourceClaimsAsFlatListQuery.Execute();
+        var resourceClaimsById = (Lookup<int, ResourceClaim>)resourceClaims
+            .ToLookup(rc => rc.Id);
+        var resourceClaimsByName = (Lookup<string, ResourceClaim>)resourceClaims
+            .ToLookup(rc => rc.Name?.ToLower());
+
+        var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
+            .Select(a => a.AuthStrategyName).ToList();
+
+        RuleFor(m => m.ClaimSetId).NotEmpty();
+
+        RuleFor(m => m.ClaimSetId)
+            .Must(BeAnExistingClaimSet)
+            .WithMessage(FeatureConstants.ClaimSetNotFound);
+
+        RuleFor(m => m).Custom((claimSet, context) =>
+        {
+            var resourceClaimValidator = new ResourceClaimValidator();
+
+            if (claimSet.ResourceClaim != null)
+            {
+                resourceClaimValidator.Validate(resourceClaimsById, resourceClaimsByName, authStrategyNames, claimSet.ResourceClaim, context, _claimSet!.Name);
+            }
+            else
+            {
+                context.AddFailure(FeatureConstants.ResourceClaimNotFound);
+            }
+        });
+    }
+
+    private bool BeAnExistingClaimSet(int id)
+    {
+        try
+        {
+            _claimSet = _getClaimSetByIdQuery.Execute(id);
+            return true;
+        }
+        catch (AdminApiException)
+        {
+            throw new NotFoundException<int>("claimSet", id);
+        }
+    }
+}

@@ -183,3 +183,22 @@ public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResource
         }
     }
 }
+
+public class OverrideAuthStategiesOnClaimSetValidator : AbstractValidator<OverrideAuthorizationStrategyModel>
+{
+    private readonly IGetResourcesByClaimSetIdQuery _getResourcesByClaimSetIdQuery;
+
+    public OverrideAuthStategiesOnClaimSetValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery)
+    {
+        _getResourcesByClaimSetIdQuery = getResourcesByClaimSetIdQuery;
+        
+        RuleFor(m => m).Custom((claimSet, context) =>
+        {
+            var resoureClaim = _getResourcesByClaimSetIdQuery.SingleResource(claimSet.ClaimSetId, claimSet.ResourceClaimId);
+            if (resoureClaim == null)
+            {
+                context.AddFailure("Resource claim doesn't exist for the Claim set provided");
+            }
+        });
+    }
+}

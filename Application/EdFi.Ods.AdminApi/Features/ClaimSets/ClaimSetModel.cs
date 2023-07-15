@@ -122,7 +122,6 @@ public class EditClaimSetRequest
     public List<ResourceClaimModel>? ResourceClaims { get; set; }
 }
 
-
 [SwaggerSchema(Title = "EditResourceClaimOnClaimSetRequest")]
 public class EditResourceClaimOnClaimSetRequest
 {
@@ -134,5 +133,27 @@ public class EditResourceClaimOnClaimSetRequest
 
     [SwaggerSchema(Nullable = false)]
     public ResourceClaimModel? ResourceClaim { get; set; }
+}
+
+[SwaggerSchema(Title = "OverrideAuthStategiesOnClaimSetRequest")]
+public class OverrideAuthStategiesOnClaimSetRequest
+{
+    [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
+    public int ClaimSetId { get; set; }
+
+    [SwaggerSchema(Description = "ResourceClaim id", Nullable = false)]
+    public int ResourceClaimId { get; set; }
+
+    [SwaggerSchema(Description = "AuthorizationStrategyForCreate id", Nullable = false)]
+    public int AuthorizationStrategyForCreate { get; set; }
+
+    [SwaggerSchema(Description = "AuthorizationStrategyForRead id", Nullable = false)]
+    public int AuthorizationStrategyForRead { get; set; }
+
+    [SwaggerSchema(Description = "AuthorizationStrategyForUpdate id", Nullable = false)]
+    public int AuthorizationStrategyForUpdate { get; set; }
+
+    [SwaggerSchema(Description = "AuthorizationStrategyForDelete id", Nullable = false)]
+    public int AuthorizationStrategyForDelete { get; set; }
 }
 #endregion

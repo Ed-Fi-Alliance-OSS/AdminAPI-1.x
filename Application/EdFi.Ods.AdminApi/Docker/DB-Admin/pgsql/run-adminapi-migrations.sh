@@ -16,7 +16,7 @@ if [ ! -z "${API_MODE}" ] && [ "${API_MODE,,}" != "sandbox" ]; then
     # sequentially in the correct alphanumeric order
     echo "Running Admin Api database migration scripts..."
 
-    for FILE in `LANG=C ls /tmp/AdminApiScripts/*.sql | sort -V`
+    for FILE in `LANG=C ls /tmp/AdminApiScripts/PgSql/*.sql | sort -V`
     do
         psql --no-password --username "$POSTGRES_USER" --port $POSTGRES_PORT --dbname "EdFi_Admin" --file $FILE 1> /dev/null
     done

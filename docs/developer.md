@@ -67,7 +67,7 @@ There are three ways of running Admin API:
 
 - `build.ps1 run` to run from the command line.
 - Run inside a container with the help of
-  [compose-build-dev.yml](../Application/EdFi.Ods.AdminApi/Compose/pgsql/compose-build-dev.yml).
+  [compose-build-dev.yml](../Docker/Compose/pgsql/compose-build-dev.yml).
 - Start from Visual Studio to take advantage of easy debugging integration.
 
 There are several launch profiles available either with `build.ps1` or when

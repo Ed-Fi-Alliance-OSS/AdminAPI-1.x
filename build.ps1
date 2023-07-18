@@ -115,6 +115,7 @@ param(
 $Env:MSBUILDDISABLENODEREUSE = "1"
 
 $solutionRoot = "$PSScriptRoot/Application"
+$dockerRoot = "$PSScriptRoot/Docker"
 
 $supportedApiVersions = @(
     @{
@@ -393,15 +394,15 @@ function RestartAdminApiContainer {
 }
 
 function BuildAdminApiDevDockerImage {
-    &docker build -t adminapi-dev --no-cache -f "$solutionRoot/EdFi.Ods.AdminApi/dev.Dockerfile" .
+    &docker build -t adminapi-dev --no-cache -f "$dockerRoot/dev.Dockerfile" .
 }
 
 function RunAdminApiDevDockerContainer {
-    &docker run --env-file "$solutionRoot/EdFi.Ods.AdminApi/.env" -p 80:80 -v "$solutionRoot/EdFi.Ods.AdminApi/Docker/ssl:/ssl/" adminapi-dev
+    &docker run --env-file "$solutionRoot/EdFi.Ods.AdminApi/.env" -p 80:80 -v "$dockerRoot/Settings/ssl:/ssl/" adminapi-dev
 }
 
 function RunAdminApiDevDockerCompose {
-    &docker compose -f "$solutionRoot/EdFi.Ods.AdminApi/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
+    &docker compose -f "$dockerRoot/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
 }
 
 function PushPackage {

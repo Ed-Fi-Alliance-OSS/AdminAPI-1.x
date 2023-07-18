@@ -39,7 +39,7 @@ jobs:
       - name: Run Admin API
         run: |
           docker compose \
-            -f './Compose/pgsql/compose-build-dev.yml' \
+            -f '././Docker/Compose/pgsql/compose-build-dev.yml' \
             --env-file './E2E Tests/gh-action-setup/.automation.env' \
             up -d
 

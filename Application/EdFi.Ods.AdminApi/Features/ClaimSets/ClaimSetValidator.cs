@@ -135,33 +135,27 @@ public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResource
     private ClaimSet? _claimSet;
 
     public EditResourceClaimClaimSetValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
-        IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-        IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+        IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery)
     {
         _getClaimSetByIdQuery = getClaimSetByIdQuery;
 
         var resourceClaims = getResourceClaimsAsFlatListQuery.Execute();
         var resourceClaimsById = (Lookup<int, ResourceClaim>)resourceClaims
             .ToLookup(rc => rc.Id);
-        var resourceClaimsByName = (Lookup<string, ResourceClaim>)resourceClaims
-            .ToLookup(rc => rc.Name?.ToLower());
 
-        var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
-            .Select(a => a.AuthStrategyName).ToList();
+        RuleFor(m => m.Id).NotEmpty();
 
-        RuleFor(m => m.ClaimSetId).NotEmpty();
-
-        RuleFor(m => m.ClaimSetId)
+        RuleFor(m => m.Id)
             .Must(BeAnExistingClaimSet)
             .WithMessage(FeatureConstants.ClaimSetNotFound);
 
-        RuleFor(m => m).Custom((claimSet, context) =>
+        RuleFor(m => m).Custom((editResourceClaimOnClaimSetRequest, context) =>
         {
             var resourceClaimValidator = new ResourceClaimValidator();
 
-            if (claimSet.ResourceClaim != null)
+            if (editResourceClaimOnClaimSetRequest.ResourceClaim != null)
             {
-                resourceClaimValidator.Validate(resourceClaimsById, resourceClaimsByName, authStrategyNames, claimSet.ResourceClaim, context, _claimSet!.Name);
+                resourceClaimValidator.Validate(resourceClaimsById, editResourceClaimOnClaimSetRequest.ResourceClaim, context, _claimSet!.Name, editResourceClaimOnClaimSetRequest.ParentResourceClaimId);
             }
             else
             {

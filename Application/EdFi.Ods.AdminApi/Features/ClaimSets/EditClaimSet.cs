@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Common.Utils.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
@@ -83,6 +84,7 @@ public class EditClaimSet : IFeature
 
     public async Task<IResult> HandleResourceClaims(EditResourceClaimClaimSetValidator validator,
         EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
+        UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IMapper mapper,
@@ -91,10 +93,33 @@ public class EditClaimSet : IFeature
         await validator.GuardAsync(request);
         var editResourceOnClaimSetModel = mapper.Map<EditResourceOnClaimSetModel>(request);
         editResourceOnClaimSetModel.ResourceClaim!.Id = resourceclaimid;
+
+        var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(request.Id);
+        var resourceClaim = resourceClaims.FirstOrDefault(rc => rc.Id == request.ParentResourceClaimId.GetValueOrDefault());
+        if (resourceClaim != null)
+        {
+            if (!resourceClaim.Children.Any(c => c.Id == editResourceOnClaimSetModel.ResourceClaim.Id))
+            {
+                foreach (var rc in resourceClaims)
+                {
+                    if (rc.Id == editResourceOnClaimSetModel.ResourceClaim!.Id)
+                    {
+                        rc.Children.Add(editResourceOnClaimSetModel.ResourceClaim!);
+                    }
+                }
+                updateResourcesOnClaimSetCommand.Execute(
+                    new UpdateResourcesOnClaimSetModel
+                    {
+                        ClaimSetId = request.Id,
+                        ResourceClaims = mapper.Map<List<ResourceClaim>>(resourceClaims)
+                    });
+            }
+            
+        }
+
         editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
 
         var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
-
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid)
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
@@ -131,6 +156,7 @@ public class EditClaimSet : IFeature
             Read = resourceClaim!.Read,
             Update = resourceClaim!.Update,
             Delete = resourceClaim!.Delete,
+            AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategy>()
         };
         editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
 

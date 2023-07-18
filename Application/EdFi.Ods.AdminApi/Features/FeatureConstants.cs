@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Security.Policy;
+
 namespace EdFi.Ods.AdminApi.Features;
 
 public class FeatureConstants
@@ -29,6 +31,7 @@ public class FeatureConstants
     public const string ClaimSetNameMaxLengthMessage = "The claim set name must be less than 255 characters.";
     public const string ClaimSetNotFound = "No such claim set exists in the database.";
     public const string ResourceClaimNotFound = "No such resource claim exists in the database.";
+    public const string ResourceClaimOneActionNotSet = "A resource must have at least one action associated with it to be added.";
     public const string OdsInstanceIdDescription = "ODS instance id";
     public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id.";
 }

@@ -35,24 +35,30 @@ public class ResourceClaimValidator
         ValidateChildren(dbResourceClaims, dbAuthStrategies, resourceClaim, context, claimSetName, propertyName, resources);
     }
 
-    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaimsById,
-        Lookup<string, ResourceClaim> dbResourceClaimsByName,
-        List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, 
-        ValidationContext<T> context, string? claimSetName)
+    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaims, ResourceClaimActionModel resourceClaim, 
+        ValidationContext<T> context, string? claimSetName, int? parentResourceClaimId)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
-        context.MessageFormatter.AppendArgument("ResourceClaimName", resourceClaim.Name);
+        context.MessageFormatter.AppendArgument("ResourceClaimName", resourceClaim.Id);
 
         var propertyName = "ResourceClaims";
-
-        var resources = dbResourceClaimsById[resourceClaim.Id].ToList();
+        var resources = dbResourceClaims[resourceClaim.Id].ToList();
         ValidateIfExist(context, propertyName, resources);
+        ValidateIfItIsChild(context, parentResourceClaimId, propertyName, resources);
         ValidateCRUD(resourceClaim, context, propertyName);
-        ValidateAuthStrategies(dbAuthStrategies, resourceClaim, context, propertyName);
-        ValidateAuthStrategiesOverride(dbAuthStrategies, resourceClaim, context, propertyName);
-        ValidateChildren(dbResourceClaimsByName, dbAuthStrategies, resourceClaim, context, claimSetName, propertyName, resources);
     }
 
+    private static void ValidateIfItIsChild<T>(ValidationContext<T> context, int? parentResourceClaimId, string propertyName, List<ResourceClaim> resources)
+    {
+        var dbResourceClaim = resources.FirstOrDefault();
+        if (dbResourceClaim!.IsParent == false)
+        {
+            if (parentResourceClaimId.GetValueOrDefault() != dbResourceClaim.ParentId)
+            {
+                context.AddFailure(propertyName, $"The parentResourceClaimId is not valid for the child {dbResourceClaim.Id}. Set the proper value {dbResourceClaim.ParentId}");
+            }
+        }
+    }
 
     private static void ValidateIfExist<T>(ValidationContext<T> context, string propertyName, List<ResourceClaim> resources)
     {
@@ -137,7 +143,15 @@ public class ResourceClaimValidator
     {
         if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
         {
-            context.AddFailure(propertyName, "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'");
+            context.AddFailure(propertyName, $"Only valid resources can be added. {FeatureConstants.ResourceClaimOneActionNotSet} The following is an invalid resource: '{{ResourceClaimName}}'");
+        }
+    }
+
+    private static void ValidateCRUD<T>(ResourceClaimActionModel resourceClaim, ValidationContext<T> context, string propertyName)
+    {
+        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        {
+            context.AddFailure(propertyName, FeatureConstants.ResourceClaimOneActionNotSet);
         }
     }
 }

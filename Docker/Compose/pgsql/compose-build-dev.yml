@@ -20,7 +20,7 @@ services:
 
   nginx:
     build:
-      context: ../../Docker/gateway/
+      context: ../../Settings/gateway/
       dockerfile: Dockerfile
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
@@ -32,7 +32,7 @@ services:
     restart: always
     hostname: nginx
     volumes:
-      - ../../Docker/ssl:/ssl/
+      - ../../Settings/ssl:/ssl/
     depends_on:
       - adminapi
       - api
@@ -72,7 +72,7 @@ services:
       # Important to set the context to the root, rather than setting it to the
       # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
       # C# projects.
-      context: ../../../../
+      context: ../../../
       dockerfile: Application/EdFi.Ods.AdminApi/dev.Dockerfile
     environment:
       ADMIN_POSTGRES_HOST: pb-admin

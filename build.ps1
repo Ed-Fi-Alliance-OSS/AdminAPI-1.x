@@ -68,7 +68,7 @@ param(
     [string]
     [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest",  "PackageApi"
     , "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
-    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run")]
+    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run", "CopyToDockerContext", "RemoveDockerContextFiles")]
     $Command = "Build",
 
     # Assembly and package version number for Admin API. The current package number is
@@ -444,6 +444,43 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
+function CopyTempFilesToDockerContext {
+	$sourceArtifacts = "$solutionRoot/EdFi.Ods.AdminApi/Artifacts/"
+	$destinationArtifacts = "$dockerRoot/"
+	Copy-Item -Path $sourceArtifacts -Destination $destinationArtifacts -Recurse
+	
+	New-Item -Path "$dockerRoot/Application" -ItemType Directory
+	
+	$sourceAdminApi = "$solutionRoot/EdFi.Ods.AdminApi/"
+	$destinationAdminApi = "$dockerRoot/Application/"
+	Copy-Item -Path $sourceAdminApi -Destination $destinationAdminApi -Recurse
+	
+	$sourceNugetConfig = "$solutionRoot/NuGet.Config"
+	$destinationNugetConfig = "$dockerRoot/Application/"
+	Copy-Item -Path $sourceNugetConfig -Destination $destinationNugetConfig -Recurse	
+}
+
+function Invoke-CopyTempFilesToDockerContext {
+	Invoke-Step { CopyTempFilesToDockerContext }
+}
+
+function RemoveDockerContextTempFiles {
+	
+	$destinationArtifacts = "$dockerRoot/Artifacts/"
+	if (Test-Path $destinationArtifacts) {
+		Remove-Item $destinationArtifacts -Recurse -Force
+	}
+	
+	$destinationApplication = "$dockerRoot/Application/"
+	if (Test-Path $destinationApplication) {
+		Remove-Item $destinationApplication -Recurse -Force
+	}
+}
+
+function Invoke-RemoveDockerContextTempFiles {
+	Invoke-Step { RemoveDockerContextTempFiles }
+}
+
 Invoke-Main {
     if($IsLocalBuild)
     {
@@ -483,6 +520,13 @@ Invoke-Main {
         RunAdminApiDevDockerCompose{
             Invoke-RunAdminApiDevDockerCompose
         }
+		CopyToDockerContext{
+			Invoke-RemoveDockerContextTempFiles
+			Invoke-CopyTempFilesToDockerContext
+		}
+		RemoveDockerContextFiles{
+			Invoke-RemoveDockerContextTempFiles
+		}
         default { throw "Command '$Command' is not recognized" }
     }
 }

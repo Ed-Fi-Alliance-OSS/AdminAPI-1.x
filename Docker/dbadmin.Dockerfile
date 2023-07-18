@@ -11,7 +11,7 @@ ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=postgres
 
 COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
-COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
+COPY ./Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY Settings/dev/adminapi-test-seeddata.sql /tmp/AdminApiScripts/PgSql/adminapi-test-seeddata.sql
 
 RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0 && \

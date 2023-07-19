@@ -445,10 +445,6 @@ function Invoke-PushPackage {
 }
 
 function CopyTempFilesToDockerContext {
-	$sourceArtifacts = "$solutionRoot/EdFi.Ods.AdminApi/Artifacts/"
-	$destinationArtifacts = "$dockerRoot/"
-	Copy-Item -Path $sourceArtifacts -Destination $destinationArtifacts -Recurse
-	
 	New-Item -Path "$dockerRoot/Application" -ItemType Directory
 	
 	$sourceAdminApi = "$solutionRoot/EdFi.Ods.AdminApi/"
@@ -465,12 +461,6 @@ function Invoke-CopyTempFilesToDockerContext {
 }
 
 function RemoveDockerContextTempFiles {
-	
-	$destinationArtifacts = "$dockerRoot/Artifacts/"
-	if (Test-Path $destinationArtifacts) {
-		Remove-Item $destinationArtifacts -Recurse -Force
-	}
-	
 	$destinationApplication = "$dockerRoot/Application/"
 	if (Test-Path $destinationApplication) {
 		Remove-Item $destinationApplication -Recurse -Force

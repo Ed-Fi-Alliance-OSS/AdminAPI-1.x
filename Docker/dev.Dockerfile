@@ -11,8 +11,8 @@
 FROM mcr.microsoft.com/dotnet/sdk@sha256:c1a73b72c02e7b837e9a93030d545bc4181193e1bab1033364ed2d00986d78ff AS build
 WORKDIR /source
 
-COPY ./Application/NuGet.Config EdFi.Ods.AdminApi/
-COPY ./Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
+COPY Application/NuGet.Config EdFi.Ods.AdminApi/
+COPY Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN dotnet restore && dotnet build -c Release
@@ -31,8 +31,8 @@ ENV ASPNETCORE_ENVIRONMENT Production
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
 
-COPY ./Application/EdFi.Ods.AdminApi/Docker/dev/run.sh /app/run.sh
-COPY ./Application/EdFi.Ods.AdminApi/Docker/dev/log4net.config /app/log4net.txt
+COPY Settings/dev/run.sh /app/run.sh
+COPY Settings/dev/log4net.config /app/log4net.txt
 
 RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 gcompat && \
     cp /app/log4net.txt /app/log4net.config && \

@@ -14,9 +14,9 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 WORKDIR /app
 
-COPY ./Docker/pgsql/appsettings.template.json /app/appsettings.template.json
-COPY ./Docker/pgsql/run.sh /app/run.sh
-COPY ./Docker/pgsql/log4net.config /app/log4net.txt
+COPY Settings/pgsql/appsettings.template.json /app/appsettings.template.json
+COPY Settings/pgsql/run.sh /app/run.sh
+COPY Settings/pgsql/log4net.config /app/log4net.txt
 
 RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 postgresql13-client=~13 jq=~1 icu=~72 gcompat && \
     wget -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \

@@ -143,19 +143,19 @@ public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResource
         var resourceClaimsById = (Lookup<int, ResourceClaim>)resourceClaims
             .ToLookup(rc => rc.Id);
 
-        RuleFor(m => m.Id).NotEmpty();
+        RuleFor(m => m.ClaimSetId).NotEmpty();
 
-        RuleFor(m => m.Id)
+        RuleFor(m => m.ClaimSetId)
             .Must(BeAnExistingClaimSet)
             .WithMessage(FeatureConstants.ClaimSetNotFound);
 
         RuleFor(m => m).Custom((editResourceClaimOnClaimSetRequest, context) =>
         {
             var resourceClaimValidator = new ResourceClaimValidator();
-
-            if (editResourceClaimOnClaimSetRequest.ResourceClaim != null)
+            
+            if (editResourceClaimOnClaimSetRequest.ResourceClaimActions != null)
             {
-                resourceClaimValidator.Validate(resourceClaimsById, editResourceClaimOnClaimSetRequest.ResourceClaim, context, _claimSet!.Name, editResourceClaimOnClaimSetRequest.ParentResourceClaimId);
+                resourceClaimValidator.Validate(resourceClaimsById, editResourceClaimOnClaimSetRequest, context, _claimSet!.Name);
             }
             else
             {

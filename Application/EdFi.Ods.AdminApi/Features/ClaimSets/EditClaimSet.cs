@@ -22,11 +22,6 @@ public class EditClaimSet : IFeature
         .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
         .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}", HandleResourceClaims)
-        .WithDefaultDescription()
-        .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
-        .BuildForVersions(AdminApiVersions.V2);
-
         AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/overrideauthstrategies", HandleOverrideAuthStrategies)
         .WithDefaultDescription()
         .BuildForVersions(AdminApiVersions.V2);
@@ -77,51 +72,6 @@ public class EditClaimSet : IFeature
 
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
-            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
-
-        return Results.Ok(model);
-    }
-
-    public async Task<IResult> HandleResourceClaims(EditResourceClaimClaimSetValidator validator,
-        EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
-        UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
-        IGetClaimSetByIdQuery getClaimSetByIdQuery,
-        IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-        IMapper mapper,
-        EditResourceClaimOnClaimSetRequest request, int claimsetid, int resourceclaimid)
-    {
-        await validator.GuardAsync(request);
-        var editResourceOnClaimSetModel = mapper.Map<EditResourceOnClaimSetModel>(request);
-        editResourceOnClaimSetModel.ResourceClaim!.Id = resourceclaimid;
-
-        var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(request.Id);
-        var resourceClaim = resourceClaims.FirstOrDefault(rc => rc.Id == request.ParentResourceClaimId.GetValueOrDefault());
-        if (resourceClaim != null)
-        {
-            if (!resourceClaim.Children.Any(c => c.Id == editResourceOnClaimSetModel.ResourceClaim.Id))
-            {
-                foreach (var rc in resourceClaims)
-                {
-                    if (rc.Id == editResourceOnClaimSetModel.ResourceClaim!.Id)
-                    {
-                        rc.Children.Add(editResourceOnClaimSetModel.ResourceClaim!);
-                    }
-                }
-                updateResourcesOnClaimSetCommand.Execute(
-                    new UpdateResourcesOnClaimSetModel
-                    {
-                        ClaimSetId = request.Id,
-                        ResourceClaims = mapper.Map<List<ResourceClaim>>(resourceClaims)
-                    });
-            }
-            
-        }
-
-        editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
-
-        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
-        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
-        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid)
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
         return Results.Ok(model);

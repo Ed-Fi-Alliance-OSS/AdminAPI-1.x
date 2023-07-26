@@ -50,7 +50,6 @@ public class ResourceClaimModel
 [SwaggerSchema(Title = "ResourceClaimActionModel")]
 public class ResourceClaimActionModel
 {
-    public int Id { get; set; }
     public bool Read { get; set; }
     public bool Create { get; set; }
     public bool Update { get; set; }
@@ -132,17 +131,20 @@ public class EditClaimSetRequest
     public List<ResourceClaimModel>? ResourceClaims { get; set; }
 }
 
-[SwaggerSchema(Title = "EditResourceClaimOnClaimSetRequest")]
+[SwaggerSchema(Title = "EditResourceClaimActionsOnClaimSetRequest")]
 public class EditResourceClaimOnClaimSetRequest
 {
     [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
-    public int Id { get; set; }
+    public int ClaimSetId { get; set; }
+
+    [SwaggerSchema(Description = "ResourceClaim id", Nullable = false)]
+    public int ResourceClaimId { get; set; }
 
     [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
     public int? ParentResourceClaimId { get; set; }
 
     [SwaggerSchema(Nullable = false)]
-    public ResourceClaimActionModel ResourceClaim { get; set; }
+    public ResourceClaimActionModel ResourceClaimActions { get; set; }
 }
 
 [SwaggerSchema(Title = "OverrideAuthStategiesOnClaimSetRequest")]

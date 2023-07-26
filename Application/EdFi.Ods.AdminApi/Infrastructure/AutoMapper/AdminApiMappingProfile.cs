@@ -74,15 +74,14 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
         CreateMap<ResourceClaimActionModel, ResourceClaim>()
-           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
            .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
            .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
            .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
            .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete));
 
         CreateMap<EditResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel>()
-            .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaim));
+            .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
+            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaimActions));
 
         CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy, AuthorizationStrategyModel>()
             .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))

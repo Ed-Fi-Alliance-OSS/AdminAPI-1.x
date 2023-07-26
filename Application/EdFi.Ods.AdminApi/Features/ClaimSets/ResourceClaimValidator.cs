@@ -35,17 +35,16 @@ public class ResourceClaimValidator
         ValidateChildren(dbResourceClaims, dbAuthStrategies, resourceClaim, context, claimSetName, propertyName, resources);
     }
 
-    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaims, ResourceClaimActionModel resourceClaim, 
-        ValidationContext<T> context, string? claimSetName, int? parentResourceClaimId)
+    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaims, EditResourceClaimOnClaimSetRequest editResourceClaimOnClaimSetRequest, ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
-        context.MessageFormatter.AppendArgument("ResourceClaimName", resourceClaim.Id);
+        context.MessageFormatter.AppendArgument("ResourceClaimName", editResourceClaimOnClaimSetRequest.ResourceClaimId);
 
         var propertyName = "ResourceClaims";
-        var resources = dbResourceClaims[resourceClaim.Id].ToList();
+        var resources = dbResourceClaims[editResourceClaimOnClaimSetRequest.ResourceClaimId].ToList();
         ValidateIfExist(context, propertyName, resources);
-        ValidateIfItIsChild(context, parentResourceClaimId, propertyName, resources);
-        ValidateCRUD(resourceClaim, context, propertyName);
+        ValidateIfItIsChild(context, editResourceClaimOnClaimSetRequest.ParentResourceClaimId, propertyName, resources);
+        ValidateCRUD(editResourceClaimOnClaimSetRequest.ResourceClaimActions, context, propertyName);
     }
 
     private static void ValidateIfItIsChild<T>(ValidationContext<T> context, int? parentResourceClaimId, string propertyName, List<ResourceClaim> resources)

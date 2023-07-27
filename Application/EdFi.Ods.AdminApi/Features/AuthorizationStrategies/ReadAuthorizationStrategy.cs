@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 namespace EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 
-public class ReadAuthStrategy : IFeature
+public class ReadAuthorizationStrategy : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {

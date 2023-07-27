@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0ecda1f5-800e-4217-a7f9-d66a11e0a411",
+		"_postman_id": "65be8664-4b17-46d9-bda8-204176d28ca7",
 		"name": "Admin API E2E 2.0",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21286036"
 	},
 	"item": [
 		{
@@ -5790,6 +5791,80 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "AuthStrategies",
+					"item": [
+						{
+							"name": "Authstrategies",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET AuthStrategies: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET AuthStrategies: Response matches success format\", function () {\r",
+											"    pm.expect(response[0]).to.have.property(\"authStrategyId\");\r",
+											"    pm.expect(response[0]).to.have.property(\"authStrategyName\");\r",
+											"    pm.expect(response[0]).to.have.property(\"displayName\");\r",
+											"});\r",
+											"\r",
+											"const GetAuthStrategiesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"authStrategyId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"authStrategyName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"displayName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"authStrategyId\",\r",
+											"        \"authStrategyName\",\r",
+											"        \"displayName\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET AuthStrategies: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetAuthStrategiesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/authstrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"authstrategies"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
@@ -5862,6 +5937,14 @@
 		},
 		{
 			"key": "ODSInstanceId",
+			"value": ""
+		},
+		{
+			"key": "RegisteredClientId",
+			"value": ""
+		},
+		{
+			"key": "RegisteredClientSecret",
 			"value": ""
 		}
 	]

@@ -8,9 +8,11 @@ using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
 using EdFi.Ods.AdminApi.Features.Vendors;
+using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.Helpers; 
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using Action = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
 using Profile = AutoMapper.Profile;
 
 
@@ -94,6 +96,15 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
             .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
             .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
+
+        CreateMap<OverrideAuthStategyOnClaimSetRequest, OverrideAuthStategyOnClaimSetModel>()
+            .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
+            .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
+            .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
+            .ForMember(dst => dst.AuthStrategyId, opt => {
+                opt.ConvertUsing<AuthStrategyIdConverter, string>("AuthStrategyName");
+                });
+        
 
         CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))

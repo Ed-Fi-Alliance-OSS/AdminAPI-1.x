@@ -21,14 +21,6 @@ public class EditClaimSet : IFeature
         .WithDefaultDescription()
         .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
         .BuildForVersions(AdminApiVersions.V2);
-
-        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/overrideauthstrategies", HandleOverrideAuthStrategies)
-        .WithDefaultDescription()
-        .BuildForVersions(AdminApiVersions.V2);
-
-        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/resetauthstrategies", HandleResetAuthStrategies)
-        .WithDefaultDescription()
-        .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(EditClaimSetValidator validator, IEditClaimSetCommand editClaimSetCommand,
@@ -75,41 +67,5 @@ public class EditClaimSet : IFeature
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
         return Results.Ok(model);
-    }
-
-    public async Task<IResult> HandleOverrideAuthStrategies(OverrideAuthStategiesOnClaimSetValidator validator,
-       OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand,
-       OverrideAuthorizationStrategyModel request, int claimsetid, int resourceclaimid)
-    {
-        await validator.GuardAsync(request);
-        overrideDefaultAuthorizationStrategyCommand.Execute(request);
-
-        return Results.Ok();
-    }
-
-    public async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-        EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
-        IMapper mapper, int claimsetid, int resourceclaimid)
-    {
-        var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimsetid, resourceclaimid);
-        if (resourceClaim == null)
-        {
-            throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
-        }
-        EditResourceOnClaimSetModel editResourceOnClaimSetModel = new EditResourceOnClaimSetModel();
-        editResourceOnClaimSetModel.ClaimSetId = claimsetid;
-        editResourceOnClaimSetModel.ResourceClaim = new ResourceClaim()
-        {
-            Id = resourceclaimid,
-            Name = resourceClaim!.Name,
-            Create = resourceClaim!.Create,
-            Read = resourceClaim!.Read,
-            Update = resourceClaim!.Update,
-            Delete = resourceClaim!.Delete,
-            AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategy>()
-        };
-        editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
-
-        return await Task.FromResult(Results.Ok());
     }
 }

@@ -178,20 +178,38 @@ public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResource
     }
 }
 
-public class OverrideAuthStategiesOnClaimSetValidator : AbstractValidator<OverrideAuthorizationStrategyModel>
+public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<OverrideAuthStategyOnClaimSetRequest>
 {
-    private readonly IGetResourcesByClaimSetIdQuery _getResourcesByClaimSetIdQuery;
 
-    public OverrideAuthStategiesOnClaimSetValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery)
+    public OverrideAuthStategyOnClaimSetValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery, IGetAllActionsQuery getAllActionsQuery)
     {
-        _getResourcesByClaimSetIdQuery = getResourcesByClaimSetIdQuery;
-        
-        RuleFor(m => m).Custom((claimSet, context) =>
+        RuleFor(m => m.ClaimSetId).NotEqual(0);
+        RuleFor(m => m.ResourceClaimId).NotEqual(0);
+        RuleFor(m => m.ActionName).NotEmpty();
+        RuleFor(m => m.AuthStrategyName).NotEmpty();
+
+        RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
         {
-            var resoureClaim = _getResourcesByClaimSetIdQuery.SingleResource(claimSet.ClaimSetId, claimSet.ResourceClaimId);
+            var resoureClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
             if (resoureClaim == null)
             {
                 context.AddFailure("Resource claim doesn't exist for the Claim set provided");
+            }
+
+            var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()
+            .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName.ToLower());
+
+            if (authStrategyName == null)
+            {
+                context.AddFailure("AuthStrategyName doesn't exist.");
+            }
+
+            var actionName = getAllActionsQuery.Execute()
+            .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName.ToLower());
+
+            if (actionName == null)
+            {
+                context.AddFailure("ActionName doesn't exist.");
             }
         });
     }

@@ -7,6 +7,7 @@ using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Features.Applications;
+using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -34,16 +35,16 @@ public class ResourceClaimModel
     public bool Create { get; set; }
     public bool Update { get; set; }
     public bool Delete { get; set; }
-    public AuthorizationStrategyModel?[] DefaultAuthStrategiesForCRUD { get; set; }
-    public AuthorizationStrategyModel?[] AuthStrategyOverridesForCRUD { get; set; }
+    public AuthorizationStrategyClaimSetModel?[] DefaultAuthStrategiesForCRUD { get; set; }
+    public AuthorizationStrategyClaimSetModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
     public List<ResourceClaimModel> Children { get; set; }
     public ResourceClaimModel()
     {
         Children = new List<ResourceClaimModel>();
-        DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategyModel>();
-        AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategyModel>();
+        DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategyClaimSetModel>();
+        AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategyClaimSetModel>();
     }
 }
 
@@ -73,16 +74,8 @@ public class SimpleResourceClaimModel
 }
 
 [SwaggerSchema(Title = "AuthorizationStrategy")]
-public class AuthorizationStrategyModel
+public class AuthorizationStrategyClaimSetModel : AuthorizationStrategyModel
 {
-    [SwaggerExclude]
-    public int AuthStrategyId { get; set; }
-
-    public string? AuthStrategyName { get; set; }
-
-    [SwaggerExclude]
-    public string? DisplayName { get; set; }
-
     public bool IsInheritedFromParent { get; set; }
 }
 
@@ -157,10 +150,10 @@ public class OverrideAuthStategyOnClaimSetRequest
     public int ResourceClaimId { get; set; }
 
     [SwaggerSchema(Description = "Action name", Nullable = false)]
-    public string ActionName { get; set; }
+    public string? ActionName { get; set; }
 
     [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
-    public string AuthStrategyName { get; set; }
+    public string? AuthStrategyName { get; set; }
 }
 
 #endregion

@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: Apache-2.0
+# Licensed to the Ed-Fi Alliance under one or more agreements.
+# The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+# See the LICENSE and NOTICES files in the project root for more information.
+
+name: On Pull Request - Dockerfile
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/on-pullrequest-dockerfile.yml"
+      - "Docker/*"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/on-pullrequest-dockerfile.yml"
+      - "Docker/*"
+  workflow_dispatch:
+
+jobs:
+  docker-testing:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfile: [
+            { name: "Postgres", path: "Docker/api-pgsql.Dockerfile" },
+            { name: "Sql", path: "Docker/api-mssql.Dockerfile" },
+            { name: "Database", path: "Docker/dbadmin.Dockerfile" },
+            { name: "Development", path: "Docker/dev.Dockerfile" },
+          ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+      - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+        name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile
+        with:
+          dockerfile: ${{ matrix.dockerfile.path }}
+          failure-threshold: error

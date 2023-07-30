@@ -17,7 +17,7 @@ public class EditAuthStrategy : IFeature
        .WithDefaultDescription()
        .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/resetauthstrategies", HandleResetAuthStrategies)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/resetauthstrategies", HandleResetAuthStrategies)
         .WithDefaultDescription()
         .BuildForVersions(AdminApiVersions.V2);
     }

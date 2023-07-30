@@ -137,7 +137,7 @@ public class EditResourceClaimOnClaimSetRequest
     public int? ParentResourceClaimId { get; set; }
 
     [SwaggerSchema(Nullable = false)]
-    public ResourceClaimActionModel ResourceClaimActions { get; set; }
+    public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
 }
 
 [SwaggerSchema(Title = "OverrideAuthStategyOnClaimSetRequest")]

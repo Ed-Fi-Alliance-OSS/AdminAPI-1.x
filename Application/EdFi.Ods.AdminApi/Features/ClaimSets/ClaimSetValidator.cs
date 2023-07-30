@@ -197,7 +197,7 @@ public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<Override
             }
 
             var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()
-            .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName.ToLower());
+            .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName!.ToLower());
 
             if (authStrategyName == null)
             {
@@ -205,7 +205,7 @@ public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<Override
             }
 
             var actionName = getAllActionsQuery.Execute()
-            .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName.ToLower());
+            .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
 
             if (actionName == null)
             {

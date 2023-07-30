@@ -34,27 +34,34 @@ public class EditAuthStrategy : IFeature
     }
 
     public async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-        EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
+        IAuthStrategyResolver strategyResolver,
+        UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
-        var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimsetid, resourceclaimid);
-        if (resourceClaim == null)
+        var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid);
+        if (!resourceClaims.Any(rc=>rc.Id == resourceclaimid))
         {
             throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
+
         }
-        EditResourceOnClaimSetModel editResourceOnClaimSetModel = new EditResourceOnClaimSetModel();
-        editResourceOnClaimSetModel.ClaimSetId = claimsetid;
-        editResourceOnClaimSetModel.ResourceClaim = new ResourceClaim()
+        else
         {
-            Id = resourceclaimid,
-            Name = resourceClaim!.Name,
-            Create = resourceClaim!.Create,
-            Read = resourceClaim!.Read,
-            Update = resourceClaim!.Update,
-            Delete = resourceClaim!.Delete,
-            AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategy>()
-        };
-        editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
+            foreach (var resourceClaim in resourceClaims)
+            {
+                if (resourceClaim.Id == resourceclaimid)
+                {
+                    resourceClaim.DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategy>();
+                    resourceClaim.AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategy>();
+                }
+            }
+            
+            var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
+            if (resolvedResourceClaims.Count > 0)
+            {
+                updateResourcesOnClaimSetCommand.Execute(
+                new UpdateResourcesOnClaimSetModel { ClaimSetId = claimsetid, ResourceClaims = resolvedResourceClaims });
+            }
+        }
 
         return await Task.FromResult(Results.Ok());
     }

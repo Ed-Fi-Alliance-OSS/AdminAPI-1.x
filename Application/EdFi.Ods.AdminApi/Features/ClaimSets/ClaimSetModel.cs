@@ -125,14 +125,8 @@ public class EditClaimSetRequest
 }
 
 [SwaggerSchema(Title = "EditResourceClaimActionsOnClaimSetRequest")]
-public class EditResourceClaimOnClaimSetRequest
+public class EditResourceClaimOnClaimSetRequest : FilterResourceClaimOnClaimSet
 {
-    [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
-    public int ClaimSetId { get; set; }
-
-    [SwaggerSchema(Description = "ResourceClaim id", Nullable = false)]
-    public int ResourceClaimId { get; set; }
-
     [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
     public int? ParentResourceClaimId { get; set; }
 
@@ -141,19 +135,23 @@ public class EditResourceClaimOnClaimSetRequest
 }
 
 [SwaggerSchema(Title = "OverrideAuthStategyOnClaimSetRequest")]
-public class OverrideAuthStategyOnClaimSetRequest
+public class OverrideAuthStategyOnClaimSetRequest : FilterResourceClaimOnClaimSet
+{
+    [SwaggerSchema(Description = "Action name", Nullable = false)]
+    public string? ActionName { get; set; }
+
+    [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
+    public string? AuthStrategyName { get; set; }
+}
+
+[SwaggerSchema(Title = "FilterResourceClaimOnClaimSetRequest")]
+public class FilterResourceClaimOnClaimSet : IFilterResourceClaimOnClaimSetModel
 {
     [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
     public int ClaimSetId { get; set; }
 
     [SwaggerSchema(Description = "ResourceClaim id", Nullable = false)]
     public int ResourceClaimId { get; set; }
-
-    [SwaggerSchema(Description = "Action name", Nullable = false)]
-    public string? ActionName { get; set; }
-
-    [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
-    public string? AuthStrategyName { get; set; }
 }
 
 #endregion

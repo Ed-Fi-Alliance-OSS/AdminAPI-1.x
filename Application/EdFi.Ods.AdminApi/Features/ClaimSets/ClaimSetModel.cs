@@ -5,7 +5,6 @@
 
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Swashbuckle.AspNetCore.Annotations;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 
@@ -89,28 +88,3 @@ public class DeleteClaimSetModel : IDeleteClaimSetModel
 
     public int Id { get; set; }
 }
-
-#region Requests
-[SwaggerSchema(Title = "AddClaimSetRequest")]
-public class AddClaimSetRequest
-{
-    [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
-    public string? Name { get; set; }
-
-    [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-    public List<ResourceClaimModel>? ResourceClaims { get; set; }
-}
-
-[SwaggerSchema(Title = "EditClaimSetRequest")]
-public class EditClaimSetRequest
-{
-    [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
-    public int Id { get; set; }
-
-    [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
-    public string? Name { get; set; }
-
-    [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-    public List<ResourceClaimModel>? ResourceClaims { get; set; }
-}
-#endregion

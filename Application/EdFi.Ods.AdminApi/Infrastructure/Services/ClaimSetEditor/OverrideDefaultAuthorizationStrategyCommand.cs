@@ -41,7 +41,11 @@ public class OverrideDefaultAuthorizationStrategyCommand
 
         if (!claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Any(rc => rc.ClaimSetResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower()))
         {
-            claimSetResourceClaimAction.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides() { AuthorizationStrategyId = model.AuthStrategyId, ClaimSetResourceClaimActionId = claimSetResourceClaimAction.ClaimSetResourceClaimActionId });
+            claimSetResourceClaimAction.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides() {
+                AuthorizationStrategyId = model.AuthStrategyId,
+                AuthorizationStrategy = _context.AuthorizationStrategies.First(p => p.AuthorizationStrategyId == model.AuthStrategyId),
+                ClaimSetResourceClaimActionId = claimSetResourceClaimAction.ClaimSetResourceClaimActionId
+            });
         }
         else
         {

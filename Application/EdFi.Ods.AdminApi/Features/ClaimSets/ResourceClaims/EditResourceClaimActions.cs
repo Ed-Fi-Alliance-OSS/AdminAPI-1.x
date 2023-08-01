@@ -63,10 +63,10 @@ public class EditResourceClaimActions : IFeature
         var editResourceOnClaimSetModel = mapper.Map<EditResourceOnClaimSetModel>(request);
         editResourceOnClaimSetModel.ResourceClaim!.Id = request.ResourceClaimId;
         var resourceClaims = await Task.FromResult(getResourcesByClaimSetIdQuery.AllResources(request.ResourceClaimId));
-        var resourceClaim = resourceClaims.FirstOrDefault(rc => rc.Id == request.ParentResourceClaimId.GetValueOrDefault());
-        if (resourceClaim != null)
+        var parentResourceClaim = resourceClaims.FirstOrDefault(rc => rc.Id == request.ParentResourceClaimId.GetValueOrDefault());
+        if (parentResourceClaim != null)
         {
-            if (!resourceClaim.Children.Any(c => c.Id == editResourceOnClaimSetModel.ResourceClaim!.Id))
+            if (!parentResourceClaim.Children.Any(c => c.Id == editResourceOnClaimSetModel.ResourceClaim!.Id))
             {
                 foreach (var rc in resourceClaims)
                 {

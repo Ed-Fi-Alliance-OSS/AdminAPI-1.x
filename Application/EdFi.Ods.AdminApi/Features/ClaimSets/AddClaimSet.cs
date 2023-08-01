@@ -7,6 +7,9 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -20,7 +23,7 @@ public class AddClaimSet : IFeature
         .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> Handle(AddClaimSetValidator validator, AddClaimSetCommand addClaimSetCommand,
+    public async Task<IResult> Handle(Validator validator, AddClaimSetCommand addClaimSetCommand,
         AddOrEditResourcesOnClaimSetCommand addOrEditResourcesOnClaimSetCommand,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
@@ -52,5 +55,60 @@ public class AddClaimSet : IFeature
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
         return Results.Created($"/claimsets/{addedClaimSetId}", model);
+    }
+
+    [SwaggerSchema(Title = "AddClaimSetRequest")]
+    public class AddClaimSetRequest
+    {
+        [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
+        public string? Name { get; set; }
+
+        [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
+        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+    }
+
+    public class Validator : AbstractValidator<AddClaimSetRequest>
+    {
+        private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
+
+        public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
+            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+        {
+            _getAllClaimSetsQuery = getAllClaimSetsQuery;
+
+            var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
+                .ToLookup(rc => rc.Name?.ToLower());
+
+            var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
+                .Select(a => a.AuthStrategyName).ToList();
+
+            RuleFor(m => m.Name).NotEmpty()
+                .Must(BeAUniqueName)
+                .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage);
+
+            RuleFor(m => m.Name)
+                .MaximumLength(255)
+                .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);
+
+            RuleFor(m => m).Custom((claimSet, context) =>
+            {
+                var resourceClaimValidator = new ResourceClaimValidator();
+
+                if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
+                {
+                    foreach (var resourceClaim in claimSet.ResourceClaims)
+                    {
+                        resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
+                            resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
+                    }
+                }
+            });
+        }
+
+        private bool BeAUniqueName(string? name)
+        {
+            return _getAllClaimSetsQuery.Execute().All(x => x.Name != name);
+        }
     }
 }

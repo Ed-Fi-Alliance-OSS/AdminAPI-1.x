@@ -34,4 +34,5 @@ public class FeatureConstants
     public const string ResourceClaimOneActionNotSet = "A resource must have at least one action associated with it to be added.";
     public const string OdsInstanceIdDescription = "ODS instance id";
     public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id.";
+    public const string ClaimSetIdToCopy = "ClaimSet id to copy";
 }

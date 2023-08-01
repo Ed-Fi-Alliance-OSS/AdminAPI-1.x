@@ -10,7 +10,7 @@ ENV POSTGRES_USER=${POSTGRES_USER}
 ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=postgres
 
-ENV VERSION="0.0.0-alpha.0.65"
+ARG VERSION=latest
 
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 

@@ -34,7 +34,7 @@ COPY --from=publish /app/EdFi.Ods.AdminApi .
 COPY Settings/dev/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
 
-RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 gcompat && \
+RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 && \
     cp /app/log4net.txt /app/log4net.config && \
     dos2unix /app/*.json && \
     dos2unix /app/*.sh && \

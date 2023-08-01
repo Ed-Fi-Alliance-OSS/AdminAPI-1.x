@@ -193,7 +193,7 @@ public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<Override
             var resoureClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
             if (resoureClaim == null)
             {
-                context.AddFailure("Resource claim doesn't exist for the Claim set provided");
+                context.AddFailure("ResourceClaim", "Resource claim doesn't exist for the Claim set provided");
             }
 
             var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()
@@ -201,7 +201,7 @@ public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<Override
 
             if (authStrategyName == null)
             {
-                context.AddFailure("AuthStrategyName doesn't exist.");
+                context.AddFailure("AuthStrategyName", "AuthStrategyName doesn't exist.");
             }
 
             var actionName = getAllActionsQuery.Execute()
@@ -209,7 +209,7 @@ public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<Override
 
             if (actionName == null)
             {
-                context.AddFailure("ActionName doesn't exist.");
+                context.AddFailure("ActionName", "ActionName doesn't exist.");
             }
         });
     }

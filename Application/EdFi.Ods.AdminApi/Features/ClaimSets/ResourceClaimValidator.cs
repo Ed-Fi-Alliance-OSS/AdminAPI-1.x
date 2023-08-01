@@ -50,7 +50,7 @@ public class ResourceClaimValidator
     private static void ValidateIfItIsChild<T>(ValidationContext<T> context, int? parentResourceClaimId, string propertyName, List<ResourceClaim> resources)
     {
         var dbResourceClaim = resources.FirstOrDefault();
-        if (dbResourceClaim!.IsParent == false)
+        if (dbResourceClaim != null && dbResourceClaim!.IsParent == false)
         {
             if (parentResourceClaimId.GetValueOrDefault() != dbResourceClaim.ParentId)
             {
@@ -63,7 +63,7 @@ public class ResourceClaimValidator
     {
         if (!resources.Any())
         {
-            context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}'.\n");
+            context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource: '{ResourceClaimName}'.\n");
         }
     }
 

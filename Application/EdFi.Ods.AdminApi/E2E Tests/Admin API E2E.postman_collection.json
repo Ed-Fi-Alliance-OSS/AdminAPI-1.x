@@ -4012,7 +4012,76 @@
 							"response": []
 						},
 						{
-							"name": "ResourceClaimClaimSets - Add Action Copy",
+							"name": "ResourceClaimClaimSets - Add Action Validation Errors",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResourceClaimAction Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.ResourceClaims.length).to.equal(2);\r",
+											"    pm.expect(response.errors.ResourceClaims[0]).to.contain(\"which is not in the system\");\r",
+											"    pm.expect(response.errors.ResourceClaims[1]).to.contain(\"have at least one action\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4000,\r\n  \"resourceClaimActions\": {\r\n    \"create\": false,\r\n    \"read\": false,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaimActions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaimActions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Modify Action",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -4259,6 +4328,70 @@
 							"response": []
 						},
 						{
+							"name": "ResourceClaimClaimSets - Modify Action ClaimSet not found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT ResourceClaimAction Not Found: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT ResourceClaimAction Not Found: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT ResourceClaimAction Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"claimSet\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/90000/resourceclaimActions/4",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"90000",
+										"resourceclaimActions",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ResourceClaimClaimSets - Override Auth Strategy",
 							"event": [
 								{
@@ -4288,6 +4421,80 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authStrategyName\": \"RelationshipsWithStudentsOnly\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4/overrideauthstrategy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaims",
+										"4",
+										"overrideauthstrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy Validation Errors",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OverrideAuthStrategy Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.ResourceClaim.length).to.equal(1);\r",
+											"    pm.expect(response.errors.ResourceClaim[0]).to.contain(\"doesn't exist\");\r",
+											"    pm.expect(response.errors.AuthStrategyName.length).to.equal(1);\r",
+											"    pm.expect(response.errors.AuthStrategyName[0]).to.contain(\"doesn't exist\");\r",
+											"    pm.expect(response.errors.ActionName.length).to.equal(1);\r",
+											"    pm.expect(response.errors.ActionName[0]).to.contain(\"doesn't exist\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"NotExist\",\r\n  \"authStrategyName\": \"RelationshipsWithStudentsOnlys\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4365,6 +4572,59 @@
 							"response": []
 						},
 						{
+							"name": "ResourceClaimClaimSets - Reset Auth Strategies Not Found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResetAuthStrategies: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/40000/resetauthstrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaims",
+										"40000",
+										"resetauthstrategies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ResourceClaimClaimSets - Delete",
 							"event": [
 								{
@@ -4411,6 +4671,58 @@
 										"{{CreatedClaimSetId}}",
 										"resourceclaims",
 										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Delete Not Found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE ResourceClaimOnClaimSet: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4000",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaims",
+										"4000"
 									]
 								}
 							},

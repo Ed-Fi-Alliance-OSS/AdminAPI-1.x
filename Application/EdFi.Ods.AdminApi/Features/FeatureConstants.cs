@@ -30,5 +30,5 @@ public class FeatureConstants
     public const string ClaimSetNotFound = "No such claim set exists in the database.";
     public const string OdsInstanceIdDescription = "ODS instance id";
     public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id.";
-    public const string ClaimSetIdToCopy = "ClaimSet id for copying";
+    public const string ClaimSetIdToCopy = "ClaimSet id to copy";
 }

@@ -129,12 +129,12 @@ public class EditClaimSetValidator : AbstractValidator<EditClaimSetRequest>
     }
 }
 
-public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResourceClaimOnClaimSetRequest>
+public class ResourceClaimClaimSetValidator : AbstractValidator<IResourceClaimOnClaimSetRequest>
 {
     private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
     private ClaimSet? _claimSet;
 
-    public EditResourceClaimClaimSetValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
+    public ResourceClaimClaimSetValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery)
     {
         _getClaimSetByIdQuery = getClaimSetByIdQuery;
@@ -149,13 +149,13 @@ public class EditResourceClaimClaimSetValidator : AbstractValidator<EditResource
             .Must(BeAnExistingClaimSet)
             .WithMessage(FeatureConstants.ClaimSetNotFound);
 
-        RuleFor(m => m).Custom((editResourceClaimOnClaimSetRequest, context) =>
+        RuleFor(m => m).Custom((resourceClaimOnClaimSetRequest, context) =>
         {
             var resourceClaimValidator = new ResourceClaimValidator();
             
-            if (editResourceClaimOnClaimSetRequest.ResourceClaimActions != null)
+            if (resourceClaimOnClaimSetRequest.ResourceClaimActions != null)
             {
-                resourceClaimValidator.Validate(resourceClaimsById, editResourceClaimOnClaimSetRequest, context, _claimSet!.Name);
+                resourceClaimValidator.Validate(resourceClaimsById, resourceClaimOnClaimSetRequest, context, _claimSet!.Name);
             }
             else
             {

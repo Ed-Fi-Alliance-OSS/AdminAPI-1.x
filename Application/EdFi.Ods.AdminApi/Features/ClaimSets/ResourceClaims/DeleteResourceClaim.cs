@@ -28,7 +28,6 @@ public class DeleteResourceClaim : IFeature
         if (resourceClaims == null)
         {
             throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
-
         }
         else
         {

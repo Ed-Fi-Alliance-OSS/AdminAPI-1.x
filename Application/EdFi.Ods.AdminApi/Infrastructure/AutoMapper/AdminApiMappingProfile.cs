@@ -82,7 +82,7 @@ public class AdminApiMappingProfile : Profile
            .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
            .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete));
 
-        CreateMap<EditResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel>()
+        CreateMap<IResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
             .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaimActions));
 

@@ -22,19 +22,21 @@ public class EditResourceClaimActions : IFeature
        .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> HandleAddResourceClaims(EditResourceClaimClaimSetValidator validator,
+    public async Task<IResult> HandleAddResourceClaims(ResourceClaimClaimSetValidator validator,
         EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IMapper mapper,
-        EditResourceClaimOnClaimSetRequest request, int claimsetid)
+        AddResourceClaimOnClaimSetRequest request, int claimsetid)
     {
-        await ExecuteHandle(validator, editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
+        request.ClaimSetId = claimsetid;
+        await validator.GuardAsync(request);
+        await ExecuteHandle(editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
         return Results.Ok();
     }
 
-    public async Task<IResult> HandleEditResourceClaims(EditResourceClaimClaimSetValidator validator,
+    public async Task<IResult> HandleEditResourceClaims(ResourceClaimClaimSetValidator validator,
         EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
@@ -42,7 +44,11 @@ public class EditResourceClaimActions : IFeature
         IMapper mapper,
         EditResourceClaimOnClaimSetRequest request, int claimsetid, int resourceclaimid)
     {
-        await ExecuteHandle(validator, editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
+        request.ClaimSetId = claimsetid;
+        request.ResourceClaimId = resourceclaimid;
+        await validator.GuardAsync(request);
+
+        await ExecuteHandle(editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
         var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid)
@@ -51,12 +57,11 @@ public class EditResourceClaimActions : IFeature
         return Results.Ok(model);
     }
 
-    private static async Task ExecuteHandle(EditResourceClaimClaimSetValidator validator, EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand, UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand, IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IMapper mapper, EditResourceClaimOnClaimSetRequest request)
+    private static async Task ExecuteHandle(EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand, UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand, IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IMapper mapper, IResourceClaimOnClaimSetRequest request)
     {
-        await validator.GuardAsync(request);
         var editResourceOnClaimSetModel = mapper.Map<EditResourceOnClaimSetModel>(request);
         editResourceOnClaimSetModel.ResourceClaim!.Id = request.ResourceClaimId;
-        var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(request.ResourceClaimId);
+        var resourceClaims = await Task.FromResult(getResourcesByClaimSetIdQuery.AllResources(request.ResourceClaimId));
         var resourceClaim = resourceClaims.FirstOrDefault(rc => rc.Id == request.ParentResourceClaimId.GetValueOrDefault());
         if (resourceClaim != null)
         {

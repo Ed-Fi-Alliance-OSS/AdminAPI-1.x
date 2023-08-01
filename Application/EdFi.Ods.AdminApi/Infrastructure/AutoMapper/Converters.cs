@@ -15,15 +15,15 @@ public class AuthStrategyIdConverter : IValueConverter<string, int>
     {
         _getAllAuthorizationStrategiesQuery = getAllAuthorizationStrategiesQuery;
     }
-    public int Convert(string sourceMember, ResolutionContext context)
+    public int Convert(string authStrategyName, ResolutionContext context)
     {
         var result = 0;
         var authStrategy = _getAllAuthorizationStrategiesQuery.Execute()
-            .FirstOrDefault(a => a.AuthStrategyName == sourceMember);
+            .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == authStrategyName!.ToLower());
 
         if (authStrategy == null)
         {
-            throw new Exception("Error transforming the ID for the AuthStrategyName");
+            throw new Exception($"Error transforming the ID for the AuthStrategyName {authStrategyName!}");
         }
         else
         {

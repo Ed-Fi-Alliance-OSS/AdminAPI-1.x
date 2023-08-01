@@ -26,6 +26,8 @@ public class EditAuthStrategy : IFeature
       OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand, IMapper mapper,
       OverrideAuthStategyOnClaimSetRequest request, int claimsetid, int resourceclaimid)
     {
+        request.ClaimSetId = claimsetid;
+        request.ResourceClaimId = resourceclaimid;
         await validator.GuardAsync(request);
         var model = mapper.Map<OverrideAuthStategyOnClaimSetModel>(request);
         overrideDefaultAuthorizationStrategyCommand.ExecuteOnSpecificAction(model);
@@ -42,7 +44,6 @@ public class EditAuthStrategy : IFeature
         if (!resourceClaims.Any(rc=>rc.Id == resourceclaimid))
         {
             throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
-
         }
         else
         {

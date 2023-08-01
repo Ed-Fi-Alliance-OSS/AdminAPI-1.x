@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "388d7a54-0db1-48c9-b4cc-a8413a32179f",
+		"_postman_id": "448bbae7-4c42-4dc4-8979-d7f6bbb0be34",
 		"name": "Admin API E2E 2.0",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -3954,6 +3954,463 @@
 										"v2",
 										"claimsets",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Add Action",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResourceClaimAction: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": true,\r\n    \"delete\": false\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaimActions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaimActions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Add Action Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT ResourceClaimAction: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"const PutClaimSetsSchema = {\r",
+											"  \"type\": \"object\",\r",
+											"  \"properties\": {\r",
+											"    \"resourceClaims\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": [\r",
+											"        {\r",
+											"          \"type\": \"object\",\r",
+											"          \"properties\": {\r",
+											"            \"name\": {\r",
+											"              \"type\": \"string\"\r",
+											"            },\r",
+											"            \"read\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"create\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"update\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"delete\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"defaultAuthStrategiesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"authStrategyId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"authStrategyName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"displayName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"isInheritedFromParent\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    }\r",
+											"                  },\r",
+											"                  \"required\": [\r",
+											"                    \"authStrategyId\",\r",
+											"                    \"authStrategyName\",\r",
+											"                    \"displayName\",\r",
+											"                    \"isInheritedFromParent\"\r",
+											"                  ]\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"authStrategyOverridesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
+											"                },\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
+											"                },\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
+											"                },\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"children\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"name\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"read\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    },\r",
+											"                    \"create\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    },\r",
+											"                    \"update\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    },\r",
+											"                    \"delete\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    },\r",
+											"                    \"defaultAuthStrategiesForCRUD\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                        {\r",
+											"                          \"type\": \"object\",\r",
+											"                          \"properties\": {\r",
+											"                            \"authStrategyId\": {\r",
+											"                              \"type\": \"integer\"\r",
+											"                            },\r",
+											"                            \"authStrategyName\": {\r",
+											"                              \"type\": \"string\"\r",
+											"                            },\r",
+											"                            \"displayName\": {\r",
+											"                              \"type\": \"string\"\r",
+											"                            },\r",
+											"                            \"isInheritedFromParent\": {\r",
+											"                              \"type\": \"boolean\"\r",
+											"                            }\r",
+											"                          },\r",
+											"                          \"required\": [\r",
+											"                            \"authStrategyId\",\r",
+											"                            \"authStrategyName\",\r",
+											"                            \"displayName\",\r",
+											"                            \"isInheritedFromParent\"\r",
+											"                          ]\r",
+											"                        }\r",
+											"                      ]\r",
+											"                    },\r",
+											"                    \"authStrategyOverridesForCRUD\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
+											"                        },\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
+											"                        },\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
+											"                        },\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
+											"                        }\r",
+											"                      ]\r",
+											"                    },\r",
+											"                    \"children\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": {}\r",
+											"                    }\r",
+											"                  },\r",
+											"                  \"required\": [\r",
+											"                    \"name\",\r",
+											"                    \"read\",\r",
+											"                    \"create\",\r",
+											"                    \"update\",\r",
+											"                    \"delete\",\r",
+											"                    \"defaultAuthStrategiesForCRUD\",\r",
+											"                    \"authStrategyOverridesForCRUD\",\r",
+											"                    \"children\"\r",
+											"                  ]\r",
+											"                }\r",
+											"              ]\r",
+											"            }\r",
+											"          },\r",
+											"          \"required\": [\r",
+											"            \"name\",\r",
+											"            \"read\",\r",
+											"            \"create\",\r",
+											"            \"update\",\r",
+											"            \"delete\",\r",
+											"            \"defaultAuthStrategiesForCRUD\",\r",
+											"            \"authStrategyOverridesForCRUD\",\r",
+											"            \"children\"\r",
+											"          ]\r",
+											"        }\r",
+											"      ]\r",
+											"    },\r",
+											"    \"id\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"name\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"isSystemReserved\": {\r",
+											"      \"type\": \"boolean\"\r",
+											"    },\r",
+											"    \"applications\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    }\r",
+											"  },\r",
+											"  \"required\": [\r",
+											"    \"resourceClaims\",\r",
+											"    \"id\",\r",
+											"    \"name\",\r",
+											"    \"isSystemReserved\",\r",
+											"    \"applications\"\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"PUT ResourceClaimOnClaimSets: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(PutClaimSetsSchema);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaimActions/4",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaimActions",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OverrideAuthStrategy: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authStrategyName\": \"RelationshipsWithStudentsOnly\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4/overrideauthstrategy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaims",
+										"4",
+										"overrideauthstrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Reset Auth Strategies",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResetAuthStrategies: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4/resetauthstrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaims",
+										"4",
+										"resetauthstrategies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Delete",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE ResourceClaimOnClaimSet: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}",
+										"resourceclaims",
+										"4"
 									]
 								}
 							},

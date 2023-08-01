@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "388d7a54-0db1-48c9-b4cc-a8413a32179f",
+		"_postman_id": "57116e5c-40b9-408c-ac23-0e944fb22062",
 		"name": "Admin API E2E 2.0",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -3954,6 +3954,263 @@
 										"v2",
 										"claimsets",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets/Copy- Invalid Existing ClaimSet Name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"name\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
+											"      \"resourceClaims\": []\r",
+											"    }), \r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSetJson = claimSetResponse.json();\r",
+											"  if(!claimSetJson.id) { console.log('Error in Pre-request: claimset ID missing from response. Response is:', claimSetJson); }\r",
+											"  pm.collectionVariables.set(\"OtherExistingClaimSetId\", claimSetJson.id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets Invalid Existing ClaimSets: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ClaimSets Invalid Existing ClaimSets: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets Invalid Existing ClaimSets: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets Invalid Existing ClaimSets: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Name.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Name[0]).to.contain(\"already exists\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Other Test ClaimSet {{OtherClaimSetGUID}}\",\r\n    \"resourceClaims\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v2/claimsets/"
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets/Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"name\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
+											"      \"resourceClaims\": [{\r",
+											"        \"name\": \"educationStandards\",\r",
+											"        \"read\": true,\r",
+											"        \"create\": true,\r",
+											"        \"update\": true,\r",
+											"        \"delete\": true,\r",
+											"        \"defaultAuthStrategiesForCRUD\": [\r",
+											"          {\r",
+											"            \"authStrategyName\": \"NamespaceBased\",\r",
+											"            \"isInheritedFromParent\": false\r",
+											"          },\r",
+											"          {\r",
+											"            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r",
+											"            \"isInheritedFromParent\": false\r",
+											"          },\r",
+											"          {\r",
+											"            \"authStrategyName\": \"NamespaceBased\",\r",
+											"            \"isInheritedFromParent\": false\r",
+											"          },\r",
+											"          {\r",
+											"            \"authStrategyName\": \"NamespaceBased\",\r",
+											"            \"isInheritedFromParent\": false\r",
+											"          }\r",
+											"        ],\r",
+											"        \"authStrategyOverridesForCRUD\": [\r",
+											"          null,\r",
+											"          null,\r",
+											"          null,\r",
+											"          null\r",
+											"        ]\r",
+											"    }]\r",
+											"  })\r",
+											" }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSetJson = claimSetResponse.json();\r",
+											"  if(!claimSetJson.id) { console.log('Error in Pre-request: claimset ID missing from response. Response is:', claimSetJson); }\r",
+											"  pm.collectionVariables.set(\"OtherExistingClaimSetId\", claimSetJson.id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets: Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ClaimSets: Response includes location in header\", function () {\r",
+											"    pm.response.to.have.header(\"Location\");\r",
+											"    pm.response.to.be.header(\"Location\", `/claimsets/${result.id}`);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets: Response result claimset has expected name and resource claims\", function () {\r",
+											"    pm.expect(result).to.have.property(\"id\");\r",
+											"    pm.expect(result).to.have.property(\"name\");\r",
+											"    pm.expect(result.name).contains(\"Copied ClaimSet from\");\r",
+											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
+											"    const resourceclaimexists = result.resourceClaims.any(r => r.name === \"educationStandards\")\r",
+											"    pm.expect(resourceclaimexists).to.equal(true);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Copied ClaimSet from {{OtherExistingClaimSetId}}\",\r\n    \"originalid\": {{OtherExistingClaimSetId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{API_URL}}/v2/claimsets/copy"
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets/Copy- Invalid ClaimSet Id",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function randomIntFromInterval(min, max) { // min and max included \r",
+											"  return Math.floor(Math.random() * (max - min + 1) + min)\r",
+											"}\r",
+											"\r",
+											"const rndInt = randomIntFromInterval(450, 783)\r",
+											"pm.collectionVariables.set(\"NotExistClaimSetId\", pm.variables.replaceIn(rndInt));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSet NotFound: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSet NotFound: Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSet NotFound: Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",											
+											"    pm.expect(response.title).to.contains(\"Not found\");\r",
+											"    pm.expect(response.title).to.contains(\"claimSet\");    \r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Claim set does not exists\",\r\n    \"originalid\": {{NotExistClaimSetId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/copy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"copy"
 									]
 								}
 							},

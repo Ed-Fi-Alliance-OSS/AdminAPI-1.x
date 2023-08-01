@@ -4502,7 +4502,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4/overrideauthstrategy",
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4000/overrideauthstrategy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -4511,7 +4511,7 @@
 										"claimsets",
 										"{{CreatedClaimSetId}}",
 										"resourceclaims",
-										"4",
+										"4000",
 										"overrideauthstrategy"
 									]
 								}

@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "57116e5c-40b9-408c-ac23-0e944fb22062",
+		"_postman_id": "698da6a7-55e3-4046-8fe9-c1f724390300",
 		"name": "Admin API E2E 2.0",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21286036"
 	},
 	"item": [
 		{
@@ -2962,8 +2963,6 @@
 											"    pm.expect(response[0]).to.have.property(\"odsInstanceId\");",
 											"    pm.expect(response[0]).to.have.property(\"name\");",
 											"    pm.expect(response[0]).to.have.property(\"instanceType\");",
-											"    pm.expect(response[0]).to.have.property(\"status\");",
-											"    pm.expect(response[0]).to.have.property(\"isExtended\");",
 											"});",
 											"",
 											"const GetOdsInstancesSchema = {",
@@ -2980,24 +2979,12 @@
 											"        },",
 											"        \"instanceType\": {",
 											"          \"type\": \"string\"",
-											"        },",
-											"        \"status\": {",
-											"          \"type\": \"string\"",
-											"        },",
-											"        \"isExtended\": {",
-											"          \"type\": \"boolean\"",
-											"        },",
-											"        \"version\": {",
-											"          \"type\": \"string\"",
 											"        }",
 											"      },",
 											"      \"required\": [",
 											"        \"odsInstanceId\",",
 											"        \"name\",",
-											"        \"instanceType\",",
-											"        \"status\",",
-											"        \"isExtended\",",
-											"        \"version\"",
+											"        \"instanceType\"",
 											"      ]",
 											"    }",
 											"  ]",
@@ -3090,8 +3077,7 @@
 											"pm.test(\"GET OdsInstancesID: Response matches success format\", function () {",
 											"    pm.expect(response).to.have.property(\"odsInstanceId\");",
 											"    pm.expect(response).to.have.property(\"name\");",
-											"    pm.expect(response).to.have.property(\"status\");",
-											"    pm.expect(response).to.have.property(\"isExtended\");",
+											"    pm.expect(response).to.have.property(\"instanceType\");",
 											"});",
 											"",
 											"const GetOdsInstancesIdSchema = {",
@@ -3105,24 +3091,12 @@
 											"    },",
 											"    \"instanceType\": {",
 											"      \"type\": \"string\"",
-											"    },",
-											"    \"status\": {",
-											"      \"type\": \"string\"",
-											"    },",
-											"    \"isExtended\": {",
-											"      \"type\": \"boolean\"",
-											"    },",
-											"    \"version\": {",
-											"      \"type\": \"string\"",
 											"    }",
 											"  },",
 											"  \"required\": [",
 											"    \"odsInstanceId\",",
 											"    \"name\",",
-											"    \"instanceType\",",
-											"    \"status\",",
-											"    \"isExtended\",",
-											"    \"version\"",
+											"    \"instanceType\"",
 											"  ]",
 											"}",
 											"",
@@ -4034,7 +4008,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/claimsets/"
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										""
+									]
+								}
 							},
 							"response": []
 						},
@@ -4143,7 +4127,17 @@
 										}
 									}
 								},
-								"url": "{{API_URL}}/v2/claimsets/copy"
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/copy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"copy"
+									]
+								}
 							},
 							"response": []
 						},
@@ -4179,7 +4173,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"POST ClaimSet NotFound: Response title is helpful and accurate\", function () {\r",
-											"    const response = pm.response.json();\r",											
+											"    const response = pm.response.json();\r",
 											"    pm.expect(response.title).to.contains(\"Not found\");\r",
 											"    pm.expect(response.title).to.contains(\"claimSet\");    \r",
 											"});\r",
@@ -6193,6 +6187,14 @@
 		},
 		{
 			"key": "ODSInstanceId",
+			"value": ""
+		},
+		{
+			"key": "RegisteredClientId",
+			"value": ""
+		},
+		{
+			"key": "RegisteredClientSecret",
 			"value": ""
 		}
 	]

@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public interface IDeleteResouceClaimOnClaimSetCommand
 {
-    void Execute(IFilterResourceClaimOnClaimSetModel resourceClaimOnClaimSetModel);
+    void Execute(IClaimSetResourceClaimModel resourceClaimOnClaimSetModel);
 }
 
 public class DeleteResouceClaimOnClaimSetCommand : IDeleteResouceClaimOnClaimSetCommand
@@ -22,9 +22,8 @@ public class DeleteResouceClaimOnClaimSetCommand : IDeleteResouceClaimOnClaimSet
         _context = context;
     }
 
-    public void Execute(IFilterResourceClaimOnClaimSetModel resourceClaimOnClaimSetModel)
+    public void Execute(IClaimSetResourceClaimModel resourceClaimOnClaimSetModel)
     {
-        var claimSet = _context.ClaimSets.Single(x => x.ClaimSetId == resourceClaimOnClaimSetModel.ClaimSetId);
         var resourceClaimsForClaimSetId =
                   _context.ClaimSetResourceClaimActions.Where(x => x.ClaimSetId == resourceClaimOnClaimSetModel.ClaimSetId && x.ResourceClaimId == resourceClaimOnClaimSetModel.ResourceClaimId).ToList();
         foreach (var resourceClaimAction in resourceClaimsForClaimSetId)
@@ -40,7 +39,7 @@ public class DeleteResouceClaimOnClaimSetCommand : IDeleteResouceClaimOnClaimSet
     }
 }
 
-public interface IFilterResourceClaimOnClaimSetModel
+public interface IClaimSetResourceClaimModel
 {
     int ClaimSetId { get; }
     int ResourceClaimId { get; }

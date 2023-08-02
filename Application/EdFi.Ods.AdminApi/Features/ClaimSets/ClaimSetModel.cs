@@ -176,7 +176,7 @@ public class OverrideAuthStategyOnClaimSetRequest : FilterResourceClaimOnClaimSe
     public string? AuthStrategyName { get; set; }
 }
 
-public class FilterResourceClaimOnClaimSet : IFilterResourceClaimOnClaimSetModel
+public class FilterResourceClaimOnClaimSet : IClaimSetResourceClaimModel
 {
     [SwaggerExclude]
     public int ClaimSetId { get; set; }

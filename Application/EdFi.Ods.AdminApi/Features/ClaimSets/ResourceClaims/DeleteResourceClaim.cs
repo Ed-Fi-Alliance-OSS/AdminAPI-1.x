@@ -20,12 +20,19 @@ public class DeleteResourceClaim : IFeature
 
 
     public async Task<IResult> Handle(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
+        IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IAuthStrategyResolver strategyResolver,
         IDeleteResouceClaimOnClaimSetCommand deleteResouceClaimOnClaimSetCommand,
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
-        var resourceClaims = getResourcesByClaimSetIdQuery.SingleResource(claimsetid, resourceclaimid);
-        if (resourceClaims == null)
+        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
+        if (claimSet == null)
+        {
+            throw new NotFoundException<int>("ClaimSet", claimsetid);
+        }
+
+        var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimSet.Id, resourceclaimid);
+        if (resourceClaim == null)
         {
             throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
         }
@@ -33,7 +40,7 @@ public class DeleteResourceClaim : IFeature
         {
             deleteResouceClaimOnClaimSetCommand.Execute(new FilterResourceClaimOnClaimSet()
             {
-                ClaimSetId = claimsetid,
+                ClaimSetId = claimSet.Id,
                 ResourceClaimId = resourceclaimid
             });
         }

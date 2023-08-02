@@ -50,7 +50,7 @@ public static class AdminModelExtensions
         return application?.OdsInstance?.Name;
     }
 
-    public static int? EducationOrganizationId(this Application application)
+    public static long? EducationOrganizationId(this Application application)
     {
         return application?.ApplicationEducationOrganizations?.FirstOrDefault()?.EducationOrganizationId;
     }

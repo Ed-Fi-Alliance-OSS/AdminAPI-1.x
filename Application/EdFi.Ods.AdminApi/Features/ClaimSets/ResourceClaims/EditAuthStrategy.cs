@@ -40,8 +40,7 @@ public class EditAuthStrategy : IFeature
     }
 
     internal async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-        IAuthStrategyResolver strategyResolver,
-        UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
+        OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand,
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
         var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid);
@@ -51,21 +50,12 @@ public class EditAuthStrategy : IFeature
         }
         else
         {
-            foreach (var resourceClaim in resourceClaims)
-            {
-                if (resourceClaim.Id == resourceclaimid)
+            overrideDefaultAuthorizationStrategyCommand.ResetAuthorizationStrategyOverrides(
+                new OverrideAuthStategyOnClaimSetModel()
                 {
-                    resourceClaim.DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategy>();
-                    resourceClaim.AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategy>();
-                }
-            }
-            
-            var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
-            if (resolvedResourceClaims.Count > 0)
-            {
-                updateResourcesOnClaimSetCommand.Execute(
-                new UpdateResourcesOnClaimSetModel { ClaimSetId = claimsetid, ResourceClaims = resolvedResourceClaims });
-            }
+                    ClaimSetId = claimsetid,
+                    ResourceClaimId = resourceclaimid
+                });
         }
 
         return await Task.FromResult(Results.Ok());

@@ -56,6 +56,19 @@ public class OverrideDefaultAuthorizationStrategyCommand
         _context.SaveChanges();
     }
 
+    public void ResetAuthorizationStrategyOverrides(OverrideAuthStategyOnClaimSetModel model)
+    {
+        var claimSetResourceClaimsToEdit = GetClaimSetResourceClaimsToEdit(model.ClaimSetId, model.ResourceClaimId);
+
+        var claimSetResourceClaimAction = claimSetResourceClaimsToEdit.FirstOrDefault(rc => rc.ResourceClaimId == model.ResourceClaimId);
+
+        foreach (var authorizationStrategyOverrides in claimSetResourceClaimAction!.AuthorizationStrategyOverrides)
+        {
+            claimSetResourceClaimAction.AuthorizationStrategyOverrides.Remove(authorizationStrategyOverrides);
+        }
+        _context.SaveChanges();
+    }
+
     private Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy> GetAuthorizationStrategiesAsDictionary()
     {
         var authorizationStrategiesDictionary =

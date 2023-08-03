@@ -37,11 +37,7 @@ public class DeleteResourceClaim : IFeature
         }
         else
         {
-            deleteResouceClaimOnClaimSetCommand.Execute(new FilterResourceClaimOnClaimSet()
-            {
-                ClaimSetId = claimSet.Id,
-                ResourceClaimId = resourceclaimid
-            });
+            deleteResouceClaimOnClaimSetCommand.Execute(claimSet.Id, resourceclaimid);
         }
 
         return await Task.FromResult(Results.Ok());

@@ -3,11 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -106,19 +105,4 @@ public interface IResourceClaimOnClaimSetRequest
     int ResourceClaimId { get; }
     public int? ParentResourceClaimId { get; }
     public ResourceClaimActionModel ResourceClaimActions { get; }
-}
-
-public interface IClaimSetResourceClaimModel
-{
-    int ClaimSetId { get; }
-    int ResourceClaimId { get; }
-}
-
-public class FilterResourceClaimOnClaimSet : IClaimSetResourceClaimModel
-{
-    [SwaggerExclude]
-    public int ClaimSetId { get; set; }
-
-    [SwaggerExclude]
-    public int ResourceClaimId { get; set; }
 }

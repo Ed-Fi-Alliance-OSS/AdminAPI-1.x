@@ -32,15 +32,9 @@ public class DeleteResourceClaimOnClaimSetCommandTests : SecurityDataTestBase
         var parentRcNames = UniqueNameList("ParentRc", 2);
         var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("ChildRc", 1));
 
-        var filter = new FilterResourceClaimOnClaimSet()
-        {
-            ClaimSetId = testClaimSet.ClaimSetId,
-            ResourceClaimId = testResources.First().ResourceClaimId
-        };
-
         using var securityContext = TestContext;
         var command = new DeleteResouceClaimOnClaimSetCommand(securityContext);
-        command.Execute(filter);
+        command.Execute(testClaimSet.ClaimSetId, testResources.First().ResourceClaimId);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 

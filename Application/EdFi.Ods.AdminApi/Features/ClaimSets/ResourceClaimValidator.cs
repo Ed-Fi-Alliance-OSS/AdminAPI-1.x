@@ -5,7 +5,6 @@
 
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using FluentValidation;
-using static EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditResourceClaimActions;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -98,7 +97,7 @@ public class ResourceClaimValidator
 
     private static void ValidateAuthStrategiesOverride<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
-        if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
+        if (resourceClaim.AuthStrategyOverridesForCRUD != null && resourceClaim.AuthStrategyOverridesForCRUD.Any())
         {
             foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
             {
@@ -113,7 +112,7 @@ public class ResourceClaimValidator
 
     private static void ValidateAuthStrategies<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
-        if (resourceClaim.DefaultAuthStrategiesForCRUD.Any())
+        if (resourceClaim.DefaultAuthStrategiesForCRUD != null && resourceClaim.DefaultAuthStrategiesForCRUD.Any())
         {
             foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
             {

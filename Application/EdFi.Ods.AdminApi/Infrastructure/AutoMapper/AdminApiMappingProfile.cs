@@ -98,7 +98,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
             .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
 
-        CreateMap<Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest, OverrideAuthStategyOnClaimSetModel>()
+        CreateMap<Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest, OverrideAuthStrategyOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
             .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
             .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))

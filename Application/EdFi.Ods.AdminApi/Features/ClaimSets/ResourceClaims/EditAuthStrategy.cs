@@ -33,7 +33,7 @@ public class EditAuthStrategy : IFeature
         request.ClaimSetId = claimsetid;
         request.ResourceClaimId = resourceclaimid;
         await validator.GuardAsync(request);
-        var model = mapper.Map<OverrideAuthStategyOnClaimSetModel>(request);
+        var model = mapper.Map<OverrideAuthStrategyOnClaimSetModel>(request);
         overrideDefaultAuthorizationStrategyCommand.ExecuteOnSpecificAction(model);
 
         return Results.Ok();
@@ -51,7 +51,7 @@ public class EditAuthStrategy : IFeature
         else
         {
             overrideDefaultAuthorizationStrategyCommand.ResetAuthorizationStrategyOverrides(
-                new OverrideAuthStategyOnClaimSetModel()
+                new OverrideAuthStrategyOnClaimSetModel()
                 {
                     ClaimSetId = claimsetid,
                     ResourceClaimId = resourceclaimid
@@ -100,7 +100,7 @@ public class EditAuthStrategy : IFeature
 
 
     [SwaggerSchema(Title = "OverrideAuthStategyOnClaimSetRequest")]
-    public class OverrideAuthStategyOnClaimSetRequest : OverrideAuthStategyOnClaimSetModel
+    public class OverrideAuthStategyOnClaimSetRequest : OverrideAuthStrategyOnClaimSetModel
     {
         [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
         public string? AuthStrategyName { get; set; }

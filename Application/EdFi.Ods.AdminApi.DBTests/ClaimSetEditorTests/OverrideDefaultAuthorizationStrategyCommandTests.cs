@@ -68,7 +68,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         Security.DataAccess.Models.ResourceClaim testResource1ToEdit, testResource2ToNotEdit;
         InitializeData(out testClaimSet, out appAuthorizationStrategies, out testResource1ToEdit, out testResource2ToNotEdit);
 
-        var overrideModel = new OverrideAuthStategyOnClaimSetModel
+        var overrideModel = new OverrideAuthStrategyOnClaimSetModel
         {
             ResourceClaimId = testResource1ToEdit.ResourceClaimId,
             ClaimSetId = testClaimSet.ClaimSetId,

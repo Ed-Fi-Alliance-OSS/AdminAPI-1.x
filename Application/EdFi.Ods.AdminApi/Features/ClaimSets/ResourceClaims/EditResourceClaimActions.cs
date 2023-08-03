@@ -24,7 +24,6 @@ public class EditResourceClaimActions : IFeature
 
         AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaimActions/{resourceclaimid}", HandleEditResourceClaims)
        .WithDefaultDescription()
-       .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
        .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -38,7 +37,7 @@ public class EditResourceClaimActions : IFeature
     {
         request.ClaimSetId = claimsetid;
         await validator.GuardAsync(request);
-        await ExecuteHandle(editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
+        await ExecuteHandle(editResourcesOnClaimSetCommand, mapper, request);
         return Results.Ok();
     }
 
@@ -53,38 +52,15 @@ public class EditResourceClaimActions : IFeature
         request.ResourceClaimId = resourceclaimid;
         await validator.GuardAsync(request);
 
-        await ExecuteHandle(editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
+        await ExecuteHandle(editResourcesOnClaimSetCommand, mapper, request);
        
         return Results.Ok();
     }
 
-    private static async Task ExecuteHandle(EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand, UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand, IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IMapper mapper, IResourceClaimOnClaimSetRequest request)
+    private static async Task ExecuteHandle(EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand, IMapper mapper, IResourceClaimOnClaimSetRequest request)
     {
-        var editResourceOnClaimSetModel = mapper.Map<EditResourceOnClaimSetModel>(request);
+        var editResourceOnClaimSetModel = await Task.FromResult(mapper.Map<EditResourceOnClaimSetModel>(request));
         editResourceOnClaimSetModel.ResourceClaim!.Id = request.ResourceClaimId;
-        var resourceClaims = await Task.FromResult(getResourcesByClaimSetIdQuery.AllResources(request.ResourceClaimId));
-        var parentResourceClaim = resourceClaims.FirstOrDefault(rc => rc.Id == request.ParentResourceClaimId.GetValueOrDefault());
-        if (parentResourceClaim != null)
-        {
-            if (!parentResourceClaim.Children.Any(c => c.Id == editResourceOnClaimSetModel.ResourceClaim!.Id))
-            {
-                foreach (var rc in resourceClaims)
-                {
-                    if (rc.Id == editResourceOnClaimSetModel.ResourceClaim!.Id)
-                    {
-                        rc.Children.Add(editResourceOnClaimSetModel.ResourceClaim!);
-                    }
-                }
-                updateResourcesOnClaimSetCommand.Execute(
-                    new UpdateResourcesOnClaimSetModel
-                    {
-                        ClaimSetId = request.ClaimSetId,
-                        ResourceClaims = mapper.Map<List<ResourceClaim>>(resourceClaims)
-                    });
-            }
-
-        }
-
         editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
     }
 
@@ -98,9 +74,6 @@ public class EditResourceClaimActions : IFeature
         [SwaggerSchema(Description = "ResourceClaim id", Nullable = false)]
         public int ResourceClaimId { get; set; }
 
-        [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
-        public int? ParentResourceClaimId { get; set; }
-
         [SwaggerSchema(Nullable = false)]
         public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
     }
@@ -113,9 +86,6 @@ public class EditResourceClaimActions : IFeature
 
         [SwaggerExclude]
         public int ResourceClaimId { get; set; }
-
-        [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
-        public int? ParentResourceClaimId { get; set; }
 
         [SwaggerSchema(Nullable = false)]
         public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();

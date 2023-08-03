@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Data.Entity;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 
@@ -245,9 +246,12 @@ public interface IOverrideDefaultAuthorizationStrategyModel
 
 public class OverrideAuthStategyOnClaimSetModel 
 {
+    [SwaggerExclude]
     public int ClaimSetId { get; set; }
+    [SwaggerExclude]
     public int ResourceClaimId { get; set; }
     public string? ActionName { get; set; }
+    [SwaggerExclude]
     public int AuthStrategyId { get; set; }
 }
 

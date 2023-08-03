@@ -44,20 +44,7 @@ public class ResourceClaimValidator
         var propertyName = "ResourceClaims";
         var resources = dbResourceClaims[editResourceClaimOnClaimSetRequest.ResourceClaimId].ToList();
         ValidateIfExist(context, propertyName, resources);
-        ValidateIfItIsChild(context, editResourceClaimOnClaimSetRequest.ParentResourceClaimId, propertyName, resources);
         ValidateCRUD(editResourceClaimOnClaimSetRequest.ResourceClaimActions, context, propertyName);
-    }
-
-    private static void ValidateIfItIsChild<T>(ValidationContext<T> context, int? parentResourceClaimId, string propertyName, List<ResourceClaim> resources)
-    {
-        var dbResourceClaim = resources.FirstOrDefault();
-        if (dbResourceClaim != null && dbResourceClaim!.IsParent == false)
-        {
-            if (parentResourceClaimId.GetValueOrDefault() != dbResourceClaim.ParentId)
-            {
-                context.AddFailure(propertyName, $"The parentResourceClaimId is not valid for the child {dbResourceClaim.Id}. Set the proper value {dbResourceClaim.ParentId}");
-            }
-        }
     }
 
     private static void ValidateIfExist<T>(ValidationContext<T> context, string propertyName, List<ResourceClaim> resources)

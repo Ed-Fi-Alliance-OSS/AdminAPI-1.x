@@ -103,6 +103,5 @@ public interface IResourceClaimOnClaimSetRequest
 {
     int ClaimSetId { get; }
     int ResourceClaimId { get; }
-    public int? ParentResourceClaimId { get; }
     public ResourceClaimActionModel ResourceClaimActions { get; }
 }

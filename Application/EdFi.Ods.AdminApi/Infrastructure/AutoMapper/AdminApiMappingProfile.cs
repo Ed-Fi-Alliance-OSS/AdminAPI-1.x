@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Features.Actions;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
@@ -139,5 +140,10 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Version, opt => opt.MapFrom(src => src.Version))
             .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
             .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
+
+        CreateMap<EdFi.Security.DataAccess.Models.Action, ActionModel>()
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ActionId))
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ActionName))
+            .ForMember(dst => dst.Uri, opt => opt.MapFrom(src => src.ActionUri));
     }
 }

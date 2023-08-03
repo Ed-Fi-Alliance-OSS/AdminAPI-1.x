@@ -61,10 +61,9 @@ public class OverrideDefaultAuthorizationStrategyCommand
         var claimSetResourceClaimsToEdit = GetClaimSetResourceClaimsToEdit(model.ClaimSetId, model.ResourceClaimId);
 
         var claimSetResourceClaimAction = claimSetResourceClaimsToEdit.FirstOrDefault(rc => rc.ResourceClaimId == model.ResourceClaimId);
-
-        foreach (var authorizationStrategyOverrides in claimSetResourceClaimAction!.AuthorizationStrategyOverrides)
+        if (claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Any())
         {
-            claimSetResourceClaimAction.AuthorizationStrategyOverrides.Remove(authorizationStrategyOverrides);
+            _context.ClaimSetResourceClaimActionAuthorizationStrategyOverrides.RemoveRange(claimSetResourceClaimAction.AuthorizationStrategyOverrides.ToList());
         }
         _context.SaveChanges();
     }

@@ -45,7 +45,6 @@ public class EditResourceClaimActions : IFeature
     internal async Task<IResult> HandleEditResourceClaims(ResourceClaimClaimSetValidator validator,
         EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
-        IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IMapper mapper,
         EditResourceClaimOnClaimSetRequest request, int claimsetid, int resourceclaimid)
@@ -55,12 +54,8 @@ public class EditResourceClaimActions : IFeature
         await validator.GuardAsync(request);
 
         await ExecuteHandle(editResourcesOnClaimSetCommand, updateResourcesOnClaimSetCommand, getResourcesByClaimSetIdQuery, mapper, request);
-        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
-        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
-        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid)
-            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
-
-        return Results.Ok(model);
+       
+        return Results.Ok();
     }
 
     private static async Task ExecuteHandle(EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand, UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand, IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IMapper mapper, IResourceClaimOnClaimSetRequest request)

@@ -17,24 +17,24 @@ public class ReadResourceClaims : IFeature
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/resourceclaims", GetResourceClaims)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<List<SimpleResourceClaimModel>>(200))
+            .WithRouteOptions(b => b.WithResponse<List<ResourceClaimModel>>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/resourceclaims/{id}", GetResourceClaim)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<SimpleResourceClaimModel>(200))
+            .WithRouteOptions(b => b.WithResponse<ResourceClaimModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/resourceclaims/{id}/children", GetResourceClaimChildren)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<SimpleResourceClaimModel>(200))
+            .WithRouteOptions(b => b.WithResponse<ResourceClaimModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
     internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper)
     {
         var resourceClaims = getResourceClaimsQuery.Execute().ToList();
-        var model = mapper.Map<List<SimpleResourceClaimModel>>(resourceClaims);
+        var model = mapper.Map<List<ResourceClaimModel>>(resourceClaims);
         
         return Task.FromResult(Results.Ok(model));
     }
@@ -46,7 +46,7 @@ public class ReadResourceClaims : IFeature
         {
             throw new NotFoundException<int>("resourceclaim", id);
         }
-        var model = mapper.Map<SimpleResourceClaimModel>(resourceClaim);
+        var model = mapper.Map<ResourceClaimModel>(resourceClaim);
         return Task.FromResult(Results.Ok(model));
     }
 
@@ -57,7 +57,7 @@ public class ReadResourceClaims : IFeature
         {
             throw new NotFoundException<int>("resourceclaim", id);
         }
-        var model = mapper.Map<SimpleResourceClaimModel>(resourceClaim);
+        var model = mapper.Map<ResourceClaimModel>(resourceClaim);
         return Task.FromResult(Results.Ok(model.Children));
     }
 }

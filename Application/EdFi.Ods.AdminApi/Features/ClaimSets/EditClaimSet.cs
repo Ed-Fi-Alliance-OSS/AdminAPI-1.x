@@ -66,7 +66,7 @@ public class EditClaimSet : IFeature
 
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
-            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
+            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
         return Results.Ok(model);
     }
@@ -81,7 +81,7 @@ public class EditClaimSet : IFeature
         public string? Name { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+        public List<ClaimSetResourceClaimModel>? ResourceClaims { get; set; }
     }
 
     public class Validator : AbstractValidator<EditClaimSetRequest>

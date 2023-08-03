@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 
@@ -39,8 +40,3 @@ public class DeleteResouceClaimOnClaimSetCommand : IDeleteResouceClaimOnClaimSet
     }
 }
 
-public interface IClaimSetResourceClaimModel
-{
-    int ClaimSetId { get; }
-    int ResourceClaimId { get; }
-}

@@ -5,6 +5,7 @@
 
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using FluentValidation;
+using static EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditResourceClaimActions;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -17,7 +18,7 @@ public class ResourceClaimValidator
     }
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-        List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+        List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, List<ClaimSetResourceClaimModel> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
@@ -67,7 +68,7 @@ public class ResourceClaimValidator
         }
     }
 
-    private static void ValidateDuplicateResourceClaim<T>(ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims, ValidationContext<T> context, string propertyName)
+    private static void ValidateDuplicateResourceClaim<T>(ClaimSetResourceClaimModel resourceClaim, List<ClaimSetResourceClaimModel> existingResourceClaims, ValidationContext<T> context, string propertyName)
     {
         if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1)
         {
@@ -79,7 +80,7 @@ public class ResourceClaimValidator
         }
     }
 
-    private void ValidateChildren<T>(Lookup<string, ResourceClaim> dbResourceClaims, List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, ValidationContext<T> context, string? claimSetName, string propertyName, List<ResourceClaim> resources)
+    private void ValidateChildren<T>(Lookup<string, ResourceClaim> dbResourceClaims, List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string? claimSetName, string propertyName, List<ResourceClaim> resources)
     {
         if (resourceClaim.Children.Any())
         {
@@ -108,7 +109,7 @@ public class ResourceClaimValidator
         }
     }
 
-    private static void ValidateAuthStrategiesOverride<T>(List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    private static void ValidateAuthStrategiesOverride<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
         if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
         {
@@ -123,7 +124,7 @@ public class ResourceClaimValidator
         }
     }
 
-    private static void ValidateAuthStrategies<T>(List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    private static void ValidateAuthStrategies<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
         if (resourceClaim.DefaultAuthStrategiesForCRUD.Any())
         {
@@ -138,7 +139,7 @@ public class ResourceClaimValidator
         }
     }
 
-    private static void ValidateCRUD<T>(ResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    private static void ValidateCRUD<T>(ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
         if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
         {

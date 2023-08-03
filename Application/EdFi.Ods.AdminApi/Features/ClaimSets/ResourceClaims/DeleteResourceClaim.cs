@@ -18,8 +18,7 @@ public class DeleteResourceClaim : IFeature
        .BuildForVersions(AdminApiVersions.V2);
     }
 
-
-    public async Task<IResult> Handle(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
+    internal async Task<IResult> Handle(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IAuthStrategyResolver strategyResolver,
         IDeleteResouceClaimOnClaimSetCommand deleteResouceClaimOnClaimSetCommand,

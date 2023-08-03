@@ -6,6 +6,11 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims;
 
@@ -23,7 +28,7 @@ public class EditResourceClaimActions : IFeature
        .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> HandleAddResourceClaims(ResourceClaimClaimSetValidator validator,
+    internal async Task<IResult> HandleAddResourceClaims(ResourceClaimClaimSetValidator validator,
         EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
@@ -37,7 +42,7 @@ public class EditResourceClaimActions : IFeature
         return Results.Ok();
     }
 
-    public async Task<IResult> HandleEditResourceClaims(ResourceClaimClaimSetValidator validator,
+    internal async Task<IResult> HandleEditResourceClaims(ResourceClaimClaimSetValidator validator,
         EditResourceOnClaimSetCommand editResourcesOnClaimSetCommand,
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
@@ -53,7 +58,7 @@ public class EditResourceClaimActions : IFeature
         var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid)
-            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
+            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
         return Results.Ok(model);
     }
@@ -87,4 +92,90 @@ public class EditResourceClaimActions : IFeature
 
         editResourcesOnClaimSetCommand.Execute(editResourceOnClaimSetModel);
     }
+
+
+    [SwaggerSchema(Title = "AddResourceClaimActionsOnClaimSetRequest")]
+    public class AddResourceClaimOnClaimSetRequest : IResourceClaimOnClaimSetRequest
+    {
+        [SwaggerExclude]
+        public int ClaimSetId { get; set; }
+
+        [SwaggerSchema(Description = "ResourceClaim id", Nullable = false)]
+        public int ResourceClaimId { get; set; }
+
+        [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
+        public int? ParentResourceClaimId { get; set; }
+
+        [SwaggerSchema(Nullable = false)]
+        public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
+    }
+
+    [SwaggerSchema(Title = "EditResourceClaimActionsOnClaimSetRequest")]
+    public class EditResourceClaimOnClaimSetRequest : IResourceClaimOnClaimSetRequest
+    {
+        [SwaggerExclude]
+        public int ClaimSetId { get; set; }
+
+        [SwaggerExclude]
+        public int ResourceClaimId { get; set; }
+
+        [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
+        public int? ParentResourceClaimId { get; set; }
+
+        [SwaggerSchema(Nullable = false)]
+        public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
+    }
+
+    public class ResourceClaimClaimSetValidator : AbstractValidator<IResourceClaimOnClaimSetRequest>
+    {
+        private readonly IGetClaimSetByIdQuery _getClaimSetByIdQuery;
+        private ClaimSet? _claimSet;
+
+        public ResourceClaimClaimSetValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
+            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery)
+        {
+            _getClaimSetByIdQuery = getClaimSetByIdQuery;
+
+            var resourceClaims = getResourceClaimsAsFlatListQuery.Execute();
+            var resourceClaimsById = (Lookup<int, ResourceClaim>)resourceClaims
+                .ToLookup(rc => rc.Id);
+
+            RuleFor(m => m.ClaimSetId).NotEmpty();
+
+            RuleFor(m => m.ClaimSetId)
+                .Must(BeAnExistingClaimSet)
+                .WithMessage(FeatureConstants.ClaimSetNotFound);
+
+            RuleFor(m => m).Custom((resourceClaimOnClaimSetRequest, context) =>
+            {
+                var resourceClaimValidator = new ResourceClaimValidator();
+
+                if (resourceClaimOnClaimSetRequest.ResourceClaimActions != null)
+                {
+                    resourceClaimValidator.Validate(resourceClaimsById, resourceClaimOnClaimSetRequest, context, _claimSet!.Name);
+                }
+                else
+                {
+                    context.AddFailure(FeatureConstants.ResourceClaimNotFound);
+                }
+            });
+        }
+
+        private bool BeAnExistingClaimSet(int id)
+        {
+            try
+            {
+                _claimSet = _getClaimSetByIdQuery.Execute(id);
+                return true;
+            }
+            catch (AdminApiException)
+            {
+                throw new NotFoundException<int>("claimSet", id);
+            }
+        }
+    }
+
+
 }
+
+

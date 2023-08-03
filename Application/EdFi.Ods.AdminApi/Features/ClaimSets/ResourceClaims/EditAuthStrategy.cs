@@ -6,6 +6,10 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims;
 
@@ -22,7 +26,7 @@ public class EditAuthStrategy : IFeature
         .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> HandleOverrideAuthStrategies(OverrideAuthStategyOnClaimSetValidator validator,
+    internal async Task<IResult> HandleOverrideAuthStrategies(OverrideAuthStategyOnClaimSetValidator validator,
       OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand, IMapper mapper,
       OverrideAuthStategyOnClaimSetRequest request, int claimsetid, int resourceclaimid)
     {
@@ -35,7 +39,7 @@ public class EditAuthStrategy : IFeature
         return Results.Ok();
     }
 
-    public async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
+    internal async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IAuthStrategyResolver strategyResolver,
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IMapper mapper, int claimsetid, int resourceclaimid)
@@ -65,5 +69,50 @@ public class EditAuthStrategy : IFeature
         }
 
         return await Task.FromResult(Results.Ok());
+    }
+
+
+    public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<OverrideAuthStategyOnClaimSetRequest>
+    {
+        public OverrideAuthStategyOnClaimSetValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery, IGetAllActionsQuery getAllActionsQuery)
+        {
+            RuleFor(m => m.ClaimSetId).NotEqual(0);
+            RuleFor(m => m.ResourceClaimId).NotEqual(0);
+            RuleFor(m => m.ActionName).NotEmpty();
+            RuleFor(m => m.AuthStrategyName).NotEmpty();
+
+            RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
+            {
+                var resoureClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
+                if (resoureClaim == null)
+                {
+                    context.AddFailure("ResourceClaim", "Resource claim doesn't exist for the Claim set provided");
+                }
+
+                var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()
+                .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName!.ToLower());
+
+                if (authStrategyName == null)
+                {
+                    context.AddFailure("AuthStrategyName", "AuthStrategyName doesn't exist.");
+                }
+
+                var actionName = getAllActionsQuery.Execute()
+                .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
+
+                if (actionName == null)
+                {
+                    context.AddFailure("ActionName", "ActionName doesn't exist.");
+                }
+            });
+        }
+    }
+
+
+    [SwaggerSchema(Title = "OverrideAuthStategyOnClaimSetRequest")]
+    public class OverrideAuthStategyOnClaimSetRequest : OverrideAuthStategyOnClaimSetModel
+    {
+        [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
+        public string? AuthStrategyName { get; set; }
     }
 }

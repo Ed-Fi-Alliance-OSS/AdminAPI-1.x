@@ -23,11 +23,11 @@ public class ClaimSetModel
 [SwaggerSchema(Title = "ClaimSetWithResources")]
 public class ClaimSetDetailsModel : ClaimSetModel
 {
-    public List<ResourceClaimModel> ResourceClaims { get; set; } = new();
+    public List<ClaimSetResourceClaimModel> ResourceClaims { get; set; } = new();
 }
 
-[SwaggerSchema(Title = "ResourceClaim")]
-public class ResourceClaimModel
+[SwaggerSchema(Title = "ClaimSetResourceClaim")]
+public class ClaimSetResourceClaimModel
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -39,10 +39,10 @@ public class ResourceClaimModel
     public AuthorizationStrategyClaimSetModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public List<ResourceClaimModel> Children { get; set; }
-    public ResourceClaimModel()
+    public List<ClaimSetResourceClaimModel> Children { get; set; }
+    public ClaimSetResourceClaimModel()
     {
-        Children = new List<ResourceClaimModel>();
+        Children = new List<ClaimSetResourceClaimModel>();
         DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategyClaimSetModel>();
         AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategyClaimSetModel>();
     }
@@ -57,8 +57,8 @@ public class ResourceClaimActionModel
     public bool Delete { get; set; }
 }
 
-[SwaggerSchema(Title = "SimpleResourceClaimModel")]
-public class SimpleResourceClaimModel
+[SwaggerSchema(Title = "ResourceClaimModel")]
+public class ResourceClaimModel
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -66,10 +66,10 @@ public class SimpleResourceClaimModel
     public string? ParentName { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of SimpleResourceClaimModel")]
-    public List<SimpleResourceClaimModel> Children { get; set; }
-    public SimpleResourceClaimModel()
+    public List<ResourceClaimModel> Children { get; set; }
+    public ResourceClaimModel()
     {
-        Children = new List<SimpleResourceClaimModel>();
+        Children = new List<ResourceClaimModel>();
     }
 }
 
@@ -100,31 +100,6 @@ public class DeleteClaimSetModel : IDeleteClaimSetModel
     public int Id { get; set; }
 }
 
-#region Requests
-[SwaggerSchema(Title = "AddClaimSetRequest")]
-public class AddClaimSetRequest
-{
-    [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
-    public string? Name { get; set; }
-
-    [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-    public List<ResourceClaimModel>? ResourceClaims { get; set; }
-}
-
-[SwaggerSchema(Title = "EditClaimSetRequest")]
-public class EditClaimSetRequest
-{
-    [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
-    public int Id { get; set; }
-
-    [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
-    public string? Name { get; set; }
-
-    [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-    public List<ResourceClaimModel>? ResourceClaims { get; set; }
-}
-
-
 public interface IResourceClaimOnClaimSetRequest
 {
     int ClaimSetId { get; }
@@ -133,47 +108,10 @@ public interface IResourceClaimOnClaimSetRequest
     public ResourceClaimActionModel ResourceClaimActions { get; }
 }
 
-[SwaggerSchema(Title = "AddResourceClaimActionsOnClaimSetRequest")]
-public class AddResourceClaimOnClaimSetRequest : IResourceClaimOnClaimSetRequest
+public interface IClaimSetResourceClaimModel
 {
-    [SwaggerExclude]
-    public int ClaimSetId { get; set; }
-
-    [SwaggerSchema(Description = "ResourceClaim id", Nullable = true)]
-    public int ResourceClaimId { get; set; }
-
-    [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
-    public int? ParentResourceClaimId { get; set; }
-
-    [SwaggerSchema(Nullable = false)]
-    public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
-}
-
-[SwaggerSchema(Title = "EditResourceClaimActionsOnClaimSetRequest")]
-public class EditResourceClaimOnClaimSetRequest : IResourceClaimOnClaimSetRequest
-{
-    [SwaggerExclude]
-    public int ClaimSetId { get; set; }
-
-    [SwaggerExclude]
-    public int ResourceClaimId { get; set; }
-
-    [SwaggerSchema(Description = "Parent ResourceClaim id", Nullable = true)]
-    public int? ParentResourceClaimId { get; set; }
-
-    [SwaggerSchema(Nullable = false)]
-    public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
-}
-
-
-[SwaggerSchema(Title = "OverrideAuthStategyOnClaimSetRequest")]
-public class OverrideAuthStategyOnClaimSetRequest : FilterResourceClaimOnClaimSet
-{
-    [SwaggerSchema(Description = "Action name", Nullable = false)]
-    public string? ActionName { get; set; }
-
-    [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
-    public string? AuthStrategyName { get; set; }
+    int ClaimSetId { get; }
+    int ResourceClaimId { get; }
 }
 
 public class FilterResourceClaimOnClaimSet : IClaimSetResourceClaimModel
@@ -184,5 +122,3 @@ public class FilterResourceClaimOnClaimSet : IClaimSetResourceClaimModel
     [SwaggerExclude]
     public int ResourceClaimId { get; set; }
 }
-
-#endregion

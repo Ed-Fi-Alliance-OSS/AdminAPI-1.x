@@ -6,9 +6,9 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using FluentValidation;
-using System.Xml;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Profiles;
 
@@ -23,47 +23,40 @@ public class EditProfile : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    [XmlRequestPayload]
-    public async Task<IResult> Handle(Validator validator, IEditProfileCommand editProfileCommand, IMapper mapper, HttpRequest xmlRequest, int id)   
-    {       
-        var request = new EditProfileRequest();
-        var reader = new StreamReader(xmlRequest.Body);
-        request.Definition = reader.ReadToEndAsync().Result;
+    public async Task<IResult> Handle(Validator validator, IEditProfileCommand editProfileCommand, IMapper mapper, EditProfileRequest request, int id)   
+    {
         await validator.GuardAsync(request);
+        request.Id = id;        
+        editProfileCommand.Execute(request);
+        return Results.Ok();       
+    }
 
-        var doc = new XmlDocument();
-        doc.LoadXml(request.Definition);
-        var root = doc.DocumentElement;
-        var profileName = root?.Attributes["name"]?.Value;
+    [SwaggerSchema(Title = "EditProfileRequest")]
+    public class EditProfileRequest : IEditProfileModel
+    {
+        [SwaggerSchema(Description = FeatureConstants.ProfileName, Nullable = false)]
+        public string? Name { get; set; }
 
-        if (!string.IsNullOrEmpty(profileName))
-        {
-            request.Id = id;
-            request.Name = profileName;
-            editProfileCommand.Execute(request);
-            return Results.Ok();
-        }
-        return Results.BadRequest("Profile name is empty on the provided xml.");
-    }  
-
-    public class EditProfileRequest : IEditProfile
-    {       
-        public string? Name { get; set; }       
+        [SwaggerSchema(Description = FeatureConstants.ProfileDefinition, Nullable = false)]
         public string? Definition { get; set; }
+
+        [SwaggerExclude]
+        [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription, Nullable = false)]
         public int Id { get; set; }
     }
 
     public class Validator : AbstractValidator<EditProfileRequest>
     {
         public Validator()
-        {         
+        {
+            RuleFor(m => m.Name).NotEmpty();
             RuleFor(m => m.Definition).NotEmpty();       
             RuleFor(m => m).Custom((profile, context) =>
             {
                 if (!string.IsNullOrEmpty(profile.Definition))
                 {
                     var validator = new ProfileValidator();
-                    validator.Validate(profile.Definition, context);
+                    validator.Validate(profile.Name!, profile.Definition, context);
                 }
             });
         }

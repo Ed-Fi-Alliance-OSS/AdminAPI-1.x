@@ -12,59 +12,50 @@ using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Profiles;
 
 public class AddProfile : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
-    {
+    {  
         AdminApiEndpointBuilder
-            .MapPost(endpoints, "/profiles", Handle)          
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponseCode(201))           
-            .BuildForVersions(AdminApiVersions.V2);
+           .MapPost(endpoints, "/profiles/json", HandleJson)
+           .WithDefaultDescription()
+           .WithRouteOptions(b => b.WithResponseCode(201))
+           .BuildForVersions(AdminApiVersions.V2);
+    }
+  
+    public async Task<IResult> HandleJson(Validator validator, IAddProfileCommand addProfileCommand, IMapper mapper, AddProfileRequest request)
+    {
+        await validator.GuardAsync(request);
+        var addedProfile = addProfileCommand.Execute(request);
+        return Results.Created($"/profiles/{addedProfile.ProfileId}", null);    
     }
 
-    [XmlRequestPayload]
-    public async Task<IResult> Handle(Validator validator, IAddProfileCommand addProfileCommand, IMapper mapper, HttpRequest xmlRequest)   
-    {       
-        var request = new AddProfileRequest();
-        var reader = new StreamReader(xmlRequest.Body);
-        request.Definition = reader.ReadToEndAsync().Result;
-        await validator.GuardAsync(request);
-
-        var doc = new XmlDocument();
-        doc.LoadXml(request.Definition);
-        var root = doc.DocumentElement;
-        var profileName = root?.Attributes["name"]?.Value;
-
-        if (!string.IsNullOrEmpty(profileName))
-        {
-            request.Name = profileName;
-            var addedProfile = addProfileCommand.Execute(request);
-            return Results.Created($"/profiles/{addedProfile.ProfileId}", null);
-        }
-        return Results.BadRequest("Profile name is empty on the provided xml.");
-    }  
-
+    [SwaggerSchema(Title = "AddProfileRequest")]
     public class AddProfileRequest : IAddProfileModel
-    {       
-        public string? Name { get; set; }       
+    {
+        [SwaggerSchema(Description = FeatureConstants.ProfileName, Nullable = false)]
+        public string? Name { get; set; }
+
+        [SwaggerSchema(Description = FeatureConstants.ProfileDefinition, Nullable = false)]
         public string? Definition { get; set; }
     }
 
     public class Validator : AbstractValidator<AddProfileRequest>
     {
         public Validator()
-        {         
-            RuleFor(m => m.Definition).NotEmpty();       
+        {
+            RuleFor(m => m.Name).NotEmpty();
+            RuleFor(m => m.Definition).NotEmpty();
             RuleFor(m => m).Custom((profile, context) =>
             {
                 if (!string.IsNullOrEmpty(profile.Definition))
                 {
                     var validator = new ProfileValidator();
-                    validator.Validate(profile.Definition, context);
+                    validator.Validate(profile.Name!, profile.Definition, context);
                 }
             });
         }

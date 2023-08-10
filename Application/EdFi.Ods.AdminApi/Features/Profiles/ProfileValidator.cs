@@ -7,7 +7,7 @@ namespace EdFi.Ods.AdminApi.Features.Profiles
 {
     public class ProfileValidator
     {
-        public void Validate<T>(string definition, ValidationContext<T> context)
+        public void Validate<T>(string name, string definition, ValidationContext<T> context)
         {
             var schema = new XmlSchemaSet();
             var path = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!).LocalPath;
@@ -27,6 +27,16 @@ namespace EdFi.Ods.AdminApi.Features.Profiles
                 document.LoadXml(definition);
                 document.Schemas.Add(schema);
                 document.Validate(EventHandler);
+
+                var profile = document.DocumentElement;
+                if (profile != null)
+                {
+                    var profileName = profile.GetAttribute("name");
+                    if(!profileName.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        context.AddFailure(propertyName, $"Profile name attribute value should match with {name}." );
+                    }
+                }          
             }
             catch (Exception ex)
             {

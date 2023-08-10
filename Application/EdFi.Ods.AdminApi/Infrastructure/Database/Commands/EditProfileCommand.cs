@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
 public interface IEditProfileCommand
 {
-    Profile Execute(IEditProfile changedProfileData);
+    Profile Execute(IEditProfileModel changedProfileData);
 }
 
 public class EditProfileCommand : IEditProfileCommand
@@ -22,7 +22,7 @@ public class EditProfileCommand : IEditProfileCommand
         _context = context;
     }
 
-    public Profile Execute(IEditProfile changedProfileData)
+    public Profile Execute(IEditProfileModel changedProfileData)
     {
         var profile = _context.Profiles.SingleOrDefault(v => v.ProfileId == changedProfileData.Id) ??
             throw new NotFoundException<int>("profile", changedProfileData.Id);
@@ -35,7 +35,7 @@ public class EditProfileCommand : IEditProfileCommand
     }
 }
 
-public interface IEditProfile
+public interface IEditProfileModel
 {
     public int Id { get; set; }
     string? Name { get; }

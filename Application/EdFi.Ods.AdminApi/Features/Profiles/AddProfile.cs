@@ -8,13 +8,12 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using FluentValidation;
 using System.Xml;
-
-namespace EdFi.Ods.AdminApi.Features.Profiles;
-
 using EdFi.Ods.AdminApi.Features.Vendors;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+namespace EdFi.Ods.AdminApi.Features.Profiles;
 
 public class AddProfile : IFeature
 {
@@ -23,11 +22,11 @@ public class AddProfile : IFeature
         AdminApiEndpointBuilder
             .MapPost(endpoints, "/profiles", Handle)          
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ProfileModel>(201))            
+            .WithRouteOptions(b => b.WithResponseCode(201))           
             .BuildForVersions(AdminApiVersions.V2);
     }
-    
-    [Consumes("application/xml")]
+
+    [XmlRequestPayload]
     public async Task<IResult> Handle(Validator validator, IAddProfileCommand addProfileCommand, IMapper mapper, HttpRequest xmlRequest)   
     {       
         var request = new AddProfileRequest();
@@ -44,8 +43,7 @@ public class AddProfile : IFeature
         {
             request.Name = profileName;
             var addedProfile = addProfileCommand.Execute(request);
-            var model = mapper.Map<ProfileModel>(addedProfile);
-            return Results.Created($"/profiles/{model.Id}", model);
+            return Results.Created($"/profiles/{addedProfile.ProfileId}", null);
         }
         return Results.BadRequest("Profile name is empty on the provided xml.");
     }  

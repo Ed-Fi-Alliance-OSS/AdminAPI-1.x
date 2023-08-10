@@ -20,7 +20,7 @@ public class ReadProfile : IFeature
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/profiles/{id}", GetProfile)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ProfileModel>(200))
+            .WithRouteOptions(b => b.WithResponse<ProfileDetailsModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -37,7 +37,7 @@ public class ReadProfile : IFeature
         {
             throw new NotFoundException<int>("profile", id);
         }
-        var model = mapper.Map<ProfileModel>(profile);
+        var model = mapper.Map<ProfileDetailsModel>(profile);
         return Task.FromResult(Results.Ok(model));
     }
 }

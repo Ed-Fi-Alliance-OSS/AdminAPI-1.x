@@ -105,7 +105,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         var editModel = new TestEditApplicationModel
         {
-            ApplicationId = _application.ApplicationId,
+            Id = _application.ApplicationId,
             ApplicationName = _application.ApplicationName,
             ClaimSetName = _application.ClaimSetName,
             EducationOrganizationIds = new List<int> { 12345, 67890 },
@@ -141,7 +141,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         var editModel = new TestEditApplicationModel
         {
-            ApplicationId = _application.ApplicationId,
+            Id = _application.ApplicationId,
             ApplicationName = "New Application Name",
             ClaimSetName = "DifferentFakeClaimSet",
             EducationOrganizationIds = new List<int> { 23456, 78901 },
@@ -173,7 +173,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
     private class TestEditApplicationModel : IEditApplicationModel
     {
-        public int ApplicationId { get; set; }
+        public int Id { get; set; }
         public string ApplicationName { get; set; }
         public int VendorId { get; set; }
         public string ClaimSetName { get; set; }

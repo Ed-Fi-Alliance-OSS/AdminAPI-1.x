@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Features.Vendors;
 [SwaggerSchema(Title = "Vendor")]
 public class VendorModel
 {
-    public int? VendorId { get; set; }
+    public int? Id { get; set; }
     public string? Company { get; set; }
     public string? NamespacePrefixes { get; set; }
     public string? ContactName { get; set; }

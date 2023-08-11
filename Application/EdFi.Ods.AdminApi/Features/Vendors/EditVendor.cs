@@ -25,7 +25,7 @@ public class EditVendor : IFeature
     public async Task<IResult> Handle(EditVendorCommand editVendorCommand, IMapper mapper,
                        Validator validator, Request request, int id)
     {
-        request.VendorId = id;
+        request.Id = id;
         await validator.GuardAsync(request);
         var updatedVendor = editVendorCommand.Execute(request);
         var model = mapper.Map<VendorModel>(updatedVendor);
@@ -35,8 +35,8 @@ public class EditVendor : IFeature
     [SwaggerSchema(Title = "EditVendorRequest")]
     public class Request : IEditVendor
     {
-        [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
-        public int VendorId { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.VendorIdDescription, Nullable = false)]
+        public int Id { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]
         public string? Company { get; set; }
@@ -55,7 +55,7 @@ public class EditVendor : IFeature
     {
         public Validator()
         {
-            RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage("Please provide valid Vendor Id.");
+            RuleFor(m => m.Id).Must(id => id > 0).WithMessage("Please provide valid Vendor Id.");
             RuleFor(m => m.Company).NotEmpty();
             RuleFor(m => m.Company)
                 .Must(name => !VendorExtensions.IsSystemReservedVendorName(name))

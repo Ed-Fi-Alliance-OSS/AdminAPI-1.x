@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Features.Applications;
 [SwaggerSchema(Title = "Application")]
 public class ApplicationModel
 {
-    public int ApplicationId { get; set; }
+    public int Id { get; set; }
     public string? ApplicationName { get; set; }
     public string? ClaimSetName { get; set; }
     public string? ProfileName { get; set; }

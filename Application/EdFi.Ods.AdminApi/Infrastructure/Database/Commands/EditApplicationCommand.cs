@@ -33,7 +33,7 @@ public class EditApplicationCommand : IEditApplicationCommand
             .Include(a => a.ApiClients)
             .Include(a => a.Profiles)
             .Include(a => a.OdsInstance)
-            .SingleOrDefault(a => a.ApplicationId == model.ApplicationId) ?? throw new NotFoundException<int>("application", model.ApplicationId);
+            .SingleOrDefault(a => a.ApplicationId == model.Id) ?? throw new NotFoundException<int>("application", model.Id);
 
         if (application.Vendor.IsSystemReservedVendor())
         {
@@ -75,7 +75,7 @@ public class EditApplicationCommand : IEditApplicationCommand
 
 public interface IEditApplicationModel
 {
-    int ApplicationId { get; }
+    int Id { get; }
     string? ApplicationName { get; }
     int VendorId { get; }
     string? ClaimSetName { get; }

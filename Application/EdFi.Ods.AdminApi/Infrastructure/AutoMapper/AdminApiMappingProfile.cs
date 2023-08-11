@@ -28,6 +28,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
         CreateMap<Vendor, VendorModel>()
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.VendorId))
             .ForMember(dst => dst.Company, opt => opt.MapFrom(src => src.VendorName))
             .ForMember(dst => dst.ContactName, opt => opt.MapFrom(src => src.ContactName()))
             .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))

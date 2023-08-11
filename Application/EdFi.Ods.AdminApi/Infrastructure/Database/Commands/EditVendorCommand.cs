@@ -22,7 +22,7 @@ public class EditVendorCommand
 
     public Vendor Execute(IEditVendor changedVendorData)
     {
-        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.VendorId) ?? throw new NotFoundException<int>("vendor", changedVendorData.VendorId);
+        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == changedVendorData.Id) ?? throw new NotFoundException<int>("vendor", changedVendorData.Id);
 
         if (vendor.IsSystemReservedVendor())
         {
@@ -76,7 +76,7 @@ public class EditVendorCommand
 
 public interface IEditVendor
 {
-    int VendorId { get; set; }
+    int Id { get; set; }
     string? Company { get; set; }
     string? NamespacePrefixes { get; set; }
     string? ContactName { get; set; }

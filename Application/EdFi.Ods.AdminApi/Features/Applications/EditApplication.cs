@@ -28,7 +28,7 @@ public class EditApplication : IFeature
     public async Task<IResult> Handle(IEditApplicationCommand editApplicationCommand, IMapper mapper,
         Validator validator, IUsersContext db, Request request, int id)
     {
-        request.ApplicationId = id;
+        request.Id = id;
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);
 
@@ -53,12 +53,12 @@ public class EditApplication : IFeature
     public class Request : IEditApplicationModel
     {
         [SwaggerSchema(Description = "Application id", Nullable = false)]
-        public int ApplicationId { get; set; }
+        public int Id { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
         public string? ApplicationName { get; set; }
 
-        [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
+        [SwaggerSchema(Description = FeatureConstants.VendorIdDescription, Nullable = false)]
         public int VendorId { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
@@ -79,7 +79,7 @@ public class EditApplication : IFeature
     {
         public Validator()
         {
-            RuleFor(m => m.ApplicationId).NotEmpty();
+            RuleFor(m => m.Id).NotEmpty();
             RuleFor(m => m.ApplicationName).NotEmpty();
             RuleFor(m => m.ApplicationName)
            .Must(BeWithinApplicationNameMaxLength)

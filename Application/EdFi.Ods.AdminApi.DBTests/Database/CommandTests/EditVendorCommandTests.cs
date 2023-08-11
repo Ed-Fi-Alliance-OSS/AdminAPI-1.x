@@ -53,7 +53,7 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
     public void ShouldEditVendorWithContact()
     {
         var newVendorData = new Mock<IEditVendor>();
-        newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+        newVendorData.Setup(v => v.Id).Returns(_vendorId);
         newVendorData.Setup(v => v.Company).Returns("new vendor name");
         newVendorData.Setup(v => v.NamespacePrefixes).Returns("new namespace prefix");
         newVendorData.Setup(v => v.ContactName).Returns("new contact name");
@@ -79,7 +79,7 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
     public void ShouldEditVendorWithNoNameSpacePrefix()
     {
         var newVendorData = new Mock<IEditVendor>();
-        newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+        newVendorData.Setup(v => v.Id).Returns(_vendorId);
         newVendorData.Setup(v => v.Company).Returns("new vendor name");
         newVendorData.Setup(v => v.NamespacePrefixes).Returns(string.Empty);
         newVendorData.Setup(v => v.ContactName).Returns("new contact name");
@@ -105,7 +105,7 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
     public void ShouldEditVendorByAddingNewNameSpacePrefix()
     {
         var newVendorData = new Mock<IEditVendor>();
-        newVendorData.Setup(v => v.VendorId).Returns(_vendorWithNoNameSpaceId);
+        newVendorData.Setup(v => v.Id).Returns(_vendorWithNoNameSpaceId);
         newVendorData.Setup(v => v.Company).Returns("new vendor name");
         newVendorData.Setup(v => v.NamespacePrefixes).Returns("new namespace prefix");
         newVendorData.Setup(v => v.ContactName).Returns("new contact name");
@@ -143,7 +143,7 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
             "http://www.test2.com/",
             "http://www.test3.com/"
         };
-        newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+        newVendorData.Setup(v => v.Id).Returns(_vendorId);
         newVendorData.Setup(v => v.Company).Returns("new vendor name");
         newVendorData.Setup(v => v.NamespacePrefixes).Returns(newNamespacePrefixes.ToDelimiterSeparated());
         newVendorData.Setup(v => v.ContactName).Returns("new contact name");
@@ -178,7 +178,7 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
             originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
         });
 
-        newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+        newVendorData.Setup(v => v.Id).Returns(_vendorId);
         newVendorData.Setup(v => v.Company).Returns("new vendor name");
         newVendorData.Setup(v => v.NamespacePrefixes).Returns(inputNamespacePrefixes);
         newVendorData.Setup(v => v.ContactName).Returns("new contact name");
@@ -211,7 +211,7 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
             originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
         });
 
-        newVendorData.Setup(v => v.VendorId).Returns(_vendorId);
+        newVendorData.Setup(v => v.Id).Returns(_vendorId);
         newVendorData.Setup(v => v.Company).Returns("new vendor name");
         newVendorData.Setup(v => v.NamespacePrefixes).Returns("");
         newVendorData.Setup(v => v.ContactName).Returns("new contact name");

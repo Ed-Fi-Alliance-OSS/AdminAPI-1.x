@@ -34,7 +34,8 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         _odsInstance = new OdsInstance
         {
             Name = "Test Instance",
-            InstanceType = "Ods"
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
 
         _vendor = new Vendor

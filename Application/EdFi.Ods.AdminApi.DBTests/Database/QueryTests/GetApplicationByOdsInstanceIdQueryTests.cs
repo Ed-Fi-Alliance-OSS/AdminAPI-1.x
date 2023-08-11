@@ -24,7 +24,8 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
         {
             OdsInstanceId = 1,
             Name = "Test Instance",
-            InstanceType = "Ods"
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
 
         var application = new Application
@@ -55,7 +56,8 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
         {
             OdsInstanceId = 1,
             Name = "Test Instance",
-            InstanceType = "Ods"
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
         var application = new Application
         {
@@ -90,7 +92,8 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
         {
             OdsInstanceId = 1,
             Name = "Test Instance",
-            InstanceType = "Ods"
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
         var application = new Application
         {

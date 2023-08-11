@@ -136,10 +136,7 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<OdsInstance, OdsInstanceModel>()
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
-            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dst => dst.Version, opt => opt.MapFrom(src => src.Version))
-            .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
-            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name));
 
         CreateMap<EdFi.Security.DataAccess.Models.Action, ActionModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ActionId))

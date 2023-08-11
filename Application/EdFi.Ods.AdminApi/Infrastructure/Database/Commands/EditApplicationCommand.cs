@@ -28,11 +28,6 @@ public class EditApplicationCommand : IEditApplicationCommand
     public Application Execute(IEditApplicationModel model)
     {
         var application = _context.Applications
-            .Include(a => a.Vendor)
-            .Include(a => a.ApplicationEducationOrganizations)
-            .Include(a => a.ApiClients)
-            .Include(a => a.Profiles)
-            .Include(a => a.OdsInstance)
             .SingleOrDefault(a => a.ApplicationId == model.ApplicationId) ?? throw new NotFoundException<int>("application", model.ApplicationId);
 
         if (application.Vendor.IsSystemReservedVendor())

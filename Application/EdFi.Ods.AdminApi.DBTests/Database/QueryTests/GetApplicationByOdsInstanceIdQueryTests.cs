@@ -25,9 +25,7 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             OdsInstanceId = 1,
             Name = "Test Instance",
             InstanceType = "Ods",
-            IsExtended = false,
-            Status = "OK",
-            Version = "1.0.0"
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
 
         var application = new Application
@@ -59,9 +57,7 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             OdsInstanceId = 1,
             Name = "Test Instance",
             InstanceType = "Ods",
-            IsExtended = false,
-            Status = "OK",
-            Version = "1.0.0"
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
         var application = new Application
         {
@@ -97,9 +93,7 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             OdsInstanceId = 1,
             Name = "Test Instance",
             InstanceType = "Ods",
-            IsExtended = false,
-            Status = "OK",
-            Version = "1.0.0"
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
         var application = new Application
         {

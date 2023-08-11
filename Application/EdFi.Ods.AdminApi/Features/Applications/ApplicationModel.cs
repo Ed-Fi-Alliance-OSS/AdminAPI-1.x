@@ -14,10 +14,10 @@ public class ApplicationModel
     public string? ApplicationName { get; set; }
     public string? ClaimSetName { get; set; }
     public string? ProfileName { get; set; }
-    public int EducationOrganizationId { get; set; }
+    public IList<long>? EducationOrganizationIds { get; set; }
     public string? OdsInstanceName { get; set; }
     public int? VendorId { get; set; }
-    public IList<Profile>? Profiles { get; set; }
+    public IList<int>? ProfileIds { get; set; }
     public int? OdsInstanceId { get; set; }
 }
 

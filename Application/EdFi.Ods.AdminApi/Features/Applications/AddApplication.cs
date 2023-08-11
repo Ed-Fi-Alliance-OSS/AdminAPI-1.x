@@ -39,8 +39,8 @@ public class AddApplication : IFeature
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
-        if (request.ProfileId.HasValue && db.Profiles.Find(request.ProfileId) == null)
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
+        if (request.ProfileIds != null && !db.Profiles.Any(p => request.ProfileIds.Contains(p.ProfileId)))
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"One or more Profile Id were not found.") });
 
         if (null == db.OdsInstances.Find(request.OdsInstanceId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"ODS instance with ID {request.OdsInstanceId} not found.") });
@@ -60,7 +60,7 @@ public class AddApplication : IFeature
 
         [SwaggerOptional]
         [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
-        public int? ProfileId { get; set; }
+        public IEnumerable<int>? ProfileIds { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<int>? EducationOrganizationIds { get; set; }

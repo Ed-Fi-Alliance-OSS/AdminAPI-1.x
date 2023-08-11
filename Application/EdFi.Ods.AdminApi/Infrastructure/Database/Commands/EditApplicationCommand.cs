@@ -36,8 +36,8 @@ public class EditApplicationCommand : IEditApplicationCommand
         }
 
         var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
-        var newProfile = model.ProfileId.HasValue
-            ? _context.Profiles.Single(p => p.ProfileId == model.ProfileId.Value)
+        var newProfiles = model.ProfileIds != null
+            ? _context.Profiles.Where(p => model.ProfileIds.Contains(p.ProfileId))
             : null;
         var newOdsInstance = _context.OdsInstances.Single(o => o.OdsInstanceId == model.OdsInstanceId);
 
@@ -58,9 +58,12 @@ public class EditApplicationCommand : IEditApplicationCommand
 
         application.Profiles.Clear();
 
-        if (newProfile != null)
+        if (newProfiles != null)
         {
-            application.Profiles.Add(newProfile);
+            foreach (var profile in newProfiles)
+            {
+                application.Profiles.Add(profile);
+            }
         }
 
         _context.SaveChanges();
@@ -74,7 +77,7 @@ public interface IEditApplicationModel
     string? ApplicationName { get; }
     int VendorId { get; }
     string? ClaimSetName { get; }
-    int? ProfileId { get; }
+    IEnumerable<int>? ProfileIds { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
     int OdsInstanceId { get; }
 }

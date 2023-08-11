@@ -27,8 +27,8 @@ public class AddApplicationCommand : IAddApplicationCommand
 
     public AddApplicationResult Execute(IAddApplicationModel applicationModel)
     {
-        var profile = applicationModel.ProfileId.HasValue
-            ? _usersContext.Profiles.SingleOrDefault(p => p.ProfileId == applicationModel.ProfileId.Value)
+        var profiles = applicationModel.ProfileIds != null
+            ? _usersContext.Profiles.Where(p => applicationModel.ProfileIds!.Contains(p.ProfileId))
             : null;
 
         var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
@@ -70,9 +70,12 @@ public class AddApplicationCommand : IAddApplicationCommand
             OdsInstance = odsInstance
         };
 
-        if (profile != null)
+        if (profiles != null)
         {
-            application.Profiles.Add(profile);
+            foreach (var profile in profiles)
+            {
+                application.Profiles.Add(profile);
+            }
         }
 
         _usersContext.Applications.Add(application);
@@ -92,7 +95,7 @@ public interface IAddApplicationModel
     string? ApplicationName { get; }
     int VendorId { get; }
     string? ClaimSetName { get; }
-    int? ProfileId { get; }
+    IEnumerable<int>? ProfileIds { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
     int OdsInstanceId { get; }
 }

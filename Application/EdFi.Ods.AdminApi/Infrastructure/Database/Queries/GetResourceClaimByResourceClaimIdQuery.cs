@@ -16,32 +16,28 @@ public class GetResourceClaimByResourceClaimIdQuery : IGetResourceClaimByResourc
     {
         _securityContext = securityContext;
     }
+
     public ResourceClaim Execute(int id)
     {
-        var result = new ResourceClaim();
         var resource = _securityContext.ResourceClaims.FirstOrDefault(x => x.ResourceClaimId == id);
-        if (resource != null)
+        if (resource == null)
         {
-            var children = _securityContext.ResourceClaims.Where(x => x.ParentResourceClaimId == resource.ResourceClaimId);
-            result = new ResourceClaim
-            {
-                Children = children.Select(child => new ResourceClaim()
-                {
-                    Id = child.ResourceClaimId,
-                    Name = child.ResourceName,
-                    ParentId = resource.ResourceClaimId,
-                    ParentName = resource.ResourceName,
-                }).ToList(),
-                Name = resource.ResourceName,
-                Id = resource.ResourceClaimId
-            };
-        }
-        else
-        {
-            result = null;
+            throw new NotFoundException<int>("resourceclaim", id);
         }
 
-        return result;
+        var children = _securityContext.ResourceClaims.Where(x => x.ParentResourceClaimId == resource.ResourceClaimId);
+        return new ResourceClaim
+        {
+            Children = children.Select(child => new ResourceClaim()
+            {
+                Id = child.ResourceClaimId,
+                Name = child.ResourceName,
+                ParentId = resource.ResourceClaimId,
+                ParentName = resource.ResourceName,
+            }).ToList(),
+            Name = resource.ResourceName,
+            Id = resource.ResourceClaimId
+        };
     }
 }
 

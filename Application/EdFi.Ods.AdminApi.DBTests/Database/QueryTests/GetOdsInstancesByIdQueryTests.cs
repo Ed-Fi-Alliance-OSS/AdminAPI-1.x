@@ -3,10 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using Shouldly;
 
@@ -24,7 +22,8 @@ public class GetOdsInstanceByIdQueryTests : PlatformUsersContextTestBase
             var odsInstance = new OdsInstance
             {
                 InstanceType = "test type",
-                Name = "test ods instance 1"
+                Name = "test ods instance 1",
+                ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
             };
             Save(odsInstance);
             var command = new GetOdsInstanceQuery(usersContext);

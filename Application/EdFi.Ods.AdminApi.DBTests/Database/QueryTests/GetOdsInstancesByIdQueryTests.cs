@@ -23,11 +23,8 @@ public class GetOdsInstanceByIdQueryTests : PlatformUsersContextTestBase
         {
             var odsInstance = new OdsInstance
             {
-                IsExtended = true,
                 InstanceType = "test type",
-                Name = "test ods instance 1",
-                Status = "test status",
-                Version = "v6.1"
+                Name = "test ods instance 1"
             };
             Save(odsInstance);
             var command = new GetOdsInstanceQuery(usersContext);

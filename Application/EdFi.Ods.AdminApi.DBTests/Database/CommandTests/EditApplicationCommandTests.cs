@@ -34,10 +34,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         _odsInstance = new OdsInstance
         {
             Name = "Test Instance",
-            InstanceType = "Ods",
-            IsExtended = false,
-            Status = "OK",
-            Version = "1.0.0"
+            InstanceType = "Ods"
         };
 
         _vendor = new Vendor

@@ -70,11 +70,8 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         {
             odsInstances[odsIndex] = new OdsInstance
             {
-                IsExtended = true,
                 InstanceType = "test type",
-                Name = $"test ods instance {odsIndex + 1}",
-                Status = "test status",
-                Version = "v6.1"
+                Name = $"test ods instance {odsIndex + 1}"
             };
         }
         Save(odsInstances);

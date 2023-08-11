@@ -55,7 +55,8 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
         var odsInstance = new OdsInstance
         {
             Name = "Test Instance",
-            InstanceType = "Ods"
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
 
         Save(vendor, odsInstance);
@@ -117,7 +118,8 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
         var odsInstance = new OdsInstance
         {
             Name = odsInstanceName,
-            InstanceType = "Ods"
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
 
         Save(vendor, profile, odsInstance);

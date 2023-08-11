@@ -71,7 +71,8 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
             odsInstances[odsIndex] = new OdsInstance
             {
                 InstanceType = "test type",
-                Name = $"test ods instance {odsIndex + 1}"
+                Name = $"test ods instance {odsIndex + 1}",
+                ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
             };
         }
         Save(odsInstances);

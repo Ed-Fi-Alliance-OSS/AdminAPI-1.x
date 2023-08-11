@@ -5170,7 +5170,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
 											"  method: 'GET',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",

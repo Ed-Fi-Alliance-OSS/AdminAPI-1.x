@@ -27,9 +27,9 @@ public class ReadClaimSets : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
+    internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit)
     {
-        var claimSets = getClaimSetsQuery.Execute();
+        var claimSets = getClaimSetsQuery.Execute(offset,limit);
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {

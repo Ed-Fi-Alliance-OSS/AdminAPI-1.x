@@ -43,6 +43,32 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
         claimSetNames.ShouldContain(claimSet2.ClaimSetName);
     }
 
+    [Test]
+    public void Should_Retreive_ClaimSetNames_With_Offset_And_Limit()
+    {
+        var application = new Application
+        {
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(application);
+
+        var claimSet1 = GetClaimSet(application);
+        var claimSet2 = GetClaimSet(application);
+        Save(claimSet1, claimSet2);
+
+        var offset = 0;
+        var limit = 2;
+
+        var claimSetNames = Transaction<string[]>(securityContext =>
+        {
+            var query = new GetAllClaimSetsQuery(securityContext);
+            return query.Execute(offset, limit).Select(x => x.Name).ToArray();
+        });
+
+        claimSetNames.ShouldContain(claimSet1.ClaimSetName);
+        claimSetNames.ShouldContain(claimSet2.ClaimSetName);
+    }
+
     private static int _claimSetId = 0;
     private static ClaimSet GetClaimSet(Application application)
     {

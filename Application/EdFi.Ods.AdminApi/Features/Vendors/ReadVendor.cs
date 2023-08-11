@@ -25,9 +25,9 @@ public class ReadVendor : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper)
+    internal Task<IResult> GetVendors(IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit)
     {
-        var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute());
+        var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute(offset,limit));
         return Task.FromResult(Results.Ok(vendorList));
     }
 

@@ -4,16 +4,17 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Features.Actions;
+using EdFi.Ods.AdminApi.Features.Actions;
 using EdFi.Ods.AdminApi.Features.Applications;
-using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
+using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
+using EdFi.Ods.AdminApi.Features.Profiles;
 using EdFi.Ods.AdminApi.Features.Vendors;
-using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using Profile = AutoMapper.Profile;
 
 
@@ -42,8 +43,8 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
             .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()))
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()))
-            .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()));
-
+            .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()));
+
         CreateMap<Infrastructure.ClaimSetEditor.Application, SimpleApplicationModel>()
             .ForMember(dst => dst.ApplicationName, opt => opt.MapFrom(src => src.Name));
 
@@ -76,45 +77,45 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
-        CreateMap<ResourceClaimActionModel, ResourceClaim>()
-           .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
-           .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
-           .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
-           .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete));
-
+        CreateMap<ResourceClaimActionModel, ResourceClaim>()
+           .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
+           .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
+           .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
+           .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete));
+
         CreateMap<IResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
-            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaimActions));
-
+            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaimActions));
+
         CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy, AuthorizationStrategyClaimSetModel>()
             .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
-            .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
-            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
-
+            .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
+            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
+
         CreateMap<AuthorizationStrategyClaimSetModel, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
             .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
-            .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
-            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
-
-        CreateMap<Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest, OverrideAuthStrategyOnClaimSetModel>()
-            .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
-            .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
-            .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
-            .ForMember(dst => dst.AuthStrategyId, opt => {
-                opt.ConvertUsing<AuthStrategyIdConverter, string>("AuthStrategyName");
-                });
+            .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
+            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
+
+        CreateMap<Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest, OverrideAuthStrategyOnClaimSetModel>()
+            .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
+            .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
+            .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
+            .ForMember(dst => dst.AuthStrategyId, opt => {
+                opt.ConvertUsing<AuthStrategyIdConverter, string>("AuthStrategyName");
+                });
 
         CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
-            .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
+            .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
             .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
-            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
-
+            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
+
         CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, AuthorizationStrategyModel>()
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
-            .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
+            .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
             .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName));
 
         CreateMap<ClaimSetResourceClaimModel, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim>()
@@ -125,11 +126,11 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
             .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
-            .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
-
+            .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
+
         CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.ParentId, opt => opt.MapFrom(src => src.ParentId))
             .ForMember(dst => dst.ParentName, opt => opt.MapFrom(src => src.ParentName))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
@@ -137,10 +138,19 @@ public class AdminApiMappingProfile : Profile
         CreateMap<OdsInstance, OdsInstanceModel>()
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name));
-
+
         CreateMap<EdFi.Security.DataAccess.Models.Action, ActionModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ActionId))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ActionName))
             .ForMember(dst => dst.Uri, opt => opt.MapFrom(src => src.ActionUri));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.Profile, ProfileModel>()
+          .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
+          .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.Profile, ProfileDetailsModel>()
+          .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
+          .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName))
+          .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
     }
 }

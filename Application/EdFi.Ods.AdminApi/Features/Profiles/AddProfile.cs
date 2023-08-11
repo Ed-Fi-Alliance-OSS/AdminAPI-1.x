@@ -7,11 +7,6 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using FluentValidation;
-using System.Xml;
-using EdFi.Ods.AdminApi.Features.Vendors;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Profiles;
@@ -21,13 +16,13 @@ public class AddProfile : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {  
         AdminApiEndpointBuilder
-           .MapPost(endpoints, "/profiles/json", HandleJson)
+           .MapPost(endpoints, "/profiles", Handle)
            .WithDefaultDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
     }
   
-    public async Task<IResult> HandleJson(Validator validator, IAddProfileCommand addProfileCommand, IMapper mapper, AddProfileRequest request)
+    public async Task<IResult> Handle(Validator validator, IAddProfileCommand addProfileCommand, IMapper mapper, AddProfileRequest request)
     {
         await validator.GuardAsync(request);
         var addedProfile = addProfileCommand.Execute(request);

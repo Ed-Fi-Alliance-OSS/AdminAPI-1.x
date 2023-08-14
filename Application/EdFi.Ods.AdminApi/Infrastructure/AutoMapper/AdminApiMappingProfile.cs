@@ -37,7 +37,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ContactEmailAddress, opt => opt.MapFrom(src => src.ContactEmail()))
             .ForMember(dst => dst.NamespacePrefixes, opt => opt.MapFrom(src => src.VendorNamespacePrefixes.ToCommaSeparated()));
 
-        CreateMap<Application, ApplicationModel>()
+        CreateMap<Admin.DataAccess.Models.Application, ApplicationModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ApplicationId))
             .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationId()))
             .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))

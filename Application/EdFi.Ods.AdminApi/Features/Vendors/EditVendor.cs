@@ -19,7 +19,7 @@ public class EditVendor : IFeature
         AdminApiEndpointBuilder.MapPut(endpoints, "/vendors/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(EditVendorCommand editVendorCommand, IMapper mapper,

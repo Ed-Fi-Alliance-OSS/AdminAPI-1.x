@@ -22,7 +22,7 @@ public class AddApplication : IFeature
         AdminApiEndpointBuilder.MapPost(endpoints, "/applications", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationResult>(201))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, Request request)

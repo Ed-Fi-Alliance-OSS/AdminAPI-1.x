@@ -16,7 +16,7 @@ public class DeleteVendor : IFeature
         AdminApiEndpointBuilder.MapDelete(endpoints, "/vendors/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public Task<IResult> Handle(DeleteVendorCommand deleteVendorCommand, int id)

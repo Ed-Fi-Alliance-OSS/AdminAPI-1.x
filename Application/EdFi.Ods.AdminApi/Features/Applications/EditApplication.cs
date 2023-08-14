@@ -22,7 +22,7 @@ public class EditApplication : IFeature
         AdminApiEndpointBuilder.MapPut(endpoints, "/applications/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(IEditApplicationCommand editApplicationCommand, IMapper mapper,

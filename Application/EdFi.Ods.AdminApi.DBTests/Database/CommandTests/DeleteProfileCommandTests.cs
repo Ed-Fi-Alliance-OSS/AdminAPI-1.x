@@ -15,7 +15,7 @@ namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 public class DeleteProfileCommandTests : PlatformUsersContextTestBase
 {
     [Test]
-    public void ShouldDeleteVendor()
+    public void ShouldDeleteProfile()
     {
         var newProfile = new Profile()
         {

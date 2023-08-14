@@ -11,6 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetProfilesQuery
 {
     List<Profile> Execute();
+    List<Profile> Execute(int offset, int limit);
 }
 
 public class GetProfilesQuery : IGetProfilesQuery

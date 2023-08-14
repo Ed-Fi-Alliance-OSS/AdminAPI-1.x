@@ -13,6 +13,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetAllClaimSetsQuery
 {
     IReadOnlyList<ClaimSet> Execute();
+    IReadOnlyList<ClaimSet> Execute(int offset, int limit);
 }
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
@@ -34,6 +35,21 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
             })
             .Distinct()
             .OrderBy(x => x.Name)
+            .ToList();
+    }
+
+    public IReadOnlyList<ClaimSet> Execute(int offset, int limit)
+    {
+        return _securityContext.ClaimSets
+            .Select(x => new ClaimSet
+            {
+                Id = x.ClaimSetId,
+                Name = x.ClaimSetName
+            })
+            .Distinct()
+            .OrderBy(x => x.Name)
+            .Skip(offset)
+            .Take(limit)
             .ToList();
     }
 }

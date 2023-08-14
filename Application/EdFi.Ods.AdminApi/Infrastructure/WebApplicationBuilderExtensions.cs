@@ -118,10 +118,10 @@ public static class WebApplicationBuilderExtensions
                     Title = "Admin API Documentation", Version = version
                 });
             }
-
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
+            opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {

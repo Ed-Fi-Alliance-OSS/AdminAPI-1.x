@@ -4820,7 +4820,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"GET Profiles: Status code is OK\", function () {\r",
+											"pm.test(\"GET ClaimSets: Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
@@ -4906,84 +4906,7 @@
 							"response": []
 						},
 						{
-<<<<<<< HEAD
 							"name": "ClaimSets by ID",
-=======
-							"name": "Profiles - Offset-Limit",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"GET Profiles: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"GET Profiles: Response result includes profiles\", function () {\r",
-											"    const results = pm.response.json();\r",
-											"    pm.expect(results.length).to.equal(2);   \r",
-											"});\r",
-											"\r",
-											"const GetProfilesSchema = {\r",
-											"  \"type\": \"array\",\r",
-											"  \"items\": [\r",
-											"    {\r",
-											"      \"type\": \"object\",\r",
-											"      \"properties\": {\r",
-											"        \"id\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"name\": {\r",
-											"          \"type\": \"string\"\r",
-											"        }\r",
-											"      },\r",
-											"      \"required\": [\r",
-											"        \"id\",\r",
-											"        \"name\"     \r",
-											"      ]\r",
-											"    }\r",
-											"  ]\r",
-											"}\r",
-											"\r",
-											"pm.test(\"GET Profile: Validation Schema Response\", () => {\r",
-											"    pm.response.to.have.jsonSchema(GetProfilesSchema);\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/Profiles/?offset=0&limit=2",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"Profiles",
-										""
-									],
-									"query": [
-										{
-											"key": "offset",
-											"value": "0"
-										},
-										{
-											"key": "limit",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Profile by ID",
->>>>>>> 990f72b4 (Add Offset and limit)
 							"event": [
 								{
 									"listen": "test",
@@ -5910,7 +5833,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"DELETE Profile: Status code is OK\", function () {\r",
+											"pm.test(\"DELETE ClaimSets: Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
@@ -5970,34 +5893,20 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-<<<<<<< HEAD
 											"pm.test(\"DEL ClaimSets System Reserved: Status code is Bad Request\", function () {\r",
 											"    pm.response.to.have.status(400);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
-=======
-											"pm.test(\"DELETE Profile NotFound: Status code is Not Found\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"DELETE Profile NotFound: Response matches error format\", function () {\r",
-											"    const response = pm.response.json();\r",
->>>>>>> 990f72b4 (Add Offset and limit)
 											"\r",
 											"pm.test(\"DEL ClaimSets System Reserved: Response matches error format\", function () {\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
 											"\r",
-<<<<<<< HEAD
 											"pm.test(\"DEL ClaimSets System Reserved: Response title is helpful and accurate\", function () {\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
 											"});\r",
-=======
-											"pm.test(\"DELETE Profile NotFound: Response title is helpful and accurate\", function () {\r",
-											"    const response = pm.response.json();\r",
->>>>>>> 990f72b4 (Add Offset and limit)
 											"\r",
 											"pm.test(\"DEL ClaimSets System Reserved: Response errors include messages by property\", function () {\r",
 											"    pm.expect(response.errors[\"id\"].length).to.equal(1);\r",

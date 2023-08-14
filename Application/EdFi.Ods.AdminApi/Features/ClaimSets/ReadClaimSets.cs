@@ -62,7 +62,7 @@ public class ReadClaimSets : IFeature
         }
         if (allResources != null)
         {
-            claimSetData.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
+            claimSetData.ResourceClaims = mapper.Map<List<ClaimSetResourceClaimModel>>(allResources.ToList());
         }
 
         return Task.FromResult(Results.Ok(claimSetData));

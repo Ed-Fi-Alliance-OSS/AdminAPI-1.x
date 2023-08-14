@@ -17,14 +17,45 @@ public class ResourceClaimValidator
     }
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-        List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+        List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, List<ClaimSetResourceClaimModel> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
         context.MessageFormatter.AppendArgument("ResourceClaimName", resourceClaim.Name);
 
         var propertyName = "ResourceClaims";
+        ValidateDuplicateResourceClaim(resourceClaim, existingResourceClaims, context, propertyName);
 
+        ValidateCRUD(resourceClaim, context, propertyName);
+
+        var resources = dbResourceClaims[resourceClaim.Name!.ToLower()].ToList();
+        ValidateIfExist(context, propertyName, resources);
+        ValidateAuthStrategies(dbAuthStrategies, resourceClaim, context, propertyName);
+        ValidateAuthStrategiesOverride(dbAuthStrategies, resourceClaim, context, propertyName);
+        ValidateChildren(dbResourceClaims, dbAuthStrategies, resourceClaim, context, claimSetName, propertyName, resources);
+    }
+
+    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaims, IResourceClaimOnClaimSetRequest editResourceClaimOnClaimSetRequest, ValidationContext<T> context, string? claimSetName)
+    {
+        context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
+        context.MessageFormatter.AppendArgument("ResourceClaimName", editResourceClaimOnClaimSetRequest.ResourceClaimId);
+
+        var propertyName = "ResourceClaims";
+        var resources = dbResourceClaims[editResourceClaimOnClaimSetRequest.ResourceClaimId].ToList();
+        ValidateIfExist(context, propertyName, resources);
+        ValidateCRUD(editResourceClaimOnClaimSetRequest.ResourceClaimActions, context, propertyName);
+    }
+
+    private static void ValidateIfExist<T>(ValidationContext<T> context, string propertyName, List<ResourceClaim> resources)
+    {
+        if (!resources.Any())
+        {
+            context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource: '{ResourceClaimName}'.\n");
+        }
+    }
+
+    private static void ValidateDuplicateResourceClaim<T>(ClaimSetResourceClaimModel resourceClaim, List<ClaimSetResourceClaimModel> existingResourceClaims, ValidationContext<T> context, string propertyName)
+    {
         if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1)
         {
             if (_duplicateResources != null && resourceClaim.Name != null && !_duplicateResources.Contains(resourceClaim.Name))
@@ -33,40 +64,10 @@ public class ResourceClaimValidator
                 context.AddFailure(propertyName, "Only unique resource claims can be added. The following is a duplicate resource: '{ResourceClaimName}'");
             }
         }
+    }
 
-        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
-        {
-            context.AddFailure(propertyName, "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'");
-        }
-
-        var resources = dbResourceClaims[resourceClaim.Name!.ToLower()].ToList();
-        if (!resources.Any())
-        {
-            context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}'.\n");
-        }
-        if (resourceClaim.DefaultAuthStrategiesForCRUD.Any())
-        {
-            foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
-            {
-                if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
-                {
-                    context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
-                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
-                }
-            }
-        }
-        if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
-        {
-            foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
-            {
-                if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
-                {
-                    context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
-                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
-                }
-            }
-        }
-
+    private void ValidateChildren<T>(Lookup<string, ResourceClaim> dbResourceClaims, List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string? claimSetName, string propertyName, List<ResourceClaim> resources)
+    {
         if (resourceClaim.Children.Any())
         {
             foreach (var child in resourceClaim.Children)
@@ -91,6 +92,52 @@ public class ResourceClaimValidator
                 }
                 Validate(dbResourceClaims, dbAuthStrategies, child, resourceClaim.Children, context, claimSetName);
             }
+        }
+    }
+
+    private static void ValidateAuthStrategiesOverride<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    {
+        if (resourceClaim.AuthStrategyOverridesForCRUD != null && resourceClaim.AuthStrategyOverridesForCRUD.Any())
+        {
+            foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
+            {
+                if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
+                {
+                    context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
+                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
+                }
+            }
+        }
+    }
+
+    private static void ValidateAuthStrategies<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    {
+        if (resourceClaim.DefaultAuthStrategiesForCRUD != null && resourceClaim.DefaultAuthStrategiesForCRUD.Any())
+        {
+            foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
+            {
+                if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
+                {
+                    context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
+                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
+                }
+            }
+        }
+    }
+
+    private static void ValidateCRUD<T>(ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    {
+        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        {
+            context.AddFailure(propertyName, $"Only valid resources can be added. {FeatureConstants.ResourceClaimOneActionNotSet} The following is an invalid resource: '{{ResourceClaimName}}'");
+        }
+    }
+
+    private static void ValidateCRUD<T>(ResourceClaimActionModel resourceClaim, ValidationContext<T> context, string propertyName)
+    {
+        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        {
+            context.AddFailure(propertyName, FeatureConstants.ResourceClaimOneActionNotSet);
         }
     }
 }

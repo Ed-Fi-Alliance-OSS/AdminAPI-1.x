@@ -3,10 +3,10 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -22,32 +22,42 @@ public class ClaimSetModel
 [SwaggerSchema(Title = "ClaimSetWithResources")]
 public class ClaimSetDetailsModel : ClaimSetModel
 {
-    public List<ResourceClaimModel> ResourceClaims { get; set; } = new();
+    public List<ClaimSetResourceClaimModel> ResourceClaims { get; set; } = new();
 }
 
-[SwaggerSchema(Title = "ResourceClaim")]
-public class ResourceClaimModel
+[SwaggerSchema(Title = "ClaimSetResourceClaim")]
+public class ClaimSetResourceClaimModel
 {
+    public int Id { get; set; }
     public string? Name { get; set; }
-    public bool Read { get; set; }
     public bool Create { get; set; }
+    public bool Read { get; set; }
     public bool Update { get; set; }
     public bool Delete { get; set; }
     public AuthorizationStrategyClaimSetModel?[] DefaultAuthStrategiesForCRUD { get; set; }
     public AuthorizationStrategyClaimSetModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public List<ResourceClaimModel> Children { get; set; }
-    public ResourceClaimModel()
+    public List<ClaimSetResourceClaimModel> Children { get; set; }
+    public ClaimSetResourceClaimModel()
     {
-        Children = new List<ResourceClaimModel>();
+        Children = new List<ClaimSetResourceClaimModel>();
         DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategyClaimSetModel>();
         AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategyClaimSetModel>();
     }
 }
 
-[SwaggerSchema(Title = "SimpleResourceClaimModel")]
-public class SimpleResourceClaimModel
+[SwaggerSchema(Title = "ResourceClaimActionModel")]
+public class ResourceClaimActionModel
+{
+    public bool Create { get; set; }
+    public bool Read { get; set; }
+    public bool Update { get; set; }
+    public bool Delete { get; set; }
+}
+
+[SwaggerSchema(Title = "ResourceClaimModel")]
+public class ResourceClaimModel
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -55,10 +65,10 @@ public class SimpleResourceClaimModel
     public string? ParentName { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of SimpleResourceClaimModel")]
-    public List<SimpleResourceClaimModel> Children { get; set; }
-    public SimpleResourceClaimModel()
+    public List<ResourceClaimModel> Children { get; set; }
+    public ResourceClaimModel()
     {
-        Children = new List<SimpleResourceClaimModel>();
+        Children = new List<ResourceClaimModel>();
     }
 }
 
@@ -87,4 +97,11 @@ public class DeleteClaimSetModel : IDeleteClaimSetModel
     public string? Name { get; set; }
 
     public int Id { get; set; }
+}
+
+public interface IResourceClaimOnClaimSetRequest
+{
+    int ClaimSetId { get; }
+    int ResourceClaimId { get; }
+    public ResourceClaimActionModel ResourceClaimActions { get; }
 }

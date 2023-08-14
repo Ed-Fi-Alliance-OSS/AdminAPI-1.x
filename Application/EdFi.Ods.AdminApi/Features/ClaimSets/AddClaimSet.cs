@@ -52,7 +52,7 @@ public class AddClaimSet : IFeature
             model.Applications = mapper.Map<List<SimpleApplicationModel>>(applications);
         }
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
-            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
+            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
         return Results.Created($"/claimsets/{addedClaimSetId}", model);
     }
@@ -64,7 +64,7 @@ public class AddClaimSet : IFeature
         public string? Name { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+        public List<ClaimSetResourceClaimModel>? ResourceClaims { get; set; }
     }
 
     public class Validator : AbstractValidator<AddClaimSetRequest>

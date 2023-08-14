@@ -22,6 +22,6 @@ public class DeleteProfile : IFeature
     public Task<IResult> Handle(IDeleteProfileCommand deleteProfileCommand, int id)
     {
         deleteProfileCommand.Execute(id);
-        return Task.FromResult(Results.Ok("Profile".ToJsonObjectResponseDeleted()));
+        return Task.FromResult(Results.Ok());
     }
 }

@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApi.Features.Profiles
             var schema = new XmlSchemaSet();
             var path = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!).LocalPath;
             schema.Add("", $"{path}\\Schema\\Ed-Fi-ODS-API-Profile.xsd");
-            var propertyName = "Profile";
+            var propertyName = "Definition";
 
             void EventHandler(object? sender, ValidationEventArgs e)
             {
@@ -29,7 +29,7 @@ namespace EdFi.Ods.AdminApi.Features.Profiles
                 document.Validate(EventHandler);
 
                 var profile = document.DocumentElement;
-                if (profile != null)
+                if (profile != null && !string.IsNullOrEmpty(name))
                 {
                     var profileName = profile.GetAttribute("name");
                     if(!profileName.Equals(name, StringComparison.InvariantCultureIgnoreCase))

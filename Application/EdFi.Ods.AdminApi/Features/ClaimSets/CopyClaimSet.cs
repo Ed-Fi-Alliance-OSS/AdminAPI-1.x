@@ -44,7 +44,7 @@ public class CopyClaimSet : IFeature
             model.Applications = mapper.Map<List<SimpleApplicationModel>>(applications);
         }
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(copiedClaimSetId)
-            .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
+            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
         return Results.Created($"/claimsets/{copiedClaimSetId}", model);
     }

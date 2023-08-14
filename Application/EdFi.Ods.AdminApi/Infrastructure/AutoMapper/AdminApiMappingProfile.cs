@@ -40,22 +40,20 @@ public class AdminApiMappingProfile : Profile
         CreateMap<Admin.DataAccess.Models.Application, ApplicationModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ApplicationId))
             .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationId()))
-            .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
             .ForMember(dst => dst.ProfileIds, opt => opt.MapFrom(src => src.Profiles()))
-            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()))
-            .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()));
+            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()));
 
         CreateMap<Infrastructure.ClaimSetEditor.Application, SimpleApplicationModel>()
             .ForMember(dst => dst.ApplicationName, opt => opt.MapFrom(src => src.Name));
 
         CreateMap<AddApplicationResult, ApplicationResult>()
-            .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ApplicationId))
             .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
             .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
 
         CreateMap<RegenerateApiClientSecretResult, ApplicationResult>()
-            .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.Application.ApplicationId))
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Application.ApplicationId))
             .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
             .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
 

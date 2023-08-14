@@ -31,7 +31,7 @@ public class AddApplication : IFeature
         GuardAgainstInvalidEntityReferences(request, db);
         var addedApplicationResult = addApplicationCommand.Execute(request);
         var model = mapper.Map<ApplicationResult>(addedApplicationResult);
-        return Results.Created($"/applications/{model.ApplicationId}", model);
+        return Results.Created($"/applications/{model.Id}", model);
     }
 
     private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)

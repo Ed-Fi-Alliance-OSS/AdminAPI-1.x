@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d19ebc92-cabc-4256-bc46-5e1ff79fbfa0",
+		"_postman_id": "348585c4-9ac5-45cb-869a-4ad87d3e77df",
 		"name": "Admin API E2E 2.0",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21286036"
 	},
 	"item": [
 		{
@@ -1001,13 +1002,23 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v1/vendors",
+									"raw": "{{API_URL}}/v1/vendors?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v1",
 										"vendors"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
 									]
 								}
 							},
@@ -1476,7 +1487,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v1/vendors`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/vendors?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1502,7 +1513,7 @@
 											"});\r",
 											"\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsinstances`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsinstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
 											"  method: 'GET',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1975,14 +1986,23 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/applications/",
+									"raw": "{{API_URL}}/v1/applications?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v1",
-										"applications",
-										""
+										"applications"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
 									]
 								}
 							},
@@ -3002,13 +3022,23 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsinstances",
+									"raw": "{{API_URL}}/v1/odsinstances?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v1",
 										"odsinstances"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
 									]
 								}
 							},
@@ -3166,7 +3196,7 @@
 											"          \"type\": \"string\"",
 											"        },",
 											"        \"profileName\": {",
-											"          \"type\": \"string\"",
+											"          \"type\": \"null\"",
 											"        },",
 											"        \"educationOrganizationId\": {",
 											"          \"type\": \"integer\"",
@@ -3949,7 +3979,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"POST ResourceClaimAction: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											""
 										],
@@ -4186,7 +4216,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"POST OverrideAuthStrategy: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.have.status(200);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -4313,7 +4343,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"POST ResetAuthStrategies: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.have.status(200);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -4853,14 +4883,23 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimsets?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"claimsets",
-										""
+										"claimsets"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
 									]
 								}
 							},
@@ -5705,7 +5744,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
 											"  method: 'GET',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -6763,27 +6802,11 @@
 			"value": ""
 		},
 		{
-			"key": "OtherApplicationVendorId",
+			"key": "RegisteredClientId",
 			"value": ""
 		},
 		{
-			"key": "OtherApplicationId",
-			"value": ""
-		},
-		{
-			"key": "ClaimSetGUID",
-			"value": ""
-		},
-		{
-			"key": "CreatedClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "OtherClaimSetGUID",
-			"value": ""
-		},
-		{
-			"key": "OtherExistingClaimSetId",
+			"key": "RegisteredClientSecret",
 			"value": ""
 		},
 		{

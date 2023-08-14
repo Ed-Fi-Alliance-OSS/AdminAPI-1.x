@@ -13,9 +13,7 @@ public class ApplicationModel
     public int Id { get; set; }
     public string? ApplicationName { get; set; }
     public string? ClaimSetName { get; set; }
-    public string? ProfileName { get; set; }
     public IList<long>? EducationOrganizationIds { get; set; }
-    public string? OdsInstanceName { get; set; }
     public int? VendorId { get; set; }
     public IList<int>? ProfileIds { get; set; }
     public int? OdsInstanceId { get; set; }
@@ -30,7 +28,7 @@ public class SimpleApplicationModel
 [SwaggerSchema(Title = "ApplicationKeySecret")]
 public class ApplicationResult
 {
-    public int ApplicationId { get; set; }
+    public int Id { get; set; }
     public string? Key { get; set; }
     public string? Secret { get; set; }
 }

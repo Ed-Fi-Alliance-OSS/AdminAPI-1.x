@@ -25,9 +25,9 @@ public class ReadOdsIntance : IFeature
     }
 
 
-    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper)
+    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, int offset, int limit)
     {
-        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute());
+        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(offset,limit));
         return Task.FromResult(Results.Ok(odsInstances));
     }
 

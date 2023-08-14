@@ -20,11 +20,6 @@ public static class AdminModelExtensions
         return vendor?.Users?.FirstOrDefault()?.Email;
     }
 
-    public static string? ProfileName(this Application application)
-    {
-        return application?.Profiles?.FirstOrDefault()?.ProfileName;
-    }
-
     public static IList<int> Profiles(this Application application)
     {
         var profiles = new List<int>();
@@ -43,11 +38,6 @@ public static class AdminModelExtensions
     public static int? OdsInstanceId(this Application application)
     {
         return application?.OdsInstance?.OdsInstanceId;
-    }
-
-    public static string? OdsInstanceName(this Application application)
-    {
-        return application?.OdsInstance?.Name;
     }
 
     public static IList<long>? EducationOrganizationId(this Application application)

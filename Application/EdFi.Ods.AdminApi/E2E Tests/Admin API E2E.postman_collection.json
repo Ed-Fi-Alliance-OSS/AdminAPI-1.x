@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "708864ef-875f-4350-a3c0-906230455846",
+		"_postman_id": "019a4949-dee5-462a-bbf2-9e308b13c081",
 		"name": "Admin API E2E 2.0",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1783,6 +1783,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"POST Applications Invalid Profile: Response errors include messages by property\", function () {\r",
+											"    console.log('POST Applications Invalid Profile: Response is:', response);\r",
 											"    pm.expect(response.errors.ProfileIds.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ProfileIds[0]).to.contain(\"not found\");\r",
 											"});\r",
@@ -2572,6 +2573,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"PUT Application Invalid Profile: Response errors include messages by property\", function () {\r",
+											"    console.log('PUT Application Invalid Profile: Response is:', response);\r",
 											"    pm.expect(response.errors.ProfileIds.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ProfileIds[0]).to.contain(\"not found\");\r",
 											"});\r",
@@ -6866,6 +6868,22 @@
 		},
 		{
 			"key": "OtherExistingClaimSetId",
+			"value": ""
+		},
+		{
+			"key": "RegisteredClientId",
+			"value": ""
+		},
+		{
+			"key": "RegisteredClientSecret",
+			"value": ""
+		},
+		{
+			"key": "ApplicationVendorId",
+			"value": ""
+		},
+		{
+			"key": "CreatedApplicationId",
 			"value": ""
 		}
 	]

@@ -16,7 +16,7 @@ namespace EdFi.Ods.AdminApi.Features.Profiles
         {
             var schema = new XmlSchemaSet();
             var path = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!).LocalPath;
-            schema.Add("", $"{path}\\Schema\\Ed-Fi-ODS-API-Profile.xsd");
+            schema.Add("", Path.Combine(path, "Schema", "Ed-Fi-ODS-API-Profile.xsd"));
             var propertyName = "Definition";
 
             void EventHandler(object? sender, ValidationEventArgs e)

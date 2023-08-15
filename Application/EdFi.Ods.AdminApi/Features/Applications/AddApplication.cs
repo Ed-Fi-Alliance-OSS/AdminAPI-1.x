@@ -39,11 +39,19 @@ public class AddApplication : IFeature
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
-        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !db.Profiles.Any(p => request.ProfileIds.Contains(p.ProfileId)))
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"One or more Profile Id were not found.") });
+        ValidateProfileIds(request, db);
 
         if (null == db.OdsInstances.Find(request.OdsInstanceId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"ODS instance with ID {request.OdsInstanceId} not found.") });
+    }
+
+    private static void ValidateProfileIds(Request request, IUsersContext db)
+    {
+        var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
+        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !allProfileIds.All(p => request.ProfileIds.Contains(p))) {
+            var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: { string.Join(", ", notExist) }" ) });
+        }
     }
 
     [SwaggerSchema(Title = "AddApplicationRequest")]

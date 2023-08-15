@@ -39,7 +39,7 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<Admin.DataAccess.Models.Application, ApplicationModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ApplicationId))
-            .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationId()))
+            .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationIds()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
             .ForMember(dst => dst.ProfileIds, opt => opt.MapFrom(src => src.Profiles()))
             .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()));

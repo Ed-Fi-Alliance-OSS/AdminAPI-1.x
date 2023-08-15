@@ -40,7 +40,7 @@ public static class AdminModelExtensions
         return application?.OdsInstance?.OdsInstanceId;
     }
 
-    public static IList<long>? EducationOrganizationId(this Application application)
+    public static IList<long>? EducationOrganizationIds(this Application application)
     {
         return application?.ApplicationEducationOrganizations?.Select(eu => eu.EducationOrganizationId).ToList();
     }

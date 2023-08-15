@@ -7010,7 +7010,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/Profiles/?offset=0&limit=2",
+									"raw": "{{API_URL}}/v2/Profiles/?{{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -7022,11 +7022,11 @@
 									"query": [
 										{
 											"key": "offset",
-											"value": "0"
+											"value": "{{offset}}"
 										},
 										{
 											"key": "limit",
-											"value": "2"
+											"value": "{{limit}}"
 										}
 									]
 								}

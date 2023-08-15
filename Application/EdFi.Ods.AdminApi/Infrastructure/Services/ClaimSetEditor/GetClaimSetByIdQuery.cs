@@ -35,7 +35,7 @@ public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
             };
         }
 
-        throw new NotFoundException<int>("ClaimSet", claimSetId);
+        throw new NotFoundException<int>("claimset", claimSetId);
 
     }
 }

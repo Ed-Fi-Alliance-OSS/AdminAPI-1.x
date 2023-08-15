@@ -4162,7 +4162,7 @@
 											"\r",
 											"pm.test(\"PUT ResourceClaimAction Invalid: Response errors include messages by property\", function () {\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
-											"    pm.expect(response.title).to.contain(\"ClaimSet\");\r",
+											"    pm.expect(response.title).to.contain(\"claimset\");\r",
 											"});\r",
 											""
 										],
@@ -4777,7 +4777,7 @@
 											"pm.test(\"POST ClaimSet NotFound: Response title is helpful and accurate\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"    pm.expect(response.title).to.contains(\"Not found\");\r",
-											"    pm.expect(response.title).to.contains(\"claimSet\");    \r",
+											"    pm.expect(response.title).to.contains(\"claimset\");    \r",
 											"});\r",
 											"\r",
 											""

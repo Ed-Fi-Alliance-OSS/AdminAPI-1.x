@@ -39,7 +39,7 @@ public class AddApplication : IFeature
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
-        if (request.ProfileIds != null && !db.Profiles.Any(p => request.ProfileIds.Contains(p.ProfileId)))
+        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !db.Profiles.Any(p => request.ProfileIds.Contains(p.ProfileId)))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"One or more Profile Id were not found.") });
 
         if (null == db.OdsInstances.Find(request.OdsInstanceId))

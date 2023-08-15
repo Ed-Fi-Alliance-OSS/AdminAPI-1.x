@@ -48,7 +48,8 @@ public class AddApplication : IFeature
     private static void ValidateProfileIds(Request request, IUsersContext db)
     {
         var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
-        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !allProfileIds.All(p => request.ProfileIds.Contains(p))) {
+        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !allProfileIds.All(p => request.ProfileIds.Contains(p)))
+        {
             var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: { string.Join(", ", notExist) }" ) });
         }

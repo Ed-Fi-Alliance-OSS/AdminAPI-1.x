@@ -1783,7 +1783,6 @@
 											"});\r",
 											"\r",
 											"pm.test(\"POST Applications Invalid Profile: Response errors include messages by property\", function () {\r",
-											"    console.log('POST Applications Invalid Profile: Response is:', response);\r",
 											"    pm.expect(response.errors.ProfileIds.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ProfileIds[0]).to.contain(\"not found\");\r",
 											"});\r",
@@ -1798,7 +1797,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [ 9999 ],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [ 9999 ],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2573,7 +2572,6 @@
 											"});\r",
 											"\r",
 											"pm.test(\"PUT Application Invalid Profile: Response errors include messages by property\", function () {\r",
-											"    console.log('PUT Application Invalid Profile: Response is:', response);\r",
 											"    pm.expect(response.errors.ProfileIds.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ProfileIds[0]).to.contain(\"not found\");\r",
 											"});\r",
@@ -2588,7 +2586,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [9999],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [9999],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"

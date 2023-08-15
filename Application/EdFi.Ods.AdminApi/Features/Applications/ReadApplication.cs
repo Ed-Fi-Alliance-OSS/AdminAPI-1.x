@@ -27,13 +27,14 @@ public class ReadApplication : IFeature
 
     internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit)
     {
-        var vendors = getVendorsAndApplicationsQuery.Execute(offset,limit);
+        var vendors = getVendorsAndApplicationsQuery.Execute();
         var applications = new List<ApplicationModel>();
         foreach (var vendor in vendors)
         {
             applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
         }
-        return Task.FromResult(Results.Ok(applications));
+        var filteredApplications = applications.ToList().Skip(offset).Take(limit);
+        return Task.FromResult(Results.Ok(filteredApplications));
     }
 
     internal Task<IResult> GetApplication(GetApplicationByIdQuery getApplicationByIdQuery, IMapper mapper, int id)

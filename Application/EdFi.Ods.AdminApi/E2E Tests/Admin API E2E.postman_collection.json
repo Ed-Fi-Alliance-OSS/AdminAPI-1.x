@@ -5659,7 +5659,7 @@
 									"script": {
 										"exec": [
 											"  pm.sendRequest({\r",
-											"    url: `${pm.variables.get(\"API_URL\")}/v1/applications/${pm.collectionVariables.get(\"OtherApplicationId\")}`,\r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v2/applications/${pm.collectionVariables.get(\"OtherApplicationId\")}`,\r",
 											"    method: 'PUT',\r",
 											"    header: {\r",
 											"        \"Content-Type\": \"application/json\",\r",
@@ -5671,7 +5671,7 @@
 											"        \"applicationName\": \"ClaimSet Test Vendor Application\",\r",
 											"        \"vendorId\": pm.collectionVariables.get(\"OtherApplicationVendorId\"),\r",
 											"        \"claimSetName\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
-											"        \"profileId\": null,\r",
+											"        \"profileIds\": [],\r",
 											"        \"educationOrganizationIds\": [ 255901 ],\r",
 											"        \"odsInstanceId\": 1\r",
 											"      }),\r",
@@ -5680,7 +5680,7 @@
 											"  function (appErr, appResonse) {\r",
 											"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
 											"    const appJson = appResonse.json();\r",
-											"    if(!appJson.applicationId) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }\r",
+											"    if(!appJson.id) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }\r",
 											"}); "
 										],
 										"type": "text/javascript"
@@ -6391,6 +6391,80 @@
 									"path": [
 										"v2",
 										"authstrategies"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Actions",
+					"item": [
+						{
+							"name": "Authstrategies",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Actions: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Actions: Response matches success format\", function () {\r",
+											"    pm.expect(response[0]).to.have.property(\"id\");\r",
+											"    pm.expect(response[0]).to.have.property(\"name\");\r",
+											"    pm.expect(response[0]).to.have.property(\"uri\");\r",
+											"});\r",
+											"\r",
+											"const GetActionsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"uri\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
+											"        \"uri\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Actions: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetActionsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/actions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"actions"
 									]
 								}
 							},

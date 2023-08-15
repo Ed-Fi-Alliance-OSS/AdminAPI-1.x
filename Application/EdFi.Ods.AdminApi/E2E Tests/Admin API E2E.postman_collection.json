@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "348585c4-9ac5-45cb-869a-4ad87d3e77df",
+		"_postman_id": "a5c2ba02-c52d-4df2-9f16-e3bd8b76d89e",
 		"name": "Admin API E2E 2.0",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -4163,7 +4162,7 @@
 											"\r",
 											"pm.test(\"PUT ResourceClaimAction Invalid: Response errors include messages by property\", function () {\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
-											"    pm.expect(response.title).to.contain(\"claimSet\");\r",
+											"    pm.expect(response.title).to.contain(\"claimset\");\r",
 											"});\r",
 											""
 										],
@@ -4778,7 +4777,7 @@
 											"pm.test(\"POST ClaimSet NotFound: Response title is helpful and accurate\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"    pm.expect(response.title).to.contains(\"Not found\");\r",
-											"    pm.expect(response.title).to.contains(\"claimSet\");    \r",
+											"    pm.expect(response.title).to.contains(\"claimset\");    \r",
 											"});\r",
 											"\r",
 											""

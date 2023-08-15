@@ -5,6 +5,7 @@
 
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Models;
 using System.Net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
@@ -34,10 +35,8 @@ public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
             };
         }
 
-        throw new AdminApiException("No such claim set exists in the database.")
-        {
-            StatusCode = HttpStatusCode.NotFound
-        };
+        throw new NotFoundException<int>("claimset", claimSetId);
+
     }
 }
 

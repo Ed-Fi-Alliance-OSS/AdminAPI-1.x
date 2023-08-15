@@ -25,10 +25,6 @@ public class DeleteResourceClaim : IFeature
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
         var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
-        if (claimSet == null)
-        {
-            throw new NotFoundException<int>("ClaimSet", claimsetid);
-        }
 
         var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimSet.Id, resourceclaimid);
         if (resourceClaim == null)

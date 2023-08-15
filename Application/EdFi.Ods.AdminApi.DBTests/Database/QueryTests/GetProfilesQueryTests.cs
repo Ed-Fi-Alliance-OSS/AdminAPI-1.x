@@ -43,4 +43,23 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
             ProfileName = $"Test Profile {_profileId++}-{DateTime.Now:O}"
         };
     }
+
+    [Test]
+    public void Should_retreive_profiles_with_offset_limit()
+    {
+        var profile1 = CreateProfile();
+        var profile2 = CreateProfile();
+        var profile3 = CreateProfile();
+
+        Save(profile1, profile2, profile3);
+
+        List<Profile> results = null;
+        Transaction(usersContext =>
+        {
+            var query = new GetProfilesQuery(usersContext);
+            results = query.Execute(1,1);
+            results.Count.ShouldBe(1);
+        });
+        results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
+    }    
 }

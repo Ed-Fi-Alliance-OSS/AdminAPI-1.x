@@ -3,14 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public class GetProfilesQuery
+public interface IGetProfilesQuery
+{
+    List<Profile> Execute();
+    List<Profile> Execute(int offset, int limit);
+}
+
+public class GetProfilesQuery : IGetProfilesQuery
 {
     private readonly IUsersContext _usersContext;
 
@@ -22,5 +26,10 @@ public class GetProfilesQuery
     public List<Profile> Execute()
     {
         return _usersContext.Profiles.OrderBy(p => p.ProfileName).ToList();
+    }
+
+    public List<Profile> Execute(int offset, int limit)
+    {
+        return _usersContext.Profiles.OrderBy(p => p.ProfileName).Skip(offset).Take(limit).ToList();
     }
 }

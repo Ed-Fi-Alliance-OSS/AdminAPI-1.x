@@ -66,47 +66,47 @@ jobs:
 
       - name: Run tests
         run: |
-          newman run './Admin API E2E 2.0 - User Management.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - User Management.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - Vendors.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - Vendors.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - Application.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - Application.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - ClaimSets.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - ClaimSets.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - Resourceclaims.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - Resourceclaims.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - AuthStrategies.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - AuthStrategies.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - Profiles.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - Profiles.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - Actions.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - Actions.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \
             -k
-          newman run './Admin API E2E 2.0 - OdsInstances.postman_collection.json' \
+          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstances.postman_collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \

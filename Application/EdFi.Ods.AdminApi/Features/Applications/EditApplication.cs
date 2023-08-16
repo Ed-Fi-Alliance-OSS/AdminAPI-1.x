@@ -51,6 +51,10 @@ public class EditApplication : IFeature
     private static void ValidateProfileIds(Request request, IUsersContext db)
     {
         var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
+        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && allProfileIds.Count == 0)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", request.ProfileIds)}") });
+        }
         if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !allProfileIds.All(p => request.ProfileIds.Contains(p)))
         {
             var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));

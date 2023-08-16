@@ -35,4 +35,6 @@ public class FeatureConstants
     public const string OdsInstanceIdDescription = "ODS instance id";
     public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id.";
     public const string ClaimSetIdToCopy = "ClaimSet id to copy";
+    public const string ProfileName = "Profile name";
+    public const string ProfileDefinition = "Profile definition";
 }

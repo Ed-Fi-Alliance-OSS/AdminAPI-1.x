@@ -9,13 +9,14 @@ using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Features.ODSInstances;
+using EdFi.Ods.AdminApi.Features.Profiles;
 using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
-using Profile = AutoMapper.Profile;
 
+using Profile = AutoMapper.Profile;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -103,7 +104,9 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
             .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
             .ForMember(dst => dst.AuthStrategyId, opt => {
+
                 opt.ConvertUsing<AuthStrategyIdConverter, string>("AuthStrategyName");
+
                 });
 
         CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
@@ -142,5 +145,13 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ActionId))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ActionName))
             .ForMember(dst => dst.Uri, opt => opt.MapFrom(src => src.ActionUri));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.Profile, ProfileModel>()
+          .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
+          .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName));
+        CreateMap<EdFi.Admin.DataAccess.Models.Profile, ProfileDetailsModel>()
+          .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
+          .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName))
+          .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
     }
 }

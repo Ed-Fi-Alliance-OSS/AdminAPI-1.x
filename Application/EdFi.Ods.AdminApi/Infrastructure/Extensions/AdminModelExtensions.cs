@@ -20,17 +20,12 @@ public static class AdminModelExtensions
         return vendor?.Users?.FirstOrDefault()?.Email;
     }
 
-    public static string? ProfileName(this Application application)
+    public static IList<int> Profiles(this Application application)
     {
-        return application?.Profiles?.FirstOrDefault()?.ProfileName;
-    }
-
-    public static IList<Profile> Profiles(this Application application)
-    {
-        var profiles = new List<Profile>();
+        var profiles = new List<int>();
         foreach (var profile in application.Profiles)
         {
-            profiles.Add(new Profile { Id =  profile.ProfileId });
+            profiles.Add(profile.ProfileId);
         }
         return profiles;
     }
@@ -45,13 +40,8 @@ public static class AdminModelExtensions
         return application?.OdsInstance?.OdsInstanceId;
     }
 
-    public static string? OdsInstanceName(this Application application)
+    public static IList<long>? EducationOrganizationIds(this Application application)
     {
-        return application?.OdsInstance?.Name;
-    }
-
-    public static long? EducationOrganizationId(this Application application)
-    {
-        return application?.ApplicationEducationOrganizations?.FirstOrDefault()?.EducationOrganizationId;
+        return application?.ApplicationEducationOrganizations?.Select(eu => eu.EducationOrganizationId).ToList();
     }
 }

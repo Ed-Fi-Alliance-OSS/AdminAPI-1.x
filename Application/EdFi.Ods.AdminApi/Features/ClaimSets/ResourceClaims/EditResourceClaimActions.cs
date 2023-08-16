@@ -20,10 +20,12 @@ public class EditResourceClaimActions : IFeature
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaimActions", HandleAddResourceClaims)
        .WithDefaultDescription()
+       .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaimActions/{resourceclaimid}", HandleEditResourceClaims)
        .WithDefaultDescription()
+       .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
     }
 

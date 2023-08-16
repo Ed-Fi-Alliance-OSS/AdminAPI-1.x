@@ -28,7 +28,7 @@ public class EditApplicationCommand : IEditApplicationCommand
     public Application Execute(IEditApplicationModel model)
     {
         var application = _context.Applications
-            .SingleOrDefault(a => a.ApplicationId == model.ApplicationId) ?? throw new NotFoundException<int>("application", model.ApplicationId);
+            .SingleOrDefault(a => a.ApplicationId == model.Id) ?? throw new NotFoundException<int>("application", model.Id);
 
         if (application.Vendor.IsSystemReservedVendor())
         {
@@ -36,8 +36,8 @@ public class EditApplicationCommand : IEditApplicationCommand
         }
 
         var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
-        var newProfile = model.ProfileId.HasValue
-            ? _context.Profiles.Single(p => p.ProfileId == model.ProfileId.Value)
+        var newProfiles = model.ProfileIds != null
+            ? _context.Profiles.Where(p => model.ProfileIds.Contains(p.ProfileId))
             : null;
         var newOdsInstance = _context.OdsInstances.Single(o => o.OdsInstanceId == model.OdsInstanceId);
 
@@ -58,9 +58,12 @@ public class EditApplicationCommand : IEditApplicationCommand
 
         application.Profiles.Clear();
 
-        if (newProfile != null)
+        if (newProfiles != null)
         {
-            application.Profiles.Add(newProfile);
+            foreach (var profile in newProfiles)
+            {
+                application.Profiles.Add(profile);
+            }
         }
 
         _context.SaveChanges();
@@ -70,11 +73,11 @@ public class EditApplicationCommand : IEditApplicationCommand
 
 public interface IEditApplicationModel
 {
-    int ApplicationId { get; }
+    int Id { get; }
     string? ApplicationName { get; }
     int VendorId { get; }
     string? ClaimSetName { get; }
-    int? ProfileId { get; }
+    IEnumerable<int>? ProfileIds { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
     int OdsInstanceId { get; }
 }

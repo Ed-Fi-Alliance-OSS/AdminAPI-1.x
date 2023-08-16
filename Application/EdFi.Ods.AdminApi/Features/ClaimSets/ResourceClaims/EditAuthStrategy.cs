@@ -19,10 +19,12 @@ public class EditAuthStrategy : IFeature
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/overrideauthstrategy", HandleOverrideAuthStrategies)
        .WithDefaultDescription()
+       .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/resetauthstrategies", HandleResetAuthStrategies)
         .WithDefaultDescription()
+        .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);
     }
 

@@ -22,13 +22,13 @@ public class EditApplication : IFeature
         AdminApiEndpointBuilder.MapPut(endpoints, "/applications/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(IEditApplicationCommand editApplicationCommand, IMapper mapper,
         Validator validator, IUsersContext db, Request request, int id)
     {
-        request.ApplicationId = id;
+        request.Id = id;
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);
 
@@ -42,23 +42,36 @@ public class EditApplication : IFeature
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
-        if (request.ProfileId.HasValue && db.Profiles.Find(request.ProfileId) == null)
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
+        ValidateProfileIds(request, db);
 
         if (null == db.OdsInstances.Find(request.OdsInstanceId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"ODS instance with ID {request.OdsInstanceId} not found.") });
+    }
+
+    private static void ValidateProfileIds(Request request, IUsersContext db)
+    {
+        var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
+        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && allProfileIds.Count == 0)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", request.ProfileIds)}") });
+        }
+        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && !allProfileIds.All(p => request.ProfileIds.Contains(p)))
+        {
+            var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", notExist)}") });
+        }
     }
 
     [SwaggerSchema(Title = "EditApplicationRequest")]
     public class Request : IEditApplicationModel
     {
         [SwaggerSchema(Description = "Application id", Nullable = false)]
-        public int ApplicationId { get; set; }
+        public int Id { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
         public string? ApplicationName { get; set; }
 
-        [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
+        [SwaggerSchema(Description = FeatureConstants.VendorIdDescription, Nullable = false)]
         public int VendorId { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
@@ -66,7 +79,7 @@ public class EditApplication : IFeature
 
         [SwaggerOptional]
         [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
-        public int? ProfileId { get; set; }
+        public IEnumerable<int>? ProfileIds { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<int>? EducationOrganizationIds { get; set; }
@@ -79,7 +92,7 @@ public class EditApplication : IFeature
     {
         public Validator()
         {
-            RuleFor(m => m.ApplicationId).NotEmpty();
+            RuleFor(m => m.Id).NotEmpty();
             RuleFor(m => m.ApplicationName).NotEmpty();
             RuleFor(m => m.ApplicationName)
            .Must(BeWithinApplicationNameMaxLength)

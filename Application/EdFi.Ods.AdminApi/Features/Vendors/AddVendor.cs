@@ -20,7 +20,7 @@ public class AddVendor : IFeature
             .MapPost(endpoints, "/vendors", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<VendorModel>(201))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(Validator validator, AddVendorCommand addVendorCommand, IMapper mapper, Request request)
@@ -28,7 +28,7 @@ public class AddVendor : IFeature
         await validator.GuardAsync(request);
         var addedVendor = addVendorCommand.Execute(request);
         var model = mapper.Map<VendorModel>(addedVendor);
-        return Results.Created($"/vendors/{model.VendorId}", model);
+        return Results.Created($"/vendors/{model.Id}", model);
     }
 
     [SwaggerSchema(Title = "AddVendorRequest")]

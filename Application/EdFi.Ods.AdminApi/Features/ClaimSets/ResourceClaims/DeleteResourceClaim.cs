@@ -15,6 +15,7 @@ public class DeleteResourceClaim : IFeature
     {
         AdminApiEndpointBuilder.MapDelete(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}", Handle)
        .WithDefaultDescription()
+       .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
     }
 

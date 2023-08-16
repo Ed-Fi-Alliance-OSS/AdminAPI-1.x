@@ -103,11 +103,11 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         var editModel = new TestEditApplicationModel
         {
-            ApplicationId = _application.ApplicationId,
+            Id = _application.ApplicationId,
             ApplicationName = _application.ApplicationName,
             ClaimSetName = _application.ClaimSetName,
             EducationOrganizationIds = new List<int> { 12345, 67890 },
-            ProfileId = null,
+            ProfileIds = null,
             VendorId = _vendor.VendorId,
             OdsInstanceId = _odsInstance.OdsInstanceId
         };
@@ -139,11 +139,11 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         var editModel = new TestEditApplicationModel
         {
-            ApplicationId = _application.ApplicationId,
+            Id = _application.ApplicationId,
             ApplicationName = "New Application Name",
             ClaimSetName = "DifferentFakeClaimSet",
             EducationOrganizationIds = new List<int> { 23456, 78901 },
-            ProfileId = _otherProfile.ProfileId,
+            ProfileIds = new List<int>() { _otherProfile.ProfileId },
             VendorId = _otherVendor.VendorId,
             OdsInstanceId = _odsInstance.OdsInstanceId
         };
@@ -171,11 +171,11 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
     private class TestEditApplicationModel : IEditApplicationModel
     {
-        public int ApplicationId { get; set; }
+        public int Id { get; set; }
         public string ApplicationName { get; set; }
         public int VendorId { get; set; }
         public string ClaimSetName { get; set; }
-        public int? ProfileId { get; set; }
+        public IEnumerable<int> ProfileIds { get; set; }
         public IEnumerable<int> EducationOrganizationIds { get; set; }
         public int OdsInstanceId { get; set; }
     }

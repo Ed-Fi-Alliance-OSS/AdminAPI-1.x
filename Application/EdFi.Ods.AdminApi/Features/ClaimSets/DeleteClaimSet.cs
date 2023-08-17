@@ -42,13 +42,11 @@ public class DeleteClaimSet : IFeature
 
     private static void CheckClaimSetExists(int id, IGetClaimSetByIdQuery query)
     {
-        try
+        var claimSet = query.Execute(id);
+        if (claimSet != null && !claimSet.IsEditable)
         {
-            query.Execute(id);
-        }
-        catch (AdminApiException)
-        {
-            throw new NotFoundException<int>("claimset", id);
+            throw new ValidationException(new[] { new ValidationFailure(nameof(id),
+                $"Cannot delete this claim set. This claim set is not editable.") });
         }
     }
 

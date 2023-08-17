@@ -30,8 +30,7 @@ public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
             {
                 Id = securityContextClaimSet.ClaimSetId,
                 Name = securityContextClaimSet.ClaimSetName,
-                IsEditable = !securityContextClaimSet.ForApplicationUseOnly && !securityContextClaimSet.IsEdfiPreset &&
-                !Constants.SystemReservedClaimSets.Contains(securityContextClaimSet.ClaimSetName)
+                IsEditable = !securityContextClaimSet.ForApplicationUseOnly && !securityContextClaimSet.IsEdfiPreset
             };
         }
 

@@ -46,7 +46,7 @@ public class EditAuthStrategy : IFeature
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
         var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid);
-        if (!resourceClaims.Any(rc=>rc.Id == resourceclaimid))
+        if (!resourceClaims.Any(rc => rc.Id == resourceclaimid))
         {
             throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
         }
@@ -66,7 +66,7 @@ public class EditAuthStrategy : IFeature
 
     public class OverrideAuthStategyOnClaimSetValidator : AbstractValidator<OverrideAuthStategyOnClaimSetRequest>
     {
-        public OverrideAuthStategyOnClaimSetValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery, IGetAllActionsQuery getAllActionsQuery)
+        public OverrideAuthStategyOnClaimSetValidator(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery, IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery, IGetAllActionsQuery getAllActionsQuery, IGetClaimSetByIdQuery getClaimSetByIdQuery)
         {
             RuleFor(m => m.ClaimSetId).NotEqual(0);
             RuleFor(m => m.ResourceClaimId).NotEqual(0);
@@ -75,10 +75,17 @@ public class EditAuthStrategy : IFeature
 
             RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
             {
+
                 var resoureClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
                 if (resoureClaim == null)
                 {
                     context.AddFailure("ResourceClaim", "Resource claim doesn't exist for the Claim set provided");
+                }
+
+                var claimSet = getClaimSetByIdQuery.Execute(overrideAuthStategyOnClaimSetRequest.ClaimSetId);
+                if (!claimSet.IsEditable)
+                {
+                    context.AddFailure("ClaimSetId", $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.");
                 }
 
                 var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()

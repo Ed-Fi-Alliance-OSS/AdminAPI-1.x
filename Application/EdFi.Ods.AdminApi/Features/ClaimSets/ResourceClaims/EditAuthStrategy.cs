@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
+using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims;
@@ -42,9 +43,16 @@ public class EditAuthStrategy : IFeature
     }
 
     internal async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-        OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand,
+        OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand, IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
+        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
+
+        if (!claimSet.IsEditable)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.") });
+        }
+
         var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid);
         if (!resourceClaims.Any(rc => rc.Id == resourceclaimid))
         {

@@ -6,6 +6,8 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims;
 
@@ -26,6 +28,11 @@ public class DeleteResourceClaim : IFeature
         IMapper mapper, int claimsetid, int resourceclaimid)
     {
         var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
+
+        if (!claimSet.IsEditable)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.") });
+        }
 
         var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimSet.Id, resourceclaimid);
         if (resourceClaim == null)

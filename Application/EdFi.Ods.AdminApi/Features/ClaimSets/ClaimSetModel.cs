@@ -7,6 +7,7 @@ using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json.Serialization;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -15,7 +16,13 @@ public class ClaimSetModel
 {
     public int Id { get; set; }
     public string? Name { get; set; }
+
+    [JsonPropertyName("_isSystemReserved")]
+    [SwaggerSchema(ReadOnly = true)]
     public bool IsSystemReserved { get; set; }
+
+    [JsonPropertyName("_applications")]
+    [SwaggerSchema(ReadOnly = true)]
     public List<SimpleApplicationModel> Applications { get; set; } = new();
 }
 
@@ -34,7 +41,11 @@ public class ClaimSetResourceClaimModel
     public bool Read { get; set; }
     public bool Update { get; set; }
     public bool Delete { get; set; }
+
+    [JsonPropertyName("_defaultAuthStrategiesForCRUD")]
+    [SwaggerSchema(ReadOnly = true)]
     public AuthorizationStrategyClaimSetModel?[] DefaultAuthStrategiesForCRUD { get; set; }
+
     public AuthorizationStrategyClaimSetModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]

@@ -112,7 +112,7 @@ public class EditResourceClaimActions : IFeature
                 claimSet = getClaimSetByIdQuery.Execute(resourceClaimOnClaimSetRequest.ClaimSetId);
                 if (!claimSet.IsEditable)
                 {
-                    context.AddFailure("ClaimSetId", $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.");
+                    context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
                 }
 
                 if (resourceClaimOnClaimSetRequest.ResourceClaimActions != null)

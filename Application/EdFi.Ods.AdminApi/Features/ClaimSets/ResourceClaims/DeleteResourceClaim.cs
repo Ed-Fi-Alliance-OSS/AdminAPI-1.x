@@ -31,7 +31,7 @@ public class DeleteResourceClaim : IFeature
 
         if (!claimSet.IsEditable)
         {
-            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.") });
+            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
         }
 
         var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(claimSet.Id, resourceclaimid);

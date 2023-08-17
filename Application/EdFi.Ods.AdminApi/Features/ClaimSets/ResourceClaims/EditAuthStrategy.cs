@@ -50,7 +50,7 @@ public class EditAuthStrategy : IFeature
 
         if (!claimSet.IsEditable)
         {
-            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.") });
+            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
         }
 
         var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid);
@@ -93,7 +93,7 @@ public class EditAuthStrategy : IFeature
                 var claimSet = getClaimSetByIdQuery.Execute(overrideAuthStategyOnClaimSetRequest.ClaimSetId);
                 if (!claimSet.IsEditable)
                 {
-                    context.AddFailure("ClaimSetId", $"Claim set ([{claimSet.Id}] {claimSet.Name}) is system reserved. May not be modified.");
+                    context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
                 }
 
                 var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()

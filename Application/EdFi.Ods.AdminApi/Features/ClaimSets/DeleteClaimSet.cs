@@ -46,7 +46,7 @@ public class DeleteClaimSet : IFeature
         if (claimSet != null && !claimSet.IsEditable)
         {
             throw new ValidationException(new[] { new ValidationFailure(nameof(id),
-                $"Cannot delete this claim set. This claim set is not editable.") });
+                $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
         }
     }
 

@@ -27,24 +27,6 @@ public class AuthStrategyResolver : IAuthStrategyResolver
 
         foreach (var claim in resourceClaims)
         {
-            if (claim.DefaultAuthStrategiesForCRUD != null && claim.DefaultAuthStrategiesForCRUD.Any())
-            {
-                foreach (var defaultStrategy in claim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
-                {
-                    if (defaultStrategy is null) continue;
-
-                    var authStrategy = dbAuthStrategies.SingleOrDefault(
-                        x => x.AuthorizationStrategyName.Equals(
-                            defaultStrategy.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
-
-                    if (authStrategy != null)
-                    {
-                        defaultStrategy.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                        defaultStrategy.DisplayName = authStrategy.DisplayName;
-                    }
-                }
-            }
-
             if (claim.AuthStrategyOverridesForCRUD != null && claim.AuthStrategyOverridesForCRUD.Any())
             {
                 foreach (var authStrategyOverride in claim.AuthStrategyOverridesForCRUD.Where(x => x != null))

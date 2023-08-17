@@ -132,7 +132,7 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: Application/EdFi.Ods.AdminApi/reports/*
+          path: Application/EdFi.Ods.AdminApi/reports/report.xml
           retention-days: 10
 
   report:
@@ -161,5 +161,5 @@ jobs:
               -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} `
               -ProjectId ${{ env.PROJECT_ID }} `
               -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' `
-              -ResultsFilePath '${{ env.RESULTS_FILE }}/*' `
+              -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' `
               -ConfigParams $parameters

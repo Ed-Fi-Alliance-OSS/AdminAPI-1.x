@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e1a6f3d4-86bd-46cb-9737-3f87810e3e91",
+		"_postman_id": "21764eef-6ca9-4043-b7b4-418e8b0709af",
 		"name": "Admin API E2E 2.0 - User Management",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3724147"
 	},
 	"item": [
 		{
@@ -723,14 +724,28 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"if(pm.request.auth && pm.request.auth.type === \"noauth\") {",
-					"    return;",
-					"}",
+					"let guid = pm.variables.replaceIn('{{$guid}}');",
 					"",
-					"let currentToken = pm.collectionVariables.get(\"TOKEN\");",
-					"if(currentToken) {",
-					"    return;",
-					"}",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/x-www-form-urlencoded'",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientSecret', value: guid },",
+					"            {key: 'DisplayName', value: guid }",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
 					"",
 					"pm.sendRequest({",
 					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
@@ -741,8 +756,8 @@
 					"    body: {",
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
-					"            {key: 'client_id', value: pm.variables.get(\"RegisteredClientId\")},",
-					"            {key: 'client_secret', value: pm.variables.get(\"RegisteredClientSecret\")},",
+					"            {key: 'client_id', value: guid },",
+					"            {key: 'client_secret', value: guid },",
 					"            {key: 'grant_type', value: \"client_credentials\"},",
 					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
 					"        ]",
@@ -754,6 +769,7 @@
 					"            throw res.json().error_description",
 					"        }",
 					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
+					"});",
 					"});"
 				]
 			}
@@ -771,54 +787,6 @@
 	"variable": [
 		{
 			"key": "TOKEN",
-			"value": ""
-		},
-		{
-			"key": "ODSInstanceId",
-			"value": ""
-		},
-		{
-			"key": "NotExistClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationId",
-			"value": ""
-		},
-		{
-			"key": "ClaimSetGUID",
-			"value": ""
-		},
-		{
-			"key": "CreatedClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "OtherClaimSetGUID",
-			"value": ""
-		},
-		{
-			"key": "OtherExistingClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "RegisteredClientId",
-			"value": ""
-		},
-		{
-			"key": "RegisteredClientSecret",
-			"value": ""
-		},
-		{
-			"key": "ApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "CreatedApplicationId",
 			"value": ""
 		}
 	]

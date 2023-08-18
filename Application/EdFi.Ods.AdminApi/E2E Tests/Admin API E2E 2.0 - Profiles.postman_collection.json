@@ -1,286 +1,11 @@
 {
 	"info": {
-		"_postman_id": "a3623083-29de-47ac-b0e2-cc1b24e22f20",
+		"_postman_id": "13af9dfc-70a2-479a-983f-716be1914508",
 		"name": "Admin API E2E 2.0 - Profiles",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3724147"
 	},
 	"item": [
-		{
-			"name": "Landing",
-			"item": [
-				{
-					"name": "Landing Page",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"GET Landing: Status code is OK\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"GET Landing: Response includes expected properties\", function () {\r",
-									"    pm.expect(response).to.have.property(\"version\");\r",
-									"    pm.expect(response).to.have.property(\"build\");\r",
-									"});\r",
-									"\r",
-									"const GetSchemaLanding =  {\r",
-									"  \"type\": \"object\",\r",
-									"  \"properties\": {\r",
-									"    \"version\": {\r",
-									"      \"type\": \"string\"\r",
-									"    },\r",
-									"    \"build\": {\r",
-									"      \"type\": \"string\"\r",
-									"    }\r",
-									"  },\r",
-									"  \"required\": [\r",
-									"    \"version\",\r",
-									"    \"build\"\r",
-									"  ]\r",
-									"}\r",
-									"\r",
-									"pm.test(\"GET Landing: Validation Schema Response\", () => {\r",
-									"    pm.response.to.have.jsonSchema(GetSchemaLanding);\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}",
-							"host": [
-								"{{API_URL}}"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "noauth"
-			}
-		},
-		{
-			"name": "User Management",
-			"item": [
-				{
-					"name": "Register",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"POST Register: Status code is OK\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"const result = pm.response.json().result;\r",
-									"\r",
-									"pm.test(\"POST Register: Response matches success format\", function () {\r",
-									"    pm.expect(response.status).to.equal(200);\r",
-									"    pm.expect(response).to.have.property(\"title\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"POST Register: Response title is helpful and accurate\", function () {\r",
-									"    pm.expect(response.title.toLowerCase()).to.contain(\"client\");\r",
-									"    pm.expect(response.title.toLowerCase()).to.contain(\"registered\");\r",
-									"});\r",
-									"\r",
-									"const PostRegisterSchema = {\r",
-									"  \"type\": \"object\",\r",
-									"  \"properties\": {\r",
-									"    \"title\": {\r",
-									"      \"type\": \"string\"\r",
-									"    },\r",
-									"    \"status\": {\r",
-									"      \"type\": \"integer\"\r",
-									"    }\r",
-									"  },\r",
-									"  \"required\": [\r",
-									"    \"title\",\r",
-									"    \"status\"\r",
-									"  ]\r",
-									"}\r",
-									"\r",
-									"pm.test(\"POST Register: Validation Schema Response\", () => {\r",
-									"    pm.response.to.have.jsonSchema(PostRegisterSchema);\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"RegisteredClientId\", pm.variables.replaceIn('{{$guid}}'));\r",
-									"pm.collectionVariables.set(\"RegisteredClientSecret\", pm.variables.replaceIn('{{$guid}}'));\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "ClientId",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "ClientSecret",
-									"value": "{{RegisteredClientSecret}}",
-									"type": "text"
-								},
-								{
-									"key": "DisplayName",
-									"value": "Postman Test",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/register",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Token",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"POST Token: Status code is OK\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"POST Token: Response includes token\", function () {\r",
-									"    pm.expect(response).to.have.property(\"access_token\");\r",
-									"    pm.expect(response).to.have.property(\"token_type\");\r",
-									"    pm.expect(response).to.have.property(\"expires_in\");\r",
-									"\r",
-									"    pm.expect(response[\"token_type\"]).to.equal(\"Bearer\");\r",
-									"});\r",
-									"\r",
-									"const PostTokenSchema = {\r",
-									"  \"type\": \"object\",\r",
-									"  \"properties\": {\r",
-									"    \"access_token\": {\r",
-									"      \"type\": \"string\"\r",
-									"    },\r",
-									"    \"token_type\": {\r",
-									"      \"type\": \"string\"\r",
-									"    },\r",
-									"    \"expires_in\": {\r",
-									"      \"type\": \"integer\"\r",
-									"    }\r",
-									"  },\r",
-									"  \"required\": [\r",
-									"    \"access_token\",\r",
-									"    \"token_type\",\r",
-									"    \"expires_in\"\r",
-									"  ]\r",
-									"}\r",
-									"\r",
-									"pm.test(\"POST Token: Validation Schema Response\", () => {\r",
-									"    pm.response.to.have.jsonSchema(PostTokenSchema);\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{RegisteredClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "client_secret",
-									"value": "{{RegisteredClientSecret}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "client_credentials",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "edfi_admin_api/full_access",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{API_URL}}/connect/token",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"connect",
-								"token"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "noauth"
-			}
-		},
 		{
 			"name": "v2",
 			"item": [
@@ -1215,14 +940,28 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"if(pm.request.auth && pm.request.auth.type === \"noauth\") {",
-					"    return;",
-					"}",
+					"let guid = pm.variables.replaceIn('{{$guid}}');",
 					"",
-					"let currentToken = pm.collectionVariables.get(\"TOKEN\");",
-					"if(currentToken) {",
-					"    return;",
-					"}",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/x-www-form-urlencoded'",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientSecret', value: guid },",
+					"            {key: 'DisplayName', value: guid }",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
 					"",
 					"pm.sendRequest({",
 					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
@@ -1233,8 +972,8 @@
 					"    body: {",
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
-					"            {key: 'client_id', value: pm.variables.get(\"RegisteredClientId\")},",
-					"            {key: 'client_secret', value: pm.variables.get(\"RegisteredClientSecret\")},",
+					"            {key: 'client_id', value: guid },",
+					"            {key: 'client_secret', value: guid },",
 					"            {key: 'grant_type', value: \"client_credentials\"},",
 					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
 					"        ]",
@@ -1246,6 +985,7 @@
 					"            throw res.json().error_description",
 					"        }",
 					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
+					"});",
 					"});"
 				]
 			}
@@ -1266,51 +1006,11 @@
 			"value": ""
 		},
 		{
-			"key": "ODSInstanceId",
+			"key": "NotExistProfileId",
 			"value": ""
 		},
 		{
-			"key": "NotExistClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "OtherApplicationId",
-			"value": ""
-		},
-		{
-			"key": "ClaimSetGUID",
-			"value": ""
-		},
-		{
-			"key": "CreatedClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "OtherClaimSetGUID",
-			"value": ""
-		},
-		{
-			"key": "OtherExistingClaimSetId",
-			"value": ""
-		},
-		{
-			"key": "RegisteredClientId",
-			"value": ""
-		},
-		{
-			"key": "RegisteredClientSecret",
-			"value": ""
-		},
-		{
-			"key": "ApplicationVendorId",
-			"value": ""
-		},
-		{
-			"key": "CreatedApplicationId",
+			"key": "CreatedProfileId",
 			"value": ""
 		}
 	]

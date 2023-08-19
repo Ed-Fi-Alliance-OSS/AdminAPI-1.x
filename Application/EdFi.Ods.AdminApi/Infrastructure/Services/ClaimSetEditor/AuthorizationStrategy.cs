@@ -12,3 +12,10 @@ public class AuthorizationStrategy
     public string? DisplayName { get; set; }
     public bool IsInheritedFromParent { get; set; }
 }
+
+public class ActionDetails
+{
+    public int? ActionId { get; set; }
+    public string? ActionName { get; set;}
+    public IEnumerable<AuthorizationStrategy>? AuthorizationStrategies { get; set;}
+}

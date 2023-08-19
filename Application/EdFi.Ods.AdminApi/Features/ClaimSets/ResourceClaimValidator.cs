@@ -114,13 +114,17 @@ public class ResourceClaimValidator
     {
         if (resourceClaim.DefaultAuthStrategiesForCRUD != null && resourceClaim.DefaultAuthStrategiesForCRUD.Any())
         {
-            foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
+            foreach (var defaultASWithAction in resourceClaim.DefaultAuthStrategiesForCRUD)
             {
-                if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
+                if(defaultASWithAction?.AuthorizationStrategies != null)
+                foreach(var defaultAS in defaultASWithAction.AuthorizationStrategies)
                 {
-                    context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
-                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
-                }
+                    if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
+                    {
+                        context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
+                        context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
+                    }
+                }               
             }
         }
     }

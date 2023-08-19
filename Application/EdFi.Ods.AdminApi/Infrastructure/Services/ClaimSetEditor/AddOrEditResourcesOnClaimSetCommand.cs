@@ -65,18 +65,22 @@ public class AddOrEditResourcesOnClaimSetCommand
                 {
                     ClaimSetId = claimSetId,
                     ResourceClaimId = resource.Id,
-                    AuthorizationStrategyForCreate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Create()),
-                    AuthorizationStrategyForRead = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Read()),
-                    AuthorizationStrategyForUpdate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Update()),
-                    AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Delete())
+                    AuthorizationStrategyForCreate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Create"))?
+                    .FirstOrDefault()),
+                    AuthorizationStrategyForRead = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Read"))?
+                    .FirstOrDefault()),
+                    AuthorizationStrategyForUpdate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Update"))?
+                    .FirstOrDefault()),
+                    AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Delete"))?
+                    .FirstOrDefault())
                 };
                 _overrideDefaultAuthorizationStrategyCommand.Execute(overrideAuthStrategyModel);
             }
         }
 
-        static int AuthStrategyOverrideForAction(AuthorizationStrategy? authorizationStrategy)
-        {
-            return authorizationStrategy != null ? authorizationStrategy.AuthStrategyId : 0;
+        static int AuthStrategyOverrideForAction(ActionDetails? actionDetails)
+        {            
+            return actionDetails != null ? actionDetails.AuthorizationStrategies?.FirstOrDefault()?.AuthStrategyId ?? 0 : 0;
         }
     }
 

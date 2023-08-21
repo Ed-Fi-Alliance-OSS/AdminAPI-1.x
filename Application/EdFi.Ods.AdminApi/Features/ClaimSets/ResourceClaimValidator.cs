@@ -99,13 +99,17 @@ public class ResourceClaimValidator
     {
         if (resourceClaim.AuthStrategyOverridesForCRUD != null && resourceClaim.AuthStrategyOverridesForCRUD.Any())
         {
-            foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
+            foreach (var authStrategyOverrideWithAction in resourceClaim.AuthStrategyOverridesForCRUD)
             {
-                if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
+                if (authStrategyOverrideWithAction?.AuthorizationStrategies != null)
+                foreach (var authStrategyOverride in authStrategyOverrideWithAction.AuthorizationStrategies)
                 {
-                    context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
-                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
-                }
+                    if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
+                    {
+                        context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
+                        context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
+                    }
+                }            
             }
         }
     }

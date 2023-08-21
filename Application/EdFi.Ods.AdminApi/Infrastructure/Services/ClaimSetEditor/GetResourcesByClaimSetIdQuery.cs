@@ -6,13 +6,10 @@
 
 using System.Data.Entity;
 using AutoMapper;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using SecurityResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using SecurityAuthorizationStrategy = EdFi.Security.DataAccess.Models.AuthorizationStrategy;
-using System;
-
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
@@ -135,9 +132,9 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         var defaultStrategies = defaultAuthStrategiesForChildren.SingleOrDefault(x =>
                          x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
                          x.Action.ActionName == action.ActionName)?.AuthorizationStrategies?.Select(x => x.AuthorizationStrategy);
-                       
+
                         if (defaultStrategies == null)
-                        {                           
+                        {
                             defaultStrategies = defaultAuthStrategiesForParents.SingleOrDefault(x =>
                                   x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
                                   x.Action.ActionName == action.ActionName)?.AuthorizationStrategies?.Select(x => x.AuthorizationStrategy);
@@ -155,7 +152,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                                 ActionName = action.ActionName,
                                 AuthorizationStrategies = _mapper.Map<List<AuthorizationStrategy>>(childResourceStrategies)
                             });
-                        }                       
+                        }
                     }
                 }
 
@@ -178,11 +175,12 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     return strategies;
                 }
 
-                resultDictionary[resourceClaim.ResourceClaimId] = actions.Where(x => x != null).ToList();
+                resultDictionary[resourceClaim.ResourceClaimId] = actions.Where(x => x != null &&
+                x.AuthorizationStrategies != null && x.AuthorizationStrategies.Any()).ToList();
             }
 
             return resultDictionary;
-        }       
+        }
 
         private Dictionary<int, List<ActionDetails?>> GetAuthStrategyOverrides(List<ClaimSetResourceClaimAction> resourceClaims)
         {
@@ -262,21 +260,18 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     return strategies;
                 }
 
-                //if (actionDetails != null )//&& actionDetails.AuthorizationStrategies != null && actionDetails.AuthorizationStrategies.Any())
+                if (resultDictionary.ContainsKey(resourceClaim.ResourceClaim.ResourceClaimId))
                 {
-
-                    if (resultDictionary.ContainsKey(resourceClaim.ResourceClaim.ResourceClaimId))
+                    if (actionDetails != null)
+                        resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].Add(actionDetails);
+                }
+                else
+                {
+                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new List<ActionDetails?>();
+                    if(actionDetails != null)
                     {
                         resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].Add(actionDetails);
-                    }
-                    else
-                    {
-                        //if (resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] == null)
-                        {
-                            resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new List<ActionDetails?>();
-                        }                       
-                        resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].Add(actionDetails);
-                    }
+                    };
                 }
             }
 

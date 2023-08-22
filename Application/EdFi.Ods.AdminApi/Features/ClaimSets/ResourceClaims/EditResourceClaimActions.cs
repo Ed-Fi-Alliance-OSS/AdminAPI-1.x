@@ -121,7 +121,7 @@ public class EditResourceClaimActions : IFeature
                 }
                 else
                 {
-                    context.AddFailure("ResourceClaimActions", FeatureConstants.ResourceClaimActionNotFound);
+                    context.AddFailure("ResourceClaimActions", FeatureConstants.InvalidResourceClaimActions);
                 }
 
 

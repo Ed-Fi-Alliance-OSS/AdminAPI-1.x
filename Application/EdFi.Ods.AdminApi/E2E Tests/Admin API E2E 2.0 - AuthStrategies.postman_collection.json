@@ -69,7 +69,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/authstrategies",
+									"raw": "{{API_URL}}/v2/authStrategies",
 									"host": [
 										"{{API_URL}}"
 									],

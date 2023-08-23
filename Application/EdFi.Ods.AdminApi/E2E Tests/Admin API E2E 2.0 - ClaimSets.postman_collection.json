@@ -37,7 +37,7 @@
 											"\r",
 											"pm.test(\"POST ClaimSets: Response includes location in header\", function () {\r",
 											"    pm.response.to.have.header(\"Location\");\r",
-											"    pm.response.to.be.header(\"Location\", `/claimsets/${result.id}`);\r",
+											"    pm.response.to.be.header(\"Location\", `/claimSets/${result.id}`);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"POST ClaimSets: Response result includes claimSet key and secret\", function () {\r",
@@ -259,7 +259,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -325,7 +325,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -391,7 +391,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -413,7 +413,7 @@
 										"exec": [
 											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -480,7 +480,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -553,7 +553,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -622,7 +622,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -692,7 +692,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -743,7 +743,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaimActions",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -812,7 +812,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaimActions",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -863,7 +863,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaimActions/4",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -927,7 +927,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/90000/resourceclaimActions/4",
+									"raw": "{{API_URL}}/v2/claimSets/90000/resourceClaimActions/4",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -979,7 +979,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4/overrideauthstrategy",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthStrategy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1053,7 +1053,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4000/overrideauthstrategy",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000/overrideAuthStrategy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1106,7 +1106,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4/resetauthstrategies",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/resetAuthStrategies",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1159,7 +1159,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/40000/resetauthstrategies",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/40000/resetAuthStrategies",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1212,7 +1212,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1264,7 +1264,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}/resourceclaims/4000",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1288,7 +1288,7 @@
 										"exec": [
 											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1355,7 +1355,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/",
+									"raw": "{{API_URL}}/v2/claimSets/",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1377,7 +1377,7 @@
 										"exec": [
 											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1445,7 +1445,7 @@
 											"\r",
 											"pm.test(\"POST ClaimSets: Response includes location in header\", function () {\r",
 											"    pm.response.to.have.header(\"Location\");\r",
-											"    pm.response.to.be.header(\"Location\", `/claimsets/${result.id}`);\r",
+											"    pm.response.to.be.header(\"Location\", `/claimSets/${result.id}`);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"POST ClaimSets: Response result claimset has expected name and resource claims\", function () {\r",
@@ -1474,7 +1474,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/copy",
+									"raw": "{{API_URL}}/v2/claimSets/copy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1543,7 +1543,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/copy",
+									"raw": "{{API_URL}}/v2/claimSets/copy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1626,7 +1626,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets?offset={{offset}}&limit={{limit}}",
+									"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1798,7 +1798,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2057,7 +2057,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2122,7 +2122,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2187,7 +2187,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2253,7 +2253,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2325,7 +2325,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2394,7 +2394,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2463,7 +2463,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2484,7 +2484,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimsets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
 											"  method: 'GET',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -2553,7 +2553,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{SystemReservedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2613,7 +2613,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2675,7 +2675,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{SystemReservedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2816,7 +2816,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{OtherExistingClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{OtherExistingClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2863,7 +2863,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2915,7 +2915,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -2966,7 +2966,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],

@@ -221,7 +221,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceclaims",
+									"raw": "{{API_URL}}/v2/resourceClaimActions",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -325,7 +325,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceclaims/1",
+									"raw": "{{API_URL}}/v2/resourceClaimActions/1",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -368,7 +368,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceclaims/1/children",
+									"raw": "{{API_URL}}/v2/resourceClaimActions/1/children",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -415,7 +415,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceclaims/000/children",
+									"raw": "{{API_URL}}/v2/resourceClaimActions/000/children",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -462,7 +462,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/resourceclaims/00",
+									"raw": "{{API_URL}}/v2/resourceClaimActions/00",
 									"host": [
 										"{{API_URL}}"
 									],

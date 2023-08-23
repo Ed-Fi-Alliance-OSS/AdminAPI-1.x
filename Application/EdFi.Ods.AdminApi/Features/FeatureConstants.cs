@@ -30,7 +30,7 @@ public class FeatureConstants
     public const string ClaimSetAlreadyExistsMessage = "A claim set with this name already exists in the database. Please enter a unique name.";
     public const string ClaimSetNameMaxLengthMessage = "The claim set name must be less than 255 characters.";
     public const string ClaimSetNotFound = "No such claim set exists in the database.";
-    public const string ResourceClaimNotFound = "No such resource claim exists in the database.";
+    public const string InvalidResourceClaimActions = "Please provide a valid resourceClaimActions object.";
     public const string ResourceClaimOneActionNotSet = "A resource must have at least one action associated with it to be added.";
     public const string OdsInstanceIdDescription = "ODS instance id";
     public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id.";

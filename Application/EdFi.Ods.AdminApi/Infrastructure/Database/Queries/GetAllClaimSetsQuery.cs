@@ -31,7 +31,8 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
             .Select(x => new ClaimSet
             {
                 Id = x.ClaimSetId,
-                Name = x.ClaimSetName
+                Name = x.ClaimSetName,
+                IsEditable = !x.IsEdfiPreset && !x.ForApplicationUseOnly
             })
             .Distinct()
             .OrderBy(x => x.Name)
@@ -44,7 +45,8 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
             .Select(x => new ClaimSet
             {
                 Id = x.ClaimSetId,
-                Name = x.ClaimSetName
+                Name = x.ClaimSetName,
+                IsEditable = !x.IsEdfiPreset && !x.ForApplicationUseOnly
             })
             .Distinct()
             .OrderBy(x => x.Name)

@@ -25,8 +25,7 @@ public class DeleteClaimSetCommand : IDeleteClaimSetCommand
     public void Execute(IDeleteClaimSetModel claimSet)
     {
         var claimSetToDelete = _context.ClaimSets.Single(x => x.ClaimSetId == claimSet.Id);
-        if (claimSetToDelete.ForApplicationUseOnly || claimSetToDelete.IsEdfiPreset ||
-                Constants.SystemReservedClaimSets.Contains(claimSetToDelete.ClaimSetName))
+        if (claimSetToDelete.ForApplicationUseOnly || claimSetToDelete.IsEdfiPreset)
         {
             throw new AdminApiException($"Claim set({claimSetToDelete.ClaimSetName}) is system reserved. Can not be deleted.");
         }

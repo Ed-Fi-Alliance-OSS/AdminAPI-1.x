@@ -14,17 +14,17 @@ public class ReadResourceClaims : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaimActions", GetResourceClaims)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaims", GetResourceClaims)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<List<ResourceClaimModel>>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaimActions/{id}", GetResourceClaim)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaims/{id}", GetResourceClaim)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ResourceClaimModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaimActions/{id}/children", GetResourceClaimChildren)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaims/{id}/children", GetResourceClaimChildren)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ResourceClaimModel>(200))
             .BuildForVersions(AdminApiVersions.V2);

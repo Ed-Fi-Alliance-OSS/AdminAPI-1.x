@@ -263,11 +263,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -329,11 +329,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -395,11 +395,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -484,11 +484,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -557,11 +557,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -626,11 +626,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -696,11 +696,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										""
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        ""
+                    ]
 								}
 							},
 							"response": []
@@ -747,12 +747,12 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaimActions"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions"
+                    ]
 								}
 							},
 							"response": []
@@ -816,12 +816,12 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaimActions"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions"
+                    ]
 								}
 							},
 							"response": []
@@ -867,13 +867,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaimActions",
-										"4"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "4"
+                    ]
 								}
 							},
 							"response": []
@@ -931,13 +931,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"90000",
-										"resourceclaimActions",
-										"4"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "90000",
+                        "resourceClaimActions",
+                        "4"
+                    ]
 								}
 							},
 							"response": []
@@ -983,14 +983,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaims",
-										"4",
-										"overrideauthstrategy"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "4",
+                        "overrideAuthStrategy"
+                    ]
 								}
 							},
 							"response": []
@@ -1057,14 +1057,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaims",
-										"4000",
-										"overrideauthstrategy"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "4000",
+                        "overrideAuthStrategy"
+                    ]
 								}
 							},
 							"response": []
@@ -1110,14 +1110,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaims",
-										"4",
-										"resetauthstrategies"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "4",
+                        "resetAuthStrategies"
+                    ]
 								}
 							},
 							"response": []
@@ -1163,14 +1163,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaims",
-										"40000",
-										"resetauthstrategies"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "40000",
+                        "resetAuthStrategies"
+                    ]
 								}
 							},
 							"response": []
@@ -1216,13 +1216,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaims",
-										"4"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "4"
+                    ]
 								}
 							},
 							"response": []
@@ -1268,13 +1268,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-									"path": [
-										"v2",
-										"claimsets",
-										"{{CreatedClaimSetId}}",
-										"resourceclaims",
-										"4000"
-									]
+                    "path": [
+                        "v2",
+                        "claimSets",
+                        "{{CreatedClaimSetId}}",
+                        "resourceClaimActions",
+                        "4000"
+                    ]
 								}
 							},
 							"response": []
@@ -2259,7 +2259,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2331,7 +2331,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2400,7 +2400,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2469,7 +2469,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2559,7 +2559,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{SystemReservedClaimSetId}}"
 									]
 								}
@@ -2681,7 +2681,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{SystemReservedClaimSetId}}"
 									]
 								}
@@ -2822,7 +2822,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{OtherExistingClaimSetId}}"
 									]
 								}
@@ -2869,7 +2869,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2921,7 +2921,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2972,7 +2972,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}

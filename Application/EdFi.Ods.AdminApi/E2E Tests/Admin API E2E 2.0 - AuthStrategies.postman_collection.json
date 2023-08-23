@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "9dc3fbfb-0644-43b3-b834-cbfa7430baaa",
+		"name": "Admin API E2E 2.0 - AuthStrategies",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3724147"
+	},
+	"item": [
+		{
+			"name": "v2",
+			"item": [
+				{
+					"name": "AuthStrategies",
+					"item": [
+						{
+							"name": "Authstrategies",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET AuthStrategies: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET AuthStrategies: Response matches success format\", function () {\r",
+											"    pm.expect(response[0]).to.have.property(\"authStrategyId\");\r",
+											"    pm.expect(response[0]).to.have.property(\"authStrategyName\");\r",
+											"    pm.expect(response[0]).to.have.property(\"displayName\");\r",
+											"});\r",
+											"\r",
+											"const GetAuthStrategiesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"authStrategyId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"authStrategyName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"displayName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"authStrategyId\",\r",
+											"        \"authStrategyName\",\r",
+											"        \"displayName\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET AuthStrategies: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetAuthStrategiesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/authstrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"authstrategies"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let guid = pm.variables.replaceIn('{{$guid}}');",
+					"",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/x-www-form-urlencoded'",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientSecret', value: guid },",
+					"            {key: 'DisplayName', value: guid }",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
+					"",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/x-www-form-urlencoded'",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'client_id', value: guid },",
+					"            {key: 'client_secret', value: guid },",
+					"            {key: 'grant_type', value: \"client_credentials\"},",
+					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
+					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
+					"});",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": ""
+		}
+	]
+}

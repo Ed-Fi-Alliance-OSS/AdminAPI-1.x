@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "e1c8ccb6-52cc-4857-a12d-ef2b397bea13",
+		"name": "Admin API E2E 2.0 - OdsInstances",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3724147"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "OdsInstances",
+					"item": [
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstances: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET OdsInstances: Response matches success format\", function () {",
+											"    pm.expect(response[0]).to.have.property(\"odsInstanceId\");",
+											"    pm.expect(response[0]).to.have.property(\"name\");",
+											"    pm.expect(response[0]).to.have.property(\"instanceType\");",
+											"});",
+											"",
+											"const GetOdsInstancesSchema = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"odsInstanceId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"name\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"instanceType\": {",
+											"          \"type\": \"string\"",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"odsInstanceId\",",
+											"        \"name\",",
+											"        \"instanceType\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET OdsInstances: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetOdsInstancesSchema);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances?offset={{offset}}&limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstances NotFound: Status code is Not Found\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"GET OdsInstances NotFound: Response matches error format\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response).to.have.property(\"title\");",
+											"});",
+											"",
+											"pm.test(\"GET OdsInstances NotFound: Response title is helpful and accurate\", function () {",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.title).to.contain(\"Not found\");",
+											"    pm.expect(response.title).to.contain(\"odsinstance\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/0",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstancesID: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET OdsInstancesID: Response matches success format\", function () {",
+											"    pm.expect(response).to.have.property(\"odsInstanceId\");",
+											"    pm.expect(response).to.have.property(\"name\");",
+											"    pm.expect(response).to.have.property(\"instanceType\");",
+											"});",
+											"",
+											"const GetOdsInstancesIdSchema = {",
+											"  \"type\": \"object\",",
+											"  \"properties\": {",
+											"    \"odsInstanceId\": {",
+											"      \"type\": \"integer\"",
+											"    },",
+											"    \"name\": {",
+											"      \"type\": \"string\"",
+											"    },",
+											"    \"instanceType\": {",
+											"      \"type\": \"string\"",
+											"    }",
+											"  },",
+											"  \"required\": [",
+											"    \"odsInstanceId\",",
+											"    \"name\",",
+											"    \"instanceType\"",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET OdsInstancesID: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetOdsInstancesIdSchema);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsinstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,",
+											"  method: 'GET',",
+											"  header: {",
+											"      \"Content-Type\": \"application/json\",",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`",
+											"  }",
+											"},  ",
+											"function (err, response) {",
+											"  if(err) { console.log(\"Error in Pre-request:\", err); }",
+											"  const json = response.json();",
+											"  if(!json[0].odsInstanceId) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }",
+											"  else {",
+											"    pm.collectionVariables.set(\"ODSInstanceId\", json[0].odsInstanceId);",
+											"  }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/{{ODSInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"{{ODSInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances by ID Application",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstancesIDApplication: Status code is OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"GET OdsInstancesIDApplication: Response matches success format\", function () {",
+											"    pm.expect(response[0]).to.have.property(\"id\");",
+											"    pm.expect(response[0]).to.have.property(\"applicationName\");",
+											"    pm.expect(response[0]).to.have.property(\"claimSetName\");",
+											"    pm.expect(response[0]).to.have.property(\"educationOrganizationIds\");",
+											"    pm.expect(response[0]).to.have.property(\"vendorId\");",
+											"    pm.expect(response[0]).to.have.property(\"profileIds\");",
+											"    pm.expect(response[0]).to.have.property(\"odsInstanceId\");",
+											"});",
+											"",
+											"const GetOdsInstancesIdApplication = {",
+											"  \"type\": \"array\",",
+											"  \"items\": [",
+											"    {",
+											"      \"type\": \"object\",",
+											"      \"properties\": {",
+											"        \"id\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"applicationName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"claimSetName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"educationOrganizationIds\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": {}",
+											"        },",
+											"        \"odsInstanceName\": {",
+											"          \"type\": \"string\"",
+											"        },",
+											"        \"vendorId\": {",
+											"          \"type\": \"integer\"",
+											"        },",
+											"        \"profileIds\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": {}",
+											"        },",
+											"        \"odsInstanceId\": {",
+											"          \"type\": \"integer\"",
+											"        }",
+											"      },",
+											"      \"required\": [",
+											"        \"id\",",
+											"        \"applicationName\",",
+											"        \"claimSetName\",",
+											"        \"educationOrganizationIds\",",
+											"        \"vendorId\",",
+											"        \"profileIds\",",
+											"        \"odsInstanceId\"",
+											"      ]",
+											"    }",
+											"  ]",
+											"}",
+											"",
+											"pm.test(\"GET OdsInstancesIdApplication: Validation Schema Response\", () => {",
+											"    pm.response.to.have.jsonSchema(GetOdsInstancesIdApplication);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsinstances/{{ODSInstanceId}}/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsinstances",
+										"{{ODSInstanceId}}",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let guid = pm.variables.replaceIn('{{$guid}}');",
+					"",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/x-www-form-urlencoded'",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientSecret', value: guid },",
+					"            {key: 'DisplayName', value: guid }",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
+					"",
+					"pm.sendRequest({",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/x-www-form-urlencoded'",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: 'client_id', value: guid },",
+					"            {key: 'client_secret', value: guid },",
+					"            {key: 'grant_type', value: \"client_credentials\"},",
+					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
+					"        ]",
+					"    }",
+					"},",
+					"    (err, res) => {",
+					"        error = res.json().error",
+					"        if(error) {",
+					"            throw res.json().error_description",
+					"        }",
+					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
+					"});",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": ""
+		},
+		{
+			"key": "ODSInstanceId",
+			"value": ""
+		}
+	]
+}

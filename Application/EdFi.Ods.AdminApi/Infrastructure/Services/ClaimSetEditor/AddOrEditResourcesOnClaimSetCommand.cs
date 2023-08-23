@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
 
@@ -65,22 +64,10 @@ public class AddOrEditResourcesOnClaimSetCommand
                 {
                     ClaimSetId = claimSetId,
                     ResourceClaimId = resource.Id,
-                    AuthorizationStrategyForCreate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Create"))?
-                    .FirstOrDefault()),
-                    AuthorizationStrategyForRead = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Read"))?
-                    .FirstOrDefault()),
-                    AuthorizationStrategyForUpdate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Update"))?
-                    .FirstOrDefault()),
-                    AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD?.Where(x => x != null && x.ActionName.Equals("Delete"))?
-                    .FirstOrDefault())
+                    ClaimSetResourceClaimActionAuthStrategyOverrides = resource.AuthStrategyOverridesForCRUD
                 };
                 _overrideDefaultAuthorizationStrategyCommand.Execute(overrideAuthStrategyModel);
             }
-        }
-
-        static int AuthStrategyOverrideForAction(ActionDetails? actionDetails)
-        {            
-            return actionDetails != null ? actionDetails.AuthorizationStrategies?.FirstOrDefault()?.AuthStrategyId ?? 0 : 0;
         }
     }
 
@@ -113,8 +100,5 @@ public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationS
 {
     public int ClaimSetId { get; set; }
     public int ResourceClaimId { get; set; }
-    public int AuthorizationStrategyForCreate { get; set; }
-    public int AuthorizationStrategyForRead { get; set; }
-    public int AuthorizationStrategyForUpdate { get; set; }
-    public int AuthorizationStrategyForDelete { get; set; }
+    public List<ClaimSetResourceClaimActionAuthStrategies?>? ClaimSetResourceClaimActionAuthStrategyOverrides { get; set; }
 }

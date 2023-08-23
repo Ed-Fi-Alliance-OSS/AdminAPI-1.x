@@ -92,9 +92,9 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             return parentResources;
         }
 
-        private Dictionary<int, List<ActionDetails?>> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims)
+        private Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims)
         {
-            var resultDictionary = new Dictionary<int, List<ActionDetails?>>();
+            var resultDictionary = new Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>>();
 
             var defaultAuthStrategies = _securityContext.ResourceClaimActions
                 .Include(x => x.ResourceClaim).Include(x => x.Action).Include(x => x.AuthorizationStrategies.Select(x => x.AuthorizationStrategy)).ToList();
@@ -107,7 +107,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
             foreach (var resourceClaim in resourceClaims)
             {
-                var actions = new List<ActionDetails?>();
+                var actions = new List<ClaimSetResourceClaimActionAuthStrategies?>();
                 foreach (var action in _securityContext.Actions)
                 {
                     if (resourceClaim.ParentResourceClaimId == null)
@@ -118,7 +118,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
                         if (defaultStrategies != null)
                         {
-                            actions.Add(new ActionDetails
+                            actions.Add(new ClaimSetResourceClaimActionAuthStrategies
                             {
                                 ActionId = action.ActionId,
                                 ActionName = action.ActionName,
@@ -146,7 +146,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         }
                         if (childResourceStrategies != null)
                         {
-                            actions.Add(new ActionDetails
+                            actions.Add(new ClaimSetResourceClaimActionAuthStrategies
                             {
                                 ActionId = action.ActionId,
                                 ActionName = action.ActionName,
@@ -182,22 +182,22 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             return resultDictionary;
         }
 
-        private Dictionary<int, List<ActionDetails?>> GetAuthStrategyOverrides(List<ClaimSetResourceClaimAction> resourceClaims)
+        private Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>> GetAuthStrategyOverrides(List<ClaimSetResourceClaimAction> resourceClaims)
         {
-            var resultDictionary = new Dictionary<int, List<ActionDetails?>>();
+            var resultDictionary = new Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>>();
 
             var dbActions = _securityContext.Actions.ToList();
 
             foreach (var resourceClaim in resourceClaims)
             {
-                ActionDetails? actionDetails = null;
+                ClaimSetResourceClaimActionAuthStrategies? actionDetails = null;
 
                 if (resourceClaim.ResourceClaim.ParentResourceClaim == null)
                 {
                     if (resourceClaim.AuthorizationStrategyOverrides is not null
                       && resourceClaim.AuthorizationStrategyOverrides.Any())
                     {
-                        actionDetails = new ActionDetails
+                        actionDetails = new ClaimSetResourceClaimActionAuthStrategies
                         {
                             ActionId = resourceClaim.ActionId,
                             ActionName = resourceClaim.Action.ActionName,
@@ -231,7 +231,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
                     if (childResourceOverrideStrategies != null)
                     {
-                        actionDetails = new ActionDetails
+                        actionDetails = new ClaimSetResourceClaimActionAuthStrategies
                         {
                             ActionId = resourceClaim.ActionId,
                             ActionName = resourceClaim.Action.ActionName,
@@ -267,7 +267,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 }
                 else
                 {
-                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new List<ActionDetails?>();
+                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new List<ClaimSetResourceClaimActionAuthStrategies?>();
                     if(actionDetails != null)
                     {
                         resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].Add(actionDetails);

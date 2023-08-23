@@ -44,17 +44,17 @@ public class ClaimSetResourceClaimModel
 
     [JsonPropertyName("_defaultAuthorizationStrategiesForCRUD")]
     [SwaggerSchema(ReadOnly = true)]
-    public List<ActionDetails?> DefaultAuthStrategiesForCRUD { get; set; }
+    public List<ClaimSetResourceClaimActionAuthStrategies?> DefaultAuthStrategiesForCRUD { get; set; }
 
-    public List<ActionDetails?> AuthStrategyOverridesForCRUD { get; set; }
+    public List<ClaimSetResourceClaimActionAuthStrategies?> AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
     public List<ClaimSetResourceClaimModel> Children { get; set; }
     public ClaimSetResourceClaimModel()
     {
         Children = new List<ClaimSetResourceClaimModel>();
-        DefaultAuthStrategiesForCRUD = new List<ActionDetails?>();
-        AuthStrategyOverridesForCRUD = new List<ActionDetails?>();
+        DefaultAuthStrategiesForCRUD = new List<ClaimSetResourceClaimActionAuthStrategies?>();
+        AuthStrategyOverridesForCRUD = new List<ClaimSetResourceClaimActionAuthStrategies?>();
     }
 }
 

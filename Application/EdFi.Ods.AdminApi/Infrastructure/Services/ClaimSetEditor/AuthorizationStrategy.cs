@@ -13,7 +13,14 @@ public class AuthorizationStrategy
     public bool IsInheritedFromParent { get; set; }
 }
 
-public class ActionDetails
+public interface IClaimSetResourceClaimActionAuthStrategies
+{
+    int? ActionId { get; }
+    string? ActionName { get; }
+    IEnumerable<AuthorizationStrategy>? AuthorizationStrategies { get; }
+}
+
+public class ClaimSetResourceClaimActionAuthStrategies : IClaimSetResourceClaimActionAuthStrategies
 {
     public int? ActionId { get; set; }
     public string? ActionName { get; set;}

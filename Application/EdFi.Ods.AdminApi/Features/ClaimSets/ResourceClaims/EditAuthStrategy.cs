@@ -17,7 +17,7 @@ public class EditAuthStrategy : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/overrideAuthStrategy", HandleOverrideAuthStrategies)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/overrideAuthorizationStrategy", HandleOverrideAuthStrategies)
        .WithDefaultDescription()
        .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
@@ -78,7 +78,7 @@ public class EditAuthStrategy : IFeature
             RuleFor(m => m.ClaimSetId).NotEqual(0);
             RuleFor(m => m.ResourceClaimId).NotEqual(0);
             RuleFor(m => m.ActionName).NotEmpty();
-            RuleFor(m => m.AuthStrategyName).NotEmpty();
+            RuleFor(m => m.AuthorizationStrategyName).NotEmpty();
 
             RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
             {
@@ -96,11 +96,11 @@ public class EditAuthStrategy : IFeature
                 }
 
                 var authStrategyName = getAllAuthorizationStrategiesQuery.Execute().ToList()
-                .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName!.ToLower());
+                .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthorizationStrategyName!.ToLower());
 
                 if (authStrategyName == null)
                 {
-                    context.AddFailure("AuthStrategyName", "AuthStrategyName doesn't exist.");
+                    context.AddFailure("AuthorizationStrategyName", "AuthorizationStrategyName doesn't exist.");
                 }
 
                 var actionName = getAllActionsQuery.Execute().ToList()
@@ -119,6 +119,6 @@ public class EditAuthStrategy : IFeature
     public class OverrideAuthStategyOnClaimSetRequest : OverrideAuthStrategyOnClaimSetModel
     {
         [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
-        public string? AuthStrategyName { get; set; }
+        public string? AuthorizationStrategyName { get; set; }
     }
 }

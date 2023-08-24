@@ -971,7 +971,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authStrategyName\": \"RelationshipsWithStudentsOnly\"\r\n}\r\n",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategyName\": \"RelationshipsWithStudentsOnly\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -979,7 +979,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthStrategy",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -989,7 +989,7 @@
                         "{{CreatedClaimSetId}}",
                         "resourceClaimActions",
                         "4",
-                        "overrideAuthStrategy"
+                        "overrideAuthorizationStrategy"
                     ]
 								}
 							},
@@ -1029,8 +1029,8 @@
 											"pm.test(\"POST OverrideAuthStrategy Invalid: Response errors include messages by property\", function () {\r",
 											"    pm.expect(response.errors.ResourceClaim.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ResourceClaim[0]).to.contain(\"doesn't exist\");\r",
-											"    pm.expect(response.errors.AuthStrategyName.length).to.equal(1);\r",
-											"    pm.expect(response.errors.AuthStrategyName[0]).to.contain(\"doesn't exist\");\r",
+											"    pm.expect(response.errors.AuthorizationStrategyName.length).to.equal(1);\r",
+											"    pm.expect(response.errors.AuthorizationStrategyName[0]).to.contain(\"doesn't exist\");\r",
 											"    pm.expect(response.errors.ActionName.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ActionName[0]).to.contain(\"doesn't exist\");\r",
 											"});\r",
@@ -1045,7 +1045,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"actionName\": \"NotExist\",\r\n  \"authStrategyName\": \"RelationshipsWithStudentsOnlys\"\r\n}\r\n",
+									"raw": "{\r\n  \"actionName\": \"NotExist\",\r\n  \"authorizationStrategyName\": \"RelationshipsWithStudentsOnlys\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1053,7 +1053,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000/overrideAuthStrategy",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4000/overrideAuthorizationStrategy",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1063,7 +1063,7 @@
                         "{{CreatedClaimSetId}}",
                         "resourceClaimActions",
                         "4000",
-                        "overrideAuthStrategy"
+                        "overrideAuthorizationStrategy"
                     ]
 								}
 							},

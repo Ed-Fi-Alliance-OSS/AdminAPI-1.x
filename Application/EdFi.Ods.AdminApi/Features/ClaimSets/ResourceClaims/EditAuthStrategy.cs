@@ -95,7 +95,7 @@ public class EditAuthStrategy : IFeature
                     context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
                 }
 
-                var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()
+                var authStrategyName = getAllAuthorizationStrategiesQuery.Execute().ToList()
                 .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName!.ToLower());
 
                 if (authStrategyName == null)
@@ -103,7 +103,7 @@ public class EditAuthStrategy : IFeature
                     context.AddFailure("AuthStrategyName", "AuthStrategyName doesn't exist.");
                 }
 
-                var actionName = getAllActionsQuery.Execute()
+                var actionName = getAllActionsQuery.Execute().ToList()
                 .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
 
                 if (actionName == null)

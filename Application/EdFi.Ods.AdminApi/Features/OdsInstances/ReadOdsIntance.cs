@@ -13,12 +13,12 @@ public class ReadOdsIntance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsinstances", GetOdsInstances)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstances", GetOdsInstances)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsinstances/{id}", GetOdsInstance)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstances/{id}", GetOdsInstance)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel>(200))
             .BuildForVersions(AdminApiVersions.V1);

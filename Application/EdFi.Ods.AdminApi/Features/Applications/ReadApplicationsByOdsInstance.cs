@@ -13,7 +13,7 @@ public class ReadApplicationsByOdsInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        var url = "odsinstances/{id}/applications";
+        var url = "odsInstances/{id}/applications";
 
         AdminApiEndpointBuilder.MapGet(endpoints, url, GetOdsInstanceApplications)
             .WithDescription("Retrieves applications assigned to a specific ODS instance based on the resource identifier.")

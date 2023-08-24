@@ -167,6 +167,17 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
             persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
         });
+
+        Transaction(usersContext =>
+        {
+            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId); 
+            var apiClient = persistedApplication.ApiClients.First();
+            var apiClientOdsInstance = usersContext.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == persistedApplication.OdsInstanceId() && o.ApiClient.ApiClientId == apiClient.ApiClientId);
+            apiClientOdsInstance.ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
+            apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(persistedApplication.OdsInstanceId().Value);
+        });
+
+
     }
 
     private class TestEditApplicationModel : IEditApplicationModel

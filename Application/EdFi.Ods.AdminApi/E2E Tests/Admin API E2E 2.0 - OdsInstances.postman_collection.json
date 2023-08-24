@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "v1",
+			"name": "v2",
 			"item": [
 				{
 					"name": "OdsInstances",
@@ -69,12 +69,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances?offset={{offset}}&limit={{limit}}",
+									"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
+										"v2",
 										"odsInstances"
 									],
 									"query": [
@@ -124,12 +124,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/0",
+									"raw": "{{API_URL}}/v2/odsInstances/0",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
+										"v2",
 										"odsInstances",
 										"0"
 									]
@@ -189,7 +189,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({",
-											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsInstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,",
 											"  method: 'GET',",
 											"  header: {",
 											"      \"Content-Type\": \"application/json\",",
@@ -213,12 +213,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{ODSInstanceId}}",
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
+										"v2",
 										"odsInstances",
 										"{{ODSInstanceId}}"
 									]
@@ -307,12 +307,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsInstances/{{ODSInstanceId}}/applications",
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}/applications",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
+										"v2",
 										"odsInstances",
 										"{{ODSInstanceId}}",
 										"applications"

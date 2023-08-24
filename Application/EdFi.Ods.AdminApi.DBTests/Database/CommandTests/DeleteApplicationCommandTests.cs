@@ -60,6 +60,9 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
         var applicationId = application.ApplicationId;
         applicationId.ShouldBeGreaterThan(0);
 
+        var odsInstanceId = application.OdsInstanceId().Value;
+        odsInstanceId.ShouldBeGreaterThan(0);
+
         var clientId = client.ApiClientId;
         clientId.ShouldBeGreaterThan(0);
 
@@ -74,6 +77,7 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
         Transaction(usersContext => usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext => usersContext.ApiClientOdsInstances.Where(c => c.ApiClient.ApiClientId == clientId && c.OdsInstance.OdsInstanceId == odsInstanceId).ToArray()).ShouldBeEmpty();
     }
 
     [Test]

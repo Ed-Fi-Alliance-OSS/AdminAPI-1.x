@@ -35,6 +35,8 @@ public class EditApplicationCommand : IEditApplicationCommand
             throw new Exception("This Application is required for proper system function and may not be modified");
         }
 
+        var currentOdsInstanceId = application.OdsInstanceId();
+
         var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
         var newProfiles = model.ProfileIds != null
             ? _context.Profiles.Where(p => model.ProfileIds.Contains(p.ProfileId))
@@ -42,7 +44,15 @@ public class EditApplicationCommand : IEditApplicationCommand
         var newOdsInstance = _context.OdsInstances.Single(o => o.OdsInstanceId == model.OdsInstanceId);
 
         var apiClient = application.ApiClients.Single();
+        var currentApiClientId = apiClient.ApiClientId;
         apiClient.Name = model.ApplicationName;
+
+        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == currentOdsInstanceId && o.ApiClient.ApiClientId == currentApiClientId);
+
+        if (apiClientOdsInstance != null)
+        {
+            _context.ApiClientOdsInstances.Remove(apiClientOdsInstance);
+        }
 
         application.ApplicationName = model.ApplicationName;
         application.ClaimSetName = model.ClaimSetName;
@@ -65,6 +75,8 @@ public class EditApplicationCommand : IEditApplicationCommand
                 application.Profiles.Add(profile);
             }
         }
+
+        _context.ApiClientOdsInstances.Add(new ApiClientOdsInstance { ApiClient = apiClient, OdsInstance = newOdsInstance });
 
         _context.SaveChanges();
         return application;

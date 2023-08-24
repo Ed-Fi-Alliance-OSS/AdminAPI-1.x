@@ -23,11 +23,6 @@ public class ReadResourceClaims : IFeature
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<ResourceClaimModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
-
-        AdminApiEndpointBuilder.MapGet(endpoints, "/resourceClaims/{id}/children", GetResourceClaimChildren)
-            .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ResourceClaimModel>(200))
-            .BuildForVersions(AdminApiVersions.V2);
     }
 
     internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper)
@@ -47,16 +42,5 @@ public class ReadResourceClaims : IFeature
         }
         var model = mapper.Map<ResourceClaimModel>(resourceClaim);
         return Task.FromResult(Results.Ok(model));
-    }
-
-    internal Task<IResult> GetResourceClaimChildren(IGetResourceClaimByResourceClaimIdQuery getResourceClaimByResourceClaimIdQuery, IMapper mapper, int id)
-    {
-        var resourceClaim = getResourceClaimByResourceClaimIdQuery.Execute(id);
-        if (resourceClaim == null)
-        {
-            throw new NotFoundException<int>("resourceclaim", id);
-        }
-        var model = mapper.Map<ResourceClaimModel>(resourceClaim);
-        return Task.FromResult(Results.Ok(model.Children));
     }
 }

@@ -44,7 +44,7 @@ public class AuthStrategyResolver : IAuthStrategyResolver
                             if (authStrategy != null)
                             {
                                 strategy.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                                strategy.DisplayName = authStrategy.DisplayName;
+                                strategy.AuthStrategyName = authStrategy.AuthorizationStrategyName;
                             }
                         }
                     }

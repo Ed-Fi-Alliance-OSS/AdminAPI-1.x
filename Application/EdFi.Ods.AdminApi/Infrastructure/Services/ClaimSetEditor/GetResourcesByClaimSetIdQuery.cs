@@ -156,7 +156,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     }
                 }
 
-                List<AuthorizationStrategy> AddStrategiesToChildResource(IEnumerable<SecurityAuthorizationStrategy>? authStrategies, bool fromParent = false)
+                static List<AuthorizationStrategy> AddStrategiesToChildResource(IEnumerable<SecurityAuthorizationStrategy>? authStrategies, bool fromParent = false)
                 {
                     var strategies = new List<AuthorizationStrategy>();
                     if (authStrategies != null && authStrategies.Any())
@@ -167,7 +167,6 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                             {
                                 AuthStrategyId = authStratregy.AuthorizationStrategyId,
                                 AuthStrategyName = authStratregy.AuthorizationStrategyName,
-                                DisplayName = authStratregy.DisplayName,
                                 IsInheritedFromParent = fromParent
                             });
                         }
@@ -240,8 +239,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     }
                 }
 
-
-                List<AuthorizationStrategy> AddStrategyOverridesToResource(IEnumerable<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>? authStrategies, bool fromParent = false)
+                static List<AuthorizationStrategy> AddStrategyOverridesToResource(IEnumerable<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>? authStrategies, bool fromParent = false)
                 {
                     var strategies = new List<AuthorizationStrategy>();
                     if (authStrategies != null && authStrategies.Any())
@@ -252,7 +250,6 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                             {
                                 AuthStrategyId = authStratregy.AuthorizationStrategyId,
                                 AuthStrategyName = authStratregy.AuthorizationStrategy?.AuthorizationStrategyName,
-                                DisplayName = authStratregy.AuthorizationStrategy?.DisplayName,
                                 IsInheritedFromParent = fromParent
                             });
                         }

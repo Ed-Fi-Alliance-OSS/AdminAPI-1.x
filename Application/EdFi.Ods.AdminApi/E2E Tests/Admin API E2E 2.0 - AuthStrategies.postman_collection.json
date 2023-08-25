@@ -69,13 +69,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/authorizationStrategy",
+									"raw": "{{API_URL}}/v2/authorizationStrategies",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"authorizationStrategy"
+										"authorizationStrategies"
 									]
 								}
 							},

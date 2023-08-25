@@ -24,6 +24,6 @@ public class TagByResourceUrlFilter : IOperationFilter
             ? urlParts[1] : urlParts[0];
 
         if (!string.IsNullOrWhiteSpace(resourceName))
-            operation.Tags = new List<OpenApiTag> { new() { Name = resourceName.Trim('/').ToTitleCase() } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = resourceName.Trim('/').ToPascalCase() } };
     }
 }

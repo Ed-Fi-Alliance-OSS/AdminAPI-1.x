@@ -22,7 +22,7 @@ public class EditAuthStrategy : IFeature
        .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/resetAuthStrategies", HandleResetAuthStrategies)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/resetAuthorizationStrategies", HandleResetAuthStrategies)
         .WithDefaultDescription()
         .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);

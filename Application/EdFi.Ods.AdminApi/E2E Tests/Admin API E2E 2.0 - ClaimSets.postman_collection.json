@@ -1070,7 +1070,7 @@
 							"response": []
 						},
 						{
-							"name": "ResourceClaimClaimSets - Reset Auth Strategies",
+							"name": "ResourceClaimClaimSets - Reset Authorization Strategies",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -1085,7 +1085,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST ResetAuthStrategies: Status code is OK\", function () {\r",
+											"pm.test(\"POST ResetAuthorizationStrategies: Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});"
 										],
@@ -1106,7 +1106,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/resetAuthStrategies",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/resetAuthorizationStrategies",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1116,14 +1116,14 @@
                         "{{CreatedClaimSetId}}",
                         "resourceClaimActions",
                         "4",
-                        "resetAuthStrategies"
+                        "resetAuthorizationStrategies"
                     ]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "ResourceClaimClaimSets - Reset Auth Strategies Not Found",
+							"name": "ResourceClaimClaimSets - Reset Authorization Strategies Not Found",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -1138,7 +1138,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST ResetAuthStrategies: Status code is Not Found\", function () {\r",
+											"pm.test(\"POST ResetAuthorizationStrategies: Status code is Not Found\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
 											"});"
 										],
@@ -1159,7 +1159,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/40000/resetAuthStrategies",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/40000/resetAuthorizationStrategies",
 									"host": [
 										"{{API_URL}}"
 									],
@@ -1169,7 +1169,7 @@
                         "{{CreatedClaimSetId}}",
                         "resourceClaimActions",
                         "40000",
-                        "resetAuthStrategies"
+                        "resetAuthorizationStrategies"
                     ]
 								}
 							},

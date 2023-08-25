@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace EdFi.Ods.AdminApi.Features.ODSInstances;
 
-[SwaggerSchema(Title = "ODS Instance")]
+[SwaggerSchema(Title = "OdsInstance")]
 public class OdsInstanceModel
 {
     [JsonPropertyName("id")]

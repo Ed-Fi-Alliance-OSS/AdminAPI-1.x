@@ -44,19 +44,30 @@ public class OverrideDefaultAuthorizationStrategyCommand
         {
             if (!claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Any(rc => rc.ClaimSetResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower()))
             {
-                claimSetResourceClaimAction.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
-                {
-                    AuthorizationStrategyId = model.AuthStrategyId,
-                    AuthorizationStrategy = _context.AuthorizationStrategies.First(p => p.AuthorizationStrategyId == model.AuthStrategyId),
-                    ClaimSetResourceClaimActionId = claimSetResourceClaimAction.ClaimSetResourceClaimActionId
-                });
+                if (model.AuthStrategyIds != null)
+                    foreach (var id in model.AuthStrategyIds)
+                    {
+                        claimSetResourceClaimAction.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
+                        {
+                            AuthorizationStrategyId = id,
+                            ClaimSetResourceClaimActionId = claimSetResourceClaimAction.ClaimSetResourceClaimActionId
+                        });
+                    }
             }
             else
             {
-                var authStrategyOverride = claimSetResourceClaimAction.AuthorizationStrategyOverrides.FirstOrDefault(rc => rc.ClaimSetResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower());
-                if (authStrategyOverride != null)
+                if (model.AuthStrategyIds != null)
                 {
-                    authStrategyOverride.AuthorizationStrategyId = model.AuthStrategyId;
+                    var overrideAuthStrategies = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>();
+                    foreach (var id in model.AuthStrategyIds)
+                    {
+                        overrideAuthStrategies.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
+                        {
+                            AuthorizationStrategyId = id,
+                            ClaimSetResourceClaimActionId = claimSetResourceClaimAction.ClaimSetResourceClaimActionId
+                        });
+                    }
+                    claimSetResourceClaimAction.AuthorizationStrategyOverrides = overrideAuthStrategies;
                 }
             }
             _context.SaveChanges();
@@ -168,7 +179,7 @@ public class OverrideDefaultAuthorizationStrategyCommand
         foreach (var claimSetResourceClaim in claimSetResourceClaims)
         {
             var actionAuthStrategiesToOverride = model.ClaimSetResourceClaimActionAuthStrategyOverrides?.FirstOrDefault(x =>
-               x != null && x.ActionId == claimSetResourceClaim.ActionId);
+               x != null && x.ActionName != null && x.ActionName.Equals(claimSetResourceClaim.Action.ActionName, StringComparison.InvariantCultureIgnoreCase));
 
             List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>? authStrategyOverrides = null;
 
@@ -218,6 +229,6 @@ public class OverrideAuthStrategyOnClaimSetModel
     public int ResourceClaimId { get; set; }
     public string? ActionName { get; set; }
     [SwaggerExclude]
-    public int AuthStrategyId { get; set; }
+    public List<int>? AuthStrategyIds { get; set; }
 }
 

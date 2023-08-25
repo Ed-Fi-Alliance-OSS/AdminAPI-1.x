@@ -9,7 +9,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.AdminApi.Features.ODSInstances;
 
-public class ReadOdsIntance : IFeature
+public class ReadOdsInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {

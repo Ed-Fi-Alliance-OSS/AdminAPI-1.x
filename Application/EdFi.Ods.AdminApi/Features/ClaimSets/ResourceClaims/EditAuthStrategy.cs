@@ -7,7 +7,6 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
@@ -18,12 +17,12 @@ public class EditAuthStrategy : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/overrideauthstrategy", HandleOverrideAuthStrategies)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/overrideAuthorizationStrategy", HandleOverrideAuthStrategies)
        .WithDefaultDescription()
        .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaims/{resourceclaimid}/resetauthstrategies", HandleResetAuthStrategies)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/resetAuthorizationStrategies", HandleResetAuthStrategies)
         .WithDefaultDescription()
         .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);
@@ -31,10 +30,10 @@ public class EditAuthStrategy : IFeature
 
     internal async Task<IResult> HandleOverrideAuthStrategies(OverrideAuthStategyOnClaimSetValidator validator,
       OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand, IMapper mapper,
-      OverrideAuthStategyOnClaimSetRequest request, int claimsetid, int resourceclaimid)
+      OverrideAuthStategyOnClaimSetRequest request, int claimSetId, int resourceClaimId)
     {
-        request.ClaimSetId = claimsetid;
-        request.ResourceClaimId = resourceclaimid;
+        request.ClaimSetId = claimSetId;
+        request.ResourceClaimId = resourceClaimId;
         await validator.GuardAsync(request);
         var model = mapper.Map<OverrideAuthStrategyOnClaimSetModel>(request);
         overrideDefaultAuthorizationStrategyCommand.ExecuteOnSpecificAction(model);
@@ -44,27 +43,27 @@ public class EditAuthStrategy : IFeature
 
     internal async Task<IResult> HandleResetAuthStrategies(IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         OverrideDefaultAuthorizationStrategyCommand overrideDefaultAuthorizationStrategyCommand, IGetClaimSetByIdQuery getClaimSetByIdQuery,
-        IMapper mapper, int claimsetid, int resourceclaimid)
+        IMapper mapper, int claimSetId, int resourceClaimId)
     {
-        var claimSet = getClaimSetByIdQuery.Execute(claimsetid);
+        var claimSet = getClaimSetByIdQuery.Execute(claimSetId);
 
         if (!claimSet.IsEditable)
         {
-            throw new ValidationException(new[] { new ValidationFailure(nameof(claimsetid), $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
+            throw new ValidationException(new[] { new ValidationFailure(nameof(claimSetId), $"Claim set ({claimSet.Name}) is system reserved. May not be modified.") });
         }
 
-        var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimsetid);
-        if (!resourceClaims.Any(rc => rc.Id == resourceclaimid))
+        var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimSetId);
+        if (!resourceClaims.Any(rc => rc.Id == resourceClaimId))
         {
-            throw new NotFoundException<int>("ResourceClaim", resourceclaimid);
+            throw new NotFoundException<int>("ResourceClaim", resourceClaimId);
         }
         else
         {
             overrideDefaultAuthorizationStrategyCommand.ResetAuthorizationStrategyOverrides(
                 new OverrideAuthStrategyOnClaimSetModel()
                 {
-                    ClaimSetId = claimsetid,
-                    ResourceClaimId = resourceclaimid
+                    ClaimSetId = claimSetId,
+                    ResourceClaimId = resourceClaimId
                 });
         }
 
@@ -79,7 +78,7 @@ public class EditAuthStrategy : IFeature
             RuleFor(m => m.ClaimSetId).NotEqual(0);
             RuleFor(m => m.ResourceClaimId).NotEqual(0);
             RuleFor(m => m.ActionName).NotEmpty();
-            RuleFor(m => m.AuthStrategyName).NotEmpty();
+            RuleFor(m => m.AuthorizationStrategyName).NotEmpty();
 
             RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
             {
@@ -96,15 +95,15 @@ public class EditAuthStrategy : IFeature
                     context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
                 }
 
-                var authStrategyName = getAllAuthorizationStrategiesQuery.Execute()
-                .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthStrategyName!.ToLower());
+                var authStrategyName = getAllAuthorizationStrategiesQuery.Execute().ToList()
+                .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthorizationStrategyName!.ToLower());
 
                 if (authStrategyName == null)
                 {
-                    context.AddFailure("AuthStrategyName", "AuthStrategyName doesn't exist.");
+                    context.AddFailure("AuthorizationStrategyName", "AuthorizationStrategyName doesn't exist.");
                 }
 
-                var actionName = getAllActionsQuery.Execute()
+                var actionName = getAllActionsQuery.Execute().ToList()
                 .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
 
                 if (actionName == null)
@@ -120,6 +119,6 @@ public class EditAuthStrategy : IFeature
     public class OverrideAuthStategyOnClaimSetRequest : OverrideAuthStrategyOnClaimSetModel
     {
         [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
-        public string? AuthStrategyName { get; set; }
+        public string? AuthorizationStrategyName { get; set; }
     }
 }

@@ -13,12 +13,12 @@ public class ReadApplicationsByOdsInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        var url = "odsinstances/{id}/applications";
+        var url = "odsInstances/{id}/applications";
 
         AdminApiEndpointBuilder.MapGet(endpoints, url, GetOdsInstanceApplications)
             .WithDescription("Retrieves applications assigned to a specific ODS instance based on the resource identifier.")
             .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
-            .BuildForVersions(AdminApiVersions.V1);
+            .BuildForVersions(AdminApiVersions.V2);
     }
 
     internal Task<IResult> GetOdsInstanceApplications(IGetApplicationsByOdsInstanceIdQuery getApplicationByOdsInstanceIdQuery, IMapper mapper, int id)

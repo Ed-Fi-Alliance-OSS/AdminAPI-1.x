@@ -10,6 +10,7 @@ using Shouldly;
 using System.Collections.Generic;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using Microsoft.AspNetCore.Http;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -108,6 +109,38 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
         resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
+    }
+
+    [Test]
+    public void ShouldThrowErrorWhenActionIsNotEnabledForAResource()
+    {
+        InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);
+        var action = "Update";
+        var overrides = new List<int>();
+        if (appAuthorizationStrategies != null)
+        {
+            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
+            {
+                overrides.Add(appAuthorizationStrategy.AuthorizationStrategyId);
+            }
+        }
+        var overrideModel = new OverrideAuthStrategyOnClaimSetModel
+        {
+            ResourceClaimId = testResource1ToEdit.ResourceClaimId,
+            ClaimSetId = testClaimSet.ClaimSetId,
+            ActionName = action,
+            AuthStrategyIds = overrides
+        };
+
+        var badRequestException = Assert.Throws<BadHttpRequestException>(() =>
+        {
+            using var securityContext = TestContext;
+            var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+            command.ExecuteOnSpecificAction(overrideModel);
+        });
+        badRequestException.ShouldNotBeNull();
+        badRequestException.Message.ShouldBe($"Action: {action} is not enabled for the resource.");
+
     }
 
     private void InitializeData(out ClaimSet testClaimSet, out List<Security.DataAccess.Models.AuthorizationStrategy> appAuthorizationStrategies, out Security.DataAccess.Models.ResourceClaim testResource1ToEdit, out Security.DataAccess.Models.ResourceClaim testResource2ToNotEdit)

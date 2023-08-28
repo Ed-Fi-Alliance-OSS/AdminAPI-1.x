@@ -7,6 +7,8 @@ using System.Data.Entity;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
@@ -75,7 +77,16 @@ public class OverrideDefaultAuthorizationStrategyCommand
         }
         else
         {
-            throw new BadHttpRequestException($"Action: {model.ActionName} is not enabled for the resource.");
+            var validationErrors = new List<ValidationFailure>
+            {
+                new ValidationFailure
+                {
+                    PropertyName = "Action",
+                    ErrorMessage = $"{model.ActionName} action is not enabled for the resource claim with id {model.ResourceClaimId}."
+
+                }
+            };
+            throw new ValidationException(validationErrors);
         }
     }
 

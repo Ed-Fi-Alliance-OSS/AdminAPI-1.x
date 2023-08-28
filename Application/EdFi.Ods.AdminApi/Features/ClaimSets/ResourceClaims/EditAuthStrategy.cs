@@ -103,7 +103,7 @@ public class EditAuthStrategy : IFeature
 
                     if (validAuthStrategyName == null)
                     {
-                        context.AddFailure("AuthStrategyName", $"{authStrategyName} doesn't exist.");
+                        context.AddFailure("AuthorizationStrategies", $"{authStrategyName} doesn't exist.");
                     }
 
                 }

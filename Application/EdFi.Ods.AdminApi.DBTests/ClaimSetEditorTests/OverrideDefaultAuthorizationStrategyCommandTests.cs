@@ -10,7 +10,7 @@ using Shouldly;
 using System.Collections.Generic;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Microsoft.AspNetCore.Http;
+using FluentValidation;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -132,14 +132,14 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
             AuthStrategyIds = overrides
         };
 
-        var badRequestException = Assert.Throws<BadHttpRequestException>(() =>
+        var badRequestException = Assert.Throws<ValidationException>(() =>
         {
             using var securityContext = TestContext;
             var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
             command.ExecuteOnSpecificAction(overrideModel);
         });
         badRequestException.ShouldNotBeNull();
-        badRequestException.Message.ShouldBe($"Action: {action} is not enabled for the resource.");
+        badRequestException.Errors.First().ErrorMessage.ShouldContain($"{action} action is not enabled for the resource claim with");
 
     }
 

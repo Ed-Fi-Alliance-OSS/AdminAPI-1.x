@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Features.Applications;
-using EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
@@ -81,12 +80,6 @@ public class ResourceClaimModel
     {
         Children = new List<ResourceClaimModel>();
     }
-}
-
-[SwaggerSchema(Title = "AuthorizationStrategy")]
-public class AuthorizationStrategyClaimSetModel : AuthorizationStrategyModel
-{
-    public bool IsInheritedFromParent { get; set; }
 }
 
 public class EditClaimSetModel : IEditClaimSetModel

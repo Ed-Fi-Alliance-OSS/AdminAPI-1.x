@@ -97,9 +97,9 @@ public class ResourceClaimValidator
 
     private static void ValidateAuthStrategiesOverride<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
-        if (resourceClaim.AuthStrategyOverridesForCRUD != null && resourceClaim.AuthStrategyOverridesForCRUD.Any())
+        if (resourceClaim.AuthorizationStrategyOverridesForCRUD != null && resourceClaim.AuthorizationStrategyOverridesForCRUD.Any())
         {
-            foreach (var authStrategyOverrideWithAction in resourceClaim.AuthStrategyOverridesForCRUD)
+            foreach (var authStrategyOverrideWithAction in resourceClaim.AuthorizationStrategyOverridesForCRUD)
             {
                 if (authStrategyOverrideWithAction?.AuthorizationStrategies != null)
                 foreach (var authStrategyOverride in authStrategyOverrideWithAction.AuthorizationStrategies)
@@ -116,9 +116,9 @@ public class ResourceClaimValidator
 
     private static void ValidateAuthStrategies<T>(List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
     {
-        if (resourceClaim.DefaultAuthStrategiesForCRUD != null && resourceClaim.DefaultAuthStrategiesForCRUD.Any())
+        if (resourceClaim.DefaultAuthorizationStrategiesForCRUD != null && resourceClaim.DefaultAuthorizationStrategiesForCRUD.Any())
         {
-            foreach (var defaultASWithAction in resourceClaim.DefaultAuthStrategiesForCRUD)
+            foreach (var defaultASWithAction in resourceClaim.DefaultAuthorizationStrategiesForCRUD)
             {
                 if(defaultASWithAction?.AuthorizationStrategies != null)
                 foreach(var defaultAS in defaultASWithAction.AuthorizationStrategies)

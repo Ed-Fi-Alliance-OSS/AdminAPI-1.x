@@ -95,9 +95,10 @@ public class EditAuthStrategy : IFeature
                     context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
                 }
 
+                var authStrategies = getAllAuthorizationStrategiesQuery.Execute();
                 foreach (var authStrategyName in overrideAuthStategyOnClaimSetRequest.AuthorizationStrategies!)
                 {
-                    var validAuthStrategyName = getAllAuthorizationStrategiesQuery.Execute()
+                    var validAuthStrategyName = authStrategies
                       .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == authStrategyName!.ToLower());
 
                     if (validAuthStrategyName == null)

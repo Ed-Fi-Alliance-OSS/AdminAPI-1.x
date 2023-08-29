@@ -27,8 +27,7 @@ public class GetAllAuthorizationStrategiesQuery : IGetAllAuthorizationStrategies
             .Select(x => new AuthorizationStrategy
             {
                 AuthStrategyId = x.AuthorizationStrategyId,
-                AuthStrategyName = x.AuthorizationStrategyName,
-                DisplayName = x.DisplayName
+                AuthStrategyName = x.AuthorizationStrategyName 
             }).ToList();
     }
 }

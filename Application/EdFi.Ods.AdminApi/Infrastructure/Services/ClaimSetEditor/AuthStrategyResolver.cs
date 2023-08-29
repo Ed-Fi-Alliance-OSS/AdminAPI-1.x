@@ -32,16 +32,21 @@ public class AuthStrategyResolver : IAuthStrategyResolver
                 foreach (var authStrategyOverride in claim.AuthStrategyOverridesForCRUD.Where(x => x != null))
                 {
                     if (authStrategyOverride is null) continue;
-
-                    var authStrategy = dbAuthStrategies.SingleOrDefault(
-                        x => x.AuthorizationStrategyName.Equals(
-                            authStrategyOverride.AuthStrategyName,
-                            StringComparison.InvariantCultureIgnoreCase));
-
-                    if (authStrategy != null)
+                    if (authStrategyOverride.AuthorizationStrategies != null)
                     {
-                        authStrategyOverride.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                        authStrategyOverride.DisplayName = authStrategy.DisplayName;
+                        foreach (var strategy in authStrategyOverride.AuthorizationStrategies)
+                        {
+                            var authStrategy = dbAuthStrategies.SingleOrDefault(
+                            x => x.AuthorizationStrategyName.Equals(
+                                strategy.AuthStrategyName,
+                                StringComparison.InvariantCultureIgnoreCase));
+
+                            if (authStrategy != null)
+                            {
+                                strategy.AuthStrategyId = authStrategy.AuthorizationStrategyId;
+                                strategy.AuthStrategyName = authStrategy.AuthorizationStrategyName;
+                            }
+                        }
                     }
                 }
             }

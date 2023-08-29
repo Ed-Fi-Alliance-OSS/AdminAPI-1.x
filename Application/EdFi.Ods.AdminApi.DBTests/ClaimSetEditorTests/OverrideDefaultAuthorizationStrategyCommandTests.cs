@@ -10,6 +10,7 @@ using Shouldly;
 using System.Collections.Generic;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using FluentValidation;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -19,20 +20,32 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
     [Test]
     public void ShouldOverrideAuthorizationStrategiesForParentResourcesOnClaimSet()
     {
-        ClaimSet testClaimSet;
-        List<Security.DataAccess.Models.AuthorizationStrategy> appAuthorizationStrategies;
-        Security.DataAccess.Models.ResourceClaim testResource1ToEdit, testResource2ToNotEdit;
-        InitializeData(out testClaimSet, out appAuthorizationStrategies, out testResource1ToEdit, out testResource2ToNotEdit);
+        InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);
+        var overrides = new List<AuthorizationStrategy>();
+        if (appAuthorizationStrategies != null)
+        {
+            foreach(var appAuthorizationStrategy in appAuthorizationStrategies)
+            {
+                overrides.Add(new AuthorizationStrategy
+                {
+                    AuthStrategyId = appAuthorizationStrategy.AuthorizationStrategyId,
+                    AuthStrategyName = appAuthorizationStrategy.AuthorizationStrategyName
+                });
+            }
+        }
 
         var overrideModel = new OverrideAuthorizationStrategyModel
         {
             ResourceClaimId = testResource1ToEdit.ResourceClaimId,
             ClaimSetId = testClaimSet.ClaimSetId,
-            AuthorizationStrategyForCreate = appAuthorizationStrategies
-                .Single(x => x.AuthorizationStrategyName == "TestAuthStrategy4").AuthorizationStrategyId,
-            AuthorizationStrategyForRead = 0,
-            AuthorizationStrategyForUpdate = 0,
-            AuthorizationStrategyForDelete = 0
+            ClaimSetResourceClaimActionAuthStrategyOverrides = new List<ClaimSetResourceClaimActionAuthStrategies> {
+                new ClaimSetResourceClaimActionAuthStrategies
+                {
+                    ActionId = 1,
+                    ActionName= "Create",
+                    AuthorizationStrategies = overrides
+                }
+            } 
         };
 
         List<ResourceClaim> resourceClaimsForClaimSet = null;
@@ -46,35 +59,35 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();     
     }
 
     [Test]
     public void ShouldOverrideAuthorizationStrategiesForSpecificResourcesOnClaimSet()
     {
-        ClaimSet testClaimSet;
-        List<Security.DataAccess.Models.AuthorizationStrategy> appAuthorizationStrategies;
-        Security.DataAccess.Models.ResourceClaim testResource1ToEdit, testResource2ToNotEdit;
-        InitializeData(out testClaimSet, out appAuthorizationStrategies, out testResource1ToEdit, out testResource2ToNotEdit);
+        InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);
 
+        var overrides = new List<int>();
+        if (appAuthorizationStrategies != null)
+        {
+            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
+            {
+                overrides.Add(appAuthorizationStrategy.AuthorizationStrategyId);
+            }
+        }
         var overrideModel = new OverrideAuthStrategyOnClaimSetModel
         {
             ResourceClaimId = testResource1ToEdit.ResourceClaimId,
             ClaimSetId = testClaimSet.ClaimSetId,
             ActionName = "Create",
-            AuthStrategyId = appAuthorizationStrategies
-                .Single(x => x.AuthorizationStrategyName == "TestAuthStrategy4").AuthorizationStrategyId
+            AuthStrategyIds = overrides
         };
 
         List<ResourceClaim> resourceClaimsForClaimSet = null;
@@ -88,18 +101,46 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
+    }
+
+    [Test]
+    public void ShouldThrowErrorWhenActionIsNotEnabledForAResource()
+    {
+        InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);
+        var action = "Update";
+        var overrides = new List<int>();
+        if (appAuthorizationStrategies != null)
+        {
+            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
+            {
+                overrides.Add(appAuthorizationStrategy.AuthorizationStrategyId);
+            }
+        }
+        var overrideModel = new OverrideAuthStrategyOnClaimSetModel
+        {
+            ResourceClaimId = testResource1ToEdit.ResourceClaimId,
+            ClaimSetId = testClaimSet.ClaimSetId,
+            ActionName = action,
+            AuthStrategyIds = overrides
+        };
+
+        var badRequestException = Assert.Throws<ValidationException>(() =>
+        {
+            using var securityContext = TestContext;
+            var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+            command.ExecuteOnSpecificAction(overrideModel);
+        });
+        badRequestException.ShouldNotBeNull();
+        badRequestException.Errors.First().ErrorMessage.ShouldContain($"{action} action is not enabled for the resource claim with");
+
     }
 
     private void InitializeData(out ClaimSet testClaimSet, out List<Security.DataAccess.Models.AuthorizationStrategy> appAuthorizationStrategies, out Security.DataAccess.Models.ResourceClaim testResource1ToEdit, out Security.DataAccess.Models.ResourceClaim testResource2ToNotEdit)

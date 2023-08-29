@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
 
@@ -65,18 +64,10 @@ public class AddOrEditResourcesOnClaimSetCommand
                 {
                     ClaimSetId = claimSetId,
                     ResourceClaimId = resource.Id,
-                    AuthorizationStrategyForCreate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Create()),
-                    AuthorizationStrategyForRead = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Read()),
-                    AuthorizationStrategyForUpdate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Update()),
-                    AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Delete())
+                    ClaimSetResourceClaimActionAuthStrategyOverrides = resource.AuthStrategyOverridesForCRUD
                 };
                 _overrideDefaultAuthorizationStrategyCommand.Execute(overrideAuthStrategyModel);
             }
-        }
-
-        static int AuthStrategyOverrideForAction(AuthorizationStrategy? authorizationStrategy)
-        {
-            return authorizationStrategy != null ? authorizationStrategy.AuthStrategyId : 0;
         }
     }
 
@@ -109,8 +100,5 @@ public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationS
 {
     public int ClaimSetId { get; set; }
     public int ResourceClaimId { get; set; }
-    public int AuthorizationStrategyForCreate { get; set; }
-    public int AuthorizationStrategyForRead { get; set; }
-    public int AuthorizationStrategyForUpdate { get; set; }
-    public int AuthorizationStrategyForDelete { get; set; }
+    public List<ClaimSetResourceClaimActionAuthStrategies?>? ClaimSetResourceClaimActionAuthStrategyOverrides { get; set; }
 }

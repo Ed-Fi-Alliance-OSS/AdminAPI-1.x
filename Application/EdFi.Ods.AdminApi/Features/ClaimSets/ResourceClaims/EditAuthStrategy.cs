@@ -78,7 +78,7 @@ public class EditAuthStrategy : IFeature
             RuleFor(m => m.ClaimSetId).NotEqual(0);
             RuleFor(m => m.ResourceClaimId).NotEqual(0);
             RuleFor(m => m.ActionName).NotEmpty();
-            RuleFor(m => m.AuthorizationStrategyName).NotEmpty();
+            RuleFor(m => m.AuthorizationStrategies).NotNull().NotEmpty();
 
             RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
             {
@@ -95,12 +95,17 @@ public class EditAuthStrategy : IFeature
                     context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
                 }
 
-                var authStrategyName = getAllAuthorizationStrategiesQuery.Execute().ToList()
-                .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == overrideAuthStategyOnClaimSetRequest.AuthorizationStrategyName!.ToLower());
-
-                if (authStrategyName == null)
+                var authStrategies = getAllAuthorizationStrategiesQuery.Execute();
+                foreach (var authStrategyName in overrideAuthStategyOnClaimSetRequest.AuthorizationStrategies!)
                 {
-                    context.AddFailure("AuthorizationStrategyName", "AuthorizationStrategyName doesn't exist.");
+                    var validAuthStrategyName = authStrategies
+                      .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == authStrategyName!.ToLower());
+
+                    if (validAuthStrategyName == null)
+                    {
+                        context.AddFailure("AuthorizationStrategies", $"{authStrategyName} doesn't exist.");
+                    }
+
                 }
 
                 var actionName = getAllActionsQuery.Execute().ToList()
@@ -118,7 +123,7 @@ public class EditAuthStrategy : IFeature
     [SwaggerSchema(Title = "OverrideAuthStategyOnClaimSetRequest")]
     public class OverrideAuthStategyOnClaimSetRequest : OverrideAuthStrategyOnClaimSetModel
     {
-        [SwaggerSchema(Description = "AuthorizationStrategy name", Nullable = false)]
-        public string? AuthorizationStrategyName { get; set; }
+        [SwaggerSchema(Description = "AuthorizationStrategy Names", Nullable = false)]
+        public IEnumerable<string>? AuthorizationStrategies { get; set; }
     }
 }

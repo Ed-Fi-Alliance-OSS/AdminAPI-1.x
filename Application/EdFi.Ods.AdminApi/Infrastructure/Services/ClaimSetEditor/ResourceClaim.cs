@@ -19,8 +19,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public bool Delete { get; set; }
         [JsonIgnore]
         public bool IsParent { get; set; }
-        public AuthorizationStrategy?[] DefaultAuthStrategiesForCRUD { get; set; } = Array.Empty<AuthorizationStrategy>();
-        public AuthorizationStrategy?[] AuthStrategyOverridesForCRUD { get; set; } = Array.Empty<AuthorizationStrategy>();
+        public List<ClaimSetResourceClaimActionAuthStrategies?> DefaultAuthStrategiesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
+        public List<ClaimSetResourceClaimActionAuthStrategies?> AuthStrategyOverridesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
         public List<ResourceClaim> Children { get; set; } = new();
 
         public ResourceClaim()

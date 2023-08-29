@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
@@ -170,6 +171,17 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.OdsInstance.ShouldNotBeNull();
             persistedApplication.OdsInstance.Name.ShouldBe(odsInstanceName);
         });
+
+        Transaction(usersContext =>
+        {
+            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
+            var apiClient = persistedApplication.ApiClients.First();
+            var odsInstanceId = persistedApplication.OdsInstanceId().Value;
+            var apiClientOdsInstance = usersContext.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == odsInstanceId && o.ApiClient.ApiClientId == apiClient.ApiClientId);
+            apiClientOdsInstance.ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
+            apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(persistedApplication.OdsInstanceId().Value);
+        });
+        
     }
 
     private class TestApplication : IAddApplicationModel

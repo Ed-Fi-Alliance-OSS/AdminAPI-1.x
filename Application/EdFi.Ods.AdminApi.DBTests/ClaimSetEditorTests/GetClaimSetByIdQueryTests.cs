@@ -93,14 +93,13 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
         using var securityContext = TestContext;
         EnsureZeroClaimSets(securityContext);
 
-        var adminApiException = Assert.Throws<AdminApiException>(() =>
+        var exception = Assert.Throws<NotFoundException<int>>(() =>
         {
             var query = new GetClaimSetByIdQuery(securityContext);
             query.Execute(NonExistingClaimSetId);
         });
-        adminApiException.ShouldNotBeNull();
-        adminApiException.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        adminApiException.Message.ShouldBe("No such claim set exists in the database.");
+        exception.ShouldNotBeNull();
+        exception.Message.ShouldBe("Not found: claimset with ID 1. It may have been recently deleted.");
 
         static void EnsureZeroClaimSets(ISecurityContext database)
         {

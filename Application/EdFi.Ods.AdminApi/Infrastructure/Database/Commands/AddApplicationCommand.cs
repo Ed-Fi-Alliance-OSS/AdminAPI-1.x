@@ -79,6 +79,7 @@ public class AddApplicationCommand : IAddApplicationCommand
         }
 
         _usersContext.Applications.Add(application);
+        _usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance { ApiClient = apiClient, OdsInstance = odsInstance });
         _usersContext.SaveChanges();
 
         return new AddApplicationResult

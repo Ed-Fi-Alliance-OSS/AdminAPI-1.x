@@ -1698,10 +1698,9 @@
 											"        function(claimSet) { return claimSet.id; }\r",
 											"    ).indexOf(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
 											"\r",
-											"    console.log(results);\r",
-											"\r",
+
 											"    const result = results[indexOfClaimSet];\r",
-											"    console.log(result);\r",
+
 											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
 											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
 											"    pm.expect(result._applications).to.be.empty;\r",
@@ -1750,13 +1749,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets?offset={{offset}}&limit={{limit}}",
+									"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"claimsets"
+										"claimSets"
 									],
 									"query": [
 										{
@@ -1947,13 +1946,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}

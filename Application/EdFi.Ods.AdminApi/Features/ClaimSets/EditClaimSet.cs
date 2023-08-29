@@ -68,7 +68,7 @@ public class EditClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
             .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
-        return Results.Ok(model);
+        return Results.Ok();
     }
 
     [SwaggerSchema(Title = "EditClaimSetRequest")]

@@ -66,6 +66,18 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
         application.ApiClients.Add(client);
         Save(application);
 
+        Transaction(usersContext =>
+        {
+            var createdOdsInstance = usersContext.OdsInstances.FirstOrDefault(odsInstance => odsInstance.OdsInstanceId == odsInstance.OdsInstanceId);
+            var createdApiClient = usersContext.Clients.FirstOrDefault(apiClient => apiClient.ApiClientId == client.ApiClientId);
+            usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance
+            {
+                OdsInstance = createdOdsInstance,
+                ApiClient = createdApiClient
+            });
+            usersContext.SaveChanges();
+        });
+
         var applicationId = application.ApplicationId;
         applicationId.ShouldBeGreaterThan(0);
 
@@ -84,9 +96,15 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
             deleteApplicationCommand.Execute(applicationId);
         });
 
-        Transaction(usersContext => usersContext.Applications.Where(a => a.ApplicationId == applicationId).ToArray()).ShouldBeEmpty();
-        Transaction(usersContext => usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray()).ShouldBeEmpty();
-        Transaction(usersContext => usersContext.ApiClientOdsInstances.Where(c => c.ApiClient.ApiClientId == clientId && c.OdsInstance.OdsInstanceId == odsInstanceId).ToArray()).ShouldBeEmpty();
+        Transaction(usersContext =>
+        {
+           var application = usersContext.Applications.FirstOrDefault(a => a.ApplicationId == applicationId);
+           application.ShouldBeNull();
+           var apiClients = usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray();
+           apiClients.ShouldBeEmpty();
+           var apiClientOdsInstances = usersContext.ApiClientOdsInstances.Where(c => c.ApiClient.ApiClientId == clientId && c.OdsInstance.OdsInstanceId == odsInstanceId).ToArray();
+           apiClientOdsInstances.ShouldBeEmpty();
+        });
     }
 
     [Test]

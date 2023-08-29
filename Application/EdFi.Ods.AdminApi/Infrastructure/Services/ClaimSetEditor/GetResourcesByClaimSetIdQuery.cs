@@ -136,7 +136,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         if (defaultStrategies == null)
                         {
                             defaultStrategies = defaultAuthStrategiesForParents.SingleOrDefault(x =>
-                                  x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
+                                  x.ResourceClaim.ResourceClaimId == resourceClaim.ParentResourceClaimId &&
                                   x.Action.ActionName == action.ActionName)?.AuthorizationStrategies?.Select(x => x.AuthorizationStrategy);
                             childResourceStrategies = AddStrategiesToChildResource(defaultStrategies, true);
                         }

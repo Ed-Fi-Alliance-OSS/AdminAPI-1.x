@@ -38,11 +38,6 @@ public class AddClaimSet : IFeature
             ClaimSetName = request.Name ?? string.Empty
         });
 
-        var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
-        var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
-
-        addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, resolvedResourceClaims);
-
         var claimSet = getClaimSetByIdQuery.Execute(addedClaimSetId);
 
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
@@ -62,9 +57,6 @@ public class AddClaimSet : IFeature
     {
         [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
         public string? Name { get; set; }
-
-        [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-        public List<ClaimSetResourceClaimModel>? ResourceClaims { get; set; }
     }
 
     public class Validator : AbstractValidator<AddClaimSetRequest>
@@ -90,20 +82,6 @@ public class AddClaimSet : IFeature
             RuleFor(m => m.Name)
                 .MaximumLength(255)
                 .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);
-
-            RuleFor(m => m).Custom((claimSet, context) =>
-            {
-                var resourceClaimValidator = new ResourceClaimValidator();
-
-                if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
-                {
-                    foreach (var resourceClaim in claimSet.ResourceClaims)
-                    {
-                        resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
-                            resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
-                    }
-                }
-            });
         }
 
         private bool BeAUniqueName(string? name)

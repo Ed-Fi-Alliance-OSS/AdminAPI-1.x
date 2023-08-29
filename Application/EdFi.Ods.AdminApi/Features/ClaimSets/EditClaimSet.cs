@@ -4,10 +4,10 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Common.Utils.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
@@ -53,15 +53,6 @@ public class EditClaimSet : IFeature
             throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
 
-        var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
-        
-        var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
-        if (resolvedResourceClaims.Count > 0)
-        {
-            updateResourcesOnClaimSetCommand.Execute(
-            new UpdateResourcesOnClaimSetModel { ClaimSetId = updatedClaimSetId, ResourceClaims = resolvedResourceClaims });
-        }
-
         var claimSet = getClaimSetByIdQuery.Execute(updatedClaimSetId);
 
         var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
@@ -74,14 +65,11 @@ public class EditClaimSet : IFeature
     [SwaggerSchema(Title = "EditClaimSetRequest")]
     public class EditClaimSetRequest
     {
-        [SwaggerSchema(Description = "ClaimSet id", Nullable = false)]
+        [SwaggerExclude]
         public int Id { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
         public string? Name { get; set; }
-
-        [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-        public List<ClaimSetResourceClaimModel>? ResourceClaims { get; set; }
     }
 
     public class Validator : AbstractValidator<EditClaimSetRequest>
@@ -118,20 +106,6 @@ public class EditClaimSet : IFeature
             RuleFor(m => m.Name)
                 .MaximumLength(255)
                 .WithMessage(FeatureConstants.ClaimSetNameMaxLengthMessage);
-
-            RuleFor(m => m).Custom((claimSet, context) =>
-            {
-                var resourceClaimValidator = new ResourceClaimValidator();
-
-                if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
-                {
-                    foreach (var resourceClaim in claimSet.ResourceClaims)
-                    {
-                        resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
-                            resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
-                    }
-                }
-            });
         }
 
         private bool BeAnExistingClaimSet(int id)

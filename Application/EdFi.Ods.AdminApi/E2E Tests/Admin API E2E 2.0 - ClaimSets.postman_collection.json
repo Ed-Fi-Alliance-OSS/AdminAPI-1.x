@@ -2296,9 +2296,9 @@
 											"    pm.expect(result).to.have.property(\"id\");\r",
 											"    pm.expect(result).to.have.property(\"name\");\r",
 											"    pm.expect(result.name).contains(\"Copied ClaimSet from\");\r",
-											"    //pm.expect(result.resourceClaims).to.not.be.empty;\r",
-											"    //const resourceclaimexists = result.resourceClaims.any(r => r.name === \"educationStandards\")\r",
-											"    //pm.expect(resourceclaimexists).to.equal(true);\r",
+											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
+											"    const resourceclaimexists = result.resourceClaims.any(r => r.name === \"educationStandards\")\r",
+											"    pm.expect(resourceclaimexists).to.equal(true);\r",
 											"});"
 										],
 										"type": "text/javascript"

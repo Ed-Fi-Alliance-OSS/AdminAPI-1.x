@@ -2310,7 +2310,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Copied ClaimSet from {{OtherExistingClaimSetId}}\",\r\n    \"originalid\": {{OtherExistingClaimSetId}}\r\n}",
+									"raw": "{\r\n    \"name\": \"Copied ClaimSet from {{CreatedClaimSetId}}\",\r\n    \"originalid\": {{CreatedClaimSetId}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

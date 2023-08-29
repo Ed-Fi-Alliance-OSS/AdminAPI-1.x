@@ -57,7 +57,6 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
         application.ApplicationEducationOrganizations.ToList().ForEach(o => _context.ApplicationEducationOrganizations.Remove(o));
 
 
-
         _context.Applications.Remove(application);
         _context.SaveChanges();
     }
@@ -65,6 +64,9 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
     private void RemoveApiClientOdsInstanceAssociation(int? odsInstanceId, int apiClientId)
     {
         var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == odsInstanceId && o.ApiClient.ApiClientId == apiClientId);
-        _context.ApiClientOdsInstances.Remove(apiClientOdsInstance);
+        if (apiClientOdsInstance != null)
+        { 
+            _context.ApiClientOdsInstances.Remove(apiClientOdsInstance);
+        }
     }
 }

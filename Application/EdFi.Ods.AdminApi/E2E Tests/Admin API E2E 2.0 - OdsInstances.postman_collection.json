@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "v1",
+			"name": "v2",
 			"item": [
 				{
 					"name": "OdsInstances",
@@ -26,7 +26,7 @@
 											"const response = pm.response.json();",
 											"",
 											"pm.test(\"GET OdsInstances: Response matches success format\", function () {",
-											"    pm.expect(response[0]).to.have.property(\"odsInstanceId\");",
+											"    pm.expect(response[0]).to.have.property(\"id\");",
 											"    pm.expect(response[0]).to.have.property(\"name\");",
 											"    pm.expect(response[0]).to.have.property(\"instanceType\");",
 											"});",
@@ -37,7 +37,7 @@
 											"    {",
 											"      \"type\": \"object\",",
 											"      \"properties\": {",
-											"        \"odsInstanceId\": {",
+											"        \"id\": {",
 											"          \"type\": \"integer\"",
 											"        },",
 											"        \"name\": {",
@@ -48,7 +48,7 @@
 											"        }",
 											"      },",
 											"      \"required\": [",
-											"        \"odsInstanceId\",",
+											"        \"id\",",
 											"        \"name\",",
 											"        \"instanceType\"",
 											"      ]",
@@ -69,13 +69,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsinstances?offset={{offset}}&limit={{limit}}",
+									"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
-										"odsinstances"
+										"v2",
+										"odsInstances"
 									],
 									"query": [
 										{
@@ -124,13 +124,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsinstances/0",
+									"raw": "{{API_URL}}/v2/odsInstances/0",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
-										"odsinstances",
+										"v2",
+										"odsInstances",
 										"0"
 									]
 								}
@@ -151,7 +151,7 @@
 											"const response = pm.response.json();",
 											"",
 											"pm.test(\"GET OdsInstancesID: Response matches success format\", function () {",
-											"    pm.expect(response).to.have.property(\"odsInstanceId\");",
+											"    pm.expect(response).to.have.property(\"id\");",
 											"    pm.expect(response).to.have.property(\"name\");",
 											"    pm.expect(response).to.have.property(\"instanceType\");",
 											"});",
@@ -159,7 +159,7 @@
 											"const GetOdsInstancesIdSchema = {",
 											"  \"type\": \"object\",",
 											"  \"properties\": {",
-											"    \"odsInstanceId\": {",
+											"    \"id\": {",
 											"      \"type\": \"integer\"",
 											"    },",
 											"    \"name\": {",
@@ -170,7 +170,7 @@
 											"    }",
 											"  },",
 											"  \"required\": [",
-											"    \"odsInstanceId\",",
+											"    \"id\",",
 											"    \"name\",",
 											"    \"instanceType\"",
 											"  ]",
@@ -189,7 +189,7 @@
 									"script": {
 										"exec": [
 											"pm.sendRequest({",
-											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsinstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,",
 											"  method: 'GET',",
 											"  header: {",
 											"      \"Content-Type\": \"application/json\",",
@@ -199,9 +199,9 @@
 											"function (err, response) {",
 											"  if(err) { console.log(\"Error in Pre-request:\", err); }",
 											"  const json = response.json();",
-											"  if(!json[0].odsInstanceId) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }",
+											"  if(!json[0].id) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }",
 											"  else {",
-											"    pm.collectionVariables.set(\"ODSInstanceId\", json[0].odsInstanceId);",
+											"    pm.collectionVariables.set(\"ODSInstanceId\", json[0].id);",
 											"  }",
 											"});"
 										],
@@ -213,13 +213,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsinstances/{{ODSInstanceId}}",
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
-										"odsinstances",
+										"v2",
+										"odsInstances",
 										"{{ODSInstanceId}}"
 									]
 								}
@@ -307,13 +307,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v1/odsinstances/{{ODSInstanceId}}/applications",
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}/applications",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
-										"v1",
-										"odsinstances",
+										"v2",
+										"odsInstances",
 										"{{ODSInstanceId}}",
 										"applications"
 									]

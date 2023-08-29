@@ -8,10 +8,8 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
-using static EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditAuthStrategy;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims;
 
@@ -19,12 +17,12 @@ public class EditResourceClaimActions : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets/{claimsetid}/resourceclaimActions", HandleAddResourceClaims)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions", HandleAddResourceClaims)
        .WithDefaultDescription()
        .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapPut(endpoints, "/claimsets/{claimsetid}/resourceclaimActions/{resourceclaimid}", HandleEditResourceClaims)
+        AdminApiEndpointBuilder.MapPut(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}", HandleEditResourceClaims)
        .WithDefaultDescription()
        .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
@@ -36,9 +34,9 @@ public class EditResourceClaimActions : IFeature
         IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IMapper mapper,
-        AddResourceClaimOnClaimSetRequest request, int claimsetid)
+        AddResourceClaimOnClaimSetRequest request, int claimSetId)
     {
-        request.ClaimSetId = claimsetid;
+        request.ClaimSetId = claimSetId;
         await validator.GuardAsync(request);
         await ExecuteHandle(editResourcesOnClaimSetCommand, mapper, request);
         return Results.Ok();
@@ -49,10 +47,10 @@ public class EditResourceClaimActions : IFeature
         UpdateResourcesOnClaimSetCommand updateResourcesOnClaimSetCommand,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IMapper mapper,
-        EditResourceClaimOnClaimSetRequest request, int claimsetid, int resourceclaimid)
+        EditResourceClaimOnClaimSetRequest request, int claimSetId, int resourceClaimId)
     {
-        request.ClaimSetId = claimsetid;
-        request.ResourceClaimId = resourceclaimid;
+        request.ClaimSetId = claimSetId;
+        request.ResourceClaimId = resourceClaimId;
         await validator.GuardAsync(request);
 
         await ExecuteHandle(editResourcesOnClaimSetCommand, mapper, request);

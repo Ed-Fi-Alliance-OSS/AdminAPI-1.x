@@ -106,7 +106,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
             .ForMember(dst => dst.AuthStrategyId, opt => {
 
-                opt.ConvertUsing<AuthStrategyIdConverter, string>("AuthStrategyName");
+                opt.ConvertUsing<AuthStrategyIdConverter, string>("AuthorizationStrategyName");
 
                 });
 

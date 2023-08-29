@@ -12,7 +12,7 @@ public class ReadAuthorizationStrategy : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/authstrategies", GetAuthStrategies)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/authorizationStrategies", GetAuthStrategies)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<AuthorizationStrategyModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);

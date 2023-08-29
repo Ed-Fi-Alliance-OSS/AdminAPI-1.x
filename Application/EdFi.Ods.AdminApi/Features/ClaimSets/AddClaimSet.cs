@@ -17,7 +17,7 @@ public class AddClaimSet : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPost(endpoints, "/claimsets", Handle)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets", Handle)
         .WithDefaultDescription()
         .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(201))
         .BuildForVersions(AdminApiVersions.V2);
@@ -54,7 +54,7 @@ public class AddClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
             .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
-        return Results.Created($"/claimsets/{addedClaimSetId}", model);
+        return Results.Created($"/claimSets/{addedClaimSetId}", model);
     }
 
     [SwaggerSchema(Title = "AddClaimSetRequest")]

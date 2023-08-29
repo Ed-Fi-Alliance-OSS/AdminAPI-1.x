@@ -10,24 +10,24 @@
 			"name": "v2",
 			"item": [
 				{
-					"name": "AuthStrategies",
+					"name": "AuthorizationStrategies",
 					"item": [
 						{
-							"name": "Authstrategies",
+							"name": "AuthorizationStrategies",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"GET AuthStrategies: Status code is OK\", function () {\r",
+											"pm.test(\"GET AuthorizationStrategies: Status code is OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"GET AuthStrategies: Response matches success format\", function () {\r",
-											"    pm.expect(response[0]).to.have.property(\"authStrategyId\");\r",
-											"    pm.expect(response[0]).to.have.property(\"authStrategyName\");\r",
+											"pm.test(\"GET AuthorizationStrategies: Response matches success format\", function () {\r",
+											"    pm.expect(response[0]).to.have.property(\"id\");\r",
+											"    pm.expect(response[0]).to.have.property(\"name\");\r",
 											"    pm.expect(response[0]).to.have.property(\"displayName\");\r",
 											"});\r",
 											"\r",
@@ -37,10 +37,10 @@
 											"    {\r",
 											"      \"type\": \"object\",\r",
 											"      \"properties\": {\r",
-											"        \"authStrategyId\": {\r",
+											"        \"id\": {\r",
 											"          \"type\": \"integer\"\r",
 											"        },\r",
-											"        \"authStrategyName\": {\r",
+											"        \"name\": {\r",
 											"          \"type\": \"string\"\r",
 											"        },\r",
 											"        \"displayName\": {\r",
@@ -48,15 +48,15 @@
 											"        }\r",
 											"      },\r",
 											"      \"required\": [\r",
-											"        \"authStrategyId\",\r",
-											"        \"authStrategyName\",\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
 											"        \"displayName\"\r",
 											"      ]\r",
 											"    }\r",
 											"  ]\r",
 											"}\r",
 											"\r",
-											"pm.test(\"GET AuthStrategies: Validation Schema Response\", () => {\r",
+											"pm.test(\"GET AuthorizationStrategies: Validation Schema Response\", () => {\r",
 											"    pm.response.to.have.jsonSchema(GetAuthStrategiesSchema);\r",
 											"});\r",
 											""
@@ -69,13 +69,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/authstrategies",
+									"raw": "{{API_URL}}/v2/authorizationStrategies",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"authstrategies"
+										"authorizationStrategies"
 									]
 								}
 							},

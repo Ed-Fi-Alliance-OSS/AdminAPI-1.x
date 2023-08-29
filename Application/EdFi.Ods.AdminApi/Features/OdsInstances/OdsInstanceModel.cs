@@ -4,12 +4,14 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json.Serialization;
 
 namespace EdFi.Ods.AdminApi.Features.ODSInstances;
 
-[SwaggerSchema(Title = "ODS Instance")]
+[SwaggerSchema(Title = "OdsInstance")]
 public class OdsInstanceModel
 {
+    [JsonPropertyName("id")]
     public int OdsInstanceId { get; set; }
     public string? Name { get; set; }
     public string? InstanceType { get; set; }

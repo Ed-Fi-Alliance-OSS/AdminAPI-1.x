@@ -42,10 +42,11 @@ public class ClaimSetResourceClaimModel
     public bool Update { get; set; }
     public bool Delete { get; set; }
 
-    [JsonPropertyName("_defaultAuthStrategiesForCRUD")]
+    [JsonPropertyName("_defaultAuthorizationStrategiesForCRUD")]
     [SwaggerSchema(ReadOnly = true)]
     public AuthorizationStrategyClaimSetModel?[] DefaultAuthStrategiesForCRUD { get; set; }
 
+    [JsonPropertyName("authorizationStrategyOverridesForCRUD")]
     public AuthorizationStrategyClaimSetModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]

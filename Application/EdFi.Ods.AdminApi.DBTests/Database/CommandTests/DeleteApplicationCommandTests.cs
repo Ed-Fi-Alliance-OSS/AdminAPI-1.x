@@ -46,6 +46,15 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
             ActivationCode = "fake activation code"
         };
 
+        var odsInstance = new OdsInstance
+        {
+            Name = "ODS Instance Name Test",
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
+        };
+
+        application.OdsInstance = odsInstance;
+
         var clientAccessToken = new ClientAccessToken
         {
             ApiClient = client,

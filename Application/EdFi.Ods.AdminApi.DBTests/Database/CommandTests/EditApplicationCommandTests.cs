@@ -172,7 +172,8 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         {
             var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId); 
             var apiClient = persistedApplication.ApiClients.First();
-            var apiClientOdsInstance = usersContext.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == persistedApplication.OdsInstanceId() && o.ApiClient.ApiClientId == apiClient.ApiClientId);
+            var odsInstanceId = persistedApplication.OdsInstanceId().Value;
+            var apiClientOdsInstance = usersContext.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == odsInstanceId && o.ApiClient.ApiClientId == apiClient.ApiClientId);
             apiClientOdsInstance.ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
             apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(persistedApplication.OdsInstanceId().Value);
         });

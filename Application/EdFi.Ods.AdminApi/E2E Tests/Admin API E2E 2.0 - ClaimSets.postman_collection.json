@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "20da7bd3-c574-4bf7-94fa-5d75d684a4d1",
+		"_postman_id": "2d4ba23b-92c5-46ca-a7ff-faf77d435b8c",
 		"name": "Admin API E2E 2.0 - ClaimSets",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3724147"
+		"_exporter_id": "20721775"
 	},
 	"item": [
 		{
@@ -78,42 +78,68 @@
 											"                {\r",
 											"                  \"type\": \"object\",\r",
 											"                  \"properties\": {\r",
-											"                    \"id\": {\r",
+											"                    \"actionId\": {\r",
 											"                      \"type\": \"integer\"\r",
 											"                    },\r",
-											"                    \"name\": {\r",
+											"                    \"actionName\": {\r",
 											"                      \"type\": \"string\"\r",
 											"                    },\r",
-											"                    \"displayName\": {\r",
-											"                      \"type\": \"string\"\r",
-											"                    },\r",
-											"                    \"isInheritedFromParent\": {\r",
-											"                      \"type\": \"boolean\"\r",
-											"                    }\r",
-											"                  },\r",
-											"                  \"required\": [\r",
-											"                    \"id\",\r",
-											"                    \"name\",\r",
-											"                    \"displayName\",\r",
-											"                    \"isInheritedFromParent\"\r",
-											"                  ]\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }                      \r",
+											"\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
 											"            \"authorizationStrategyOverridesForCRUD\": {\r",
 											"              \"type\": \"array\",\r",
-											"              \"items\": [\r",
+											"               \"items\": [\r",
 											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
@@ -139,49 +165,75 @@
 											"                      \"type\": \"boolean\"\r",
 											"                    },\r",
 											"                    \"_defaultAuthorizationStrategiesForCRUD\": {\r",
-											"                      \"type\": \"array\",\r",
-											"                      \"items\": [\r",
+											"                    \"type\": \"array\",\r",
+											"                    \"items\": [\r",
 											"                        {\r",
-											"                          \"type\": \"object\",\r",
-											"                          \"properties\": {\r",
-											"                            \"id\": {\r",
-											"                              \"type\": \"integer\"\r",
+											"                        \"type\": \"object\",\r",
+											"                        \"properties\": {\r",
+											"                            \"actionId\": {\r",
+											"                            \"type\": \"integer\"\r",
 											"                            },\r",
-											"                            \"name\": {\r",
-											"                              \"type\": \"string\"\r",
+											"                            \"actionName\": {\r",
+											"                            \"type\": \"string\"\r",
 											"                            },\r",
-											"                            \"displayName\": {\r",
-											"                              \"type\": \"string\"\r",
-											"                            },\r",
-											"                            \"isInheritedFromParent\": {\r",
-											"                              \"type\": \"boolean\"\r",
-											"                            }\r",
-											"                          },\r",
-											"                          \"required\": [\r",
-											"                            \"id\",\r",
-											"                            \"name\",\r",
-											"                            \"displayName\",\r",
-											"                            \"isInheritedFromParent\"\r",
-											"                          ]\r",
+											"                            \"authorizationStrategies\": {\r",
+											"                            \"type\": \"array\",\r",
+											"                            \"items\": [\r",
+											"                                {\r",
+											"                                    \"type\": \"object\",\r",
+											"                                    \"properties\": {\r",
+											"                                        \"authStrategyId\": {\r",
+											"                                        \"type\": \"integer\"\r",
+											"                                        },\r",
+											"                                        \"authStrategyName\": {\r",
+											"                                        \"type\": \"string\"\r",
+											"                                        },\r",
+											"                                        \"isInheritedFromParent\": {\r",
+											"                                        \"type\": \"boolean\"\r",
+											"                                        }                      \r",
+											"\r",
+											"                                    }\r",
+											"                                }\r",
+											"                            ]\r",
+											"                            }                    \r",
 											"                        }\r",
-											"                      ]\r",
+											"                        }\r",
+											"                    ]\r",
 											"                    },\r",
 											"                    \"authorizationStrategyOverridesForCRUD\": {\r",
-											"                      \"type\": \"array\",\r",
-											"                      \"items\": [\r",
+											"                    \"type\": \"array\",\r",
+											"                    \"items\": [\r",
 											"                        {\r",
-											"                          \"type\": \"null\"\r",
-											"                        },\r",
-											"                        {\r",
-											"                          \"type\": \"null\"\r",
-											"                        },\r",
-											"                        {\r",
-											"                          \"type\": \"null\"\r",
-											"                        },\r",
-											"                        {\r",
-											"                          \"type\": \"null\"\r",
+											"                        \"type\": \"object\",\r",
+											"                        \"properties\": {\r",
+											"                            \"actionId\": {\r",
+											"                            \"type\": \"integer\"\r",
+											"                            },\r",
+											"                            \"actionName\": {\r",
+											"                            \"type\": \"string\"\r",
+											"                            },\r",
+											"                            \"authorizationStrategies\": {\r",
+											"                            \"type\": \"array\",\r",
+											"                            \"items\": [\r",
+											"                                {\r",
+											"                                    \"type\": \"object\",\r",
+											"                                    \"properties\": {\r",
+											"                                        \"authStrategyId\": {\r",
+											"                                        \"type\": \"integer\"\r",
+											"                                        },\r",
+											"                                        \"authStrategyName\": {\r",
+											"                                        \"type\": \"string\"\r",
+											"                                        },\r",
+											"                                        \"isInheritedFromParent\": {\r",
+											"                                        \"type\": \"boolean\"\r",
+											"                                        }\r",
+											"                                    }\r",
+											"                                }\r",
+											"                            ]\r",
+											"                            }                    \r",
 											"                        }\r",
-											"                      ]\r",
+											"                        }\r",
+											"                    ]\r",
 											"                    },\r",
 											"                    \"children\": {\r",
 											"                      \"type\": \"array\",\r",
@@ -263,11 +315,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -329,11 +381,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -395,11 +447,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -484,11 +536,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -557,11 +609,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -626,11 +678,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -696,11 +748,11 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        ""
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										""
+									]
 								}
 							},
 							"response": []
@@ -747,12 +799,12 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions"
+									]
 								}
 							},
 							"response": []
@@ -816,12 +868,12 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions"
+									]
 								}
 							},
 							"response": []
@@ -867,13 +919,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "4"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4"
+									]
 								}
 							},
 							"response": []
@@ -931,13 +983,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "90000",
-                        "resourceClaimActions",
-                        "4"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"90000",
+										"resourceClaimActions",
+										"4"
+									]
 								}
 							},
 							"response": []
@@ -971,7 +1023,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategyName\": \"RelationshipsWithStudentsOnly\"\r\n}\r\n",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategies\": [\r\n    \"RelationshipsWithStudentsOnly\"\r\n  ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -983,14 +1035,83 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "4",
-                        "overrideAuthorizationStrategy"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"overrideAuthorizationStrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy - Action not enabled",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OverrideAuthStrategy - Action not enabled: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy - Action not enabled: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy - Action not enabled: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy - Action not enabled: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Action.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Action[0]).to.contain(\"action is not enabled for the resource claim\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"delete\",\r\n  \"authorizationStrategies\": [\r\n    \"RelationshipsWithStudentsOnly\"\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"overrideAuthorizationStrategy"
+									]
 								}
 							},
 							"response": []
@@ -1029,8 +1150,8 @@
 											"pm.test(\"POST OverrideAuthStrategy Invalid: Response errors include messages by property\", function () {\r",
 											"    pm.expect(response.errors.ResourceClaim.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ResourceClaim[0]).to.contain(\"doesn't exist\");\r",
-											"    pm.expect(response.errors.AuthorizationStrategyName.length).to.equal(1);\r",
-											"    pm.expect(response.errors.AuthorizationStrategyName[0]).to.contain(\"doesn't exist\");\r",
+											"    pm.expect(response.errors.AuthorizationStrategies.length).to.equal(1);\r",
+											"    pm.expect(response.errors.AuthorizationStrategies[0]).to.contain(\"doesn't exist\");\r",
 											"    pm.expect(response.errors.ActionName.length).to.equal(1);\r",
 											"    pm.expect(response.errors.ActionName[0]).to.contain(\"doesn't exist\");\r",
 											"});\r",
@@ -1045,7 +1166,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"actionName\": \"NotExist\",\r\n  \"authorizationStrategyName\": \"RelationshipsWithStudentsOnlys\"\r\n}\r\n",
+									"raw": "{\r\n  \"actionName\": \"NotExist\",\r\n  \"authorizationStrategies\": [\"RelationshipsWithStudentsOnlys\"]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1057,14 +1178,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "4000",
-                        "overrideAuthorizationStrategy"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4000",
+										"overrideAuthorizationStrategy"
+									]
 								}
 							},
 							"response": []
@@ -1110,14 +1231,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "4",
-                        "resetAuthorizationStrategies"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"resetAuthorizationStrategies"
+									]
 								}
 							},
 							"response": []
@@ -1163,14 +1284,14 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "40000",
-                        "resetAuthorizationStrategies"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"40000",
+										"resetAuthorizationStrategies"
+									]
 								}
 							},
 							"response": []
@@ -1216,13 +1337,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "4"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4"
+									]
 								}
 							},
 							"response": []
@@ -1268,13 +1389,13 @@
 									"host": [
 										"{{API_URL}}"
 									],
-                    "path": [
-                        "v2",
-                        "claimSets",
-                        "{{CreatedClaimSetId}}",
-                        "resourceClaimActions",
-                        "4000"
-                    ]
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4000"
+									]
 								}
 							},
 							"response": []
@@ -1361,7 +1482,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										""
 									]
 								}
@@ -1480,7 +1601,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"copy"
 									]
 								}
@@ -1549,7 +1670,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"copy"
 									]
 								}
@@ -1577,7 +1698,9 @@
 											"        function(claimSet) { return claimSet.id; }\r",
 											"    ).indexOf(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
 											"\r",
+
 											"    const result = results[indexOfClaimSet];\r",
+
 											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
 											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
 											"    pm.expect(result._applications).to.be.empty;\r",
@@ -1632,7 +1755,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets"
+										"claimSets"
 									],
 									"query": [
 										{
@@ -1664,7 +1787,6 @@
 											"\r",
 											"pm.test(\"GET ClaimSetsId: Response result matches claimset\", function () {\r",
 											"    const claimSetId = pm.collectionVariables.get(\"CreatedClaimSetId\");\r",
-											"    \r",
 											"    pm.expect(result.id).to.equal(claimSetId);\r",
 											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
 											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
@@ -1706,42 +1828,68 @@
 											"                {\r",
 											"                  \"type\": \"object\",\r",
 											"                  \"properties\": {\r",
-											"                    \"id\": {\r",
+											"                    \"actionId\": {\r",
 											"                      \"type\": \"integer\"\r",
 											"                    },\r",
-											"                    \"name\": {\r",
+											"                    \"actionName\": {\r",
 											"                      \"type\": \"string\"\r",
 											"                    },\r",
-											"                    \"displayName\": {\r",
-											"                      \"type\": \"string\"\r",
-											"                    },\r",
-											"                    \"isInheritedFromParent\": {\r",
-											"                      \"type\": \"boolean\"\r",
-											"                    }\r",
-											"                  },\r",
-											"                  \"required\": [\r",
-											"                    \"id\",\r",
-											"                    \"name\",\r",
-											"                    \"displayName\",\r",
-											"                    \"isInheritedFromParent\"\r",
-											"                  ]\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }                      \r",
+											"\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
 											"            \"authorizationStrategyOverridesForCRUD\": {\r",
 											"              \"type\": \"array\",\r",
-											"              \"items\": [\r",
+											"               \"items\": [\r",
 											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
@@ -1804,7 +1952,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -1875,42 +2023,67 @@
 											"                {\r",
 											"                  \"type\": \"object\",\r",
 											"                  \"properties\": {\r",
-											"                    \"id\": {\r",
+											"                    \"actionId\": {\r",
 											"                      \"type\": \"integer\"\r",
 											"                    },\r",
-											"                    \"name\": {\r",
+											"                    \"actionName\": {\r",
 											"                      \"type\": \"string\"\r",
 											"                    },\r",
-											"                    \"displayName\": {\r",
-											"                      \"type\": \"string\"\r",
-											"                    },\r",
-											"                    \"isInheritedFromParent\": {\r",
-											"                      \"type\": \"boolean\"\r",
-											"                    }\r",
-											"                  },\r",
-											"                  \"required\": [\r",
-											"                    \"id\",\r",
-											"                    \"name\",\r",
-											"                    \"displayName\",\r",
-											"                    \"isInheritedFromParent\"\r",
-											"                  ]\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
 											"            \"authorizationStrategyOverridesForCRUD\": {\r",
 											"              \"type\": \"array\",\r",
-											"              \"items\": [\r",
+											"               \"items\": [\r",
 											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
-											"                },\r",
-											"                {\r",
-											"                  \"type\": \"null\"\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
@@ -2063,7 +2236,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2128,7 +2301,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2193,7 +2366,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}
@@ -2619,7 +2792,7 @@
 									],
 									"path": [
 										"v2",
-										"claimsets",
+										"claimSets",
 										"{{CreatedClaimSetId}}"
 									]
 								}

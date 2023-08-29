@@ -8,29 +8,38 @@ using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 
-public class AuthStrategyIdConverter : IValueConverter<string, int>
+public class AuthStrategyIdsConverter : IValueConverter<List<string>, List<int>>
 {
     private readonly IGetAllAuthorizationStrategiesQuery _getAllAuthorizationStrategiesQuery;
-    public AuthStrategyIdConverter(IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+    public AuthStrategyIdsConverter(IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
     {
         _getAllAuthorizationStrategiesQuery = getAllAuthorizationStrategiesQuery;
     }
-    public int Convert(string authStrategyName, ResolutionContext context)
+    public List<int> Convert(List<string> authStrategyNames, ResolutionContext context)
     {
-        var result = 0;
-        var authStrategy = _getAllAuthorizationStrategiesQuery.Execute()
-            .FirstOrDefault(a => a.AuthStrategyName!.ToLower() == authStrategyName!.ToLower());
-
-        if (authStrategy == null)
+        var ids = new List<int>();
+        if (authStrategyNames != null)
         {
-            throw new Exception($"Error transforming the ID for the AuthStrategyName {authStrategyName!}");
-        }
-        else
-        {
-            result = authStrategy!.AuthStrategyId;
-        }
+            var unavailableAuthStrategies = string.Empty;
+            foreach (var authStrategyName in authStrategyNames)
+            {
+                var authStrategy = _getAllAuthorizationStrategiesQuery.Execute()
+                   .FirstOrDefault(a => authStrategyName.Equals(a.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
 
-        return result;
-
+                if (authStrategy == null)
+                {
+                    unavailableAuthStrategies = string.Join(",", authStrategyName);
+                }
+                else
+                {
+                    ids.Add(authStrategy!.AuthStrategyId);
+                }
+            }
+            if (!string.IsNullOrEmpty(unavailableAuthStrategies))
+            {
+                throw new Exception($"Error transforming the ID for the AuthStrategyNames {unavailableAuthStrategies!}");
+            }
+        }
+        return ids;
     }
 }

@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "2d4ba23b-92c5-46ca-a7ff-faf77d435b8c",
+		"_postman_id": "fa42e385-b585-4ee6-b675-f0785bf794c8",
 		"name": "Admin API E2E 2.0 - ClaimSets",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20721775"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -78,68 +77,42 @@
 											"                {\r",
 											"                  \"type\": \"object\",\r",
 											"                  \"properties\": {\r",
-											"                    \"actionId\": {\r",
+											"                    \"id\": {\r",
 											"                      \"type\": \"integer\"\r",
 											"                    },\r",
-											"                    \"actionName\": {\r",
+											"                    \"name\": {\r",
 											"                      \"type\": \"string\"\r",
 											"                    },\r",
-											"                    \"authorizationStrategies\": {\r",
-											"                      \"type\": \"array\",\r",
-											"                      \"items\": [\r",
-											"                          {\r",
-											"                            \"type\": \"object\",\r",
-											"                            \"properties\": {\r",
-											"                                \"authStrategyId\": {\r",
-											"                                \"type\": \"integer\"\r",
-											"                                },\r",
-											"                                \"authStrategyName\": {\r",
-											"                                \"type\": \"string\"\r",
-											"                                },\r",
-											"                                \"isInheritedFromParent\": {\r",
-											"                                \"type\": \"boolean\"\r",
-											"                                }                      \r",
-											"\r",
-											"                            }\r",
-											"                          }\r",
-											"                      ]\r",
-											"                    }                    \r",
-											"                  }\r",
+											"                    \"displayName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"isInheritedFromParent\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    }\r",
+											"                  },\r",
+											"                  \"required\": [\r",
+											"                    \"id\",\r",
+											"                    \"name\",\r",
+											"                    \"displayName\",\r",
+											"                    \"isInheritedFromParent\"\r",
+											"                  ]\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
 											"            \"authorizationStrategyOverridesForCRUD\": {\r",
 											"              \"type\": \"array\",\r",
-											"               \"items\": [\r",
+											"              \"items\": [\r",
 											"                {\r",
-											"                  \"type\": \"object\",\r",
-											"                  \"properties\": {\r",
-											"                    \"actionId\": {\r",
-											"                      \"type\": \"integer\"\r",
-											"                    },\r",
-											"                    \"actionName\": {\r",
-											"                      \"type\": \"string\"\r",
-											"                    },\r",
-											"                    \"authorizationStrategies\": {\r",
-											"                      \"type\": \"array\",\r",
-											"                      \"items\": [\r",
-											"                          {\r",
-											"                            \"type\": \"object\",\r",
-											"                            \"properties\": {\r",
-											"                                \"authStrategyId\": {\r",
-											"                                \"type\": \"integer\"\r",
-											"                                },\r",
-											"                                \"authStrategyName\": {\r",
-											"                                \"type\": \"string\"\r",
-											"                                },\r",
-											"                                \"isInheritedFromParent\": {\r",
-											"                                \"type\": \"boolean\"\r",
-											"                                }\r",
-											"                            }\r",
-											"                          }\r",
-											"                      ]\r",
-											"                    }                    \r",
-											"                  }\r",
+											"                  \"type\": \"null\"\r",
+											"                },\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
+											"                },\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
+											"                },\r",
+											"                {\r",
+											"                  \"type\": \"null\"\r",
 											"                }\r",
 											"              ]\r",
 											"            },\r",
@@ -165,75 +138,49 @@
 											"                      \"type\": \"boolean\"\r",
 											"                    },\r",
 											"                    \"_defaultAuthorizationStrategiesForCRUD\": {\r",
-											"                    \"type\": \"array\",\r",
-											"                    \"items\": [\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
 											"                        {\r",
-											"                        \"type\": \"object\",\r",
-											"                        \"properties\": {\r",
-											"                            \"actionId\": {\r",
-											"                            \"type\": \"integer\"\r",
+											"                          \"type\": \"object\",\r",
+											"                          \"properties\": {\r",
+											"                            \"id\": {\r",
+											"                              \"type\": \"integer\"\r",
 											"                            },\r",
-											"                            \"actionName\": {\r",
-											"                            \"type\": \"string\"\r",
+											"                            \"name\": {\r",
+											"                              \"type\": \"string\"\r",
 											"                            },\r",
-											"                            \"authorizationStrategies\": {\r",
-											"                            \"type\": \"array\",\r",
-											"                            \"items\": [\r",
-											"                                {\r",
-											"                                    \"type\": \"object\",\r",
-											"                                    \"properties\": {\r",
-											"                                        \"authStrategyId\": {\r",
-											"                                        \"type\": \"integer\"\r",
-											"                                        },\r",
-											"                                        \"authStrategyName\": {\r",
-											"                                        \"type\": \"string\"\r",
-											"                                        },\r",
-											"                                        \"isInheritedFromParent\": {\r",
-											"                                        \"type\": \"boolean\"\r",
-											"                                        }                      \r",
-											"\r",
-											"                                    }\r",
-											"                                }\r",
-											"                            ]\r",
-											"                            }                    \r",
+											"                            \"displayName\": {\r",
+											"                              \"type\": \"string\"\r",
+											"                            },\r",
+											"                            \"isInheritedFromParent\": {\r",
+											"                              \"type\": \"boolean\"\r",
+											"                            }\r",
+											"                          },\r",
+											"                          \"required\": [\r",
+											"                            \"id\",\r",
+											"                            \"name\",\r",
+											"                            \"displayName\",\r",
+											"                            \"isInheritedFromParent\"\r",
+											"                          ]\r",
 											"                        }\r",
-											"                        }\r",
-											"                    ]\r",
+											"                      ]\r",
 											"                    },\r",
 											"                    \"authorizationStrategyOverridesForCRUD\": {\r",
-											"                    \"type\": \"array\",\r",
-											"                    \"items\": [\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
 											"                        {\r",
-											"                        \"type\": \"object\",\r",
-											"                        \"properties\": {\r",
-											"                            \"actionId\": {\r",
-											"                            \"type\": \"integer\"\r",
-											"                            },\r",
-											"                            \"actionName\": {\r",
-											"                            \"type\": \"string\"\r",
-											"                            },\r",
-											"                            \"authorizationStrategies\": {\r",
-											"                            \"type\": \"array\",\r",
-											"                            \"items\": [\r",
-											"                                {\r",
-											"                                    \"type\": \"object\",\r",
-											"                                    \"properties\": {\r",
-											"                                        \"authStrategyId\": {\r",
-											"                                        \"type\": \"integer\"\r",
-											"                                        },\r",
-											"                                        \"authStrategyName\": {\r",
-											"                                        \"type\": \"string\"\r",
-											"                                        },\r",
-											"                                        \"isInheritedFromParent\": {\r",
-											"                                        \"type\": \"boolean\"\r",
-											"                                        }\r",
-											"                                    }\r",
-											"                                }\r",
-											"                            ]\r",
-											"                            }                    \r",
+											"                          \"type\": \"null\"\r",
+											"                        },\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
+											"                        },\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
+											"                        },\r",
+											"                        {\r",
+											"                          \"type\": \"null\"\r",
 											"                        }\r",
-											"                        }\r",
-											"                    ]\r",
+											"                      ]\r",
 											"                    },\r",
 											"                    \"children\": {\r",
 											"                      \"type\": \"array\",\r",
@@ -303,7 +250,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test ClaimSet {{ClaimSetGUID}}\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"_defaultAuthorizationStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"learningStandard\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"_defaultAuthorizationStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"_defaultAuthorizationStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Test ClaimSet {{ClaimSetGUID}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -369,7 +316,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"\",\r\n    \"resourceClaims\": []\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -524,7 +471,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Other Test ClaimSet {{OtherClaimSetGUID}}\",\r\n    \"resourceClaims\": []\r\n}",
+									"raw": "{\r\n    \"name\": \"Other Test ClaimSet {{OtherClaimSetGUID}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -546,45 +493,64 @@
 							"response": []
 						},
 						{
-							"name": "ClaimSets - Invalid Wrong Resource Name",
+							"name": "ClaimSets",
 							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST ClaimSets Invalid Resource Name: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"GET ClaimSets: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
-											"const errors = pm.response.json().errors;\r",
+											"const results = pm.response.json();\r",
 											"\r",
-											"pm.test(\"POST ClaimSets Invalid Resource Name: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"pm.test(\"GET ClaimSets: Response result includes claimsets\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"\r",
+											"    const indexOfClaimSet = results.map(\r",
+											"        function(claimSet) { return claimSet.id; }\r",
+											"    ).indexOf(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
+											"\r",
+											"    const result = results[indexOfClaimSet];\r",
+											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
+											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
+											"    pm.expect(result._applications).to.be.empty;\r",
 											"});\r",
 											"\r",
-											"pm.test(\"POST ClaimSets Invalid Resource Name: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
+											"const GetClaimSetsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"_isSystemReserved\": {\r",
+											"          \"type\": \"boolean\"\r",
+											"        },\r",
+											"        \"_applications\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
+											"        \"_isSystemReserved\",\r",
+											"        \"_applications\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
 											"\r",
-											"pm.test(\"POST ClaimSets Invalid Resource Name: Response errors include messages by property and resource\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(2);\r",
-											"    [\"not in the system\", \"educationStandards-123\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
-											"    });\r",
-											"    [\"not in the system\", \"learningStandard-123\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[1]).to.contain(substring);\r",
-											"    });\r",
+											"pm.test(\"GET ClaimSet: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsSchema);\r",
 											"});\r",
 											""
 										],
@@ -593,68 +559,191 @@
 								}
 							],
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"ClaimSet-WithWrongResource\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards-123\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"learningStandard-123\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
+									"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}&limit={{limit}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
-										"claimSets",
-										""
+										"claimSets"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "ClaimSets - Invalid Wrong Parent Child Relationship",
+							"name": "ClaimSets by ID",
 							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST ClaimSets Invalid Parent Child Relationship: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"GET ClaimSetsId: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
-											"const errors = pm.response.json().errors;\r",
+											"const result = pm.response.json();\r",
 											"\r",
-											"pm.test(\"POST ClaimSets Invalid Parent Child Relationship: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"pm.test(\"GET ClaimSetsId: Response result matches claimset\", function () {\r",
+											"    const claimSetId = pm.collectionVariables.get(\"CreatedClaimSetId\");\r",
+											"    pm.expect(result.id).to.equal(claimSetId);\r",
+											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
+											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
+											"    pm.expect(result._applications).to.be.empty;\r",
 											"});\r",
 											"\r",
-											"pm.test(\"POST ClaimSets Invalid Parent Child Relationship: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
+											"const GetClaimSetsIdSchema = {\r",
+											"  \"type\": \"object\",\r",
+											"  \"properties\": {\r",
+											"    \"resourceClaims\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": [\r",
+											"        {\r",
+											"          \"type\": \"object\",\r",
+											"          \"properties\": {\r",
+											"            \"name\": {\r",
+											"              \"type\": \"string\"\r",
+											"            },\r",
+											"            \"read\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"create\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"update\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"delete\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }                      \r",
 											"\r",
-											"pm.test(\"POST ClaimSets Invalid Parent Child Relationship: Response errors include messages by property and resource\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
-											"    [\"Child resource: 'academicSubjectDescriptor'\", \"wrong parent resource\", \"parent resource is: 'systemDescriptors'\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
-											"    });\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"authorizationStrategyOverridesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"               \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"children\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": {}\r",
+											"            }\r",
+											"          },\r",
+											"          \"required\": [\r",
+											"            \"name\",\r",
+											"            \"read\",\r",
+											"            \"create\",\r",
+											"            \"update\",\r",
+											"            \"delete\",\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
+											"            \"authorizationStrategyOverridesForCRUD\",\r",
+											"            \"children\"\r",
+											"          ]\r",
+											"        }\r",
+											"      ]\r",
+											"    },\r",
+											"    \"id\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"name\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"_isSystemReserved\": {\r",
+											"      \"type\": \"boolean\"\r",
+											"    },\r",
+											"    \"_applications\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    }\r",
+											"  },\r",
+											"  \"required\": [\r",
+											"    \"resourceClaims\",\r",
+											"    \"id\",\r",
+											"    \"name\",\r",
+											"    \"_isSystemReserved\",\r",
+											"    \"_applications\"\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ClaimSetId: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsIdSchema);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -662,96 +751,17 @@
 								}
 							],
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Wrong-Parent-Child-Relation\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"academicSubjectDescriptor\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
 										"claimSets",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ClaimSets - Invalid Resource Duplication",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"POST ClaimSets Invalid Resource Duplcation: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const errors = pm.response.json().errors;\r",
-											"\r",
-											"pm.test(\"POST ClaimSets Invalid Resource Duplcation: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"POST ClaimSets Invalid Resource Duplcation: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"POST ClaimSets Invalid Resource Duplcation: Response errors include messages by property and resource\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
-											"    [\"Only unique resource claims\", \"duplicate resource: 'learningStandard'\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
-											"    });\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Resource-Duplication\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"learningStandard\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          },\r\n\t\t  {\r\n            \"name\": \"learningStandard\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										""
+										"{{CreatedClaimSetId}}"
 									]
 								}
 							},
@@ -804,6 +814,195 @@
 										"claimSets",
 										"{{CreatedClaimSetId}}",
 										"resourceClaimActions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets by ID after adding Action",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ClaimSetsId after adding Action: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET ClaimSetsId after adding Action: Response result matches claimset\", function () {\r",
+											"    const claimSetId = pm.collectionVariables.get(\"CreatedClaimSetId\");\r",
+											"    \r",
+											"    pm.expect(result.id).to.equal(claimSetId);\r",
+											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
+											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
+											"    pm.expect(result._applications).to.be.empty;\r",
+											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
+											"    const educationOrganizationsResourceClaim = result.resourceClaims.find(r => r.name === \"educationOrganizations\")\r",
+											"    pm.expect(educationOrganizationsResourceClaim).to.be.an(\"object\", \"The educationOrganizations resource claim was not found.\")\r",
+											"    const actionCreate = educationOrganizationsResourceClaim._defaultAuthorizationStrategiesForCRUD.find(r => r.actionName === \"Create\")\r",
+											"    pm.expect(actionCreate).to.be.an(\"object\", \"The Create resource claim action was not found.\")\r",
+											"});\r",
+											"\r",
+											"const GetClaimSetsIdSchema = {\r",
+											"  \"type\": \"object\",\r",
+											"  \"properties\": {\r",
+											"    \"resourceClaims\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": [\r",
+											"        {\r",
+											"          \"type\": \"object\",\r",
+											"          \"properties\": {\r",
+											"            \"name\": {\r",
+											"              \"type\": \"string\"\r",
+											"            },\r",
+											"            \"read\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"create\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"update\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"delete\": {\r",
+											"              \"type\": \"boolean\"\r",
+											"            },\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }                      \r",
+											"\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"authorizationStrategyOverridesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"               \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"children\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": {}\r",
+											"            }\r",
+											"          },\r",
+											"          \"required\": [\r",
+											"            \"name\",\r",
+											"            \"read\",\r",
+											"            \"create\",\r",
+											"            \"update\",\r",
+											"            \"delete\",\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
+											"            \"authorizationStrategyOverridesForCRUD\",\r",
+											"            \"children\"\r",
+											"          ]\r",
+											"        }\r",
+											"      ]\r",
+											"    },\r",
+											"    \"id\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"name\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"_isSystemReserved\": {\r",
+											"      \"type\": \"boolean\"\r",
+											"    },\r",
+											"    \"_applications\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    }\r",
+											"  },\r",
+											"  \"required\": [\r",
+											"    \"resourceClaims\",\r",
+											"    \"id\",\r",
+											"    \"name\",\r",
+											"    \"_isSystemReserved\",\r",
+											"    \"_applications\"\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ClaimSetId after adding Action: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsIdSchema);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}"
 									]
 								}
 							},
@@ -879,6 +1078,96 @@
 							"response": []
 						},
 						{
+							"name": "ResourceClaimClaimSets - Add Action System Reserved",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSets = claimSetResponse.json();\r",
+											"  if(!claimSets) { console.log('Error in Pre-request: ClaimSets missing from response.'); }\r",
+											"  const systemReservedClaimSetIds = claimSets.map(\r",
+											"        function(claimSet) { \r",
+											"            if(claimSet._isSystemReserved)\r",
+											"            {\r",
+											"                return claimSet.id;\r",
+											"            } \r",
+											"        }\r",
+											"    );\r",
+											"  if(!systemReservedClaimSetIds) { console.log('Error in Pre-request: System Reserved claimset IDs not found. Response is:', claimSets); }\r",
+											"  pm.collectionVariables.set(\"SystemReservedClaimSetId\", systemReservedClaimSetIds[0]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResourceClaimAction System Reserved: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction System Reserved: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction System Reserved: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction System Reserved: Response errors include system reserved message\", function () {\r",
+											"     pm.expect(response.errors.ClaimSetId.length).to.equal(1)\r",
+											"    pm.expect(response.errors.ClaimSetId[0]).to.contain(\"system reserved\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": false,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{SystemReservedClaimSetId}}",
+										"resourceClaimActions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ResourceClaimClaimSets - Modify Action",
 							"event": [
 								{
@@ -923,6 +1212,97 @@
 										"v2",
 										"claimSets",
 										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Modify Action System Reserved",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSets = claimSetResponse.json();\r",
+											"  if(!claimSets) { console.log('Error in Pre-request: ClaimSets missing from response.'); }\r",
+											"  const systemReservedClaimSetIds = claimSets.map(\r",
+											"        function(claimSet) { \r",
+											"            if(claimSet._isSystemReserved)\r",
+											"            {\r",
+											"                return claimSet.id;\r",
+											"            } \r",
+											"        }\r",
+											"    );\r",
+											"  if(!systemReservedClaimSetIds) { console.log('Error in Pre-request: System Reserved claimset IDs not found. Response is:', claimSets); }\r",
+											"  pm.collectionVariables.set(\"SystemReservedClaimSetId\", systemReservedClaimSetIds[0]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT ResourceClaimAction System Reserved: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT ResourceClaimAction System Reserved: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT ResourceClaimAction System Reserved: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT ResourceClaimAction System Reserved: Response errors include system reserved message\", function () {\r",
+											"     pm.expect(response.errors.ClaimSetId.length).to.equal(1)\r",
+											"    pm.expect(response.errors.ClaimSetId[0]).to.contain(\"system reserved\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{SystemReservedClaimSetId}}",
 										"resourceClaimActions",
 										"4"
 									]
@@ -1117,6 +1497,98 @@
 							"response": []
 						},
 						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy System Reserved",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSets = claimSetResponse.json();\r",
+											"  if(!claimSets) { console.log('Error in Pre-request: ClaimSets missing from response.'); }\r",
+											"  const systemReservedClaimSetIds = claimSets.map(\r",
+											"        function(claimSet) { \r",
+											"            if(claimSet._isSystemReserved)\r",
+											"            {\r",
+											"                return claimSet.id;\r",
+											"            } \r",
+											"        }\r",
+											"    );\r",
+											"  if(!systemReservedClaimSetIds) { console.log('Error in Pre-request: System Reserved claimset IDs not found. Response is:', claimSets); }\r",
+											"  pm.collectionVariables.set(\"SystemReservedClaimSetId\", systemReservedClaimSetIds[0]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OverrideAuthStrategy System Reserved: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy System Reserved: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy System Reserved: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy System Reserved: Response errors include system reserved message\", function () {\r",
+											"     pm.expect(response.errors.ClaimSetId.length).to.equal(1)\r",
+											"    pm.expect(response.errors.ClaimSetId[0]).to.contain(\"system reserved\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategies\": [\r\n    \"RelationshipsWithStudentsOnly\"\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{SystemReservedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"overrideAuthorizationStrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ResourceClaimClaimSets - Override Auth Strategy Validation Errors",
 							"event": [
 								{
@@ -1244,6 +1716,98 @@
 							"response": []
 						},
 						{
+							"name": "ResourceClaimClaimSets - Reset Authorization Strategies System Reserved",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSets = claimSetResponse.json();\r",
+											"  if(!claimSets) { console.log('Error in Pre-request: ClaimSets missing from response.'); }\r",
+											"  const systemReservedClaimSetIds = claimSets.map(\r",
+											"        function(claimSet) { \r",
+											"            if(claimSet._isSystemReserved)\r",
+											"            {\r",
+											"                return claimSet.id;\r",
+											"            } \r",
+											"        }\r",
+											"    );\r",
+											"  if(!systemReservedClaimSetIds) { console.log('Error in Pre-request: System Reserved claimset IDs not found. Response is:', claimSets); }\r",
+											"  pm.collectionVariables.set(\"SystemReservedClaimSetId\", systemReservedClaimSetIds[0]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResetAuthorizationStrategies System Reserved: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ResetAuthorizationStrategies System Reserved: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResetAuthorizationStrategies System Reserved: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResetAuthorizationStrategies System Reserved: Response errors include system reserved message\", function () {\r",
+											"     pm.expect(response.errors.claimSetId.length).to.equal(1)\r",
+											"    pm.expect(response.errors.claimSetId[0]).to.contain(\"system reserved\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4/resetAuthorizationStrategies",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{SystemReservedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"resetAuthorizationStrategies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ResourceClaimClaimSets - Reset Authorization Strategies Not Found",
 							"event": [
 								{
@@ -1341,6 +1905,97 @@
 										"v2",
 										"claimSets",
 										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Delete System Reserved",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const claimSets = claimSetResponse.json();\r",
+											"  if(!claimSets) { console.log('Error in Pre-request: ClaimSets missing from response.'); }\r",
+											"  const systemReservedClaimSetIds = claimSets.map(\r",
+											"        function(claimSet) { \r",
+											"            if(claimSet._isSystemReserved)\r",
+											"            {\r",
+											"                return claimSet.id;\r",
+											"            } \r",
+											"        }\r",
+											"    );\r",
+											"  if(!systemReservedClaimSetIds) { console.log('Error in Pre-request: System Reserved claimset IDs not found. Response is:', claimSets); }\r",
+											"  pm.collectionVariables.set(\"SystemReservedClaimSetId\", systemReservedClaimSetIds[0]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE ResourceClaimOnClaimSet System Reserved: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"DELETE ResourceClaimOnClaimSet System Reserved: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"DELETE ResourceClaimOnClaimSet System Reserved: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"DELETE ResourceClaimOnClaimSet System Reserved: Response errors include system reserved message\", function () {\r",
+											"     pm.expect(response.errors.claimSetId.length).to.equal(1)\r",
+											"    pm.expect(response.errors.claimSetId[0]).to.contain(\"system reserved\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{SystemReservedClaimSetId}}/resourceClaimActions/4",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{SystemReservedClaimSetId}}",
 										"resourceClaimActions",
 										"4"
 									]
@@ -1496,9 +2151,8 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
 											"pm.sendRequest({\r",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets/${pm.collectionVariables.get(\"CreatedClaimSetId\")}/resourceClaimActions`,\r",
 											"  method: 'POST',\r",
 											"  header: {\r",
 											"      \"Content-Type\": \"application/json\",\r",
@@ -1507,47 +2161,22 @@
 											"  body: {\r",
 											"    mode: 'raw',\r",
 											"    raw:JSON.stringify({\r",
-											"      \"name\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
-											"      \"resourceClaims\": [{\r",
-											"        \"name\": \"educationStandards\",\r",
-											"        \"read\": true,\r",
-											"        \"create\": true,\r",
-											"        \"update\": true,\r",
-											"        \"delete\": true,\r",
-											"        \"defaultAuthStrategiesForCRUD\": [\r",
-											"          {\r",
-											"            \"authStrategyName\": \"NamespaceBased\",\r",
-											"            \"isInheritedFromParent\": false\r",
-											"          },\r",
-											"          {\r",
-											"            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r",
-											"            \"isInheritedFromParent\": false\r",
-											"          },\r",
-											"          {\r",
-											"            \"authStrategyName\": \"NamespaceBased\",\r",
-											"            \"isInheritedFromParent\": false\r",
-											"          },\r",
-											"          {\r",
-											"            \"authStrategyName\": \"NamespaceBased\",\r",
-											"            \"isInheritedFromParent\": false\r",
-											"          }\r",
-											"        ],\r",
-											"        \"authorizationStrategyOverridesForCRUD\": [\r",
-											"          null,\r",
-											"          null,\r",
-											"          null,\r",
-											"          null\r",
-											"        ]\r",
-											"    }]\r",
-											"  })\r",
+											"        \"resourceClaimId\": 9,\r",
+											"        \"resourceClaimActions\": {\r",
+											"            \"create\": true,\r",
+											"            \"read\": true,\r",
+											"            \"update\": true,\r",
+											"            \"delete\": false\r",
+											"        }\r",
+											"    })\r",
 											" }\r",
 											"},\r",
 											"function (claimSetErr, claimSetResponse) {\r",
 											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
 											"  const claimSetJson = claimSetResponse.json();\r",
 											"  if(!claimSetJson.id) { console.log('Error in Pre-request: claimset ID missing from response. Response is:', claimSetJson); }\r",
-											"  pm.collectionVariables.set(\"OtherExistingClaimSetId\", claimSetJson.id);\r",
 											"});\r",
+											"\r",
 											""
 										],
 										"type": "text/javascript"
@@ -1587,7 +2216,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Copied ClaimSet from {{OtherExistingClaimSetId}}\",\r\n    \"originalid\": {{OtherExistingClaimSetId}}\r\n}",
+									"raw": "{\r\n    \"name\": \"Copied ClaimSet from {{CreatedClaimSetId}}\",\r\n    \"originalid\": {{CreatedClaimSetId}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1681,288 +2310,6 @@
 							"name": "ClaimSets",
 							"event": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"GET ClaimSets: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const results = pm.response.json();\r",
-											"\r",
-											"pm.test(\"GET ClaimSets: Response result includes claimsets\", function () {\r",
-											"    pm.expect(results.length).to.be.greaterThan(0);\r",
-											"\r",
-											"    const indexOfClaimSet = results.map(\r",
-											"        function(claimSet) { return claimSet.id; }\r",
-											"    ).indexOf(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
-											"\r",
-
-											"    const result = results[indexOfClaimSet];\r",
-
-											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
-											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
-											"    pm.expect(result._applications).to.be.empty;\r",
-											"});\r",
-											"\r",
-											"const GetClaimSetsSchema = {\r",
-											"  \"type\": \"array\",\r",
-											"  \"items\": [\r",
-											"    {\r",
-											"      \"type\": \"object\",\r",
-											"      \"properties\": {\r",
-											"        \"id\": {\r",
-											"          \"type\": \"integer\"\r",
-											"        },\r",
-											"        \"name\": {\r",
-											"          \"type\": \"string\"\r",
-											"        },\r",
-											"        \"_isSystemReserved\": {\r",
-											"          \"type\": \"boolean\"\r",
-											"        },\r",
-											"        \"_applications\": {\r",
-											"          \"type\": \"array\",\r",
-											"          \"items\": {}\r",
-											"        }\r",
-											"      },\r",
-											"      \"required\": [\r",
-											"        \"id\",\r",
-											"        \"name\",\r",
-											"        \"_isSystemReserved\",\r",
-											"        \"_applications\"\r",
-											"      ]\r",
-											"    }\r",
-											"  ]\r",
-											"}\r",
-											"\r",
-											"pm.test(\"GET ClaimSet: Validation Schema Response\", () => {\r",
-											"    pm.response.to.have.jsonSchema(GetClaimSetsSchema);\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}&limit={{limit}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets"
-									],
-									"query": [
-										{
-											"key": "offset",
-											"value": "{{offset}}"
-										},
-										{
-											"key": "limit",
-											"value": "{{limit}}"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ClaimSets by ID",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"GET ClaimSetsId: Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const result = pm.response.json();\r",
-											"\r",
-											"pm.test(\"GET ClaimSetsId: Response result matches claimset\", function () {\r",
-											"    const claimSetId = pm.collectionVariables.get(\"CreatedClaimSetId\");\r",
-											"    pm.expect(result.id).to.equal(claimSetId);\r",
-											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
-											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
-											"    pm.expect(result._applications).to.be.empty;\r",
-											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
-											"    const educationStandardsResourceClaim = result.resourceClaims.find(r => r.name === \"educationStandards\")\r",
-											"    pm.expect(educationStandardsResourceClaim).to.be.an(\"object\", \"The educationStandards resource claim was not found.\")\r",
-											"    const academicSubjectDescriptorResourceClaim = result.resourceClaims.find(r => r.name === \"academicSubjectDescriptor\")\r",
-											"    pm.expect(academicSubjectDescriptorResourceClaim).to.be.an(\"object\", \"The academicSubjectDescriptor resource claim was not found.\")\r",
-											"});\r",
-											"\r",
-											"const GetClaimSetsIdSchema = {\r",
-											"  \"type\": \"object\",\r",
-											"  \"properties\": {\r",
-											"    \"resourceClaims\": {\r",
-											"      \"type\": \"array\",\r",
-											"      \"items\": [\r",
-											"        {\r",
-											"          \"type\": \"object\",\r",
-											"          \"properties\": {\r",
-											"            \"name\": {\r",
-											"              \"type\": \"string\"\r",
-											"            },\r",
-											"            \"read\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"create\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"update\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"delete\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
-											"              \"type\": \"array\",\r",
-											"              \"items\": [\r",
-											"                {\r",
-											"                  \"type\": \"object\",\r",
-											"                  \"properties\": {\r",
-											"                    \"actionId\": {\r",
-											"                      \"type\": \"integer\"\r",
-											"                    },\r",
-											"                    \"actionName\": {\r",
-											"                      \"type\": \"string\"\r",
-											"                    },\r",
-											"                    \"authorizationStrategies\": {\r",
-											"                      \"type\": \"array\",\r",
-											"                      \"items\": [\r",
-											"                          {\r",
-											"                            \"type\": \"object\",\r",
-											"                            \"properties\": {\r",
-											"                                \"authStrategyId\": {\r",
-											"                                \"type\": \"integer\"\r",
-											"                                },\r",
-											"                                \"authStrategyName\": {\r",
-											"                                \"type\": \"string\"\r",
-											"                                },\r",
-											"                                \"isInheritedFromParent\": {\r",
-											"                                \"type\": \"boolean\"\r",
-											"                                }                      \r",
-											"\r",
-											"                            }\r",
-											"                          }\r",
-											"                      ]\r",
-											"                    }                    \r",
-											"                  }\r",
-											"                }\r",
-											"              ]\r",
-											"            },\r",
-											"            \"authorizationStrategyOverridesForCRUD\": {\r",
-											"              \"type\": \"array\",\r",
-											"               \"items\": [\r",
-											"                {\r",
-											"                  \"type\": \"object\",\r",
-											"                  \"properties\": {\r",
-											"                    \"actionId\": {\r",
-											"                      \"type\": \"integer\"\r",
-											"                    },\r",
-											"                    \"actionName\": {\r",
-											"                      \"type\": \"string\"\r",
-											"                    },\r",
-											"                    \"authorizationStrategies\": {\r",
-											"                      \"type\": \"array\",\r",
-											"                      \"items\": [\r",
-											"                          {\r",
-											"                            \"type\": \"object\",\r",
-											"                            \"properties\": {\r",
-											"                                \"authStrategyId\": {\r",
-											"                                \"type\": \"integer\"\r",
-											"                                },\r",
-											"                                \"authStrategyName\": {\r",
-											"                                \"type\": \"string\"\r",
-											"                                },\r",
-											"                                \"isInheritedFromParent\": {\r",
-											"                                \"type\": \"boolean\"\r",
-											"                                }\r",
-											"                            }\r",
-											"                          }\r",
-											"                      ]\r",
-											"                    }                    \r",
-											"                  }\r",
-											"                }\r",
-											"              ]\r",
-											"            },\r",
-											"            \"children\": {\r",
-											"              \"type\": \"array\",\r",
-											"              \"items\": {}\r",
-											"            }\r",
-											"          },\r",
-											"          \"required\": [\r",
-											"            \"name\",\r",
-											"            \"read\",\r",
-											"            \"create\",\r",
-											"            \"update\",\r",
-											"            \"delete\",\r",
-											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
-											"            \"authorizationStrategyOverridesForCRUD\",\r",
-											"            \"children\"\r",
-											"          ]\r",
-											"        }\r",
-											"      ]\r",
-											"    },\r",
-											"    \"id\": {\r",
-											"      \"type\": \"integer\"\r",
-											"    },\r",
-											"    \"name\": {\r",
-											"      \"type\": \"string\"\r",
-											"    },\r",
-											"    \"_isSystemReserved\": {\r",
-											"      \"type\": \"boolean\"\r",
-											"    },\r",
-											"    \"_applications\": {\r",
-											"      \"type\": \"array\",\r",
-											"      \"items\": {}\r",
-											"    }\r",
-											"  },\r",
-											"  \"required\": [\r",
-											"    \"resourceClaims\",\r",
-											"    \"id\",\r",
-											"    \"name\",\r",
-											"    \"_isSystemReserved\",\r",
-											"    \"_applications\"\r",
-											"  ]\r",
-											"}\r",
-											"\r",
-											"pm.test(\"GET ClaimSetId: Validation Schema Response\", () => {\r",
-											"    pm.response.to.have.jsonSchema(GetClaimSetsIdSchema);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ClaimSets",
-							"event": [
-								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
@@ -1987,10 +2334,6 @@
 											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
 											"    pm.expect(result._applications).to.be.empty;\r",
 											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
-											"    const educationStandardsResourceClaim = result.resourceClaims.find(r => r.name === \"educationStandards\")\r",
-											"    pm.expect(educationStandardsResourceClaim).to.be.an(\"object\", \"The educationStandards resource claim was not found.\")\r",
-											"    const academicSubjectDescriptorResourceClaim = result.resourceClaims.any(r => r.name === \"academicSubjectDescriptor\")\r",
-											"    pm.expect(academicSubjectDescriptorResourceClaim).to.equal(false);\r",
 											"});\r",
 											"\r",
 											"const PutClaimSetsSchema = {\r",
@@ -2222,7 +2565,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"Updated Test ClaimSet\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"learningStandard\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      }      \r\n    ]\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Updated Test ClaimSet\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2287,7 +2630,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"\",\r\n    \"resourceClaims\": []\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2418,217 +2761,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"Other Test ClaimSet {{OtherClaimSetGUID}}\",\r\n    \"resourceClaims\": []\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ClaimSets - Invalid Wrong Resource Name",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"PUT ClaimSets Invalid Wrong Resource: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const errors = pm.response.json().errors;\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Wrong Resource: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Wrong Resource: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Wrong Resource: Response errors include messages by property and resource\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(2);\r",
-											"    [\"not in the system\", \"educationStandards-123\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
-											"    });\r",
-											"    [\"not in the system\", \"learningStandard-123\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[1]).to.contain(substring);\r",
-											"    });\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"ClaimSet-WithWrongResource\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards-123\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"learningStandard-123\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ClaimSets - Invalid Wrong Parent Child Relationship",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"PUT ClaimSets Invalid Wrong Parent Child: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const errors = pm.response.json().errors;\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Wrong Parent Child: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Wrong Parent Child: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Wrong Parent Child: Response errors include messages by property and resource\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
-											"    [\"Child resource: 'academicSubjectDescriptor'\", \"wrong parent resource\", \"parent resource is: 'systemDescriptors'\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
-											"    });\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"Wrong-Parent-Child-Relation\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"academicSubjectDescriptor\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"claimSets",
-										"{{CreatedClaimSetId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ClaimSets - Invalid Resource Duplication",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"PUT ClaimSets Invalid Resource Duplication: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const errors = pm.response.json().errors;\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Resource Duplication: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Resource Duplication: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"PUT ClaimSets Invalid Resource Duplication: Response errors include messages by property and resource\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
-											"    [\"Only unique resource claims\", \"duplicate resource: 'learningStandard'\"].forEach((substring) => {\r",
-											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
-											"    });\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"Resource-Duplication\",\r\n    \"resourceClaims\": [\r\n      {\r\n        \"name\": \"educationStandards\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": false\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": [\r\n          {\r\n            \"name\": \"learningStandard\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          },\r\n\t\t  {\r\n            \"name\": \"learningStandard\",\r\n            \"read\": true,\r\n            \"create\": true,\r\n            \"update\": true,\r\n            \"delete\": true,\r\n            \"defaultAuthStrategiesForCRUD\": [\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              },\r\n              {\r\n                \"authStrategyName\": \"NamespaceBased\",\r\n                \"isInheritedFromParent\": true\r\n              }\r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [\r\n              null,\r\n              null,\r\n              null,\r\n              null\r\n            ],\r\n            \"children\": []\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"name\": \"academicSubjectDescriptor\",\r\n        \"read\": true,\r\n        \"create\": true,\r\n        \"update\": true,\r\n        \"delete\": true,\r\n        \"defaultAuthStrategiesForCRUD\": [\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NoFurtherAuthorizationRequired\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          },\r\n          {\r\n            \"authStrategyName\": \"NamespaceBased\",\r\n            \"isInheritedFromParent\": true\r\n          }\r\n        ],\r\n        \"authorizationStrategyOverridesForCRUD\": [\r\n          null,\r\n          null,\r\n          null,\r\n          null\r\n        ],\r\n        \"children\": []\r\n      }      \r\n    ]\r\n}",
+									"raw": "{\r\n    \"name\": \"Other Test ClaimSet {{OtherClaimSetGUID}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2718,7 +2851,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{SystemReservedClaimSetId}},\r\n    \"name\": \"Update System Reserved ClaimSet\",\r\n    \"resourceClaims\": []\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Update System Reserved ClaimSet\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3080,7 +3213,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{CreatedClaimSetId}},\r\n    \"name\": \"Edited-ClaimSet\",\r\n    \"resourceClaims\": []\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Edited-ClaimSet\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "e1c8ccb6-52cc-4857-a12d-ef2b397bea13",
+		"_postman_id": "b24681d3-b53e-4c98-8965-3291ae50e6a6",
 		"name": "Admin API E2E 2.0 - OdsInstances",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3724147"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -12,6 +11,66 @@
 				{
 					"name": "OdsInstances",
 					"item": [
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OdsInstances: Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances: Response includes location in header\", function () {\r",
+											"    pm.response.to.have.header(\"Location\");\r",
+											"    const id = pm.response.headers.get(\"Location\").split(\"/\")[2];\r",
+											"    if(id)\r",
+											"    {\r",
+											"        pm.collectionVariables.set(\"CreatedOdsInstanceId\", id);\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test-OdsInstance\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "OdsInstances",
 							"event": [

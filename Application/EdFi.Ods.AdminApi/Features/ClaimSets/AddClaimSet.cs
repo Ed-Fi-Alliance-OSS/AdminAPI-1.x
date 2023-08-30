@@ -49,7 +49,7 @@ public class AddClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
             .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
-        return Results.Created($"/claimSets/{addedClaimSetId}", model);
+        return Results.Created($"/claimSets/{addedClaimSetId}", null);
     }
 
     [SwaggerSchema(Title = "AddClaimSetRequest")]

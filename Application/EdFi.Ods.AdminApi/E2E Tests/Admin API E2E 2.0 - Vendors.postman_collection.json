@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "01bb7df1-08a3-4791-9995-06fd48d7ea8c",
+		"_postman_id": "d4c6ff1c-fc25-45bf-9ce3-461666855a8f",
 		"name": "Admin API E2E 2.0 - Vendors",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -350,6 +349,173 @@
 							"response": []
 						},
 						{
+							"name": "Vendors with Application",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Vendors with Application: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const result = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Vendors With Application: Response result includes application\", function () {\r",
+											"    pm.expect(result[0].applicationName).to.equal(\"Other Vendor with Application\");\r",
+											"    pm.expect(result[0].claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+											"    pm.expect(result[0].educationOrganizationIds.length).to.equal(1);\r",
+											"    pm.expect(result[0].profileIds.length).to.equal(0);\r",
+											"    pm.expect(result[0].odsInstanceId).to.not.equal(0);\r",
+											"});\r",
+											"\r",
+											"const GetVendorWithApplicationSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"applicationName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"claimSetName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"educationOrganizationIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": [\r",
+											"            {\r",
+											"              \"type\": \"integer\"\r",
+											"            }\r",
+											"          ]\r",
+											"        },\r",
+											"        \"vendorId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"profileIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"applicationName\",\r",
+											"        \"claimSetName\",\r",
+											"        \"educationOrganizationIds\",\r",
+											"        \"vendorId\",\r",
+											"        \"profileIds\",\r",
+											"        \"odsInstanceId\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Vendors with Application: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetVendorWithApplicationSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/vendors`,",
+											"  method: 'POST',",
+											"  header: {",
+											"      \"Content-Type\": \"application/json\",",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`",
+											"  },",
+											"  body: {",
+											"    mode: 'raw',",
+											"    raw:JSON.stringify({",
+											"      \"company\": \"Other Company With Application\",",
+											"      \"namespacePrefixes\": \"uri://ed-fi.org\",",
+											"      \"contactName\": \"Other Company with Application User\",",
+											"      \"contactEmailAddress\": \"otherapplicationwithcompany@example.com\"",
+											"    }), ",
+											"  }",
+											"},",
+											"function (vendorErr, vendorResponse) {",
+											"  if(vendorErr) { console.log(\"Error in Pre-request:\", vendorErr); }",
+											"  const id = vendorResponse.headers.get(\"Location\").split(\"/\")[2];",
+											"  if(!id) { console.log('Error in Pre-request: vendorID missing from response. Response is:', vendorHeader); }",
+											"  pm.collectionVariables.set(\"OtherApplicationVendorIdwithVendor\", id);    ",
+											"",
+											"  pm.sendRequest({",
+											"    url: `${pm.variables.get(\"API_URL\")}/v2/applications`,",
+											"    method: 'POST',",
+											"    header: {",
+											"        \"Content-Type\": \"application/json\",",
+											"        \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`",
+											"    },",
+											"    body: {",
+											"      mode: 'raw',",
+											"      raw:JSON.stringify({",
+											"        \"applicationName\": \"Other Vendor with Application\",",
+											"        \"vendorId\": pm.collectionVariables.get(\"OtherApplicationVendorIdwithVendor\"),",
+											"        \"claimSetName\": \"Ed-Fi Sandbox\",",
+											"        \"profileIds\": [],",
+											"        \"educationOrganizationIds\": [ 983438 ],",
+											"        \"odsInstanceId\": 1",
+											"      }),",
+											"    }",
+											"  },  ",
+											"  function (appErr, appResonse) {",
+											"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }",
+											"    const appJson = appResonse.json();",
+											"    if(!appJson.id) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }",
+											"    else {",
+											"      pm.collectionVariables.set(\"OtherApplicationId\", appJson.id);",
+											"    }",
+											"  });",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/{{OtherApplicationVendorIdwithVendor}}/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"{{OtherApplicationVendorIdwithVendor}}",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Vendors",
 							"event": [
 								{
@@ -597,6 +763,75 @@
 							"response": []
 						},
 						{
+							"name": "Vendors with Invalid Application - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Vendors NotFound: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Vendors NotFound: Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Vendors NotFound: Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"vendor\");\r",
+											"    pm.expect(response.title).to.contain(\"0\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors/0/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors",
+										"0",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Vendors - Not Found",
 							"event": [
 								{
@@ -785,6 +1020,18 @@
 	"variable": [
 		{
 			"key": "TOKEN",
+			"value": ""
+		},
+		{
+			"key": "CreatedVendorId",
+			"value": ""
+		},
+		{
+			"key": "OtherApplicationVendorIdwithVendor",
+			"value": ""
+		},
+		{
+			"key": "OtherApplicationId",
 			"value": ""
 		}
 	]

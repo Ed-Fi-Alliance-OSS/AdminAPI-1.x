@@ -26,7 +26,7 @@ public class ResourceClaimValidator
         var propertyName = "ResourceClaims";
         ValidateDuplicateResourceClaim(resourceClaim, existingResourceClaims, context, propertyName);
 
-        ValidateCRUD(resourceClaim, context, propertyName);
+        ValidateCRUD(resourceClaim.Actions, context, propertyName);
 
         var resources = dbResourceClaims[resourceClaim.Name!.ToLower()].ToList();
         ValidateIfExist(context, propertyName, resources);
@@ -35,7 +35,8 @@ public class ResourceClaimValidator
         ValidateChildren(dbResourceClaims, dbAuthStrategies, resourceClaim, context, claimSetName, propertyName, resources);
     }
 
-    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaims, IResourceClaimOnClaimSetRequest editResourceClaimOnClaimSetRequest, ValidationContext<T> context, string? claimSetName)
+    public void Validate<T>(Lookup<int, ResourceClaim> dbResourceClaims, IResourceClaimOnClaimSetRequest editResourceClaimOnClaimSetRequest,
+        ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
         context.MessageFormatter.AppendArgument("ResourceClaimName", editResourceClaimOnClaimSetRequest.ResourceClaimId);
@@ -133,19 +134,19 @@ public class ResourceClaimValidator
         }
     }
 
-    private static void ValidateCRUD<T>(ClaimSetResourceClaimModel resourceClaim, ValidationContext<T> context, string propertyName)
+    private static void ValidateCRUD<T>(List<ResourceClaimAction>? resourceClaimActions, ValidationContext<T> context, string propertyName)
     {
-        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        if (resourceClaimActions != null && resourceClaimActions.Any())
         {
-            context.AddFailure(propertyName, $"Only valid resources can be added. {FeatureConstants.ResourceClaimOneActionNotSet} The following is an invalid resource: '{{ResourceClaimName}}'");
+            var atleastAnActionEnabled = resourceClaimActions.Any(x => x.Enabled);
+            if (!atleastAnActionEnabled)
+            {
+                context.AddFailure(propertyName, FeatureConstants.ResourceClaimOneActionNotSet);
+            }
         }
-    }
-
-    private static void ValidateCRUD<T>(ResourceClaimActionModel resourceClaim, ValidationContext<T> context, string propertyName)
-    {
-        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        else
         {
-            context.AddFailure(propertyName, FeatureConstants.ResourceClaimOneActionNotSet);
+            context.AddFailure(propertyName, $"Actions can not be empty.");
         }
     }
 }

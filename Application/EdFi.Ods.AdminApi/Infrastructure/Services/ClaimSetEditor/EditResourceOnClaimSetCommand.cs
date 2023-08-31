@@ -45,19 +45,8 @@ public class EditResourceOnClaimSetCommand
 
         foreach (var claimSetResourceClaim in resourceClaimsToEdit)
         {
-            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && !modelResourceClaim.Create)
-            {
-                recordsToRemove.Add(claimSetResourceClaim);
-            }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && !modelResourceClaim.Read)
-            {
-                recordsToRemove.Add(claimSetResourceClaim);
-            }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && !modelResourceClaim.Update)
-            {
-                recordsToRemove.Add(claimSetResourceClaim);
-            }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && !modelResourceClaim.Delete)
+            if(modelResourceClaim.Actions != null &&
+                modelResourceClaim.Actions.Any(x => x.Name != null && x.Name.Equals(claimSetResourceClaim.Action.ActionName) && !x.Enabled))
             {
                 recordsToRemove.Add(claimSetResourceClaim);
             }
@@ -77,46 +66,21 @@ public class EditResourceOnClaimSetCommand
 
         var recordsToAdd = new List<ClaimSetResourceClaimAction>();
 
-        if (modelResourceClaim.Create && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Create.Value))
+        if(modelResourceClaim.Actions != null)
         {
-            recordsToAdd.Add(new ClaimSetResourceClaimAction
+            foreach (var action in modelResourceClaim.Actions)
             {
-                Action = actionsFromDb.Single(x => x.ActionName == Action.Create.Value),
-                ClaimSet = claimSetToEdit,
-                ResourceClaim = resourceClaimFromDb
-            });
+                if (action.Enabled && claimSetResourceClaimsToEdit.All(x => !x.Action.ActionName.Equals(action.Name)))
+                {
+                    recordsToAdd.Add(new ClaimSetResourceClaimAction
+                    {
+                        Action = actionsFromDb.Single(x => x.ActionName == action.Name),
+                        ClaimSet = claimSetToEdit,
+                        ResourceClaim = resourceClaimFromDb
+                    });
+                }
+            }
         }
-
-        if (modelResourceClaim.Read && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Read.Value))
-        {
-            recordsToAdd.Add(new ClaimSetResourceClaimAction
-            {
-                Action = actionsFromDb.Single(x => x.ActionName == Action.Read.Value),
-                ClaimSet = claimSetToEdit,
-                ResourceClaim = resourceClaimFromDb
-            });
-        }
-
-        if (modelResourceClaim.Update && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Update.Value))
-        {
-            recordsToAdd.Add(new ClaimSetResourceClaimAction
-            {
-                Action = actionsFromDb.Single(x => x.ActionName == Action.Update.Value),
-                ClaimSet = claimSetToEdit,
-                ResourceClaim = resourceClaimFromDb
-            });
-        }
-
-        if (modelResourceClaim.Delete && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Delete.Value))
-        {
-            recordsToAdd.Add(new ClaimSetResourceClaimAction
-            {
-                Action = actionsFromDb.Single(x => x.ActionName == Action.Delete.Value),
-                ClaimSet = claimSetToEdit,
-                ResourceClaim = resourceClaimFromDb
-            });
-        }
-
         if (recordsToAdd.Any())
         {
             _context.ClaimSetResourceClaimActions.AddRange(recordsToAdd);

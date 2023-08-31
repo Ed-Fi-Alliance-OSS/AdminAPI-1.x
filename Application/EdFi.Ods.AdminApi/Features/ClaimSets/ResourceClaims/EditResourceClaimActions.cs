@@ -76,7 +76,7 @@ public class EditResourceClaimActions : IFeature
         public int ResourceClaimId { get; set; }
 
         [SwaggerSchema(Nullable = false)]
-        public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
+        public List<ResourceClaimAction>? ResourceClaimActions { get; set; } = new List<ResourceClaimAction>();
     }
 
     [SwaggerSchema(Title = "EditResourceClaimActionsOnClaimSetRequest")]
@@ -89,7 +89,7 @@ public class EditResourceClaimActions : IFeature
         public int ResourceClaimId { get; set; }
 
         [SwaggerSchema(Nullable = false)]
-        public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
+        public List<ResourceClaimAction> ResourceClaimActions { get; set; } = new List<ResourceClaimAction>();
     }
 
     public class ResourceClaimClaimSetValidator : AbstractValidator<IResourceClaimOnClaimSetRequest>

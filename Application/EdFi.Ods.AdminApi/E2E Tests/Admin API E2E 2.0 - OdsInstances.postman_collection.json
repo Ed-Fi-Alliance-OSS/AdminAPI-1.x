@@ -18,6 +18,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
+											"pm.collectionVariables.set(\"OdsInstanceGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
 											""
 										],
 										"type": "text/javascript"
@@ -50,7 +51,169 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test-OdsInstance\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Invalid",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OdsInstances Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"Name\"].length).to.equal(1);\r",
+											"    pm.expect(response.errors[\"InstanceType\"].length).to.equal(1);\r",
+											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid: Response errors include messages with wrong elements\", function () {\r",
+											"    pm.expect(response.errors[\"Name\"][0]).to.contain(\"'Name' must not be empty\");\r",
+											"    pm.expect(response.errors[\"InstanceType\"][0]).to.contain(\"'Instance Type' must not be empty\");\r",
+											"    pm.expect(response.errors[\"ConnectionString\"][0]).to.contain(\"'Connection String' must not be empty\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"\",\r\n    \"instanceType\": \"\",\r\n    \"connectionString\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Invalid Existing Name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"OtherOdsInstanceGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"name\": `Other Ods Instance ${pm.collectionVariables.get(\"OtherOdsInstanceGUID\")}`,\r",
+											"      \"instanceType\": \"Other Ods Instance Type\",\r",
+											"      \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r",
+											"    }), \r",
+											"  }\r",
+											"},\r",
+											"function (error, response) {\r",
+											"  if(error) { console.log(\"Error in Pre-request:\", error); }\r",
+											"  const id = response.headers.get(\"Location\").split(\"/\")[2];\r",
+											"  pm.collectionVariables.set(\"OtherExistingOdsInstanceId\", id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OdsInstance Invalid Existing OdsInstance: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OdsInstance Invalid Existing OdsInstance: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstance Invalid Existing OdsInstance: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstance Invalid Existing OdsInstance: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Name.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Name[0]).to.contain(\"already exists\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -379,6 +542,307 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstance: Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstance/${pm.collectionVariables.get(\"CreatedOdsInstanceId\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (odsInstanceErr, odsInstanceResponse) {\r",
+											"  if(odsInstanceErr) \r",
+											"  { \r",
+											"    console.log(\"Error :\", odsInstanceErr); \r",
+											"  } \r",
+											"  const updatedOdsInstanceJson = odsInstanceResponse.json();\r",
+											"  pm.test(\"PUT OdsInstance: Response includes updated odsInstance\", function () {\r",
+											"    pm.expect(updatedOdsInstanceJson.name).to.equal(`Updated-Test-OdsInstance-${pm.collectionVariables.get(\"OdsInstanceGUID\")}`);\r",
+											"    pm.expect(updatedOdsInstanceJson.instanceType).to.not.be.empty;\r",
+											"    pm.expect(updatedOdsInstanceJson.connectionString).to.not.be.empty;\r",
+											"   });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Empty Connection String",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstance connectionString empty: Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstance/${pm.collectionVariables.get(\"CreatedOdsInstanceId\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},\r",
+											"function (odsInstanceErr, odsInstanceResponse) {\r",
+											"  if(odsInstanceErr) \r",
+											"  { \r",
+											"    console.log(\"Error :\", odsInstanceErr); \r",
+											"  } \r",
+											"  const updatedOdsInstanceJson = odsInstanceResponse.json();\r",
+											"  pm.test(\"PUT OdsInstance connectionString empty: Response includes updated odsInstance\", function () {\r",
+											"    pm.expect(updatedOdsInstanceJson.name).to.equal(`Updated-Test-OdsInstance-${pm.collectionVariables.get(\"OdsInstanceGUID\")}-Empty`);\r",
+											"    pm.expect(updatedOdsInstanceJson.instanceType).to.not.be.empty;\r",
+											"    pm.expect(updatedOdsInstanceJson.connectionString).to.not.be.empty;\r",
+											"   });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}-Empty\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Invalid Existing Name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstance Invalid Existing OdsInstance: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT OdsInstance Invalid Existing OdsInstance: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstance Invalid Existing OdsInstance: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstance Invalid Existing OdsInstance: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Name.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Name[0]).to.contain(\"already exists\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Not Found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function randomIntFromInterval(min, max) { // min and max included \r",
+											"  return Math.floor(Math.random() * (max - min + 1) + min)\r",
+											"}\r",
+											"\r",
+											"const rndInt = randomIntFromInterval(99990, 99999)\r",
+											"pm.collectionVariables.set(\"NotExistOdsInstanceId\", pm.variables.replaceIn(rndInt));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstance NotFound: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstance NotFound: Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstance NotFound: Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");\r",
+											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"NotExistOdsInstanceId\"));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{NotExistOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{NotExistOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				}
@@ -468,6 +932,26 @@
 		},
 		{
 			"key": "ODSInstanceId",
+			"value": ""
+		},
+		{
+			"key": "NotExistOdsInstanceId",
+			"value": ""
+		},
+		{
+			"key": "OtherClaimSetGUID",
+			"value": ""
+		},
+		{
+			"key": "OtherExistingClaimSetId",
+			"value": ""
+		},
+		{
+			"key": "OtherOdsInstanceGUID",
+			"value": ""
+		},
+		{
+			"key": "OtherExistingOdsInstanceId",
 			"value": ""
 		}
 	]

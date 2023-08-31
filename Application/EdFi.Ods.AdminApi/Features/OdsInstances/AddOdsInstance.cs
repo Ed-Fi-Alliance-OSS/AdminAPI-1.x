@@ -6,6 +6,7 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -43,12 +44,22 @@ public class AddOdsInstance : IFeature
 
     public class Validator : AbstractValidator<IAddOdsInstanceModel>
     {
-        public Validator()
+        private readonly IGetOdsInstancesQuery _getOdsInstancesQuery;
+        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery)
         {
-            RuleFor(m => m.Name).NotEmpty();
+            _getOdsInstancesQuery = getOdsInstancesQuery;
+            RuleFor(m => m.Name)
+                .NotEmpty()
+                .Must(BeAUniqueName)
+                .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage); ;
             RuleFor(m => m.InstanceType).NotEmpty();
             RuleFor(m => m.ConnectionString).NotEmpty();
             //TO-DO: Implement connection string format validator (Regex or SqlConnectionStringBuilder-NpgsqlConnectionStringBuilder)
+        }
+
+        private bool BeAUniqueName(string? name)
+        {
+            return _getOdsInstancesQuery.Execute().All(x => x.Name != name);
         }
     }
 }

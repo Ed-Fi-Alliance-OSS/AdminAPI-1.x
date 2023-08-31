@@ -40,5 +40,7 @@ public class FeatureConstants
     public const string OdsInstanceName = "Ods Instance name";
     public const string OdsInstanceInstanceType = "Ods Instance type";
     public const string OdsInstanceConnectionString = "Ods Instance connection string";
+    public const string OdsInstanceAlreadyExistsMessage = "An Ods instance with this name already exists in the database. Please enter a unique name.";
+
 
 }

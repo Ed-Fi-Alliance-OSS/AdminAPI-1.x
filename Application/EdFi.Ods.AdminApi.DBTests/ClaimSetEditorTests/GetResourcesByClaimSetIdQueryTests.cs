@@ -40,7 +40,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             results.Length.ShouldBe(testResourceClaimsForId.Length);
             results.Select(x => x.Name).ShouldBe(testResourceClaimsForId.Select(x => x.ResourceName), true);
             results.Select(x => x.Id).ShouldBe(testResourceClaimsForId.Select(x => x.ResourceClaimId), true);
-            results.All(x => x.Create).ShouldBe(true);
+            results.All(x => x.Actions.All(x => x.Name.Equals("Create") && x.Enabled)).ShouldBe(true);
         }
     }
 
@@ -66,10 +66,10 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
 
             result.Name.ShouldBe(testResourceClaim.ResourceName);
             result.Id.ShouldBe(testResourceClaim.ResourceClaimId);
-            result.Create.ShouldBe(true);
-            result.Read.ShouldBe(false);
-            result.Update.ShouldBe(false);
-            result.Delete.ShouldBe(false);
+            result.Actions.All(x => x.Name.Equals("Create") && x.Enabled).ShouldBe(true);
+            result.Actions.All(x => x.Name.Equals("Read") && x.Enabled).ShouldBe(false);
+            result.Actions.All(x => x.Name.Equals("Update") && x.Enabled).ShouldBe(false);
+            result.Actions.All(x => x.Name.Equals("Delete") && x.Enabled).ShouldBe(false);
         }
     }
 
@@ -96,7 +96,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             results.Length.ShouldBe(testParentResourceClaimsForId.Length);
             results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
             results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
-            results.All(x => x.Create).ShouldBe(true);
+            results.All(x => x.Actions.All(x => x.Name.Equals("Create") && x.Enabled)).ShouldBe(true);
 
             foreach (var testParentResourceClaim in testParentResourceClaimsForId)
             {
@@ -105,7 +105,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
                 var parentResult = results.First(x => x.Id == testParentResourceClaim.ResourceClaimId);
                 parentResult.Children.Select(x => x.Name).ShouldBe(testChildren.Select(x => x.ResourceName), true);
                 parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
-                parentResult.Children.All(x => x.Create).ShouldBe(true);
+                parentResult.Children.All(x => x.Actions.All(x => x.Name.Equals("Create") && x.Enabled)).ShouldBe(true);
             }
 
         }
@@ -169,10 +169,10 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
 
         result.Name.ShouldBe(testResourceClaim.ResourceName);
         result.Id.ShouldBe(testResourceClaim.ResourceClaimId);
-        result.Create.ShouldBe(true);
-        result.Read.ShouldBe(false);
-        result.Update.ShouldBe(false);
-        result.Delete.ShouldBe(false);
+        result.Actions.All(x => x.Name.Equals("Create") && x.Enabled).ShouldBe(true);
+        result.Actions.All(x => x.Name.Equals("Read") && x.Enabled).ShouldBe(false);
+        result.Actions.All(x => x.Name.Equals("Update") && x.Enabled).ShouldBe(false);
+        result.Actions.All(x => x.Name.Equals("Delete") && x.Enabled).ShouldBe(false);
         result.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
 
     }

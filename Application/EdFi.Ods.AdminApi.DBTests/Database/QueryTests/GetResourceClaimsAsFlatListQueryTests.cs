@@ -37,10 +37,7 @@ public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
         results.Length.ShouldBe(testResourceClaims.Count);
         results.Select(x => x.Name).ShouldBe(testResourceClaims.Select(x => x.ResourceName), true);
         results.Select(x => x.Id).ShouldBe(testResourceClaims.Select(x => x.ResourceClaimId), true);
-        results.All(x => x.Create == false).ShouldBe(true);
-        results.All(x => x.Delete == false).ShouldBe(true);
-        results.All(x => x.Update == false).ShouldBe(true);
-        results.All(x => x.Read == false).ShouldBe(true);
+        results.All(x => x.Actions == null).ShouldBe(true);
         results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
         results.All(x => x.ParentName == null).ShouldBe(true);
         results.All(x => x.Children.Count == 0).ShouldBe(true);

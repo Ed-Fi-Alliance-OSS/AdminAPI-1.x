@@ -823,6 +823,99 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE OdsInstances: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE OdsInstance NotFound: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"DELETE OdsInstance NotFound: Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"DELETE OdsInstance NotFound: Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");\r",
+											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"NotExistOdsInstanceId\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function randomIntFromInterval(min, max) { // min and max included \r",
+											"  return Math.floor(Math.random() * (max - min + 1) + min)\r",
+											"}\r",
+											"\r",
+											"const rndInt = randomIntFromInterval(99990, 99999)\r",
+											"pm.collectionVariables.set(\"NotExistOdsInstanceId\", pm.variables.replaceIn(rndInt));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{NotExistOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{NotExistOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"event": [

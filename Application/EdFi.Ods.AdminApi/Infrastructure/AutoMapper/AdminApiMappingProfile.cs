@@ -18,6 +18,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 using Profile = AutoMapper.Profile;
 using OverrideAuthStategyOnClaimSetRequest = EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest;
+using AutoMapper;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -78,7 +79,7 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<IResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
-            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaimActions));
+            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom<ResourceClaimResolver>());
         CreateMap<OverrideAuthStategyOnClaimSetRequest, OverrideAuthStrategyOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
             .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
@@ -127,5 +128,17 @@ public class AdminApiMappingProfile : Profile
           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
           .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName))
           .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
+    }
+
+    public class ResourceClaimResolver : IValueResolver<IResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel, ResourceClaim?>
+    {
+        public ResourceClaim? Resolve(IResourceClaimOnClaimSetRequest source, EditResourceOnClaimSetModel destination, ResourceClaim? destMember, ResolutionContext context)
+        {
+            return new ResourceClaim
+            {
+                Id = source.ResourceClaimId,                
+                Actions = source.ResourceClaimActions
+            };         
+        }
     }
 }

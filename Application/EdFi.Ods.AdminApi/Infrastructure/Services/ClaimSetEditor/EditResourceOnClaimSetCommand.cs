@@ -46,7 +46,8 @@ public class EditResourceOnClaimSetCommand
         foreach (var claimSetResourceClaim in resourceClaimsToEdit)
         {
             if(modelResourceClaim.Actions != null &&
-                modelResourceClaim.Actions.Any(x => x.Name != null && x.Name.Equals(claimSetResourceClaim.Action.ActionName) && !x.Enabled))
+                modelResourceClaim.Actions.Any(x => x.Name != null && x.Name.Equals(claimSetResourceClaim.Action.ActionName,
+                StringComparison.InvariantCultureIgnoreCase) && !x.Enabled))
             {
                 recordsToRemove.Add(claimSetResourceClaim);
             }
@@ -58,7 +59,8 @@ public class EditResourceOnClaimSetCommand
         }
     }
 
-    private void AddEnabledActionsToClaimSet(ResourceClaim modelResourceClaim, IReadOnlyCollection<ClaimSetResourceClaimAction> claimSetResourceClaimsToEdit, EdFi.Security.DataAccess.Models.ClaimSet claimSetToEdit)
+    private void AddEnabledActionsToClaimSet(ResourceClaim modelResourceClaim,
+        IReadOnlyCollection<ClaimSetResourceClaimAction> claimSetResourceClaimsToEdit, EdFi.Security.DataAccess.Models.ClaimSet claimSetToEdit)
     {
         var actionsFromDb = _context.Actions.ToList();
 
@@ -70,11 +72,12 @@ public class EditResourceOnClaimSetCommand
         {
             foreach (var action in modelResourceClaim.Actions)
             {
-                if (action.Enabled && claimSetResourceClaimsToEdit.All(x => !x.Action.ActionName.Equals(action.Name)))
+                if (action.Enabled && claimSetResourceClaimsToEdit.All(x => !x.Action.ActionName.Equals(action.Name,
+                    StringComparison.InvariantCultureIgnoreCase)))
                 {
                     recordsToAdd.Add(new ClaimSetResourceClaimAction
                     {
-                        Action = actionsFromDb.Single(x => x.ActionName == action.Name),
+                        Action = actionsFromDb.Single(x => x.ActionName.Equals(action.Name, StringComparison.InvariantCultureIgnoreCase)),
                         ClaimSet = claimSetToEdit,
                         ResourceClaim = resourceClaimFromDb
                     });

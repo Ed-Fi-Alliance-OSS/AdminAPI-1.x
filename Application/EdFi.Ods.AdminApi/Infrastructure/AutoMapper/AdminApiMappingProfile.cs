@@ -84,7 +84,8 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
             .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
             .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
-            .ForMember(dst => dst.AuthStrategyIds, opt => {
+            .ForMember(dst => dst.AuthStrategyIds, opt => {
+
                 opt.ConvertUsing<AuthStrategyIdsConverter, List<string>>("AuthorizationStrategies");
             });
 
@@ -128,17 +129,5 @@ public class AdminApiMappingProfile : Profile
           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
           .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName))
           .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
-    }
-
-    public class ResourceClaimResolver : IValueResolver<IResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel, ResourceClaim?>
-    {
-        public ResourceClaim? Resolve(IResourceClaimOnClaimSetRequest source, EditResourceOnClaimSetModel destination, ResourceClaim? destMember, ResolutionContext context)
-        {
-            return new ResourceClaim
-            {
-                Id = source.ResourceClaimId,                
-                Actions = source.ResourceClaimActions
-            };         
-        }
     }
 }

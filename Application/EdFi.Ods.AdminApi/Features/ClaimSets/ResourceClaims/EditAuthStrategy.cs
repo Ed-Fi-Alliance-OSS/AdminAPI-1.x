@@ -53,7 +53,19 @@ public class EditAuthStrategy : IFeature
         }
 
         var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimSetId);
-        if (!resourceClaims.Any(rc => rc.Id == resourceClaimId))
+        var allResourcesIds = new List<int>();
+        foreach(var resourceClaim in resourceClaims)
+        {
+            allResourcesIds.Add(resourceClaim.Id);
+            if (resourceClaim.Children != null && resourceClaim.Children.Any())
+            {
+                foreach (var child in resourceClaim.Children)
+                {
+                    allResourcesIds.Add(child.Id);
+                }
+            }
+        }       
+        if (!allResourcesIds.Any(x => x == resourceClaimId))
         {
             throw new NotFoundException<int>("ResourceClaim", resourceClaimId);
         }

@@ -150,15 +150,22 @@ public class ResourceClaimValidator
             }
             else
             {
-                foreach(var action in resourceClaimActions)
+                var duplicates = resourceClaimActions.GroupBy(x => x.Name)
+                              .Where(g => g.Count() > 1)
+                              .Select(y => y.Key)
+                              .ToList();
+                foreach(var duplicate in duplicates)
+                {
+                    context.AddFailure(propertyName, $"{duplicate} action is duplicated.");
+                }
+                foreach (var action in resourceClaimActions)
                 {
                     if(!dbActions.Any(actionName => actionName != null &&
                         actionName.Equals(action.Name, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         context.AddFailure(propertyName, $"{action.Name} is not a valid action.");
                     }
-                }         
-
+                }
             }
         }
         else

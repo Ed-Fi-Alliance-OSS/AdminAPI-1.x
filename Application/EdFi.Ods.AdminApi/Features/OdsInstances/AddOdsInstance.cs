@@ -4,10 +4,14 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
+using Npgsql;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
@@ -45,21 +49,60 @@ public class AddOdsInstance : IFeature
     public class Validator : AbstractValidator<IAddOdsInstanceModel>
     {
         private readonly IGetOdsInstancesQuery _getOdsInstancesQuery;
-        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery)
+        private readonly string _databaseEngine;
+        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery, IOptions<AppSettings> options)
         {
             _getOdsInstancesQuery = getOdsInstancesQuery;
+            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+
             RuleFor(m => m.Name)
                 .NotEmpty()
                 .Must(BeAUniqueName)
                 .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage);
+
             RuleFor(m => m.InstanceType).NotEmpty();
-            RuleFor(m => m.ConnectionString).NotEmpty();
-            //TO-DO: Implement connection string format validator (Regex or SqlConnectionStringBuilder-NpgsqlConnectionStringBuilder)
+
+            RuleFor(m => m.ConnectionString)
+                .NotEmpty();
+
+            RuleFor(m => m.ConnectionString)
+                .Must(BeAValidConnectionString)
+                .WithMessage(FeatureConstants.OdsInstanceConnectionStringInvalid)
+                .When(m => !string.IsNullOrEmpty(m.ConnectionString));
         }
 
         private bool BeAUniqueName(string? name)
         {
             return _getOdsInstancesQuery.Execute().All(x => x.Name != name);
+        }
+
+        private bool BeAValidConnectionString(string? connectionString)
+        {
+            bool result = true;
+            if (_databaseEngine == "SqlServer")
+            {
+                try
+                {
+                    SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
+                }
+                catch (ArgumentException)
+                {
+                    result = false;
+                }
+            }
+            else if (_databaseEngine == "PostgreSQL")
+            {
+                try
+                {
+                    NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+                }
+                catch (ArgumentException)
+                {
+                    result = false;
+                }
+            }
+            
+            return result;
         }
     }
 }

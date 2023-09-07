@@ -4,12 +4,17 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Common.Configuration;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
+using Npgsql;
 using Swashbuckle.AspNetCore.Annotations;
 using static EdFi.Ods.AdminApi.Features.ClaimSets.EditClaimSet;
 
@@ -51,17 +56,26 @@ public class EditOdsInstance : IFeature
     {
         private readonly IGetOdsInstancesQuery _getOdsInstancesQuery;
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
-        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery, IGetOdsInstanceQuery getOdsInstanceQuery)
+        private readonly string _databaseEngine;
+
+        public Validator(IGetOdsInstancesQuery getOdsInstancesQuery, IGetOdsInstanceQuery getOdsInstanceQuery, IOptions<AppSettings> options)
         {
             _getOdsInstancesQuery = getOdsInstancesQuery;
             _getOdsInstanceQuery = getOdsInstanceQuery;
+            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+
             RuleFor(m => m.Name)
                 .NotEmpty()
                 .Must(BeAUniqueName)
                 .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage)
                 .When(m => BeAnExistingOdsInstance(m.Id) && NameIsChanged(m));
+
             RuleFor(m => m.InstanceType).NotEmpty();
-            //TO-DO: Implement connection string format validator (Regex or SqlConnectionStringBuilder-NpgsqlConnectionStringBuilder)
+
+            RuleFor(m => m.ConnectionString)
+                .Must(BeAValidConnectionString)
+                .WithMessage(FeatureConstants.OdsInstanceConnectionStringInvalid)
+                .When(m => !string.IsNullOrEmpty(m.ConnectionString));
         }
 
         private bool BeAnExistingOdsInstance(int id)
@@ -86,6 +100,35 @@ public class EditOdsInstance : IFeature
         {
             return _getOdsInstancesQuery.Execute().All(x => x.Name != name);
         }
+        private bool BeAValidConnectionString(string? connectionString)
+        {
+            bool result = true;
+            if (_databaseEngine == "SqlServer")
+            {
+                try
+                {
+                    SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
+                }
+                catch (ArgumentException)
+                {
+                    result = false;
+                }
+            }
+            else if (_databaseEngine == "PostgreSQL")
+            {
+                try
+                {
+                    NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+                }
+                catch (ArgumentException)
+                {
+                    result = false;
+                }
+            }
+
+            return result;
+        }
+
     }
 }
 

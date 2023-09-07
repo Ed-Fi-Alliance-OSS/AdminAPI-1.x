@@ -24,9 +24,6 @@ public class DeleteOdsInstanceCommand : IDeleteOdsInstanceCommand
     public void Execute(int id)
     {
         var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == id) ?? throw new NotFoundException<int>("odsInstance", id);
-
-        //TO-DO: Should we validate if this ods instance is in the OdsInstanceContext table or remove any association?
-
         _context.OdsInstances.Remove(odsInstance);
         _context.SaveChanges();
     }

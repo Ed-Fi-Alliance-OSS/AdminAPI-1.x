@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -24,6 +25,9 @@ public class GetOdsInstanceQuery : IGetOdsInstanceQuery
 
     public OdsInstance? Execute(int odsInstanceId)
     {
-        return _usersContext.OdsInstances.SingleOrDefault(odsInstance => odsInstance.OdsInstanceId == odsInstanceId);
+        return _usersContext.OdsInstances
+            .Include(p => p.OdsInstanceContexts)
+            .Include(p => p.OdsInstanceDerivatives)
+            .SingleOrDefault(odsInstance => odsInstance.OdsInstanceId == odsInstanceId);
     }
 }

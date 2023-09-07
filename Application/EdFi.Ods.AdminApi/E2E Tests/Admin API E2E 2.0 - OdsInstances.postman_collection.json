@@ -916,6 +916,64 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "OdsInstances - Application associated",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE OdsInstance Application associated: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"DELETE OdsInstance Application associated: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"DELETE OdsInstance Application associated: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"DELETE OdsInstance Application associated: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Id.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Id[0]).to.contain(\"can not be removed\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{ODSInstanceId}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"event": [

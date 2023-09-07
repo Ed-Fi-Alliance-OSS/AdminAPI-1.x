@@ -51,7 +51,7 @@ public class AddOdsInstance : IFeature
             RuleFor(m => m.Name)
                 .NotEmpty()
                 .Must(BeAUniqueName)
-                .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage); ;
+                .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage);
             RuleFor(m => m.InstanceType).NotEmpty();
             RuleFor(m => m.ConnectionString).NotEmpty();
             //TO-DO: Implement connection string format validator (Regex or SqlConnectionStringBuilder-NpgsqlConnectionStringBuilder)

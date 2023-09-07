@@ -146,6 +146,75 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstances - Invalid Connection String",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response errors include messages with wrong elements\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"][0]).to.contain(\"is not valid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test Connection String\",\r\n    \"instanceType\": \"Postgresql\",\r\n    \"connectionString\": \"Host=localhost; Port=XXXX; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstances - Invalid Existing Name",
 							"event": [
 								{
@@ -667,6 +736,75 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}-Empty\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										"{{CreatedOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Invalid Connection String",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstances Invalid ConnectionString: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT OdsInstances Invalid ConnectionString: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstances Invalid ConnectionString: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstances Invalid ConnectionString: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstances Invalid ConnectionString: Response errors include messages with wrong elements\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"][0]).to.contain(\"is not valid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"Host=localhost; Port=XXXX; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

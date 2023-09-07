@@ -43,10 +43,10 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
             Name = testResource1ToEdit.ResourceName,
             Actions = new List<ResourceClaimAction>
             {
-                new ResourceClaimAction{ Name = "Create", Enabled=false },
-                new ResourceClaimAction{ Name = "Read", Enabled = false},
-                new ResourceClaimAction{ Name = "Update", Enabled=true },
-                new ResourceClaimAction{ Name = "Delete", Enabled = true}
+                new ResourceClaimAction{ Name = "Create", Enabled = false },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = true }
             }     
         };
 
@@ -103,10 +103,10 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
             Name = testChildResource1ToEdit.ResourceName,
             Actions = new List<ResourceClaimAction>
             {
-                new ResourceClaimAction{ Name = "Create", Enabled=false },
-                new ResourceClaimAction{ Name = "Read", Enabled = false},
-                new ResourceClaimAction{ Name = "Update", Enabled=true },
-                new ResourceClaimAction{ Name = "Delete", Enabled = true}
+                new ResourceClaimAction{ Name = "Create", Enabled = false },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = true }
             }
         };
 
@@ -162,10 +162,10 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
             Name = testResourceToAdd.ResourceName,
             Actions = new List<ResourceClaimAction>
             {
-                new ResourceClaimAction{ Name = "Create", Enabled=true },
-                new ResourceClaimAction{ Name = "Read", Enabled = false},
-                new ResourceClaimAction{ Name = "Update", Enabled=true },
-                new ResourceClaimAction{ Name = "Delete", Enabled = false}
+                new ResourceClaimAction{ Name = "Create", Enabled = true },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = false }
             }         
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
@@ -217,10 +217,10 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
             Name = testChildResource1ToAdd.ResourceName,
             Actions = new List<ResourceClaimAction>
             {
-                new ResourceClaimAction{ Name = "Create", Enabled=true },
-                new ResourceClaimAction{ Name = "Read", Enabled = false},
-                new ResourceClaimAction{ Name = "Update", Enabled=true },
-                new ResourceClaimAction{ Name = "Delete", Enabled = false}
+                new ResourceClaimAction{ Name = "Create", Enabled = true },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = false }
             }
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);

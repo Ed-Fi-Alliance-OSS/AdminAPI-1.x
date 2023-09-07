@@ -55,9 +55,9 @@ public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
             Name = testParentResource.ResourceClaim.ResourceName,
             Actions = new List<ResourceClaimAction>
             {
-                new ResourceClaimAction{ Name = "Create", Enabled=false },
-                new ResourceClaimAction{ Name = "Read", Enabled = false},
-                new ResourceClaimAction{ Name = "Update", Enabled=true },
+                new ResourceClaimAction{ Name = "Create", Enabled = false },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
                 new ResourceClaimAction{ Name = "Delete", Enabled = true}
             },
             Children = new List<ResourceClaim> {new ResourceClaim
@@ -66,9 +66,9 @@ public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
                     Name = testChildResource1ToEdit.ResourceName,
                       Actions = new List<ResourceClaimAction>
                         {
-                            new ResourceClaimAction{ Name = "Create", Enabled=false },
-                            new ResourceClaimAction{ Name = "Read", Enabled = false},
-                            new ResourceClaimAction{ Name = "Update", Enabled=true },
+                            new ResourceClaimAction{ Name = "Create", Enabled = false },
+                            new ResourceClaimAction{ Name = "Read", Enabled = false },
+                            new ResourceClaimAction{ Name = "Update", Enabled = true },
                             new ResourceClaimAction{ Name = "Delete", Enabled = true}
                         }
                 } }

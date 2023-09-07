@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
@@ -13,10 +14,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public int ParentId { get; set; }
         public string? ParentName { get; set; }
         public string? Name { get; set; }
-        public bool Read { get; set; }
-        public bool Create { get; set; }
-        public bool Update { get; set; }
-        public bool Delete { get; set; }
+        public List<ResourceClaimAction>? Actions { get; set; }
         [JsonIgnore]
         public bool IsParent { get; set; }
         public List<ClaimSetResourceClaimActionAuthStrategies?> DefaultAuthStrategiesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
@@ -27,5 +25,12 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         {
             Children = new List<ResourceClaim>();
         }
+    }
+
+    [SwaggerSchema(Title = "ResourceClaimAction")]
+    public class ResourceClaimAction
+    {
+        public string? Name { get; set; }
+        public bool Enabled { get; set; }
     }
 }

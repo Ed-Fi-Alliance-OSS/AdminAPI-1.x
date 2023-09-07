@@ -37,10 +37,7 @@ public class AddOrEditResourcesOnClaimSetCommand
                 var resource = allResources.FirstOrDefault(dr => (dr.Name ?? string.Empty).Equals(r.Name, StringComparison.Ordinal));
                 if (resource != null)
                 {
-                    resource.Create = r.Create;
-                    resource.Read = r.Read;
-                    resource.Update = r.Update;
-                    resource.Delete = r.Delete;
+                    resource.Actions = r.Actions;
                     resource.AuthStrategyOverridesForCRUD = r.AuthStrategyOverridesForCRUD;
                 }
                 return resource;

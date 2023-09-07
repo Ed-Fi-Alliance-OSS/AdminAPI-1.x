@@ -76,7 +76,7 @@ public class EditResourceClaimActions : IFeature
         public int ResourceClaimId { get; set; }
 
         [SwaggerSchema(Nullable = false)]
-        public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
+        public List<ResourceClaimAction>? ResourceClaimActions { get; set; } = new List<ResourceClaimAction>();
     }
 
     [SwaggerSchema(Title = "EditResourceClaimActionsOnClaimSetRequest")]
@@ -89,13 +89,14 @@ public class EditResourceClaimActions : IFeature
         public int ResourceClaimId { get; set; }
 
         [SwaggerSchema(Nullable = false)]
-        public ResourceClaimActionModel ResourceClaimActions { get; set; } = new ResourceClaimActionModel();
+        public List<ResourceClaimAction> ResourceClaimActions { get; set; } = new List<ResourceClaimAction>();
     }
 
     public class ResourceClaimClaimSetValidator : AbstractValidator<IResourceClaimOnClaimSetRequest>
     {
         public ResourceClaimClaimSetValidator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
-            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery)
+            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
+            IGetAllActionsQuery getAllActionsQuery)
         {
             var resourceClaims = getResourceClaimsAsFlatListQuery.Execute();
             var resourceClaimsById = (Lookup<int, ResourceClaim>)resourceClaims
@@ -108,6 +109,7 @@ public class EditResourceClaimActions : IFeature
                 var resourceClaimValidator = new ResourceClaimValidator();
                 ClaimSet claimSet;
                 claimSet = getClaimSetByIdQuery.Execute(resourceClaimOnClaimSetRequest.ClaimSetId);
+                var actions = getAllActionsQuery.Execute().Select(x => x.ActionName).ToList();
                 if (!claimSet.IsEditable)
                 {
                     context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
@@ -115,14 +117,12 @@ public class EditResourceClaimActions : IFeature
 
                 if (resourceClaimOnClaimSetRequest.ResourceClaimActions != null)
                 {
-                    resourceClaimValidator.Validate(resourceClaimsById, resourceClaimOnClaimSetRequest, context, claimSet!.Name);
+                    resourceClaimValidator.Validate(resourceClaimsById, actions, resourceClaimOnClaimSetRequest, context, claimSet!.Name);
                 }
                 else
                 {
                     context.AddFailure("ResourceClaimActions", FeatureConstants.InvalidResourceClaimActions);
                 }
-
-
             });
         }
 

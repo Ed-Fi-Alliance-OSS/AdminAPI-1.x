@@ -37,36 +37,33 @@ public class CopyClaimSetCommandTests : SecurityDataTestBase
 
             var copyClaimSetId = 0;
             ClaimSet copiedClaimSet = null;
-            using (var securityContext = TestContext)
+            using var securityContext = TestContext;
+            var command = new CopyClaimSetCommand(securityContext);
+            copyClaimSetId = command.Execute(newClaimSet.Object);
+            copiedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
+
+            copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
+            copiedClaimSet.ForApplicationUseOnly.ShouldBe(false);
+            copiedClaimSet.IsEdfiPreset.ShouldBe(false);
+
+            var results = ResourceClaimsForClaimSet(copiedClaimSet.ClaimSetId).ToList();
+
+            var testParentResourceClaimsForId =
+                testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
+
+            results.Count.ShouldBe(testParentResourceClaimsForId.Length);
+            results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
+            results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
+            results.All(x => x.Actions.All(x => x.Name.Equals("Create") && x.Enabled)).ShouldBe(true);
+
+            foreach (var testParentResourceClaim in testParentResourceClaimsForId)
             {
-                var command = new CopyClaimSetCommand(securityContext);
-                copyClaimSetId =  command.Execute(newClaimSet.Object);
-                copiedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == copyClaimSetId);
-
-                copiedClaimSet.ClaimSetName.ShouldBe(newClaimSet.Object.Name);
-                copiedClaimSet.ForApplicationUseOnly.ShouldBe(false);
-                copiedClaimSet.IsEdfiPreset.ShouldBe(false);
-
-                var results = ResourceClaimsForClaimSet(copiedClaimSet.ClaimSetId).ToList();
-
-                var testParentResourceClaimsForId =
-                    testResourceClaims.Where(x => x.ClaimSet.ClaimSetId == testClaimSet.ClaimSetId && x.ResourceClaim.ParentResourceClaim == null).Select(x => x.ResourceClaim).ToArray();
-
-                results.Count.ShouldBe(testParentResourceClaimsForId.Length);
-                results.Select(x => x.Name).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceName), true);
-                results.Select(x => x.Id).ShouldBe(testParentResourceClaimsForId.Select(x => x.ResourceClaimId), true);
-                results.All(x => x.Create).ShouldBe(true);
-
-                foreach (var testParentResourceClaim in testParentResourceClaimsForId)
-                {
-                    var testChildren = securityContext.ResourceClaims.Where(x =>
-                        x.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId).ToList();
-                    var parentResult = results.First(x => x.Id == testParentResourceClaim.ResourceClaimId);
-                    parentResult.Children.Select(x => x.Name).ShouldBe(testChildren.Select(x => x.ResourceName), true);
-                    parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
-                    parentResult.Children.All(x => x.Create).ShouldBe(true);
-                }
+                var testChildren = securityContext.ResourceClaims.Where(x =>
+                    x.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId).ToList();
+                var parentResult = results.First(x => x.Id == testParentResourceClaim.ResourceClaimId);
+                parentResult.Children.Select(x => x.Name).ShouldBe(testChildren.Select(x => x.ResourceName), true);
+                parentResult.Children.Select(x => x.Id).ShouldBe(testChildren.Select(x => x.ResourceClaimId), true);
+                parentResult.Children.All(x => x.Actions.All(x => x.Name.Equals("Create") && x.Enabled)).ShouldBe(true);
             }
-        }              
     }
-
+    }

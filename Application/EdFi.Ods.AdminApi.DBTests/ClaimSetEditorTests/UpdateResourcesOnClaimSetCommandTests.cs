@@ -53,18 +53,24 @@ public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
         {
             Id = testParentResource.ResourceClaim.ResourceClaimId,
             Name = testParentResource.ResourceClaim.ResourceName,
-            Create = false,
-            Read = false,
-            Update = true,
-            Delete = true,
+            Actions = new List<ResourceClaimAction>
+            {
+                new ResourceClaimAction{ Name = "Create", Enabled = false },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = true}
+            },
             Children = new List<ResourceClaim> {new ResourceClaim
                 {
                     Id = testChildResource1ToEdit.ResourceClaimId,
                     Name = testChildResource1ToEdit.ResourceName,
-                    Create = false,
-                    Read = false,
-                    Update = true,
-                    Delete = true
+                      Actions = new List<ResourceClaimAction>
+                        {
+                            new ResourceClaimAction{ Name = "Create", Enabled = false },
+                            new ResourceClaimAction{ Name = "Read", Enabled = false },
+                            new ResourceClaimAction{ Name = "Update", Enabled = true },
+                            new ResourceClaimAction{ Name = "Delete", Enabled = true}
+                        }
                 } }
         };
 

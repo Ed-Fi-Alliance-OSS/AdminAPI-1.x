@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "40ed62e0-4f89-495e-a89e-4cb01a692399",
+		"_postman_id": "bc4a9c71-8d9f-499c-a2ec-4632377ba756",
 		"name": "Admin API E2E 2.0 - ClaimSets",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"_exporter_id": "20721775"
 	},
 	"item": [
 		{
@@ -409,17 +409,20 @@
 											"            \"name\": {\r",
 											"              \"type\": \"string\"\r",
 											"            },\r",
-											"            \"read\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"create\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"update\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"delete\": {\r",
-											"              \"type\": \"boolean\"\r",
+											"             \"actions\": {\r",
+											"             \"type\": \"array\",\r",
+											"             \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"name\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"enabled\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    }\r",
+											"                } \r",
+											"                } ]\r",
 											"            },\r",
 											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
 											"              \"type\": \"array\",\r",
@@ -499,10 +502,7 @@
 											"          },\r",
 											"          \"required\": [\r",
 											"            \"name\",\r",
-											"            \"read\",\r",
-											"            \"create\",\r",
-											"            \"update\",\r",
-											"            \"delete\",\r",
+											"            \"actions\",\r",
 											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
 											"            \"authorizationStrategyOverridesForCRUD\",\r",
 											"            \"children\"\r",
@@ -588,7 +588,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": true,\r\n    \"delete\": false\r\n  }\r\n}",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -650,17 +650,20 @@
 											"            \"name\": {\r",
 											"              \"type\": \"string\"\r",
 											"            },\r",
-											"            \"read\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"create\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"update\": {\r",
-											"              \"type\": \"boolean\"\r",
-											"            },\r",
-											"            \"delete\": {\r",
-											"              \"type\": \"boolean\"\r",
+											"            \"actions\": {\r",
+											"             \"type\": \"array\",\r",
+											"             \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"name\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"enabled\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    }\r",
+											"                } \r",
+											"                } ]\r",
 											"            },\r",
 											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
 											"              \"type\": \"array\",\r",
@@ -740,10 +743,7 @@
 											"          },\r",
 											"          \"required\": [\r",
 											"            \"name\",\r",
-											"            \"read\",\r",
-											"            \"create\",\r",
-											"            \"update\",\r",
-											"            \"delete\",\r",
+											"            \"actions\",\r",
 											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
 											"            \"authorizationStrategyOverridesForCRUD\",\r",
 											"            \"children\"\r",
@@ -831,9 +831,9 @@
 											"});\r",
 											"\r",
 											"pm.test(\"POST ResourceClaimAction Invalid: Response errors include messages by property\", function () {\r",
-											"    pm.expect(response.errors.ResourceClaims.length).to.equal(2);\r",
-											"    pm.expect(response.errors.ResourceClaims[0]).to.contain(\"which is not in the system\");\r",
-											"    pm.expect(response.errors.ResourceClaims[1]).to.contain(\"have at least one action\");\r",
+											"    pm.expect(response.errors.ResourceClaimActions.length).to.equal(2);\r",
+											"    pm.expect(response.errors.ResourceClaimActions[0]).to.contain(\"which is not in the system\");\r",
+											"    pm.expect(response.errors.ResourceClaimActions[1]).to.contain(\"have at least one action\");\r",
 											"});\r",
 											""
 										],
@@ -846,7 +846,76 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceClaimId\": 4000,\r\n  \"resourceClaimActions\": {\r\n    \"create\": false,\r\n    \"read\": false,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"raw": "{\r\n  \"resourceClaimId\": 4000,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": false\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Add duplicate action Validation Errors",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ResourceClaimAction Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction Invalid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ResourceClaimAction Invalid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.ResourceClaimActions.length).to.equal(2);\r",
+											"    pm.expect(response.errors.ResourceClaimActions[0]).to.contain(\"which is not in the system\");\r",
+											"    pm.expect(response.errors.ResourceClaimActions[1]).to.contain(\"action is duplicated\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaimId\": 4000,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -936,7 +1005,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": false,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"update\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"delete\",\r\n      \"enabled\": false\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -987,7 +1056,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"update\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"delete\",\r\n      \"enabled\": false\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1078,7 +1147,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"update\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"delete\",\r\n      \"enabled\": false\r\n    }   \r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1142,7 +1211,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": {\r\n    \"create\": true,\r\n    \"read\": true,\r\n    \"update\": false,\r\n    \"delete\": false\r\n  }\r\n}",
+									"raw": "{\r\n  \"resourceClaimId\": 4,\r\n  \"resourceClaimActions\": [\r\n    {\r\n      \"name\": \"read\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"create\",\r\n      \"enabled\": true\r\n    },\r\n    {\r\n      \"name\": \"update\",\r\n      \"enabled\": false\r\n    },\r\n    {\r\n      \"name\": \"delete\",\r\n      \"enabled\": false\r\n    }   \r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1952,20 +2021,22 @@
 											"  body: {\r",
 											"    mode: 'raw',\r",
 											"    raw:JSON.stringify({\r",
-											"        \"resourceClaimId\": 9,\r",
-											"        \"resourceClaimActions\": {\r",
-											"            \"create\": true,\r",
-											"            \"read\": true,\r",
-											"            \"update\": true,\r",
-											"            \"delete\": false\r",
-											"        }\r",
+											"       \"resourceClaimId\": 9,\r",
+											"           \"resourceClaimActions\": [\r",
+											"                {\r",
+											"                \"name\": \"read\",\r",
+											"                \"enabled\": true\r",
+											"                },\r",
+											"                {\r",
+											"                \"name\": \"create\",\r",
+											"                \"enabled\": true\r",
+											"                }            \r",
+											"        ]\r",
 											"    })\r",
 											" }\r",
 											"},\r",
-											"function (claimSetErr, claimSetResponse) {\r",
-											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
-											"  const id = claimSetResponse.headers.get(\"Location\").split(\"/\")[2];\r",
-											"  if(!id) { console.log('Error in Pre-request: claimset ID missing from response'); }\r",
+											"function (claimSetErr) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); } \r",
 											"});\r",
 											"\r",
 											""
@@ -2637,6 +2708,7 @@
 											"},\r",
 											"function (vendorErr, vendorResponse) {\r",
 											"  if(vendorErr) { console.log(\"Error in Pre-request:\", vendorErr); }\r",
+											"  console.log(vendorResponse.headers.get(\"Location\"));\r",
 											"  const vendorId = vendorResponse.headers.get(\"Location\").split(\"/\")[2];\r",
 											"  if(!vendorId) { console.log('Error in Pre-request: vendorID missing from response'); }\r",
 											"  pm.collectionVariables.set(\"OtherApplicationVendorId\", vendorId);\r",
@@ -2663,6 +2735,7 @@
 											"  },  \r",
 											"  function (appErr, appResonse) {\r",
 											"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
+											"    console.log(appResonse.headers.get(\"Location\"));\r",
 											"    const appId = appResonse.headers.get(\"Location\").split(\"/\")[2];\r",
 											"    if(!appId) { console.log('Error in Pre-request: applicationId missing from response'); }\r",
 											"    else {\r",
@@ -2690,10 +2763,8 @@
 											"      }),\r",
 											"    }\r",
 											"  },  \r",
-											"  function (appErr, appResonse) {\r",
-											"     if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
-											"    const applId = appResonse.headers.get(\"Location\").split(\"/\")[2];\r",
-											"    if(!applId) { console.log('Error in Pre-request: applicationId missing from response'); }\r",
+											"  function (appErr) {\r",
+											"     if(appErr) { console.log(\"Error in Pre-request:\", appErr); }   \r",
 											"}); \r",
 											"});\r",
 											"});"

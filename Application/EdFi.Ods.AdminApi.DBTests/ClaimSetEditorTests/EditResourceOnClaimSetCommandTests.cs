@@ -12,6 +12,7 @@ using Moq;
 using Application = EdFi.Security.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim;
+using System.Collections.Generic;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -40,10 +41,13 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
         {
             Id = testResource1ToEdit.ResourceClaimId,
             Name = testResource1ToEdit.ResourceName,
-            Create = false,
-            Read = false,
-            Update = true,
-            Delete = true
+            Actions = new List<ResourceClaimAction>
+            {
+                new ResourceClaimAction{ Name = "Create", Enabled = false },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = true }
+            }     
         };
 
         var editResourceOnClaimSetModel = new Mock<IEditResourceOnClaimSetModel>();
@@ -58,17 +62,15 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
 
         var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Id == editedResource.Id);
 
-        resultResourceClaim1.Create.ShouldBe(editedResource.Create);
-        resultResourceClaim1.Read.ShouldBe(editedResource.Read);
-        resultResourceClaim1.Update.ShouldBe(editedResource.Update);
-        resultResourceClaim1.Delete.ShouldBe(editedResource.Delete);
+        resultResourceClaim1.Actions.ShouldNotBeNull();
+        resultResourceClaim1.Actions.Count.ShouldBe(2);
+        resultResourceClaim1.Actions.All(x =>
+        editedResource.Actions.Any(y => x.Name.Equals(y.Name) && x.Enabled.Equals(y.Enabled))).ShouldBe(true);
 
         var resultResourceClaim2 = resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
-
-        resultResourceClaim2.Create.ShouldBe(true);
-        resultResourceClaim2.Read.ShouldBe(false);
-        resultResourceClaim2.Update.ShouldBe(false);
-        resultResourceClaim2.Delete.ShouldBe(false);
+        resultResourceClaim2.Actions.ShouldNotBeNull();
+        resultResourceClaim2.Actions.Count.ShouldBe(1);
+        resultResourceClaim2.Actions.Any(x => x.Name.Equals("Create")).ShouldBe(true);
     }
 
     [Test]
@@ -99,10 +101,13 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
         {
             Id = testChildResource1ToEdit.ResourceClaimId,
             Name = testChildResource1ToEdit.ResourceName,
-            Create = false,
-            Read = false,
-            Update = true,
-            Delete = true
+            Actions = new List<ResourceClaimAction>
+            {
+                new ResourceClaimAction{ Name = "Create", Enabled = false },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = true }
+            }
         };
 
         var editResourceOnClaimSetModel = new Mock<IEditResourceOnClaimSetModel>();
@@ -115,26 +120,24 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
         var resultParentResourceClaim = resourceClaimsForClaimSet.Single(x => x.Id == testParentResource.ResourceClaim.ResourceClaimId);
-        resultParentResourceClaim.Create.ShouldBe(true);
-        resultParentResourceClaim.Read.ShouldBe(false);
-        resultParentResourceClaim.Update.ShouldBe(false);
-        resultParentResourceClaim.Delete.ShouldBe(false);
+        resultParentResourceClaim.Actions.ShouldNotBeNull();
+        resultParentResourceClaim.Actions.Count.ShouldBe(1);
+        resultParentResourceClaim.Actions.Any(x => x.Name.Equals("Create")).ShouldBe(true);
 
         var resultChildResourceClaim1 =
             resultParentResourceClaim.Children.Single(x => x.Id == editedResource.Id);
 
-        resultChildResourceClaim1.Create.ShouldBe(editedResource.Create);
-        resultChildResourceClaim1.Read.ShouldBe(editedResource.Read);
-        resultChildResourceClaim1.Update.ShouldBe(editedResource.Update);
-        resultChildResourceClaim1.Delete.ShouldBe(editedResource.Delete);
+        resultChildResourceClaim1.Actions.ShouldNotBeNull();
+        resultChildResourceClaim1.Actions.Count.ShouldBe(2);
+        resultChildResourceClaim1.Actions.All(x =>
+        editedResource.Actions.Any(y => x.Name.Equals(y.Name) && x.Enabled.Equals(y.Enabled))).ShouldBe(true);
 
         var resultChildResourceClaim2 =
             resultParentResourceClaim.Children.Single(x => x.Id == testChildResource2NotToEdit.ResourceClaimId);
 
-        resultChildResourceClaim2.Create.ShouldBe(true);
-        resultChildResourceClaim2.Read.ShouldBe(false);
-        resultChildResourceClaim2.Update.ShouldBe(false);
-        resultChildResourceClaim2.Delete.ShouldBe(false);
+        resultParentResourceClaim.Actions.ShouldNotBeNull();
+        resultParentResourceClaim.Actions.Count.ShouldBe(1);
+        resultParentResourceClaim.Actions.Any(x => x.Name.Equals("Create")).ShouldBe(true);
     }
 
 
@@ -157,10 +160,13 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
         {
             Id = testResourceToAdd.ResourceClaimId,
             Name = testResourceToAdd.ResourceName,
-            Create = true,
-            Read = false,
-            Update = true,
-            Delete = false
+            Actions = new List<ResourceClaimAction>
+            {
+                new ResourceClaimAction{ Name = "Create", Enabled = true },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = false }
+            }         
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -178,10 +184,10 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
 
         var resultResourceClaim1 = resourceClaimsForClaimSet.Single(x => x.Name == testResourceToAdd.ResourceName);
 
-        resultResourceClaim1.Create.ShouldBe(resourceToAdd.Create);
-        resultResourceClaim1.Read.ShouldBe(resourceToAdd.Read);
-        resultResourceClaim1.Update.ShouldBe(resourceToAdd.Update);
-        resultResourceClaim1.Delete.ShouldBe(resourceToAdd.Delete);
+        resultResourceClaim1.Actions.ShouldNotBeNull();
+        resultResourceClaim1.Actions.Count.ShouldBe(2);
+        resultResourceClaim1.Actions.All(x =>
+        resourceToAdd.Actions.Any(y => x.Name.Equals(y.Name) && x.Enabled.Equals(y.Enabled))).ShouldBe(true);
     }
 
     [Test]
@@ -209,10 +215,13 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
         {
             Id = testChildResource1ToAdd.ResourceClaimId,
             Name = testChildResource1ToAdd.ResourceName,
-            Create = true,
-            Read = false,
-            Update = true,
-            Delete = false
+            Actions = new List<ResourceClaimAction>
+            {
+                new ResourceClaimAction{ Name = "Create", Enabled = true },
+                new ResourceClaimAction{ Name = "Read", Enabled = false },
+                new ResourceClaimAction{ Name = "Update", Enabled = true },
+                new ResourceClaimAction{ Name = "Delete", Enabled = false }
+            }
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -230,9 +239,9 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
         var resultChildResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Name == testChildResource1ToAdd.ResourceName);
 
-        resultChildResourceClaim1.Create.ShouldBe(resourceToAdd.Create);
-        resultChildResourceClaim1.Read.ShouldBe(resourceToAdd.Read);
-        resultChildResourceClaim1.Update.ShouldBe(resourceToAdd.Update);
-        resultChildResourceClaim1.Delete.ShouldBe(resourceToAdd.Delete);
+        resultChildResourceClaim1.Actions.ShouldNotBeNull();
+        resultChildResourceClaim1.Actions.Count.ShouldBe(2);
+        resultChildResourceClaim1.Actions.All(x =>
+        resourceToAdd.Actions.Any(y => x.Name.Equals(y.Name) && x.Enabled.Equals(y.Enabled))).ShouldBe(true);
     }
 }

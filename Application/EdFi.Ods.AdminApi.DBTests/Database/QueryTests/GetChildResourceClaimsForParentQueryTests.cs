@@ -49,10 +49,7 @@ public class GetChildResourceClaimsForParentQueryTests : SecurityDataTestBase
             results.Length.ShouldBe(testChildResourceClaims.Count());
             results.Select(x => x.Name).ShouldBe(testChildResourceClaims.Select(x => x.ResourceName), true);
             results.Select(x => x.Id).ShouldBe(testChildResourceClaims.Select(x => x.ResourceClaimId), true);
-            results.All(x => x.Create == false).ShouldBe(true);
-            results.All(x => x.Delete == false).ShouldBe(true);
-            results.All(x => x.Update == false).ShouldBe(true);
-            results.All(x => x.Read == false).ShouldBe(true);
+            results.All(x => x.Actions == null).ShouldBeTrue();
             results.All(x => x.ParentId.Equals(testParentResource.ResourceClaimId)).ShouldBe(true);
         });
     }

@@ -78,21 +78,18 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             {
                 Id = x.Key.ResourceClaimId,
                 Name = x.Key.ResourceName,
-                Create = x.Any(a => a.Action.ActionName == Action.Create.Value),
-                Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
-                Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
-                Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                Actions = x.Where(x => x.Action != null).Select(x =>
+                             new ResourceClaimAction { Name = x.Action.ActionName, Enabled = true}).ToList(),
                 IsParent = true,
                 DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
                 AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId]
-            })
-                .ToList();
+            }).ToList();
 
             parentResources.ForEach(x => x.Children = new List<ResourceClaim>());
             return parentResources;
         }
 
-        private Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims)
+        public Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims)
         {
             var resultDictionary = new Dictionary<int, List<ClaimSetResourceClaimActionAuthStrategies?>>();
 
@@ -292,10 +289,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     Id = x.Key.ResourceClaimId,
                     ParentId = x.Key.ParentResourceClaimId ?? 0,
                     Name = x.Key.ResourceName,
-                    Create = x.Any(a => a.Action.ActionName == Action.Create.Value),
-                    Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
-                    Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
-                    Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                    Actions = x.Where(x => x.Action != null).Select(x =>
+                             new ResourceClaimAction { Name = x.Action.ActionName, Enabled = true }).ToList(),
                     IsParent = false,
                     DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
                     AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId]

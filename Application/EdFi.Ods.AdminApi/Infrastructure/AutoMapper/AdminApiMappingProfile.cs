@@ -18,6 +18,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 using Profile = AutoMapper.Profile;
 using OverrideAuthStategyOnClaimSetRequest = EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest;
+using AutoMapper;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -71,29 +72,20 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<ClaimSetEditor.ResourceClaim, ClaimSetResourceClaimModel>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
-            .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
-            .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
-            .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
+            .ForMember(dst => dst.Actions, opt => opt.MapFrom(src => src.Actions))
             .ForMember(dst => dst.AuthorizationStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthorizationStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
-        CreateMap<ResourceClaimActionModel, ResourceClaim>()
-           .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
-           .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
-           .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
-           .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete));
-
         CreateMap<IResourceClaimOnClaimSetRequest, EditResourceOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
-            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom(src => src.ResourceClaimActions));
-
+            .ForMember(dst => dst.ResourceClaim, opt => opt.MapFrom<ResourceClaimResolver>());
         CreateMap<OverrideAuthStategyOnClaimSetRequest, OverrideAuthStrategyOnClaimSetModel>()
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
             .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
             .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
-            .ForMember(dst => dst.AuthStrategyIds, opt => {
+            .ForMember(dst => dst.AuthStrategyIds, opt => {
+
                 opt.ConvertUsing<AuthStrategyIdsConverter, List<string>>("AuthorizationStrategies");
             });
 
@@ -109,10 +101,7 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<ClaimSetResourceClaimModel, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
-            .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
-            .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
-            .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
+            .ForMember(dst => dst.Actions, opt => opt.MapFrom(src => src.Actions))
             .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthorizationStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthorizationStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));

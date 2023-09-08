@@ -51,7 +51,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -146,75 +146,6 @@
 							"response": []
 						},
 						{
-							"name": "OdsInstances - Invalid Connection String",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"POST OdsInstances Invalid ConnectionString: Status code is Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"\r",
-											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response matches error format\", function () {\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"errors\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response title is helpful and accurate\", function () {\r",
-											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response errors include messages by property\", function () {\r",
-											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response errors include messages with wrong elements\", function () {\r",
-											"    pm.expect(response.errors[\"ConnectionString\"][0]).to.contain(\"is not valid\");\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test Connection String\",\r\n    \"instanceType\": \"Postgresql\",\r\n    \"connectionString\": \"Host=localhost; Port=XXXX; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/v2/odsInstances/",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v2",
-										"odsInstances",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "OdsInstances - Invalid Existing Name",
 							"event": [
 								{
@@ -234,7 +165,7 @@
 											"    raw:JSON.stringify({\r",
 											"      \"name\": `Other Ods Instance ${pm.collectionVariables.get(\"OtherOdsInstanceGUID\")}`,\r",
 											"      \"instanceType\": \"Other Ods Instance Type\",\r",
-											"      \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r",
+											"      \"connectionString\": `${pm.collectionVariables.get(\"connectionString\")}`\r",
 											"    }), \r",
 											"  }\r",
 											"},\r",
@@ -282,7 +213,76 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n     \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/odsInstances/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"odsInstances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Invalid Connection String",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OdsInstances Invalid ConnectionString: Response errors include messages with wrong elements\", function () {\r",
+											"    pm.expect(response.errors[\"ConnectionString\"][0]).to.contain(\"is not valid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test Connection String\",\r\n    \"instanceType\": \"Postgresql\",\r\n    \"connectionString\": \"WrongConnection\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -445,6 +445,8 @@
 											"    pm.expect(response).to.have.property(\"id\");",
 											"    pm.expect(response).to.have.property(\"name\");",
 											"    pm.expect(response).to.have.property(\"instanceType\");",
+											"    pm.expect(response).to.have.property(\"odsInstanceContexts\");",
+											"    pm.expect(response).to.have.property(\"odsInstanceDerivatives\");",
 											"});",
 											"",
 											"const GetOdsInstancesIdSchema = {",
@@ -458,12 +460,22 @@
 											"    },",
 											"    \"instanceType\": {",
 											"      \"type\": \"string\"",
+											"    },",
+											"    \"odsInstanceContexts\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": {}",
+											"    },",
+											"    \"odsInstanceDerivatives\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": {}",
 											"    }",
 											"  },",
 											"  \"required\": [",
 											"    \"id\",",
 											"    \"name\",",
-											"    \"instanceType\"",
+											"    \"instanceType\",",
+											"    \"odsInstanceContexts\",",
+											"    \"odsInstanceDerivatives\"",
 											"  ]",
 											"}",
 											"",
@@ -649,7 +661,6 @@
 											"  pm.test(\"PUT OdsInstance: Response includes updated odsInstance\", function () {\r",
 											"    pm.expect(updatedOdsInstanceJson.name).to.equal(`Updated-Test-OdsInstance-${pm.collectionVariables.get(\"OdsInstanceGUID\")}`);\r",
 											"    pm.expect(updatedOdsInstanceJson.instanceType).to.not.be.empty;\r",
-											"    pm.expect(updatedOdsInstanceJson.connectionString).to.not.be.empty;\r",
 											"   });\r",
 											"});\r",
 											""
@@ -663,7 +674,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -721,7 +732,6 @@
 											"  pm.test(\"PUT OdsInstance connectionString empty: Response includes updated odsInstance\", function () {\r",
 											"    pm.expect(updatedOdsInstanceJson.name).to.equal(`Updated-Test-OdsInstance-${pm.collectionVariables.get(\"OdsInstanceGUID\")}-Empty`);\r",
 											"    pm.expect(updatedOdsInstanceJson.instanceType).to.not.be.empty;\r",
-											"    pm.expect(updatedOdsInstanceJson.connectionString).to.not.be.empty;\r",
 											"   });\r",
 											"});\r",
 											""
@@ -735,7 +745,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}-Empty\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Updated-Test-OdsInstance-{{OdsInstanceGUID}}-Empty\",\r\n    \"instanceType\": \"Updated-Test-OdsInstanceType\",\r\n    \"connectionString\": \"\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -804,7 +814,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"Host=localhost; Port=XXXX; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"WrongConnectionString\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -871,7 +881,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"Host=localhost; Port=5432; Database=EdFi_Ods; username=username; Integrated Security=true; Application Name=AdminApi;\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

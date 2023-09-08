@@ -27,7 +27,7 @@ public class ReadOdsInstance : IFeature
 
     internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, int offset, int limit)
     {
-        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(offset,limit));
+        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(offset, limit));
         return Task.FromResult(Results.Ok(odsInstances));
     }
 
@@ -38,7 +38,8 @@ public class ReadOdsInstance : IFeature
         {
             throw new NotFoundException<int>("odsinstance", id);
         }
-        var model = mapper.Map<OdsInstanceModel>(odsInstance);
+        var model = mapper.Map<OdsInstanceDetailModel>(odsInstance);
+        
         return Task.FromResult(Results.Ok(model));
     }
 }

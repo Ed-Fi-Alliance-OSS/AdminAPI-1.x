@@ -165,7 +165,7 @@
 											"    raw:JSON.stringify({\r",
 											"      \"name\": `Other Ods Instance ${pm.collectionVariables.get(\"OtherOdsInstanceGUID\")}`,\r",
 											"      \"instanceType\": \"Other Ods Instance Type\",\r",
-											"      \"connectionString\": `${pm.collectionVariables.get(\"connectionString\")}`\r",
+											"      \"connectionString\": `${pm.environment.get(\"connectionString\")}`\r",
 											"    }), \r",
 											"  }\r",
 											"},\r",
@@ -213,7 +213,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n     \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Other Ods Instance {{OtherOdsInstanceGUID}}\",\r\n    \"instanceType\": \"Other Ods Instance Type\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

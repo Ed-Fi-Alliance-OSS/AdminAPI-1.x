@@ -32,6 +32,7 @@ public class ClaimSetDetailsModel : ClaimSetModel
 [SwaggerSchema(Title = "ClaimSetResourceClaim")]
 public class ClaimSetResourceClaimModel
 {
+    [SwaggerSchema(ReadOnly = true)]
     public int Id { get; set; }
     public string? Name { get; set; }
     public List<ResourceClaimAction>? Actions { get; set; }

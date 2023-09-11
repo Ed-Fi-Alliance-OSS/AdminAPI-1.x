@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bc4a9c71-8d9f-499c-a2ec-4632377ba756",
+		"_postman_id": "6c7f4056-4574-4c2e-810c-d38c880f79c1",
 		"name": "Admin API E2E 2.0 - ClaimSets",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20721775"
@@ -66,6 +66,351 @@
 										"v2",
 										"claimSets",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Import",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"ImportClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets - Import: Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Response includes location in header\", function () {\r",
+											"    pm.response.to.have.header(\"Location\");   \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaims\": [\r\n    {     \r\n      \"name\": \"educationStandards\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],      \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {     \r\n      \"name\": \"academicSubjectDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }  \r\n   \r\n      ],\r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {\r\n      \"name\": \"gradeLevelDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],\r\n     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {      \r\n      \"name\": \"publicationStatusDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    }\r\n  ],\r\n  \"name\": \"Test ClaimSet import {{ImportClaimSetGUID}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/import",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Import - Invalid Existing ClaimSet Name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"OtherClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/claimSets`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"name\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
+											"      \"resourceClaims\": []\r",
+											"    }), \r",
+											"  }\r",
+											"},\r",
+											"function (claimSetErr, claimSetResponse) {\r",
+											"  if(claimSetErr) { console.log(\"Error in Pre-request:\", claimSetErr); }\r",
+											"  const id = claimSetResponse.headers.get(\"Location\").split(\"/\")[2];\r",
+											"  if(!id) { console.log('Error in Pre-request: claimset ID missing from response'); }\r",
+											"  pm.collectionVariables.set(\"OtherExistingClaimSetId\", id);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets - Import: Invalid Existing ClaimSets: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Invalid Existing ClaimSets: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Invalid Existing ClaimSets: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Invalid Existing ClaimSets: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Name.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Name[0]).to.contain(\"already exists\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaims\": [\r\n    {     \r\n      \"name\": \"educationStandards\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],      \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {     \r\n      \"name\": \"academicSubjectDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }  \r\n   \r\n      ],\r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {\r\n      \"name\": \"gradeLevelDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],\r\n     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {      \r\n      \"name\": \"publicationStatusDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    }\r\n  ],\r\n  \"name\": \"Other Test ClaimSet {{OtherClaimSetGUID}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/import",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Import - Wrong resource name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"WrongNameClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets - Import: Wrong resouce name Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Wrong resouce name Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Wrong resouce name: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Wrong resouce name:  Response errors include messages by property and resource\", function () {\r",
+											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
+											"    [\"not in the system\", \"educationStandards-123\"].forEach((substring) => {\r",
+											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
+											"    });   \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaims\": [\r\n    {     \r\n      \"name\": \"educationStandards-123\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],      \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {     \r\n      \"name\": \"academicSubjectDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }  \r\n   \r\n      ],\r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {\r\n      \"name\": \"gradeLevelDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],\r\n     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {      \r\n      \"name\": \"publicationStatusDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    }\r\n  ],\r\n  \"name\": \"Wrong Resouce name {{WrongNameClaimSetGUID}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/import",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Import - Invalid Wrong Parent Child Relationship",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"InvalidParentClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets - Import: Wrong relation: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Wrong relation: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Wrong relation: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Wrong relation:  Response errors include messages by property and resource\", function () {\r",
+											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
+											"    [\"Child resource: 'academicSubjectDescriptor'\", \"wrong parent resource\", \"parent resource is: 'systemDescriptors'\"].forEach((substring) => {\r",
+											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
+											"    });  \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaims\": [\r\n    {     \r\n      \"name\": \"educationStandards\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],      \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": [\r\n           {\r\n            \"name\": \"academicSubjectDescriptor\",\r\n            \"actions\": [\r\n                {\r\n                \"name\": \"Create\",\r\n                \"enabled\": true\r\n                },\r\n                {\r\n                \"name\": \"Read\",\r\n                \"enabled\": true\r\n                },\r\n                {\r\n                \"name\": \"Update\",\r\n                \"enabled\": true\r\n                },\r\n                {\r\n                \"name\": \"Delete\",\r\n                \"enabled\": true\r\n                }  \r\n        \r\n            ],\r\n            \"authorizationStrategyOverridesForCRUD\": [],\r\n            \"children\": []\r\n            }\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"gradeLevelDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],\r\n     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {      \r\n      \"name\": \"publicationStatusDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    }\r\n  ],\r\n  \"name\": \"Wrong Relationship {{InvalidParentClaimSetGUID}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/import",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Import - Invalid Resource duplication",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"DuplicateClaimSetGUID\", pm.variables.replaceIn('{{$guid}}'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ClaimSets - Import: Resource duplication: name Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Resource duplication: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Resource duplication: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ClaimSets - Import: Resource duplication:  Response errors include messages by property and resource\", function () {\r",
+											"    pm.expect(response.errors.ResourceClaims.length).to.equal(1);\r",
+											"    [\"Only unique resource claims\", \"duplicate resource: 'gradeLevelDescriptor'\"].forEach((substring) => {\r",
+											"        pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);\r",
+											"    }); \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceClaims\": [\r\n    {     \r\n      \"name\": \"educationStandards\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],      \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {\r\n      \"name\": \"gradeLevelDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],\r\n     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {\r\n      \"name\": \"gradeLevelDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],\r\n     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    },\r\n    {\r\n      \"name\": \"publicationStatusDescriptor\",\r\n      \"actions\": [\r\n        {\r\n          \"name\": \"Create\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Read\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Update\",\r\n          \"enabled\": true\r\n        },\r\n        {\r\n          \"name\": \"Delete\",\r\n          \"enabled\": true\r\n        }\r\n      ],     \r\n      \"authorizationStrategyOverridesForCRUD\": [],\r\n      \"children\": []\r\n    }\r\n  ],\r\n  \"name\": \"Wrong Relationship {{DuplicateClaimSetGUID}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/import",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"import"
 									]
 								}
 							},
@@ -553,6 +898,190 @@
 										"v2",
 										"claimSets",
 										"{{CreatedClaimSetId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Export",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"ClaimSets Export: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json();\r",
+											"\r",
+											"pm.test(\"ClaimSets Export: Response result matches claimset\", function () {\r",
+											"    const claimSetId = pm.collectionVariables.get(\"CreatedClaimSetId\");\r",
+											"    pm.expect(result.id).to.equal(parseInt(claimSetId));\r",
+											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
+											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
+											"    pm.expect(result._applications).to.be.empty;\r",
+											"});\r",
+											"\r",
+											"const GetClaimSetsIdSchema = {\r",
+											"  \"type\": \"object\",\r",
+											"  \"properties\": {\r",
+											"    \"resourceClaims\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": [\r",
+											"        {\r",
+											"          \"type\": \"object\",\r",
+											"          \"properties\": {\r",
+											"            \"name\": {\r",
+											"              \"type\": \"string\"\r",
+											"            },\r",
+											"             \"actions\": {\r",
+											"             \"type\": \"array\",\r",
+											"             \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"name\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"enabled\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    }\r",
+											"                } \r",
+											"                } ]\r",
+											"            },\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }                      \r",
+											"\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"authorizationStrategyOverridesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"               \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"children\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": {}\r",
+											"            }\r",
+											"          },\r",
+											"          \"required\": [\r",
+											"            \"name\",\r",
+											"            \"actions\",\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
+											"            \"authorizationStrategyOverridesForCRUD\",\r",
+											"            \"children\"\r",
+											"          ]\r",
+											"        }\r",
+											"      ]\r",
+											"    },\r",
+											"    \"id\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"name\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"_isSystemReserved\": {\r",
+											"      \"type\": \"boolean\"\r",
+											"    },\r",
+											"    \"_applications\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    }\r",
+											"  },\r",
+											"  \"required\": [\r",
+											"    \"resourceClaims\",\r",
+											"    \"id\",\r",
+											"    \"name\",\r",
+											"    \"_isSystemReserved\",\r",
+											"    \"_applications\"\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"ClaimSets Export: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsIdSchema);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/export",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"export"
 									]
 								}
 							},
@@ -2838,6 +3367,53 @@
 							"response": []
 						},
 						{
+							"name": "ClaimSets - Export - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ClaimSet NotFound: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET ClaimSet NotFound: Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET ClaimSet NotFound: Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"claimset\");\r",
+											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/export",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"export"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ClaimSets - Not Found",
 							"event": [
 								{
@@ -3036,6 +3612,22 @@
 		},
 		{
 			"key": "RegisteredClientSecret",
+			"value": ""
+		},
+		{
+			"key": "ImportClaimSetGUID",
+			"value": ""
+		},
+		{
+			"key": "WrongNameClaimSetGUID",
+			"value": ""
+		},
+		{
+			"key": "InvalidParentClaimSetGUID",
+			"value": ""
+		},
+		{
+			"key": "DuplicateClaimSetGUID",
 			"value": ""
 		}
 	]

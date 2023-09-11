@@ -26,15 +26,7 @@ public class ExportClaimSet : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int id)
     {
-        ClaimSet claimSet;
-        try
-        {
-            claimSet = getClaimSetByIdQuery.Execute(id);
-        }
-        catch (AdminApiException)
-        {
-            throw new NotFoundException<int>("claimset", id);
-        }
+        var claimSet = getClaimSetByIdQuery.Execute(id); 
 
         var allResources = getResourcesByClaimSetIdQuery.AllResources(id);
         var applications = getApplications.Execute(id);

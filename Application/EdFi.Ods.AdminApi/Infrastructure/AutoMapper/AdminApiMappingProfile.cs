@@ -19,6 +19,8 @@ using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using Profile = AutoMapper.Profile;
 using OverrideAuthStategyOnClaimSetRequest = EdFi.Ods.AdminApi.Features.ClaimSets.ResourceClaims.EditAuthStrategy.OverrideAuthStategyOnClaimSetRequest;
 using AutoMapper;
+using EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
+using EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -128,6 +130,27 @@ public class AdminApiMappingProfile : Profile
         CreateMap<EdFi.Admin.DataAccess.Models.Profile, ProfileDetailsModel>()
           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ProfileId))
           .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ProfileName))
-          .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
+          .ForMember(dst => dst.Definition, opt => opt.MapFrom(src => src.ProfileDefinition));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceDerivative, OdsInstanceDerivativeModel>()
+           .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.OdsInstanceDerivativeId))
+           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+           .ForMember(dst => dst.DerivativeType, opt => opt.MapFrom(src => src.DerivativeType));
+
+        CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceContext, OdsInstanceContextModel>()
+           .ForMember(dst => dst.OdsInstanceContextId, opt => opt.MapFrom(src => src.OdsInstanceContextId))
+           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+           .ForMember(dst => dst.ContextKey, opt => opt.MapFrom(src => src.ContextKey))
+           .ForMember(dst => dst.ContextValue, opt => opt.MapFrom(src => src.ContextValue));
+       
+
+        CreateMap<OdsInstance, OdsInstanceDetailModel>()
+            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.OdsInstanceDerivatives, opt => opt.MapFrom(src => src.OdsInstanceDerivatives))
+            .ForMember(dst => dst.OdsInstanceContexts, opt => opt.MapFrom(src => src.OdsInstanceContexts));
+
+       
+       
     }
 }

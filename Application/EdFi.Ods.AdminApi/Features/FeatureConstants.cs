@@ -37,4 +37,11 @@ public class FeatureConstants
     public const string ClaimSetIdToCopy = "ClaimSet id to copy";
     public const string ProfileName = "Profile name";
     public const string ProfileDefinition = "Profile definition";
+    public const string OdsInstanceName = "Ods Instance name";
+    public const string OdsInstanceInstanceType = "Ods Instance type";
+    public const string OdsInstanceConnectionString = "Ods Instance connection string";
+    public const string OdsInstanceAlreadyExistsMessage = "An Ods instance with this name already exists in the database. Please enter a unique name.";
+    public const string OdsInstanceCantBeDeletedMessage = "There are some {Table} associated to this OdsInstance. Can not be deleted.";
+    public const string OdsInstanceConnectionStringInvalid = "The connection string is not valid.";
+
 }

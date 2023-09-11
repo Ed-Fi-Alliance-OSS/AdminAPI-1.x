@@ -4,19 +4,16 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Common.Configuration;
 using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using FluentValidation;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
-using Npgsql;
 using Swashbuckle.AspNetCore.Annotations;
-using static EdFi.Ods.AdminApi.Features.ClaimSets.EditClaimSet;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
 
@@ -80,20 +77,13 @@ public class EditOdsInstance : IFeature
 
         private bool BeAnExistingOdsInstance(int id)
         {
-            try
-            {
-                var odsInstance = _getOdsInstanceQuery.Execute(id) ?? throw new AdminApiException("Not Found");
-                return true;
-            }
-            catch (AdminApiException)
-            {
-                throw new NotFoundException<int>("odsInstance", id);
-            }
+            _getOdsInstanceQuery.Execute(id);
+            return true;
         }
 
         private bool NameIsChanged(IEditOdsInstanceModel model)
         {
-            return _getOdsInstanceQuery.Execute(model.Id)!.Name != model.Name;
+            return _getOdsInstanceQuery.Execute(model.Id).Name != model.Name;
         }
 
         private bool BeAUniqueName(string? name)
@@ -102,31 +92,7 @@ public class EditOdsInstance : IFeature
         }
         private bool BeAValidConnectionString(string? connectionString)
         {
-            bool result = true;
-            if (_databaseEngine == "SqlServer")
-            {
-                try
-                {
-                    SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
-                }
-                catch (ArgumentException)
-                {
-                    result = false;
-                }
-            }
-            else if (_databaseEngine == "PostgreSQL")
-            {
-                try
-                {
-                    NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-                }
-                catch (ArgumentException)
-                {
-                    result = false;
-                }
-            }
-
-            return result;
+            return ConnectionStringHelper.ValidateConnectionString(_databaseEngine, connectionString);
         }
 
     }

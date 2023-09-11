@@ -48,7 +48,7 @@ public class DeleteOdsInstance : IFeature
 
         private bool Exist(Request request)
         {
-            OdsInstanceEntity = _getOdsInstanceQuery.Execute(request.Id) ?? throw new NotFoundException<int>("odsInstance", request.Id);
+            OdsInstanceEntity = _getOdsInstanceQuery.Execute(request.Id);
             return true;
         }
 

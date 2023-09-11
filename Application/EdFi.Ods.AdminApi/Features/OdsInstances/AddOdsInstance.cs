@@ -8,10 +8,9 @@ using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using FluentValidation;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
-using Npgsql;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
@@ -78,31 +77,7 @@ public class AddOdsInstance : IFeature
 
         private bool BeAValidConnectionString(string? connectionString)
         {
-            bool result = true;
-            if (_databaseEngine == "SqlServer")
-            {
-                try
-                {
-                    SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
-                }
-                catch (ArgumentException)
-                {
-                    result = false;
-                }
-            }
-            else if (_databaseEngine == "PostgreSQL")
-            {
-                try
-                {
-                    NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-                }
-                catch (ArgumentException)
-                {
-                    result = false;
-                }
-            }
-            
-            return result;
+            return ConnectionStringHelper.ValidateConnectionString(_databaseEngine, connectionString);
         }
     }
 }

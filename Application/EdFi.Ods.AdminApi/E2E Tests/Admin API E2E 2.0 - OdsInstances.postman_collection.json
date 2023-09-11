@@ -403,7 +403,7 @@
 											"    const response = pm.response.json();",
 											"",
 											"    pm.expect(response.title).to.contain(\"Not found\");",
-											"    pm.expect(response.title).to.contain(\"odsinstance\");",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");",
 											"});",
 											""
 										],

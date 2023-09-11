@@ -41,7 +41,7 @@ public class FeatureConstants
     public const string OdsInstanceInstanceType = "Ods Instance type";
     public const string OdsInstanceConnectionString = "Ods Instance connection string";
     public const string OdsInstanceAlreadyExistsMessage = "An Ods instance with this name already exists in the database. Please enter a unique name.";
-    public const string OdsInstanceCantBeRemovedMessage = "This Ods instance can not be removed because it's being used in Applications, OdsInstanceContexts and/or OdsInstanceDerivatives tables. Please remove it from there first and try again.";
+    public const string OdsInstanceCantBeDeletedMessage = "There are some {Table} associated to this OdsInstance. Can not be deleted.";
     public const string OdsInstanceConnectionStringInvalid = "The connection string is not valid.";
 
 }

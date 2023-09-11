@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using FluentValidation;
+using Polly;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
 
@@ -41,8 +42,16 @@ public class DeleteOdsInstance : IFeature
             _getApplicationByOdsInstanceIdQuery = getApplicationByOdsInstanceIdQuery;
 
             RuleFor(m => m.Id)
-                .Must(NotHaveRelationships)
-                .WithMessage(FeatureConstants.OdsInstanceCantBeRemovedMessage)
+                .Must(NotHaveApplicationsRelationships)
+                .WithMessage(FeatureConstants.OdsInstanceCantBeDeletedMessage)
+                .When(Exist);
+            RuleFor(m => m.Id)
+                .Must(NotHaveOdsInstanceContextsRelationships)
+                .WithMessage(FeatureConstants.OdsInstanceCantBeDeletedMessage)
+                .When(Exist);
+            RuleFor(m => m.Id)
+                .Must(NotHaveOdsInstanceDerivativesRelationships)
+                .WithMessage(FeatureConstants.OdsInstanceCantBeDeletedMessage)
                 .When(Exist);
         }
 
@@ -51,13 +60,23 @@ public class DeleteOdsInstance : IFeature
             OdsInstanceEntity = _getOdsInstanceQuery.Execute(request.Id);
             return true;
         }
-
-        private bool NotHaveRelationships<T>(Request model, int odsIntanceId, ValidationContext<T> context)
+        private bool NotHaveApplicationsRelationships<T>(Request model, int odsIntanceId, ValidationContext<T> context)
         {
-            bool result = false;
+            context.MessageFormatter.AppendArgument("Table", "Applications");
             List<Admin.DataAccess.Models.Application> appList = _getApplicationByOdsInstanceIdQuery.Execute(odsIntanceId) ?? new List<Admin.DataAccess.Models.Application>();
-            result = OdsInstanceEntity!.OdsInstanceContexts.Count == 0 && OdsInstanceEntity!.OdsInstanceDerivatives.Count == 0 && appList.Count == 0;
-            return result;
+            return appList.Count == 0;
+        }
+
+        private bool NotHaveOdsInstanceContextsRelationships<T>(Request model, int odsIntanceId, ValidationContext<T> context)
+        {
+            context.MessageFormatter.AppendArgument("Table", "OdsInstanceContexts");
+            return OdsInstanceEntity!.OdsInstanceContexts.Count == 0;
+        }
+
+        private bool NotHaveOdsInstanceDerivativesRelationships<T>(Request model, int odsIntanceId, ValidationContext<T> context)
+        {
+            context.MessageFormatter.AppendArgument("Table", "OdsInstanceDerivatives");
+            return OdsInstanceEntity!.OdsInstanceDerivatives.Count == 0;
         }
     }
 

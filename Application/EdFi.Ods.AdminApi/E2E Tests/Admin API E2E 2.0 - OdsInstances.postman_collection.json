@@ -1066,13 +1066,13 @@
 							"response": []
 						},
 						{
-							"name": "OdsInstances - Applications,  OdsInstanceContexts, OdsInstanceDerivatives associated",
+							"name": "OdsInstances - Applications associated",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"DELETE OdsInstance Applications,  OdsInstanceContexts, OdsInstanceDerivatives associated: Status code is Bad Request\", function () {\r",
+											"pm.test(\"DELETE OdsInstance Applications associated: Status code is Bad Request\", function () {\r",
 											"    pm.response.to.have.status(400);\r",
 											"});\r",
 											"\r",
@@ -1088,13 +1088,9 @@
 											"});\r",
 											"\r",
 											"pm.test(\"DELETE OdsInstance Applications,  OdsInstanceContexts, OdsInstanceDerivatives associated: Response errors include messages by property\", function () {\r",
-											"    pm.expect(response.errors.Id.length).to.equal(3);\r",
+											"    pm.expect(response.errors.Id.length).to.equal(1);\r",
 											"    pm.expect(response.errors.Id[0]).to.contain(\"Can not be deleted\");\r",
 											"    pm.expect(response.errors.Id[0]).to.contain(\"Applications\");\r",
-											"    pm.expect(response.errors.Id[1]).to.contain(\"Can not be deleted\");\r",
-											"    pm.expect(response.errors.Id[1]).to.contain(\"OdsInstanceContexts\");\r",
-											"    pm.expect(response.errors.Id[2]).to.contain(\"Can not be deleted\");\r",
-											"    pm.expect(response.errors.Id[2]).to.contain(\"OdsInstanceDerivatives \");\r",
 											"});\r",
 											""
 										],

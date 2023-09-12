@@ -5,7 +5,6 @@
 
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Moq;
 using NUnit.Framework;
 using Shouldly;

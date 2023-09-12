@@ -5,11 +5,9 @@
 
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using System.Data.Entity.Validation;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 

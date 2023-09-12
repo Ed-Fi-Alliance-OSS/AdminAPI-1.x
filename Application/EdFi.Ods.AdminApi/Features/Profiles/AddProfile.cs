@@ -6,6 +6,7 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -21,7 +22,8 @@ public class AddProfile : IFeature
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
     }
-  
+
+    [ProfileRequestExample]
     public async Task<IResult> Handle(Validator validator, IAddProfileCommand addProfileCommand, IMapper mapper, AddProfileRequest request)
     {
         await validator.GuardAsync(request);

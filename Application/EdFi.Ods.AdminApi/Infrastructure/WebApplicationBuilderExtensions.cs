@@ -122,6 +122,7 @@ public static class WebApplicationBuilderExtensions
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
+            opt.OperationFilter<ProfileRequestExampleFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {

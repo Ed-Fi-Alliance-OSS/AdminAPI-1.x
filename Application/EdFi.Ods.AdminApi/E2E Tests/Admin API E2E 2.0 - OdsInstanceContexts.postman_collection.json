@@ -216,6 +216,69 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstanceContexts - Not Found ODS Instance",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ODS Instance Contexts Invalid: Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Contexts Invalid: Response matches title property\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Contexts Invalid ODSInstance: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");\r",
+											"    pm.expect(response.title).to.contain(\"It may have been recently deleted\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": 9000,\r\n  \"contextKey\": \"ckey\",\r\n  \"contextValue\": \"cvalue\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstanceContexts",
 							"event": [
 								{

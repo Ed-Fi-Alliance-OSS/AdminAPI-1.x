@@ -260,7 +260,7 @@
 											"}\r",
 											"\r",
 											"pm.test(\"GET OdsInstanceDerivatives: Validation Schema Response\", () => {\r",
-											"    pm.response.to.have.jsonSchema(GetOdsInstanceDerivativSchema);\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceDerivativesSchema);\r",
 											"});\r",
 											""
 										],

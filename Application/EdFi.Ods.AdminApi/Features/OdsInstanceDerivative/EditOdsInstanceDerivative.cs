@@ -60,16 +60,16 @@ public class EditOdsInstanceDerivative : IFeature
     public class Validator : AbstractValidator<EditOdsInstanceDerivativeRequest>
     {
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
-        private readonly string _databaseEngine;
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IOptions<AppSettings> options)
+        
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery)
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
-            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
+            
 
             RuleFor(m => m.DerivativeType).NotEmpty();
 
             RuleFor(m => m.DerivativeType)
-                .Matches("^(ReadReplica|Snapshot)$")
+                .Matches("^(?i)(readreplica|snapshot)$")
                 .WithMessage(FeatureConstants.OdsInstanceDerivativeDerivativeTypeNotValid)
                 .When(m => !string.IsNullOrEmpty(m.DerivativeType));
 

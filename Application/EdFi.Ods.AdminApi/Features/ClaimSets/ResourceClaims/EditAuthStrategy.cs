@@ -95,8 +95,9 @@ public class EditAuthStrategy : IFeature
             RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
             {
 
-                var resoureClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
-                if (resoureClaim == null)
+                var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
+
+                if (resourceClaim == null)
                 {
                     context.AddFailure("ResourceClaim", "Resource claim doesn't exist for the Claim set provided");
                 }
@@ -105,6 +106,14 @@ public class EditAuthStrategy : IFeature
                 if (!claimSet.IsEditable)
                 {
                     context.AddFailure("ClaimSetId", $"Claim set ({claimSet.Name}) is system reserved. May not be modified.");
+                }
+
+                var actionName = getAllActionsQuery.Execute().ToList()
+                .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
+
+                if (actionName == null)
+                {
+                    context.AddFailure("ActionName", "ActionName doesn't exist.");
                 }
 
                 var authStrategies = getAllAuthorizationStrategiesQuery.Execute();
@@ -117,15 +126,14 @@ public class EditAuthStrategy : IFeature
                     {
                         context.AddFailure("AuthorizationStrategies", $"{authStrategyName} doesn't exist.");
                     }
+                    else if (resourceClaim != null &&
+                        resourceClaim.DefaultAuthStrategiesForCRUD.Any(das => das != null &&
+                            (actionName != null && actionName.ActionName == das.ActionName) &&
+                            das.AuthorizationStrategies!.Any(aus => aus.AuthStrategyName == validAuthStrategyName.AuthStrategyName)))
+                    {
+                        context.AddFailure("AuthorizationStrategies", $"{authStrategyName} is already set as a DefaultAuthorizationStrategiesForCRUD. You can not set it as an AuthorizationStrategyOverridesForCRUD.");
+                    }
 
-                }
-
-                var actionName = getAllActionsQuery.Execute().ToList()
-                .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
-
-                if (actionName == null)
-                {
-                    context.AddFailure("ActionName", "ActionName doesn't exist.");
                 }
             });
         }

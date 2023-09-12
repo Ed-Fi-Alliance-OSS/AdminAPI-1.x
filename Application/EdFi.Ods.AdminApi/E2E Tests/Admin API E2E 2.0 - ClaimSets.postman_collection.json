@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "6c7f4056-4574-4c2e-810c-d38c880f79c1",
+		"_postman_id": "88364053-b71e-46e5-b7b6-0aa95e9c1e9a",
 		"name": "Admin API E2E 2.0 - ClaimSets",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20721775"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -1862,6 +1861,75 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"actionName\": \"delete\",\r\n  \"authorizationStrategies\": [\r\n    \"RelationshipsWithStudentsOnly\"\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"overrideAuthorizationStrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy - Default Authorization not valid",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OverrideAuthStrategy - Default Authorization not valid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy - Default Authorization not valid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy - Default Authorization not valid: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST OverrideAuthStrategy - Default Authorization not valid: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.AuthorizationStrategies.length).to.equal(1);\r",
+											"    pm.expect(response.errors.AuthorizationStrategies[0]).to.contain(\"is already set as a DefaultAuthorizationStrategiesForCRUD\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategies\": [\r\n    \"NoFurtherAuthorizationRequired\"\r\n  ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"

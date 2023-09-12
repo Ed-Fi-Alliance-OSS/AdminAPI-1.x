@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: Apache-2.0
+// Licensed to the Ed-Fi Alliance under one or more agreements.
+// The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+// See the LICENSE and NOTICES files in the project root for more information.
+
+using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+
+namespace EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
+
+public class DeleteOdsInstanceDerivative : IFeature
+{
+    public void MapEndpoints(IEndpointRouteBuilder endpoints)
+    {
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstancesDerivatives/{id}", Handle)
+            .WithDefaultDescription()
+            .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
+            .BuildForVersions(AdminApiVersions.V2);
+    }
+
+    public Task<IResult> Handle(IDeleteOdsInstanceDerivativeCommand deleteOdsInstanceDerivativeCommand, int id)
+    {
+        deleteOdsInstanceDerivativeCommand.Execute(id);
+        return Task.FromResult(Results.Ok());
+    }
+}

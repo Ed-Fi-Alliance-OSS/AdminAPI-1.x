@@ -111,6 +111,16 @@ jobs:
             -r junit,cli \
             --reporter-junit-export ./reports/reportOdsInstances.xml \
             -k
+          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstancesContexts.postman_collection.json' \
+            -e './E2E Tests/Admin API Docker.postman_environment.json' \
+            -r junit,cli \
+            --reporter-junit-export ./reports/reportOdsInstancesContext.xml \
+            -k
+          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstancesDerivatives.postman_collection.json' \
+            -e './E2E Tests/Admin API Docker.postman_environment.json' \
+            -r junit,cli \
+            --reporter-junit-export ./reports/reportOdsInstancesDerivative.xml \
+            -k
 
       - name: Get Docker logs
         if: failure()

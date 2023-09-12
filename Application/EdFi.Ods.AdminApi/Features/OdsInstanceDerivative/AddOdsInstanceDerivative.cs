@@ -23,7 +23,7 @@ public class AddOdsInstanceDerivative : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-           .MapPost(endpoints, "/odsInstancesDerivatives", Handle)
+           .MapPost(endpoints, "/odsInstanceDerivatives", Handle)
            .WithDefaultDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
@@ -33,7 +33,7 @@ public class AddOdsInstanceDerivative : IFeature
     {
         await validator.GuardAsync(request);
         var addedOdsInstanceDerivative = addOdsInstanceDerivativeCommand.Execute(request);
-        return Results.Created($"/odsInstancesDerivatives/{addedOdsInstanceDerivative.OdsInstanceDerivativeId}", null);
+        return Results.Created($"/odsInstanceDerivatives/{addedOdsInstanceDerivative.OdsInstanceDerivativeId}", null);
     }
 
   
@@ -84,15 +84,8 @@ public class AddOdsInstanceDerivative : IFeature
 
         private bool BeAnExistingOdsInstance(int id)
         {
-            try
-            {
-                var odsInstance = _getOdsInstanceQuery.Execute(id) ?? throw new AdminApiException("Not Found");
-                return true;
-            }
-            catch (AdminApiException)
-            {
-                throw new NotFoundException<int>("OdsInstanceId", id);
-            }
+            _getOdsInstanceQuery.Execute(id);
+            return true;
         }
 
         private bool BeAValidConnectionString(string? connectionString)

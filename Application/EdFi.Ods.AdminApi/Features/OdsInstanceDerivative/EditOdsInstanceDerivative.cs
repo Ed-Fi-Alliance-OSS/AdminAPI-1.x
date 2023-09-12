@@ -24,7 +24,7 @@ public class EditOdsInstanceDerivative : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-            .MapPut(endpoints, "/odsInstancesDerivatives/{id}", Handle)
+            .MapPut(endpoints, "/odsInstanceDerivatives/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
@@ -90,15 +90,8 @@ public class EditOdsInstanceDerivative : IFeature
 
         private bool BeAnExistingOdsInstance(int id)
         {
-            try
-            {
-                var odsInstance = _getOdsInstanceQuery.Execute(id) ?? throw new AdminApiException("Not Found");
-                return true;
-            }
-            catch (AdminApiException)
-            {
-                throw new NotFoundException<int>("OdsInstanceId", id);
-            }
+            _getOdsInstanceQuery.Execute(id);
+            return true;
         }
 
         private bool BeAValidConnectionString(string? connectionString)

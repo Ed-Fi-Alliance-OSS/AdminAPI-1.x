@@ -13,12 +13,12 @@ public class ReadOdsInstanceContext : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstancesContexts", GetOdsInstanceContexts)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstanceContexts", GetOdsInstanceContexts)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceContextModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstancesContexts/{id}", GetOdsInstanceContext)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstanceContexts/{id}", GetOdsInstanceContext)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceContextModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
@@ -33,10 +33,6 @@ public class ReadOdsInstanceContext : IFeature
     internal Task<IResult> GetOdsInstanceContext(IGetOdsInstanceContextByIdQuery getOdsInstanceContextByIdQuery, IMapper mapper, int id)
     {
         var odsInstanceContext = getOdsInstanceContextByIdQuery.Execute(id);
-        if (odsInstanceContext == null)
-        {
-            throw new NotFoundException<int>("odsInstanceContext", id);
-        }
         var model = mapper.Map<OdsInstanceContextModel>(odsInstanceContext);
         return Task.FromResult(Results.Ok(model));
     }

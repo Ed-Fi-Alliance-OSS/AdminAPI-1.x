@@ -12,7 +12,7 @@ public class DeleteOdsInstanceDerivative : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstancesDerivatives/{id}", Handle)
+        AdminApiEndpointBuilder.MapDelete(endpoints, "/odsInstanceDerivatives/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
             .BuildForVersions(AdminApiVersions.V2);

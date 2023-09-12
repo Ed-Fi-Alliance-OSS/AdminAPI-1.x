@@ -21,7 +21,7 @@ public class EditOdsInstanceContext : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-            .MapPut(endpoints, "/odsInstancesContexts/{id}", Handle)
+            .MapPut(endpoints, "/odsInstanceContexts/{id}", Handle)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
@@ -52,12 +52,11 @@ public class EditOdsInstanceContext : IFeature
     public class Validator : AbstractValidator<EditOdsInstanceContextRequest>
     {
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
-        private readonly string _databaseEngine;
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IOptions<AppSettings> options)
+        
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery)
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
-            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
-
+            
             RuleFor(m => m.ContextKey).NotEmpty();
             RuleFor(m => m.ContextValue).NotEmpty();
 
@@ -72,15 +71,8 @@ public class EditOdsInstanceContext : IFeature
 
         private bool BeAnExistingOdsInstance(int id)
         {
-            try
-            {
-                var odsInstance = _getOdsInstanceQuery.Execute(id) ?? throw new AdminApiException("Not Found");
-                return true;
-            }
-            catch (AdminApiException)
-            {
-                throw new NotFoundException<int>("OdsInstanceId", id);
-            }
+            _getOdsInstanceQuery.Execute(id);
+            return true;
         }
     }
 }

@@ -20,7 +20,7 @@ public class AddOdsInstanceContext : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder
-           .MapPost(endpoints, "/odsInstancesContexts", Handle)
+           .MapPost(endpoints, "/odsInstanceContexts", Handle)
            .WithDefaultDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
@@ -30,7 +30,7 @@ public class AddOdsInstanceContext : IFeature
     {
         await validator.GuardAsync(request);
         var addedOdsInstanceContext = addOdsInstanceContextCommand.Execute(request);
-        return Results.Created($"/odsInstancesContexts/{addedOdsInstanceContext.OdsInstanceContextId}", null);
+        return Results.Created($"/odsInstanceContexts/{addedOdsInstanceContext.OdsInstanceContextId}", null);
     }
 
 
@@ -48,12 +48,11 @@ public class AddOdsInstanceContext : IFeature
     public class Validator : AbstractValidator<AddOdsInstanceContextRequest>
     {
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
-        private readonly string _databaseEngine;
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IOptions<AppSettings> options)
+        
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery)
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
-            _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
-
+            
             RuleFor(m => m.ContextKey).NotEmpty();
 
             RuleFor(m => m.ContextValue).NotEmpty();
@@ -70,15 +69,8 @@ public class AddOdsInstanceContext : IFeature
 
         private bool BeAnExistingOdsInstance(int id)
         {
-            try
-            {
-                var odsInstance = _getOdsInstanceQuery.Execute(id) ?? throw new AdminApiException("Not Found");
-                return true;
-            }
-            catch (AdminApiException)
-            {
-                throw new NotFoundException<int>("OdsInstanceId", id);
-            }
+            _getOdsInstanceQuery.Execute(id);
+            return true;
         }
     }
 }

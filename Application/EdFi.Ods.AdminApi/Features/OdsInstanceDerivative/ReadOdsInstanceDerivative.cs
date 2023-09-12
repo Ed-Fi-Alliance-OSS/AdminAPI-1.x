@@ -13,12 +13,12 @@ public class ReadOdsInstanceDerivative : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstancesDerivatives", GetOdsInstanceDerivatives)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstanceDerivatives", GetOdsInstanceDerivatives)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceDerivativeModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstancesDerivatives/{id}", GetOdsInstanceDerivative)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstanceDerivatives/{id}", GetOdsInstanceDerivative)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceDerivativeModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
@@ -33,10 +33,6 @@ public class ReadOdsInstanceDerivative : IFeature
     internal Task<IResult> GetOdsInstanceDerivative(IGetOdsInstanceDerivativeByIdQuery getOdsInstanceDerivativeByIdQuery, IMapper mapper, int id)
     {
         var odsInstanceDerivative = getOdsInstanceDerivativeByIdQuery.Execute(id);
-        if (odsInstanceDerivative == null)
-        {
-            throw new NotFoundException<int>("odsInstanceDerivative", id);
-        }
         var model = mapper.Map<OdsInstanceDerivativeModel>(odsInstanceDerivative);
         return Task.FromResult(Results.Ok(model));
     }

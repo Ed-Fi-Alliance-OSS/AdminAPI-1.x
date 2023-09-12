@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
 public interface IAddOdsInstanceDerivativeCommand
 {
-    OdsInstanceDerivative Execute(IAddOdsInstanceDerivativeModel newProfile);
+    OdsInstanceDerivative Execute(IAddOdsInstanceDerivativeModel newOdsInstanceDerivative);
 }
 
 public class AddOdsInstanceDerivativeCommand : IAddOdsInstanceDerivativeCommand

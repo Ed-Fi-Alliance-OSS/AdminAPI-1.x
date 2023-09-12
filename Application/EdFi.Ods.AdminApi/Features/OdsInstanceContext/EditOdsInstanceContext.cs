@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -39,6 +40,7 @@ public class EditOdsInstanceContext : IFeature
     [SwaggerSchema(Title = "EditOdsInstanceContextRequest")]
     public class EditOdsInstanceContextRequest : IEditOdsInstanceContextModel
     {
+        [SwaggerExclude]
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceContextIdDescription, Nullable = false)]
         public int Id { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceContextOdsInstanceIdDescription, Nullable = false)]

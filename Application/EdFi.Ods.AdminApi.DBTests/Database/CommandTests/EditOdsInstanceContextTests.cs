@@ -8,6 +8,8 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -62,6 +64,63 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
             updatedOdsInstanceContext.ContextKey.ShouldBe(updateContextKey);
             updatedOdsInstanceContext.ContextValue.ShouldBe(updateContextValue);
         });
+    }
+
+
+    [Test]
+    public void ShouldFailOdsInstanceContextCombinedKey()
+    {
+        var odsInstance1 = new OdsInstance
+        {
+            Name = "ODS Instance Name",
+            InstanceType = "Ods1",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
+        };
+        Save(odsInstance1);
+
+        var contextKey = "contextKey";
+        var contextValue = "contextValue";
+        var newOdsInstanceContext = new OdsInstanceContext
+        {
+            ContextKey = contextKey,
+            ContextValue = contextValue,
+            OdsInstanceId = odsInstance1.OdsInstanceId
+        };
+        Save(newOdsInstanceContext);
+
+        var contextKey2 = "contextKey2";
+        var contextValue2 = "contextValue2";
+        var newOdsInstanceContext2 = new OdsInstanceContext
+        {
+            ContextKey = contextKey2,
+            ContextValue = contextValue2,
+            OdsInstanceId = odsInstance1.OdsInstanceId
+        };
+        Save(newOdsInstanceContext2);
+
+        var updateContextKey = "contextKey2";
+        var updateContextValue = "contextValue2";
+        var editOdsInstanceContext = new Mock<IEditOdsInstanceContextModel>();
+        editOdsInstanceContext.Setup(x => x.OdsInstanceId).Returns(odsInstance1.OdsInstanceId);
+        editOdsInstanceContext.Setup(x => x.ContextKey).Returns(updateContextKey);
+        editOdsInstanceContext.Setup(x => x.ContextValue).Returns(updateContextValue);
+        editOdsInstanceContext.Setup(x => x.Id).Returns(newOdsInstanceContext.OdsInstanceContextId);
+
+        Assert.Throws<DbUpdateException>(() =>
+        {
+            Transaction(usersContext =>
+            {
+                var command = new EditOdsInstanceContextCommand(usersContext);
+                var updatedOdsInstanceContext = command.Execute(editOdsInstanceContext.Object);
+                updatedOdsInstanceContext.ShouldNotBeNull();
+                updatedOdsInstanceContext.OdsInstanceContextId.ShouldBeGreaterThan(0);
+                updatedOdsInstanceContext.OdsInstanceContextId.ShouldBe(newOdsInstanceContext.OdsInstanceContextId);
+                updatedOdsInstanceContext.OdsInstanceId.ShouldBe(odsInstance1.OdsInstanceId);
+                updatedOdsInstanceContext.ContextKey.ShouldBe(updateContextKey);
+                updatedOdsInstanceContext.ContextValue.ShouldBe(updateContextValue);
+            });
+        });
+   
     }
 
     [Test]

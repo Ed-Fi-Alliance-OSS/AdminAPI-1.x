@@ -12,7 +12,6 @@ using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
-
 namespace EdFi.Ods.AdminApi.Features.OdsInstanceDerivative;
 
 public class AddOdsInstanceDerivative : IFeature
@@ -48,11 +47,13 @@ public class AddOdsInstanceDerivative : IFeature
     public class Validator : AbstractValidator<AddOdsInstanceDerivativeRequest>
     {
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
+        private readonly IGetOdsInstanceDerivativesQuery _getOdsInstanceDerivativesQuery;
         private readonly string _databaseEngine;
 
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IOptions<AppSettings> options)
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IGetOdsInstanceDerivativesQuery getOdsInstanceDerivativesQuery, IOptions<AppSettings> options)
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
+            _getOdsInstanceDerivativesQuery = getOdsInstanceDerivativesQuery;
             _databaseEngine = options.Value.DatabaseEngine ?? throw new NotFoundException<string>("AppSettings", "DatabaseEngine");
 
             RuleFor(m => m.DerivativeType).NotEmpty();
@@ -78,6 +79,9 @@ public class AddOdsInstanceDerivative : IFeature
                 .WithMessage(FeatureConstants.OdsInstanceConnectionStringInvalid)
                 .When(m => !string.IsNullOrEmpty(m.ConnectionString));
 
+            RuleFor(odsDerivative => odsDerivative)
+                .Must(BeUniqueCombinedKey)
+                .WithMessage(FeatureConstants.OdsInstanceDerivativeCombinedKeyMustBeUnique);
         }
 
         private bool BeAnExistingOdsInstance(int id)
@@ -89,6 +93,11 @@ public class AddOdsInstanceDerivative : IFeature
         private bool BeAValidConnectionString(string? connectionString)
         {
             return ConnectionStringHelper.ValidateConnectionString(_databaseEngine, connectionString);
+        }
+
+        private bool BeUniqueCombinedKey(AddOdsInstanceDerivativeRequest request)
+        {
+            return !_getOdsInstanceDerivativesQuery.Execute().Any(x => x.OdsInstanceId == request.OdsInstanceId && x.DerivativeType.Equals(request.DerivativeType, StringComparison.OrdinalIgnoreCase));
         }
 
     }

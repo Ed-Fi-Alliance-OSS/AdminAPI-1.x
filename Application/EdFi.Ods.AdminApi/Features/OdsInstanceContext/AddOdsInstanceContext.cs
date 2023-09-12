@@ -9,8 +9,6 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
-
-
 namespace EdFi.Ods.AdminApi.Features.OdsInstanceContext;
 
 public class AddOdsInstanceContext : IFeature
@@ -46,10 +44,12 @@ public class AddOdsInstanceContext : IFeature
     public class Validator : AbstractValidator<AddOdsInstanceContextRequest>
     {
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
-        
-        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery)
+        private readonly IGetOdsInstanceContextsQuery _getOdsInstanceContextsQuery;
+
+        public Validator(IGetOdsInstanceQuery getOdsInstanceQuery, IGetOdsInstanceContextsQuery getOdsInstanceContextsQuery)
         {
             _getOdsInstanceQuery = getOdsInstanceQuery;
+            _getOdsInstanceContextsQuery = getOdsInstanceContextsQuery;
             
             RuleFor(m => m.ContextKey).NotEmpty();
 
@@ -63,12 +63,23 @@ public class AddOdsInstanceContext : IFeature
                 .Must(BeAnExistingOdsInstance)
                 .When(m => !m.OdsInstanceId.Equals(0));
 
+            RuleFor(odsContext => odsContext)
+                 .Must(BeUniqueCombinedKey)
+                 .WithMessage(FeatureConstants.OdsInstanceContextCombinedKeyMustBeUnique);
+
         }
 
         private bool BeAnExistingOdsInstance(int id)
         {
             _getOdsInstanceQuery.Execute(id);
             return true;
+        }
+
+        private bool BeUniqueCombinedKey(AddOdsInstanceContextRequest request)
+        {
+            return !_getOdsInstanceContextsQuery.Execute().Any
+                (x => x.OdsInstanceId == request.OdsInstanceId &&
+                x.ContextKey.Equals(request.ContextKey, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

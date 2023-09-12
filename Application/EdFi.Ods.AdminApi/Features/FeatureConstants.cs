@@ -42,6 +42,8 @@ public class FeatureConstants
     public const string OdsInstanceConnectionString = "Ods Instance connection string";
     public const string OdsInstanceAlreadyExistsMessage = "An Ods instance with this name already exists in the database. Please enter a unique name.";
     public const string OdsInstanceCantBeDeletedMessage = "There are some {Table} associated to this OdsInstance. Can not be deleted.";
+    public const string OdsInstanceDerivativeCombinedKeyMustBeUnique = "The combined key ODS instance id and derivative type must be unique.";
+    public const string OdsInstanceContextCombinedKeyMustBeUnique = "The combined key ODS instance id, context key, and context value must be unique.";
     public const string OdsInstanceConnectionStringInvalid = "The connection string is not valid.";
     public const string OdsInstanceDerivativeIdDescription = "ODS instance derivative id.";
     public const string OdsInstanceDerivativeOdsInstanceIdDescription = "ODS instance derivative ODS instance id.";

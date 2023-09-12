@@ -150,6 +150,130 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstanceDerivatives - Invalid Derivative Type",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ODS Instance Derivatives Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Derivatives Invalid: DerivativeType included\", function () {\r",
+											"    pm.expect(response.errors).to.have.property('DerivativeType');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Derivatives Invalid: DerivativeType value allowed\", function () {\r",
+											"     pm.expect(response.errors.DerivativeType[0]).to.contain(\"The value for the Derivative type is not allowed. The only accepted values are: 'ReadReplica' or 'Snapshot'\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"another-derivative-type\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceDerivatives - Invalid ConnectionString",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ODS Instance Derivatives Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Derivatives Invalid: ConnectionString included\", function () {\r",
+											"    pm.expect(response.errors).to.have.property('ConnectionString');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Derivatives Invalid: ConnectionString value allowed\", function () {\r",
+											"     pm.expect(response.errors.ConnectionString[0]).to.contain(\"The connection string is not valid.\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"invalid-connection-string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstanceDerivatives - Invalid ODS Instance",
 							"event": [
 								{
@@ -503,17 +627,17 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"GET OdsInstanceDerivatives NotFound: Status code is Not Found\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives NotFound: Status code is Not Found\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
 											"});\r",
 											"\r",
-											"pm.test(\"GET OdsInstanceDerivatives NotFound: Response matches error format\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives NotFound: Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"GET OdsInstanceDerivatives NotFound: Response title is helpful and accurate\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives NotFound: Response title is helpful and accurate\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
@@ -568,18 +692,18 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
 											"    pm.response.to.have.status(400);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Response matches error format\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Response matches error format\", function () {\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Response title is helpful and accurate\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Response title is helpful and accurate\", function () {\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
 											"});\r",
 											""
@@ -594,6 +718,130 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/{{CreatedOdsInstanceDerivativeId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										"{{CreatedOdsInstanceDerivativeId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceDerivatives - Invalid Derivative Type",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT ODS Instance Derivatives Invalid: DerivativeType included\", function () {\r",
+											"    pm.expect(response.errors).to.have.property('DerivativeType');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT ODS Instance Derivatives Invalid: DerivativeType value allowed\", function () {\r",
+											"     pm.expect(response.errors.DerivativeType[0]).to.contain(\"The value for the Derivative type is not allowed. The only accepted values are: 'ReadReplica' or 'Snapshot'\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"invalid\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/{{CreatedOdsInstanceDerivativeId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										"{{CreatedOdsInstanceDerivativeId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceDerivatives - Invalid Connection String",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT ODS Instance Derivatives Invalid: ConnectionString included\", function () {\r",
+											"    pm.expect(response.errors).to.have.property('ConnectionString');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT ODS Instance Derivatives Invalid: ConnectionString value allowed\", function () {\r",
+											"     pm.expect(response.errors.ConnectionString[0]).to.contain(\"The connection string is not valid.\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": 0,\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"invalid-connection-string\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -630,22 +878,22 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
 											"    pm.response.to.have.status(400);\r",
 											"});\r",
 											"\r",
 											"const response = pm.response.json();\r",
 											"\r",
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Response matches error format\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Response matches error format\", function () {\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"    pm.expect(response).to.have.property(\"errors\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Response title is helpful and accurate\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Response title is helpful and accurate\", function () {\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"POST OdsInstanceDerivatives Invalid: Invalid OdsInstanceId\", function () {\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Invalid OdsInstanceId\", function () {\r",
 											"   pm.expect(response.errors.OdsInstanceId[0]).to.contain(\"valid ods instance id\");\r",
 											"});"
 										],
@@ -719,17 +967,17 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"GET OdsInstanceDerivatives NotFound: Status code is Not Found\", function () {\r",
+											"pm.test(\"DELETE OdsInstanceDerivatives NotFound: Status code is Not Found\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
 											"});\r",
 											"\r",
-											"pm.test(\"GET OdsInstanceDerivatives NotFound: Response matches error format\", function () {\r",
+											"pm.test(\"DELETE OdsInstanceDerivatives NotFound: Response matches error format\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response).to.have.property(\"title\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"GET OdsInstanceDerivatives NotFound: Response title is helpful and accurate\", function () {\r",
+											"pm.test(\"DELETE OdsInstanceDerivatives NotFound: Response title is helpful and accurate\", function () {\r",
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",

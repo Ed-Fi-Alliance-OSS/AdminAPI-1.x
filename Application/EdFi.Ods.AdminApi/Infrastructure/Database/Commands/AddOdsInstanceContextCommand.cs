@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
 public interface IAddOdsInstanceContextCommand
 {
-    OdsInstanceContext Execute(IAddOdsInstanceContextModel newProfile);
+    OdsInstanceContext Execute(IAddOdsInstanceContextModel newOdsInstanceContext);
 }
 
 public class AddOdsInstanceContextCommand : IAddOdsInstanceContextCommand

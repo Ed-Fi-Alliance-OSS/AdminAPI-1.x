@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4997fc6e-eaa4-4269-b6d5-59e3e0c5ad0f",
+		"_postman_id": "e36d346d-d2bd-4868-b846-b1a8bc78f10d",
 		"name": "Admin API E2E 2.0 - OdsInstancesDerivatives",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21286036"
@@ -253,7 +253,6 @@
 											"      \"required\": [\r",
 											"        \"id\",\r",
 											"        \"derivativeType\",\r",
-											"        \"connectionString\",\r",
 											"        \"odsInstanceId\"     \r",
 											"      ]\r",
 											"    }\r",
@@ -309,7 +308,6 @@
 											"\r",
 											"pm.test(\"GET OdsInstancesDerivativeId: Response result matches OdsInstancesDerivative\", function () {\r",
 											"    const result = pm.response.json();\r",
-											"    pm.expect(result.connectionString).to.not.be.empty;\r",
 											"    pm.expect(result.derivativeType).to.not.be.empty;\r",
 											"    pm.expect(result.odsInstanceId).to.not.equal(0);\r",
 											"});\r",
@@ -333,7 +331,6 @@
 											"      \"required\": [\r",
 											"        \"id\",\r",
 											"        \"derivativeType\",\r",
-											"        \"connectionString\",\r",
 											"        \"odsInstanceId\"     \r",
 											"      ]\r",
 											"}\r",
@@ -454,8 +451,7 @@
 											"  } \r",
 											"  const updatedJson = response.json();\r",
 											"  pm.test(\"PUT OdsInstancesDerivative: Response includes updated OdsInstanceDerivative\", function () {\r",
-											"    pm.expect(updatedJson.derivativeType).to.equal(\"Snapshot\");\r",
-											"    pm.expect(updatedJson.connectionString).to.be.not.empty;\r",
+											"    pm.expect(updatedJson.derivativeType).to.equal(\"ReadReplica\");\r",
 											"    pm.expect(updatedJson.odsInstanceId).to.be.not.equal(0);\r",
 											"   });\r",
 											"});\r",
@@ -470,7 +466,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

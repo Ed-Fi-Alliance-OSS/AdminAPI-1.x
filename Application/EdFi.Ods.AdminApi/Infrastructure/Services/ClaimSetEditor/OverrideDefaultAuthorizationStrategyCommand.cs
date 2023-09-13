@@ -3,19 +3,18 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.Entity;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using FluentValidation;
 using FluentValidation.Results;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public class OverrideDefaultAuthorizationStrategyCommand
 {
     private readonly ISecurityContext _context;
-
     public OverrideDefaultAuthorizationStrategyCommand(ISecurityContext context)
     {
         _context = context;
@@ -45,15 +44,14 @@ public class OverrideDefaultAuthorizationStrategyCommand
 
         if (claimSetResourceClaimAction != null)
         {
+            var resourceClaimActionDefaultAuthorizationStrategy = _context.ResourceClaimActionAuthorizationStrategies.FirstOrDefault(p => p.ResourceClaimAction.ResourceClaimId == model.ResourceClaimId && p.ResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower());
+
             if (!claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Any(rc => rc.ClaimSetResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower()))
             {
                 if (model.AuthStrategyIds != null)
                     foreach (var id in model.AuthStrategyIds)
                     {
-                        claimSetResourceClaimAction.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
-                        {
-                            AuthorizationStrategy = authorizationStrategiesDictionary[id]                                                  
-                        });
+                        ValidateAndAddAuthStrategy(model, authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
                     }
             }
             else
@@ -65,10 +63,7 @@ public class OverrideDefaultAuthorizationStrategyCommand
                     var overrideAuthStrategies = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>();
                     foreach (var id in model.AuthStrategyIds)
                     {
-                        overrideAuthStrategies.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
-                        {
-                            AuthorizationStrategy = authorizationStrategiesDictionary[id]                          
-                        });
+                        ValidateAndAddAuthStrategy(model, authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
                     }
                     claimSetResourceClaimAction.AuthorizationStrategyOverrides = overrideAuthStrategies;
                 }
@@ -87,6 +82,18 @@ public class OverrideDefaultAuthorizationStrategyCommand
                 }
             };
             throw new ValidationException(validationErrors);
+        }
+    }
+
+    private static void ValidateAndAddAuthStrategy(OverrideAuthStrategyOnClaimSetModel model, Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary, ResourceClaimActionAuthorizationStrategies? resourceClaimActionDefaultAuthorizationStrategy, ClaimSetResourceClaimAction? claimSetResourceClaimAction, int id)
+    {
+        if (resourceClaimActionDefaultAuthorizationStrategy != null &&
+            resourceClaimActionDefaultAuthorizationStrategy.AuthorizationStrategyId != id)
+        {
+            claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
+            {
+                AuthorizationStrategy = authorizationStrategiesDictionary[id]
+            });
         }
     }
 

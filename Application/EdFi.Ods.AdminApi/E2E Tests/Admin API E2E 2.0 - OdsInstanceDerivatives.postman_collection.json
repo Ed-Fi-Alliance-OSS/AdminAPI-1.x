@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "602075b4-5173-4b7a-8168-65f9a1a437ee",
+		"_postman_id": "c0d55233-e7bb-4fc9-a80d-3c2b22ce2011",
 		"name": "Admin API E2E 2.0 - OdsInstancesDerivatives",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21286036"
@@ -382,6 +382,69 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"odsInstanceId\": 9000,\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceDerivatives - Invalid Combined Key",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST ODS Instance Derivatives Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Derivatives Invalid: Response matches title property\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"POST ODS Instance Derivatives Invalid ODSInstance: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.title).to.contain(\"Validation failed\");\r",
+											"    pm.expect(response.errors).to.be.an(\"object\").and.not.to.be.empty;\r",
+											"    pm.expect(response.errors[\"\"]).to.be.an(\"array\").that.includes(\"The combined key ODS instance id and derivative type must be unique.\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"ReadReplica\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1053,6 +1116,88 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstanceDerivatives - Invalid Combined Key",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstanceDerivatives/`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"odsInstanceId\": `${pm.collectionVariables.get(\"ODSInstanceId\")}`,\r",
+											"      \"derivativeType\": \"Snapshot\",\r",
+											"      \"connectionString\": `${pm.environment.get(\"connectionString\")}`\r",
+											"    }), \r",
+											"  }\r",
+											"},\r",
+											"function (error, response) {\r",
+											"  if(error) { console.log(\"Error in Pre-request:\", error); }\r",
+											"  const id = response.headers.get(\"Location\").split(\"/\")[2];\r",
+											"  pm.collectionVariables.set(\"OtherOdsInstanceDerivativeId\", id);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT OdsInstanceDerivatives Invalid: Invalid OdsInstanceId\", function () {\r",
+											"   pm.expect(response.title).to.contain(\"Validation failed\");\r",
+											"    pm.expect(response.errors).to.be.an(\"object\").and.not.to.be.empty;\r",
+											"    pm.expect(response.errors[\"\"]).to.be.an(\"array\").that.includes(\"The combined key ODS instance id and derivative type must be unique.\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"odsInstanceId\": {{ODSInstanceId}},\r\n  \"derivativeType\": \"Snapshot\",\r\n  \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/{{CreatedOdsInstanceDerivativeId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										"{{CreatedOdsInstanceDerivativeId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstanceDerivatives",
 							"event": [
 								{
@@ -1269,6 +1414,10 @@
 		{
 			"key": "NotExistOdsInstancesContextId",
 			"value": "786"
+		},
+		{
+			"key": "OtherOdsInstanceDerivativeId",
+			"value": ""
 		}
 	]
 }

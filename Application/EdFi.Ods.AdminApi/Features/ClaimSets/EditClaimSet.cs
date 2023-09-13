@@ -21,7 +21,7 @@ public class EditClaimSet : IFeature
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/claimSets/{id}", Handle)
         .WithDefaultDescription()
-        .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(200))
+        .WithRouteOptions(b => b.WithResponseCode(200))
         .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -52,13 +52,6 @@ public class EditClaimSet : IFeature
         {
             throw new ValidationException(new[] { new ValidationFailure(nameof(id), exception.Message) });
         }
-
-        var claimSet = getClaimSetByIdQuery.Execute(updatedClaimSetId);
-
-        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
-        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
-            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
-
         return Results.Ok();
     }
 
@@ -110,15 +103,8 @@ public class EditClaimSet : IFeature
 
         private bool BeAnExistingClaimSet(int id)
         {
-            try
-            {
-                _getClaimSetByIdQuery.Execute(id);
-                return true;
-            }
-            catch (AdminApiException)
-            {
-                throw new NotFoundException<int>("claimSet", id);
-            }
+            _getClaimSetByIdQuery.Execute(id);
+            return true;
         }
 
         private bool NameIsChanged(EditClaimSetRequest model)

@@ -7,6 +7,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -18,7 +19,7 @@ public class EditVendor : IFeature
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/vendors/{id}", Handle)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<VendorModel>(200))
+            .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -27,15 +28,14 @@ public class EditVendor : IFeature
     {
         request.Id = id;
         await validator.GuardAsync(request);
-        var updatedVendor = editVendorCommand.Execute(request);
-        var model = mapper.Map<VendorModel>(updatedVendor);
+        editVendorCommand.Execute(request);
         return Results.Ok();
     }
 
     [SwaggerSchema(Title = "EditVendorRequest")]
     public class Request : IEditVendor
     {
-        [SwaggerSchema(Description = FeatureConstants.VendorIdDescription, Nullable = false)]
+        [SwaggerExclude]
         public int Id { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]

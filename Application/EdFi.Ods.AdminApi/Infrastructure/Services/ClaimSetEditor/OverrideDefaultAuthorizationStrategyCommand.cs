@@ -51,7 +51,7 @@ public class OverrideDefaultAuthorizationStrategyCommand
                 if (model.AuthStrategyIds != null)
                     foreach (var id in model.AuthStrategyIds)
                     {
-                        ValidateAndAddAuthStrategy(model, authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
+                        ValidateAndAddAuthStrategy(authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
                     }
             }
             else
@@ -63,7 +63,7 @@ public class OverrideDefaultAuthorizationStrategyCommand
                     var overrideAuthStrategies = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>();
                     foreach (var id in model.AuthStrategyIds)
                     {
-                        ValidateAndAddAuthStrategy(model, authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
+                        ValidateAndAddAuthStrategy(authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
                     }
                     claimSetResourceClaimAction.AuthorizationStrategyOverrides = overrideAuthStrategies;
                 }
@@ -85,7 +85,7 @@ public class OverrideDefaultAuthorizationStrategyCommand
         }
     }
 
-    private static void ValidateAndAddAuthStrategy(OverrideAuthStrategyOnClaimSetModel model, Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary, ResourceClaimActionAuthorizationStrategies? resourceClaimActionDefaultAuthorizationStrategy, ClaimSetResourceClaimAction? claimSetResourceClaimAction, int id)
+    private static void ValidateAndAddAuthStrategy(Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary, ResourceClaimActionAuthorizationStrategies? resourceClaimActionDefaultAuthorizationStrategy, ClaimSetResourceClaimAction? claimSetResourceClaimAction, int id)
     {
         if (resourceClaimActionDefaultAuthorizationStrategy != null &&
             resourceClaimActionDefaultAuthorizationStrategy.AuthorizationStrategyId != id)

@@ -19,12 +19,12 @@ public class EditAuthStrategy : IFeature
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/overrideAuthorizationStrategy", HandleOverrideAuthStrategies)
        .WithDefaultDescription()
-       .WithRouteOptions(b => b.WithResponseCode(201))
+       .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/resetAuthorizationStrategies", HandleResetAuthStrategies)
         .WithDefaultDescription()
-        .WithRouteOptions(b => b.WithResponseCode(201))
+        .WithRouteOptions(b => b.WithResponseCode(200))
         .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -37,7 +37,6 @@ public class EditAuthStrategy : IFeature
         await validator.GuardAsync(request);
         var model = mapper.Map<OverrideAuthStrategyOnClaimSetModel>(request);
         overrideDefaultAuthorizationStrategyCommand.ExecuteOnSpecificAction(model);
-
         return Results.Ok();
     }
 

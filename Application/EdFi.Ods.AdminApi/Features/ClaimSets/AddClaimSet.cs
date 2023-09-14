@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
@@ -19,7 +18,7 @@ public class AddClaimSet : IFeature
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets", Handle)
         .WithDefaultDescription()
-        .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(201))
+        .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -37,17 +36,6 @@ public class AddClaimSet : IFeature
         {
             ClaimSetName = request.Name ?? string.Empty
         });
-
-        var claimSet = getClaimSetByIdQuery.Execute(addedClaimSetId);
-
-        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
-        var applications = getApplications.Execute(addedClaimSetId);
-        if (applications != null)
-        {
-            model.Applications = mapper.Map<List<SimpleApplicationModel>>(applications);
-        }
-        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
-            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
 
         return Results.Created($"/claimSets/{addedClaimSetId}", null);
     }

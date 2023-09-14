@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6c7f4056-4574-4c2e-810c-d38c880f79c1",
+		"_postman_id": "6cbcf583-1f82-41dd-a4d1-c50624d69401",
 		"name": "Admin API E2E 2.0 - ClaimSets",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20721775"
@@ -2581,22 +2581,41 @@
 											"    pm.response.to.have.status(201);\r",
 											"});\r",
 											"\r",
-											"const response = pm.response.json();\r",
-											"const result = pm.response.json();\r",
-											"\r",
 											"pm.test(\"POST ClaimSets: Response includes location in header\", function () {\r",
-											"    pm.response.to.have.header(\"Location\");\r",
-											"    pm.response.to.be.header(\"Location\", `/claimSets/${result.id}`);\r",
-											"});\r",
+											" pm.response.to.have.header(\"Location\");\r",
+											" const id = pm.response.headers.get(\"Location\").split(\"/\")[2];\r",
+											" pm.response.to.be.header(\"Location\", `/claimSets/${id}`);\r",
+											" pm.collectionVariables.set(\"CopiedClaimSetId\", id);\r",
+											" });\r",
 											"\r",
-											"pm.test(\"POST ClaimSets: Response result claimset has expected name and resource claims\", function () {\r",
+											"pm.sendRequest({\r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v2/claimsets/${pm.collectionVariables.get(\"CopiedClaimSetId\")}`,\r",
+											"    method: 'GET',\r",
+											"    header: {\r",
+											"    \"Content-Type\": \"application/json\",\r",
+											"    \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"    }\r",
+											"},\r",
+											"\r",
+											"function (err, response) {\r",
+											"if(err) \r",
+											"{ \r",
+											" console.log(\"Error :\", err); \r",
+											"} \r",
+											" const result = response.json();\r",
+											"    pm.test(\"POST ClaimSets: Response result claimset has expected name and resource claims\", function () {\r",
 											"    pm.expect(result).to.have.property(\"id\");\r",
 											"    pm.expect(result).to.have.property(\"name\");\r",
 											"    pm.expect(result.name).contains(\"Copied ClaimSet from\");\r",
 											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
 											"    const resourceclaimexists = result.resourceClaims.any(r => r.name === \"educationStandards\")\r",
 											"    pm.expect(resourceclaimexists).to.equal(true);\r",
-											"});"
+											" });\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -3628,6 +3647,10 @@
 		},
 		{
 			"key": "DuplicateClaimSetGUID",
+			"value": ""
+		},
+		{
+			"key": "CopiedClaimSetId",
 			"value": ""
 		}
 	]

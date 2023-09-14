@@ -18,7 +18,7 @@ public class ImportClaimSet : IFeature
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/import", Handle)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(201))
+            .WithRouteOptions(b => b.WithResponseCode(201))
             .BuildForVersions(AdminApiVersions.V2);
     }
 

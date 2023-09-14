@@ -21,7 +21,7 @@ public class CopyClaimSet : IFeature
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/copy", Handle)
         .WithDefaultDescription()
-        .WithRouteOptions(b => b.WithResponse<ClaimSetDetailsModel>(201))
+        .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -33,20 +33,9 @@ public class CopyClaimSet : IFeature
         CopyClaimSetRequest request)
     {
         await validator.GuardAsync(request);
-        var copiedClaimSetId = copyClaimSetCommand.Execute(request);      
+        var copiedClaimSetId = copyClaimSetCommand.Execute(request);
 
-        var claimSet = getClaimSetByIdQuery.Execute(copiedClaimSetId);
-
-        var model = mapper.Map<ClaimSetDetailsModel>(claimSet);
-        var applications = getApplications.Execute(copiedClaimSetId);
-        if (applications != null)
-        {
-            model.Applications = mapper.Map<List<SimpleApplicationModel>>(applications);
-        }
-        model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(copiedClaimSetId)
-            .Select(r => mapper.Map<ClaimSetResourceClaimModel>(r)).ToList();
-
-        return Results.Created($"/claimSets/{copiedClaimSetId}", model);
+        return Results.Created($"/claimSets/{copiedClaimSetId}", null);
     }
 
     [SwaggerSchema(Title = "CopyClaimSetRequest")]

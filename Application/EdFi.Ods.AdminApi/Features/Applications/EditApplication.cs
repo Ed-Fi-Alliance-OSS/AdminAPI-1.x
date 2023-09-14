@@ -21,7 +21,7 @@ public class EditApplication : IFeature
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/applications/{id}", Handle)
             .WithDefaultDescription()
-            .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
+            .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
@@ -31,9 +31,7 @@ public class EditApplication : IFeature
         request.Id = id;
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);
-
-        var updatedApplication = editApplicationCommand.Execute(request);
-        var model = mapper.Map<ApplicationModel>(updatedApplication);
+        editApplicationCommand.Execute(request);
         return Results.Ok();
     }
 
@@ -65,7 +63,7 @@ public class EditApplication : IFeature
     [SwaggerSchema(Title = "EditApplicationRequest")]
     public class Request : IEditApplicationModel
     {
-        [SwaggerSchema(Description = "Application id", Nullable = false)]
+        [SwaggerExclude]
         public int Id { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]

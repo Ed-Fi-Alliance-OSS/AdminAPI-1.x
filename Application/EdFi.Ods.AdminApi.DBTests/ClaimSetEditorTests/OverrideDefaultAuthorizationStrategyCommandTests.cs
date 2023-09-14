@@ -112,6 +112,54 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
     }
 
     [Test]
+    public void ShouldOverrideAuthorizationStrategiesForSpecificResourcesOnClaimSetDefaultAuth()
+    {
+        InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);
+
+        var overrides = new List<int>();
+        if (appAuthorizationStrategies != null)
+        {
+            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
+            {
+                overrides.Add(appAuthorizationStrategy.AuthorizationStrategyId);
+            }
+        }
+        var resourceClaimActionParent = TestContext.ResourceClaimActions.First(rca => rca.ResourceClaimId == testResource1ToEdit.ResourceClaimId && rca.Action.ActionName == "Create");
+
+        var resourceClaimActionAuthStrategiesParent = TestContext.ResourceClaimActionAuthorizationStrategies.First(rcaa => rcaa.ResourceClaimActionId == resourceClaimActionParent.ResourceClaimActionId);
+
+        overrides.Add(resourceClaimActionAuthStrategiesParent.AuthorizationStrategyId);
+
+        var overrideModel = new OverrideAuthStrategyOnClaimSetModel
+        {
+            ResourceClaimId = testResource1ToEdit.ResourceClaimId,
+            ClaimSetId = testClaimSet.ClaimSetId,
+            ActionName = "Create",
+            AuthStrategyIds = overrides
+        };
+        
+        List<ResourceClaim> resourceClaimsForClaimSet = null;
+
+        using var securityContext = TestContext;
+        var command = new OverrideDefaultAuthorizationStrategyCommand(securityContext);
+        command.ExecuteOnSpecificAction(overrideModel);
+        var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(securityContext, SecurityDataTestBase.Mapper());
+        resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
+
+        var resultResourceClaim1 =
+            resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
+
+        resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
+
+        var resultResourceClaim2 =
+            resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
+
+        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
+    }
+
+    [Test]
     public void ShouldThrowErrorWhenActionIsNotEnabledForAResource()
     {
         InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);

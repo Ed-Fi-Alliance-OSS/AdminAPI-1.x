@@ -39,12 +39,13 @@ public class OverrideDefaultAuthorizationStrategyCommand
     {
         var authorizationStrategiesDictionary = GetAuthorizationStrategiesAsDictionary();
         var claimSetResourceClaimsToEdit = GetClaimSetResourceClaimsToEdit(model.ClaimSetId, model.ResourceClaimId);
-
+        var resourceClaim = _context.ResourceClaims.First(rc => rc.ResourceClaimId == model.ResourceClaimId);
+        var resourceClaimId = resourceClaim.ParentResourceClaimId != null ? resourceClaim.ParentResourceClaimId : resourceClaim.ResourceClaimId;
         var claimSetResourceClaimAction = claimSetResourceClaimsToEdit.FirstOrDefault(rc => rc.ResourceClaimId == model.ResourceClaimId && rc.Action.ActionName.ToLower() == model.ActionName!.ToLower());
 
         if (claimSetResourceClaimAction != null)
         {
-            var resourceClaimActionDefaultAuthorizationStrategy = _context.ResourceClaimActionAuthorizationStrategies.FirstOrDefault(p => p.ResourceClaimAction.ResourceClaimId == model.ResourceClaimId && p.ResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower());
+            var resourceClaimActionDefaultAuthorizationStrategy = _context.ResourceClaimActionAuthorizationStrategies.FirstOrDefault(p => p.ResourceClaimAction.ResourceClaimId == resourceClaimId && p.ResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower());
 
             if (!claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Any(rc => rc.ClaimSetResourceClaimAction.Action.ActionName.ToLower() == model.ActionName!.ToLower()))
             {

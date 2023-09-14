@@ -52,7 +52,15 @@ public class OverrideDefaultAuthorizationStrategyCommand
                 if (model.AuthStrategyIds != null)
                     foreach (var id in model.AuthStrategyIds)
                     {
-                        ValidateAndAddAuthStrategy(authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
+                        if (resourceClaimActionDefaultAuthorizationStrategy != null &&
+            resourceClaimActionDefaultAuthorizationStrategy.AuthorizationStrategyId != id)
+                        {
+                            claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
+                            {
+                                AuthorizationStrategy = authorizationStrategiesDictionary[id]
+                            });
+                        }
+                        
                     }
             }
             else
@@ -64,7 +72,14 @@ public class OverrideDefaultAuthorizationStrategyCommand
                     var overrideAuthStrategies = new List<ClaimSetResourceClaimActionAuthorizationStrategyOverrides>();
                     foreach (var id in model.AuthStrategyIds)
                     {
-                        ValidateAndAddAuthStrategy(authorizationStrategiesDictionary, resourceClaimActionDefaultAuthorizationStrategy, claimSetResourceClaimAction, id);
+                        if (resourceClaimActionDefaultAuthorizationStrategy != null &&
+            resourceClaimActionDefaultAuthorizationStrategy.AuthorizationStrategyId != id)
+                        {
+                            overrideAuthStrategies.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
+                            {
+                                AuthorizationStrategy = authorizationStrategiesDictionary[id]
+                            });
+                        }
                     }
                     claimSetResourceClaimAction.AuthorizationStrategyOverrides = overrideAuthStrategies;
                 }
@@ -83,18 +98,6 @@ public class OverrideDefaultAuthorizationStrategyCommand
                 }
             };
             throw new ValidationException(validationErrors);
-        }
-    }
-
-    private static void ValidateAndAddAuthStrategy(Dictionary<int, EdFi.Security.DataAccess.Models.AuthorizationStrategy> authorizationStrategiesDictionary, ResourceClaimActionAuthorizationStrategies? resourceClaimActionDefaultAuthorizationStrategy, ClaimSetResourceClaimAction? claimSetResourceClaimAction, int id)
-    {
-        if (resourceClaimActionDefaultAuthorizationStrategy != null &&
-            resourceClaimActionDefaultAuthorizationStrategy.AuthorizationStrategyId != id)
-        {
-            claimSetResourceClaimAction!.AuthorizationStrategyOverrides.Add(new ClaimSetResourceClaimActionAuthorizationStrategyOverrides()
-            {
-                AuthorizationStrategy = authorizationStrategiesDictionary[id]
-            });
         }
     }
 

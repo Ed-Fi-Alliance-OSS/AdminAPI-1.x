@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "aaa07750-f671-490a-9f36-5e4a716af8d4",
+		"_postman_id": "307397a8-c584-4628-bcbf-69d6e8f8b878",
 		"name": "Admin API E2E 2.0 - Application",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"_exporter_id": "20721775"
 	},
 	"item": [
 		{
@@ -768,7 +768,7 @@
 											"        \"claimSetName\": \"Ed-Fi Sandbox\",\r",
 											"        \"profileIds\": [],\r",
 											"        \"educationOrganizationIds\": [ 255901 ],\r",
-											"        \"odsInstanceId\": 1\r",
+											"        \"odsInstanceId\": pm.collectionVariables.get(\"ODSInstanceId\")\r",
 											"      }),\r",
 											"    }\r",
 											"  },  \r",

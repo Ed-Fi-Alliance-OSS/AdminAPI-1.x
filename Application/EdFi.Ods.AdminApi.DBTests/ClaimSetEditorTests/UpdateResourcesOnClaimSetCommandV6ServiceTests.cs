@@ -57,6 +57,7 @@ public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBa
             Read = false,
             Update = true,
             Delete = true,
+            ReadChanges = true,
             Children = new List<ResourceClaim> {new ResourceClaim
                 {
                     Id = testChildResource1ToEdit.ResourceClaimId,
@@ -64,7 +65,8 @@ public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBa
                     Create = false,
                     Read = false,
                     Update = true,
-                    Delete = true
+                    Delete = true,
+                    ReadChanges = true,
                 } }
         };
 

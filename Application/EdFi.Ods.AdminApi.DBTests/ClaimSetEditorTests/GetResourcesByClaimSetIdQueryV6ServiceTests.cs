@@ -70,6 +70,7 @@ public class GetResourcesByClaimSetIdQueryV6SerivceTests : SecurityDataTestBase
             result.Read.ShouldBe(false);
             result.Update.ShouldBe(false);
             result.Delete.ShouldBe(false);
+            result.ReadChanges.ShouldBe(false);
         }
     }
 
@@ -173,6 +174,7 @@ public class GetResourcesByClaimSetIdQueryV6SerivceTests : SecurityDataTestBase
         result.Read.ShouldBe(false);
         result.Update.ShouldBe(false);
         result.Delete.ShouldBe(false);
+        result.ReadChanges.ShouldBe(false);
         result.DefaultAuthStrategiesForCRUD[0].AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
 
     }

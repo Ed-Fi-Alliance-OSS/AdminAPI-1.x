@@ -43,7 +43,8 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
             Create = false,
             Read = false,
             Update = true,
-            Delete = true
+            Delete = true,
+            ReadChanges = true
         };
 
         var editResourceOnClaimSetModel = new Mock<IEditResourceOnClaimSetModel>();
@@ -62,6 +63,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultResourceClaim1.Read.ShouldBe(editedResource.Read);
         resultResourceClaim1.Update.ShouldBe(editedResource.Update);
         resultResourceClaim1.Delete.ShouldBe(editedResource.Delete);
+        resultResourceClaim1.ReadChanges.ShouldBe(editedResource.ReadChanges);
 
         var resultResourceClaim2 = resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
@@ -69,6 +71,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultResourceClaim2.Read.ShouldBe(false);
         resultResourceClaim2.Update.ShouldBe(false);
         resultResourceClaim2.Delete.ShouldBe(false);
+        resultResourceClaim2.ReadChanges.ShouldBe(false);
     }
 
     [Test]
@@ -102,7 +105,8 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
             Create = false,
             Read = false,
             Update = true,
-            Delete = true
+            Delete = true,
+            ReadChanges = true
         };
 
         var editResourceOnClaimSetModel = new Mock<IEditResourceOnClaimSetModel>();
@@ -119,6 +123,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultParentResourceClaim.Read.ShouldBe(false);
         resultParentResourceClaim.Update.ShouldBe(false);
         resultParentResourceClaim.Delete.ShouldBe(false);
+        resultParentResourceClaim.ReadChanges.ShouldBe(false);
 
         var resultChildResourceClaim1 =
             resultParentResourceClaim.Children.Single(x => x.Id == editedResource.Id);
@@ -127,6 +132,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultChildResourceClaim1.Read.ShouldBe(editedResource.Read);
         resultChildResourceClaim1.Update.ShouldBe(editedResource.Update);
         resultChildResourceClaim1.Delete.ShouldBe(editedResource.Delete);
+        resultChildResourceClaim1.ReadChanges.ShouldBe(editedResource.ReadChanges);
 
         var resultChildResourceClaim2 =
             resultParentResourceClaim.Children.Single(x => x.Id == testChildResource2NotToEdit.ResourceClaimId);
@@ -135,6 +141,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultChildResourceClaim2.Read.ShouldBe(false);
         resultChildResourceClaim2.Update.ShouldBe(false);
         resultChildResourceClaim2.Delete.ShouldBe(false);
+        resultChildResourceClaim2.ReadChanges.ShouldBe(false);
     }
 
 
@@ -160,7 +167,8 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
             Create = true,
             Read = false,
             Update = true,
-            Delete = false
+            Delete = false,
+            ReadChanges = false
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -182,6 +190,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultResourceClaim1.Read.ShouldBe(resourceToAdd.Read);
         resultResourceClaim1.Update.ShouldBe(resourceToAdd.Update);
         resultResourceClaim1.Delete.ShouldBe(resourceToAdd.Delete);
+        resultResourceClaim1.ReadChanges.ShouldBe(resourceToAdd.ReadChanges);
     }
 
     [Test]
@@ -212,7 +221,8 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
             Create = true,
             Read = false,
             Update = true,
-            Delete = false
+            Delete = false,
+            ReadChanges = false
         };
         var existingResources = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
 
@@ -234,5 +244,6 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         resultChildResourceClaim1.Read.ShouldBe(resourceToAdd.Read);
         resultChildResourceClaim1.Update.ShouldBe(resourceToAdd.Update);
         resultChildResourceClaim1.Delete.ShouldBe(resourceToAdd.Delete);
+        resultChildResourceClaim1.ReadChanges.ShouldBe(resourceToAdd.ReadChanges);
     }
 }

@@ -11,6 +11,7 @@ public class Action : Enumeration<Action, string>
     public static readonly Action Read = new("Read", "Read");
     public static readonly Action Update = new("Update", "Update");
     public static readonly Action Delete = new("Delete", "Delete");
+    public static readonly Action ReadChanges = new("ReadChanges", "ReadChanges");
 
     private Action(string value, string displayName) : base(value, displayName) { }
 }

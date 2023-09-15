@@ -62,6 +62,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
             .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
             .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
+            .ForMember(dst => dst.ReadChanges, opt => opt.MapFrom(src => src.ReadChanges))
             .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
@@ -94,6 +95,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
             .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
             .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
+            .ForMember(dst => dst.ReadChanges, opt => opt.MapFrom(src => src.ReadChanges))
             .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));

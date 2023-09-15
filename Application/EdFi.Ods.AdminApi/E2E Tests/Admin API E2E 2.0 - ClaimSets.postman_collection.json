@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "6cbcf583-1f82-41dd-a4d1-c50624d69401",
+		"_postman_id": "42a6e1f1-629c-4fd3-b5ae-a8f36540a05c",
 		"name": "Admin API E2E 2.0 - ClaimSets",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20721775"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -1811,6 +1810,254 @@
 										"resourceClaimActions",
 										"4",
 										"overrideAuthorizationStrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResourceClaimClaimSets - Override Auth Strategy Default Strategy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST OverrideAuthStrategy: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actionName\": \"create\",\r\n  \"authorizationStrategies\": [\r\n    \"RelationshipsWithStudentsOnly\", \"NoFurtherAuthorizationRequired\"\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets/{{CreatedClaimSetId}}/resourceClaimActions/4/overrideAuthorizationStrategy",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets",
+										"{{CreatedClaimSetId}}",
+										"resourceClaimActions",
+										"4",
+										"overrideAuthorizationStrategy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets by ID after overriding Authorization Strategy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ClaimSetsId after overriding Authorization Strategy: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET ClaimSetsId after overriding Authorization Strategy: Response result matches claimset\", function () {\r",
+											"    const claimSetId = pm.collectionVariables.get(\"CreatedClaimSetId\");\r",
+											"    \r",
+											"    pm.expect(result.id).to.equal(parseInt(claimSetId));\r",
+											"    pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get(\"ClaimSetGUID\")}`);\r",
+											"    pm.expect(result._isSystemReserved).to.equal(false);\r",
+											"    pm.expect(result._applications).to.be.empty;\r",
+											"    pm.expect(result.resourceClaims).to.not.be.empty;\r",
+											"\r",
+											"    const educationOrganizationsResourceClaim = result.resourceClaims.find(r => r.name === \"educationOrganizations\")\r",
+											"    pm.expect(educationOrganizationsResourceClaim).to.be.an(\"object\", \"The educationOrganizations resource claim was not found.\")\r",
+											"    pm.expect(educationOrganizationsResourceClaim.authorizationStrategyOverridesForCRUD).to.not.be.empty;\r",
+											"    const overrideAuthCreate = educationOrganizationsResourceClaim.authorizationStrategyOverridesForCRUD.find(r => r.actionName === \"Create\")\r",
+											"    pm.expect(overrideAuthCreate).to.be.an(\"object\", \"The Create authorization override was not found.\")\r",
+											"    //validates that default wasn't added\r",
+											"    pm.expect(overrideAuthCreate.authorizationStrategies.length).to.equal(1);\r",
+											"    const relationshipsWithStudentsOnlyStrategy = overrideAuthCreate.authorizationStrategies.find(r => r.authStrategyName === \"RelationshipsWithStudentsOnly\")\r",
+											"    pm.expect(relationshipsWithStudentsOnlyStrategy).to.be.an(\"object\", \"The RelationshipsWithStudentsOnly strategy name was not found.\")\r",
+											"});\r",
+											"\r",
+											"const GetClaimSetsIdSchema = {\r",
+											"  \"type\": \"object\",\r",
+											"  \"properties\": {\r",
+											"    \"resourceClaims\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": [\r",
+											"        {\r",
+											"          \"type\": \"object\",\r",
+											"          \"properties\": {\r",
+											"            \"name\": {\r",
+											"              \"type\": \"string\"\r",
+											"            },\r",
+											"             \"actions\": {\r",
+											"             \"type\": \"array\",\r",
+											"             \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"name\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"enabled\": {\r",
+											"                      \"type\": \"boolean\"\r",
+											"                    }\r",
+											"                } \r",
+											"                } ]\r",
+											"            },\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }                      \r",
+											"\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"authorizationStrategyOverridesForCRUD\": {\r",
+											"              \"type\": \"array\",\r",
+											"               \"items\": [\r",
+											"                {\r",
+											"                  \"type\": \"object\",\r",
+											"                  \"properties\": {\r",
+											"                    \"actionId\": {\r",
+											"                      \"type\": \"integer\"\r",
+											"                    },\r",
+											"                    \"actionName\": {\r",
+											"                      \"type\": \"string\"\r",
+											"                    },\r",
+											"                    \"authorizationStrategies\": {\r",
+											"                      \"type\": \"array\",\r",
+											"                      \"items\": [\r",
+											"                          {\r",
+											"                            \"type\": \"object\",\r",
+											"                            \"properties\": {\r",
+											"                                \"authStrategyId\": {\r",
+											"                                \"type\": \"integer\"\r",
+											"                                },\r",
+											"                                \"authStrategyName\": {\r",
+											"                                \"type\": \"string\"\r",
+											"                                },\r",
+											"                                \"isInheritedFromParent\": {\r",
+											"                                \"type\": \"boolean\"\r",
+											"                                }\r",
+											"                            }\r",
+											"                          }\r",
+											"                      ]\r",
+											"                    }                    \r",
+											"                  }\r",
+											"                }\r",
+											"              ]\r",
+											"            },\r",
+											"            \"children\": {\r",
+											"              \"type\": \"array\",\r",
+											"              \"items\": {}\r",
+											"            }\r",
+											"          },\r",
+											"          \"required\": [\r",
+											"            \"name\",\r",
+											"            \"actions\",\r",
+											"            \"_defaultAuthorizationStrategiesForCRUD\",\r",
+											"            \"authorizationStrategyOverridesForCRUD\",\r",
+											"            \"children\"\r",
+											"          ]\r",
+											"        }\r",
+											"      ]\r",
+											"    },\r",
+											"    \"id\": {\r",
+											"      \"type\": \"integer\"\r",
+											"    },\r",
+											"    \"name\": {\r",
+											"      \"type\": \"string\"\r",
+											"    },\r",
+											"    \"_isSystemReserved\": {\r",
+											"      \"type\": \"boolean\"\r",
+											"    },\r",
+											"    \"_applications\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
+											"    }\r",
+											"  },\r",
+											"  \"required\": [\r",
+											"    \"resourceClaims\",\r",
+											"    \"id\",\r",
+											"    \"name\",\r",
+											"    \"_isSystemReserved\",\r",
+											"    \"_applications\"\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ClaimSetId after overriding Authorization Strategy: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsIdSchema);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimsets/{{CreatedClaimSetId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimsets",
+										"{{CreatedClaimSetId}}"
 									]
 								}
 							},

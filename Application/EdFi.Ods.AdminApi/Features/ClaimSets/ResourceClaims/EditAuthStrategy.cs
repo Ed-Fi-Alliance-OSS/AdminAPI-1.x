@@ -53,7 +53,7 @@ public class EditAuthStrategy : IFeature
 
         var resourceClaims = getResourcesByClaimSetIdQuery.AllResources(claimSetId);
         var allResourcesIds = new List<int>();
-        foreach(var resourceClaim in resourceClaims)
+        foreach (var resourceClaim in resourceClaims)
         {
             allResourcesIds.Add(resourceClaim.Id);
             if (resourceClaim.Children != null && resourceClaim.Children.Any())
@@ -63,7 +63,7 @@ public class EditAuthStrategy : IFeature
                     allResourcesIds.Add(child.Id);
                 }
             }
-        }       
+        }
         if (!allResourcesIds.Any(x => x == resourceClaimId))
         {
             throw new NotFoundException<int>("ResourceClaim", resourceClaimId);
@@ -94,8 +94,8 @@ public class EditAuthStrategy : IFeature
             RuleFor(m => m).Custom((overrideAuthStategyOnClaimSetRequest, context) =>
             {
 
-                var resoureClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
-                if (resoureClaim == null)
+                var resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(overrideAuthStategyOnClaimSetRequest.ClaimSetId, overrideAuthStategyOnClaimSetRequest.ResourceClaimId);
+                if (resourceClaim == null)
                 {
                     context.AddFailure("ResourceClaim", "Resource claim doesn't exist for the Claim set provided");
                 }

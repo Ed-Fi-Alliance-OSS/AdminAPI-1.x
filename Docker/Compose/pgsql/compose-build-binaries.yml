@@ -40,6 +40,8 @@ services:
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
+      AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
+      AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
     depends_on:
       - db-admin
     restart: always

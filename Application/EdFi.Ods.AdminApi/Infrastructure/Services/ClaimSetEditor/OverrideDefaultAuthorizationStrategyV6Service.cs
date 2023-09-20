@@ -3,11 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
@@ -93,6 +91,11 @@ public class OverrideDefaultAuthorizationStrategyV6Service
             {
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;
             }
+            else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value &&
+                     model.AuthorizationStrategyForReadChanges == 0)
+            {
+                claimSetResourceClaim.AuthorizationStrategyOverrides = null;
+            }
 
             RemoveClaimSetResourceClaimActionAuthorizationStrategyOverrides(claimSetResourceClaim);
         }
@@ -151,6 +154,13 @@ public class OverrideDefaultAuthorizationStrategyV6Service
                 SetAuthorizationStrategyOverrides(
                     claimSetResourceClaim, parentResourceClaims, model.AuthorizationStrategyForDelete,
                     authorizationStrategiesDictionary, Action.Delete.Value);
+            }
+            else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value &&
+                     model.AuthorizationStrategyForReadChanges != 0)
+            {
+                SetAuthorizationStrategyOverrides(
+                    claimSetResourceClaim, parentResourceClaims, model.AuthorizationStrategyForReadChanges,
+                    authorizationStrategiesDictionary, Action.ReadChanges.Value);
             }
         }
     }

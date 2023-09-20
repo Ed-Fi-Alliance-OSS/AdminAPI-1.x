@@ -38,5 +38,6 @@ public interface IOverrideDefaultAuthorizationStrategyModel
     int AuthorizationStrategyForRead { get; }
     int AuthorizationStrategyForUpdate { get; }
     int AuthorizationStrategyForDelete { get; }
+    int AuthorizationStrategyForReadChanges { get; }
 }
 

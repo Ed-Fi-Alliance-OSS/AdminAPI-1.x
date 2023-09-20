@@ -42,6 +42,7 @@ public class AddOrEditResourcesOnClaimSetCommand
                     resource.Read = r.Read;
                     resource.Update = r.Update;
                     resource.Delete = r.Delete;
+                    resource.ReadChanges = r.ReadChanges;
                     resource.AuthStrategyOverridesForCRUD = r.AuthStrategyOverridesForCRUD;
                 }
                 return resource;
@@ -68,7 +69,8 @@ public class AddOrEditResourcesOnClaimSetCommand
                     AuthorizationStrategyForCreate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Create()),
                     AuthorizationStrategyForRead = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Read()),
                     AuthorizationStrategyForUpdate = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Update()),
-                    AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Delete())
+                    AuthorizationStrategyForDelete = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.Delete()),
+                    AuthorizationStrategyForReadChanges = AuthStrategyOverrideForAction(resource.AuthStrategyOverridesForCRUD.ReadChanges())
                 };
                 _overrideDefaultAuthorizationStrategyCommand.Execute(overrideAuthStrategyModel);
             }
@@ -113,4 +115,5 @@ public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationS
     public int AuthorizationStrategyForRead { get; set; }
     public int AuthorizationStrategyForUpdate { get; set; }
     public int AuthorizationStrategyForDelete { get; set; }
+    public int AuthorizationStrategyForReadChanges { get; set; }
 }

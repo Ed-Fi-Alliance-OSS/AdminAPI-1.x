@@ -32,6 +32,7 @@ public class ResourceClaimModel
     public bool Create { get; set; }
     public bool Update { get; set; }
     public bool Delete { get; set; }
+    public bool ReadChanges { get; set; }
     public AuthorizationStrategyModel?[] DefaultAuthStrategiesForCRUD { get; set; }
     public AuthorizationStrategyModel?[] AuthStrategyOverridesForCRUD { get; set; }
 

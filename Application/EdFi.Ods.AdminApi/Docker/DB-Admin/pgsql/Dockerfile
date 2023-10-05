@@ -10,13 +10,16 @@ ENV POSTGRES_USER=${POSTGRES_USER}
 ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=postgres
 
-ENV ADMINAPP_DATABASE_VERSION="2.4.26"
+ARG VERSION=latest
 
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
 RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0 && \
-    wget -O /tmp/EdFi_AdminApi_Scripts.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApp.Database/versions/${ADMINAPP_DATABASE_VERSION}/content && \
-    unzip /tmp/EdFi_AdminApi_Scripts.zip PgSql/202205080900-CreateAdminApiSchema.sql PgSql/202205090900-AddApiAuthTables.sql -d /tmp/AdminApiScripts/ && \
+    wget -O /tmp/EdFi_AdminApi_Scripts.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \
+    unzip /tmp/EdFi_AdminApi_Scripts.zip AdminApi/Artifacts/PgSql/Structure/Admin/* -d /tmp/AdminApiScripts/ && \
+    cp -r /tmp/AdminApiScripts/AdminApi/Artifacts/PgSql/Structure/Admin/. /tmp/AdminApiScripts/PgSql/ && \
+    rm -f /tmp/EdFi_AdminApi_Scripts.zip && \
+    rm -r /tmp/AdminApiScripts/AdminApi && \
     dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/PgSql

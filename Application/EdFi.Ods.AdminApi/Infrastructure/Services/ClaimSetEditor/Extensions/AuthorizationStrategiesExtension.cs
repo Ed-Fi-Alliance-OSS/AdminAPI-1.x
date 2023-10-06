@@ -47,5 +47,5 @@ public static class AuthorizationStrategiesExtension
             authorizationStrategies[4] = strategy;
 
         return authorizationStrategies;
-    }
+    }   
 }

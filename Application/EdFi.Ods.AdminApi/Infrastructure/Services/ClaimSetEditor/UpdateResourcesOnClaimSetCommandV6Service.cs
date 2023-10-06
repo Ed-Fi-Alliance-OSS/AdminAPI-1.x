@@ -4,6 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Security.DataAccess.Contexts;
+using System.Data.Entity;
+
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
@@ -22,7 +24,10 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public void Execute(IUpdateResourcesOnClaimSetModel model)
         {
             var resourceClaimsForClaimSet =
-                _context.ClaimSetResourceClaimActions.Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
+                _context
+                .ClaimSetResourceClaimActions
+                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                .Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
             _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSet);
             _context.SaveChanges();
 

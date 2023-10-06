@@ -78,7 +78,7 @@ public class EditClaimSet : IFeature
         public string? Name { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+        public List<RequestResourceClaimModel>? ResourceClaims { get; set; }
     }
 
     public class Validator : AbstractValidator<Request>

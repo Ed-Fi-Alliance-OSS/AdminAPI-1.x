@@ -38,6 +38,7 @@ public class AddClaimSet : IFeature
         });
 
         var resourceClaims = mapper.Map<List<ResourceClaim>>(request.ResourceClaims);
+        
         var resolvedResourceClaims = strategyResolver.ResolveAuthStrategies(resourceClaims).ToList();
 
         addOrEditResourcesOnClaimSetCommand.Execute(addedClaimSetId, resolvedResourceClaims);
@@ -59,7 +60,7 @@ public class AddClaimSet : IFeature
         public string? Name { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ResourceClaimsDescription, Nullable = false)]
-        public List<ResourceClaimModel>? ResourceClaims { get; set; }
+        public List<RequestResourceClaimModel>? ResourceClaims { get; set; }
     }
 
     public class Validator : AbstractValidator<Request>

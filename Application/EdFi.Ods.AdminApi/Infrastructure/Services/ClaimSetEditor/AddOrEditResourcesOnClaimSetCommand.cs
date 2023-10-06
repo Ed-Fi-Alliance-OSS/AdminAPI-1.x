@@ -5,6 +5,8 @@
 
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor.Extensions;
 using FluentValidation;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
@@ -76,9 +78,15 @@ public class AddOrEditResourcesOnClaimSetCommand
             }
         }
 
-        static int AuthStrategyOverrideForAction(AuthorizationStrategy? authorizationStrategy)
+        static int[] AuthStrategyOverrideForAction(ClaimSetResourceClaimActionAuthStrategies? claimSetResourceClaimActionAuthStrategies)
         {
-            return authorizationStrategy != null ? authorizationStrategy.AuthStrategyId : 0;
+            if (claimSetResourceClaimActionAuthStrategies != null && claimSetResourceClaimActionAuthStrategies.AuthorizationStrategies != null)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                return claimSetResourceClaimActionAuthStrategies.AuthorizationStrategies.Where(p => p is not null).Select(p => p.AuthStrategyId).ToArray();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+            return Array.Empty<int>();
         }
     }
 
@@ -111,9 +119,10 @@ public class OverrideAuthorizationStrategyModel : IOverrideDefaultAuthorizationS
 {
     public int ClaimSetId { get; set; }
     public int ResourceClaimId { get; set; }
-    public int AuthorizationStrategyForCreate { get; set; }
-    public int AuthorizationStrategyForRead { get; set; }
-    public int AuthorizationStrategyForUpdate { get; set; }
-    public int AuthorizationStrategyForDelete { get; set; }
-    public int AuthorizationStrategyForReadChanges { get; set; }
+    public int[]? AuthorizationStrategyForCreate { get; set; }
+    public int[]? AuthorizationStrategyForRead { get; set; }
+    public int[]? AuthorizationStrategyForUpdate { get; set; }
+    public int[]? AuthorizationStrategyForDelete { get; set; }
+    public int[]? AuthorizationStrategyForReadChanges { get; set; }
+
 }

@@ -61,19 +61,19 @@ public class OverrideDefaultAuthorizationStrategyV53Service
         var claimSetResourceClaims = resourceClaimsToEdit.ToList();
         foreach (var claimSetResourceClaim in claimSetResourceClaims)
         {
-            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate == 0)
+            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead == 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate == 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete == 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
@@ -91,57 +91,83 @@ public class OverrideDefaultAuthorizationStrategyV53Service
         foreach (var claimSetResourceClaim in claimSetResourceClaims)
         {
 
-            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate != 0)
+            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate.Length != 0)
             {
-                if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
-                        x.Action.ActionName == Action.Create.Value && x.AuthorizationStrategyOverride != null &&
-                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForCreate) == null)
+                foreach (var authStrategyId in model.AuthorizationStrategyForCreate)
                 {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForCreate];
-                }
-                else if (!parentResourceClaims.Any())
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForCreate];
+                    if (authStrategyId != 0)
+                    {
+                        if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
+                            x.Action.ActionName == Action.Create.Value && x.AuthorizationStrategyOverride != null &&
+                            x.AuthorizationStrategyOverride.AuthorizationStrategyId == authStrategyId) == null)
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                        else if (!parentResourceClaims.Any())
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                    }
                 }
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead != 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead.Length != 0)
             {
-                if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
+                foreach (var authStrategyId in model.AuthorizationStrategyForRead)
+                {
+                    if (authStrategyId != 0)
+                    {
+                        if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
                         x.Action.ActionName == Action.Read.Value && x.AuthorizationStrategyOverride != null &&
-                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForRead) == null)
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForRead];
-                }
-                else if (!parentResourceClaims.Any())
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForRead];
+                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == authStrategyId) == null)
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                        else if (!parentResourceClaims.Any())
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                    }
                 }
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate != 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate.Length != 0)
             {
-                if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
+                foreach (var authStrategyId in model.AuthorizationStrategyForUpdate)
+                {
+                    if (authStrategyId != 0)
+                    {
+                        if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
                         x.Action.ActionName == Action.Update.Value && x.AuthorizationStrategyOverride != null &&
-                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForUpdate) == null)
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForUpdate];
+                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == authStrategyId) == null)
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                        else if (!parentResourceClaims.Any())
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                    }
                 }
-                else if (!parentResourceClaims.Any())
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForUpdate];
-                }
+                    
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete != 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete.Length != 0)
             {
-                if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
+                foreach (var authStrategyId in model.AuthorizationStrategyForDelete)
+                {
+                    if (authStrategyId != 0)
+                    {
+                        if (parentResourceClaims.Any() && parentResourceClaims.SingleOrDefault(x =>
                         x.Action.ActionName == Action.Delete.Value && x.AuthorizationStrategyOverride != null &&
-                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == model.AuthorizationStrategyForDelete) == null)
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForDelete];
+                        x.AuthorizationStrategyOverride.AuthorizationStrategyId == authStrategyId) == null)
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                        else if (!parentResourceClaims.Any())
+                        {
+                            claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[authStrategyId];
+                        }
+                    }
                 }
-                else if (!parentResourceClaims.Any())
-                {
-                    claimSetResourceClaim.AuthorizationStrategyOverride = authorizationStrategiesDictionary[model.AuthorizationStrategyForDelete];
-                }
+                
             }
         }
     }

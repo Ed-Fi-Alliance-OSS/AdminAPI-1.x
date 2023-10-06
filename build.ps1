@@ -68,7 +68,8 @@ param(
     [string]
     [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest",  "PackageApi"
     , "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
-    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run")]
+    , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run",
+    "CopyApplicationFilesToDockerContext", "RemoveApplicationFilesFromDockerContext")]
     $Command = "Build",
 
     # Assembly and package version number for Admin API. The current package number is
@@ -115,6 +116,7 @@ param(
 $Env:MSBUILDDISABLENODEREUSE = "1"
 
 $solutionRoot = "$PSScriptRoot/Application"
+$dockerRoot = "$PSScriptRoot/Docker"
 
 $supportedApiVersions = @(
     @{
@@ -393,15 +395,15 @@ function RestartAdminApiContainer {
 }
 
 function BuildAdminApiDevDockerImage {
-    &docker build -t adminapi-dev --no-cache -f "$solutionRoot/EdFi.Ods.AdminApi/dev.Dockerfile" .
+    &docker build -t adminapi-dev --no-cache -f "$dockerRoot/dev.Dockerfile" .
 }
 
 function RunAdminApiDevDockerContainer {
-    &docker run --env-file "$solutionRoot/EdFi.Ods.AdminApi/.env" -p 80:80 -v "$solutionRoot/EdFi.Ods.AdminApi/Docker/ssl:/ssl/" adminapi-dev
+    &docker run --env-file "$solutionRoot/EdFi.Ods.AdminApi/.env" -p 80:80 -v "$dockerRoot/Settings/ssl:/ssl/" adminapi-dev
 }
 
 function RunAdminApiDevDockerCompose {
-    &docker compose -f "$solutionRoot/EdFi.Ods.AdminApi/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
+    &docker compose -f "$dockerRoot/Compose/pgsql/compose-build-dev.yml" --env-file "$solutionRoot/EdFi.Ods.AdminApi/E2E Tests/gh-action-setup/.automation.env" -p "ods_admin_api" up -d
 }
 
 function PushPackage {
@@ -444,6 +446,27 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
+function CopyApplicationFilesToDockerContext {
+	New-Item -Path "$dockerRoot/Application" -ItemType Directory
+	Copy-Item -Path "$solutionRoot/EdFi.Ods.AdminApi/" -Destination "$dockerRoot/Application/" -Recurse
+	Copy-Item -Path "$solutionRoot/NuGet.Config" -Destination "$dockerRoot/Application/" -Recurse	
+}
+
+function Invoke-CopyApplicationFilesToDockerContext {
+	Invoke-Step { CopyApplicationFilesToDockerContext }
+}
+
+function RemoveApplicationFilesFromDockerContext {
+	$destinationApplication = "$dockerRoot/Application/"
+	if (Test-Path $destinationApplication) {
+		Remove-Item $destinationApplication -Recurse -Force
+	}
+}
+
+function Invoke-RemoveApplicationFilesFromDockerContext {
+	Invoke-Step { RemoveApplicationFilesFromDockerContext }
+}
+
 Invoke-Main {
     if($IsLocalBuild)
     {
@@ -483,6 +506,13 @@ Invoke-Main {
         RunAdminApiDevDockerCompose{
             Invoke-RunAdminApiDevDockerCompose
         }
+        CopyApplicationFilesToDockerContext{
+			Invoke-RemoveApplicationFilesFromDockerContext
+			Invoke-CopyApplicationFilesToDockerContext
+		}
+		RemoveApplicationFilesFromDockerContext{
+			Invoke-RemoveApplicationFilesFromDockerContext
+		}
         default { throw "Command '$Command' is not recognized" }
     }
 }

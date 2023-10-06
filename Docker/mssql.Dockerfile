@@ -14,9 +14,9 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 WORKDIR /app
 
-COPY ./Docker/mssql/appsettings.template.json /app/appsettings.template.json
-COPY ./Docker/mssql/run.sh /app/run.sh
-COPY ./Docker/mssql/log4net.config /app/log4net.txt
+COPY Settings/mssql/appsettings.template.json /app/appsettings.template.json
+COPY Settings/mssql/run.sh /app/run.sh
+COPY Settings/mssql/log4net.config /app/log4net.txt
 
 RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~72 gcompat && \
     wget -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \

@@ -33,13 +33,21 @@ jobs:
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
+      - name: Copy application folder to docker context
+        run: |
+          mkdir ../../Docker/Application
+          cp -r ../EdFi.Ods.AdminApi ../../Docker/Application
+
+      - name: Copy nuget config to docker context
+        run: cp ../NuGet.Config ../../Docker/Application
+
       - name: Update certificates
-        run: cp -r ../../eng/test-certs/ssl ./Docker
+        run: cp -r ../../eng/test-certs/ssl ../../Docker/Settings
 
       - name: Run Admin API
         run: |
           docker compose \
-            -f './Compose/pgsql/compose-build-dev.yml' \
+            -f '../../Docker/Compose/pgsql/compose-build-dev.yml' \
             --env-file './E2E Tests/gh-action-setup/.automation.env' \
             up -d
 

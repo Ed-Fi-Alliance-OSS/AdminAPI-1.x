@@ -222,6 +222,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 _securityContext.ClaimSetResourceClaims
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)
+                .Include(x => x.AuthorizationStrategyOverride)
                 .Where(x => x.ClaimSet.ClaimSetId == claimSetId
                             && x.ResourceClaim.ParentResourceClaimId != null).ToList();
             var defaultAuthStrategies = GetDefaultAuthStrategies(dbChildResources.Select(x => x.ResourceClaim).ToList());
@@ -239,7 +240,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
                     IsParent = false,
                     DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
-                    AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].ToArray()
+                    AuthStrategyOverridesForCRUD = authStrategyOverrides.Keys.Any(p => p == x.Key.ResourceClaimId) ? authStrategyOverrides[x.Key.ResourceClaimId] : Array.Empty<ClaimSetResourceClaimActionAuthStrategies>(),
                 })
                 .ToList();
             return childResources;

@@ -71,27 +71,27 @@ public class OverrideDefaultAuthorizationStrategyV6Service
 
         foreach (var claimSetResourceClaim in claimSetResourceClaims)
         {
-            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value &&
+            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate != null &&
                 model.AuthorizationStrategyForCreate.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value &&
+            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead != null &&
                      model.AuthorizationStrategyForRead.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value &&
+            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate != null &&
                      model.AuthorizationStrategyForUpdate.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value &&
+            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete != null &&
                      model.AuthorizationStrategyForDelete.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value &&
+            else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value && model.AuthorizationStrategyForReadChanges != null &&
                      model.AuthorizationStrategyForReadChanges.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverrides = null;

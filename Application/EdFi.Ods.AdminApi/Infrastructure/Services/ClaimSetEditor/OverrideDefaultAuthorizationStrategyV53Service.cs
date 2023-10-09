@@ -61,19 +61,19 @@ public class OverrideDefaultAuthorizationStrategyV53Service
         var claimSetResourceClaims = resourceClaimsToEdit.ToList();
         foreach (var claimSetResourceClaim in claimSetResourceClaims)
         {
-            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate.Length == 0)
+            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate != null && model.AuthorizationStrategyForCreate.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead.Length == 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead != null && model.AuthorizationStrategyForRead.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate.Length == 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate != null && model.AuthorizationStrategyForUpdate.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete.Length == 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete != null && model.AuthorizationStrategyForDelete.Length == 0)
             {
                 claimSetResourceClaim.AuthorizationStrategyOverride = null;
             }
@@ -91,7 +91,7 @@ public class OverrideDefaultAuthorizationStrategyV53Service
         foreach (var claimSetResourceClaim in claimSetResourceClaims)
         {
 
-            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate.Length != 0)
+            if (claimSetResourceClaim.Action.ActionName == Action.Create.Value && model.AuthorizationStrategyForCreate != null && model.AuthorizationStrategyForCreate.Length != 0)
             {
                 foreach (var authStrategyId in model.AuthorizationStrategyForCreate)
                 {
@@ -110,7 +110,7 @@ public class OverrideDefaultAuthorizationStrategyV53Service
                     }
                 }
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead.Length != 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Read.Value && model.AuthorizationStrategyForRead != null && model.AuthorizationStrategyForRead.Length != 0)
             {
                 foreach (var authStrategyId in model.AuthorizationStrategyForRead)
                 {
@@ -129,7 +129,7 @@ public class OverrideDefaultAuthorizationStrategyV53Service
                     }
                 }
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate.Length != 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Update.Value && model.AuthorizationStrategyForUpdate != null && model.AuthorizationStrategyForUpdate.Length != 0)
             {
                 foreach (var authStrategyId in model.AuthorizationStrategyForUpdate)
                 {
@@ -149,7 +149,7 @@ public class OverrideDefaultAuthorizationStrategyV53Service
                 }
                     
             }
-            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete.Length != 0)
+            else if (claimSetResourceClaim.Action.ActionName == Action.Delete.Value && model.AuthorizationStrategyForDelete != null && model.AuthorizationStrategyForDelete.Length != 0)
             {
                 foreach (var authStrategyId in model.AuthorizationStrategyForDelete)
                 {

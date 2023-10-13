@@ -163,7 +163,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     }
                 }
 
-                resultDictionary[resourceClaim.ResourceClaimId] = actions.Where(x => x != null).ToArray() as AuthorizationStrategy[];
+                resultDictionary[resourceClaim.ResourceClaimId] = actions.ToArray() as AuthorizationStrategy[];
             }
 
             return resultDictionary;

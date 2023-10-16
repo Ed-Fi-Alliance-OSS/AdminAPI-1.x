@@ -150,8 +150,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         return actions;
                     }
                 }
-
-                resultDictionary[resourceClaim.ResourceClaimId] = actions.Where(x => x != null).ToArray() as AuthorizationStrategy[];
+                resultDictionary[resourceClaim.ResourceClaimId] = actions.ToArray() as AuthorizationStrategy[];
             }
 
             return resultDictionary;

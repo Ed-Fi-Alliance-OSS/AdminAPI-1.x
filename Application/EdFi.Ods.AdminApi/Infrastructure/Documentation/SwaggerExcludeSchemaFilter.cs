@@ -12,14 +12,26 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Documentation;
 [AttributeUsage(AttributeTargets.Property)]
 public class SwaggerExcludeAttribute : Attribute
 {
+    public EdFiOdsSecurityModelCompatibility VersionCompatibility { get; set; }
+    public SwaggerExcludeAttribute(EdFiOdsSecurityModelCompatibility version = EdFiOdsSecurityModelCompatibility.Both)
+    {
+        VersionCompatibility = version;
+    }
 }
 
 public class SwaggerExcludeSchemaFilter : ISchemaFilter
 {
+    private readonly IOdsSecurityModelVersionResolver _odsSecurityModelResolver;
+
+    public SwaggerExcludeSchemaFilter(IOdsSecurityModelVersionResolver odsSecurityModelResolver)
+    {
+        _odsSecurityModelResolver = odsSecurityModelResolver;
+    }
+
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
         var properties = context.Type.GetProperties();
-
+        var version = _odsSecurityModelResolver.DetermineSecurityModel();
         foreach (var property in properties)
         {
             var attribute = property.GetCustomAttribute(typeof(SwaggerExcludeAttribute));
@@ -27,7 +39,12 @@ public class SwaggerExcludeSchemaFilter : ISchemaFilter
 
             if (attribute != null)
             {
-                schema.Properties.Remove(propertyNameInCamelCasing);
+                var swaggerExcludeAttribute = property.CustomAttributes.First(a => a.AttributeType.Name == nameof(SwaggerExcludeAttribute));
+                var odsVersionValue = swaggerExcludeAttribute.ConstructorArguments.First().Value;
+                if (odsVersionValue != null &&
+                    ((EdFiOdsSecurityModelCompatibility)odsVersionValue == EdFiOdsSecurityModelCompatibility.Both ||
+                    (EdFiOdsSecurityModelCompatibility)odsVersionValue == version))
+                    schema.Properties.Remove(propertyNameInCamelCasing);
             }
         }
     }

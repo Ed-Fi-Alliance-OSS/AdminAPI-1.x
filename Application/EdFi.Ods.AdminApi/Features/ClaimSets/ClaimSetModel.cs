@@ -6,6 +6,7 @@
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using EdFi.Ods.AdminApi.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -32,6 +33,7 @@ public class ResourceClaimModel
     public bool Read { get; set; }
     public bool Update { get; set; }
     public bool Delete { get; set; }
+    [SwaggerExclude(EdFiOdsSecurityModelCompatibility.Six)]
     public bool ReadChanges { get; set; }
     public AuthorizationStrategyModel?[] DefaultAuthStrategiesForCRUD { get; set; }
     public AuthorizationStrategyModel?[] AuthStrategyOverridesForCRUD { get; set; }

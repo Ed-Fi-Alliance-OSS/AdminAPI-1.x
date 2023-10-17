@@ -82,9 +82,7 @@ public class AddOrEditResourcesOnClaimSetCommand
         {
             if (claimSetResourceClaimActionAuthStrategies != null && claimSetResourceClaimActionAuthStrategies.AuthorizationStrategies != null)
             {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                return claimSetResourceClaimActionAuthStrategies.AuthorizationStrategies.Where(p => p is not null).Select(p => p.AuthStrategyId).ToArray();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                return claimSetResourceClaimActionAuthStrategies.AuthorizationStrategies.Where(p => p is not null).Select(p => p!.AuthStrategyId).ToArray();
             }
             return Array.Empty<int>();
         }

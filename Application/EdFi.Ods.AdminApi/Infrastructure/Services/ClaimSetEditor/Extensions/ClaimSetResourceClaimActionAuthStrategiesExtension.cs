@@ -13,27 +13,27 @@ public static class ClaimSetResourceClaimActionAuthStrategiesExtension
 {
     public static ClaimSetResourceClaimActionAuthStrategies? Create(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)
     {
-        return claimSetResourceClaimActionAuthStrategies[0];
+        return claimSetResourceClaimActionAuthStrategies.Length > 0 ? claimSetResourceClaimActionAuthStrategies[0] : null;
     }
 
     public static ClaimSetResourceClaimActionAuthStrategies? Read(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)
     {
-        return claimSetResourceClaimActionAuthStrategies[1];
+        return claimSetResourceClaimActionAuthStrategies.Length > 2 ? claimSetResourceClaimActionAuthStrategies[1] : null;
     }
 
     public static ClaimSetResourceClaimActionAuthStrategies? Update(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)
     {
-        return claimSetResourceClaimActionAuthStrategies[2];
+        return claimSetResourceClaimActionAuthStrategies.Length > 2 ? claimSetResourceClaimActionAuthStrategies[2] : null;
     }
 
     public static ClaimSetResourceClaimActionAuthStrategies? Delete(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)
     {
-        return claimSetResourceClaimActionAuthStrategies[3];
+        return claimSetResourceClaimActionAuthStrategies.Length > 3 ? claimSetResourceClaimActionAuthStrategies[3] : null;
     }
 
     public static ClaimSetResourceClaimActionAuthStrategies? ReadChanges(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)
     {
-        return claimSetResourceClaimActionAuthStrategies[4];
+        return claimSetResourceClaimActionAuthStrategies.Length > 4 ? claimSetResourceClaimActionAuthStrategies[4] : null;
     }
 
     public static ClaimSetResourceClaimActionAuthStrategies?[] AddAuthorizationStrategyOverrides(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies,

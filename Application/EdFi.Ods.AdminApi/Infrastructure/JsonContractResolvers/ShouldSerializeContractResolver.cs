@@ -22,7 +22,7 @@ public class ShouldSerializeContractResolver : DefaultContractResolver
     {
         JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-        if (property.DeclaringType == typeof(ResourceClaimModel) && property.PropertyName == "ReadChanges")
+        if (property.DeclaringType == typeof(ResourceClaimModel) && (property.PropertyName is not null && property.PropertyName.ToLowerInvariant() == "readchanges"))
         {
             property.ShouldSerialize =
                 instance =>

@@ -14,8 +14,8 @@ public class ResourceClaim
     public int ParentId { get; set; }
     public string? ParentName { get; set; }
     public string? Name { get; set; }
-    public bool Read { get; set; }
     public bool Create { get; set; }
+    public bool Read { get; set; }
     public bool Update { get; set; }
     public bool Delete { get; set; }
     public bool ReadChanges { get; set; }

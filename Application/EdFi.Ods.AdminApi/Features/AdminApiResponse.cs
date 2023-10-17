@@ -39,7 +39,6 @@ public class AdminApiResponse<T> : AdminApiResponse
     {
         var data = new AdminApiResponse<T>(200, "Request successful", result);
         var dataSerialize = JsonConvert.SerializeObject(data, Formatting.Indented, jsonSerializerSettings);
-        jsonSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         return Results.Text(dataSerialize, "application/json", System.Text.Encoding.UTF8);
     }
 

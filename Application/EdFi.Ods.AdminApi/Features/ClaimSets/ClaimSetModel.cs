@@ -33,16 +33,47 @@ public class ResourceClaimModel
     public bool Update { get; set; }
     public bool Delete { get; set; }
     public bool ReadChanges { get; set; }
-    public AuthorizationStrategyModel?[] DefaultAuthStrategiesForCRUD { get; set; }
-    public AuthorizationStrategyModel?[] AuthStrategyOverridesForCRUD { get; set; }
+    public AuthorizationStrategiesModel?[] DefaultAuthStrategiesForCRUD { get; set; }
+    public AuthorizationStrategiesModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
     public List<ResourceClaimModel> Children { get; set; }
     public ResourceClaimModel()
     {
         Children = new List<ResourceClaimModel>();
-        DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategyModel>();
-        AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategyModel>();
+        DefaultAuthStrategiesForCRUD = Array.Empty<AuthorizationStrategiesModel>();
+        AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategiesModel>();
+    }
+}
+
+[SwaggerSchema(Title = "ResourceClaim")]
+public class RequestResourceClaimModel
+{
+    public string? Name { get; set; }
+    public bool Create { get; set; }
+    public bool Read { get; set; }
+    public bool Update { get; set; }
+    public bool Delete { get; set; }
+    public bool ReadChanges { get; set; }
+    public AuthorizationStrategiesModel?[] AuthStrategyOverridesForCRUD { get; set; }
+
+    [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
+    public List<RequestResourceClaimModel> Children { get; set; }
+    public RequestResourceClaimModel()
+    {
+        Children = new List<RequestResourceClaimModel>();
+        AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategiesModel>();
+    }
+}
+
+[SwaggerSchema(Title = "AuthorizationStrategies")]
+public class AuthorizationStrategiesModel
+{
+    public AuthorizationStrategyModel?[] AuthorizationStrategies { get; set; }
+    public AuthorizationStrategiesModel()
+    {
+        AuthorizationStrategies = Array.Empty<AuthorizationStrategyModel>();
+
     }
 }
 

@@ -18,7 +18,7 @@ public static class ClaimSetResourceClaimActionAuthStrategiesExtension
 
     public static ClaimSetResourceClaimActionAuthStrategies? Read(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)
     {
-        return claimSetResourceClaimActionAuthStrategies.Length > 2 ? claimSetResourceClaimActionAuthStrategies[1] : null;
+        return claimSetResourceClaimActionAuthStrategies.Length > 1 ? claimSetResourceClaimActionAuthStrategies[1] : null;
     }
 
     public static ClaimSetResourceClaimActionAuthStrategies? Update(this ClaimSetResourceClaimActionAuthStrategies?[] claimSetResourceClaimActionAuthStrategies)

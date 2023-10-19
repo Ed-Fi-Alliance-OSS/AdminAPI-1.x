@@ -29,19 +29,27 @@ public class AuthStrategyResolver : IAuthStrategyResolver
         {
             if (claim.DefaultAuthStrategiesForCRUD != null && claim.DefaultAuthStrategiesForCRUD.Any())
             {
-                foreach (var defaultStrategy in claim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
+                foreach (var claimSetResourceClaimActionAuthStrategyItem in claim.DefaultAuthStrategiesForCRUD.Where(x => x != null))
                 {
-                    if (defaultStrategy is null) continue;
-
-                    var authStrategy = dbAuthStrategies.SingleOrDefault(
-                        x => x.AuthorizationStrategyName.Equals(
-                            defaultStrategy.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
-
-                    if (authStrategy != null)
+                    if (claimSetResourceClaimActionAuthStrategyItem != null && claimSetResourceClaimActionAuthStrategyItem.AuthorizationStrategies != null)
                     {
-                        defaultStrategy.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                        defaultStrategy.DisplayName = authStrategy.DisplayName;
+                        foreach (var authorizationStrategyItem in claimSetResourceClaimActionAuthStrategyItem.AuthorizationStrategies)
+                        {
+                            if (authorizationStrategyItem is null) continue;
+
+                            var authStrategy = dbAuthStrategies.SingleOrDefault(
+                            x => x.AuthorizationStrategyName.Equals(
+                                authorizationStrategyItem.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
+
+                            if (authStrategy != null)
+                            {
+                                authorizationStrategyItem.AuthStrategyId = authStrategy.AuthorizationStrategyId;
+                                authorizationStrategyItem.DisplayName = authStrategy.DisplayName;
+                            }
+                        }
                     }
+
+                    
                 }
             }
 
@@ -49,17 +57,23 @@ public class AuthStrategyResolver : IAuthStrategyResolver
             {
                 foreach (var authStrategyOverride in claim.AuthStrategyOverridesForCRUD.Where(x => x != null))
                 {
-                    if (authStrategyOverride is null) continue;
-
-                    var authStrategy = dbAuthStrategies.SingleOrDefault(
-                        x => x.AuthorizationStrategyName.Equals(
-                            authStrategyOverride.AuthStrategyName,
-                            StringComparison.InvariantCultureIgnoreCase));
-
-                    if (authStrategy != null)
+                    if (authStrategyOverride != null && authStrategyOverride.AuthorizationStrategies != null)
                     {
-                        authStrategyOverride.AuthStrategyId = authStrategy.AuthorizationStrategyId;
-                        authStrategyOverride.DisplayName = authStrategy.DisplayName;
+                        foreach (var authorizationStrategyItem in authStrategyOverride.AuthorizationStrategies)
+                        {
+                            if (authorizationStrategyItem is null) continue;
+
+                            var authStrategy = dbAuthStrategies.SingleOrDefault(
+                                x => x.AuthorizationStrategyName.Equals(
+                                    authorizationStrategyItem.AuthStrategyName,
+                                    StringComparison.InvariantCultureIgnoreCase));
+
+                            if (authStrategy != null)
+                            {
+                                authorizationStrategyItem.AuthStrategyId = authStrategy.AuthorizationStrategyId;
+                                authorizationStrategyItem.DisplayName = authStrategy.DisplayName;
+                            }
+                        }
                     }
                 }
             }

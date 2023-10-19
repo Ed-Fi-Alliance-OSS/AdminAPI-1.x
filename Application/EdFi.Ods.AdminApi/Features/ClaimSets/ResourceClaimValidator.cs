@@ -17,7 +17,7 @@ public class ResourceClaimValidator
     }
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-        List<string?> dbAuthStrategies, ResourceClaimModel resourceClaim, List<ResourceClaimModel> existingResourceClaims,
+        List<string?> dbAuthStrategies, RequestResourceClaimModel resourceClaim, List<RequestResourceClaimModel> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
@@ -34,7 +34,7 @@ public class ResourceClaimValidator
             }
         }
 
-        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update))
+        if (!(resourceClaim.Create || resourceClaim.Delete || resourceClaim.Read || resourceClaim.Update || resourceClaim.ReadChanges))
         {
             context.AddFailure(propertyName, "Only valid resources can be added. A resource must have at least one action associated with it to be added. The following is an invalid resource: '{ResourceClaimName}'");
         }
@@ -44,26 +44,22 @@ public class ResourceClaimValidator
         {
             context.AddFailure(propertyName, "This Claim Set contains a resource which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}'.\n");
         }
-        if (resourceClaim.DefaultAuthStrategiesForCRUD.Any())
-        {
-            foreach (var defaultAS in resourceClaim.DefaultAuthStrategiesForCRUD)
-            {
-                if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
-                {
-                    context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
-                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
-                }
-            }
-        }
+        
         if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
         {
             foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
             {
-                if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
-                {
-                    context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
-                    context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
+                if (authStrategyOverride != null && authStrategyOverride.AuthorizationStrategies.Any()) {
+                    foreach (var authStrategy in authStrategyOverride.AuthorizationStrategies)
+                    {
+                        if (authStrategy?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategy.AuthStrategyName))
+                        {
+                            context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategy.AuthStrategyName);
+                            context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
+                        }
+                    }
                 }
+                
             }
         }
 

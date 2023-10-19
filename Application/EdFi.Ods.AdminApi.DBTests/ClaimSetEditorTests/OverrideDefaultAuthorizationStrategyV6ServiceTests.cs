@@ -53,12 +53,12 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
         {
             ResourceClaimId = testResource1ToEdit.ResourceClaimId,
             ClaimSetId = testClaimSet.ClaimSetId,
-            AuthorizationStrategyForCreate = appAuthorizationStrategies
-                .Single(x => x.AuthorizationStrategyName == "TestAuthStrategy4").AuthorizationStrategyId,
-            AuthorizationStrategyForRead = 0,
-            AuthorizationStrategyForUpdate = 0,
-            AuthorizationStrategyForDelete = 0,
-            AuthorizationStrategyForReadChanges = 0,
+            AuthorizationStrategyForCreate = new int[1] { appAuthorizationStrategies
+                .Single(x => x.AuthorizationStrategyName == "TestAuthStrategy4").AuthorizationStrategyId },
+            AuthorizationStrategyForRead = new int[0],
+            AuthorizationStrategyForUpdate = new int[0],
+            AuthorizationStrategyForDelete = new int[0],
+            AuthorizationStrategyForReadChanges = new int[0],
         };
 
         List<ResourceClaim> resourceClaimsForClaimSet = null;
@@ -73,7 +73,7 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
         resultResourceClaim1.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
         resultResourceClaim1.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
         resultResourceClaim1.AuthStrategyOverridesForCRUD[3].ShouldBeNull();

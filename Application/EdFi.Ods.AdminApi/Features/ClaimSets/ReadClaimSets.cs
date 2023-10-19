@@ -8,6 +8,8 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
+using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -40,7 +42,8 @@ public class ReadClaimSets : IFeature
 
     internal Task<IResult> GetClaimSet(IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
-        IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int id)
+        IGetApplicationsByClaimSetIdQuery getApplications,
+        IOdsSecurityModelVersionResolver odsSecurityModelResolver, IMapper mapper, int id)
     {
         ClaimSet claimSet;
         try
@@ -56,7 +59,10 @@ public class ReadClaimSets : IFeature
         var claimSetData = mapper.Map<ClaimSetDetailsModel>(claimSet);
         claimSetData.ApplicationsCount = getApplications.ExecuteCount(id);
         claimSetData.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
-
-        return Task.FromResult(AdminApiResponse<ClaimSetDetailsModel>.Ok(claimSetData));
+        return Task.FromResult(AdminApiResponse<ClaimSetDetailsModel>.Ok(claimSetData,
+            new JsonSerializerSettings() {
+                Formatting = Formatting.Indented,
+                ContractResolver = new ShouldSerializeContractResolver(odsSecurityModelResolver)
+            }));
     }
 }

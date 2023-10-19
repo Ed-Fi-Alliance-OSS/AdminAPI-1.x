@@ -129,7 +129,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication);
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
-        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
 
     }
 
@@ -166,7 +166,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         result.Read.ShouldBe(false);
         result.Update.ShouldBe(false);
         result.Delete.ShouldBe(false);
-        result.DefaultAuthStrategiesForCRUD[0].AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
+        result.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
     }
 
     [Test]
@@ -201,7 +201,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
         var testAuthStrategiesForParents =
             testAuthStrategies.Where(x => x.ResourceClaim.ParentResourceClaim == null);
 
-        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
 
         foreach (var testParentResourceClaim in testParentResourceClaimsForId)
         {
@@ -209,7 +209,7 @@ public class GetResourcesByClaimSetIdQueryV53ServiceTests : SecurityData53TestBa
             var testAuthStrategiesForChildren =
                 testAuthStrategies.Where(x =>
                     x.ResourceClaim.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId);
-            parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
+            parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategy.AuthorizationStrategyName), true);
         }
 
     }

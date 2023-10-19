@@ -3,6 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features;
@@ -32,6 +34,13 @@ public class AdminApiResponse<T> : AdminApiResponse
 
     public static IResult Ok(T result)
         => Results.Ok(new AdminApiResponse<T>(200, "Request successful", result));
+
+    public static IResult Ok(T result, JsonSerializerSettings jsonSerializerSettings)
+    {
+        var data = new AdminApiResponse<T>(200, "Request successful", result);
+        var dataSerialize = JsonConvert.SerializeObject(data, Formatting.Indented, jsonSerializerSettings);
+        return Results.Text(dataSerialize, "application/json", System.Text.Encoding.UTF8);
+    }
 
     public static IResult Created(T result, string name, string getUri)
         => Results.Created(getUri, new AdminApiResponse<T>(201, $"{name} created successfully", result));

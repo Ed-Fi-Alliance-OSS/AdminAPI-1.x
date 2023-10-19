@@ -34,10 +34,10 @@ public interface IOverrideDefaultAuthorizationStrategyModel
 {
     int ClaimSetId { get; }
     int ResourceClaimId { get; }
-    int AuthorizationStrategyForCreate { get; }
-    int AuthorizationStrategyForRead { get; }
-    int AuthorizationStrategyForUpdate { get; }
-    int AuthorizationStrategyForDelete { get; }
-    int AuthorizationStrategyForReadChanges { get; }
+    int[]? AuthorizationStrategyForCreate { get; }
+    int[]? AuthorizationStrategyForRead { get; }
+    int[]? AuthorizationStrategyForUpdate { get; }
+    int[]? AuthorizationStrategyForDelete { get; }
+    int[]? AuthorizationStrategyForReadChanges { get; }
 }
 

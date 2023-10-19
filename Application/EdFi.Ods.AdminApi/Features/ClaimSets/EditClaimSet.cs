@@ -8,8 +8,10 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
 using FluentValidation;
 using FluentValidation.Results;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
@@ -30,6 +32,7 @@ public class EditClaimSet : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications,
         IAuthStrategyResolver strategyResolver,
+        IOdsSecurityModelVersionResolver odsSecurityModelResolver,
         IMapper mapper,
         Request request, int id)
     {
@@ -65,7 +68,15 @@ public class EditClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(updatedClaimSetId)
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
-        return AdminApiResponse<ClaimSetDetailsModel>.Updated(model, "ClaimSet");
+        return AdminApiResponse<ClaimSetDetailsModel>.Updated(
+            model,
+            "ClaimSet",
+            new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new ShouldSerializeContractResolver(odsSecurityModelResolver)
+            }
+            );
     }
 
     [SwaggerSchema(Title = "EditClaimSetRequest")]

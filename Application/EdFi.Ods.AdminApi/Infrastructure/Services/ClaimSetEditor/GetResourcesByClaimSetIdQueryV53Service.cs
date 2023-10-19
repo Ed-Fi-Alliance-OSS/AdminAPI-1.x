@@ -242,7 +242,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
             var childResources = dbChildResources.GroupBy(x => x.ResourceClaim)
                 .Select(x => {
-                    var authStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].Select(authStrategyOverride =>
+                    var authStrategyOverridesForCRUD = authStrategyOverrides.Keys.Any(p => p == x.Key.ResourceClaimId) ? authStrategyOverrides[x.Key.ResourceClaimId].Select(authStrategyOverride =>
                     {
                         if (authStrategyOverride is null)
                         {
@@ -252,7 +252,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         {
                             return authStrategyOverride;
                         }
-                    });
+                    }).ToArray() : Array.Empty<ClaimSetResourceClaimActionAuthStrategies>();
                     return new ResourceClaim
                     {
                         Id = x.Key.ResourceClaimId,
@@ -264,7 +264,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
                         IsParent = false,
                         DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
-                        AuthStrategyOverridesForCRUD = authStrategyOverrides.Keys.Any(p => p == x.Key.ResourceClaimId) ? authStrategyOverrides[x.Key.ResourceClaimId] : Array.Empty<ClaimSetResourceClaimActionAuthStrategies>(),
+                        AuthStrategyOverridesForCRUD = authStrategyOverridesForCRUD,
                     };
                 }).ToList();
             return childResources;

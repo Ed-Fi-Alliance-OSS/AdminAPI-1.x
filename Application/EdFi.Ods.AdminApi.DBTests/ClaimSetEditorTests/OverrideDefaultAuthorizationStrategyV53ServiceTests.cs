@@ -133,15 +133,15 @@ public class OverrideDefaultAuthorizationStrategyV53ServiceTests : SecurityData5
             resultParentResource.Children.Single(x => x.Id == testChildResourceToEdit.ResourceClaimId);
 
         resultChildResource1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
-        resultChildResource1.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
-        resultChildResource1.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
-        resultChildResource1.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultChildResource1.AuthStrategyOverridesForCRUD[1].AuthorizationStrategies[0].ShouldBeNull();
+        resultChildResource1.AuthStrategyOverridesForCRUD[2].AuthorizationStrategies[0].ShouldBeNull();
+        resultChildResource1.AuthStrategyOverridesForCRUD[3].AuthorizationStrategies[0].ShouldBeNull();
 
         var resultResourceClaim2 = resultParentResource.Children.Single(x => x.Id == testChildResourceNotToEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies[0].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[1].AuthorizationStrategies[0].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[2].AuthorizationStrategies[0].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[3].AuthorizationStrategies[0].ShouldBeNull();
     }
 }

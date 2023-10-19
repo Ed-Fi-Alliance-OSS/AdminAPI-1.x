@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e2a6eb1b-e28b-44b2-9e79-2aeac9f5760d",
+		"_postman_id": "cd97eae7-381a-4b25-80d4-37b060551f89",
 		"name": "Admin API E2E refactor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -3265,6 +3265,7 @@
 											"    const educationStandardsResourceClaim = result.resourceClaims.find(r => r.name === \"educationStandards\")\r",
 											"    pm.expect(educationStandardsResourceClaim).to.be.an(\"object\", \"The educationStandards resource claim was not found.\")\r",
 											"    pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD).to.not.be.empty;\r",
+											"    pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD[0].authorizationStrategies[0]).to.be.null\r",
 											"    pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD[1]).to.be.an(\"object\", \"The override for read action in resource claim educationStandards was not found.\")\r",
 											"\r",
 											"    const academicSubjectDescriptorResourceClaim = result.resourceClaims.find(r => r.name === \"academicSubjectDescriptor\")\r",

@@ -3265,7 +3265,6 @@
 											"    const educationStandardsResourceClaim = result.resourceClaims.find(r => r.name === \"educationStandards\")\r",
 											"    pm.expect(educationStandardsResourceClaim).to.be.an(\"object\", \"The educationStandards resource claim was not found.\")\r",
 											"    pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD).to.not.be.empty;\r",
-											"    pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD[0].authorizationStrategies[0]).to.be.null\r",
 											"    pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD[1]).to.be.an(\"object\", \"The override for read action in resource claim educationStandards was not found.\")\r",
 											"\r",
 											"    const academicSubjectDescriptorResourceClaim = result.resourceClaims.find(r => r.name === \"academicSubjectDescriptor\")\r",

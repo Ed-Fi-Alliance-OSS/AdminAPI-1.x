@@ -74,18 +74,18 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
         resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies[0].AuthStrategyName.ShouldBe("TestAuthStrategy4");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[1].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[2].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[3].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[4].AuthorizationStrategies[0].ShouldBeNull();
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[4].ShouldBeNull();
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[1].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[2].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[3].AuthorizationStrategies[0].ShouldBeNull();
-        resultResourceClaim2.AuthStrategyOverridesForCRUD[4].AuthorizationStrategies[0].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[0].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[1].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[2].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[3].ShouldBeNull();
+        resultResourceClaim2.AuthStrategyOverridesForCRUD[4].ShouldBeNull();
     }
 }

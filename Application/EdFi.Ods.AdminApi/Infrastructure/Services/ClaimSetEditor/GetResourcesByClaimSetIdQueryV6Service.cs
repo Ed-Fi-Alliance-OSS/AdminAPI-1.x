@@ -193,7 +193,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
         private Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]> GetAuthStrategyOverrides(List<ClaimSetResourceClaimAction> resourceClaims)
         {
-            var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]>();
+            var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies[]?>();
             resourceClaims =
                 new List<ClaimSetResourceClaimAction>(resourceClaims.OrderBy(i => new List<string> { Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value, Action.ReadChanges.Value }.IndexOf(i.Action.ActionName)));
             foreach (var resourceClaim in resourceClaims)
@@ -236,8 +236,12 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     {
                         foreach (var authStrategy in authStrategies)
                         {
-                            resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
+                            resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId]!.AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
                         }
+                    }
+                    else
+                    {
+                        resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[5];
                     }
                 }
                 else
@@ -247,12 +251,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[5];
                         foreach (var authStrategy in authStrategies)
                         {
-                            resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
+                            resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId]!.AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
                         }
+                    }
+                    else
+                    {
+                        resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[5];
                     }
                 }
             }
-            return resultDictionary;
+            return resultDictionary!;
         }
 
         internal IReadOnlyList<ResourceClaim> GetChildResources(int claimSetId)

@@ -62,6 +62,14 @@ public static class WebApplicationBuilderExtensions
             }
         }
 
+        //Add service to identify ODS Version
+        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
+        {
+            var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
+            var validator = sp.GetRequiredService<IOdsApiValidator>();
+            return new OdsSecurityVersionResolver(validator, apiServerUrl);
+        });
+
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -162,12 +170,7 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
 
-        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
-        {
-            var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
-            var validator = sp.GetRequiredService<IOdsApiValidator>();
-            return new OdsSecurityVersionResolver(validator, apiServerUrl);
-        });
+        
     }
 
     private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

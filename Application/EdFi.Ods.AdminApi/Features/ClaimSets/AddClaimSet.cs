@@ -7,7 +7,9 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
 using FluentValidation;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
@@ -28,6 +30,7 @@ public class AddClaimSet : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications,
         IAuthStrategyResolver strategyResolver,
+        IOdsSecurityModelVersionResolver odsSecurityModelResolver,
         IMapper mapper,
         Request request)
     {
@@ -50,7 +53,17 @@ public class AddClaimSet : IFeature
         model.ResourceClaims = getResourcesByClaimSetIdQuery.AllResources(addedClaimSetId)
             .Select(r => mapper.Map<ResourceClaimModel>(r)).ToList();
 
-        return AdminApiResponse<ClaimSetDetailsModel>.Created(model, "ClaimSet", $"/claimsets/{addedClaimSetId}");
+
+        return AdminApiResponse<ClaimSetDetailsModel>.Created(
+            model,
+            "ClaimSet",
+            $"/claimsets/{addedClaimSetId}",
+            new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new ShouldSerializeContractResolver(odsSecurityModelResolver)
+            }
+            );
     }
 
     [SwaggerSchema(Title = "AddClaimSetRequest")]

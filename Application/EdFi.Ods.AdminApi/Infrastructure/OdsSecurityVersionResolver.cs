@@ -62,4 +62,5 @@ public enum EdFiOdsSecurityModelCompatibility
 {
     ThreeThroughFive = 1,
     Six = 2,
+    Both = 3
 }

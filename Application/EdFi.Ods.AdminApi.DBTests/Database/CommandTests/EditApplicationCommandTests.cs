@@ -12,12 +12,18 @@ using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using EdFi.Ods.AdminApi.Infrastructure;
 using Profile = EdFi.Admin.DataAccess.Models.Profile;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
 [TestFixture]
 public class EditApplicationCommandTests : PlatformUsersContextTestBase
 {
+    private const int EdOrgId1 = 1234;
+    private const int EdOrgId2 = 2345;
+    private const int EdOrgId3 = 56666;
+
     private Vendor _vendor;
     private Vendor _otherVendor;
     private VendorUser _user;
@@ -82,8 +88,8 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         _application.ApiClients.Add(_apiClient);
         _application.Profiles.Add(_profile);
-        _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(12345));
-        _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(67890));
+        _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(EdOrgId1));
+        _application.ApplicationEducationOrganizations.Add(_application.CreateApplicationEducationOrganization(EdOrgId2));
 
         Save(_vendor, _otherVendor, _user, _otherUser, _profile, _otherProfile, _application);
     }
@@ -98,7 +104,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             ApplicationId = _application.ApplicationId,
             ApplicationName = _application.ApplicationName,
             ClaimSetName = _application.ClaimSetName,
-            EducationOrganizationIds = new List<int> { 12345, 67890 },
+            EducationOrganizationIds = new List<int> { EdOrgId1, EdOrgId2 },
             ProfileId = null,
             VendorId = _vendor.VendorId
         };
@@ -118,7 +124,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.ApiClients.First().Name.ShouldBe("Test Application");
             persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
             persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 12345 || aeo.EducationOrganizationId == 67890);
+            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == EdOrgId1 || aeo.EducationOrganizationId == EdOrgId2);
             persistedApplication.Profiles.Count.ShouldBe(0);
         });
     }
@@ -133,7 +139,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             ApplicationId = _application.ApplicationId,
             ApplicationName = "New Application Name",
             ClaimSetName = "DifferentFakeClaimSet",
-            EducationOrganizationIds = new List<int> { 23456, 78901 },
+            EducationOrganizationIds = new List<int> { EdOrgId2, EdOrgId3 },
             ProfileId = _otherProfile.ProfileId,
             VendorId = _otherVendor.VendorId
         };
@@ -155,9 +161,87 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.Profiles.Count.ShouldBe(1);
             persistedApplication.Profiles.First().ProfileName.ShouldBe("Other Test Profile");
             persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
+            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == EdOrgId2 || aeo.EducationOrganizationId == EdOrgId3);
         });
     }
+
+        [Test]
+        public void GivenAdditionalEdOrgThenItShouldBeConnectedToAllThreeEdOrgIds()
+        {
+            // Arrange
+            SetupTestEntities();
+
+            // Act
+            var edOrgs = _application.ApplicationEducationOrganizations.Select(x => x.EducationOrganizationId).ToList().Append(EdOrgId3);
+
+            var editApplication = new TestEditApplicationModel
+            {
+                ApplicationId = _application.ApplicationId,
+                ApplicationName = _application.ApplicationName,
+                ClaimSetName = _application.ClaimSetName,
+                EducationOrganizationIds = edOrgs,
+                ProfileId = _application.Profiles.FirstOrDefault()?.ProfileId,
+                VendorId = _application.Vendor.VendorId
+            };
+
+            Transaction(usersContext =>
+            {
+                var command = new EditApplicationCommand(usersContext);
+                command.Execute(editApplication);
+            });
+
+            // Assert
+            Transaction(UsersContext =>
+            {
+                var aeos = UsersContext.ApplicationEducationOrganizations.ToList();
+                aeos.Count.ShouldBe(3);
+                aeos.ShouldContain(x => x.EducationOrganizationId == EdOrgId1);
+                aeos.ShouldContain(x => x.EducationOrganizationId == EdOrgId2);
+                aeos.ShouldContain(x => x.EducationOrganizationId == EdOrgId3);
+            });
+        }
+
+        [Test]
+        public async Task GivenChangedEdOrgIdThenItShouldBeConnectedToOnlyTheOneEdOrgid()
+        {
+            // Arrange
+            SetupTestEntities();
+
+            // Act
+            var editApplication = new TestEditApplicationModel
+            {
+                ApplicationId = _application.ApplicationId,
+                ApplicationName = _application.ApplicationName,
+                ClaimSetName = _application.ClaimSetName,
+                // Now connected to just one
+                EducationOrganizationIds = new List<int> { EdOrgId3 },
+                ProfileId = _application.Profiles.FirstOrDefault()?.ProfileId,
+                VendorId = _application.Vendor.VendorId
+            };
+
+            Transaction(usersContext =>
+            {
+                var command = new EditApplicationCommand(usersContext);
+                command.Execute(editApplication);
+            });
+
+            // Assert
+            Transaction(usersContext =>
+            {
+                var aeos = usersContext.ApplicationEducationOrganizations.ToList();
+                aeos.Count.ShouldBe(1);
+                var first = aeos.First();
+                first.EducationOrganizationId.ShouldBe(EdOrgId3);
+            });
+
+            // Not trusting Entity Framework for the following check - directly querying the database
+            const string sql = "select count(1) from dbo.ApiClientApplicationEducationOrganizations";
+            using var connection = new SqlConnection(ConnectionString);
+            await connection.OpenAsync();
+            using var command = new SqlCommand(sql, connection);
+            var count = (int)await command.ExecuteScalarAsync();
+            count.ShouldBe(1);
+        }
 
     private class TestEditApplicationModel : IEditApplicationModel
     {

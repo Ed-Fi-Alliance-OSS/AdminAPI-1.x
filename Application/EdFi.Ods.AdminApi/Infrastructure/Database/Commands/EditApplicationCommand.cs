@@ -7,8 +7,8 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Common.Utils.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -54,8 +54,11 @@ public class EditApplicationCommand : IEditApplicationCommand
 
         application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
 
+        // Quick and dirty: simply remove all existing links to ApplicationEducationOrganizations...
+        application.ApplicationEducationOrganizations.ToList().ForEach(x => _context.ApplicationEducationOrganizations.Remove(x));
         application.ApplicationEducationOrganizations.Clear();
-        model.EducationOrganizationIds?.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
+        // ... and now create the new proper list.
+        model.EducationOrganizationIds?.ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
 
         application.Profiles ??= new Collection<Profile>();
 

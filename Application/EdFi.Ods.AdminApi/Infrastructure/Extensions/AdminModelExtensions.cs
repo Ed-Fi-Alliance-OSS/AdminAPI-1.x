@@ -40,8 +40,8 @@ public static class AdminModelExtensions
         return application?.Vendor?.VendorId;
     }
 
-    public static int? EducationOrganizationId(this Application application)
+    public static IList<int>? EducationOrganizationIds(this Application application)
     {
-        return application?.ApplicationEducationOrganizations?.FirstOrDefault()?.EducationOrganizationId;
+        return application?.ApplicationEducationOrganizations?.Select(eu => eu.EducationOrganizationId).ToList();
     }
 }

@@ -18,6 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
+using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Context;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -25,6 +28,7 @@ public static class WebApplicationBuilderExtensions
 {
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
+        EnableMultiTenancySupport(webApplicationBuilder);
         var executingAssembly = Assembly.GetExecutingAssembly();
         webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminApiMappingProfile).Assembly);
         webApplicationBuilder.Services.AddScoped<InstanceContext>();
@@ -164,21 +168,33 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
     }
 
+    private static void EnableMultiTenancySupport(this WebApplicationBuilder webApplicationBuilder)
+    {
+        webApplicationBuilder.Services.Configure<AppSettings>(webApplicationBuilder.Configuration.GetSection("AppSettings"));
+        webApplicationBuilder.Services.AddTransient<ITenantConfigurationProvider, TenantConfigurationProvider>();
+        webApplicationBuilder.Services.AddTransient<IContextProvider<TenantConfiguration>, ContextProvider<TenantConfiguration>>();
+        webApplicationBuilder.Services.AddSingleton<IContextStorage, HashtableContextStorage>();
+        webApplicationBuilder.Services.AddScoped<TenantResolverMiddleware>();
+        webApplicationBuilder.Services.Configure<TenantsSection>(webApplicationBuilder.Configuration);
+    }
+
     private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)
     {
         var adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("Admin");
         var securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("Security");
+
+        var multiTenancyEnabled = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:MultiTenancy");
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
-                options =>
-                {
-                    options.UseNpgsql(adminConnectionString);
-                    options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
-                });
+            options =>
+            {
+                options.UseNpgsql(adminConnectionString);
+                options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
+            });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new PostgresSecurityContext(securityConnectionString));
@@ -194,19 +210,56 @@ public static class WebApplicationBuilderExtensions
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
-                options =>
+                (sp,options) =>
                 {
+                    if (multiTenancyEnabled)
+                    {
+                        SetMultiTenancyAdminConnectionString(sp);
+                    }
                     options.UseSqlServer(adminConnectionString);
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new SqlServerSecurityContext(securityConnectionString));
+                (sp) =>
+                {
+                    if (multiTenancyEnabled)
+                    {
+                        SetMultiTenancySecurityConnectionString(sp);
+                    }
+                    return new SqlServerSecurityContext(securityConnectionString);
+                });
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new SqlServerUsersContext(adminConnectionString));
+                (sp) => {
+                    if (multiTenancyEnabled)
+                    {
+                        SetMultiTenancyAdminConnectionString(sp);
+                    }
+                    return new SqlServerUsersContext(adminConnectionString);
+                });
 
             return (adminConnectionString, true);
+        }
+
+        void SetMultiTenancyAdminConnectionString(IServiceProvider serviceProvider)
+        {
+            var tenant = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>().Get();
+            if (tenant != null)
+            {
+                if (!string.IsNullOrEmpty(tenant.AdminConnectionString))
+                    adminConnectionString = tenant.AdminConnectionString;
+            }
+        }
+
+        void SetMultiTenancySecurityConnectionString(IServiceProvider serviceProvider)
+        {
+            var tenant = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>().Get();
+            if (tenant != null)
+            {
+                if (!string.IsNullOrEmpty(tenant.SecurityConnectionString))
+                    securityConnectionString = tenant.SecurityConnectionString;
+            }
         }
 
         throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");

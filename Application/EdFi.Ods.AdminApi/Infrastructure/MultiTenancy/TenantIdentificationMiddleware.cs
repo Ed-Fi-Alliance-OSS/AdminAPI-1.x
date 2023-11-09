@@ -5,8 +5,10 @@
 
 using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Context;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Microsoft.Extensions.Options;
 using System.Collections;
+using System.Net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 
@@ -30,21 +32,26 @@ public class TenantResolverMiddleware : IMiddleware
     {
         var multiTenancyEnabled = _options.Value.MultiTenancy;
 
-        if (multiTenancyEnabled && context.Request.Headers.TryGetValue("tenant", out var tenantIdentifier)
-            && !string.IsNullOrEmpty(tenantIdentifier))
+        if (multiTenancyEnabled)
         {
-            if (_tenantConfigurationProvider.Get().TryGetValue((string) tenantIdentifier, out var tenantConfiguration))
-            {  
-                _tenantConfigurationContextProvider.Set(tenantConfiguration);
-            }
-            else
+            if (context.Request.Headers.TryGetValue("tenant", out var tenantIdentifier))
             {
-                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier, out var tenantConfiguration))
+                {
+                    _tenantConfigurationContextProvider.Set(tenantConfiguration);
+                }
+                else
+                {
+                    //context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    //return;
+                    throw new AdminApiException($"Tenant not found with provided tenant id: {tenantIdentifier}")
+                    {
+                        StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
+                    };
+                }
+            }           
 
-                return;
-            }
-        }
-
+        }     
         await next.Invoke(context);
     }
 }

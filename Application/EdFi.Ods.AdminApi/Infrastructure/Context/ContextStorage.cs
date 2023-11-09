@@ -11,7 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Context
     {
         void SetValue(string key, object value);
 
-        T GetValue<T>(string key);
+        T? GetValue<T>(string key);
     }
 
     public class HashtableContextStorage : IContextStorage
@@ -24,7 +24,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Context
             UnderlyingHashtable[key] = value;
         }
 
-        public T? GetValue<T>(string key) => (T)(UnderlyingHashtable != null &&
+        public T? GetValue<T>(string key) => (T?)(UnderlyingHashtable != null &&
             UnderlyingHashtable[key] != null ? UnderlyingHashtable[key] : default(T));
     }
 }

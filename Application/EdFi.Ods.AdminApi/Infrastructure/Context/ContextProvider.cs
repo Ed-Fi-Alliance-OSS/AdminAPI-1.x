@@ -7,13 +7,13 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Context;
 
 public interface IContextProvider<T>
 {
-    T Get();
-    void Set(T context);
+    T? Get();
+    void Set(T? context);
 }
 
 public class ContextProvider<T> : IContextProvider<T>
 {
-    private static readonly string _contextKey = typeof(T).FullName;
+    private static readonly string? _contextKey = typeof(T?).FullName;
 
     private readonly IContextStorage _contextStorage;
 
@@ -22,8 +22,8 @@ public class ContextProvider<T> : IContextProvider<T>
         _contextStorage = contextStorage;
     }
 
-    public T Get() => _contextStorage.GetValue<T>(_contextKey);
+    public T? Get() => _contextStorage.GetValue<T>(_contextKey!);
 
-    public void Set(T context) => _contextStorage.SetValue(_contextKey, context);
+    public void Set(T? context) => _contextStorage.SetValue(_contextKey!, context!);
 }
 

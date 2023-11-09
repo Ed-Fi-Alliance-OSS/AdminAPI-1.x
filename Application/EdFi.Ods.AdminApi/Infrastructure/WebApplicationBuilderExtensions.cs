@@ -127,6 +127,7 @@ public static class WebApplicationBuilderExtensions
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.OperationFilter<ProfileRequestExampleFilter>();
+            opt.OperationFilter<SwaggerTenantIdHeaderFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {
@@ -210,12 +211,11 @@ public static class WebApplicationBuilderExtensions
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
-                (sp,options) =>
+                (sp, options) =>
                 {
                     if (multiTenancyEnabled)
-                    {
                         SetMultiTenancyAdminConnectionString(sp);
-                    }
+
                     options.UseSqlServer(adminConnectionString);
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
@@ -224,18 +224,16 @@ public static class WebApplicationBuilderExtensions
                 (sp) =>
                 {
                     if (multiTenancyEnabled)
-                    {
                         SetMultiTenancySecurityConnectionString(sp);
-                    }
+
                     return new SqlServerSecurityContext(securityConnectionString);
                 });
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
                 (sp) => {
                     if (multiTenancyEnabled)
-                    {
                         SetMultiTenancyAdminConnectionString(sp);
-                    }
+
                     return new SqlServerUsersContext(adminConnectionString);
                 });
 

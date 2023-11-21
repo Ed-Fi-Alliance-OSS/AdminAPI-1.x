@@ -66,8 +66,10 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
         {
             var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
+            var using53Cqe = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:Using53Cqe");
+
             var validator = sp.GetRequiredService<IOdsApiValidator>();
-            return new OdsSecurityVersionResolver(validator, apiServerUrl);
+            return new OdsSecurityVersionResolver(validator, apiServerUrl, using53Cqe);
         });
 
         // Add services to the container.
@@ -170,7 +172,7 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddTransient<ISimpleGetRequest, SimpleGetRequest>();
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
 
-        
+
     }
 
     private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)

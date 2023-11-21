@@ -12,10 +12,10 @@ on:
       # again after the merge has occurred.
       - main
       - "*-hotfix"
-      paths:
-        - "**/*.cs"
-        - "**/*.csproj"
-        - ".github/**/*.yml"
+    paths:
+      - "**/*.cs"
+      - "**/*.csproj"
+      - ".github/**/*.yml"
   pull_request:
     branches:
       - main

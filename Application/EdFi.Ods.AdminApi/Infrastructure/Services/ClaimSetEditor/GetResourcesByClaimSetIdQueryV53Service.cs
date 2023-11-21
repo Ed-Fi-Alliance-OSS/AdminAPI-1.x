@@ -61,6 +61,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
                 Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
                 Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                // SFUQUA
+                ReadChanges = x.Any(a => a.Action.ActionName == Action.ReadChanges.Value),
                 IsParent = true,
                 DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
                 AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId].ToArray()
@@ -106,9 +108,15 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                                 x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
                                 x.Action.ActionName == Action.Delete.Value)?.AuthorizationStrategy;
                     AddStrategyToParentResource(deleteDefaultStrategy);
+                    // SFUQUA
+                    var readChangesDefaultStrategy = defaultAuthStrategiesForParents
+                            .SingleOrDefault(x =>
+                                x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
+                                x.Action.ActionName == Action.ReadChanges.Value)?.AuthorizationStrategy;
+                    AddStrategyToParentResource(readChangesDefaultStrategy);
 
                     void AddStrategyToParentResource(SecurityAuthorizationStrategy ? defaultStrategy)
-                    {                        
+                    {
                         actions.Add(defaultStrategy != null ?new ClaimSetResourceClaimActionAuthStrategies()
                         {
                             AuthorizationStrategies = new List<AuthorizationStrategy?>
@@ -136,6 +144,12 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
                         x.Action.ActionName == Action.Delete.Value)?.AuthorizationStrategy;
                     actions = AddStrategyToChildResource(deleteDefaultStrategy, Action.Delete);
+
+                    // SFUQUA
+                    var readChangesDefaultStrategy = defaultAuthStrategiesForChildren.SingleOrDefault(x =>
+                        x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
+                        x.Action.ActionName == Action.ReadChanges.Value)?.AuthorizationStrategy;
+                    actions = AddStrategyToChildResource(readChangesDefaultStrategy, Action.ReadChanges);
 
                     List<ClaimSetResourceClaimActionAuthStrategies?> AddStrategyToChildResource(SecurityAuthorizationStrategy? defaultStrategy, Action action)
                     {
@@ -177,7 +191,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         {
             var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]>();
             resourceClaims =
-                new List<ClaimSetResourceClaim>(resourceClaims.OrderBy(i => new List<string> { Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value }.IndexOf(i.Action.ActionName)));
+                new List<ClaimSetResourceClaim>(resourceClaims.OrderBy(i => new List<string> { Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value, Action.ReadChanges.Value /* SFUQUA */ }.IndexOf(i.Action.ActionName)));
             foreach (var resourceClaim in resourceClaims)
             {
                 AuthorizationStrategy? authStrategy = null;
@@ -217,7 +231,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 }
                 else
                 {
-                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[4];                        
+                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[4];
                     resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
                 }
             }
@@ -246,6 +260,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                      Read = x.Any(a => a.Action.ActionName == Action.Read.Value),
                      Update = x.Any(a => a.Action.ActionName == Action.Update.Value),
                      Delete = x.Any(a => a.Action.ActionName == Action.Delete.Value),
+                     // SFUQUA
+                     ReadChanges = x.Any(a => a.Action.ActionName == Action.ReadChanges.Value),
                      IsParent = false,
                      DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
                      AuthStrategyOverridesForCRUD = authStrategyOverrides.Keys.Any(p => p == x.Key.ResourceClaimId) ? authStrategyOverrides[x.Key.ResourceClaimId] : Array.Empty<ClaimSetResourceClaimActionAuthStrategies>(),

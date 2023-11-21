@@ -28,12 +28,13 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public int Execute(IEditClaimSetModel claimSet)
         {
             var securityModel = _resolver.DetermineSecurityModel();
-            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-                return _v53Service.Execute(claimSet);
-            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
-                return _v6Service.Execute(claimSet);
-            else
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+
+            return securityModel switch
+            {
+                EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(claimSet),
+                EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(claimSet),
+                _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
+            };
         }
     }
 

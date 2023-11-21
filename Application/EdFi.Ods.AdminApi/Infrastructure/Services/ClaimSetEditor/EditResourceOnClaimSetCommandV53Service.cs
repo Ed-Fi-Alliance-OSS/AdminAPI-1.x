@@ -64,6 +64,11 @@ public class EditResourceOnClaimSetCommandV53Service
             {
                 recordsToRemove.Add(claimSetResourceClaim);
             }
+            // SFUQUA
+            else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value && !modelResourceClaim.ReadChanges)
+            {
+                recordsToRemove.Add(claimSetResourceClaim);
+            }
         }
 
         if (recordsToRemove.Any())
@@ -115,6 +120,17 @@ public class EditResourceOnClaimSetCommandV53Service
             recordsToAdd.Add(new ClaimSetResourceClaim
             {
                 Action = actionsFromDb.Single(x => x.ActionName == Action.Delete.Value),
+                ClaimSet = claimSetToEdit,
+                ResourceClaim = resourceClaimFromDb
+            });
+        }
+
+        // SFUQUA
+        if (modelResourceClaim.ReadChanges && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.ReadChanges.Value))
+        {
+            recordsToAdd.Add(new ClaimSetResourceClaim
+            {
+                Action = actionsFromDb.Single(x => x.ActionName == Action.ReadChanges.Value),
                 ClaimSet = claimSetToEdit,
                 ResourceClaim = resourceClaimFromDb
             });

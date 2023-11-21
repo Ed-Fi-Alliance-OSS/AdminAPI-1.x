@@ -21,7 +21,7 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
     }
 
     [Test]
-    public void Should_Retreive_ClaimSetNames()
+    public void Should_Retrieve_ClaimSetNames()
     {
         var application = new Application
         {

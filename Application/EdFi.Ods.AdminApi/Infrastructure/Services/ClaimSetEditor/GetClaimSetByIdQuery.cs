@@ -20,15 +20,16 @@ public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
         _v6Service = v6Service;
     }
 
-    public ClaimSet Execute(int claimSetId)
+    public ClaimSet Execute(int securityContextClaimSetId)
     {
         var securityModel = _resolver.DetermineSecurityModel();
-        if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-            return _v53Service.Execute(claimSetId);
-        else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
-            return _v6Service.Execute(claimSetId);
-        else
-            throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+
+        return securityModel switch
+        {
+            EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(securityContextClaimSetId),
+            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(securityContextClaimSetId),
+            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
+        };
     }
 }
 

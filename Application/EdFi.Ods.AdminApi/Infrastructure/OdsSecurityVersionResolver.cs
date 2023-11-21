@@ -27,7 +27,7 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
     // handle the "ReadChanges" action properly.
     private readonly bool _using53Cqe;
 
-    public OdsSecurityVersionResolver(IOdsApiValidator apiValidator, string apiServerUrl, bool using53Cqe=false)
+    public OdsSecurityVersionResolver(IOdsApiValidator apiValidator, string apiServerUrl, bool using53Cqe = false)
     {
         _apiValidator = apiValidator;
         _apiServerUrl = apiServerUrl;
@@ -48,8 +48,8 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
             throw validationResult.Exception ?? new Exception("No version reported from the Ed-Fi API");
         }
 
-        // SFUQUA
-        if (_using53Cqe) {
+        if (_using53Cqe)
+        {
             return EdFiOdsSecurityModelCompatibility.FiveThreeCqe;
         }
 

@@ -64,8 +64,7 @@ public class EditResourceOnClaimSetCommandV53Service
             {
                 recordsToRemove.Add(claimSetResourceClaim);
             }
-            // SFUQUA
-            else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value && !modelResourceClaim.ReadChanges)
+                        else if (claimSetResourceClaim.Action.ActionName == Action.ReadChanges.Value && !modelResourceClaim.ReadChanges)
             {
                 recordsToRemove.Add(claimSetResourceClaim);
             }
@@ -125,8 +124,7 @@ public class EditResourceOnClaimSetCommandV53Service
             });
         }
 
-        // SFUQUA
-        if (modelResourceClaim.ReadChanges && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.ReadChanges.Value))
+                if (modelResourceClaim.ReadChanges && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.ReadChanges.Value))
         {
             recordsToAdd.Add(new ClaimSetResourceClaim
             {

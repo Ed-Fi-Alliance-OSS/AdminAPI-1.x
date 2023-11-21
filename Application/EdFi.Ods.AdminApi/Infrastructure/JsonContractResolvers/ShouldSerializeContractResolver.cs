@@ -24,8 +24,7 @@ public class ShouldSerializeContractResolver : DefaultContractResolver
 
         if (property.DeclaringType == typeof(ResourceClaimModel) && (property.PropertyName is not null && property.PropertyName.ToLowerInvariant() == "readchanges"))
         {
-            // SFUQUA
-            property.ShouldSerialize =
+                        property.ShouldSerialize =
                 instance =>
                 {
                     var securityModel = _odsSecurityModelResolver.DetermineSecurityModel();

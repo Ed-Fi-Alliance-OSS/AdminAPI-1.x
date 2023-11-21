@@ -65,7 +65,6 @@ public static class ClaimSetResourceClaimActionAuthStrategiesExtension
                 claimSetResourceClaimActionAuthStrategies[3] = new ClaimSetResourceClaimActionAuthStrategies();
             claimSetResourceClaimActionAuthStrategies[3]!.AuthorizationStrategies.Add(strategy);
         }
-        // SFUQUA
         else if (actionName == Action.ReadChanges.Value && claimSetResourceClaimActionAuthStrategies.Length == 5)
         {
             if (claimSetResourceClaimActionAuthStrategies[4] == null)

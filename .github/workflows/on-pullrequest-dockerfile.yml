@@ -36,7 +36,7 @@ jobs:
       matrix:
         dockerfile: [
             { name: "api-database", path: "Docker/Settings/DB-Admin/pgsql" },
-            # { name: "postgres", path: "Docker/pgsql.Dockerfile" },
+            { name: "postgres", path: "Docker/Dockerfile" },
             # { name: "sql-server", path: "Docker/mssql.Dockerfile" },
             # { name: "database", path: "Docker/dbadmin.Dockerfile" },
             # { name: "development", path: "Docker/dev.Dockerfile" },
@@ -57,17 +57,31 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_HUB_TOKEN }}
 
-      # - name: Build
-      #   run: |
-      #     cd ${{ matrix.dockerfile.path }}
-      #     docker build -t ${{ matrix.dockerfile.name }} .
+      - name: Set Version Numbers
+        id: versions
+        shell: pwsh
+        run: |
+          $apiPrefix = "v"
+
+          # Install the MinVer CLI tool
+          &dotnet tool install --global minver-cli
+
+          "admin-api=$($apiPrefix)$(minver -t $apiPrefix)" >> $env:GITHUB_OUTPUT
+          echo "admin-api=$($apiPrefix)$(minver -t $apiPrefix)"
+          "VERSION=2.0.1" >> $env:GITHUB_OUTPUT
+
+      - name: Build
+        run: |
+          cd ${{ matrix.dockerfile.path }}
+          echo {{ steps.versions.outputs.VERSION }}
+          docker build -t ${{ matrix.dockerfile.name }} --build-arg="VERSION=${{ steps.versions.outputs.VERSION }}" .
 
       - name: Analize
         uses: docker/scout-action@4e9ac4df44fb56797da111fce8185f7fbffd5a09 # v1.0.9
         with:
           command: cves
-          # image: local://${{ matrix.dockerfile.name }}
-          image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          image: local://${{ matrix.dockerfile.name }}
+          # image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
           sarif-file: sarif-${{ matrix.dockerfile.name }}.output.json
           summary: true
 

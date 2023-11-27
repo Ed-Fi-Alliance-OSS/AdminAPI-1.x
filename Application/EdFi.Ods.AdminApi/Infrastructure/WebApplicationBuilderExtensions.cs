@@ -75,6 +75,7 @@ public static class WebApplicationBuilderExtensions
             opt.AssumeDefaultVersionWhenUnspecified = false;
         });
 
+        webApplicationBuilder.Services.Configure<SwaggerSettings>(webApplicationBuilder.Configuration.GetSection("SwaggerSettings"));
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
@@ -127,7 +128,6 @@ public static class WebApplicationBuilderExtensions
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.OperationFilter<ProfileRequestExampleFilter>();
-            opt.OperationFilter<SwaggerTenantIdHeaderFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {

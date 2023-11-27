@@ -17,15 +17,19 @@ public class TenantResolverMiddleware : IMiddleware
     private readonly ITenantConfigurationProvider _tenantConfigurationProvider;
     private readonly IContextProvider<TenantConfiguration> _tenantConfigurationContextProvider;
     private readonly IOptions<AppSettings> _options;
+    private readonly IOptions<SwaggerSettings> _swaggerOptions;
 
     public TenantResolverMiddleware(
         ITenantConfigurationProvider tenantConfigurationProvider,
         IContextProvider<TenantConfiguration> tenantConfigurationContextProvider,
-        IOptions<AppSettings> options)
+        IOptions<AppSettings> options,
+        IOptions<SwaggerSettings> swaggerOptions)
     {
         _tenantConfigurationProvider = tenantConfigurationProvider;
         _tenantConfigurationContextProvider = tenantConfigurationContextProvider;
         _options = options;
+        _swaggerOptions = swaggerOptions;
+
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -34,7 +38,8 @@ public class TenantResolverMiddleware : IMiddleware
 
         if (multiTenancyEnabled)
         {
-            if (context.Request.Headers.TryGetValue("tenant", out var tenantIdentifier))
+            if (context.Request.Headers.TryGetValue("tenant", out var tenantIdentifier) &&
+                !string.IsNullOrEmpty(tenantIdentifier))
             {
                 if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier, out var tenantConfiguration))
                 {
@@ -42,15 +47,33 @@ public class TenantResolverMiddleware : IMiddleware
                 }
                 else
                 {
-                    //context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    //return;
                     throw new AdminApiException($"Tenant not found with provided tenant id: {tenantIdentifier}")
                     {
                         StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
                     };
                 }
-            }           
-
+            }
+            else
+            {
+                if(_swaggerOptions.Value.EnableSwagger)
+                {
+                    var defaultTenant = _swaggerOptions.Value.DefaultTenant;
+                    if (!string.IsNullOrEmpty(defaultTenant))
+                    {
+                        if (_tenantConfigurationProvider.Get().TryGetValue(defaultTenant, out var tenantConfiguration))
+                        {
+                            _tenantConfigurationContextProvider.Set(tenantConfiguration);
+                        }
+                    }
+                    else
+                    {
+                        throw new AdminApiException($"Please configure valid default tenant id")
+                        {
+                            StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
+                        };
+                    }
+                }
+            }
         }     
         await next.Invoke(context);
     }

@@ -37,7 +37,7 @@ app.MapFeatureEndpoints();
 app.MapControllers();
 app.UseHealthChecks("/health");
 
-if (app.Configuration.GetValue<bool>("EnableSwagger"))
+if (app.Configuration.GetValue<bool>("SwaggerSettings:EnableSwagger"))
 {
     app.UseSwagger();
     app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());

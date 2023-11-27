@@ -6,6 +6,9 @@
 FROM edfialliance/ods-api-db-admin:v2.3.1
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
+ARG POSTGRES_USER=postgres
+ARG POSTGRES_PASSWORD=abcdefgh1!
+
 ENV POSTGRES_USER=${POSTGRES_USER}
 ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=postgres

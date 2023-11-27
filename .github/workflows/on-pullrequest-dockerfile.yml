@@ -27,29 +27,7 @@ env:
   IMAGE_VERSION: pre-1.3
 
 jobs:
-  # docker-testing:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       dockerfile: [
-  #           { name: "ApiDatabase", path: "Docker/Settings/DB-Admin/pgsql/Dockerfile" },
-  #           { name: "Postgres", path: "Docker/Dockerfile" },
-  #           { name: "Database", path: "Docker/dbadmin.Dockerfile" },
-  #           { name: "Development", path: "Docker/dev.Dockerfile" },
-  #         ]
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-
-  #     - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
-  #       name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile
-  #       with:
-  #         dockerfile: ${{ matrix.dockerfile.path }}
-  #         failure-threshold: error
-
-
-  docker-analysis:
+  docker:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -57,14 +35,20 @@ jobs:
       fail-fast: false
       matrix:
         dockerfile: [
-          { name: "api-database", path: "Docker/Settings/DB-Admin/pgsql/Dockerfile" },
+          # { name: "api-database", path: "Docker/Settings/DB-Admin/pgsql/Dockerfile" },
           # { name: "postgres", path: "Docker/Dockerfile" },
-          # { name: "database", path: "Docker/dbadmin.Dockerfile" },
+          { name: "database", path: "Docker/dbadmin.Dockerfile" } #,
           # { name: "development", path: "Docker/dev.Dockerfile" },
           ]
     steps:
     - name: Checkout code
       uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+    - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+      name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile
+      with:
+        dockerfile: ${{ matrix.dockerfile.path }}
+        failure-threshold: error
 
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a  # v2.1.0
@@ -80,12 +64,17 @@ jobs:
 
     - name: Build
       run: |
-        path=${{matrix.dockerfile.path}}
-        folder=${path%/*}
-        cd $folder
-        dockerfile=$(echo ${{matrix.dockerfile.path}} | awk -F"/" '{print $NF}')
+        if [ ${{ matrix.dockerfile.name }} == 'api-database' ]; then
+          path=${{matrix.dockerfile.path}}
+          folder=${path%/*}
+          # temp comment
+          cd $folder
+          dockerfile=$(echo ${{matrix.dockerfile.path}} | awk -F"/" '{print $NF}')
+          pwd
+        else
+          dockerfile=${{ matrix.dockerfile.path }}
+        fi
         echo $dockerfile
-        echo {{ steps.versions.outputs.VERSION }}
         docker build -f $dockerfile -t ${{ matrix.dockerfile.name }} --build-arg="VERSION=${{ steps.versions.outputs.VERSION }}" .
 
     - name: Analize

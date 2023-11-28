@@ -9,9 +9,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/workflows/on-pullrequest-dockerfile.yml"
-      - "Docker/*"
   pull_request:
     branches:
       - main
@@ -23,141 +20,76 @@ on:
 env:
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
   DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-  IMAGE_NAME: ${{ vars.IMAGE_NAME }}
-  IMAGE_VERSION: pre-1.3
 
 jobs:
-  docker-published:
+  docker-analisis:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
     strategy:
       fail-fast: false
       matrix:
-        dockerfile: [
-          { name: "api-database", path: "Docker/Settings/DB-Admin/pgsql/Dockerfile" },
-          { name: "postgres", path: "Docker/Dockerfile" }
+        dockerfile:
+          [
+            { name: "api-database", path: "Docker/Settings/DB-Admin/pgsql/Dockerfile", type: "published" },
+            { name: "postgres", path: "Docker/Dockerfile", type: "published" },
+            { name: "database", path: "Docker/dbadmin.Dockerfile", type: "local" },
+            { name: "development", path: "Docker/dev.Dockerfile", type: "local" },
           ]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - name: Checkout code
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          fetch-depth: 0w
 
-    - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
-      name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile
-      with:
-        dockerfile: ${{ matrix.dockerfile.path }}
-        failure-threshold: error
+      - name: Copy application folder to docker context
+        if: ${{ matrix.dockerfile.type == 'local' }}
+        run: |
+          mkdir Docker/Application
+          cp -r ./Application/EdFi.Ods.AdminApi ./Docker/Application
+          cp ./Application/NuGet.Config ./Docker/Application
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a  # v2.1.0
-      with:
-        username: ${{ env.DOCKER_USERNAME }}
-        password: ${{ env.DOCKER_HUB_TOKEN }}
+      - name: Set Version Numbers
+        if: ${{ matrix.dockerfile.type == 'published' }}
+        id: versions
+        run: |
+          tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          current=${tag:1}
+          echo $current
+          echo "VERSION=$current" >> $GITHUB_OUTPUT
 
-    - name: Set Version Numbers
-      id: versions
-      shell: pwsh
-      run: |
-        echo ${{ github.ref_name }}
-        "VERSION=2.0.1" >> $env:GITHUB_OUTPUT
+      - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+        name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile
+        with:
+          dockerfile: ${{ matrix.dockerfile.path }}
+          failure-threshold: error
 
-    - name: Build
-      run: |
-        path=${{matrix.dockerfile.path}}
-        folder=${path%/*}
-        cd $folder
-        dockerfile=$(echo ${{matrix.dockerfile.path}} | awk -F"/" '{print $NF}')
-        docker build -f $dockerfile -t ${{ matrix.dockerfile.name }} --build-arg="VERSION=${{ steps.versions.outputs.VERSION }}" .
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_HUB_TOKEN }}
 
-    - name: Analize
-      uses: docker/scout-action@4e9ac4df44fb56797da111fce8185f7fbffd5a09 # v1.0.9
-      with:
-        command: cves
-        image: local://${{ matrix.dockerfile.name }}
-        sarif-file: sarif-${{ matrix.dockerfile.name }}.output.json
-        summary: true
+      - name: Build
+        run: |
+          path=${{matrix.dockerfile.path}}
+          folder=${path%/*}
+          cd $folder
+          dockerfile=$(echo ${{matrix.dockerfile.path}} | awk -F"/" '{print $NF}')
 
-    - name: Upload SARIF result
-      id: upload-sarif
-      if: ${{ github.event_name != 'pull_request_target' }}
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: sarif-${{ matrix.dockerfile.name }}.output.json
+          docker build -f $dockerfile -t ${{ matrix.dockerfile.name }} --build-arg="VERSION=${{ steps.versions.outputs.VERSION }}" .
 
-  docker-local:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        dockerfile: [
-          { name: "database", path: "dbadmin.Dockerfile" },
-          { name: "development", path: "dev.Dockerfile" },
-          ]
-    defaults:
-      run:
-        working-directory: Docker
+      - name: Analyze
+        uses: docker/scout-action@4e9ac4df44fb56797da111fce8185f7fbffd5a09 # v1.0.9
+        with:
+          command: cves
+          image: local://${{ matrix.dockerfile.name }}
+          sarif-file: sarif-${{ matrix.dockerfile.name }}.output.json
+          summary: true
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-
-    - name: Copy application folder to docker context
-      if:
-      run: |
-        mkdir Application
-        cp -r ../Application/EdFi.Ods.AdminApi ./Application
-        cp ../Application/NuGet.Config ./Application
-
-    - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
-      name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile
-      with:
-        dockerfile: Docker/${{ matrix.dockerfile.path }}
-        failure-threshold: error
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a  # v2.1.0
-      with:
-        username: ${{ env.DOCKER_USERNAME }}
-        password: ${{ env.DOCKER_HUB_TOKEN }}
-
-    - name: Build
-      run: docker build -f ${{ matrix.dockerfile.path }} -t ${{ matrix.dockerfile.name }} .
-      env:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: abcdefgh1!
-
-    - name: Analize
-      uses: docker/scout-action@4e9ac4df44fb56797da111fce8185f7fbffd5a09 # v1.0.9
-      with:
-        command: cves
-        image: local://${{ matrix.dockerfile.name }}
-        sarif-file: sarif-${{ matrix.dockerfile.name }}.output.json
-        summary: true
-
-    - name: Upload SARIF result
-      id: upload-sarif
-      if: ${{ github.event_name != 'pull_request_target' }}
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: sarif-${{ matrix.dockerfile.name }}.output.json
-
-
-  # docker-analysis:
-  #   runs-on: ubuntu-latest
-  #   steps:
-
-  #     - name: Log in to Docker Hub
-  #       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a  # v2.1.0
-  #       with:
-  #         username: ${{ env.DOCKER_USERNAME }}
-  #         password: ${{ env.DOCKER_HUB_TOKEN }}
-
-  #     # - name: SBOM
-  #     #   uses: docker/scout-action@4e9ac4df44fb56797da111fce8185f7fbffd5a09 # v1.0.9
-  #     #   with:
-  #     #     command: sbom
-  #     #     image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-
-  #     - run: ls
+      - name: Upload SARIF result
+        id: upload-sarif
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: sarif-${{ matrix.dockerfile.name }}.output.json

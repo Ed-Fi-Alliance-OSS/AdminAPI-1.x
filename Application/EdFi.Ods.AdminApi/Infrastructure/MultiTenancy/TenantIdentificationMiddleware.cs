@@ -7,7 +7,6 @@ using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Microsoft.Extensions.Options;
-using System.Collections;
 using System.Net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
@@ -53,28 +52,39 @@ public class TenantResolverMiddleware : IMiddleware
                     };
                 }
             }
+            else if (_swaggerOptions.Value.EnableSwagger && RequestFromSwagger())
+            {
+                var defaultTenant = _swaggerOptions.Value.DefaultTenant;
+                if (!string.IsNullOrEmpty(defaultTenant) &&
+                    _tenantConfigurationProvider.Get().TryGetValue(defaultTenant, out var tenantConfiguration))
+                {
+                    _tenantConfigurationContextProvider.Set(tenantConfiguration);
+
+                }
+                else
+                {
+                    throw new AdminApiException($"Please configure valid default tenant id")
+                    {
+                        StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
+                    };
+                }
+            }
             else
             {
-                if(_swaggerOptions.Value.EnableSwagger)
+                if (!HealthCheck())
                 {
-                    var defaultTenant = _swaggerOptions.Value.DefaultTenant;
-                    if (!string.IsNullOrEmpty(defaultTenant))
+                    throw new AdminApiException($"Tenant not found")
                     {
-                        if (_tenantConfigurationProvider.Get().TryGetValue(defaultTenant, out var tenantConfiguration))
-                        {
-                            _tenantConfigurationContextProvider.Set(tenantConfiguration);
-                        }
-                    }
-                    else
-                    {
-                        throw new AdminApiException($"Please configure valid default tenant id")
-                        {
-                            StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
-                        };
-                    }
+                        StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
+                    };
                 }
             }
         }     
         await next.Invoke(context);
-    }
+
+        bool RequestFromSwagger() => (context.Request.Path.Value != null && context.Request.Path.Value.Contains("swagger")) ||
+                context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger")) != null;
+
+        bool HealthCheck() => context.Request.Path.Value != null && context.Request.Path.Value.Contains("health");
+    }    
 }

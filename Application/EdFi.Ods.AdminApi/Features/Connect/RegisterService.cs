@@ -60,8 +60,7 @@ public class RegisterService : IRegisterService
     private async Task<bool> RegistrationIsEnabledOrNecessary()
     {
         var registrationIsEnabled = _configuration.GetValue<bool>("Authentication:AllowRegistration");
-        var applicationCount = await _applicationManager.CountAsync();
-        return registrationIsEnabled || applicationCount == 0;
+        return await Task.FromResult(registrationIsEnabled);
     }
 
     public class Validator : AbstractValidator<Request>

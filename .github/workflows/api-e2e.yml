@@ -21,7 +21,7 @@ env:
   CYCLE_NAME: "Automation Cycle"
   TASK_NAME: "API Automation Task"
   FOLDER_NAME: "API Automation Run"
-  RESULTS_FILE: "test-results"
+  RESULTS_FILE: "test-xml-results"
 
 jobs:
   run-e2e-tests:
@@ -61,65 +61,23 @@ jobs:
         with:
           node-version: "16"
 
-      - name: Install newman
-        run: npm install -g newman newman-reporter-junitfull
+      - name: Install Tools
+        run: npm install -g newman newman-reporter-htmlextra postman-combine-collections
+
+      - name: Combine Collections
+        run: |
+          postman-combine-collections -f './E2E Tests/Admin API E2E 2.0 -*.postman_collection.json' \
+             -n 'Admin API E2E 2.0' \
+             -o './E2E Tests/Admin-API-Full-Collection.json'
 
       - name: Run tests
         run: |
-          newman run './E2E Tests/Admin API E2E 2.0 - User Management.postman_collection.json' \
+          newman run './E2E Tests/Admin-API-Full-Collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportUser.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Vendors.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportVendors.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Application.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportApplication.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - ClaimSets.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportClaimSets.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Resourceclaims.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportResourceClaims.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - AuthStrategies.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportAuthStrategies.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Profiles.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportProfiles.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - Actions.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportActions.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstances.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportOdsInstances.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstanceContexts.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportOdsInstancesContext.xml \
-            -k
-          newman run './E2E Tests/Admin API E2E 2.0 - OdsInstanceDerivatives.postman_collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
-            --reporter-junit-export ./reports/reportOdsInstancesDerivative.xml \
+            -r cli,junit,htmlextra \
+            --reporter-htmlextra-title 'AdminAPI - 2.0' \
+            --reporter-htmlextra-export './report-html/results.html' \
+            --reporter-junit-export ./reports/report.xml \
             -k
 
       - name: Get Docker logs
@@ -135,18 +93,25 @@ jobs:
         with:
           name: docker-logs
           path: Application/EdFi.Ods.AdminApi/docker-logs/
-          retention-days: 10
+          retention-days: 5
 
-      - name: Upload results
+      - name: Upload Html results
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() || failure()
         with:
-          name: test-results
+          name: test-html-results
+          path: Application/EdFi.Ods.AdminApi/report-html/results.html
+          retention-days: 5
+
+      - name: Upload xml results
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        if: success() || failure()
+        with:
+          name: test-xml-results
           path: Application/EdFi.Ods.AdminApi/reports/report.xml
-          retention-days: 10
+          retention-days: 5
 
   report:
-    if: ${{ false }}
     defaults:
       run:
         shell: pwsh

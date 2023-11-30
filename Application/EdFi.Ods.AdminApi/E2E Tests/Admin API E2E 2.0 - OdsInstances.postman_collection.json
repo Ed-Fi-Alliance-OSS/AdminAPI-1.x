@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "02802cd4-1e6d-4e78-b3b7-5b2f5a4bb709",
+		"_postman_id": "bc7ce413-a68f-4e7f-9c99-e6ffa4cd302a",
 		"name": "Admin API E2E 2.0 - OdsInstances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20721775"
+		"_exporter_id": "29549414"
 	},
 	"item": [
 		{
@@ -1089,7 +1089,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"DELETE OdsInstance Applications associated: Response errors include messages by property\", function () {\r",
-											"    pm.expect(response.errors.Id.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Id.length).to.equal(3);\r",
 											"    pm.expect(response.errors.Id[0]).to.contain(\"Can not be deleted\");\r",
 											"    pm.expect(response.errors.Id[0]).to.contain(\"Applications\"); \r",
 											"});\r",

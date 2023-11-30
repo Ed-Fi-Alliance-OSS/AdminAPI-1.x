@@ -22,7 +22,7 @@ env:
   DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
 
 jobs:
-  docker-analisis:
+  docker-analysis:
     runs-on: ubuntu-latest
     permissions:
       security-events: write

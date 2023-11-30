@@ -34,6 +34,7 @@ jobs:
             { name: "api-database", path: "Docker/Settings/DB-Admin/pgsql/Dockerfile", type: "published" },
             { name: "postgres", path: "Docker/Dockerfile", type: "published" },
             { name: "database", path: "Docker/dbadmin.Dockerfile", type: "local" },
+            { name: "development", path: "Docker/dev.Dockerfile", type: "local" },
           ]
     steps:
       - name: Checkout code

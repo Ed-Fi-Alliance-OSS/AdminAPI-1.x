@@ -15,16 +15,17 @@ public static class HealthCheckServiceExtensions
         Dictionary<string, string> connectionStrings;
         var databaseEngine = configuration["AppSettings:DatabaseEngine"];
         var multiTenancyEnabled = configuration.GetValue<bool>("AppSettings:MultiTenancy");
+        var dbName = "EdFi_Admin";
 
         if (multiTenancyEnabled)
         {
             connectionStrings = configuration.Get<TenantsSection>().Tenants.
-                ToDictionary(x => x.Key, x => x.Value.ConnectionStrings["EdFi_Admin"]);
+                ToDictionary(x => x.Key, x => x.Value.ConnectionStrings[dbName]);
         }
         else
         {
             connectionStrings = new() {
-                    { "SingleTenant", configuration.GetConnectionString("EdFi_Admin") }};
+                    { "SingleTenant", configuration.GetConnectionString(dbName) }};
         }
 
         if (!string.IsNullOrEmpty(databaseEngine))

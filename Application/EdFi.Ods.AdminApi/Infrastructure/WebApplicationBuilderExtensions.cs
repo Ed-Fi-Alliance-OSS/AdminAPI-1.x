@@ -224,7 +224,7 @@ public static class WebApplicationBuilderExtensions
 
         string AdminConnectionString(IServiceProvider serviceProvider)
         {
-            var adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("Admin");
+            var adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Admin");
 
             if (multiTenancyEnabled)
             {
@@ -240,7 +240,7 @@ public static class WebApplicationBuilderExtensions
 
         string SecurityConnectionString(IServiceProvider serviceProvider)
         {
-            var securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("Security");
+            var securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Security");
 
             if (multiTenancyEnabled)
             {

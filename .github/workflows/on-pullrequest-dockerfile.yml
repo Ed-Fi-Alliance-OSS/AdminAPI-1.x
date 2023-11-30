@@ -54,9 +54,19 @@ jobs:
         id: versions
         run: |
           tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-          current=${tag:1}
-          echo $current
-          echo "VERSION=$current" >> $GITHUB_OUTPUT
+
+          if [[ $tag =~ "Pre-Release" ]]
+          then
+            # Remove Pre-Release prefix
+            prefix="Pre-Release-"
+            package=${tag#"$prefix"}
+          else
+            package=${tag}
+          fi
+
+          SEMVERSION=${package:1}  # strip off the leading 'v'
+          echo "Current version: $SEMVERSION"
+          echo "VERSION=$SEMVERSION" >> $GITHUB_OUTPUT
 
       - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile

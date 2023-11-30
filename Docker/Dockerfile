@@ -20,7 +20,7 @@ COPY Settings/"${DB}"/run.sh /app/run.sh
 COPY Settings/"${DB}"/log4net.config /app/log4net.txt
 
 RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~72 && \
-    if [ "$DB" == "pgsql" ]; then apk --no-cache add postgresql13-client=~13; fi && \
+    if [ "$DB" = "pgsql" ]; then apk --no-cache add postgresql13-client=~13; fi && \
     wget -nv -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \
     unzip /app/AdminApi.zip AdminApi/* -d /app/ && \
     cp -r /app/AdminApi/. /app/ && \

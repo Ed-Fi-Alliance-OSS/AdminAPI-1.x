@@ -54,5 +54,5 @@ public class FeatureConstants
     public const string OdsInstanceContextOdsInstanceIdDescription = "ODS instance context ODS instance id.";
     public const string OdsInstanceContextContextKeyDescription = "context key.";
     public const string OdsInstanceContextContextValueDescription = "context value.";
-
+    public const string ClientSecretValidationMessage = "ClientSecret must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be 32 to 128 characters long.";
 }

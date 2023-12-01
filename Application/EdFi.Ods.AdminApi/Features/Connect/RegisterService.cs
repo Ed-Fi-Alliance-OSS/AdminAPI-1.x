@@ -72,7 +72,7 @@ public class RegisterService : IRegisterService
             RuleFor(m => m.ClientSecret)
                 .NotEmpty()
                 .Matches(new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{32,128}$"))
-                .WithMessage("ClientSecret must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be 32 to 128 characters long.");
+                .WithMessage(FeatureConstants.ClientSecretValidationMessage);
             RuleFor(m => m.DisplayName).NotEmpty();
         }
     }

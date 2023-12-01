@@ -69,7 +69,6 @@ public class RegisterService : IRegisterService
         public Validator()
         {
             RuleFor(m => m.ClientId).NotEmpty();
-            RuleFor(m => m.ClientSecret).NotEmpty();
             RuleFor(m => m.ClientSecret)
                 .NotEmpty()
                 .Matches(new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{32,128}$"))

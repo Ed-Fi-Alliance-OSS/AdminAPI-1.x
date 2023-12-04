@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "21764eef-6ca9-4043-b7b4-418e8b0709af",
+		"_postman_id": "9163560a-3818-4bdd-9deb-7d31ad1cf82b",
 		"name": "Admin API E2E 2.0 - User Management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3724147"
+		"_exporter_id": "21286036"
 	},
 	"item": [
 		{
@@ -139,8 +139,42 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
+									"function generateClientSecret() {\r",
+									"    const minLength = 32;\r",
+									"    const maxLength = 128;\r",
+									"    let result = '';\r",
+									"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+									"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';\r",
+									"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;\r",
+									"\r",
+									"    result += randomChar('abcdefghijklmnopqrstuvwxyz');\r",
+									"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');\r",
+									"    result += randomChar('0123456789');\r",
+									"    result += randomChar(specialCharacters);\r",
+									"\r",
+									"    for (let i = result.length; i < length; i++) {\r",
+									"        const charactersPlusSpecial = characters + specialCharacters;\r",
+									"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));\r",
+									"    }\r",
+									"\r",
+									"    return shuffleString(result);\r",
+									"}\r",
+									"\r",
+									"function randomChar(str) {\r",
+									"    return str.charAt(Math.floor(Math.random() * str.length));\r",
+									"}\r",
+									"\r",
+									"function shuffleString(str) {\r",
+									"    const array = str.split('');\r",
+									"    for (let i = array.length - 1; i > 0; i--) {\r",
+									"        const j = Math.floor(Math.random() * (i + 1));\r",
+									"        [array[i], array[j]] = [array[j], array[i]];\r",
+									"    }\r",
+									"    return array.join('');\r",
+									"}\r",
+									"\r",
 									"pm.collectionVariables.set(\"RegisteredClientId\", pm.variables.replaceIn('{{$guid}}'));\r",
-									"pm.collectionVariables.set(\"RegisteredClientSecret\", pm.variables.replaceIn('{{$guid}}'));\r",
+									"pm.collectionVariables.set(\"RegisteredClientSecret\", generateClientSecret());\r",
 									""
 								],
 								"type": "text/javascript"
@@ -213,6 +247,7 @@
 									"    pm.expect(response.errors[\"ClientSecret\"].length).to.equal(1);\r",
 									"    pm.expect(response.errors[\"DisplayName\"].length).to.equal(1);\r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript"
@@ -312,6 +347,86 @@
 								{
 									"key": "DisplayName",
 									"value": "{{UserName}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/connect/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"connect",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register - Invalid ClientSecret",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST Register Already Exists: Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"POST Register Already Exists: Response matches error format\", function () {\r",
+									"    pm.expect(response).to.have.property(\"title\");\r",
+									"    pm.expect(response).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"POST Register Already Exists: Response title is helpful and accurate\", function () {\r",
+									"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"POST Register Invalid ClientSecret: Response errors include message\", function () {\r",
+									"    pm.expect(response.errors.ClientSecret.length).to.equal(1);\r",
+									"    pm.expect(response.errors.ClientSecret[0]).to.contain(\"must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be 32 to 128 characters\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"InvalidClientSecret\", 'invalidvalue');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "ClientId",
+									"value": "{{RegisteredClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "ClientSecret",
+									"value": "{{InvalidClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "DisplayName",
+									"value": "Test",
 									"type": "text"
 								}
 							]
@@ -724,7 +839,42 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"function generateClientSecret() {",
+					"    const minLength = 32;",
+					"    const maxLength = 128;",
+					"    let result = '';",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+					"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+					"",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');",
+					"    result += randomChar('0123456789');",
+					"    result += randomChar(specialCharacters);",
+					"",
+					"    for (let i = result.length; i < length; i++) {",
+					"        const charactersPlusSpecial = characters + specialCharacters;",
+					"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));",
+					"    }",
+					"",
+					"    return shuffleString(result);",
+					"}",
+					"",
+					"function randomChar(str) {",
+					"    return str.charAt(Math.floor(Math.random() * str.length));",
+					"}",
+					"",
+					"function shuffleString(str) {",
+					"    const array = str.split('');",
+					"    for (let i = array.length - 1; i > 0; i--) {",
+					"        const j = Math.floor(Math.random() * (i + 1));",
+					"        [array[i], array[j]] = [array[j], array[i]];",
+					"    }",
+					"    return array.join('');",
+					"}",
+					"",
 					"let guid = pm.variables.replaceIn('{{$guid}}');",
+					"let client_secret =  generateClientSecret();",
 					"",
 					"pm.sendRequest({",
 					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
@@ -736,7 +886,7 @@
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
 					"            {key: 'ClientId', value: guid },",
-					"            {key: 'ClientSecret', value: guid },",
+					"            {key: 'ClientSecret', value: client_secret },",
 					"            {key: 'DisplayName', value: guid }",
 					"        ]",
 					"    }",
@@ -757,7 +907,7 @@
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
 					"            {key: 'client_id', value: guid },",
-					"            {key: 'client_secret', value: guid },",
+					"            {key: 'client_secret', value: client_secret },",
 					"            {key: 'grant_type', value: \"client_credentials\"},",
 					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
 					"        ]",
@@ -787,6 +937,10 @@
 	"variable": [
 		{
 			"key": "TOKEN",
+			"value": ""
+		},
+		{
+			"key": "InvalidClientSecret",
 			"value": ""
 		}
 	]

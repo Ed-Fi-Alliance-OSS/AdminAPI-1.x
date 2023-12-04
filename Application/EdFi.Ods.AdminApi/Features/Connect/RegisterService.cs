@@ -8,6 +8,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using OpenIddict.Abstractions;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.RegularExpressions;
 
 namespace EdFi.Ods.AdminApi.Features.Connect;
 
@@ -68,7 +69,10 @@ public class RegisterService : IRegisterService
         public Validator()
         {
             RuleFor(m => m.ClientId).NotEmpty();
-            RuleFor(m => m.ClientSecret).NotEmpty();
+            RuleFor(m => m.ClientSecret)
+                .NotEmpty()
+                .Matches(new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{32,128}$"))
+                .WithMessage(FeatureConstants.ClientSecretValidationMessage);
             RuleFor(m => m.DisplayName).NotEmpty();
         }
     }

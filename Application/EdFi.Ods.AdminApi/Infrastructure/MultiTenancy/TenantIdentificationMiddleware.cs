@@ -5,9 +5,10 @@
 
 using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Context;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Options;
-using System.Net;
+using System.Text.RegularExpressions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 
@@ -34,49 +35,55 @@ public class TenantResolverMiddleware : IMiddleware
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var multiTenancyEnabled = _options.Value.MultiTenancy;
+        var validationErrorMessage = "Please provide valid tenant id. Tenant id can only contain alphanumeric and -";
 
         if (multiTenancyEnabled)
         {
             if (context.Request.Headers.TryGetValue("tenant", out var tenantIdentifier) &&
                 !string.IsNullOrEmpty(tenantIdentifier))
             {
-                if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier, out var tenantConfiguration))
+                if (IsValidTenantId(tenantIdentifier))
                 {
-                    _tenantConfigurationContextProvider.Set(tenantConfiguration);
+                    if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier, out var tenantConfiguration))
+                    {
+                        _tenantConfigurationContextProvider.Set(tenantConfiguration);
+                    }
+                    else
+                    {
+                        ThrowTenantValidationError($"Tenant not found with provided tenant id: {tenantIdentifier}");                       
+                    }
                 }
                 else
                 {
-                    throw new AdminApiException($"Tenant not found with provided tenant id: {tenantIdentifier}")
-                    {
-                        StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
-                    };
+                    ThrowTenantValidationError(validationErrorMessage);
                 }
             }
             else if (_swaggerOptions.Value.EnableSwagger && RequestFromSwagger())
             {
                 var defaultTenant = _swaggerOptions.Value.DefaultTenant;
-                if (!string.IsNullOrEmpty(defaultTenant) &&
-                    _tenantConfigurationProvider.Get().TryGetValue(defaultTenant, out var tenantConfiguration))
+                if (!string.IsNullOrEmpty(defaultTenant) && IsValidTenantId(defaultTenant))
                 {
-                    _tenantConfigurationContextProvider.Set(tenantConfiguration);
+                    if (!string.IsNullOrEmpty(defaultTenant) &&
+                        _tenantConfigurationProvider.Get().TryGetValue(defaultTenant, out var tenantConfiguration))
+                    {
+                        _tenantConfigurationContextProvider.Set(tenantConfiguration);
 
+                    }
+                    else
+                    {
+                        ThrowTenantValidationError("Please configure valid default tenant id"); ;
+                    }
                 }
                 else
                 {
-                    throw new AdminApiException($"Please configure valid default tenant id")
-                    {
-                        StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
-                    };
+                    ThrowTenantValidationError(validationErrorMessage);
                 }
             }
             else
             {
                 if (!HealthCheck())
                 {
-                    throw new AdminApiException($"Tenant not found")
-                    {
-                        StatusCode = (HttpStatusCode)StatusCodes.Status404NotFound
-                    };
+                    ThrowTenantValidationError("Tenant header is missing");                   
                 }
             }
         }     
@@ -86,5 +93,23 @@ public class TenantResolverMiddleware : IMiddleware
                 context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger")) != null;
 
         bool HealthCheck() => context.Request.Path.Value != null && context.Request.Path.Value.Contains("health");
-    }    
+
+        void ThrowTenantValidationError(string errorMessage)
+        {
+            throw new ValidationException(new[] { new ValidationFailure("Tenant", errorMessage) });           
+        };
+    }
+
+    private bool IsValidTenantId(string tenantId)
+    {
+        const int MaxLength = 50;
+        var regex = new Regex("^[A-Za-z0-9-]+$");
+
+        if (string.IsNullOrEmpty(tenantId) || tenantId.Length > MaxLength ||
+                       !regex.IsMatch(tenantId))
+        {
+            return false;
+        }
+        return true;
+    }  
 }

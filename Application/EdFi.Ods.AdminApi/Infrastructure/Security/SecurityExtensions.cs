@@ -34,7 +34,7 @@ public static class SecurityExtensions
             .AddServer(opt =>
             {
                 opt.AllowClientCredentialsFlow();
-
+                opt.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
                 opt.SetTokenEndpointUris(SecurityConstants.TokenEndpoint);
 
                 opt.AddEphemeralEncryptionKey();

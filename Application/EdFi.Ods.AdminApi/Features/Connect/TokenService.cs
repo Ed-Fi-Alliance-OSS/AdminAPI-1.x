@@ -19,6 +19,8 @@ public class TokenService : ITokenService
 {
     private readonly IOpenIddictApplicationManager _applicationManager;
 
+    private const string DENIED_AUTHENTICATION_MESSAGE = "Access Denied. Please review your information and try again.";
+
     public TokenService(IOpenIddictApplicationManager applicationManager)
     {
         _applicationManager = applicationManager;
@@ -36,7 +38,7 @@ public class TokenService : ITokenService
 
         if (!await _applicationManager.ValidateClientSecretAsync(application, request.ClientSecret!))
         {
-            throw new AuthenticationException("Invalid Admin API Client key and secret");
+            throw new AuthenticationException(DENIED_AUTHENTICATION_MESSAGE);
         }
 
         var requestedScopes = request.GetScopes();
@@ -47,7 +49,7 @@ public class TokenService : ITokenService
 
         var missingScopes = requestedScopes.Where(s => !appScopes.Contains(s)).ToList();
         if (missingScopes.Any())
-            throw new AuthenticationException($"Client is not allowed access to requested scope(s): {string.Join(", ", missingScopes)}");
+            throw new AuthenticationException(DENIED_AUTHENTICATION_MESSAGE);
 
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
 

@@ -30,11 +30,11 @@ public class TokenService : ITokenService
     {
         if (!request.IsClientCredentialsGrantType())
         {
-            throw new NotImplementedException("The specified grant type is not implemented");
+            throw new NotImplementedException(DENIED_AUTHENTICATION_MESSAGE);
         }
 
         var application = await _applicationManager.FindByClientIdAsync(request.ClientId!) ??
-            throw new NotFoundException<string?>("Admin API Client", request.ClientId);
+            throw new NotFoundException<string?>("Access Denied", DENIED_AUTHENTICATION_MESSAGE);
 
         if (!await _applicationManager.ValidateClientSecretAsync(application, request.ClientSecret!))
         {

@@ -4,13 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Features;
-using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using log4net;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.AddServices();
 
@@ -31,6 +29,7 @@ AdminApiVersions.Initialize(app);
 
 //The ordering here is meaningful: Logging -> Routing -> Auth -> Endpoints
 app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<TenantResolverMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -38,7 +37,7 @@ app.MapFeatureEndpoints();
 app.MapControllers();
 app.UseHealthChecks("/health");
 
-if (app.Configuration.GetValue<bool>("EnableSwagger"))
+if (app.Configuration.GetValue<bool>("SwaggerSettings:EnableSwagger"))
 {
     app.UseSwagger();
     app.DefineSwaggerUIWithApiVersions(AdminApiVersions.GetAllVersionStrings());

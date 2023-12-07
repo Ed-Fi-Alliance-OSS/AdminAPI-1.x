@@ -3,22 +3,47 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using Microsoft.Extensions.DependencyInjection;
+using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
 public static class HealthCheckServiceExtensions
 {
-    public static IServiceCollection AddHealthCheck(this IServiceCollection services, string connectionString, bool isSqlServer)
+    public static IServiceCollection AddHealthCheck(this IServiceCollection services,
+             IConfigurationRoot configuration)
     {
-        var hcBuilder = services.AddHealthChecks();
-        if (isSqlServer)
+        Dictionary<string, string> connectionStrings;
+        var databaseEngine = configuration["AppSettings:DatabaseEngine"];
+        var multiTenancyEnabled = configuration.GetValue<bool>("AppSettings:MultiTenancy");
+        var dbName = "EdFi_Admin";
+
+        if (multiTenancyEnabled)
         {
-            hcBuilder.AddSqlServer(connectionString);
+            connectionStrings = configuration.Get<TenantsSection>().Tenants.
+                ToDictionary(x => x.Key, x => x.Value.ConnectionStrings[dbName]);
         }
         else
         {
-            hcBuilder.AddNpgSql(connectionString);
+            connectionStrings = new() {
+                    { "SingleTenant", configuration.GetConnectionString(dbName) }};
+        }
+
+        if (!string.IsNullOrEmpty(databaseEngine))
+        {
+            var isSqlServer = DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer);
+            var hcBuilder = services.AddHealthChecks();
+
+            foreach (var connectionString in connectionStrings)
+            {
+                if (isSqlServer)
+                {
+                    hcBuilder.AddSqlServer(connectionString.Value, name: connectionString.Key);
+                }
+                else
+                {
+                    hcBuilder.AddNpgSql(connectionString.Value, name: connectionString.Key);
+                }
+            }
         }
 
         return services;

@@ -18,6 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
+using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Context;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -25,6 +28,8 @@ public static class WebApplicationBuilderExtensions
 {
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
+        webApplicationBuilder.Services.Configure<AppSettings>(webApplicationBuilder.Configuration.GetSection("AppSettings"));
+        EnableMultiTenancySupport(webApplicationBuilder);
         var executingAssembly = Assembly.GetExecutingAssembly();
         webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminApiMappingProfile).Assembly);
         webApplicationBuilder.Services.AddScoped<InstanceContext>();
@@ -71,6 +76,7 @@ public static class WebApplicationBuilderExtensions
             opt.AssumeDefaultVersionWhenUnspecified = false;
         });
 
+        webApplicationBuilder.Services.Configure<SwaggerSettings>(webApplicationBuilder.Configuration.GetSection("SwaggerSettings"));
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
@@ -146,10 +152,10 @@ public static class WebApplicationBuilderExtensions
 
         //Databases
         var databaseEngine = webApplicationBuilder.Configuration["AppSettings:DatabaseEngine"];
-        var (connectionString, isSqlServer) = webApplicationBuilder.AddDatabases(databaseEngine);
+        webApplicationBuilder.AddDatabases(databaseEngine);
 
         //Health
-        webApplicationBuilder.Services.AddHealthCheck(connectionString, isSqlServer);
+        webApplicationBuilder.Services.AddHealthCheck(webApplicationBuilder.Configuration);
 
         //JSON
         webApplicationBuilder.Services.Configure<JsonOptions>(o =>
@@ -164,52 +170,89 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddTransient<IOdsApiValidator, OdsApiValidator>();
     }
 
-    private static (string adminConnectionString, bool) AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)
+    private static void EnableMultiTenancySupport(this WebApplicationBuilder webApplicationBuilder)
     {
-        var adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("Admin");
-        var securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("Security");
+        webApplicationBuilder.Services.AddTransient<ITenantConfigurationProvider, TenantConfigurationProvider>();
+        webApplicationBuilder.Services.AddTransient<IContextProvider<TenantConfiguration>, ContextProvider<TenantConfiguration>>();
+        webApplicationBuilder.Services.AddSingleton<IContextStorage, HashtableContextStorage>();
+        webApplicationBuilder.Services.AddScoped<TenantResolverMiddleware>();
+        webApplicationBuilder.Services.Configure<TenantsSection>(webApplicationBuilder.Configuration);
+    }
+
+    private static void AddDatabases(this WebApplicationBuilder webApplicationBuilder, string databaseEngine)
+    {
+        var multiTenancyEnabled = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:MultiTenancy");
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
-                options =>
-                {
-                    options.UseNpgsql(adminConnectionString);
-                    options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
-                });
+            (sp, options) =>
+            {
+                options.UseNpgsql(AdminConnectionString(sp));
+                options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
+            });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new PostgresSecurityContext(securityConnectionString));
+                sp => new PostgresSecurityContext(SecurityConnectionString(sp)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new PostgresUsersContext(adminConnectionString));
-
-            return (adminConnectionString, false);
+                sp => new PostgresUsersContext(AdminConnectionString(sp)));            
         }
-
-        if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
+        else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
             DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
 
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
-                options =>
+                (sp, options) =>
                 {
-                    options.UseSqlServer(adminConnectionString);
+                    options.UseSqlServer(AdminConnectionString(sp));
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new SqlServerSecurityContext(securityConnectionString));
+                (sp) => new SqlServerSecurityContext(SecurityConnectionString(sp)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new SqlServerUsersContext(adminConnectionString));
-
-            return (adminConnectionString, true);
+                (sp) => new SqlServerUsersContext(AdminConnectionString(sp)));          
+        }
+        else
+        {
+            throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
 
-        throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
+        string AdminConnectionString(IServiceProvider serviceProvider)
+        {
+            var adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Admin");
+
+            if (multiTenancyEnabled)
+            {
+                var tenant = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>().Get();
+                if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString))
+                {
+                    adminConnectionString = tenant.AdminConnectionString;
+                }
+            }
+
+            return adminConnectionString;
+        }
+
+        string SecurityConnectionString(IServiceProvider serviceProvider)
+        {
+            var securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Security");
+
+            if (multiTenancyEnabled)
+            {
+                var tenant = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>().Get();
+                if (tenant != null && !string.IsNullOrEmpty(tenant.SecurityConnectionString))
+                {
+                    securityConnectionString = tenant.SecurityConnectionString;
+                }
+            }
+
+            return securityConnectionString;
+        }
     }
 
     private enum HttpVerbOrder

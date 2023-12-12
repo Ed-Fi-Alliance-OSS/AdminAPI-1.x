@@ -19,6 +19,8 @@ public class TokenService : ITokenService
 {
     private readonly IOpenIddictApplicationManager _applicationManager;
 
+    private const string DENIED_AUTHENTICATION_MESSAGE = "Access Denied. Please review your information and try again.";
+
     public TokenService(IOpenIddictApplicationManager applicationManager)
     {
         _applicationManager = applicationManager;
@@ -28,15 +30,15 @@ public class TokenService : ITokenService
     {
         if (!request.IsClientCredentialsGrantType())
         {
-            throw new NotImplementedException("The specified grant type is not implemented");
+            throw new NotImplementedException(DENIED_AUTHENTICATION_MESSAGE);
         }
 
         var application = await _applicationManager.FindByClientIdAsync(request.ClientId!) ??
-            throw new NotFoundException<string?>("Admin API Client", request.ClientId);
+            throw new NotFoundException<string?>("Access Denied", DENIED_AUTHENTICATION_MESSAGE);
 
         if (!await _applicationManager.ValidateClientSecretAsync(application, request.ClientSecret!))
         {
-            throw new AuthenticationException("Invalid Admin API Client key and secret");
+            throw new AuthenticationException(DENIED_AUTHENTICATION_MESSAGE);
         }
 
         var requestedScopes = request.GetScopes();
@@ -47,7 +49,7 @@ public class TokenService : ITokenService
 
         var missingScopes = requestedScopes.Where(s => !appScopes.Contains(s)).ToList();
         if (missingScopes.Any())
-            throw new AuthenticationException($"Client is not allowed access to requested scope(s): {string.Join(", ", missingScopes)}");
+            throw new AuthenticationException(DENIED_AUTHENTICATION_MESSAGE);
 
         var displayName = await _applicationManager.GetDisplayNameAsync(application);
 

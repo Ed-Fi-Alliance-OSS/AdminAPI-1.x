@@ -6,8 +6,11 @@
 using EdFi.Ods.AdminApi.Features.Connect;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
+using OpenIddict.Server;
+using static OpenIddict.Server.OpenIddictServerEvents;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Security;
 
@@ -57,6 +60,11 @@ public static class SecurityExtensions
                 {
                     aspNetCoreBuilder.DisableTransportSecurityRequirement();
                 }
+
+                opt.AddEventHandler<ApplyTokenResponseContext>(
+                    builder =>
+                    builder.UseSingletonHandler<DefaultTokenResponseHandler>().SetType(OpenIddictServerHandlerType.Custom)
+                );
             })
             .AddValidation(options =>
             {
@@ -94,4 +102,27 @@ public static class SecurityExtensions
         services.AddTransient<IRegisterService, RegisterService>();
         services.AddControllers();
     }
+
+    public class DefaultTokenResponseHandler : IOpenIddictServerHandler<ApplyTokenResponseContext>
+    {
+        private const string DENIED_AUTHENTICATION_MESSAGE = "Access Denied. Please review your information and try again.";
+
+        public ValueTask HandleAsync(ApplyTokenResponseContext context)
+        {
+            var response = context.Response;
+
+            if (string.Equals(response.Error, OpenIddictConstants.Errors.InvalidGrant, StringComparison.Ordinal) ||
+                string.Equals(response.Error, OpenIddictConstants.Errors.UnsupportedGrantType, StringComparison.Ordinal) ||
+                string.Equals(response.Error, OpenIddictConstants.Errors.InvalidClient, StringComparison.Ordinal) ||
+                string.Equals(response.Error, OpenIddictConstants.Errors.InvalidScope, StringComparison.Ordinal))
+            {
+                response.Error = OpenIddictConstants.Errors.AccessDenied;
+                response.ErrorDescription = DENIED_AUTHENTICATION_MESSAGE;
+                response.ErrorUri = "";
+            }
+
+            return default;
+        }
+    }
 }
+

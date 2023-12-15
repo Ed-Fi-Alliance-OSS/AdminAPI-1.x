@@ -224,7 +224,7 @@ public static class WebApplicationBuilderExtensions
 
         string AdminConnectionString(IServiceProvider serviceProvider)
         {
-            var adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Admin");
+            var adminConnectionString = string.Empty;
 
             if (multiTenancyEnabled)
             {
@@ -233,6 +233,14 @@ public static class WebApplicationBuilderExtensions
                 {
                     adminConnectionString = tenant.AdminConnectionString;
                 }
+                else
+                {
+                    throw new Exception($"Admin database connection setup error. Tenant not configured correctly.");
+                }
+            }
+            else
+            {
+                adminConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Admin");
             }
 
             return adminConnectionString;
@@ -240,7 +248,7 @@ public static class WebApplicationBuilderExtensions
 
         string SecurityConnectionString(IServiceProvider serviceProvider)
         {
-            var securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Security");
+            var securityConnectionString = string.Empty;
 
             if (multiTenancyEnabled)
             {
@@ -249,6 +257,14 @@ public static class WebApplicationBuilderExtensions
                 {
                     securityConnectionString = tenant.SecurityConnectionString;
                 }
+                else
+                {
+                    throw new Exception($"Security database connection setup error. Tenant not configured correctly.");
+                }
+            }
+            else
+            {
+                securityConnectionString = webApplicationBuilder.Configuration.GetConnectionString("EdFi_Security");
             }
 
             return securityConnectionString;

@@ -81,7 +81,7 @@ public class TenantResolverMiddleware : IMiddleware
             }
             else
             {
-                if (!HealthCheck())
+                if (!NonFeatureEndpoints())
                 {
                     ThrowTenantValidationError("Tenant header is missing");                   
                 }
@@ -92,7 +92,10 @@ public class TenantResolverMiddleware : IMiddleware
         bool RequestFromSwagger() => (context.Request.Path.Value != null && context.Request.Path.Value.Contains("swagger")) ||
                 context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger")) != null;
 
-        bool HealthCheck() => context.Request.Path.Value != null && context.Request.Path.Value.Contains("health");
+        bool NonFeatureEndpoints() => context.Request.Path.Value != null &&
+            (context.Request.Path.Value.Contains("health")
+            || context.Request.Path.Value.Equals("/")
+            || (context.Request.Path.StartsWithSegments(new PathString("/.well-known"))));
 
         void ThrowTenantValidationError(string errorMessage)
         {

@@ -8,7 +8,7 @@ version: "3.8"
 services:
   nginx:
     build:
-      context: ../../Settings/gateway/
+      context: ../../../Settings/gateway/
       dockerfile: Dockerfile
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
@@ -19,14 +19,14 @@ services:
     restart: always
     hostname: nginx
     volumes:
-      - ../../Settings/ssl:/ssl/
-      - ../../Settings/gateway/adminapi-packaged.conf:/etc/nginx/templates/default.conf.template
+      - ../../../Settings/ssl:/ssl/
+      - ../../../Settings/gateway/adminapi-packaged.conf:/etc/nginx/templates/default.conf.template
     depends_on:
       - adminapi
 
   adminapi:
     build:
-      context: ../../
+      context: ../../../
       dockerfile: api-pgsql.Dockerfile
     environment:
       ADMIN_POSTGRES_HOST: db-admin
@@ -54,7 +54,7 @@ services:
 
   db-admin:
     build:
-      context: ../../Settings/DB-Admin/pgsql/
+      context: ../../../Settings/DB-Admin/pgsql/
       dockerfile: Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"

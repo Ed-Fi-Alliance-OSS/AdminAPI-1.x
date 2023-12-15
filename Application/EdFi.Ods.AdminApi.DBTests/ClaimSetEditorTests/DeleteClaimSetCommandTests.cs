@@ -11,7 +11,7 @@ using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Moq;
 using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -29,12 +29,12 @@ public class DeleteClaimSetCommandTests : SecurityDataTestBase
         Save(testApplication);
 
         var testClaimSetToDelete = new ClaimSet
-        { ClaimSetName = "TestClaimSet_Delete", Application = testApplication };
+        { ClaimSetName = "TestClaimSet_Delete" };
         Save(testClaimSetToDelete);
         SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
         var testClaimSetToPreserve = new ClaimSet
-        { ClaimSetName = "TestClaimSet_Preserve", Application = testApplication };
+        { ClaimSetName = "TestClaimSet_Preserve" };
         Save(testClaimSetToPreserve);
         var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication, UniqueNameList("ParentRc", 3),
             UniqueNameList("ChildRc", 1));
@@ -84,7 +84,7 @@ public class DeleteClaimSetCommandTests : SecurityDataTestBase
         };
         Save(testApplication);
 
-        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", Application = testApplication, IsEdfiPreset = true };
+        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", IsEdfiPreset = true };
         Save(systemReservedClaimSet);
 
         var deleteModel = new Mock<IDeleteClaimSetModel>();

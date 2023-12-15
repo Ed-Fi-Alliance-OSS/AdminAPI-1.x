@@ -47,7 +47,8 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationIds()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
             .ForMember(dst => dst.ProfileIds, opt => opt.MapFrom(src => src.Profiles()))
-            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()));
+            .ForMember(dst => dst.OdsInstanceIds, opt => {
+                opt.ConvertUsing<OdsInstanceIdsForApplicationConverter, int>("ApplicationId");            });
 
         CreateMap<Infrastructure.ClaimSetEditor.Application, SimpleApplicationModel>()
             .ForMember(dst => dst.ApplicationName, opt => opt.MapFrom(src => src.Name));
@@ -134,12 +135,12 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceDerivative, OdsInstanceDerivativeModel>()
            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.OdsInstanceDerivativeId))
-           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()))
            .ForMember(dst => dst.DerivativeType, opt => opt.MapFrom(src => src.DerivativeType));
 
         CreateMap<EdFi.Admin.DataAccess.Models.OdsInstanceContext, OdsInstanceContextModel>()
            .ForMember(dst => dst.OdsInstanceContextId, opt => opt.MapFrom(src => src.OdsInstanceContextId))
-           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId))
+           .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstanceId()))
            .ForMember(dst => dst.ContextKey, opt => opt.MapFrom(src => src.ContextKey))
            .ForMember(dst => dst.ContextValue, opt => opt.MapFrom(src => src.ContextValue));
        

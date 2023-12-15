@@ -47,14 +47,14 @@ public class AddApplicationCommand : IAddApplicationCommand
             IsApproved = true,
             UseSandbox = false,
             KeyStatus = "Active",
-            User = user
+            User = user,
         };
 
         var applicationEdOrgs = applicationModel.EducationOrganizationIds == null
             ? Enumerable.Empty<ApplicationEducationOrganization>()
             : applicationModel.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
             {
-                Clients = new List<ApiClient> { apiClient },
+                ApiClients = new List<ApiClient> { apiClient },
                 EducationOrganizationId = id
             });
 
@@ -66,8 +66,13 @@ public class AddApplicationCommand : IAddApplicationCommand
             ClaimSetName = applicationModel.ClaimSetName,
             Profiles = new List<Profile>(),
             Vendor = vendor,
-            OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
-            OdsInstance = odsInstance
+            OperationalContextUri = OperationalContext.DefaultOperationalContextUri
+        };
+
+        var apiClientOdsInstances = new ApiClientOdsInstance
+        {
+            OdsInstance = odsInstance,
+            ApiClient = apiClient,
         };
 
         if (profiles != null)
@@ -79,7 +84,7 @@ public class AddApplicationCommand : IAddApplicationCommand
         }
 
         _usersContext.Applications.Add(application);
-        _usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance { ApiClient = apiClient, OdsInstance = odsInstance });
+        _usersContext.ApiClientOdsInstances.Add(apiClientOdsInstances);
         _usersContext.SaveChanges();
 
         return new AddApplicationResult

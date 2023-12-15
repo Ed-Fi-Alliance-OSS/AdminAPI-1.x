@@ -26,9 +26,11 @@ public class EditOdsInstanceContextCommand : IEditOdsInstanceContextCommand
     {
         var odsInstanceContext = _context.OdsInstanceContexts.SingleOrDefault(v => v.OdsInstanceContextId == changedOdsInstanceContextData.Id) ??
             throw new NotFoundException<int>("odsInstanceContext", changedOdsInstanceContextData.Id);
+        var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == changedOdsInstanceContextData.OdsInstanceId) ??
+            throw new NotFoundException<int>("odsInstance", changedOdsInstanceContextData.OdsInstanceId);
 
         odsInstanceContext.ContextKey = changedOdsInstanceContextData.ContextKey;
-        odsInstanceContext.OdsInstanceId = changedOdsInstanceContextData.OdsInstanceId;
+        odsInstanceContext.OdsInstance = odsInstance;
         odsInstanceContext.ContextValue = changedOdsInstanceContextData.ContextValue;
 
         _context.SaveChanges();

@@ -3,13 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Data.Entity;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -45,13 +41,10 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
             return;
         }
 
-        var currentOdsInstanceId = application.OdsInstanceId();
-        
         application.ApiClients.ToList().ForEach(a =>
         {
-            RemoveApiClientOdsInstanceAssociation(currentOdsInstanceId,a.ApiClientId);
+            RemoveApiClientOdsInstanceAssociation(a.ApiClientId);
             a.ClientAccessTokens.ToList().ForEach(t => _context.ClientAccessTokens.Remove(t));
-            _context.Clients.Remove(a);
         });
 
         application.ApplicationEducationOrganizations.ToList().ForEach(o => _context.ApplicationEducationOrganizations.Remove(o));
@@ -61,9 +54,9 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
         _context.SaveChanges();
     }
 
-    private void RemoveApiClientOdsInstanceAssociation(int? odsInstanceId, int apiClientId)
+    private void RemoveApiClientOdsInstanceAssociation(int apiClientId)
     {
-        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == odsInstanceId && o.ApiClient.ApiClientId == apiClientId);
+        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.ApiClient.ApiClientId == apiClientId);
         if (apiClientOdsInstance != null)
         { 
             _context.ApiClientOdsInstances.Remove(apiClientOdsInstance);

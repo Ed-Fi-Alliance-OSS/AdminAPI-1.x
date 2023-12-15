@@ -9,7 +9,7 @@ using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 

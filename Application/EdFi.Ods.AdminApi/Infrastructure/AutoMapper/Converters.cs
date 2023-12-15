@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
@@ -40,6 +41,24 @@ public class AuthStrategyIdsConverter : IValueConverter<List<string>, List<int>>
                 throw new Exception($"Error transforming the ID for the AuthStrategyNames {unavailableAuthStrategies!}");
             }
         }
+        return ids;
+    }
+}
+
+
+public class OdsInstanceIdsForApplicationConverter : IValueConverter<int, List<int>>
+{
+    private readonly IUsersContext _context;
+    public OdsInstanceIdsForApplicationConverter(IUsersContext context)
+    {
+        _context = context;
+    }
+    public List<int> Convert(int applicationId, ResolutionContext context)
+    {
+        var ids = new List<int>();
+
+        ids = _context.ApiClientOdsInstances.Where(p => p.ApiClient.Application.ApplicationId == applicationId).Select(p => p.OdsInstance.OdsInstanceId).ToList();
+
         return ids;
     }
 }

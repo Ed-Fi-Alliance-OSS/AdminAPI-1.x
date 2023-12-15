@@ -107,7 +107,7 @@ public class EditOdsInstanceDerivative : IFeature
         {
             return !_getOdsInstanceDerivativesQuery.Execute().Any
                 (x =>
-                    x.OdsInstanceId == request.OdsInstanceId &&
+                    x.OdsInstanceId() == request.OdsInstanceId &&
                     x.DerivativeType.Equals(request.DerivativeType, StringComparison.OrdinalIgnoreCase) &&
                     x.OdsInstanceDerivativeId != request.Id);
         }

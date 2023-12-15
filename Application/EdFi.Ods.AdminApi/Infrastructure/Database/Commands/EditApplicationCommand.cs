@@ -7,7 +7,6 @@ using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -35,8 +34,6 @@ public class EditApplicationCommand : IEditApplicationCommand
             throw new Exception("This Application is required for proper system function and may not be modified");
         }
 
-        var currentOdsInstanceId = application.OdsInstanceId();
-
         var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
         var newProfiles = model.ProfileIds != null
             ? _context.Profiles.Where(p => model.ProfileIds.Contains(p.ProfileId))
@@ -47,7 +44,7 @@ public class EditApplicationCommand : IEditApplicationCommand
         var currentApiClientId = apiClient.ApiClientId;
         apiClient.Name = model.ApplicationName;
 
-        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == currentOdsInstanceId && o.ApiClient.ApiClientId == currentApiClientId);
+        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.ApiClient.ApiClientId == currentApiClientId);
 
         if (apiClientOdsInstance != null)
         {
@@ -57,7 +54,6 @@ public class EditApplicationCommand : IEditApplicationCommand
         application.ApplicationName = model.ApplicationName;
         application.ClaimSetName = model.ClaimSetName;
         application.Vendor = newVendor;
-        application.OdsInstance = newOdsInstance;
 
         application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
 

@@ -10,7 +10,8 @@ using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Moq;
 using Shouldly;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
+
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
@@ -25,7 +26,7 @@ public class CopyClaimSetCommandTests : SecurityDataTestBase
             };
             Save(testApplication);
 
-            var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet", Application = testApplication};
+            var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet"};
             Save(testClaimSet);
 
             var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication,

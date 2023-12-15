@@ -24,11 +24,14 @@ public class AddOdsInstanceContextCommand : IAddOdsInstanceContextCommand
 
     public OdsInstanceContext Execute(IAddOdsInstanceContextModel newOdsInstanceContext)
     {
+        var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == newOdsInstanceContext.OdsInstanceId) ??
+            throw new NotFoundException<int>("odsInstance", newOdsInstanceContext.OdsInstanceId);
+
         var odsInstanceContext = new OdsInstanceContext
         {
             ContextKey = newOdsInstanceContext.ContextKey,
             ContextValue = newOdsInstanceContext.ContextValue,
-            OdsInstanceId = newOdsInstanceContext.OdsInstanceId
+            OdsInstance = odsInstance
         };
         _context.OdsInstanceContexts.Add(odsInstanceContext);
         _context.SaveChanges();

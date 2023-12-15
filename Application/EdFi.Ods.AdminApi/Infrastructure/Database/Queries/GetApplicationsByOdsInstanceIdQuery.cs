@@ -24,8 +24,9 @@ public class GetApplicationsByOdsInstanceIdQuery : IGetApplicationsByOdsInstance
 
     public List<Application> Execute(int odsInstanceId)
     {
-        var applications = _context.Applications
-            .Where(a => a.OdsInstance != null && a.OdsInstance.OdsInstanceId == odsInstanceId)
+        var applications = _context.ApiClientOdsInstances
+            .Where(a => a.OdsInstance.OdsInstanceId == odsInstanceId)
+            .Select(app => app.ApiClient.Application)
             .ToList();
 
         if (!applications.Any() && _context.OdsInstances.Find(odsInstanceId) == null)

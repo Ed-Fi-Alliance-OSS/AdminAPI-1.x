@@ -28,11 +28,11 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_ENVIRONMENT Production
 
-WORKDIR /app
-COPY --from=publish /app/EdFi.Ods.AdminApi .
-
 COPY Settings/dev/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
+
+WORKDIR /app
+COPY --from=publish /app/EdFi.Ods.AdminApi .
 
 RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 && \
     cp /app/log4net.txt /app/log4net.config && \
@@ -42,6 +42,5 @@ RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 && \
     chmod 700 /app/*.sh -- **
 
 EXPOSE 443
-WORKDIR /app
 
 ENTRYPOINT ["/app/run.sh"]

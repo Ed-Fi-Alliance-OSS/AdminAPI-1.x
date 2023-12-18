@@ -81,6 +81,11 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_HUB_TOKEN }}
 
+      - name: Wait for image to be published
+        if: github.event_name != 'pull_request'
+        # When running on a push, we need to wait
+        run: sleep 30
+
       - name: Build
         run: |
           path=${{matrix.dockerfile.path}}

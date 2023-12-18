@@ -27,7 +27,7 @@ services:
   adminapi:
     build:
       context: ../../
-      dockerfile: api-pgsql.Dockerfile
+      dockerfile: api.Dockerfile
     environment:
       ADMIN_POSTGRES_HOST: db-admin
       POSTGRES_PORT: 5432

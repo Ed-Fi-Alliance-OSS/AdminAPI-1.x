@@ -14,7 +14,6 @@
   <files>
        <file src="**" target="AdminApi" exclude="AppCommon/**/*.*;E2E Tests/**;Docker/**;Compose/**"/>
        <file src="..\..\..\Installer.AdminApi\install.ps1" target="installer"/>
-       <file src="..\..\..\Installer.AdminApi\upgrade.ps1" target="installer"/>
        <file src="..\..\..\Installer.AdminApi\uninstall.ps1" target="installer"/>
        <file src="..\..\..\Installer.AdminApi\global.json" target="installer"/>
        <file src="..\..\..\Installer.AdminApi\Install-AdminApi.psm1" target="installer"/>

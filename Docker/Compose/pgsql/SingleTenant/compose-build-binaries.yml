@@ -34,7 +34,6 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       DATABASEENGINE: "PostgreSql"
-      API_MODE: ${API_MODE}
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
@@ -59,7 +58,6 @@ services:
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      API_MODE: ${API_MODE}
     ports:
       - "5401:5432"
     volumes:

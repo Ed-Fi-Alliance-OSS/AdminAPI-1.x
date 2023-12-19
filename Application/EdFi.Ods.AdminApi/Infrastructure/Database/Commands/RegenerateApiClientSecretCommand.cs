@@ -5,7 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -20,7 +20,9 @@ public class RegenerateApiClientSecretCommand
 
     public RegenerateApiClientSecretResult Execute(int applicationId)
     {
-        var application = _context.Applications.SingleOrDefault(a => a.ApplicationId == applicationId);
+        var application = _context.Applications
+            .Include(x => x.ApiClients)
+            .SingleOrDefault(a => a.ApplicationId == applicationId);
         if (application == null)
         {
             throw new NotFoundException<int>("application", applicationId);

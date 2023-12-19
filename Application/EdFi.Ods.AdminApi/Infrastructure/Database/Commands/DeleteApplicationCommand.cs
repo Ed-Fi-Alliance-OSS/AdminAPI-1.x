@@ -27,8 +27,8 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
     {
         var application = _context.Applications
             .Include(a => a.ApiClients)
-            .Include(a => a.ApiClients.Select(c => c.ClientAccessTokens))
             .Include(a => a.ApplicationEducationOrganizations)
+            .Include(a => a.Profiles)
             .SingleOrDefault(a => a.ApplicationId == id) ?? throw new NotFoundException<int>("application", id);
 
         if (application != null && application.Vendor.IsSystemReservedVendor())
@@ -41,25 +41,39 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
             return;
         }
 
-        application.ApiClients.ToList().ForEach(a =>
+        var currentClientAccessTokens = _context.ClientAccessTokens.Where(o => application.ApiClients.Contains(o.ApiClient));
+
+        if (currentClientAccessTokens != null)
         {
-            RemoveApiClientOdsInstanceAssociation(a.ApiClientId);
-            a.ClientAccessTokens.ToList().ForEach(t => _context.ClientAccessTokens.Remove(t));
-        });
+            _context.ClientAccessTokens.RemoveRange(currentClientAccessTokens);
+        }
 
-        application.ApplicationEducationOrganizations.ToList().ForEach(o => _context.ApplicationEducationOrganizations.Remove(o));
+        var currentApiClientOdsInstances = _context.ApiClientOdsInstances.Where(o => application.ApiClients.Contains(o.ApiClient));
 
+        if (currentApiClientOdsInstances != null)
+        {
+            _context.ApiClientOdsInstances.RemoveRange(currentApiClientOdsInstances);
+        }
+
+        var currentApplicationEducationOrganizations = _context.ApplicationEducationOrganizations.Where(aeo => aeo.Application.ApplicationId == application.ApplicationId);
+
+        if (currentApplicationEducationOrganizations != null)
+        {
+            _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
+        }
+
+        var currentProfiles = application.Profiles;
+
+        if (currentProfiles != null)
+        {
+            foreach (var profile in currentProfiles)
+            {
+                application.Profiles.Remove(profile);
+            }
+        }
 
         _context.Applications.Remove(application);
         _context.SaveChanges();
     }
 
-    private void RemoveApiClientOdsInstanceAssociation(int apiClientId)
-    {
-        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.ApiClient.ApiClientId == apiClientId);
-        if (apiClientOdsInstance != null)
-        { 
-            _context.ApiClientOdsInstances.Remove(apiClientOdsInstance);
-        }
-    }
 }

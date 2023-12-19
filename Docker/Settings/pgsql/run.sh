@@ -9,10 +9,19 @@ set +x
 
 envsubst < /app/appsettings.template.json > /app/appsettings.json
 
-until PGPASSWORD=$POSTGRES_PASSWORD psql -h $ADMIN_POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c '\q';
+if [[ -z "$ADMIN_WAIT_POSTGRES_HOSTS" ]]; then
+  # if there are no hosts to wait then fallback to $ODS_POSTGRES_HOST
+  export ADMIN_WAIT_POSTGRES_HOSTS=$ADMIN_POSTGRES_HOST
+fi
+
+export ADMIN_WAIT_POSTGRES_HOSTS_ARR=($ADMIN_WAIT_POSTGRES_HOSTS)
+for HOST in ${ADMIN_WAIT_POSTGRES_HOSTS_ARR[@]}
 do
-  >&2 echo "Admin Postgres is unavailable - sleeping"
-  sleep 10
+  until PGPASSWORD=$POSTGRES_PASSWORD psql -h $HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c '\q';
+  do
+    >&2 echo "Admin '$HOST' is unavailable - sleeping"
+    sleep 10
+  done
 done
 
 >&2 echo "Postgres is up - executing command"

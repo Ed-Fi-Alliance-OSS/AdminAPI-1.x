@@ -31,6 +31,8 @@ public class GetVendorsQuery : IGetVendorsQuery
                 .ThenInclude(a => a.Profiles)
             .Include(v => v.Applications)
                 .ThenInclude(a => a.ApplicationEducationOrganizations)
+            .Include(v => v.Users)
+            .Include(v => v.VendorNamespacePrefixes)
             .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
     }
 
@@ -41,6 +43,8 @@ public class GetVendorsQuery : IGetVendorsQuery
                 .ThenInclude(a => a.Profiles)
             .Include(v => v.Applications)
                 .ThenInclude(a => a.ApplicationEducationOrganizations)
+            .Include(v => v.Users)
+            .Include(v => v.VendorNamespacePrefixes)
             .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
             .Skip(offset).Take(limit).ToList();
     }

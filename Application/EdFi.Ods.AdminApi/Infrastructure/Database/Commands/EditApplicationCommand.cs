@@ -6,6 +6,7 @@
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
@@ -27,6 +28,10 @@ public class EditApplicationCommand : IEditApplicationCommand
     public Application Execute(IEditApplicationModel model)
     {
         var application = _context.Applications
+            .Include(a => a.ApplicationEducationOrganizations)
+            .Include(a => a.Profiles)
+            .Include(a => a.Vendor)
+            .Include(a => a.ApiClients)
             .SingleOrDefault(a => a.ApplicationId == model.Id) ?? throw new NotFoundException<int>("application", model.Id);
 
         if (application.Vendor.IsSystemReservedVendor())
@@ -38,28 +43,60 @@ public class EditApplicationCommand : IEditApplicationCommand
         var newProfiles = model.ProfileIds != null
             ? _context.Profiles.Where(p => model.ProfileIds.Contains(p.ProfileId))
             : null;
-        var newOdsInstance = _context.OdsInstances.Single(o => o.OdsInstanceId == model.OdsInstanceId);
+        var newOdsInstances = model.OdsInstanceIds != null
+            ? _context.OdsInstances.Where(p => model.OdsInstanceIds.Contains(p.OdsInstanceId))
+            : null;
 
         var apiClient = application.ApiClients.Single();
         var currentApiClientId = apiClient.ApiClientId;
         apiClient.Name = model.ApplicationName;
 
-        var apiClientOdsInstance = _context.ApiClientOdsInstances.FirstOrDefault(o => o.ApiClient.ApiClientId == currentApiClientId);
+        var currentApiClientOdsInstances = _context.ApiClientOdsInstances.Where(o => o.ApiClient.ApiClientId == currentApiClientId);
 
-        if (apiClientOdsInstance != null)
+        if (currentApiClientOdsInstances != null)
         {
-            _context.ApiClientOdsInstances.Remove(apiClientOdsInstance);
+            _context.ApiClientOdsInstances.RemoveRange(currentApiClientOdsInstances);
         }
+
+        var currentApplicationEducationOrganizations = _context.ApplicationEducationOrganizations.Where(aeo => aeo.Application.ApplicationId == application.ApplicationId);
+
+        if (currentApplicationEducationOrganizations != null)
+        {
+            _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
+        }
+
+        var currentProfiles = application.Profiles;
+
+        if (currentProfiles != null)
+        {
+            foreach (var profile in currentProfiles)
+            {
+                application.Profiles.Remove(profile);
+            }
+        }
+
 
         application.ApplicationName = model.ApplicationName;
         application.ClaimSetName = model.ClaimSetName;
         application.Vendor = newVendor;
 
-        application.ApplicationEducationOrganizations ??= new Collection<ApplicationEducationOrganization>();
+        var newApplicationEdOrgs = model.EducationOrganizationIds == null
+            ? Enumerable.Empty<ApplicationEducationOrganization>()
+            : model.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
+            {
+                ApiClients = new List<ApiClient> { apiClient },
+                EducationOrganizationId = id,
+                Application = application,
+            });
 
-        application.ApplicationEducationOrganizations.Clear();
-        model.EducationOrganizationIds?.ToList().ForEach(id => application.ApplicationEducationOrganizations.Add(application.CreateApplicationEducationOrganization(id)));
-
+        if (newApplicationEdOrgs != null)
+        {
+            foreach (var appEdOrg in newApplicationEdOrgs)
+            {
+                application.ApplicationEducationOrganizations.Add(appEdOrg);
+            }
+        }
+        
         application.Profiles ??= new Collection<Profile>();
 
         application.Profiles.Clear();
@@ -72,7 +109,13 @@ public class EditApplicationCommand : IEditApplicationCommand
             }
         }
 
-        _context.ApiClientOdsInstances.Add(new ApiClientOdsInstance { ApiClient = apiClient, OdsInstance = newOdsInstance });
+        if (newOdsInstances != null)
+        {
+            foreach (var newOdsInstance in newOdsInstances)
+            {
+                _context.ApiClientOdsInstances.Add(new ApiClientOdsInstance { ApiClient = apiClient, OdsInstance = newOdsInstance });
+            }
+        }
 
         _context.SaveChanges();
         return application;
@@ -87,5 +130,5 @@ public interface IEditApplicationModel
     string? ClaimSetName { get; }
     IEnumerable<int>? ProfileIds { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
-    int OdsInstanceId { get; }
+    IEnumerable<int>? OdsInstanceIds { get; }
 }

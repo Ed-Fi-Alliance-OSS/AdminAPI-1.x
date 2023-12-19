@@ -32,7 +32,10 @@ public class AddApplicationCommand : IAddApplicationCommand
             : null;
 
         var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
-        var odsInstance = _usersContext.OdsInstances.Single(o => o.OdsInstanceId == applicationModel.OdsInstanceId);
+        
+        var odsInstances = applicationModel.OdsInstanceIds != null
+            ? _usersContext.OdsInstances.Where(o => applicationModel.OdsInstanceIds.Contains(o.OdsInstanceId))
+            : null;
 
         var user = new VendorUser
         {
@@ -69,12 +72,6 @@ public class AddApplicationCommand : IAddApplicationCommand
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri
         };
 
-        var apiClientOdsInstances = new ApiClientOdsInstance
-        {
-            OdsInstance = odsInstance,
-            ApiClient = apiClient,
-        };
-
         if (profiles != null)
         {
             foreach (var profile in profiles)
@@ -84,7 +81,19 @@ public class AddApplicationCommand : IAddApplicationCommand
         }
 
         _usersContext.Applications.Add(application);
-        _usersContext.ApiClientOdsInstances.Add(apiClientOdsInstances);
+
+        if (odsInstances != null && odsInstances.Count() > 0)
+        {
+            foreach (var odsInstance in odsInstances)
+            {
+                _usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance
+                {
+                    OdsInstance = odsInstance,
+                    ApiClient = apiClient,
+                });
+            }
+        }
+
         _usersContext.SaveChanges();
 
         return new AddApplicationResult
@@ -103,7 +112,7 @@ public interface IAddApplicationModel
     string? ClaimSetName { get; }
     IEnumerable<int>? ProfileIds { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
-    int OdsInstanceId { get; }
+    IEnumerable<int>? OdsInstanceIds { get; }
 }
 
 public class AddApplicationResult

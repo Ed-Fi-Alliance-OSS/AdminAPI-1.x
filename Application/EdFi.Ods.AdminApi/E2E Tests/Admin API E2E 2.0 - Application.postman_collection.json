@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "7fb80c40-6afc-4b29-9375-602d064e7904",
+		"_postman_id": "5068b698-e990-4d82-b3c1-6a6b9b9b5cfb",
 		"name": "Admin API E2E 2.0 - Application",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -128,7 +127,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceIds\": [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -183,7 +182,6 @@
 											"    pm.expect(response.errors[\"ApplicationName\"].length).to.equal(1);\r",
 											"    pm.expect(response.errors[\"ClaimSetName\"].length).to.equal(1);\r",
 											"    pm.expect(response.errors[\"EducationOrganizationIds\"].length).to.equal(1);\r",
-											"    pm.expect(response.errors[\"OdsInstanceId\"].length).to.equal(1);\r",
 											"});\r",
 											""
 										],
@@ -196,7 +194,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [],\r\n  \"odsInstanceId\": 0\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [],\r\n  \"odsInstanceIds\": []\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -263,7 +261,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceIds\": [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -331,7 +329,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [ 9999 ],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [ 9999 ],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceIds\": [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -385,8 +383,8 @@
 											"});\r",
 											"\r",
 											"pm.test(\"POST Applications Invalid ODSInstance: Response errors include messages by property\", function () {\r",
-											"    pm.expect(response.errors.OdsInstanceId.length).to.equal(1);\r",
-											"    pm.expect(response.errors.OdsInstanceId[0]).to.contain(\"provide valid ods instance id.\");\r",
+											"    pm.expect(response.errors.OdsInstanceIds.length).to.equal(1);\r",
+											"    pm.expect(response.errors.OdsInstanceIds[0]).to.contain(\"not found\");\r",
 											"});\r",
 											""
 										],
@@ -399,7 +397,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [ 9999 ],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": 0\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [ ],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceIds\": [ 99999 ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -446,7 +444,7 @@
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
 											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
 											"    pm.expect(result.profileIds.length).to.equal(0);\r",
-											"    pm.expect(result.odsInstanceid).to.not.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"GET Applications: Response results do not include key or secret\", function () {\r",
@@ -482,8 +480,9 @@
 											"          \"type\": \"array\",\r",
 											"          \"items\": {}\r",
 											"        },\r",
-											"        \"odsInstanceId\": {\r",
-											"          \"type\": \"integer\"\r",
+											"        \"odsInstanceIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
 											"        }\r",
 											"      },\r",
 											"      \"required\": [\r",
@@ -493,7 +492,7 @@
 											"        \"educationOrganizationIds\",\r",
 											"        \"vendorId\",\r",
 											"        \"profileIds\",\r",
-											"        \"odsInstanceId\"\r",
+											"        \"odsInstanceIds\"\r",
 											"      ]\r",
 											"    }\r",
 											"  ]\r",
@@ -550,13 +549,12 @@
 											"\r",
 											"pm.test(\"GET ApplicationID: Response result matches application\", function () {\r",
 											"    const applicationId = pm.collectionVariables.get(\"CreatedApplicationId\");\r",
-											"    \r",
 											"    pm.expect(result.id).to.equal(applicationId);\r",
 											"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
 											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
 											"    pm.expect(result.profileIds.length).to.equal(0);\r",
-											"    pm.expect(result.odsInstanceId).to.not.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"GET ApplicationID: Response result does not include key or secret\", function () {  \r",
@@ -587,8 +585,9 @@
 											"      \"type\": \"array\",\r",
 											"      \"items\": {}\r",
 											"    },\r",
-											"    \"odsInstanceId\": {\r",
-											"      \"type\": \"integer\"\r",
+											"    \"odsInstanceIds\": {\r",
+											"      \"type\": \"array\",\r",
+											"      \"items\": {}\r",
 											"    }\r",
 											"  },\r",
 											"  \"required\": [\r",
@@ -598,7 +597,7 @@
 											"    \"educationOrganizationIds\",\r",
 											"    \"vendorId\",\r",
 											"    \"profileIds\",\r",
-											"    \"odsInstanceId\"\r",
+											"    \"odsInstanceIds\"\r",
 											"  ]\r",
 											"}\r",
 											"\r",
@@ -654,7 +653,7 @@
 											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
 											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
 											"    pm.expect(result.profileIds.length).to.equal(0);\r",
-											"    pm.expect(result.odsInstanceId).to.not.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"GET Application by Vendor: Response result is filtered by vendor\", function () {\r",
@@ -699,8 +698,9 @@
 											"          \"type\": \"array\",\r",
 											"          \"items\": {}\r",
 											"        },\r",
-											"        \"odsInstanceId\": {\r",
-											"          \"type\": \"integer\"\r",
+											"        \"odsInstanceIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
 											"        }\r",
 											"      },\r",
 											"      \"required\": [\r",
@@ -710,7 +710,7 @@
 											"        \"educationOrganizationIds\",\r",
 											"        \"vendorId\",\r",
 											"        \"profileIds\",\r",
-											"        \"odsInstanceId\"\r",
+											"        \"odsInstanceIds\"\r",
 											"      ]\r",
 											"    }\r",
 											"  ]\r",
@@ -844,7 +844,7 @@
 											"    pm.expect(updated.claimSetName).to.equal(\"Ed-Fi ODS Admin App\");\r",
 											"    pm.expect(updated.educationOrganizationIds.length).to.equal(1);\r",
 											"    pm.expect(updated.profileIds.length).to.equal(0);\r",
-											"    pm.expect(updated.odsInstanceId).to.not.equal(0);\r",
+											"    pm.expect(updated.odsInstanceIds.length).to.equal(1);\r",
 											"   });\r",
 											"\r",
 											"   pm.test(\"PUT Application: Response result does not include application key and secret\", function () {\r",
@@ -892,7 +892,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\": [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -960,7 +960,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [],\r\n  \"odsInstanceIds\": [ ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1027,7 +1027,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": 10\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\":  [ ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1095,7 +1095,75 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [9999],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [9999],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\": [ ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/applications/{{CreatedApplicationId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications",
+										"{{CreatedApplicationId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications - Invalid OdsInstance",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT Application Invalid OdsInstance: Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const errors = pm.response.json().errors;\r",
+											"\r",
+											"pm.test(\"PUT Application Invalid OdsInstance: Response matches error format\", function () {\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT Application Invalid OdsInstance: Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"PUT Application Invalid OdsInstance: Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.OdsInstanceIds.length).to.equal(1);\r",
+											"    pm.expect(response.errors.OdsInstanceIds[0]).to.contain(\"not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\": [ 9999 ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"

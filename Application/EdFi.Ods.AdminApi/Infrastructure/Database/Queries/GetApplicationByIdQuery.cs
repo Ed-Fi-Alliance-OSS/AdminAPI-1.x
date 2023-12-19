@@ -3,10 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -21,7 +20,11 @@ public class GetApplicationByIdQuery
 
     public Application Execute(int applicationId)
     {
-        var application = _context.Applications.SingleOrDefault(app => app.ApplicationId == applicationId);
+        var application = _context.Applications
+            .Include(a => a.ApplicationEducationOrganizations)
+            .Include(a => a.Profiles)
+            .Include(a => a.Vendor)
+            .SingleOrDefault(app => app.ApplicationId == applicationId);
         if (application == null)
         {
             throw new NotFoundException<int>("application", applicationId);

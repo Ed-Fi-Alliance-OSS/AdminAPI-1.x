@@ -37,7 +37,8 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     .Where(x => x.ClaimSet.ClaimSetId == claimSet.OriginalId)
                     .Include(x => x.ResourceClaim)
                     .Include(x => x.Action)
-                    .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                    .Include(x => x.AuthorizationStrategyOverrides)
+                        .ThenInclude(x => x.AuthorizationStrategy)
                     .ToList();
             _context.ClaimSets.Add(newClaimSet);
 

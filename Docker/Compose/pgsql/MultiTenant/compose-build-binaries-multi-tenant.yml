@@ -32,6 +32,7 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      ADMIN_WAIT_POSTGRES_HOSTS: "db-admin-tenant1 db-admin-tenant2 "
       DATABASEENGINE: "PostgreSql"
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
@@ -40,10 +41,11 @@ services:
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
       AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
+      ASPNETCORE_ENVIRONMENT: "multitenantdocker"
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
-    command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.docker.json && /app/run.sh"]
+    command: ["-c","envsubst < /app/appsettings.dockertemplate.json > /app/appsettings.multitenantdocker.json && /app/run.sh"]
     depends_on:
       - db-admin-tenant1
       - db-admin-tenant2

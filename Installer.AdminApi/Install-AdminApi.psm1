@@ -1164,6 +1164,7 @@ function Invoke-DbUpScripts {
         else
         {
             $adminConnectionString = Get-AdminInstallConnectionString $Config.AdminDbConnectionInfo
+            $params["ConnectionString"] = $adminConnectionString
             Invoke-DbDeploy @params
         }
     }

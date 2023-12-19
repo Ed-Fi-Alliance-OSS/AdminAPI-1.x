@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -25,6 +26,19 @@ public class GetApplicationsByOdsInstanceIdQuery : IGetApplicationsByOdsInstance
     public List<Application> Execute(int odsInstanceId)
     {
         var applications = _context.ApiClientOdsInstances
+            .Include(aco => aco.OdsInstance)
+            .Include(aco => aco.ApiClient)
+                .ThenInclude(api => api.Application)
+                .ThenInclude(app => app.ApplicationEducationOrganizations)
+            .Include(api => api.ApiClient)
+                .ThenInclude(api => api.Application)
+                .ThenInclude(api => api.Profiles)
+            .Include(api => api.ApiClient)
+                .ThenInclude(api => api.Application)
+                .ThenInclude(api => api.ApplicationEducationOrganizations)
+            .Include(api => api.ApiClient)
+                .ThenInclude(api => api.Application)
+                .ThenInclude(api => api.Vendor)
             .Where(a => a.OdsInstance.OdsInstanceId == odsInstanceId)
             .Select(app => app.ApiClient.Application)
             .ToList();

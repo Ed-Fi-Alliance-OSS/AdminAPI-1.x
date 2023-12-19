@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "33b2b87b-02da-4e8b-b7f4-ef727b95ebc9",
+		"_postman_id": "da36ffba-dbab-43e1-b485-333bb6d1a159",
 		"name": "Admin API E2E 2.0 - OdsInstances",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -550,7 +549,7 @@
 											"    pm.expect(response[0]).to.have.property(\"educationOrganizationIds\");",
 											"    pm.expect(response[0]).to.have.property(\"vendorId\");",
 											"    pm.expect(response[0]).to.have.property(\"profileIds\");",
-											"    pm.expect(response[0]).to.have.property(\"odsInstanceId\");",
+											"    pm.expect(response[0]).to.have.property(\"odsInstanceIds\");",
 											"});",
 											"",
 											"const GetOdsInstancesIdApplication = {",
@@ -582,8 +581,9 @@
 											"          \"type\": \"array\",",
 											"          \"items\": {}",
 											"        },",
-											"        \"odsInstanceId\": {",
-											"          \"type\": \"integer\"",
+											"        \"odsInstanceIds\": {",
+											"          \"type\": \"array\",",
+											"          \"items\": {}",
 											"        }",
 											"      },",
 											"      \"required\": [",
@@ -593,7 +593,7 @@
 											"        \"educationOrganizationIds\",",
 											"        \"vendorId\",",
 											"        \"profileIds\",",
-											"        \"odsInstanceId\"",
+											"        \"odsInstanceIds\"",
 											"      ]",
 											"    }",
 											"  ]",

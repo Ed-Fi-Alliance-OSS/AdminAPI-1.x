@@ -1,0 +1,48 @@
+meta {
+  name: ClaimSets by ID - Override
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{API_URL}}/v1/claimsets/{{CreatedClaimSetIdOverride}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  // 
+  // const response = pm.response.json();
+  // const result = pm.response.json().result;
+  // 
+  // pm.test("Response matches success format", function () {
+  //     pm.expect(response.status).to.equal(200);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("result");
+  // });
+  // 
+  // pm.test("Response result matches claimset", function () {
+  //     const claimSetId = pm.collectionVariables.get("CreatedClaimSetIdOverride");
+  //     
+  //     pm.expect(result.id).to.equal(claimSetId);
+  //     pm.expect(result.name).to.equal(`Test ClaimSet ${pm.collectionVariables.get("ClaimSetOverrideGUID")}`);
+  //     pm.expect(result.isSystemReserved).to.equal(false);
+  //     pm.expect(result.applicationsCount).to.equal(0);
+  //     pm.expect(result.resourceClaims).to.not.be.empty;
+  //     const educationStandardsResourceClaim = result.resourceClaims.find(r => r.name === "educationStandards")
+  //     pm.expect(educationStandardsResourceClaim).to.be.an("object", "The educationStandards resource claim was not found.")
+  //     pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD).to.not.be.empty;
+  //     pm.expect(educationStandardsResourceClaim.authStrategyOverridesForCRUD[1]).to.be.an("object", "The override for read action in resource claim educationStandards was not found.")
+  // 
+  //     const academicSubjectDescriptorResourceClaim = result.resourceClaims.find(r => r.name === "academicSubjectDescriptor")
+  //     pm.expect(academicSubjectDescriptorResourceClaim).to.be.an("object", "The academicSubjectDescriptor resource claim was not found.")
+  // });
+  // 
+}

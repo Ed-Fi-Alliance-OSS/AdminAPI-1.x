@@ -1,0 +1,43 @@
+meta {
+  name: Register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/connect/register
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  ClientId: %7B%7BRegisteredClientId%7D%7D
+  ClientSecret: %7B%7BRegisteredClientSecret%7D%7D
+  DisplayName: Postman%20Test
+}
+
+script:pre-request {
+  // pm.collectionVariables.set("RegisteredClientId", pm.variables.replaceIn('{{$guid}}'));
+  // pm.collectionVariables.set("RegisteredClientSecret", pm.variables.replaceIn('{{$guid}}'));
+  // 
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  // 
+  // const response = pm.response.json();
+  // const result = pm.response.json().result;
+  // 
+  // pm.test("Response matches success format", function () {
+  //     pm.expect(response.status).to.equal(200);
+  //     pm.expect(response).to.have.property("title");
+  // });
+  // 
+  // pm.test("Response title is helpful and accurate", function () {
+  //     pm.expect(response.title.toLowerCase()).to.contain("client");
+  //     pm.expect(response.title.toLowerCase()).to.contain("registered");
+  // });
+  // 
+}

@@ -1,0 +1,48 @@
+meta {
+  name: ClaimSets - With Applications
+  type: http
+  seq: 24
+}
+
+delete {
+  url: {{API_URL}}/v1/claimsets/{{OtherExistingClaimSetId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+script:pre-request {
+  // 
+}
+
+tests {
+  // pm.test("Status code is Bad Request", function () {
+  //     pm.response.to.have.status(400);
+  // });
+  // 
+  // const response = pm.response.json();
+  // 
+  // pm.test("Response matches error format", function () {
+  //     pm.expect(response.status).to.equal(400);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("errors");
+  // });
+  // 
+  // pm.test("Response title is helpful and accurate", function () {
+  //     pm.expect(response.title.toLowerCase()).to.contain("validation");
+  // });
+  // 
+  // pm.test("Response errors include messages by property", function () {
+  //     pm.expect(response.errors["id"].length).to.equal(1);
+  //     ["Cannot delete", "associated application"].forEach((substring) => {
+  //         pm.expect(response.errors.id[0]).to.contain(substring);
+  //     });
+  // });
+  // 
+  // pm.collectionVariables.unset("OtherApplicationId");
+  // pm.collectionVariables.unset("OtherApplicationVendorId");
+  // 
+}

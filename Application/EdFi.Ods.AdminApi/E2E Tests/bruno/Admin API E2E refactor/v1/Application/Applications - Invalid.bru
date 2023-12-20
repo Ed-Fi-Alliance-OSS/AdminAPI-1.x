@@ -1,0 +1,56 @@
+meta {
+  name: Applications - Invalid
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{API_URL}}/v1/applications/{{CreatedApplicationId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "applicationId": {{CreatedApplicationId}},
+    "applicationName": "",
+    "vendorId": {{OtherApplicationVendorId}},
+    "claimSetName": "",
+    "profileId": null,
+    "educationOrganizationIds": []
+  }
+  
+}
+
+script:pre-request {
+  // 
+}
+
+tests {
+  // pm.test("Status code is Bad Request", function () {
+  //     pm.response.to.have.status(400);
+  // });
+  // 
+  // const response = pm.response.json();
+  // 
+  // pm.test("Response matches error format", function () {
+  //     pm.expect(response.status).to.equal(400);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("errors");
+  // });
+  // 
+  // pm.test("Response title is helpful and accurate", function () {
+  //     pm.expect(response.title.toLowerCase()).to.contain("validation");
+  // });
+  // 
+  // pm.test("Response errors include messages by property", function () {
+  //     pm.expect(response.errors["ApplicationName"].length).to.equal(1);
+  //     pm.expect(response.errors["ClaimSetName"].length).to.equal(1);
+  //     pm.expect(response.errors["EducationOrganizationIds"].length).to.equal(1);
+  // });
+  // 
+}

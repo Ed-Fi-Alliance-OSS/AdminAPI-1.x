@@ -1,0 +1,56 @@
+meta {
+  name: Applications - Invalid Profile
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{API_URL}}/v1/applications/{{CreatedApplicationId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "applicationId": {{CreatedApplicationId}},
+    "applicationName": "Updated Application Name",
+    "vendorId": {{OtherApplicationVendorId}},
+    "claimSetName": "Ed-Fi ODS Admin App",
+    "profileId": 9999,
+    "educationOrganizationIds": [1234]
+  }
+  
+}
+
+script:pre-request {
+  // 
+}
+
+tests {
+  // pm.test("Status code is Bad Request", function () {
+  //     pm.response.to.have.status(400);
+  // });
+  // 
+  // const response = pm.response.json();
+  // const errors = pm.response.json().errors;
+  // 
+  // pm.test("Response matches error format", function () {
+  //     pm.expect(response.status).to.equal(400);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("errors");
+  // });
+  // 
+  // pm.test("Response title is helpful and accurate", function () {
+  //     pm.expect(response.title.toLowerCase()).to.contain("validation");
+  // });
+  // 
+  // pm.test("Response errors include messages by property", function () {
+  //     pm.expect(response.errors.ProfileId.length).to.equal(1);
+  //     pm.expect(response.errors.ProfileId[0]).to.contain("not found");
+  // });
+  // 
+}

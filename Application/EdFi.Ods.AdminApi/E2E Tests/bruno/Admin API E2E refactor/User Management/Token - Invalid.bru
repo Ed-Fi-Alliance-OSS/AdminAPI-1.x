@@ -1,0 +1,32 @@
+meta {
+  name: Token - Invalid
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{API_URL}}/connect/token
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  client_id: %7B%7B%24guid%7D%7D
+  client_secret: 
+  grant_type: client_credentials
+}
+
+tests {
+  // pm.test("Status code is Bad Request", function () {
+  //     pm.response.to.have.status(400);
+  // });
+  // 
+  // const response = pm.response.json();
+  // 
+  // pm.test("Response includes error message", function () {
+  //     pm.expect(response).to.have.property("error");
+  //     pm.expect(response).to.have.property("error_description");
+  //     pm.expect(response).to.have.property("error_uri");
+  // });
+  // 
+}

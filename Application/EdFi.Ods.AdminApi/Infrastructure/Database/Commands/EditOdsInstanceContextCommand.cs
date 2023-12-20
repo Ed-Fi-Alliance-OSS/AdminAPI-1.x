@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -24,7 +25,9 @@ public class EditOdsInstanceContextCommand : IEditOdsInstanceContextCommand
 
     public OdsInstanceContext Execute(IEditOdsInstanceContextModel changedOdsInstanceContextData)
     {
-        var odsInstanceContext = _context.OdsInstanceContexts.SingleOrDefault(v => v.OdsInstanceContextId == changedOdsInstanceContextData.Id) ??
+        var odsInstanceContext = _context.OdsInstanceContexts
+            .Include(oid => oid.OdsInstance)
+            .SingleOrDefault(v => v.OdsInstanceContextId == changedOdsInstanceContextData.Id) ??
             throw new NotFoundException<int>("odsInstanceContext", changedOdsInstanceContextData.Id);
         var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == changedOdsInstanceContextData.OdsInstanceId) ??
             throw new NotFoundException<int>("odsInstance", changedOdsInstanceContextData.OdsInstanceId);

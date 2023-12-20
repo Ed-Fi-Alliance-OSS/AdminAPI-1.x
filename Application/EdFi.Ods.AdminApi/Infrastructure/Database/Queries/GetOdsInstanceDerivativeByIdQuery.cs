@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -24,7 +25,9 @@ public class GetOdsInstanceDerivativeByIdQuery : IGetOdsInstanceDerivativeByIdQu
 
     public OdsInstanceDerivative Execute(int odsInstanceDerivativeId)
     {
-        var odsInstanceDerivative = _context.OdsInstanceDerivatives.SingleOrDefault(app => app.OdsInstanceDerivativeId == odsInstanceDerivativeId);
+        var odsInstanceDerivative = _context.OdsInstanceDerivatives
+            .Include(oid => oid.OdsInstance)
+            .SingleOrDefault(app => app.OdsInstanceDerivativeId == odsInstanceDerivativeId);
         if (odsInstanceDerivative == null)
         {
             throw new NotFoundException<int>("odsInstanceDerivative", odsInstanceDerivativeId);

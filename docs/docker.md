@@ -91,8 +91,6 @@ style I fill:#fff
    # Check status of the AdminAPI
    curl -k https://localhost/adminapi
 
-   # Check status of ODS/API
-   curl -k https://localhost/webapi
    ```
 
 6. Create an administrative (full access) API client (substitute in appropriate
@@ -155,3 +153,17 @@ style D fill:#fff
 
 Instructions are similar to the localhost quickstart above, except use
 `compose-build-binaries.yml` instead of `compose-build-dev.yml`.
+
+## Multi-Tenant
+
+Instructions are similar to the Local Development and Pre-Built Binaries setups above.
+
+Tenants details can be configured on appsettings.dockertemplate.json file.
+
+For local development and testing, use `compose-build-dev-multi-tenant.yml`.
+For testing pre-built binaries, use `compose-build-binaries-multi-tenant.yml`.
+
+## Admin Api and Ed-Fi ODS / API docker containers
+
+Please refer [DOCKER DEPLOYMENT](https://techdocs.ed-fi.org/display/EDFITOOLS/Docker+Deployment) for 
+installing and configuring Admin Api along with Ed-Fi ODS / API on Docker containers for testing.

@@ -1,0 +1,22 @@
+meta {
+  name: Get Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/connect/token
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  grant_type: client_credentials
+  client_id: %7B%7BClientId%7D%7D
+  client_secret: %7B%7BClientSecret%7D%7D
+  scope: edfi_admin_api%2Ffull_access
+}
+
+script:post-response {
+  bru.setEnvVar("AT",res.body.access_token);
+}

@@ -17,15 +17,23 @@ assert {
 
 script:pre-request {
   const { nanoid } = require("nanoid");
-
+  
   const clientId = nanoid();
   const clientSecret = nanoid();
   const displayName = "Test";
-
+  
   req.setBody({
     clientId,
     clientSecret,
     displayName
   });
+  
+  bru.setVar('ClientId', clientId);
+  bru.setVar('ClientSecret', clientSecret);
+}
 
+docs {
+  # Register
+  
+  Registers a new user
 }

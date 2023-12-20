@@ -68,7 +68,7 @@ jobs:
 
       - name: Run tests
         run: bru run
-        working-directory: ./Application/EdFi.Ods.AdminApi/E2E Tests/bruno
+        working-directory: ./Application/EdFi.Ods.AdminApi/E2E Tests/bruno/Admin API E2E
 
       - name: Install newman
         run: npm install -g newman newman-reporter-junitfull

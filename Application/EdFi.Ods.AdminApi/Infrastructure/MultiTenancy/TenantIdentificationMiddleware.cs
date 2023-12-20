@@ -81,7 +81,7 @@ public class TenantResolverMiddleware : IMiddleware
             }
             else
             {
-                if (!HealthCheck())
+                if (!NonFeatureEndpoints())
                 {
                     ThrowTenantValidationError("Tenant header is missing");                   
                 }
@@ -89,10 +89,15 @@ public class TenantResolverMiddleware : IMiddleware
         }     
         await next.Invoke(context);
 
-        bool RequestFromSwagger() => (context.Request.Path.Value != null && context.Request.Path.Value.Contains("swagger")) ||
-                context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger")) != null;
+        bool RequestFromSwagger() => (context.Request.Path.Value != null &&
+            context.Request.Path.Value.Contains("swagger", StringComparison.InvariantCultureIgnoreCase)) ||
+            context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger", StringComparison.InvariantCultureIgnoreCase)) != null;
 
-        bool HealthCheck() => context.Request.Path.Value != null && context.Request.Path.Value.Contains("health");
+        bool NonFeatureEndpoints() => context.Request.Path.Value != null &&
+            (context.Request.Path.Value.Contains("health", StringComparison.InvariantCultureIgnoreCase)
+            || context.Request.Path.Value.Equals("/")
+            || (context.Request.PathBase.HasValue && !context.Request.Path.HasValue)
+            || (context.Request.Path.StartsWithSegments(new PathString("/.well-known"))));
 
         void ThrowTenantValidationError(string errorMessage)
         {

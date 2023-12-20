@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "9163560a-3818-4bdd-9deb-7d31ad1cf82b",
+		"_postman_id": "a65beb70-b5e3-4dc5-9403-180782190d8a",
 		"name": "Admin API E2E 2.0 - User Management",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -551,7 +550,6 @@
 									"pm.test(\"POST Token Invalid: Response includes error message\", function () {\r",
 									"    pm.expect(response).to.have.property(\"error\");\r",
 									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
 									"});\r",
 									""
 								],
@@ -611,9 +609,7 @@
 									"pm.test(\"POST Token Invalid Grant Type: Response includes error message\", function () {\r",
 									"    pm.expect(response).to.have.property(\"error\");\r",
 									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"grant_type\");\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"Access Denied. Please review your information and try again.\");\r",
 									"});\r",
 									""
 								],
@@ -677,10 +673,9 @@
 									"\r",
 									"pm.test(\"POST Token Invalid Scope: Response includes error message\", function () {\r",
 									"    pm.expect(response).to.have.property(\"error\");\r",
-									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
+									"    pm.expect(response).to.have.property(\"error_description\");    \r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"Access Denied. Please review your information and try again.\");\r",
 									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"scope\");\r",
 									"});\r",
 									""
 								],
@@ -745,8 +740,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"POST Token Incorrect Secret: Status code is Unauthorized\", function () {\r",
-									"    pm.response.to.have.status(401);\r",
+									"pm.test(\"POST Token Incorrect Secret: Status code is Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
 									"const response = pm.response.json();\r",
@@ -754,10 +749,7 @@
 									"pm.test(\"POST Token Incorrect Secret: Response includes error message\", function () {\r",
 									"    pm.expect(response).to.have.property(\"error\");\r",
 									"    pm.expect(response).to.have.property(\"error_description\");\r",
-									"    pm.expect(response).to.have.property(\"error_uri\");\r",
-									"\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"credentials\");\r",
-									"    pm.expect(response[\"error_description\"]).to.contain(\"invalid\");\r",
+									"    pm.expect(response[\"error_description\"]).to.contain(\"Access Denied. Please review your information and try again.\");\r",
 									"});\r",
 									"\r",
 									"pm.collectionVariables.unset(\"RegisteredClientId\");\r",

@@ -49,8 +49,6 @@ function Install-EdFiOdsAdminApi {
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
-            OdsDatabaseName = "EdFi_Ods_Sandbox"
-            OdsApiUrl = "http://example-web-api.com/WebApi"
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
@@ -60,18 +58,10 @@ function Install-EdFiOdsAdminApi {
     .EXAMPLE
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
-            OdsApiUrl = "http://example-web-api.com/WebApi"
             AdminDbConnectionInfo = @{
                 Engine="SqlServer"
                 Server="edfi-auth.my-sql-server.example"
                 UseIntegratedSecurity=$true
-            }
-            OdsDbConnectionInfo = @{
-                DatabaseName="EdFi_ODS_Staging"
-                Engine="SqlServer"
-                Server="edfi-stage.my-sql-server.example"
-                Username="ods-write"
-                Password="@#$%^&*(GHJ%^&*YUKSDF"
             }
             SecurityDbConnectionInfo = @{
                 Engine="SqlServer"
@@ -96,7 +86,6 @@ function Install-EdFiOdsAdminApi {
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
             InstallCredentialsUseIntegratedSecurity = $true
-            OdsApiUrl = "http://example-web-api.com/WebApi"
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
@@ -112,15 +101,10 @@ function Install-EdFiOdsAdminApi {
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
-            OdsApiUrl = "http://example-web-api.com/WebApi"
-            AdminApiFeatures = @{
-                ApiMode="yearspecific"
-            }
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
-        Installs Admin Api to SQL Server in Year Specific mode for 2020. The installer will also
-        install Admin Api in ASP.NET Identity mode, rather than AD Authentication.
+        The installer will install Admin Api in ASP.NET Identity mode, rather than AD Authentication.
     #>
     [CmdletBinding()]
     param (
@@ -165,11 +149,6 @@ function Install-EdFiOdsAdminApi {
         [string]
         $CertThumbprint,
 
-        # Full URL to the Ed-Fi ODS / API version endpoint.
-        [string]
-        [Parameter(Mandatory=$true)]
-        $OdsApiUrl,
-
         # Install Credentials: User
         [string]
         $InstallCredentialsUser,
@@ -202,8 +181,10 @@ function Install-EdFiOdsAdminApi {
         # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
         # either UseIntegratedSecurity or Username and Password (Password can be skipped
         # for PostgreSQL when using pgconf file). Optionally can include Port.
+        # This can be used with IsMultiTenant flag.
         [hashtable]
         [Parameter(Mandatory=$true, ParameterSetName="SharedCredentials")]
+        [Parameter(ParameterSetName="MultiTenant")]
         $DbConnectionInfo,
 
         # Database connectivity only for the admin database.
@@ -215,16 +196,6 @@ function Install-EdFiOdsAdminApi {
         [hashtable]
         [Parameter(Mandatory=$true, ParameterSetName="SeparateCredentials")]
         $AdminDbConnectionInfo,
-
-        # Database connectivity only for the ODS database.
-        #
-        # The hashtable must include: Server, Engine (SqlServer or PostgreSQL), and
-        # either UseIntegratedSecurity or Username and Password (Password can be skipped
-        # for PostgreSQL when using pgconf file). Optionally can include Port and
-        # DatabaseName.
-        [hashtable]
-        [Parameter(Mandatory=$true, ParameterSetName="SeparateCredentials")]
-        $OdsDbConnectionInfo,
 
         # Database connectivity only for the security database.
         #
@@ -241,16 +212,30 @@ function Install-EdFiOdsAdminApi {
         [Parameter(Mandatory=$true)]
         $AuthenticationSettings,
 
-        # Optional overrides for features and settings in the appsettings.
-        #
-        # The hashtable can include: ApiMode. By default, AdminApi is installed
-        # inShared Instance mode.
-        [hashtable]
-        $AdminApiFeatures,
-
         # Database Config
         [switch]
-        $NoDuration
+        $NoDuration,
+
+        # Deploy Admin Api with MultiTenant support. 
+        # Passing this flag, requires to pass Tenants configuration.
+        # When true, this flag will enable the MultiTenancy flag in Appsettings.
+        [switch]
+        [Parameter(Mandatory=$true, ParameterSetName="MultiTenant")]
+        $IsMultiTenant,
+        
+        # List of Tenants with information required by the Tenants section in appsettings.json
+        #
+        # Each tenant hashtable can include: 
+        #   - AdminDatabaseName and SecurityDatabaseName when used with DbConnectionInfo.
+        #   - AdminDbConnectionInfo and SecurityDbConnectionInfo when DbConnectionInfo is not used.
+        [hashtable]
+        [Parameter(Mandatory=$true, ParameterSetName="MultiTenant")]
+        $Tenants,
+
+        # Set Encrypt=false for all connection strings
+        # Not recomended for production environment.
+        [switch]
+        $UnEncryptedConnection
     )
 
     Write-InvocationInfo $MyInvocation
@@ -271,7 +256,6 @@ function Install-EdFiOdsAdminApi {
         WebSitePort = $WebsitePort
         CertThumbprint = $CertThumbprint
         WebApplicationName = $WebApplicationName
-        OdsApiUrl = $OdsApiUrl
         DatabaseInstallCredentials = @{
             DatabaseUser = $InstallCredentialsUser
             DatabasePassword = $InstallCredentialsPassword
@@ -282,11 +266,17 @@ function Install-EdFiOdsAdminApi {
         SecurityDatabaseName = $SecurityDatabaseName
         DbConnectionInfo = $DbConnectionInfo
         AdminDbConnectionInfo = $AdminDbConnectionInfo
-        OdsDbConnectionInfo = $OdsDbConnectionInfo
         SecurityDbConnectionInfo = $SecurityDbConnectionInfo
         AuthenticationSettings = $AuthenticationSettings
-        AdminApiFeatures = $AdminApiFeatures
         NoDuration = $NoDuration
+        IsMultiTenant = $IsMultiTenant.IsPresent
+        Tenants = $Tenants
+        UnEncryptedConnection = $UnEncryptedConnection
+    }
+
+    if($IsMultiTenant.IsPresent)
+    {
+        Write-Warning "Please make sure required tenant specific Admin, Security databases are already available on the data server."
     }
 
     $elapsed = Use-StopWatch {
@@ -295,7 +285,13 @@ function Install-EdFiOdsAdminApi {
         $result += Set-AdminApiPackageSource -Config $Config
         $result += Get-DbDeploy -Config $Config
         $result += Invoke-TransformAppSettings -Config $Config
-        $result += Invoke-TransformConnectionStrings -Config $config
+
+        if ($IsMultiTenant.IsPresent) {            
+            $result += Invoke-TransformMultiTenantConnectionStrings -Config $config
+        } else {
+            $result += Invoke-TransformConnectionStrings -Config $config
+        }
+        
         $result += Install-Application -Config $Config
         $result += Set-SqlLogins -Config $Config
         $result += Invoke-DbUpScripts -Config $Config
@@ -583,15 +579,6 @@ function Invoke-InstallationPreCheck{
                 exit
             }
         }
-
-        if($Config.AdminApiFeatures.ContainsKey("ApiMode") -and $Config.AdminApiFeatures.ApiMode) {
-            $apiMode = $Config.AdminApiFeatures.ApiMode
-            $supportedModes = @('sandbox', 'sharedinstance', 'yearspecific', 'districtspecific')
-            if ($supportedModes -NotContains $apiMode) {
-                Write-Warning "Not supported ApiMode: '$apiMode'. Please use one of the supported modes for the ApiMode Admin Api feature. Supported modes:'$($supportedModes -join "','")'"
-                exit
-            }
-        }
     }
 }
 
@@ -759,7 +746,7 @@ function Invoke-TransferAppsettings {
 
         $backUpPath = $Config.ApplicationBackupPath
         Write-Warning "The following appsettings will be copied over from existing application: "
-        $appSettings = @('ProductionApiUrl','DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
+        $appSettings = @('DatabaseEngine', 'ApiStartupType', 'ApiExternalUrl', 'PathBase', 'Log4NetConfigFileName', 'Authority', 'IssuerUrl', 'SigningKey', 'AllowRegistration')
         foreach ($property in $appSettings) {
            Write-Host $property;
         }
@@ -769,7 +756,6 @@ function Invoke-TransferAppsettings {
         $newSettingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $newSettings = Get-Content $newSettingsFile | ConvertFrom-Json | ConvertTo-Hashtable
 
-        $newSettings.AppSettings.ProductionApiUrl = $oldSettings.AppSettings.ProductionApiUrl
         $newSettings.AppSettings.DatabaseEngine = $oldSettings.AppSettings.DatabaseEngine
         $newSettings.AppSettings.ApiStartupType = $oldSettings.AppSettings.ApiStartupType
         $newSettings.AppSettings.ApiExternalUrl =  $oldSettings.AppSettings.ApiExternalUrl
@@ -881,17 +867,23 @@ function Initialize-Configuration {
         $Config.usingSharedCredentials = $Config.ContainsKey("DbConnectionInfo") -and (-not $null -eq $Config.DbConnectionInfo)
         if ($Config.usingSharedCredentials) {
             Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.DbConnectionInfo
-            $Config.DbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
+            $Config.DbConnectionInfo.ApplicationName = "AdminApi"
             $Config.engine = $Config.DbConnectionInfo.Engine
         }
         else {
+            if ($Config.IsMultiTenant) {
+                foreach ($tenantKey in $Config.Tenants.Keys) {
+                    Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.Tenants[$tenantKey].AdminDbConnectionInfo -RequireDatabaseName
+                    Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.Tenants[$tenantKey].SecurityDbConnectionInfo -RequireDatabaseName
+                }
+            }
+            else{
             Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.AdminDbConnectionInfo
-            Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.OdsDbConnectionInfo
             Assert-DatabaseConnectionInfo -DbConnectionInfo $Config.SecurityDbConnectionInfo
-            $Config.AdminDbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
-            $Config.OdsDbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
-            $Config.SecurityDbConnectionInfo.ApplicationName = "Ed-Fi ODS/API AdminApi"
-            $Config.engine = $Config.OdsDbConnectionInfo.Engine
+            $Config.AdminDbConnectionInfo.ApplicationName = "AdminApi"
+            $Config.SecurityDbConnectionInfo.ApplicationName = "AdminApi"
+            $Config.engine = $Config.AdminDbConnectionInfo.Engine
+            }
         }
     }
 }
@@ -961,21 +953,9 @@ function Invoke-TransformAppSettings {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
         $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
-        $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
         $settings.AppSettings.DatabaseEngine = $config.engine
 
-        if ($Config.AdminApiFeatures) {
-            if ($Config.AdminApiFeatures.ContainsKey("ApiMode") -and $Config.AdminApiFeatures.ApiMode) {
-                $settings.AppSettings.ApiStartupType = $Config.AdminApiFeatures.ApiMode
-                if ($Config.AdminApiFeatures.ApiMode -ieq "yearspecific" -or $Config.AdminApiFeatures.ApiMode -ieq "districtspecific") {
-                    if (-not $Config.OdsDatabaseName.Contains("{0}")) {
-                        $Config.OdsDatabaseName += "_{0}"
-
-                        $Config.OdsDatabaseName = $Config.OdsDatabaseName -replace "_Ods_\{0\}", "_{0}"
-                    }
-                }
-            }
-        }
+        $settings.AppSettings.MultiTenancy = $config.IsMultiTenant
 
         $missingAuthenticationSettings = @()
         if ($Config.AuthenticationSettings.ContainsKey("Authority")) {
@@ -1002,7 +982,6 @@ function Invoke-TransformAppSettings {
             $missingAuthenticationSettings += 'AllowRegistration'
         }
 
-
         if ($missingAuthenticationSettings -gt 0) {
             Write-Warning "Please ensure all Admin Api authentication settings are configured correctly. The following Admin Api authentication settings are missing from the configuration: "
             foreach ($property in $missingAuthenticationSettings) {
@@ -1028,9 +1007,6 @@ function Invoke-TransformConnectionStrings {
             $Config.AdminDbConnectionInfo = $Config.DbConnectionInfo.Clone()
             $Config.AdminDbConnectionInfo.DatabaseName = $Config.AdminDatabaseName
 
-            $Config.OdsDbConnectionInfo = $Config.DbConnectionInfo.Clone()
-            $Config.OdsDbConnectionInfo.DatabaseName = $Config.OdsDatabaseName
-
             $Config.SecurityDbConnectionInfo = $Config.DbConnectionInfo.Clone()
             $Config.SecurityDbConnectionInfo.DatabaseName = $Config.SecurityDatabaseName
         }
@@ -1038,9 +1014,6 @@ function Invoke-TransformConnectionStrings {
             # Inject default database names if not provided
             if (-not $Config.AdminDbConnectionInfo.DatabaseName) {
                 $Config.AdminDbConnectionInfo.DatabaseName = "EdFi_Admin"
-            }
-            if (-not $Config.OdsDbConnectionInfo.DatabaseName) {
-                $Config.OdsDbConnectionInfo.DatabaseName = "EdFi_Ods"
             }
             if (-not $Config.SecurityDbConnectionInfo.DatabaseName) {
                 $Config.SecurityDbConnectionInfo.DatabaseName = "EdFi_Security"
@@ -1052,17 +1025,75 @@ function Invoke-TransformConnectionStrings {
 
         Write-Host "Setting database connections in $($Config.WebConfigLocation)"
         $adminconnString = New-ConnectionString -ConnectionInfo $Config.AdminDbConnectionInfo -SspiUsername $Config.WebApplicationName
-        $odsconnString = New-ConnectionString -ConnectionInfo $Config.OdsDbConnectionInfo -SspiUsername $Config.WebApplicationName
         $securityConnString = New-ConnectionString -ConnectionInfo $Config.SecurityDbConnectionInfo -SspiUsername $Config.WebApplicationName
 
+        if ($Config.UnEncryptedConnection) {
+            $adminconnString += ";Encrypt=false"
+            $securityConnString += ";Encrypt=false"
+        }
+        
         $connectionstrings = @{
             ConnectionStrings = @{
-                Admin = $adminconnString
-                Security = $securityConnString
+                EdFi_Admin = $adminconnString
+                EdFi_Security = $securityConnString
             }
         }
 
         $mergedSettings = Merge-Hashtables $settings, $connectionstrings
+        New-JsonFile $settingsFile  $mergedSettings -Overwrite
+    }
+}
+
+function Invoke-TransformMultiTenantConnectionStrings {
+    [CmdletBinding()]
+    param (
+        [hashtable]
+        [Parameter(Mandatory=$true)]
+        $Config
+    )
+
+    Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
+        # $webConfigPath = "$($Config.PackageDirectory)/appsettings.json"
+        # $settings = Get-Content $webConfigPath | ConvertFrom-Json | ConvertTo-Hashtable
+
+        $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
+        $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        Write-Host "Setting database connections in $($Config.WebConfigLocation)"
+
+        $newSettings = @{
+            Tenants = @{}
+        }
+
+        foreach ($tenantKey in $Config.Tenants.Keys) {
+            
+            if ($Config.usingSharedCredentials) {
+                $Config.Tenants[$tenantKey].AdminDbConnectionInfo = $Config.DbConnectionInfo.Clone()
+                $Config.Tenants[$tenantKey].AdminDbConnectionInfo.DatabaseName = $Config.Tenants[$tenantKey].AdminDatabaseName
+
+                $Config.Tenants[$tenantKey].SecurityDbConnectionInfo = $Config.DbConnectionInfo.Clone()
+                $Config.Tenants[$tenantKey].SecurityDbConnectionInfo.DatabaseName = $Config.Tenants[$tenantKey].SecurityDatabaseName
+            }
+            
+            $adminconnString = New-ConnectionString -ConnectionInfo $Config.Tenants[$tenantKey].AdminDbConnectionInfo -SspiUsername $Config.WebApplicationName
+            $securityConnString = New-ConnectionString -ConnectionInfo $Config.Tenants[$tenantKey].SecurityDbConnectionInfo -SspiUsername $Config.WebApplicationName
+
+            if ($Config.UnEncryptedConnection) {
+                $adminconnString += ";Encrypt=false"
+                $securityConnString += ";Encrypt=false"
+            }
+
+            $newSettings.Tenants += @{
+                $tenantKey = @{
+                    ConnectionStrings = @{
+                        EdFi_Admin = $adminconnString
+                        EdFi_Security = $securityConnString 
+                    }
+                }
+            }
+        }
+
+        $mergedSettings = Merge-Hashtables $settings, $newSettings
         New-JsonFile $settingsFile  $mergedSettings -Overwrite
     }
 }
@@ -1072,11 +1103,11 @@ function Get-AdminInstallConnectionString {
     param (
         [hashtable]
         [Parameter(Mandatory=$true)]
-        $Config
+        $AdminDbConnectionInfo
     )
 
     $dbInstallCredentials = $Config.DatabaseInstallCredentials
-    $adminDbConnectionInfo = $Config.AdminDbConnectionInfo
+    $adminDbConnectionInfo = $AdminDbConnectionInfo
 
     $useInstallCredentials = ($dbInstallCredentials.UseIntegratedSecurity) -or ($dbInstallCredentials.DatabaseUser -and $dbInstallCredentials.DatabasePassword -and -not $dbInstallCredentials.UseIntegratedSecurity)
 
@@ -1087,9 +1118,9 @@ function Get-AdminInstallConnectionString {
     }
     else
     {
-        if($Config.ApplicationInstallType -ieq "Upgrade" -and $Config.AdminConnectionString)
+        if($Config.ApplicationInstallType -ieq "Upgrade" -and $AdminDbConnectionInfo)
         {
-            return $Config.AdminConnectionString
+            return $AdminDbConnectionInfo
         }
     }
 
@@ -1106,7 +1137,6 @@ function Invoke-DbUpScripts {
 
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
 
-        $adminConnectionString = Get-AdminInstallConnectionString $Config
         $engine = "PostgreSql"
 
         if(!(Test-IsPostgreSQL -Engine $Config.engine)){
@@ -1117,12 +1147,26 @@ function Invoke-DbUpScripts {
             Verb = "Deploy"
             Engine = $engine
             Database = "Admin"
-            ConnectionString = $adminConnectionString
+            ConnectionString = ""
             FilePaths = $Config.WebApplicationPath
             ToolsPath = $Config.ToolsPath
         }
 
-        Invoke-DbDeploy @params
+        if($Config.IsMultiTenant)
+        {
+            foreach ($tenantKey in $Config.Tenants.Keys) {       
+                
+                $adminConnectionString = Get-AdminInstallConnectionString  $Config.Tenants[$tenantKey].AdminDbConnectionInfo
+                $params["ConnectionString"] = $adminConnectionString
+                Invoke-DbDeploy @params
+            }           
+        }
+        else
+        {
+            $adminConnectionString = Get-AdminInstallConnectionString $Config.AdminDbConnectionInfo
+            $params["ConnectionString"] = $adminConnectionString
+            Invoke-DbDeploy @params
+        }
     }
 }
 
@@ -1186,14 +1230,22 @@ function Set-SqlLogins {
         }
         else
         {
+            if ($Config.IsMultiTenant) {
+                foreach ($tenantKey in $Config.Tenants.Keys) {
+                    if ($Config.UseAlternateUserName ) { Write-Host ""; Write-Host "Adding Sql Login for Admin Database:"; }
+                    Add-SqlLogins $Config.Tenants[$tenantKey].AdminDbConnectionInfo $Config.WebApplicationName -IsCustomLogin:$Config.UseAlternateUserName 
+                    
+                    if ($Config.UseAlternateUserName ) { Write-Host ""; Write-Host "Adding Sql Login for Security Database:"; }
+                    Add-SqlLogins $Config.Tenants[$tenantKey].SecurityDbConnectionInfo $Config.WebApplicationName -IsCustomLogin:$Config.UseAlternateUserName
+                }
+            }
+            else{
             Write-Host "Adding Sql Login for Admin Database:";
             Add-SqlLogins $Config.AdminDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
 
-            Write-Host "Adding Sql Login for Ed-Fi ODS Database:";
-            Add-SqlLogins $Config.OdsDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
-
             Write-Host "Adding Sql Login for Security Database:";
             Add-SqlLogins $Config.SecurityDbConnectionInfo $Config.WebApplicationName -IsCustomLogin
+            }
         }
     }
 }

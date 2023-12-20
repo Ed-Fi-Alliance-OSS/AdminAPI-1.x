@@ -16,27 +16,27 @@ body:form-urlencoded {
   DisplayName: 
 }
 
+assert {
+  res.status: eq 400
+  res.body.title: eq Validation failed
+  res.body.errors: isJson {}
+}
+
 tests {
-  // pm.test("Status code is Bad Request", function () {
-  //     pm.response.to.have.status(400);
-  // });
-  // 
-  // const response = pm.response.json();
-  // 
-  // pm.test("Response matches error format", function () {
-  //     pm.expect(response.status).to.equal(400);
-  //     pm.expect(response).to.have.property("title");
-  //     pm.expect(response).to.have.property("errors");
-  // });
-  // 
-  // pm.test("Response title is helpful and accurate", function () {
-  //     pm.expect(response.title.toLowerCase()).to.contain("validation");
-  // });
-  // 
-  // pm.test("Response errors include messages by property", function () {
-  //     pm.expect(response.errors["ClientId"].length).to.equal(1);
-  //     pm.expect(response.errors["ClientSecret"].length).to.equal(1);
-  //     pm.expect(response.errors["DisplayName"].length).to.equal(1);
-  // });
-  // 
+  test("Response includes validation errors", function() {
+    const data = res.getBody();
+    const validationErrors = {
+      "ClientId": [
+        "'Client Id' must not be empty."
+      ],
+      "ClientSecret": [
+        "'Client Secret' must not be empty."
+      ],
+      "DisplayName": [
+        "'Display Name' must not be empty."
+      ]
+    };
+    expect(data.errors).deep.equal(validationErrors);
+    
+  });
 }

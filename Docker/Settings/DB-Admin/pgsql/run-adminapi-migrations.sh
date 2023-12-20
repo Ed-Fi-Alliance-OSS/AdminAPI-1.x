@@ -11,13 +11,11 @@ if [[ -z "$POSTGRES_PORT" ]]; then
   export POSTGRES_PORT=5432
 fi
 
-if [ ! -z "${API_MODE}" ] && [ "${API_MODE,,}" != "sandbox" ]; then
-    # Force sorting by name following C language sort ordering, so that the sql scripts are run
-    # sequentially in the correct alphanumeric order
-    echo "Running Admin Api database migration scripts..."
+# Force sorting by name following C language sort ordering, so that the sql scripts are run
+# sequentially in the correct alphanumeric order
+echo "Running Admin Api database migration scripts..."
 
-    for FILE in `LANG=C ls /tmp/AdminApiScripts/PgSql/*.sql | sort -V`
-    do
-        psql --no-password --username "$POSTGRES_USER" --port $POSTGRES_PORT --dbname "EdFi_Admin" --file $FILE 1> /dev/null
-    done
-fi
+for FILE in `LANG=C ls /tmp/AdminApiScripts/PgSql/*.sql | sort -V`
+do
+    psql --no-password --username "$POSTGRES_USER" --port $POSTGRES_PORT --dbname "EdFi_Admin" --file $FILE 1> /dev/null
+done

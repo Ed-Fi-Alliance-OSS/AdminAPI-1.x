@@ -10,16 +10,15 @@ get {
   auth: none
 }
 
+assert {
+  res.status: eq 200
+}
+
 tests {
-  // pm.test("Status code is OK", function () {
-  //     pm.response.to.have.status(200);
-  // });
-  // 
-  // const response = pm.response.json();
-  // 
-  // pm.test("Response includes expected properties", function () {
-  //     pm.expect(response).to.have.property("version");
-  //     pm.expect(response).to.have.property("build");
-  // });
-  // 
+
+  test("Response includes expected properties", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("version");
+    expect(data).to.have.property("build");
+  });
 }

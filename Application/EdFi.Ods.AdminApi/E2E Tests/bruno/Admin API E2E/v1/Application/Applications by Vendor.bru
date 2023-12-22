@@ -1,0 +1,120 @@
+meta {
+  name: Applications by Vendor
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{API_URL}}/v1/vendors/{{ApplicationVendorId}}/applications
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+script:pre-request {
+  // pm.sendRequest({
+  //   url: `${pm.variables.get("API_URL")}/v1/vendors`,
+  //   method: 'POST',
+  //   header: {
+  //       "Content-Type": "application/json",
+  //       "Authorization": `Bearer ${pm.collectionVariables.get("TOKEN")}`
+  //   },
+  //   body: {
+  //     mode: 'raw',
+  //     raw:JSON.stringify({
+  //       "company": "Other Company",
+  //       "namespacePrefixes": "uri://ed-fi.org",
+  //       "contactName": "Other Application User",
+  //       "contactEmailAddress": "otherapplication@example.com"
+  //     }), 
+  //   }
+  // },
+  // function (vendorErr, vendorResponse) {
+  //   if(vendorErr) { console.log("Error in Pre-request:", vendorErr); }
+  //   const vendorJson = vendorResponse.json();
+  //   if(!vendorJson.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', vendorJson); }
+  //   pm.collectionVariables.set("OtherApplicationVendorId", vendorJson.result.vendorId);
+  // 
+  //   pm.sendRequest({
+  //     url: `${pm.variables.get("API_URL")}/v1/applications`,
+  //     method: 'POST',
+  //     header: {
+  //         "Content-Type": "application/json",
+  //         "Authorization": `Bearer ${pm.collectionVariables.get("TOKEN")}`
+  //     },
+  //     body: {
+  //       mode: 'raw',
+  //       raw:JSON.stringify({
+  //         "applicationName": "Other Vendor Application",
+  //         "vendorId": pm.collectionVariables.get("OtherApplicationVendorId"),
+  //         "claimSetName": "Ed-Fi Sandbox",
+  //         "profileId": null,
+  //         "educationOrganizationIds": [ 255901 ]
+  //       }),
+  //     }
+  //   },  
+  //   function (appErr, appResonse) {
+  //     if(appErr) { console.log("Error in Pre-request:", appErr); }
+  //     const appJson = appResonse.json();
+  //     if(!appJson.result.applicationId) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }
+  //     else {
+  //       pm.collectionVariables.set("OtherApplicationId", appJson.result.applicationId);
+  //     }
+  //   });
+  // });
+  // 
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  // 
+  // const response = pm.response.json();
+  // const results = pm.response.json().result;
+  // 
+  // pm.test("Response matches success format", function () {
+  //     pm.expect(response.status).to.equal(200);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("result");
+  // });
+  // 
+  // pm.test("Response result includes applications", function () {
+  //     pm.expect(results.length).to.be.greaterThan(0);
+  // 
+  //     const indexOfApplication = results.map(
+  //         function(application) { return application.applicationId; }
+  //     ).indexOf(pm.collectionVariables.get("CreatedApplicationId"));
+  // 
+  //     const result = results[indexOfApplication];
+  //     pm.expect(result.applicationName).to.equal("Test Application");
+  //     pm.expect(result.claimSetName).to.equal("Ed-Fi Sandbox");
+  //     pm.expect(result.educationOrganizationIds).to.length(1);
+  //     pm.expect(result.educationOrganizationIds[0]).to.equal(255901);
+  //     pm.expect(result.profileName).to.equal(null);
+  //     pm.expect(result.odsInstanceName).to.equal(null);
+  //     pm.expect(result.profiles).to.length(0);
+  //     pm.expect(result.vendorId).to.not.equal(null);
+  //     pm.expect(result.vendorId).to.greaterThan(0);
+  // });
+  // 
+  // pm.test("Response result is filtered by vendor", function () {
+  //     const resultApplicationIds = results.map(
+  //         function(application) { return application.applicationId; }
+  //     );
+  // 
+  //     pm.expect(resultApplicationIds).to.contain(pm.collectionVariables.get("CreatedApplicationId"));
+  //     pm.expect(resultApplicationIds).to.not.contain(pm.collectionVariables.get("OtherApplicationId"));
+  // });
+  // 
+  // pm.test("Response results do not include key or secret", function () {
+  //     results.forEach(function(result, i) {
+  //         pm.expect(result).to.not.have.property("key");
+  //         pm.expect(result).to.not.have.property("secret");
+  //     });
+  // });
+  // 
+}

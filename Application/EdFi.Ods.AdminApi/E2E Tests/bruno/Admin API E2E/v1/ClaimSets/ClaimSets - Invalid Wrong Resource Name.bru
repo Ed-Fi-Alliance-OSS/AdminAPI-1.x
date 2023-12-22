@@ -1,0 +1,106 @@
+meta {
+  name: ClaimSets - Invalid Wrong Resource Name
+  type: http
+  seq: 17
+}
+
+put {
+  url: {{API_URL}}/v1/claimsets/{{CreatedClaimSetId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+      "id": {{CreatedClaimSetId}},
+      "name": "ClaimSet-WithWrongResource",
+      "resourceClaims": [
+        {
+          "name": "educationStandards-123",
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": true,
+          "readChanges": true,
+          "authStrategyOverridesForCRUD": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "children": [
+            {
+              "name": "learningObjective-123",
+              "read": true,
+              "create": true,
+              "update": true,
+              "delete": true,
+              "readChanges": true,
+              "authStrategyOverridesForCRUD": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "academicSubjectDescriptor",
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": true,
+          "readChanges": true,
+          "authStrategyOverridesForCRUD": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "children": []
+        }      
+      ]
+  }
+}
+
+script:pre-request {
+  // 
+}
+
+tests {
+  // pm.test("Status code is Bad Request", function () {
+  //     pm.response.to.have.status(400);
+  // });
+  // 
+  // const response = pm.response.json();
+  // const errors = pm.response.json().errors;
+  // 
+  // pm.test("Response matches error format", function () {
+  //     pm.expect(response.status).to.equal(400);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("errors");
+  // });
+  // 
+  // pm.test("Response title is helpful and accurate", function () {
+  //     pm.expect(response.title.toLowerCase()).to.contain("validation");
+  // });
+  // 
+  // pm.test("Response errors include messages by property and resource", function () {
+  //     pm.expect(response.errors.ResourceClaims.length).to.equal(2);
+  //     ["not in the system", "educationStandards-123"].forEach((substring) => {
+  //         pm.expect(response.errors.ResourceClaims[0]).to.contain(substring);
+  //     });
+  //     ["not in the system", "learningObjective-123"].forEach((substring) => {
+  //         pm.expect(response.errors.ResourceClaims[1]).to.contain(substring);
+  //     });
+  // });
+}

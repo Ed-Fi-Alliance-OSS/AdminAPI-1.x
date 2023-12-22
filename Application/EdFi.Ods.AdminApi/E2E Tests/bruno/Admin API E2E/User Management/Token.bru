@@ -1,0 +1,35 @@
+meta {
+  name: Token
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{API_URL}}/connect/token
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  client_id: %7B%7BRegisteredClientId%7D%7D
+  client_secret: %7B%7BRegisteredClientSecret%7D%7D
+  grant_type: client_credentials
+  scope: edfi_admin_api%2Ffull_access
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  // 
+  // const response = pm.response.json();
+  // 
+  // pm.test("Response includes token", function () {
+  //     pm.expect(response).to.have.property("access_token");
+  //     pm.expect(response).to.have.property("token_type");
+  //     pm.expect(response).to.have.property("expires_in");
+  // 
+  //     pm.expect(response["token_type"]).to.equal("Bearer");
+  // });
+  // 
+}

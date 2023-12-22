@@ -1,0 +1,39 @@
+meta {
+  name: Register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/connect/register
+  body: formUrlEncoded
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.title: contains Registered client
+}
+
+script:pre-request {
+  const { nanoid } = require("nanoid");
+  
+  const clientId = nanoid();
+  const clientSecret = nanoid();
+  const displayName = "Test";
+  
+  req.setBody({
+    clientId,
+    clientSecret,
+    displayName
+  });
+  
+  bru.setVar('ClientId', clientId);
+  bru.setVar('ClientSecret', clientSecret);
+}
+
+docs {
+  # Register
+  
+  Registers a new user
+}

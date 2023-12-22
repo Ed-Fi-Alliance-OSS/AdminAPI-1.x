@@ -1,0 +1,51 @@
+meta {
+  name: Applications by ID
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{API_URL}}/v1/applications/{{CreatedApplicationId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  // 
+  // const response = pm.response.json();
+  // const result = pm.response.json().result;
+  // 
+  // pm.test("Response matches success format", function () {
+  //     pm.expect(response.status).to.equal(200);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("result");
+  // });
+  // 
+  // pm.test("Response result matches application", function () {
+  //     const applicationId = pm.collectionVariables.get("CreatedApplicationId");
+  //     
+  //     pm.expect(result.applicationId).to.equal(applicationId);
+  //     pm.expect(result.applicationName).to.equal("Test Application");
+  //     pm.expect(result.claimSetName).to.equal("Ed-Fi Sandbox");
+  //     pm.expect(result.educationOrganizationIds).to.length(1);
+  //     pm.expect(result.educationOrganizationIds[0]).to.equal(255901);
+  //     pm.expect(result.profileName).to.equal(null);
+  //     pm.expect(result.odsInstanceName).to.equal(null);
+  //     pm.expect(result.profiles).to.length(0);
+  //     pm.expect(result.vendorId).to.not.equal(null);
+  //     pm.expect(result.vendorId).to.greaterThan(0);
+  // });
+  // 
+  // pm.test("Response result does not include key or secret", function () {  
+  //     pm.expect(result).to.not.have.property("key");
+  //     pm.expect(result).to.not.have.property("secret");
+  // });
+  // 
+}

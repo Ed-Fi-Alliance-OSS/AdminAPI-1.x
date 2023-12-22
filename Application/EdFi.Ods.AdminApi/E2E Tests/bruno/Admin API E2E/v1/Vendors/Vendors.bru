@@ -1,0 +1,34 @@
+meta {
+  name: Vendors
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{API_URL}}/v1/vendors/{{CreatedVendorId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  //
+  // const response = pm.response.json();
+  //
+  // pm.test("Response matches success format", function () {
+  //     pm.expect(response.status).to.equal(200);
+  //     pm.expect(response).to.have.property("title");
+  // });
+  //
+  // pm.test("Response title is helpful and accurate", function () {
+  //     pm.expect(response.title.toLowerCase()).to.contain("vendor");
+  //     pm.expect(response.title.toLowerCase()).to.contain("deleted");
+  // });
+  //
+}

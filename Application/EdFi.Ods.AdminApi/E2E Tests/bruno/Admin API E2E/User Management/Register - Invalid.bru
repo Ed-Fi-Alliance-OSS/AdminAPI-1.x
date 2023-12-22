@@ -1,0 +1,42 @@
+meta {
+  name: Register - Invalid
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{API_URL}}/connect/register
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  ClientId: 
+  ClientSecret: 
+  DisplayName: 
+}
+
+assert {
+  res.status: eq 400
+  res.body.title: eq Validation failed
+  res.body.errors: isJson {}
+}
+
+tests {
+  test("Response includes validation errors", function() {
+    const data = res.getBody();
+    const validationErrors = {
+      "ClientId": [
+        "'Client Id' must not be empty."
+      ],
+      "ClientSecret": [
+        "'Client Secret' must not be empty."
+      ],
+      "DisplayName": [
+        "'Display Name' must not be empty."
+      ]
+    };
+    expect(data.errors).deep.equal(validationErrors);
+    
+  });
+}

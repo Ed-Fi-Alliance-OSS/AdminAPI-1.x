@@ -1,0 +1,41 @@
+meta {
+  name: Vendors by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/v1/vendors/{{CreatedVendorId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+tests {
+  // pm.test("Status code is OK", function () {
+  //     pm.response.to.have.status(200);
+  // });
+  //
+  // const response = pm.response.json();
+  // const result = pm.response.json().result;
+  //
+  // pm.test("Response matches success format", function () {
+  //     pm.expect(response.status).to.equal(200);
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response).to.have.property("result");
+  // });
+  //
+  // pm.test("Response result matches vendor", function () {
+  //     const vendorId = pm.collectionVariables.get("CreatedVendorId");
+  //
+  //     pm.expect(result.vendorId).to.equal(vendorId);
+  //     pm.expect(result.company).to.equal("Test Company");
+  //     pm.expect(result.namespacePrefixes).to.equal("uri://ed-fi.org");
+  //     pm.expect(result.contactName).to.equal("Test User");
+  //     pm.expect(result.contactEmailAddress).to.equal("test@test-ed-fi.org");
+  // });
+  //
+}

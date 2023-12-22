@@ -1,0 +1,40 @@
+meta {
+  name: Vendors - Not Found
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{API_URL}}/v1/vendors/{{CreatedVendorId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+tests {
+  // pm.test("Status code is Not Found", function () {
+  //     pm.response.to.have.status(404);
+  // });
+  //
+  // pm.test("Response matches error format", function () {
+  //     const response = pm.response.json();
+  //
+  //     pm.expect(response).to.have.property("status");
+  //     pm.expect(response).to.have.property("title");
+  //     pm.expect(response.status).to.equal(404);
+  // });
+  //
+  // pm.test("Response title is helpful and accurate", function () {
+  //     const response = pm.response.json();
+  //
+  //     pm.expect(response.title).to.contain("Not found");
+  //     pm.expect(response.title).to.contain("vendor");
+  //     pm.expect(response.title).to.contain(pm.collectionVariables.get("CreatedVendorId"));
+  // });
+  //
+  // pm.collectionVariables.unset("CreatedVendorId");
+  //
+}

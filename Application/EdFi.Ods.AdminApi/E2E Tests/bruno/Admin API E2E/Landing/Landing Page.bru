@@ -1,0 +1,24 @@
+meta {
+  name: Landing Page
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_URL}}
+  body: json
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+
+  test("Response includes expected properties", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("version");
+    expect(data).to.have.property("build");
+  });
+}

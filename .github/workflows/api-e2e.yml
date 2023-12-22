@@ -63,6 +63,13 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Install bruno
+        run: npm install -g @usebruno/cli
+
+      - name: Run tests
+        run: bru run --env "Admin API Docker" --insecure
+        working-directory: ./Application/EdFi.Ods.AdminApi/E2E Tests/bruno/Admin API E2E
+
       - name: Install newman
         run: npm install -g newman newman-reporter-junitfull
 

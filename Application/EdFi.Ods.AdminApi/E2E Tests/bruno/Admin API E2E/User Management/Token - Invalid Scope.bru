@@ -1,0 +1,39 @@
+meta {
+  name: Token - Invalid Scope
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{API_URL}}/connect/token
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  client_id: %7B%7BRegisteredClientId%7D%7D
+  client_secret: %7B%7B%24guid%7D%7D
+  grant_type: client_credentials
+  scope: NOT_REAL%2FSCOPE
+}
+
+script:pre-request {
+  // 
+}
+
+tests {
+  // pm.test("Status code is Bad Request", function () {
+  //     pm.response.to.have.status(400);
+  // });
+  // 
+  // const response = pm.response.json();
+  // 
+  // pm.test("Response includes error message", function () {
+  //     pm.expect(response).to.have.property("error");
+  //     pm.expect(response).to.have.property("error_description");
+  //     pm.expect(response).to.have.property("error_uri");
+  // 
+  //     pm.expect(response["error_description"]).to.contain("scope");
+  // });
+  // 
+}

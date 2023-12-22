@@ -8,7 +8,7 @@ using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Shouldly;
 using System.Collections.Generic;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using FluentValidation;
 
@@ -198,12 +198,11 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication
         };
         Save(testClaimSet);
 

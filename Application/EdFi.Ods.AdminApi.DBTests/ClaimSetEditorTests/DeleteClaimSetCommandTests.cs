@@ -26,7 +26,7 @@ public class DeleteClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSetToDelete = new ClaimSet
         { ClaimSetName = "TestClaimSet_Delete" };
@@ -82,7 +82,7 @@ public class DeleteClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", IsEdfiPreset = true };
         Save(systemReservedClaimSet);

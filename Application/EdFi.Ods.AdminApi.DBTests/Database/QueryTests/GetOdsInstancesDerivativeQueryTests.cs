@@ -41,7 +41,7 @@ public class GetOdsInstancesDerivativeQueryTests : PlatformUsersContextTestBase
             results = query.Execute();
         });
 
-        results.Any(p => p.OdsInstanceId == odsInstanceDerivative1.OdsInstanceId).ShouldBeTrue();
+        results.Any(p => p.OdsInstance.OdsInstanceId == odsInstanceDerivative1.OdsInstance.OdsInstanceId).ShouldBeTrue();
         results.Any(p => p.DerivativeType == odsInstanceDerivative1.DerivativeType).ShouldBeTrue();
         results.Any(p => p.ConnectionString == odsInstanceDerivative1.ConnectionString).ShouldBeTrue();
 
@@ -81,7 +81,7 @@ public class GetOdsInstancesDerivativeQueryTests : PlatformUsersContextTestBase
             results.Count.ShouldBe(1);
         });
 
-        results.Any(p => p.OdsInstanceId == odsInstanceDerivative2.OdsInstanceId).ShouldBeTrue();
+        results.Any(p => p.OdsInstance.OdsInstanceId == odsInstanceDerivative2.OdsInstance.OdsInstanceId).ShouldBeTrue();
         results.Any(p => p.DerivativeType == odsInstanceDerivative2.DerivativeType).ShouldBeTrue();
         results.Any(p => p.ConnectionString == odsInstanceDerivative2.ConnectionString).ShouldBeTrue();
     }

@@ -9,7 +9,7 @@ using NUnit.Framework;
 using EdFi.Admin.DataAccess.Models;
 using Shouldly;
 using EdFi.Security.DataAccess.Models;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
@@ -58,13 +58,11 @@ public class GetResourceClaimByResourceClaimIdQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
         var parentResourceClaim = new ResourceClaim()
         {
             ClaimName = $"ParentTestResourceClaim",
             ResourceName = $"ParentTestResourceClaim",
-            DisplayName = $"ParentTestResourceClaim",
-            Application = testApplication
         };
         usersContext.ResourceClaims.Add(parentResourceClaim);
         Save(parentResourceClaim);
@@ -73,8 +71,6 @@ public class GetResourceClaimByResourceClaimIdQueryTests : SecurityDataTestBase
         {
             ClaimName = $"ChildrenTestResourceClaim",
             ResourceName = $"ChildrenTestResourceClaim",
-            DisplayName = $"ChildrenTestResourceClaim",
-            Application = testApplication,
             ParentResourceClaimId = parentResourceClaim.ResourceClaimId,
         };
         Save(resourceClaim);

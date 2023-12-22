@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Contexts;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Respawn;
 
@@ -34,7 +35,7 @@ public abstract class PlatformSecurityContextTestBase
         SchemasToExclude = Array.Empty<string>()
     };
 
-    protected virtual string ConnectionString => TestContext.Database.Connection.ConnectionString;
+    protected virtual string ConnectionString => TestContext.Database.GetConnectionString();
 
     protected virtual void AdditionalFixtureSetup()
     {
@@ -82,7 +83,7 @@ public abstract class PlatformSecurityContextTestBase
     {
         foreach (var entity in entities)
         {
-            TestContext.Set(entity.GetType()).Add(entity);
+            TestContext.Add(entity);
         }
 
         TestContext.SaveChanges();
@@ -90,7 +91,7 @@ public abstract class PlatformSecurityContextTestBase
 
     protected void UsersTransaction(Action<IUsersContext> action)
     {
-        using var usersContext = new SqlServerUsersContext(Testing.AdminConnectionString);
+        using var usersContext = new SqlServerUsersContext(Testing.GetDbContextOptions(Testing.AdminConnectionString));
         using var transaction = usersContext.Database.BeginTransaction();
         action(usersContext);
         TestContext.SaveChanges();

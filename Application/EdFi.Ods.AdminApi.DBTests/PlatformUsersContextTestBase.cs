@@ -4,8 +4,10 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Respawn;
 using static EdFi.Ods.AdminApi.DBTests.Testing;
@@ -43,13 +45,15 @@ public abstract class PlatformUsersContextTestBase
         Transaction(usersContext =>
         {
             foreach (var entity in entities)
-                ((SqlServerUsersContext)usersContext).Set(entity.GetType()).Add(entity);
+            {
+                ((SqlServerUsersContext)usersContext).Add(entity);
+            }
         });
     }
 
     protected static void Transaction(Action<IUsersContext> action)
     {
-        using var usersContext = new SqlServerUsersContext(ConnectionString);
+        using var usersContext = new SqlServerUsersContext(GetDbContextOptions());
         using var transaction = (usersContext).Database.BeginTransaction();
         action(usersContext);
         usersContext.SaveChanges();
@@ -67,4 +71,11 @@ public abstract class PlatformUsersContextTestBase
 
         return result;
     }
+
+    protected static DbContextOptions GetDbContextOptions()
+    {
+        var builder = new DbContextOptionsBuilder();
+        builder.UseSqlServer(ConnectionString);
+        return builder.Options;
+    } 
 }

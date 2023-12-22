@@ -11,7 +11,7 @@ using Shouldly;
 using System.Collections.Generic;
 using Moq;
 
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -27,9 +27,9 @@ public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
-        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("ParentRc", 2);

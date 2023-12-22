@@ -3,14 +3,14 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -53,7 +53,7 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
 
-        application.OdsInstance = odsInstance;
+        Save(odsInstance);
 
         var clientAccessToken = new ClientAccessToken
         {
@@ -68,8 +68,8 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var createdOdsInstance = usersContext.OdsInstances.FirstOrDefault(odsInstance => odsInstance.OdsInstanceId == odsInstance.OdsInstanceId);
-            var createdApiClient = usersContext.Clients.FirstOrDefault(apiClient => apiClient.ApiClientId == client.ApiClientId);
+            var createdOdsInstance = usersContext.OdsInstances.FirstOrDefault(odsI => odsI.OdsInstanceId == odsInstance.OdsInstanceId);
+            var createdApiClient = usersContext.ApiClients.FirstOrDefault(apiClient => apiClient.ApiClientId == client.ApiClientId);
             usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance
             {
                 OdsInstance = createdOdsInstance,
@@ -80,9 +80,6 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
 
         var applicationId = application.ApplicationId;
         applicationId.ShouldBeGreaterThan(0);
-
-        var odsInstanceId = application.OdsInstanceId().Value;
-        odsInstanceId.ShouldBeGreaterThan(0);
 
         var clientId = client.ApiClientId;
         clientId.ShouldBeGreaterThan(0);
@@ -98,11 +95,11 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-           var application = usersContext.Applications.FirstOrDefault(a => a.ApplicationId == applicationId);
+           var application = usersContext.Applications
+            .Include(a => a.ApiClients).FirstOrDefault(a => a.ApplicationId == applicationId);
            application.ShouldBeNull();
-           var apiClients = usersContext.Clients.Where(c => c.ApiClientId == clientId).ToArray();
-           apiClients.ShouldBeEmpty();
-           var apiClientOdsInstances = usersContext.ApiClientOdsInstances.Where(c => c.ApiClient.ApiClientId == clientId && c.OdsInstance.OdsInstanceId == odsInstanceId).ToArray();
+           var apiClientOdsInstances = usersContext.ApiClientOdsInstances
+            .Include(p => p.OdsInstance).Where(c => c.ApiClient.ApiClientId == clientId && c.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId).ToArray();
            apiClientOdsInstances.ShouldBeEmpty();
         });
     }
@@ -122,9 +119,8 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
         var organization = new ApplicationEducationOrganization
         {
             Application = application,
-            Clients = new List<ApiClient> { client }
         };
-
+        organization.ApiClients.Add(client);
         application.ApiClients.Add(client);
         application.ApplicationEducationOrganizations.Add(organization);
         Save(application);

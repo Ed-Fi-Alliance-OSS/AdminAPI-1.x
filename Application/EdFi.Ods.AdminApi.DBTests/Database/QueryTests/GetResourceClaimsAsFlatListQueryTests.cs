@@ -10,7 +10,7 @@ using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
 
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
@@ -26,7 +26,7 @@ public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testResourceClaims = SetupResourceClaims(testApplication);
 
@@ -51,10 +51,10 @@ public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSet = new ClaimSet
-        { ClaimSetName = "TestClaimSet_test", Application = testApplication };
+        { ClaimSetName = "TestClaimSet_test" };
         Save(testClaimSet);
         var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1)).ToList();
         var parentResourceNames = testResourceClaims.Where(x => x.ResourceClaim?.ParentResourceClaim == null)
@@ -79,9 +79,7 @@ public class GetResourceClaimsAsFlatListQueryTests : SecurityDataTestBase
             var resourceClaim = new ResourceClaim
             {
                 ClaimName = $"TestResourceClaim{index:N}",
-                DisplayName = $"TestResourceClaim{index:N}",
                 ResourceName = $"TestResourceClaim{index:N}",
-                Application = testApplication
             };
             resourceClaims.Add(resourceClaim);
         }

@@ -3,15 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -74,7 +74,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ProfileIds = null,
                 VendorId = vendor.VendorId,
                 EducationOrganizationIds = new List<int> { 12345, 67890 },
-                OdsInstanceId = odsInstance.OdsInstanceId
+                OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId }, 
             };
 
             result = command.Execute(newApplication);
@@ -82,7 +82,11 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
+            var persistedApplication = usersContext.Applications
+            .Include(a => a.ApplicationEducationOrganizations)
+            .Include(a => a.Vendor)
+            .Include(a => a.ApiClients)
+            .FirstOrDefault(a => a.ApplicationId == result.ApplicationId);
 
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.Profiles.Count.ShouldBe(0);
@@ -93,7 +97,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
 
             persistedApplication.ApiClients.Count.ShouldBe(1);
-            var apiClient = persistedApplication.ApiClients.First();
+            var apiClient = persistedApplication.ApiClients.FirstOrDefault();
             apiClient.Name.ShouldBe("Test Application");
             apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
             apiClient.Key.ShouldBe(result.Key);
@@ -142,7 +146,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ProfileIds = new List<int>() { profile.ProfileId },
                 VendorId = vendor.VendorId,
                 EducationOrganizationIds = new List<int> { 12345, 67890 },
-                OdsInstanceId = odsInstance.OdsInstanceId
+                OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId },
             };
 
             result = command.Execute(newApplication);
@@ -150,8 +154,11 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
-
+            var persistedApplication = usersContext.Applications
+            .Include(a => a.ApplicationEducationOrganizations)
+            .Include(a => a.Vendor)
+            .Include(a => a.Profiles)
+            .Include(a => a.ApiClients).Single(a => a.ApplicationId == result.ApplicationId);
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.Profiles.Count.ShouldBe(1);
             persistedApplication.Profiles.First().ProfileName.ShouldBe("Test Profile");
@@ -168,18 +175,24 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             apiClient.Key.ShouldBe(result.Key);
             apiClient.Secret.ShouldBe(result.Secret);
 
-            persistedApplication.OdsInstance.ShouldNotBeNull();
-            persistedApplication.OdsInstance.Name.ShouldBe(odsInstanceName);
+            var persistedApiOdsInstances = usersContext.ApiClientOdsInstances.Where(a => a.ApiClient.ApiClientId == apiClient.ApiClientId).ToList();
+
+            persistedApiOdsInstances.ShouldNotBeNull();
+            persistedApiOdsInstances.First().ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
         });
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == result.ApplicationId);
+            var persistedApplication = usersContext.Applications
+            .Include(p => p.ApiClients)
+            .Single(a => a.ApplicationId == result.ApplicationId);
             var apiClient = persistedApplication.ApiClients.First();
-            var odsInstanceId = persistedApplication.OdsInstanceId().Value;
-            var apiClientOdsInstance = usersContext.ApiClientOdsInstances.FirstOrDefault(o => o.OdsInstance.OdsInstanceId == odsInstanceId && o.ApiClient.ApiClientId == apiClient.ApiClientId);
+            var apiClientOdsInstance = usersContext.ApiClientOdsInstances
+            .Include(ac => ac.OdsInstance)
+            .Include(ac => ac.ApiClient)
+            .FirstOrDefault(o => o.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId && o.ApiClient.ApiClientId == apiClient.ApiClientId);
             apiClientOdsInstance.ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
-            apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(persistedApplication.OdsInstanceId().Value);
+            apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(odsInstance.OdsInstanceId);
         });
         
     }
@@ -191,6 +204,6 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
         public string ClaimSetName { get; set; }
         public IEnumerable<int> ProfileIds { get; set; }
         public IEnumerable<int> EducationOrganizationIds { get; set; }
-        public int OdsInstanceId { get; set; }
+        public IEnumerable<int> OdsInstanceIds { get; set; }
     }
 }

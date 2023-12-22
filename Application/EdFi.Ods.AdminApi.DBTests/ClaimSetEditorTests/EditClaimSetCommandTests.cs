@@ -12,7 +12,7 @@ using EdFi.Security.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure;
 
@@ -28,9 +28,9 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
-        var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(alreadyExistingClaimSet);
 
         var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = alreadyExistingClaimSet.ClaimSetId };
@@ -53,9 +53,9 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
-        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", Application = testApplication, IsEdfiPreset = true };
+        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", IsEdfiPreset = true };
         Save(systemReservedClaimSet);
 
         var editModel = new EditClaimSetModel { ClaimSetName = "TestClaimSetEdited", ClaimSetId = systemReservedClaimSet.ClaimSetId };
@@ -77,13 +77,13 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
-        var claimSetToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}", Application = testApplication };
+        var claimSetToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}" };
         Save(claimSetToBeEdited);
         SetupVendorApplicationsForClaimSet(claimSetToBeEdited);
 
-        var claimSetNotToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}", Application = testApplication };
+        var claimSetNotToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}" };
         Save(claimSetNotToBeEdited);
         SetupVendorApplicationsForClaimSet(claimSetNotToBeEdited);
 
@@ -142,7 +142,7 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
     //    {
     //        ApplicationName = $"Test Application {DateTime.Now:O}"
     //    };
-    //    Save(testApplication);
+    //    SaveAdminContext(testApplication);
 
     //    var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet1", Application = testApplication };
     //    Save(alreadyExistingClaimSet);
@@ -167,7 +167,7 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
     //    {
     //        ApplicationName = $"Test Application {DateTime.Now:O}"
     //    };
-    //    Save(testApplication);
+    //    SaveAdminContext(testApplication);
 
     //    var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet1", Application = testApplication };
     //    Save(testClaimSet);
@@ -189,7 +189,7 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
     //    {
     //        ApplicationName = $"Test Application {DateTime.Now:O}"
     //    };
-    //    Save(testApplication);
+    //    SaveAdminContext(testApplication);
 
     //    var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet1", Application = testApplication };
     //    Save(testClaimSet);

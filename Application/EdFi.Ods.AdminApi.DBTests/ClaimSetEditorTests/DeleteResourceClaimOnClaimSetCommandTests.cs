@@ -9,7 +9,7 @@ using NUnit.Framework;
 using Shouldly;
 using System;
 using System.Linq;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
@@ -24,9 +24,9 @@ public class DeleteResourceClaimOnClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
-        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("ParentRc", 2);

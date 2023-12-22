@@ -24,7 +24,7 @@ public class CopyClaimSetCommandTests : SecurityDataTestBase
             {
                 ApplicationName = $"Test Application {DateTime.Now:O}"
             };
-            Save(testApplication);
+            SaveAdminContext(testApplication);
 
             var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet"};
             Save(testClaimSet);

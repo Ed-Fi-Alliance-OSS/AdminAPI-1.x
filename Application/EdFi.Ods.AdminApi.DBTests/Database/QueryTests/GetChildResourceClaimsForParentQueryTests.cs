@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -23,7 +23,7 @@ public class GetChildResourceClaimsForParentQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var parentRcs = UniqueNameList("Parent", 2);
 

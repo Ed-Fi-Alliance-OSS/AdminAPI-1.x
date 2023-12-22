@@ -12,7 +12,7 @@ using System.Net;
 using EdFi.Security.DataAccess.Contexts;
 
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -26,12 +26,11 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication,
             ForApplicationUseOnly = false,
             IsEdfiPreset = false
         };
@@ -52,12 +51,11 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var systemReservedClaimSet = new ClaimSet
         {
             ClaimSetName = "SystemReservedClaimSet",
-            Application = testApplication,
             ForApplicationUseOnly = true
         };
         Save(systemReservedClaimSet);
@@ -65,7 +63,6 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
         var edfiPresetClaimSet = new ClaimSet
         {
             ClaimSetName = "EdfiPresetClaimSet",
-            Application = testApplication,
             ForApplicationUseOnly = false,
             IsEdfiPreset = true
         };

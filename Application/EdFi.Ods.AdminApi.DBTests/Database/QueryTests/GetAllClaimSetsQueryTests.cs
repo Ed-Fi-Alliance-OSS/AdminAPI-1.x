@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -23,14 +24,8 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
     [Test]
     public void Should_Retreive_ClaimSetNames()
     {
-        var application = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(application);
-
-        var claimSet1 = GetClaimSet(application);
-        var claimSet2 = GetClaimSet(application);
+        var claimSet1 = GetClaimSet();
+        var claimSet2 = GetClaimSet();
         Save(claimSet1, claimSet2);
 
         var claimSetNames = Transaction<string[]>(securityContext =>
@@ -46,14 +41,8 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
     [Test]
     public void Should_Retreive_ClaimSetNames_With_Offset_And_Limit()
     {
-        var application = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(application);
-
-        var claimSet1 = GetClaimSet(application);
-        var claimSet2 = GetClaimSet(application);
+        var claimSet1 = GetClaimSet();
+        var claimSet2 = GetClaimSet();
         Save(claimSet1, claimSet2);
 
         var offset = 0;
@@ -70,11 +59,10 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
     }
 
     private static int _claimSetId = 0;
-    private static ClaimSet GetClaimSet(Application application)
+    private static ClaimSet GetClaimSet()
     {
         return new ClaimSet
         {
-            Application = application,
             ClaimSetName = $"Test Claim Set {_claimSetId++} - {DateTime.Now:O}"
         };
     }

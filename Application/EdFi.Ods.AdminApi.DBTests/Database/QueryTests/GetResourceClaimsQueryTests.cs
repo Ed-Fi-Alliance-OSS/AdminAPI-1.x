@@ -8,7 +8,7 @@ using System.Linq;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
@@ -24,7 +24,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testResourceClaims = SetupResourceClaims(testApplication);
 
@@ -49,9 +49,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
             var resourceClaim = new ResourceClaim
             {
                 ClaimName = $"TestResourceClaim{index:N}",
-                DisplayName = $"TestResourceClaim{index:N}",
                 ResourceName = $"TestResourceClaim{index:N}",
-                Application = testApplication
             };
             resourceClaims.Add(resourceClaim);
         }

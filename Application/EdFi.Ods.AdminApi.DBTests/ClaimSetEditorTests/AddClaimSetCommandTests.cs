@@ -23,7 +23,7 @@ public class AddClaimSetCommandTests : SecurityDataTestBase
         {
             ApplicationName = $"Test Application {DateTime.Now:O}"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var newClaimSet = new AddClaimSetModel { ClaimSetName = "TestClaimSet" };
 

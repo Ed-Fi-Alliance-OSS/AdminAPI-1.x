@@ -9,8 +9,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
@@ -39,17 +38,20 @@ public class AddOdsInstanceContextTests : PlatformUsersContextTestBase
         newOdsInstanceContext.Setup(x => x.ContextValue).Returns(contextValue);
 
         var id = 0;
-        Transaction(usersContext =>
+        Transaction((usersContext) =>
         {
             var command = new AddOdsInstanceContextCommand(usersContext);
             id = command.Execute(newOdsInstanceContext.Object).OdsInstanceContextId;
             id.ShouldBeGreaterThan(0);
         });
 
-        Transaction(usersContext =>
+        Transaction((usersContext) =>
         {
-            var odsInstanceContext = usersContext.OdsInstanceContexts.Single(v => v.OdsInstanceContextId == id);
-            odsInstanceContext.OdsInstanceId.ShouldBe(odsInstance.OdsInstanceId);
+            var odsInstanceContext = usersContext.OdsInstanceContexts
+            .Include(o => o.OdsInstance)
+            .Single(v => v.OdsInstanceContextId == id);
+
+            odsInstanceContext.OdsInstance.OdsInstanceId.ShouldBe(odsInstance.OdsInstanceId);
             odsInstanceContext.ContextKey.ShouldBe(contextKey);
             odsInstanceContext.ContextValue.ShouldBe(contextValue);
         });
@@ -112,15 +114,13 @@ public class AddOdsInstanceContextTests : PlatformUsersContextTestBase
 
         Save(odsInstance);
 
-        var contextKey = string.Empty;
         var contextValue = "2000";
 
         var newOdsInstanceContext = new Mock<IAddOdsInstanceContextModel>();
         newOdsInstanceContext.Setup(x => x.OdsInstanceId).Returns(odsInstance.OdsInstanceId);
-        newOdsInstanceContext.Setup(x => x.ContextKey).Returns(contextKey);
         newOdsInstanceContext.Setup(x => x.ContextValue).Returns(contextValue);
 
-        Assert.Throws<DbEntityValidationException>(() =>
+        Assert.Throws<DbUpdateException>(() =>
         {
             Transaction(usersContext =>
             {
@@ -143,14 +143,12 @@ public class AddOdsInstanceContextTests : PlatformUsersContextTestBase
         Save(odsInstance);
 
         var contextKey = "School";
-        var contextValue = string.Empty;
 
         var newOdsInstanceContext = new Mock<IAddOdsInstanceContextModel>();
         newOdsInstanceContext.Setup(x => x.OdsInstanceId).Returns(odsInstance.OdsInstanceId);
         newOdsInstanceContext.Setup(x => x.ContextKey).Returns(contextKey);
-        newOdsInstanceContext.Setup(x => x.ContextValue).Returns(contextValue);
 
-        Assert.Throws<DbEntityValidationException>(() =>
+        Assert.Throws<DbUpdateException>(() =>
         {
             Transaction(usersContext =>
             {

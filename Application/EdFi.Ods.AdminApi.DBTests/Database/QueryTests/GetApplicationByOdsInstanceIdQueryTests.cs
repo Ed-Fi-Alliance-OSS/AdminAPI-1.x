@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
+using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +23,6 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
         var vendor = new Vendor { VendorName = "test vendor" };
         var odsInstance = new OdsInstance
         {
-            OdsInstanceId = 1,
             Name = "Test Instance",
             InstanceType = "Ods",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
@@ -34,10 +34,34 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             ClaimSetName = "test claim set",
             Vendor = vendor,
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
-            OdsInstance = odsInstance
         };
-        
-        Save(odsInstance, vendor, application);
+
+        var user = new VendorUser
+        {
+            Email = "",
+            FullName = application.ApplicationName,
+            Vendor = vendor
+        };
+
+        var apiClient = new ApiClient
+        {
+            Application = application,
+            Key = "key",
+            Secret = "secret",
+            Name = application.ApplicationName,
+            IsApproved = true,
+            UseSandbox = false,
+            KeyStatus = "Active",
+            User = user,
+        };
+
+        var apiClientOdsIntance = new ApiClientOdsInstance
+        {
+            ApiClient = apiClient,
+            OdsInstance = odsInstance,
+        };
+
+        Save(odsInstance, vendor, application, apiClient, apiClientOdsIntance);
 
         Transaction(usersContext =>
         {
@@ -54,7 +78,6 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
         var vendor = new Vendor { VendorName = "test vendor" };
         var odsInstance = new OdsInstance
         {
-            OdsInstanceId = 1,
             Name = "Test Instance",
             InstanceType = "Ods",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
@@ -64,14 +87,39 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             ApplicationName = "test application",
             Vendor = vendor,
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
-            OdsInstance = odsInstance
         };
 
         var applicationOrganization = new ApplicationEducationOrganization { Application = application };
 
         application.ApplicationEducationOrganizations.Add(applicationOrganization);
-        
-        Save(odsInstance, vendor, application);
+
+        var user = new VendorUser
+        {
+            Email = "",
+            FullName = application.ApplicationName,
+            Vendor = vendor
+        };
+
+        var apiClient = new ApiClient
+        {
+            Application = application,
+            Key = "key",
+            Secret = "secret",
+            Name = application.ApplicationName,
+            IsApproved = true,
+            UseSandbox = false,
+            KeyStatus = "Active",
+            User = user,
+        };
+
+        application.ApiClients.Add(apiClient);
+
+        var apiClientOdsIntance = new ApiClientOdsInstance
+        {
+            ApiClient = apiClient,
+            OdsInstance = odsInstance,
+        };
+        Save(odsInstance, vendor, application, apiClientOdsIntance);
 
         var organizationId = applicationOrganization.ApplicationEducationOrganizationId;
         organizationId.ShouldBeGreaterThan(0);
@@ -90,7 +138,6 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
         var vendor = new Vendor { VendorName = "test vendor" };
         var odsInstance = new OdsInstance
         {
-            OdsInstanceId = 1,
             Name = "Test Instance",
             InstanceType = "Ods",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
@@ -100,16 +147,40 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             ApplicationName = "test application",
             Vendor = vendor,
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
-            OdsInstance = odsInstance
         };
         var profile = new Profile
         {
             Applications = new List<Application> { application },
             ProfileName = "test profile"
         };
+
+        var user = new VendorUser
+        {
+            Email = "",
+            FullName = application.ApplicationName,
+            Vendor = vendor
+        };
+
+        var apiClient = new ApiClient
+        {
+            Application = application,
+            Key = "key",
+            Secret = "secret",
+            Name = application.ApplicationName,
+            IsApproved = true,
+            UseSandbox = false,
+            KeyStatus = "Active",
+            User = user,
+        };
+
+        var apiClientOdsIntance = new ApiClientOdsInstance
+        {
+            ApiClient = apiClient,
+            OdsInstance = odsInstance,
+        };
         application.Profiles.Add(profile);
 
-        Save(odsInstance, vendor, application);
+        Save(odsInstance, vendor, application, apiClient, apiClientOdsIntance);
         var profileId = profile.ProfileId;
         profileId.ShouldBeGreaterThan(0);
 

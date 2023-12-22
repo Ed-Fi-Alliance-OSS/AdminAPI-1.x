@@ -3,15 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
-using EdFi.Admin.DataAccess.Models;
-using NuGet.Packaging;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Security.DataAccess.Models;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -22,10 +19,8 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
 
     protected override SqlServerSecurityContext CreateDbContext()
     {
-        return new SqlServerSecurityContext(ConnectionString);
+        return new SqlServerSecurityContext(Testing.GetDbContextOptions(ConnectionString));
     }
-
-
 
     [Test]
     public void Should_Retrieve_AuthStrategies()
@@ -34,7 +29,6 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
         {
             AuthorizationStrategyName = "Test Auth S",
             DisplayName = "Test Auth Strategy",
-            Application = new Security.DataAccess.Models.Application { ApplicationId =1, ApplicationName = "Application" }
         };
 
         Save(newAuthStrategy);
@@ -63,7 +57,6 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
             {
                 AuthorizationStrategyName = "Test Auth S " + (index + 1),
                 DisplayName = "Test Auth Strategy" + (index + 1),
-                Application = new Security.DataAccess.Models.Application { ApplicationId = 1, ApplicationName = "Application" }
             };
         }
 

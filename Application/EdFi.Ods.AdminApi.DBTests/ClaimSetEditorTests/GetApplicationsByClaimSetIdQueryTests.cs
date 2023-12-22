@@ -9,7 +9,7 @@ using System.Linq;
 using NUnit.Framework;
 using Shouldly;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using EdFi.Ods.AdminApi.Infrastructure;
@@ -79,7 +79,7 @@ public class GetApplicationsByClaimSetIdQueryTests : SecurityDataTestBase
             ApplicationName = applicationName
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSetNames = Enumerable.Range(1, claimSetCount)
             .Select((x, index) => $"TestClaimSetName{index:N}")
@@ -88,8 +88,7 @@ public class GetApplicationsByClaimSetIdQueryTests : SecurityDataTestBase
         var testClaimSets = testClaimSetNames
             .Select(x => new ClaimSet
             {
-                ClaimSetName = x,
-                Application = testApplication
+                ClaimSetName = x
             })
             .ToArray();
 

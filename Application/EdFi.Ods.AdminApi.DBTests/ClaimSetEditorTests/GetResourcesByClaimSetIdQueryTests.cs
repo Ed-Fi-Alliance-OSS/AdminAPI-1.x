@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using Application = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using Action = EdFi.Security.DataAccess.Models.Action;
@@ -27,7 +27,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
         var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
         var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication, UniqueNameList("ParentRc", 1));
 
@@ -52,7 +52,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
         var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
         var rcIds = UniqueNameList("ParentRc", 1);
         var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication, rcIds);
@@ -81,7 +81,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             ApplicationName = "TestApplicationName"
         };
 
-        Save(testApplication);
+        SaveAdminContext(testApplication);
         var testClaimSets = SetupApplicationWithClaimSets(testApplication);
         var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSets, testApplication);
 
@@ -118,12 +118,11 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         {
             ApplicationName = "TestApplicationName"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication
         };
         Save(testClaimSet);
 
@@ -144,12 +143,11 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         {
             ApplicationName = "TestApplicationName"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication
         };
         Save(testClaimSet);
 
@@ -184,12 +182,11 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         {
             ApplicationName = "TestApplicationName"
         };
-        Save(testApplication);
+        SaveAdminContext(testApplication);
 
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication
         };
         Save(testClaimSet);
 
@@ -232,7 +229,6 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             .Select(x => new ClaimSet
             {
                 ClaimSetName = x,
-                Application = testApplication
             })
             .ToArray();
 
@@ -252,9 +248,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
                 var resourceClaim = new ResourceClaim
                 {
                     ClaimName = rcName,
-                    DisplayName = rcName,
                     ResourceName = rcName,
-                    Application = testApplication
                 };
                 var action = new Action
                 {
@@ -283,9 +277,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             var resourceClaim = new ResourceClaim
             {
                 ClaimName = $"TestParentResourceClaim{parentIndex:N}",
-                DisplayName = $"TestParentResourceClaim{parentIndex:N}",
                 ResourceName = $"TestParentResourceClaim{parentIndex:N}",
-                Application = testApplication
             };
             parentResourceClaims.Add(resourceClaim);
 
@@ -293,9 +285,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
                 .Select(childIndex => new ResourceClaim
                 {
                     ClaimName = $"TestChildResourceClaim{resourceClaim.ClaimName}",
-                    DisplayName = $"TestChildResourceClaim{resourceClaim.ClaimName}",
                     ResourceName = $"TestChildResourceClaim{resourceClaim.ClaimName}",
-                    Application = testApplication,
                     ParentResourceClaim = resourceClaim,
                     ParentResourceClaimId = resourceClaim.ResourceClaimId
                 }));

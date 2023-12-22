@@ -62,7 +62,7 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
             _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
         }
 
-        var currentProfiles = application.Profiles;
+        var currentProfiles = application.Profiles.ToList();
 
         if (currentProfiles != null)
         {

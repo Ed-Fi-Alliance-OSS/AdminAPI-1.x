@@ -65,7 +65,7 @@ public class EditApplicationCommand : IEditApplicationCommand
             _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
         }
 
-        var currentProfiles = application.Profiles;
+        var currentProfiles = application.Profiles.ToList();
 
         if (currentProfiles != null)
         {

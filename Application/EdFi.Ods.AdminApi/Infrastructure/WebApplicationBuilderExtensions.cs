@@ -183,12 +183,11 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
-            //DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
-
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
             (sp, options) =>
             {
                 options.UseNpgsql(AdminConnectionString(sp));
+                options.UseLowerCaseNamingConvention();
                 options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
             });
 
@@ -200,8 +199,6 @@ public static class WebApplicationBuilderExtensions
         }
         else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
-            //DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
-
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 (sp, options) =>
                 {
@@ -250,6 +247,7 @@ public static class WebApplicationBuilderExtensions
             DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
             if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql)) {
                 builder.UseNpgsql(adminConnectionString);
+                builder.UseLowerCaseNamingConvention();
             }
             else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
             {
@@ -289,6 +287,7 @@ public static class WebApplicationBuilderExtensions
             if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
             {
                 builder.UseNpgsql(securityConnectionString);
+                builder.UseLowerCaseNamingConvention();
             }
             else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
             {

@@ -14,11 +14,12 @@ COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initd
 COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY Settings/dev/adminapi-test-seeddata.sql /tmp/AdminApiScripts/PgSql/adminapi-test-seeddata.sql
 
+USER root
 RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0 && \
     dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/PgSql/*
 
 EXPOSE 5432
-
+USER postgres
 CMD ["docker-entrypoint.sh", "postgres"]

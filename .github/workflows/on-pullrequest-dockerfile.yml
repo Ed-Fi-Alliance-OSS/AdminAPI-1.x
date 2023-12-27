@@ -40,8 +40,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-        with:
-          fetch-depth: 0w
 
       - name: Copy application folder to docker context
         if: ${{ matrix.dockerfile.type == 'local' }}
@@ -54,20 +52,13 @@ jobs:
         if: ${{ matrix.dockerfile.type == 'published' }}
         id: versions
         run: |
-          tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          FEED="9f7770ac-66d9-4fbc-b81e-b5ad79002b62"
+          PACKAGE="db5612a0-336b-4960-9092-f3be0b63d13e"
 
-          if [[ $tag =~ "Pre-Release" ]]
-          then
-            # Remove Pre-Release prefix
-            prefix="Pre-Release-"
-            package=${tag#"$prefix"}
-          else
-            package=${tag}
-          fi
-
-          SEMVERSION=${package:1}  # strip off the leading 'v'
-          echo "Current version: $SEMVERSION"
-          echo "VERSION=$SEMVERSION" >> $GITHUB_OUTPUT
+          VERSIONS=$(curl https://feeds.dev.azure.com/ed-fi-alliance/$FEED/_apis/Packaging/Feeds/EdFi/Packages/$PACKAGE?includeAllVersions=true)
+          LATEST=$(echo $VERSIONS | jq '[.versions[] | select(.views[].name == "Release") | .version | select(startswith("1."))][0]')
+          echo "latest version: $LATEST"
+          echo "VERSION=$LATEST" >> $GITHUB_OUTPUT
 
       - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         name: Run Linter on ${{ matrix.dockerfile.name }} Dockerfile

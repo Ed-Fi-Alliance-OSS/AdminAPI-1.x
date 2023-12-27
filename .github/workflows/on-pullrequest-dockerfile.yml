@@ -55,8 +55,8 @@ jobs:
           FEED="9f7770ac-66d9-4fbc-b81e-b5ad79002b62"
           PACKAGE="db5612a0-336b-4960-9092-f3be0b63d13e"
 
-          VERSIONS=$(curl https://feeds.dev.azure.com/ed-fi-alliance/$FEED/_apis/Packaging/Feeds/EdFi/Packages/$PACKAGE)
-          LATEST=$(echo $VERSIONS | jq '.versions[] | select(.isLatest == true) | .version')
+          VERSIONS=$(curl https://feeds.dev.azure.com/ed-fi-alliance/$FEED/_apis/Packaging/Feeds/EdFi/Packages/$PACKAGE?includeAllVersions=true)
+          LATEST=$(echo $VERSIONS | jq '[.versions[] | select(.views[].name == "Release") | .version | select(startswith("1."))][0]')
           echo "latest version: $LATEST"
           echo "VERSION=$LATEST" >> $GITHUB_OUTPUT
 

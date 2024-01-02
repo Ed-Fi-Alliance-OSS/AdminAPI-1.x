@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "99e7aa0c-6bdd-4efa-8a32-70b264da0ac7",
+		"_postman_id": "d5aa928a-f34a-442b-ab54-9292875dc37a",
 		"name": "Admin API E2E 2.0 - OdsInstances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -502,9 +502,10 @@
 											"function (err, response) {",
 											"  if(err) { console.log(\"Error in Pre-request:\", err); }",
 											"  const json = response.json();",
+											"  const index = json.length - 1;",
 											"  if(!json[0].id) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }",
 											"  else {",
-											"    pm.collectionVariables.set(\"ODSInstanceId\", json[0].id);",
+											"    pm.collectionVariables.set(\"ODSInstanceId\", json[index].id);",
 											"  }",
 											"});"
 										],
@@ -570,9 +571,6 @@
 											"        \"educationOrganizationIds\": {",
 											"          \"type\": \"array\",",
 											"          \"items\": {}",
-											"        },",
-											"        \"odsInstanceName\": {",
-											"          \"type\": \"string\"",
 											"        },",
 											"        \"vendorId\": {",
 											"          \"type\": \"integer\"",

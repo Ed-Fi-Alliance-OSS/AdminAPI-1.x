@@ -195,7 +195,7 @@ public static class WebApplicationBuilderExtensions
                 sp => new PostgresSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new PostgresUsersContext(AdminDbContextOption(sp, DatabaseEngineEnum.PostgreSql)));            
+                sp => new PostgresUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));            
         }
         else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
@@ -210,7 +210,7 @@ public static class WebApplicationBuilderExtensions
                 (sp) => new SqlServerSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                (sp) => new SqlServerUsersContext(AdminDbContextOption(sp, DatabaseEngineEnum.SqlServer)));          
+                (sp) => new SqlServerUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));          
         }
         else
         {
@@ -241,7 +241,7 @@ public static class WebApplicationBuilderExtensions
             return adminConnectionString;
         }
 
-        DbContextOptions AdminDbContextOption(IServiceProvider serviceProvider, string databaseEngine)
+        DbContextOptions AdminDbContextOptions(IServiceProvider serviceProvider, string databaseEngine)
         {
             var adminConnectionString = AdminConnectionString(serviceProvider);
             DbContextOptionsBuilder builder = new DbContextOptionsBuilder();

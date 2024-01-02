@@ -7,8 +7,7 @@
 set -e
 set +x
 
-envsubst < /app/AdminApi/appsettings.template.json > /app/temp.json
-mv /app/temp.json /app/appsettings.json
+envsubst < /app/AdminApi/appsettings.template.json > /app/appsettings.json
 
 if [[ -f /ssl/server.crt ]]; then
   cp /ssl/server.crt /usr/local/share/ca-certificates/

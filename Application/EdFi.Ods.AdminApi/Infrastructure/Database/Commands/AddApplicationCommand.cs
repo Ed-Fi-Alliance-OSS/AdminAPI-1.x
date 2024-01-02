@@ -5,7 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -17,12 +17,10 @@ public interface IAddApplicationCommand
 public class AddApplicationCommand : IAddApplicationCommand
 {
     private readonly IUsersContext _usersContext;
-    private readonly InstanceContext _instanceContext;
 
-    public AddApplicationCommand(IUsersContext usersContext, InstanceContext instanceContext)
+    public AddApplicationCommand(IUsersContext usersContext)
     {
         _usersContext = usersContext;
-        _instanceContext = instanceContext;
     }
 
     public AddApplicationResult Execute(IAddApplicationModel applicationModel)
@@ -31,18 +29,14 @@ public class AddApplicationCommand : IAddApplicationCommand
             ? _usersContext.Profiles.Where(p => applicationModel.ProfileIds!.Contains(p.ProfileId))
             : null;
 
-        var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
+        var vendor = _usersContext.Vendors.Include(x => x.Users)
+            .Single(v => v.VendorId == applicationModel.VendorId);
         
         var odsInstances = applicationModel.OdsInstanceIds != null
             ? _usersContext.OdsInstances.Where(o => applicationModel.OdsInstanceIds.Contains(o.OdsInstanceId))
             : null;
 
-        var user = new VendorUser
-        {
-            Email = "",
-            FullName = applicationModel.ApplicationName,
-            Vendor = vendor
-        };
+        var user = vendor.Users.FirstOrDefault();
 
         var apiClient = new ApiClient(true)
         {

@@ -31,7 +31,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new AddApplicationCommand(usersContext, new InstanceContext());
+            var command = new AddApplicationCommand(usersContext);
             var newApplication = new TestApplication
             {
                 ApplicationName = "Production-Test Application",
@@ -66,7 +66,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new AddApplicationCommand(usersContext, new InstanceContext());
+            var command = new AddApplicationCommand(usersContext);
             var newApplication = new TestApplication
             {
                 ApplicationName = "Test Application",
@@ -125,16 +125,10 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
 
         Save(vendor, profile, odsInstance);
 
-        var instanceContext = new InstanceContext
-        {
-            Id = 1,
-            Name = odsInstanceName
-        };
-
         AddApplicationResult result = null;
         Transaction(usersContext =>
         {
-            var command = new AddApplicationCommand(usersContext, instanceContext);
+            var command = new AddApplicationCommand(usersContext);
             var newApplication = new TestApplication
             {
                 ApplicationName = "Test Application",

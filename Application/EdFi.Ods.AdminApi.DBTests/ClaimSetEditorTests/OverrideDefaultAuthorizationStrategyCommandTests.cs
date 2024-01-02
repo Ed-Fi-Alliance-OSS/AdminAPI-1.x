@@ -193,24 +193,17 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
     private void InitializeData(out ClaimSet testClaimSet, out List<Security.DataAccess.Models.AuthorizationStrategy> appAuthorizationStrategies, out Security.DataAccess.Models.ResourceClaim testResource1ToEdit, out Security.DataAccess.Models.ResourceClaim testResource2ToNotEdit)
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        SaveAdminContext(testApplication);
-
         testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
         };
         Save(testClaimSet);
 
-        appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
+        appAuthorizationStrategies = SetupApplicationAuthorizationStrategies().ToList();
         var parentRcNames = UniqueNameList("ParentRc", 2);
 
         var testResourceClaims = SetupParentResourceClaimsWithChildren(
-            testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
+            testClaimSet, parentRcNames, UniqueNameList("Child", 1));
 
         SetupResourcesWithDefaultAuthorizationStrategies(
             appAuthorizationStrategies, testResourceClaims.ToList());

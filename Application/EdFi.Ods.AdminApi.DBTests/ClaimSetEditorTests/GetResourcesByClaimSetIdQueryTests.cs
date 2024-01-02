@@ -3,16 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
+using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Admin.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
+using System.Collections.Generic;
+using System.Linq;
 using Action = EdFi.Security.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
-using EdFi.Security.DataAccess.Models;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -22,14 +21,8 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetParentResourcesByClaimSetId()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        SaveAdminContext(testApplication);
-        var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication, UniqueNameList("ParentRc", 1));
+        var testClaimSets = SetupApplicationWithClaimSets().ToList();
+        var testResourceClaims = SetupParentResourceClaims(testClaimSets, UniqueNameList("ParentRc", 1));
 
         foreach (var testClaimSet in testClaimSets)
         {
@@ -47,15 +40,9 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetSingleResourceByClaimSetIdAndResourceId()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        SaveAdminContext(testApplication);
-        var testClaimSets = SetupApplicationWithClaimSets(testApplication).ToList();
+        var testClaimSets = SetupApplicationWithClaimSets().ToList();
         var rcIds = UniqueNameList("ParentRc", 1);
-        var testResourceClaims = SetupParentResourceClaims(testClaimSets, testApplication, rcIds);
+        var testResourceClaims = SetupParentResourceClaims(testClaimSets, rcIds);
 
         foreach (var testClaimSet in testClaimSets)
         {
@@ -76,14 +63,8 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetParentResourcesWithChildrenByClaimSetId()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        SaveAdminContext(testApplication);
-        var testClaimSets = SetupApplicationWithClaimSets(testApplication);
-        var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSets, testApplication);
+        var testClaimSets = SetupApplicationWithClaimSets();
+        var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSets);
 
         using var securityContext = TestContext;
         foreach (var testClaimSet in testClaimSets)
@@ -114,20 +95,14 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetDefaultAuthorizationStrategiesForParentResourcesByClaimSetId()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-        SaveAdminContext(testApplication);
-
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
         };
         Save(testClaimSet);
 
-        var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
-        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication, UniqueNameList("ParentRc", 3));
+        var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies().ToList();
+        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, UniqueNameList("ParentRc", 3));
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
@@ -139,21 +114,15 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetDefaultAuthorizationStrategiesForSingleResourcesByClaimSetIdAndResourceId()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-        SaveAdminContext(testApplication);
-
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
         };
         Save(testClaimSet);
 
-        var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
+        var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies().ToList();
         var rcIds = UniqueNameList("Parent", 1);
-        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, testApplication, rcIds);
+        var testResourceClaims = SetupParentResourceClaims(new List<ClaimSet> { testClaimSet }, rcIds);
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
         var rcName = $"{rcIds.First()}{testClaimSet.ClaimSetName}";
@@ -178,21 +147,15 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetDefaultAuthorizationStrategiesForParentResourcesWithChildrenByClaimSetId()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-        SaveAdminContext(testApplication);
-
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
         };
         Save(testClaimSet);
 
-        var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
+        var appAuthorizationStrategies = SetupApplicationAuthorizationStrategies().ToList();
 
-        var testResourceClaims = SetupParentResourceClaimsWithChildren(new List<ClaimSet> { testClaimSet }, testApplication);
+        var testResourceClaims = SetupParentResourceClaimsWithChildren(new List<ClaimSet> { testClaimSet });
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
@@ -219,7 +182,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         }
     }
 
-    private IReadOnlyCollection<ClaimSet> SetupApplicationWithClaimSets(Application testApplication, int claimSetCount = 5)
+    private IReadOnlyCollection<ClaimSet> SetupApplicationWithClaimSets(int claimSetCount = 5)
     {
         var testClaimSetNames = Enumerable.Range(1, claimSetCount)
             .Select((x, index) => $"TestClaimSetName{index:N}")
@@ -237,7 +200,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         return testClaimSets;
     }
 
-    private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaims(IEnumerable<ClaimSet> testClaimSets, Application testApplication, IList<string> resouceClaimsIds)
+    private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaims(IEnumerable<ClaimSet> testClaimSets, IList<string> resouceClaimsIds)
     {
         var claimSetResourceClaims = new List<ClaimSetResourceClaimAction>();
         foreach (var claimSet in testClaimSets)
@@ -268,7 +231,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         return claimSetResourceClaims;
     }
 
-    private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(IEnumerable<ClaimSet> testClaimSets, Application testApplication, int resourceClaimCount = 5, int childResourceClaimCount = 1)
+    private IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(IEnumerable<ClaimSet> testClaimSets, int resourceClaimCount = 5, int childResourceClaimCount = 1)
     {
         var parentResourceClaims = new List<ResourceClaim>();
         var childResourceClaims = new List<ResourceClaim>();

@@ -74,13 +74,6 @@ public class GetApplicationsByClaimSetIdQueryTests : SecurityDataTestBase
     private IReadOnlyCollection<ClaimSet> SetupApplicationWithClaimSets(
         string applicationName = "TestApplicationName", int claimSetCount = 5)
     {
-        var testApplication = new Application
-        {
-            ApplicationName = applicationName
-        };
-
-        SaveAdminContext(testApplication);
-
         var testClaimSetNames = Enumerable.Range(1, claimSetCount)
             .Select((x, index) => $"TestClaimSetName{index:N}")
             .ToArray();

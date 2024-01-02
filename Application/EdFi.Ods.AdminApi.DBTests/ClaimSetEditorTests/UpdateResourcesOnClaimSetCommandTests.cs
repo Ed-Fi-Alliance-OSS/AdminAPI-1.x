@@ -3,17 +3,14 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using Moq;
+using NUnit.Framework;
 using Shouldly;
 using System.Collections.Generic;
-using Moq;
-
-using Application = EdFi.Admin.DataAccess.Models.Application;
+using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -23,18 +20,12 @@ public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldUpdateResourcesOnClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        SaveAdminContext(testApplication);
-
         var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("ParentRc", 2);
         var childName = "ChildRc098";
-        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames,
+        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, parentRcNames,
             new List<string> { childName });
 
         var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First());

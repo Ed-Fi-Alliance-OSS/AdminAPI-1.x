@@ -32,16 +32,6 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
     public virtual SqlServerUsersContext AdminDbContext => new SqlServerUsersContext(Testing.GetDbContextOptions(AdminTestingConnectionString));
 
-    public void SaveAdminContext(params object[] entities)
-    {
-        foreach (var entity in entities)
-        {
-            AdminDbContext.Add(entity);
-        }
-
-        AdminDbContext.SaveChanges();
-    }
-
     // This bool controls whether or not to run SecurityContext initialization
     // method. Setting this flag to true will cause seed data to be
     // inserted into the security database on fixture setup.
@@ -177,7 +167,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         }
     }
 
-    protected IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
+    protected IReadOnlyCollection<ResourceClaim> SetupResourceClaims(IList<string> parentRcNames, IList<string> childRcNames)
     {
         var parentResourceClaims = new List<ResourceClaim>();
         var childResourceClaims = new List<ResourceClaim>();
@@ -233,7 +223,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         return parentResourceClaims;
     }
 
-    protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
+    protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, IList<string> parentRcNames, IList<string> childRcNames)
     {
         var actions = ActionName.GetAll().Select(action => new Action { ActionName = action.Value, ActionUri = action.Value }).ToList();
         Save(actions.Cast<object>().ToArray());
@@ -284,7 +274,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         return claimSetResourceClaims;
     }
 
-    protected IReadOnlyCollection<AuthorizationStrategy> SetupApplicationAuthorizationStrategies(Application testApplication, int authStrategyCount = 5)
+    protected IReadOnlyCollection<AuthorizationStrategy> SetupApplicationAuthorizationStrategies(int authStrategyCount = 5)
     {
         var testAuthStrategies = Enumerable.Range(1, authStrategyCount)
             .Select(index => $"TestAuthStrategy{index}")

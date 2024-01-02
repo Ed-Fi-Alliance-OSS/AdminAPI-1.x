@@ -3,18 +3,17 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using NUnit.Framework;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using Shouldly;
-using EdFi.Security.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
-using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Admin.DataAccess.Models.Application;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Security.DataAccess.Contexts;
+using NUnit.Framework;
+using Shouldly;
+using System;
+using System.Linq;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -24,12 +23,6 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldEditClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        SaveAdminContext(testApplication);
-
         var alreadyExistingClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(alreadyExistingClaimSet);
 
@@ -49,12 +42,6 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldThrowExceptionOnEditSystemReservedClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        SaveAdminContext(testApplication);
-
         var systemReservedClaimSet = new ClaimSet { ClaimSetName = "Ed-Fi Sandbox", IsEdfiPreset = true };
         Save(systemReservedClaimSet);
 
@@ -73,12 +60,6 @@ public class EditClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldEditClaimSetWithVendorApplications()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        SaveAdminContext(testApplication);
-
         var claimSetToBeEdited = new ClaimSet { ClaimSetName = $"TestClaimSet{Guid.NewGuid():N}" };
         Save(claimSetToBeEdited);
         SetupVendorApplicationsForClaimSet(claimSetToBeEdited);

@@ -491,23 +491,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.sendRequest({",
-											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,",
-											"  method: 'GET',",
-											"  header: {",
-											"      \"Content-Type\": \"application/json\",",
-											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`",
-											"  }",
-											"},  ",
-											"function (err, response) {",
-											"  if(err) { console.log(\"Error in Pre-request:\", err); }",
-											"  const json = response.json();",
-											"  const index = json.length - 1;",
-											"  if(!json[0].id) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }",
-											"  else {",
-											"    pm.collectionVariables.set(\"ODSInstanceId\", json[index].id);",
-											"  }",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -517,14 +501,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{API_URL}}/v2/odsInstances/{{ODSInstanceId}}",
+									"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
 									"host": [
 										"{{API_URL}}"
 									],
 									"path": [
 										"v2",
 										"odsInstances",
-										"{{ODSInstanceId}}"
+										"{{CreatedOdsInstanceId}}"
 									]
 								}
 							},
@@ -599,6 +583,31 @@
 											"",
 											"pm.test(\"GET OdsInstancesIdApplication: Validation Schema Response\", () => {",
 											"    pm.response.to.have.jsonSchema(GetOdsInstancesIdApplication);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances?offset=${pm.variables.get(\"offset\")}&limit=${pm.variables.get(\"limit\")}`,\r",
+											"  method: 'GET',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  }\r",
+											"},  \r",
+											"function (err, response) {\r",
+											"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"  const json = response.json();\r",
+											"  console.log(JSON.stringify(json))\r",
+											"  if(!json[0].id) { console.log('Error in Pre-request: odsInstancesID missing from response. Response is:', json); }\r",
+											"  else {\r",
+											"    pm.collectionVariables.set(\"ODSInstanceId\", json[0].id);\r",
+											"  }\r",
 											"});"
 										],
 										"type": "text/javascript"

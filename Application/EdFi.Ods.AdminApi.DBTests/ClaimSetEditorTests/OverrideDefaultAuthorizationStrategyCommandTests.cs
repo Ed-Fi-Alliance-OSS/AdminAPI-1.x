@@ -23,7 +23,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var overrides = new List<AuthorizationStrategy>();
         if (appAuthorizationStrategies != null)
         {
-            foreach(var appAuthorizationStrategy in appAuthorizationStrategies)
+            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
             {
                 overrides.Add(new AuthorizationStrategy
                 {
@@ -44,7 +44,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
                     ActionName= "Create",
                     AuthorizationStrategies = overrides
                 }
-            } 
+            }
         };
 
         List<ResourceClaim> resourceClaimsForClaimSet = null;
@@ -65,7 +65,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();     
+        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
     }
 
     [Test]
@@ -136,7 +136,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
             ActionName = "Create",
             AuthStrategyIds = overrides
         };
-        
+
         List<ResourceClaim> resourceClaimsForClaimSet = null;
 
         using var securityContext = TestContext;
@@ -150,7 +150,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
         resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
         resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.Count().ShouldBe(4);
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);

@@ -97,7 +97,7 @@ public class AddOdsInstanceDerivative : IFeature
 
         private bool BeUniqueCombinedKey(AddOdsInstanceDerivativeRequest request)
         {
-            return !_getOdsInstanceDerivativesQuery.Execute().Any(x => x.OdsInstanceId() == request.OdsInstanceId && x.DerivativeType.Equals(request.DerivativeType, StringComparison.OrdinalIgnoreCase));
+            return !_getOdsInstanceDerivativesQuery.Execute().Any(x => x.OdsInstance?.OdsInstanceId == request.OdsInstanceId && x.DerivativeType.Equals(request.DerivativeType, StringComparison.OrdinalIgnoreCase));
         }
 
     }

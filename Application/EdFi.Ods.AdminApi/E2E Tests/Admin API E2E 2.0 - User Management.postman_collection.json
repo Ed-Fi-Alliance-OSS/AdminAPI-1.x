@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a65beb70-b5e3-4dc5-9403-180782190d8a",
+		"_postman_id": "aedf7726-945b-4f40-8f34-2e346e214b6d",
 		"name": "Admin API E2E 2.0 - User Management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -741,7 +741,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"POST Token Incorrect Secret: Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.have.status(401);\r",
 									"});\r",
 									"\r",
 									"const response = pm.response.json();\r",

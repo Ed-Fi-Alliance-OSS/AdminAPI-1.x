@@ -116,7 +116,7 @@ public static class SecurityExtensions
                 string.Equals(response.Error, OpenIddictConstants.Errors.InvalidClient, StringComparison.Ordinal) ||
                 string.Equals(response.Error, OpenIddictConstants.Errors.InvalidScope, StringComparison.Ordinal))
             {
-                response.Error = OpenIddictConstants.Errors.AccessDenied;
+                response.Error = OpenIddictConstants.Errors.InvalidClient;
                 response.ErrorDescription = DENIED_AUTHENTICATION_MESSAGE;
                 response.ErrorUri = "";
             }

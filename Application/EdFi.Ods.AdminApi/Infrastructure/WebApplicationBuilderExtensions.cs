@@ -217,7 +217,7 @@ public static class WebApplicationBuilderExtensions
             throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
 
-        string AdminConnectionString(IServiceProvider serviceProvider)
+        string? AdminConnectionString(IServiceProvider serviceProvider)
         {
             var adminConnectionString = string.Empty;
 
@@ -256,7 +256,7 @@ public static class WebApplicationBuilderExtensions
             return builder.Options;
         }
 
-        string SecurityConnectionString(IServiceProvider serviceProvider)
+        string? SecurityConnectionString(IServiceProvider serviceProvider)
         {
             var securityConnectionString = string.Empty;
 

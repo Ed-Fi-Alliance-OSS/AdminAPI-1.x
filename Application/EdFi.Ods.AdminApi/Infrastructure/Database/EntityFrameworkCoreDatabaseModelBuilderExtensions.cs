@@ -29,7 +29,7 @@ public static class EntityFrameworkCoreDatabaseModelBuilderExtensions
             {
                 var tableId = StoreObjectIdentifier.Table(tableName);
                 var columnName = property.GetColumnName(tableId) ?? property.GetDefaultColumnName(tableId);
-                property.SetColumnName(columnName.ToLowerInvariant());
+                property.SetColumnName(columnName?.ToLowerInvariant());
             }
 
             foreach (var key in entity.GetKeys())

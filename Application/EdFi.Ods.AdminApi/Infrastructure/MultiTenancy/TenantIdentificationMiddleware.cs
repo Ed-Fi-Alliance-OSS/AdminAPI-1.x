@@ -42,9 +42,9 @@ public class TenantResolverMiddleware : IMiddleware
             if (context.Request.Headers.TryGetValue("tenant", out var tenantIdentifier) &&
                 !string.IsNullOrEmpty(tenantIdentifier))
             {
-                if (IsValidTenantId(tenantIdentifier))
+                if (IsValidTenantId(tenantIdentifier!))
                 {
-                    if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier, out var tenantConfiguration))
+                    if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier!, out var tenantConfiguration))
                     {
                         _tenantConfigurationContextProvider.Set(tenantConfiguration);
                     }
@@ -91,7 +91,7 @@ public class TenantResolverMiddleware : IMiddleware
 
         bool RequestFromSwagger() => (context.Request.Path.Value != null &&
             context.Request.Path.Value.Contains("swagger", StringComparison.InvariantCultureIgnoreCase)) ||
-            context.Request.Headers.Referer.FirstOrDefault(x => x.ToLower().Contains("swagger", StringComparison.InvariantCultureIgnoreCase)) != null;
+            context.Request.Headers.Referer.FirstOrDefault(x => x != null && x.ToLower().Contains("swagger", StringComparison.InvariantCultureIgnoreCase)) != null;
 
         bool NonFeatureEndpoints() => context.Request.Path.Value != null &&
             (context.Request.Path.Value.Contains("health", StringComparison.InvariantCultureIgnoreCase)

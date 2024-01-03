@@ -601,7 +601,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"POST Token Invalid Grant Type: Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.have.status(401);\r",
 									"});\r",
 									"\r",
 									"const response = pm.response.json();\r",
@@ -666,7 +666,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"POST Token Invalid Scope: Status code is Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.have.status(401);\r",
 									"});\r",
 									"\r",
 									"const response = pm.response.json();\r",

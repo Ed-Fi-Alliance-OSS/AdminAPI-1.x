@@ -27,7 +27,7 @@ services:
   adminapi:
     build:
       context: ../../../
-      dockerfile: api-pgsql.Dockerfile
+      dockerfile: api.Dockerfile
     environment:
       POSTGRES_PORT: 5432
       POSTGRES_USER: "${POSTGRES_USER}"

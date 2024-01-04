@@ -49,8 +49,7 @@ In order to structure the file layout for the packaged binaries, a distinction b
 Create a docker directory at the root of the project, which contains these files:
 
 - dbadmin.Dockerfile
-- api-pgsql.Dockerfile
-- api-mssql.Dockerfile
+- api.Dockerfile
 - The sample docker-compose.yml and other associated configuration files
 
 # Tasks

@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "d6b173d6-9ced-433a-ae82-1ee2dca388f2",
+		"_postman_id": "aa95140d-a83e-4e7f-a3f8-052341b2c007",
 		"name": "Admin API E2E 2.0 - ClaimSets",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -3525,7 +3524,7 @@
 											"        \"claimSetName\": \"Ed-Fi Sandbox\",\r",
 											"        \"profileIds\": [],\r",
 											"        \"educationOrganizationIds\": [ 255901 ],\r",
-											"        \"odsInstanceId\": 1\r",
+											"        \"odsInstanceIds\": [ 1 ]\r",
 											"      }),\r",
 											"    }\r",
 											"  },  \r",
@@ -3555,7 +3554,7 @@
 											"        \"claimSetName\": `Other Test ClaimSet ${pm.collectionVariables.get(\"OtherClaimSetGUID\")}`,\r",
 											"        \"profileIds\": [],\r",
 											"        \"educationOrganizationIds\": [ 255901 ],\r",
-											"        \"odsInstanceId\": 1\r",
+											"        \"odsInstanceIds\": [ 1 ]\r",
 											"      }),\r",
 											"    }\r",
 											"  },  \r",

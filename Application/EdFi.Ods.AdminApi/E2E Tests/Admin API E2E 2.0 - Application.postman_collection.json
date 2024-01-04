@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e1b0e824-153b-4763-a4fd-6ce2416c4087",
+		"_postman_id": "0d84361c-6af5-4694-9dcf-2fda6c7de28c",
 		"name": "Admin API E2E 2.0 - Application",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1027,7 +1027,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\":  [ ]\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": 9999,\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\":  [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1095,7 +1095,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [9999],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\": [ ]\r\n}\r\n",
+									"raw": "{\r\n  \"id\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Updated Application Name\",\r\n  \"vendorId\": {{OtherApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi ODS Admin App\",\r\n  \"profileIds\": [9999],\r\n  \"educationOrganizationIds\": [1234],\r\n  \"odsInstanceIds\": [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1437,7 +1437,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceId\": {{ODSInstanceId}}\r\n}\r\n",
+									"raw": "{\r\n  \"applicationId\": {{CreatedApplicationId}},\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileIds\": [],\r\n  \"educationOrganizationIds\": [ 255901 ],\r\n  \"odsInstanceIds\": [ {{ODSInstanceId}} ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"

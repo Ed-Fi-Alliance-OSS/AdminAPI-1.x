@@ -118,6 +118,10 @@ public class AddApplication : IFeature
                 .NotEmpty()
                 .WithMessage(FeatureConstants.EdOrgIdsValidationMessage);
 
+            RuleFor(m => m.OdsInstanceIds)
+                .NotEmpty()
+                .WithMessage(FeatureConstants.OdsInstanceIdsValidationMessage);
+
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
         }
 

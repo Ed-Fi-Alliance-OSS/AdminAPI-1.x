@@ -62,3 +62,8 @@ credentials-*.xml
 libs/
 libs.codegen/
 
+#Docker
+Docker/Application/
+Docker/Settings/ssl/server.crt
+Docker/Settings/ssl/server.key
+Docker/Settings/ssl/dhparam.pem

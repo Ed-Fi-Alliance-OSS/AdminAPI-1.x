@@ -1,11 +1,13 @@
 #! /bin/bash
 end=$((SECONDS+ 5 * 60))
 
-until [[ "`docker inspect -f {{.State.Health.Status}} adminapi`" == "healthy" || $SECONDS -gt $end ]]; do
+echo $1
+
+until [[ "`docker inspect -f {{.State.Health.Status}} $1`" == "healthy" || $SECONDS -gt $end ]]; do
     sleep 2;
 done;
 
-if [ "`docker inspect -f {{.State.Health.Status}} adminapi`" == "healthy" ]
+if [ "`docker inspect -f {{.State.Health.Status}} $1`" == "healthy" ]
 then
     echo "--- Container is healthy ---"
 else

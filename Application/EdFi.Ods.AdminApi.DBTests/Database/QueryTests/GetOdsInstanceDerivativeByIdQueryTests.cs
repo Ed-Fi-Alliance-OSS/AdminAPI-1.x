@@ -46,7 +46,7 @@ public class GetOdsInstanceDerivativeByIdQueryTests : PlatformUsersContextTestBa
             result = query.Execute(odsInstanceDerivative1.OdsInstanceDerivativeId);
             result.ShouldNotBeNull();
             result.OdsInstanceDerivativeId.ShouldBe(odsInstanceDerivative1.OdsInstanceDerivativeId);
-            result.OdsInstanceId.ShouldBe(odsInstanceDerivative1.OdsInstanceId);
+            result.OdsInstance.OdsInstanceId.ShouldBe(odsInstanceDerivative1.OdsInstance.OdsInstanceId);
             result.DerivativeType.ShouldBe(odsInstanceDerivative1.DerivativeType);
             result.ConnectionString.ShouldBe(odsInstanceDerivative1.ConnectionString);
         });

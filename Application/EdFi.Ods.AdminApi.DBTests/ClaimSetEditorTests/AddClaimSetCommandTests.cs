@@ -3,13 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using NUnit.Framework;
 using Shouldly;
+using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -19,12 +17,6 @@ public class AddClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldAddClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
         var newClaimSet = new AddClaimSetModel { ClaimSetName = "TestClaimSet" };
 
         var addedClaimSetId = 0;

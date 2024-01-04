@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -26,12 +27,16 @@ public class GetOdsInstanceContextsQuery : IGetOdsInstanceContextsQuery
 
     public List<OdsInstanceContext> Execute()
     {
-        return _usersContext.OdsInstanceContexts.OrderBy(p => p.ContextKey).ToList();
+        return _usersContext.OdsInstanceContexts
+            .Include(oid => oid.OdsInstance)
+            .OrderBy(p => p.ContextKey).ToList();
     }
 
     public List<OdsInstanceContext> Execute(int offset, int limit)
     {
-        return _usersContext.OdsInstanceContexts.OrderBy(p => p.ContextKey).Skip(offset).Take(limit).ToList();
+        return _usersContext.OdsInstanceContexts
+            .Include(oid => oid.OdsInstance)
+            .OrderBy(p => p.ContextKey).Skip(offset).Take(limit).ToList();
     }
 }
 

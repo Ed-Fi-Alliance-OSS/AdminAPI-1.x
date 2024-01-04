@@ -8,8 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -25,7 +24,6 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
             InstanceType = "Ods1",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
-        Save(odsInstance1);
 
         var odsInstance2 = new OdsInstance
         {
@@ -41,7 +39,7 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
         {
             ContextKey = contextKey,
             ContextValue = contextValue,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
         Save(newOdsInstanceContext);
 
@@ -60,7 +58,7 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
             updatedOdsInstanceContext.ShouldNotBeNull();
             updatedOdsInstanceContext.OdsInstanceContextId.ShouldBeGreaterThan(0);
             updatedOdsInstanceContext.OdsInstanceContextId.ShouldBe(newOdsInstanceContext.OdsInstanceContextId);
-            updatedOdsInstanceContext.OdsInstanceId.ShouldBe(odsInstance2.OdsInstanceId);
+            updatedOdsInstanceContext.OdsInstance.OdsInstanceId.ShouldBe(odsInstance2.OdsInstanceId);
             updatedOdsInstanceContext.ContextKey.ShouldBe(updateContextKey);
             updatedOdsInstanceContext.ContextValue.ShouldBe(updateContextValue);
         });
@@ -76,17 +74,14 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
             InstanceType = "Ods1",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
-        Save(odsInstance1);
-
         var contextKey = "contextKey";
         var contextValue = "contextValue";
         var newOdsInstanceContext = new OdsInstanceContext
         {
             ContextKey = contextKey,
             ContextValue = contextValue,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
-        Save(newOdsInstanceContext);
 
         var contextKey2 = "contextKey2";
         var contextValue2 = "contextValue2";
@@ -94,9 +89,9 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
         {
             ContextKey = contextKey2,
             ContextValue = contextValue2,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
-        Save(newOdsInstanceContext2);
+        Save(newOdsInstanceContext, newOdsInstanceContext2);
 
         var updateContextKey = "contextKey2";
         var updateContextValue = "contextValue2";
@@ -115,7 +110,7 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
                 updatedOdsInstanceContext.ShouldNotBeNull();
                 updatedOdsInstanceContext.OdsInstanceContextId.ShouldBeGreaterThan(0);
                 updatedOdsInstanceContext.OdsInstanceContextId.ShouldBe(newOdsInstanceContext.OdsInstanceContextId);
-                updatedOdsInstanceContext.OdsInstanceId.ShouldBe(odsInstance1.OdsInstanceId);
+                updatedOdsInstanceContext.OdsInstance.OdsInstanceId.ShouldBe(odsInstance1.OdsInstanceId);
                 updatedOdsInstanceContext.ContextKey.ShouldBe(updateContextKey);
                 updatedOdsInstanceContext.ContextValue.ShouldBe(updateContextValue);
             });
@@ -132,7 +127,6 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
             InstanceType = "Ods1",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
-        Save(odsInstance1);
 
         var odsInstance2 = new OdsInstance
         {
@@ -148,7 +142,7 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
         {
             ContextKey = contextKey,
             ContextValue = contextValue,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
         Save(newOdsInstanceContext);
 

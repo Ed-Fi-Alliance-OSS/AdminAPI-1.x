@@ -14,6 +14,8 @@ using NUnit.Framework;
 using Action = EdFi.Security.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
 using ClaimSetEditorTypes = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using Application = EdFi.Admin.DataAccess.Models.Application;
+using EdFi.Admin.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.DBTests;
 
@@ -24,8 +26,11 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
     protected override SqlServerSecurityContext CreateDbContext()
     {
-        return new SqlServerSecurityContext(ConnectionString);
+        return new SqlServerSecurityContext(Testing.GetDbContextOptions(ConnectionString));
     }
+    public virtual string AdminTestingConnectionString => Testing.AdminConnectionString;
+
+    public virtual SqlServerUsersContext AdminDbContext => new SqlServerUsersContext(Testing.GetDbContextOptions(AdminTestingConnectionString));
 
     // This bool controls whether or not to run SecurityContext initialization
     // method. Setting this flag to true will cause seed data to be
@@ -36,7 +41,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     {
         if (SeedSecurityContextOnFixtureSetup)
         {
-            TestContext.Database.Initialize(true);
+            TestContext.Database.EnsureCreated();
         }
     }
 
@@ -70,23 +75,32 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
         Application GetOrCreateApplication(string applicationName)
         {
-            var application = TestContext.Applications.FirstOrDefault(a => a.ApplicationName == applicationName) ??
-                              TestContext.Applications.Add(new Application
-                              {
-                                  ApplicationName = "Ed-Fi ODS API"
-                              });
+            var application = AdminDbContext.Applications.FirstOrDefault(a => a.ApplicationName == applicationName);
+
+            if (application == null)
+            {
+                application = new Application
+                {
+                    ApplicationName = "Ed-Fi ODS API"
+                };
+                AdminDbContext.Applications.Add(application);
+            }
             return application;
         }
 
         Action GetOrCreateAction(string actionName)
         {
-            var action = TestContext.Actions.FirstOrDefault(a => a.ActionName == actionName) ??
-                         TestContext.Actions.Add(new Action
-                         {
-                             ActionName = actionName,
-                             ActionUri = $"http://ed-fi.org/odsapi/actions/{actionName}"
-                         });
+            var action = TestContext.Actions.FirstOrDefault(a => a.ActionName == actionName);
 
+            if (action == null)
+            {
+                action = new Action
+                {
+                    ActionName = actionName,
+                    ActionUri = $"http://ed-fi.org/odsapi/actions/{actionName}"
+                };
+                TestContext.Actions.Add(action);
+            }
             return action;
         }
 
@@ -94,15 +108,18 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
             string authorizationStrategyName)
         {
             var authorizationStrategy = TestContext.AuthorizationStrategies.FirstOrDefault(a =>
-                                            a.Application.ApplicationId == application.ApplicationId && a.DisplayName == displayName &&
-                                            a.AuthorizationStrategyName == authorizationStrategyName) ??
-                                        TestContext.AuthorizationStrategies.Add(
-                                            new AuthorizationStrategy
-                                            {
-                                                DisplayName = displayName,
-                                                AuthorizationStrategyName = authorizationStrategyName,
-                                                Application = application
-                                            });
+                                            a.DisplayName == displayName &&
+                                            a.AuthorizationStrategyName == authorizationStrategyName);
+
+            if (authorizationStrategy == null)
+            {
+                authorizationStrategy = new AuthorizationStrategy
+                {
+                    DisplayName = displayName,
+                    AuthorizationStrategyName = authorizationStrategyName,
+                };
+                TestContext.AuthorizationStrategies.Add(authorizationStrategy);
+            }
 
             return authorizationStrategy;
         }
@@ -111,15 +128,17 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         {
             var resourceClaim =
                 TestContext.ResourceClaims.FirstOrDefault(r =>
-                    r.ResourceName == resourceName && r.Application.ApplicationId == application.ApplicationId) ??
-                TestContext.ResourceClaims.Add(new ResourceClaim
+                    r.ResourceName == resourceName);
+            if (resourceClaim == null)
+            {
+                resourceClaim = new ResourceClaim
                 {
-                    Application = application,
-                    DisplayName = resourceName,
                     ResourceName = resourceName,
                     ClaimName = $"http://ed-fi.org/ods/identity/claims/domains/{resourceName}",
                     ParentResourceClaim = null
-                });
+                };
+                TestContext.ResourceClaims.Add(resourceClaim);
+            }
 
             return resourceClaim;
         }
@@ -148,7 +167,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         }
     }
 
-    protected IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
+    protected IReadOnlyCollection<ResourceClaim> SetupResourceClaims(IList<string> parentRcNames, IList<string> childRcNames)
     {
         var parentResourceClaims = new List<ResourceClaim>();
         var childResourceClaims = new List<ResourceClaim>();
@@ -158,9 +177,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
             var resourceClaim = new ResourceClaim
             {
                 ClaimName = parentName,
-                DisplayName = parentName,
                 ResourceName = parentName,
-                Application = testApplication
             };
             parentResourceClaims.Add(resourceClaim);
 
@@ -171,9 +188,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
                     return new ResourceClaim
                     {
                         ClaimName = childRcName,
-                        DisplayName = childRcName,
                         ResourceName = childRcName,
-                        Application = testApplication,
                         ParentResourceClaim = resourceClaim,
                         ParentResourceClaimId = resourceClaim.ResourceClaimId
                     };
@@ -208,7 +223,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         return parentResourceClaims;
     }
 
-    protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, Application testApplication, IList<string> parentRcNames, IList<string> childRcNames)
+    protected IReadOnlyCollection<ClaimSetResourceClaimAction> SetupParentResourceClaimsWithChildren(ClaimSet testClaimSet, IList<string> parentRcNames, IList<string> childRcNames)
     {
         var actions = ActionName.GetAll().Select(action => new Action { ActionName = action.Value, ActionUri = action.Value }).ToList();
         Save(actions.Cast<object>().ToArray());
@@ -218,9 +233,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
             return new ResourceClaim
             {
                 ClaimName = parentRcName,
-                DisplayName = parentRcName,
                 ResourceName = parentRcName,
-                Application = testApplication
             };
         }).ToList();
 
@@ -231,9 +244,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
                return new ResourceClaim
                {
                    ClaimName = childName,
-                   DisplayName = childName,
                    ResourceName = childName,
-                   Application = testApplication,
                    ParentResourceClaim = x
                };
            })).ToList();
@@ -263,7 +274,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         return claimSetResourceClaims;
     }
 
-    protected IReadOnlyCollection<AuthorizationStrategy> SetupApplicationAuthorizationStrategies(Application testApplication, int authStrategyCount = 5)
+    protected IReadOnlyCollection<AuthorizationStrategy> SetupApplicationAuthorizationStrategies(int authStrategyCount = 5)
     {
         var testAuthStrategies = Enumerable.Range(1, authStrategyCount)
             .Select(index => $"TestAuthStrategy{index}")
@@ -274,7 +285,6 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
             {
                 AuthorizationStrategyName = x,
                 DisplayName = x,
-                Application = testApplication
             })
             .ToArray();
 

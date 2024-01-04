@@ -5,7 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -31,8 +31,10 @@ public class AddApplicationCommand : IAddApplicationCommand
 
         var vendor = _usersContext.Vendors.Include(x => x.Users)
             .Single(v => v.VendorId == applicationModel.VendorId);
-
-        var odsInstance = _usersContext.OdsInstances.Single(o => o.OdsInstanceId == applicationModel.OdsInstanceId);
+        
+        var odsInstances = applicationModel.OdsInstanceIds != null
+            ? _usersContext.OdsInstances.Where(o => applicationModel.OdsInstanceIds.Contains(o.OdsInstanceId))
+            : null;
 
         var user = vendor.Users.FirstOrDefault();
 
@@ -42,14 +44,14 @@ public class AddApplicationCommand : IAddApplicationCommand
             IsApproved = true,
             UseSandbox = false,
             KeyStatus = "Active",
-            User = user
+            User = user,
         };
 
         var applicationEdOrgs = applicationModel.EducationOrganizationIds == null
             ? Enumerable.Empty<ApplicationEducationOrganization>()
             : applicationModel.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
             {
-                Clients = new List<ApiClient> { apiClient },
+                ApiClients = new List<ApiClient> { apiClient },
                 EducationOrganizationId = id
             });
 
@@ -61,8 +63,7 @@ public class AddApplicationCommand : IAddApplicationCommand
             ClaimSetName = applicationModel.ClaimSetName,
             Profiles = new List<Profile>(),
             Vendor = vendor,
-            OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
-            OdsInstance = odsInstance
+            OperationalContextUri = OperationalContext.DefaultOperationalContextUri
         };
 
         if (profiles != null)
@@ -74,7 +75,19 @@ public class AddApplicationCommand : IAddApplicationCommand
         }
 
         _usersContext.Applications.Add(application);
-        _usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance { ApiClient = apiClient, OdsInstance = odsInstance });
+
+        if (odsInstances != null && odsInstances.Count() > 0)
+        {
+            foreach (var odsInstance in odsInstances)
+            {
+                _usersContext.ApiClientOdsInstances.Add(new ApiClientOdsInstance
+                {
+                    OdsInstance = odsInstance,
+                    ApiClient = apiClient,
+                });
+            }
+        }
+
         _usersContext.SaveChanges();
 
         return new AddApplicationResult
@@ -93,7 +106,7 @@ public interface IAddApplicationModel
     string? ClaimSetName { get; }
     IEnumerable<int>? ProfileIds { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
-    int OdsInstanceId { get; }
+    IEnumerable<int>? OdsInstanceIds { get; }
 }
 
 public class AddApplicationResult

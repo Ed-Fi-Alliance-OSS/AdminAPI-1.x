@@ -32,8 +32,8 @@ public class FeatureConstants
     public const string ClaimSetNotFound = "No such claim set exists in the database.";
     public const string InvalidResourceClaimActions = "Please provide a valid resourceClaimActions object.";
     public const string ResourceClaimOneActionNotSet = "A resource must have at least one action associated with it to be added.";
-    public const string OdsInstanceIdDescription = "ODS instance id";
-    public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id.";
+    public const string OdsInstanceIdsDescription = "List of ODS instance id";
+    public const string OdsInstanceIdValidationMessage = "Please provide valid ods instance id. The id {OdsInstanceId} does not exist.";
     public const string ClaimSetIdToCopy = "ClaimSet id to copy";
     public const string ProfileName = "Profile name";
     public const string ProfileDefinition = "Profile definition";

@@ -20,7 +20,6 @@ public class AddClaimSetCommand
         var newClaimSet = new EdFi.Security.DataAccess.Models.ClaimSet
         {
             ClaimSetName = claimSet.ClaimSetName,
-            Application = _context.Applications.Single(),
             IsEdfiPreset = false,
             ForApplicationUseOnly = false
         };

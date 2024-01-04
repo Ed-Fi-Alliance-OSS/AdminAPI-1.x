@@ -3,14 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-//using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using NUnit.Framework;
-using EdFi.Admin.DataAccess.Models;
-using Shouldly;
-using EdFi.Security.DataAccess.Models;
-using Application = EdFi.Security.DataAccess.Models.Application;
 using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Models;
+using NUnit.Framework;
+using Shouldly;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -53,18 +50,10 @@ public class GetResourceClaimByResourceClaimIdQueryTests : SecurityDataTestBase
 
     private ResourceClaim SetupResourceClaims(ISecurityContext usersContext)
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        Save(testApplication);
         var parentResourceClaim = new ResourceClaim()
         {
             ClaimName = $"ParentTestResourceClaim",
             ResourceName = $"ParentTestResourceClaim",
-            DisplayName = $"ParentTestResourceClaim",
-            Application = testApplication
         };
         usersContext.ResourceClaims.Add(parentResourceClaim);
         Save(parentResourceClaim);
@@ -73,8 +62,6 @@ public class GetResourceClaimByResourceClaimIdQueryTests : SecurityDataTestBase
         {
             ClaimName = $"ChildrenTestResourceClaim",
             ResourceName = $"ChildrenTestResourceClaim",
-            DisplayName = $"ChildrenTestResourceClaim",
-            Application = testApplication,
             ParentResourceClaimId = parentResourceClaim.ResourceClaimId,
         };
         Save(resourceClaim);

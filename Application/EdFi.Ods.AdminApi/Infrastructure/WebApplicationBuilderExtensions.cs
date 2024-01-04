@@ -3,10 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.Entity;
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Admin.DataAccess.DbConfigurations;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
@@ -185,25 +183,22 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
-            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
-
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
             (sp, options) =>
             {
                 options.UseNpgsql(AdminConnectionString(sp));
+                options.UseLowerCaseNamingConvention();
                 options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
             });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new PostgresSecurityContext(SecurityConnectionString(sp)));
+                sp => new PostgresSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new PostgresUsersContext(AdminConnectionString(sp)));            
+                sp => new PostgresUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.PostgreSql)));            
         }
         else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
-            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
-
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 (sp, options) =>
                 {
@@ -212,17 +207,17 @@ public static class WebApplicationBuilderExtensions
                 });
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                (sp) => new SqlServerSecurityContext(SecurityConnectionString(sp)));
+                (sp) => new SqlServerSecurityContext(SecurityDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                (sp) => new SqlServerUsersContext(AdminConnectionString(sp)));          
+                (sp) => new SqlServerUsersContext(AdminDbContextOptions(sp, DatabaseEngineEnum.SqlServer)));          
         }
         else
         {
             throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
 
-        string AdminConnectionString(IServiceProvider serviceProvider)
+        string? AdminConnectionString(IServiceProvider serviceProvider)
         {
             var adminConnectionString = string.Empty;
 
@@ -246,7 +241,22 @@ public static class WebApplicationBuilderExtensions
             return adminConnectionString;
         }
 
-        string SecurityConnectionString(IServiceProvider serviceProvider)
+        DbContextOptions AdminDbContextOptions(IServiceProvider serviceProvider, string databaseEngine)
+        {
+            var adminConnectionString = AdminConnectionString(serviceProvider);
+            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql)) {
+                builder.UseNpgsql(adminConnectionString);
+                builder.UseLowerCaseNamingConvention();
+            }
+            else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
+            {
+                builder.UseSqlServer(adminConnectionString);
+            }
+            return builder.Options;
+        }
+
+        string? SecurityConnectionString(IServiceProvider serviceProvider)
         {
             var securityConnectionString = string.Empty;
 
@@ -268,6 +278,23 @@ public static class WebApplicationBuilderExtensions
             }
 
             return securityConnectionString;
+        }
+
+        DbContextOptions SecurityDbContextOptions(IServiceProvider serviceProvider, string databaseEngine)
+        {
+            var securityConnectionString = SecurityConnectionString(serviceProvider);
+            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
+            {
+                builder.UseNpgsql(securityConnectionString);
+                builder.UseLowerCaseNamingConvention();
+            }
+            else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
+            {
+                builder.UseSqlServer(securityConnectionString);
+            }
+
+            return builder.Options;
         }
     }
 

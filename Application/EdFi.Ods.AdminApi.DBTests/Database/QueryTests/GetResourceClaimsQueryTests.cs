@@ -8,7 +8,6 @@ using System.Linq;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using Application = EdFi.Security.DataAccess.Models.Application;
 using ResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
@@ -19,14 +18,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetResourceClaims()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        Save(testApplication);
-
-        var testResourceClaims = SetupResourceClaims(testApplication);
+        var testResourceClaims = SetupResourceClaims();
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
@@ -41,7 +33,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
         results.All(x => x.Children.Count == 0).ShouldBe(true);
     }
 
-    private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(Application testApplication, int resourceClaimCount = 5)
+    private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(int resourceClaimCount = 5)
     {
         var resourceClaims = new List<ResourceClaim>();
         foreach (var index in Enumerable.Range(1, resourceClaimCount))
@@ -49,9 +41,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
             var resourceClaim = new ResourceClaim
             {
                 ClaimName = $"TestResourceClaim{index:N}",
-                DisplayName = $"TestResourceClaim{index:N}",
                 ResourceName = $"TestResourceClaim{index:N}",
-                Application = testApplication
             };
             resourceClaims.Add(resourceClaim);
         }

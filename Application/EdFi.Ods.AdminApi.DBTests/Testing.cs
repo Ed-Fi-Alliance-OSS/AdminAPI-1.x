@@ -3,9 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Admin.DataAccess.DbConfigurations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.DBTests;
 
@@ -13,7 +12,6 @@ public static class Testing
 {
     public static void EnsureInitialized()
     {
-        DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
         _ = new SecurityTestDatabaseSetup();
         SecurityTestDatabaseSetup.EnsureSecurityDatabase(@"C:\\temp");
     }
@@ -34,4 +32,11 @@ public static class Testing
     public static string SecurityConnectionString { get { return Configuration().GetConnectionString("EdFi_Security"); } }
 
     public static string SecurityV53ConnectionString { get { return Configuration().GetConnectionString("EdFi_SecurityV53"); } }
+
+    public static DbContextOptions GetDbContextOptions(string connectionString)
+    {
+        var builder = new DbContextOptionsBuilder();
+        builder.UseSqlServer(connectionString);
+        return builder.Options;
+    }
 }

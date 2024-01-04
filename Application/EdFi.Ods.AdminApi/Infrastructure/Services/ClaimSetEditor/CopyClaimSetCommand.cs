@@ -3,9 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.Entity;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
 {
@@ -28,7 +28,6 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
             var newClaimSet = new ClaimSet
             {
                 ClaimSetName = claimSet.Name,
-                Application = _context.Applications.Single(),
                 IsEdfiPreset = false,
                 ForApplicationUseOnly = false
             };
@@ -38,7 +37,8 @@ namespace EdFi.Ods.AdminApp.Management.ClaimSetEditor
                     .Where(x => x.ClaimSet.ClaimSetId == claimSet.OriginalId)
                     .Include(x => x.ResourceClaim)
                     .Include(x => x.Action)
-                    .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                    .Include(x => x.AuthorizationStrategyOverrides)
+                        .ThenInclude(x => x.AuthorizationStrategy)
                     .ToList();
             _context.ClaimSets.Add(newClaimSet);
 

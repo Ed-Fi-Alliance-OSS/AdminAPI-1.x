@@ -3,16 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
+using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Security.DataAccess.Contexts;
 using NUnit.Framework;
 using Shouldly;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using System.Net;
-using EdFi.Security.DataAccess.Contexts;
-
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -22,16 +17,9 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetClaimSetById()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
         var testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication,
             ForApplicationUseOnly = false,
             IsEdfiPreset = false
         };
@@ -48,16 +36,9 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
     [Test]
     public void ShouldGetNonEditableClaimSetById()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
         var systemReservedClaimSet = new ClaimSet
         {
             ClaimSetName = "SystemReservedClaimSet",
-            Application = testApplication,
             ForApplicationUseOnly = true
         };
         Save(systemReservedClaimSet);
@@ -65,7 +46,6 @@ public class GetClaimSetByIdQueryTests : SecurityDataTestBase
         var edfiPresetClaimSet = new ClaimSet
         {
             ClaimSetName = "EdfiPresetClaimSet",
-            Application = testApplication,
             ForApplicationUseOnly = false,
             IsEdfiPreset = true
         };

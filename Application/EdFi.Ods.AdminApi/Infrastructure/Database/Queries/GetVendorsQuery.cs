@@ -3,10 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -27,11 +26,30 @@ public class GetVendorsQuery : IGetVendorsQuery
 
     public List<Vendor> Execute()
     {
-        return _context.Vendors.OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
+        return _context.Vendors
+            .Include(v => v.Applications)
+                .ThenInclude(a => a.Profiles)
+            .Include(v => v.Applications)
+                .ThenInclude(a => a.ApplicationEducationOrganizations)
+            .Include(v => v.Applications)
+                .ThenInclude(a => a.ApiClients)
+            .Include(v => v.Users)
+            .Include(v => v.VendorNamespacePrefixes)
+            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
     }
 
     public List<Vendor> Execute(int offset, int limit)
     {
-        return _context.Vendors.OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).Skip(offset).Take(limit).ToList();
+        return _context.Vendors
+            .Include(v => v.Applications)
+                .ThenInclude(a => a.Profiles)
+            .Include(v => v.Applications)
+                .ThenInclude(a => a.ApplicationEducationOrganizations)
+            .Include(v => v.Applications)
+                .ThenInclude(a => a.ApiClients)
+            .Include(v => v.Users)
+            .Include(v => v.VendorNamespacePrefixes)
+            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
+            .Skip(offset).Take(limit).ToList();
     }
 }

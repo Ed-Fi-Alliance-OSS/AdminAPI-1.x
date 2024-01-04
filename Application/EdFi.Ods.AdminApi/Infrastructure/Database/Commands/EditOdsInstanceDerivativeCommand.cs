@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -24,11 +25,16 @@ public class EditOdsInstanceDerivativeCommand : IEditOdsInstanceDerivativeComman
 
     public OdsInstanceDerivative Execute(IEditOdsInstanceDerivativeModel changedOdsInstanceDerivativeData)
     {
-        var odsInstanceDerivative = _context.OdsInstanceDerivatives.SingleOrDefault(v => v.OdsInstanceDerivativeId == changedOdsInstanceDerivativeData.Id) ??
+        var odsInstance = _context.OdsInstances
+            .SingleOrDefault(v => v.OdsInstanceId == changedOdsInstanceDerivativeData.OdsInstanceId) ??
+            throw new NotFoundException<int>("odsInstance", changedOdsInstanceDerivativeData.OdsInstanceId);
+        var odsInstanceDerivative = _context.OdsInstanceDerivatives
+            .Include(oid => oid.OdsInstance)
+            .SingleOrDefault(v => v.OdsInstanceDerivativeId == changedOdsInstanceDerivativeData.Id) ??
             throw new NotFoundException<int>("odsInstanceDerivative", changedOdsInstanceDerivativeData.Id);
 
         odsInstanceDerivative.DerivativeType = changedOdsInstanceDerivativeData.DerivativeType;
-        odsInstanceDerivative.OdsInstanceId = changedOdsInstanceDerivativeData.OdsInstanceId;
+        odsInstanceDerivative.OdsInstance = odsInstance;
         odsInstanceDerivative.ConnectionString = changedOdsInstanceDerivativeData.ConnectionString;
 
         _context.SaveChanges();

@@ -3,14 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using NUnit.Framework;
 using EdFi.Ods.AdminApp.Management.ClaimSetEditor;
 using Moq;
+using NUnit.Framework;
 using Shouldly;
+using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
+
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
@@ -19,16 +18,10 @@ public class CopyClaimSetCommandTests : SecurityDataTestBase
         [Test]
         public void ShouldCopyClaimSet()
         {
-            var testApplication = new Application
-            {
-                ApplicationName = $"Test Application {DateTime.Now:O}"
-            };
-            Save(testApplication);
-
-            var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet", Application = testApplication};
+            var testClaimSet = new ClaimSet {ClaimSetName = "TestClaimSet"};
             Save(testClaimSet);
 
-            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication,
+            var testResourceClaims = SetupParentResourceClaimsWithChildren(testClaimSet,
                UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
             var newClaimSet = new Mock<ICopyClaimSetModel>();

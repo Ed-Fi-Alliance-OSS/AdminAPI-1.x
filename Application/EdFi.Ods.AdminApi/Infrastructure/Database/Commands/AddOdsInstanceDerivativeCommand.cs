@@ -24,11 +24,14 @@ public class AddOdsInstanceDerivativeCommand : IAddOdsInstanceDerivativeCommand
 
     public OdsInstanceDerivative Execute(IAddOdsInstanceDerivativeModel newOdsInstanceDerivative)
     {
+        var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == newOdsInstanceDerivative.OdsInstanceId) ??
+            throw new NotFoundException<int>("odsInstance", newOdsInstanceDerivative.OdsInstanceId);
+
         var odsInstanceDerivative = new OdsInstanceDerivative
         {
            ConnectionString = newOdsInstanceDerivative.ConnectionString,
            DerivativeType = newOdsInstanceDerivative.DerivativeType,
-           OdsInstanceId = newOdsInstanceDerivative.OdsInstanceId
+           OdsInstance = odsInstance
         };
         _context.OdsInstanceDerivatives.Add(odsInstanceDerivative);
         _context.SaveChanges();

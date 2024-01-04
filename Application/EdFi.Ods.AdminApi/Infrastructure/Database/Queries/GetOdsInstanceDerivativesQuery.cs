@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -26,12 +27,16 @@ public class GetOdsInstanceDerivativesQuery : IGetOdsInstanceDerivativesQuery
 
     public List<OdsInstanceDerivative> Execute()
     {
-        return _usersContext.OdsInstanceDerivatives.OrderBy(p => p.DerivativeType).ToList();
+        return _usersContext.OdsInstanceDerivatives
+            .Include(oid => oid.OdsInstance)
+            .OrderBy(p => p.DerivativeType).ToList();
     }
 
     public List<OdsInstanceDerivative> Execute(int offset, int limit)
     {
-        return _usersContext.OdsInstanceDerivatives.OrderBy(p => p.DerivativeType).Skip(offset).Take(limit).ToList();
+        return _usersContext.OdsInstanceDerivatives
+            .Include(oid => oid.OdsInstance)
+            .OrderBy(p => p.DerivativeType).Skip(offset).Take(limit).ToList();
     }
 }
 

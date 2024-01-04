@@ -46,7 +46,7 @@ public class GetOdsInstanceContextByIdQueryTests : PlatformUsersContextTestBase
             result = query.Execute(odsInstanceContext1.OdsInstanceContextId);
             result.ShouldNotBeNull();
             result.OdsInstanceContextId.ShouldBe(odsInstanceContext1.OdsInstanceContextId);
-            result.OdsInstanceId.ShouldBe(odsInstanceContext1.OdsInstanceId);
+            result.OdsInstance.OdsInstanceId.ShouldBe(odsInstanceContext1.OdsInstance.OdsInstanceId);
             result.ContextKey.ShouldBe(odsInstanceContext1.ContextKey);
             result.ContextValue.ShouldBe(odsInstanceContext1.ContextValue);
         });

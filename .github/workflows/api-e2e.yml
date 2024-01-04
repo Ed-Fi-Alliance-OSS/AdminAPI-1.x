@@ -112,6 +112,7 @@ jobs:
           retention-days: 5
 
   report:
+    if: ${{ false }}
     defaults:
       run:
         shell: pwsh

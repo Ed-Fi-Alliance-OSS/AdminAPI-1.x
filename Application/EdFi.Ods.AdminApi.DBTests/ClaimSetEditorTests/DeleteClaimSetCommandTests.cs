@@ -3,15 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Moq;
+using NUnit.Framework;
 using Shouldly;
+using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -22,21 +20,15 @@ public class DeleteClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldDeleteClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
         var testClaimSetToDelete = new ClaimSet
-        { ClaimSetName = "TestClaimSet_Delete", Application = testApplication };
+        { ClaimSetName = "TestClaimSet_Delete" };
         Save(testClaimSetToDelete);
-        SetupParentResourceClaimsWithChildren(testClaimSetToDelete, testApplication, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
+        SetupParentResourceClaimsWithChildren(testClaimSetToDelete, UniqueNameList("ParentRc", 3), UniqueNameList("ChildRc", 1));
 
         var testClaimSetToPreserve = new ClaimSet
-        { ClaimSetName = "TestClaimSet_Preserve", Application = testApplication };
+        { ClaimSetName = "TestClaimSet_Preserve" };
         Save(testClaimSetToPreserve);
-        var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, testApplication, UniqueNameList("ParentRc", 3),
+        var resourceClaimsForPreservedClaimSet = SetupParentResourceClaimsWithChildren(testClaimSetToPreserve, UniqueNameList("ParentRc", 3),
             UniqueNameList("ChildRc", 1));
 
         var deleteModel = new Mock<IDeleteClaimSetModel>();
@@ -78,13 +70,7 @@ public class DeleteClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldThrowExceptionOnEditSystemReservedClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
-        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", Application = testApplication, IsEdfiPreset = true };
+        var systemReservedClaimSet = new ClaimSet { ClaimSetName = "SIS Vendor", IsEdfiPreset = true };
         Save(systemReservedClaimSet);
 
         var deleteModel = new Mock<IDeleteClaimSetModel>();

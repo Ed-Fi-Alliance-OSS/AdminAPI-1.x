@@ -3,14 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
-using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using FluentValidation;
+using NUnit.Framework;
 using Shouldly;
 using System.Collections.Generic;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
-using FluentValidation;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -24,7 +23,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var overrides = new List<AuthorizationStrategy>();
         if (appAuthorizationStrategies != null)
         {
-            foreach(var appAuthorizationStrategy in appAuthorizationStrategies)
+            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
             {
                 overrides.Add(new AuthorizationStrategy
                 {
@@ -45,7 +44,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
                     ActionName= "Create",
                     AuthorizationStrategies = overrides
                 }
-            } 
+            }
         };
 
         List<ResourceClaim> resourceClaimsForClaimSet = null;
@@ -66,7 +65,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();     
+        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
     }
 
     [Test]
@@ -103,7 +102,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
         resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
         resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.Count().ShouldBe(4);
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
@@ -137,7 +136,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
             ActionName = "Create",
             AuthStrategyIds = overrides
         };
-        
+
         List<ResourceClaim> resourceClaimsForClaimSet = null;
 
         using var securityContext = TestContext;
@@ -151,7 +150,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
         resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
         resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.Count().ShouldBe(4);
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
@@ -193,25 +192,17 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
     private void InitializeData(out ClaimSet testClaimSet, out List<Security.DataAccess.Models.AuthorizationStrategy> appAuthorizationStrategies, out Security.DataAccess.Models.ResourceClaim testResource1ToEdit, out Security.DataAccess.Models.ResourceClaim testResource2ToNotEdit)
     {
-        var testApplication = new Application
-        {
-            ApplicationName = "TestApplicationName"
-        };
-
-        Save(testApplication);
-
         testClaimSet = new ClaimSet
         {
             ClaimSetName = "TestClaimSet",
-            Application = testApplication
         };
         Save(testClaimSet);
 
-        appAuthorizationStrategies = SetupApplicationAuthorizationStrategies(testApplication).ToList();
+        appAuthorizationStrategies = SetupApplicationAuthorizationStrategies().ToList();
         var parentRcNames = UniqueNameList("ParentRc", 2);
 
         var testResourceClaims = SetupParentResourceClaimsWithChildren(
-            testClaimSet, testApplication, parentRcNames, UniqueNameList("Child", 1));
+            testClaimSet, parentRcNames, UniqueNameList("Child", 1));
 
         SetupResourcesWithDefaultAuthorizationStrategies(
             appAuthorizationStrategies, testResourceClaims.ToList());

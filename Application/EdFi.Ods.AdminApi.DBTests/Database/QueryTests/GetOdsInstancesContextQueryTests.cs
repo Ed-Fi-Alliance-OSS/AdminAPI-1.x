@@ -41,7 +41,7 @@ public class GetOdsInstancesContextQueryTests : PlatformUsersContextTestBase
             results = query.Execute();
         });
 
-        results.Any(p => p.OdsInstanceId == odsInstanceContext1.OdsInstanceId).ShouldBeTrue();
+        results.Any(p => p.OdsInstance.OdsInstanceId == odsInstanceContext1.OdsInstance.OdsInstanceId).ShouldBeTrue();
         results.Any(p => p.ContextKey == odsInstanceContext1.ContextKey).ShouldBeTrue();
         results.Any(p => p.ContextValue == odsInstanceContext1.ContextValue).ShouldBeTrue();
 
@@ -81,7 +81,7 @@ public class GetOdsInstancesContextQueryTests : PlatformUsersContextTestBase
             results.Count.ShouldBe(1);
         });
 
-        results.Any(p => p.OdsInstanceId == odsInstanceContext2.OdsInstanceId).ShouldBeTrue();
+        results.Any(p => p.OdsInstance.OdsInstanceId == odsInstanceContext2.OdsInstance.OdsInstanceId).ShouldBeTrue();
         results.Any(p => p.ContextKey == odsInstanceContext2.ContextKey).ShouldBeTrue();
         results.Any(p => p.ContextValue == odsInstanceContext2.ContextValue).ShouldBeTrue();
     }

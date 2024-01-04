@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "603be102-6163-4609-8661-0690e251787a",
+		"_postman_id": "fbfb5478-49f6-47e8-a4f4-16ee41a7c307",
 		"name": "Admin API E2E 2.0 - OdsInstancesDerivatives",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21286036"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -765,7 +764,6 @@
 											"\r",
 											"pm.test(\"PUT OdsInstanceDerivatives NotFound: Response title is helpful and accurate\", function () {\r",
 											"    const response = pm.response.json();\r",
-											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
 											"    pm.expect(response.title).to.contain(\"odsInstanceDerivative\");\r",
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"NotExistOdsInstancesDerivativeId\"));\r",

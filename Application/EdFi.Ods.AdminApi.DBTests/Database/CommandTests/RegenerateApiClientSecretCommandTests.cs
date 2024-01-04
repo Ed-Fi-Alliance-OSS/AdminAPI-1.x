@@ -94,7 +94,7 @@ public class RegenerateApiClientSecretCommandTests : PlatformUsersContextTestBas
         //Simulate the automatic hashing performed by using the key/secret on the API.
         Transaction(usersContext =>
         {
-            var odsSideApiClient = usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId);
+            var odsSideApiClient = usersContext.ApiClients.Single(c => c.ApiClientId == apiClient.ApiClientId);
             odsSideApiClient.Secret = "SIMULATED HASH OF " + originalSecret;
             odsSideApiClient.SecretIsHashed = true;
         });
@@ -106,7 +106,7 @@ public class RegenerateApiClientSecretCommandTests : PlatformUsersContextTestBas
             result = command.Execute(application.ApplicationId);
         });
 
-        var updatedApiClient = Transaction(usersContext => usersContext.Clients.Single(c => c.ApiClientId == apiClient.ApiClientId));
+        var updatedApiClient = Transaction(usersContext => usersContext.ApiClients.Single(c => c.ApiClientId == apiClient.ApiClientId));
 
         result.Key.ShouldBe(orignalKey);
         result.Secret.ShouldNotBe(originalSecret);

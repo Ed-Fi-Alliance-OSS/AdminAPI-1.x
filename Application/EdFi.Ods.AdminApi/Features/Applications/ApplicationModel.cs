@@ -16,7 +16,7 @@ public class ApplicationModel
     public IList<long>? EducationOrganizationIds { get; set; }
     public int? VendorId { get; set; }
     public IList<int>? ProfileIds { get; set; }
-    public int? OdsInstanceId { get; set; }
+    public IList<int>? OdsInstanceIds { get; set; }
 }
 
 [SwaggerSchema(Title = "Application")]

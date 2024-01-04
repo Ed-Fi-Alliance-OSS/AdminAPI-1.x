@@ -3,16 +3,14 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Linq;
-using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using Shouldly;
 using Moq;
-using Application = EdFi.Security.DataAccess.Models.Application;
+using NUnit.Framework;
+using Shouldly;
+using System.Collections.Generic;
+using System.Linq;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using ResourceClaim = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaim;
-using System.Collections.Generic;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
@@ -22,17 +20,11 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldEditParentResourcesOnClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
-        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("ParentRc", 2);
-        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, UniqueNameList("ChildRc", 1));
+        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, parentRcNames, UniqueNameList("ChildRc", 1));
 
         var testResource1ToEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.First());
         var testResource2ToNotEdit = testResources.Select(x => x.ResourceClaim).Single(x => x.ResourceName == parentRcNames.Last());
@@ -76,18 +68,12 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldEditChildResourcesOnClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
-        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("ParentRc", 1);
         var childRcNames = UniqueNameList("ChildRc", 2);
-        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames, childRcNames);
+        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, parentRcNames, childRcNames);
 
         var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First());
 
@@ -144,17 +130,11 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldAddParentResourceToClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
-        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("Parent", 1);
-        var testResources = SetupResourceClaims(testApplication, parentRcNames, UniqueNameList("child", 1));
+        var testResources = SetupResourceClaims(parentRcNames, UniqueNameList("child", 1));
         var testResourceToAdd = testResources.Single(x => x.ResourceName == parentRcNames.First());
         var resourceToAdd = new ResourceClaim()
         {
@@ -193,18 +173,12 @@ public class EditResourceOnClaimSetCommandTests : SecurityDataTestBase
     [Test]
     public void ShouldAddChildResourcesToClaimSet()
     {
-        var testApplication = new Application
-        {
-            ApplicationName = $"Test Application {DateTime.Now:O}"
-        };
-        Save(testApplication);
-
-        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
+        var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet" };
         Save(testClaimSet);
 
         var parentRcNames = UniqueNameList("Parent", 1);
         var childRcNames = UniqueNameList("Child", 1);
-        var testResources = SetupResourceClaims(testApplication, parentRcNames, childRcNames);
+        var testResources = SetupResourceClaims(parentRcNames, childRcNames);
 
         var testParentResource1 = testResources.Single(x => x.ResourceName == parentRcNames.First());
         var childRcToTest = $"{childRcNames.First()}-{parentRcNames.First()}";

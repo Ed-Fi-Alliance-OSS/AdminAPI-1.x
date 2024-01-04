@@ -40,9 +40,7 @@ public class AddApplication : IFeature
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
 
         ValidateProfileIds(request, db);
-
-        if (null == db.OdsInstances.Find(request.OdsInstanceId))
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"ODS instance with ID {request.OdsInstanceId} not found.") });
+        ValidateOdsInstanceIds(request, db);
     }
 
     private static void ValidateProfileIds(Request request, IUsersContext db)
@@ -58,6 +56,22 @@ public class AddApplication : IFeature
         {
             var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: { string.Join(", ", notExist) }" ) });
+        }
+    }
+
+    private static void ValidateOdsInstanceIds(Request request, IUsersContext db)
+    {
+        var allOdsInstanceIds = db.OdsInstances.Select(p => p.OdsInstanceId).ToList();
+
+        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Count() > 0) && allOdsInstanceIds.Count == 0)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceIds), $"The following OdsInstanceIds were not found in database: {string.Join(", ", request.OdsInstanceIds)}") });
+        }
+
+        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Count() > 0) && (!request.OdsInstanceIds.All(p => allOdsInstanceIds.Contains(p))))
+        {
+            var notExist = request.OdsInstanceIds.Where(p => !allOdsInstanceIds.Contains(p));
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceIds), $"The following OdsInstanceIds were not found in database: {string.Join(", ", notExist)}") });
         }
     }
 
@@ -80,8 +94,8 @@ public class AddApplication : IFeature
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<int>? EducationOrganizationIds { get; set; }
 
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdDescription, Nullable = false)]
-        public int OdsInstanceId { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdsDescription, Nullable = false)]
+        public IEnumerable<int>? OdsInstanceIds { get; set; }
     }
 
     public class Validator : AbstractValidator<Request>
@@ -105,7 +119,6 @@ public class AddApplication : IFeature
                 .WithMessage(FeatureConstants.EdOrgIdsValidationMessage);
 
             RuleFor(m => m.VendorId).Must(id => id > 0).WithMessage(FeatureConstants.VendorIdValidationMessage);
-            RuleFor(m => m.OdsInstanceId).Must(id => id > 0).WithMessage(FeatureConstants.OdsInstanceIdValidationMessage);
         }
 
         private bool BeWithinApplicationNameMaxLength<T>(IAddApplicationModel model, string? applicationName, ValidationContext<T> context)

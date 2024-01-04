@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -24,7 +24,6 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
             InstanceType = "Ods1",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
-        Save(odsInstance1);
 
         var odsInstance2 = new OdsInstance
         {
@@ -40,7 +39,7 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
         {
             ConnectionString = connectionString,
             DerivativeType = derivativeType,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
         Save(newOdsInstanceDerivative);
 
@@ -59,7 +58,7 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
             updatedOdsInstanceDerivative.ShouldNotBeNull();
             updatedOdsInstanceDerivative.OdsInstanceDerivativeId.ShouldBeGreaterThan(0);
             updatedOdsInstanceDerivative.OdsInstanceDerivativeId.ShouldBe(newOdsInstanceDerivative.OdsInstanceDerivativeId);
-            updatedOdsInstanceDerivative.OdsInstanceId.ShouldBe(odsInstance2.OdsInstanceId);
+            updatedOdsInstanceDerivative.OdsInstance.OdsInstanceId.ShouldBe(odsInstance2.OdsInstanceId);
             updatedOdsInstanceDerivative.DerivativeType.ShouldBe(updateDerivativeType);
             updatedOdsInstanceDerivative.ConnectionString.ShouldBe(updateConnectionString);
         });
@@ -74,7 +73,6 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
             InstanceType = "Ods1",
             ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
         };
-        Save(odsInstance1);
 
         var derivativeType = "ReadReplica";
         var connectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False";
@@ -82,18 +80,17 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
         {
             ConnectionString = connectionString,
             DerivativeType = derivativeType,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
-        Save(newOdsInstanceDerivative);
 
         var newDerivativeType = "Snapshot";
         var newOdsInstanceDerivative2 = new OdsInstanceDerivative
         {
             ConnectionString = connectionString,
             DerivativeType = newDerivativeType,
-            OdsInstanceId = odsInstance1.OdsInstanceId
+            OdsInstance = odsInstance1
         };
-        Save(newOdsInstanceDerivative2);
+        Save(newOdsInstanceDerivative, newOdsInstanceDerivative2);
 
         var updateDerivativeType = "Snapshot";
         var updateConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods_2;Integrated Security=True;Encrypt=False";
@@ -112,7 +109,7 @@ public class EditOdsInstanceDerivativeTests : PlatformUsersContextTestBase
                 updatedOdsInstanceDerivative.ShouldNotBeNull();
                 updatedOdsInstanceDerivative.OdsInstanceDerivativeId.ShouldBeGreaterThan(0);
                 updatedOdsInstanceDerivative.OdsInstanceDerivativeId.ShouldBe(newOdsInstanceDerivative.OdsInstanceDerivativeId);
-                updatedOdsInstanceDerivative.OdsInstanceId.ShouldBe(odsInstance1.OdsInstanceId);
+                updatedOdsInstanceDerivative.OdsInstance.OdsInstanceId.ShouldBe(odsInstance1.OdsInstanceId);
                 updatedOdsInstanceDerivative.DerivativeType.ShouldBe(updateDerivativeType);
                 updatedOdsInstanceDerivative.ConnectionString.ShouldBe(updateConnectionString);
             });

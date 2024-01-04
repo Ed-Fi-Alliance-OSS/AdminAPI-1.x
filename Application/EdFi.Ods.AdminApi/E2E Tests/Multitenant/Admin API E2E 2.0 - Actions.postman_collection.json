@@ -106,7 +106,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "{{TOKEN}}",
+				"value": "{{TOKEN_Tenant1}}",
 				"type": "string"
 			}
 		]
@@ -117,6 +117,8 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"var uuid = require('uuid');",
+					"",
 					"function generateClientSecret() {",
 					"    const minLength = 32;",
 					"    const maxLength = 128;",
@@ -151,23 +153,21 @@
 					"    return array.join('');",
 					"}",
 					"",
-					"let guid = pm.variables.replaceIn('{{$guid}}');",
-					"let client_secret =  generateClientSecret();",
-					"",
-					"",
-					"pm.sendRequest({",
+					"function registerAndSetToken(tenant, client_id, client_secret)",
+					"{",
+					"    pm.sendRequest({",
 					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,",
 					"    method: 'POST',",
 					"    header: {",
 					"        'Content-Type': 'application/x-www-form-urlencoded',",
-					"        'Tenant': `${pm.variables.get(\"Tenant1\")}`",
+					"        'Tenant': `${pm.variables.get(tenant)}`",
 					"    },",
 					"    body: {",
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
-					"            {key: 'ClientId', value: guid },",
+					"            {key: 'ClientId', value: client_id },",
 					"            {key: 'ClientSecret', value: client_secret },",
-					"            {key: 'DisplayName', value: guid }",
+					"            {key: 'DisplayName', value: client_id }",
 					"        ]",
 					"    }",
 					"},",
@@ -182,12 +182,12 @@
 					"    method: 'POST',",
 					"    header: {",
 					"        'Content-Type': 'application/x-www-form-urlencoded',",
-					"        'Tenant': `${pm.variables.get(\"Tenant1\")}`",
+					"        'Tenant': `${pm.variables.get(tenant)}`",
 					"    },",
 					"    body: {",
 					"        mode: 'urlencoded',",
 					"        urlencoded: [",
-					"            {key: 'client_id', value: guid },",
+					"            {key: 'client_id', value: client_id },",
 					"            {key: 'client_secret', value: client_secret },",
 					"            {key: 'grant_type', value: \"client_credentials\"},",
 					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}",
@@ -199,9 +199,15 @@
 					"        if(error) {",
 					"            throw res.json().error_description",
 					"        }",
-					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token)",
+					"        pm.collectionVariables.set(\"TOKEN_\" + tenant, res.json().access_token)",
 					"});",
-					"});"
+					"});",
+					"}",
+					"",
+					"registerAndSetToken(\"Tenant1\", uuid.v4(), generateClientSecret());",
+					"registerAndSetToken(\"Tenant2\", uuid.v4(), generateClientSecret());",
+					"",
+					""
 				]
 			}
 		},
@@ -217,7 +223,11 @@
 	],
 	"variable": [
 		{
-			"key": "TOKEN",
+			"key": "TOKEN_Tenant1",
+			"value": ""
+		},
+		{
+			"key": "TOKEN_Tenant2",
 			"value": ""
 		}
 	]

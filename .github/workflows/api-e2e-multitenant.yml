@@ -3,7 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-name: Admin API Multitenancy E2E Tests + ODS 6
+name: Admin API Multi Tenant E2E Tests + ODS 7
 
 on:
   push:
@@ -66,13 +66,13 @@ jobs:
 
       - name: Combine Collections
         run: |
-          postman-combine-collections -f './E2E Tests/Multitenant/Admin API E2E 2.0 -*.postman_collection.json' \
+          postman-combine-collections -f './E2E Tests/MultiTenant/Admin API E2E 2.0 -*.postman_collection.json' \
              -n 'Admin API E2E 2.0' \
-             -o './E2E Tests/Admin-API-Full-Collection.json'
+             -o './E2E Tests/MultiTenant/Admin-API-Full-Collection.json'
 
       - name: Run tests
         run: |
-          newman run './E2E Tests/Admin-API-Full-Collection.json' \
+          newman run './E2E Tests/MultiTenant/Admin-API-Full-Collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r cli,junit,htmlextra \
             --reporter-htmlextra-title 'AdminAPI - 2.0' \
@@ -84,8 +84,9 @@ jobs:
         if: failure()
         run: |
           mkdir docker-logs
-          docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
-          docker logs adminapi > docker-logs/adminapi.log
+          docker logs ed-fi-db-admin-adminapi-tenant1 > docker-logs/ed-fi-db-admin-adminapi-tenant1.log
+          docker logs ed-fi-db-admin-adminapi-tenant2 > docker-logs/ed-fi-db-admin-adminapi-tenant2.log
+          docker logs adminapi-packaged > docker-logs/adminapi-packaged.log
 
       - name: Upload Docker logs
         if: failure()

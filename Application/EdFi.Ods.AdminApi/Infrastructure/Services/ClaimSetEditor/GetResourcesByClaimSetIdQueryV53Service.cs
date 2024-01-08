@@ -189,7 +189,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         {
             var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]>();
             resourceClaims =
-                new List<ClaimSetResourceClaim>(resourceClaims.OrderBy(i => new List<string> { Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value, Action.ReadChanges.Value /* SFUQUA */ }.IndexOf(i.Action.ActionName)));
+                new List<ClaimSetResourceClaim>(resourceClaims.OrderBy(i => new List<string> { Action.Create.Value, Action.Read.Value, Action.Update.Value, Action.Delete.Value, Action.ReadChanges.Value }.IndexOf(i.Action.ActionName)));
             foreach (var resourceClaim in resourceClaims)
             {
                 AuthorizationStrategy? authStrategy = null;
@@ -229,7 +229,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 }
                 else
                 {
-                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[4];
+                    resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId] = new ClaimSetResourceClaimActionAuthStrategies[5];
                     resultDictionary[resourceClaim.ResourceClaim.ResourceClaimId].AddAuthorizationStrategyOverrides(resourceClaim.Action.ActionName, authStrategy);
                 }
             }

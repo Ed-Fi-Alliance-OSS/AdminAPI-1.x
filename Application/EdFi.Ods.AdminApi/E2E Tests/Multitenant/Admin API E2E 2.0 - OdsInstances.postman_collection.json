@@ -1616,6 +1616,155 @@
 									"response": []
 								},
 								{
+									"name": "OdsInstances by ID - Wrong Tenant",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.upsert({key: 'Tenant', value: 'Tenant1' });\r",
+													"\r",
+													"var uuid = require('uuid');\r",
+													"\r",
+													"function generateClientSecret() {\r",
+													"    const minLength = 32;\r",
+													"    const maxLength = 128;\r",
+													"    let result = '';\r",
+													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+													"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';\r",
+													"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;\r",
+													"\r",
+													"    result += randomChar('abcdefghijklmnopqrstuvwxyz');\r",
+													"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');\r",
+													"    result += randomChar('0123456789');\r",
+													"    result += randomChar(specialCharacters);\r",
+													"\r",
+													"    for (let i = result.length; i < length; i++) {\r",
+													"        const charactersPlusSpecial = characters + specialCharacters;\r",
+													"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));\r",
+													"    }\r",
+													"\r",
+													"    return shuffleString(result);\r",
+													"}\r",
+													"\r",
+													"function randomChar(str) {\r",
+													"    return str.charAt(Math.floor(Math.random() * str.length));\r",
+													"}\r",
+													"\r",
+													"function shuffleString(str) {\r",
+													"    const array = str.split('');\r",
+													"    for (let i = array.length - 1; i > 0; i--) {\r",
+													"        const j = Math.floor(Math.random() * (i + 1));\r",
+													"        [array[i], array[j]] = [array[j], array[i]];\r",
+													"    }\r",
+													"    return array.join('');\r",
+													"}\r",
+													"\r",
+													"function registerAndSetToken(tenant, client_id, client_secret)\r",
+													"{\r",
+													"    pm.sendRequest({\r",
+													"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,\r",
+													"    method: 'POST',\r",
+													"    header: {\r",
+													"        'Content-Type': 'application/x-www-form-urlencoded',\r",
+													"        'Tenant': `${pm.variables.get(tenant)}`\r",
+													"    },\r",
+													"    body: {\r",
+													"        mode: 'urlencoded',\r",
+													"        urlencoded: [\r",
+													"            {key: 'ClientId', value: client_id },\r",
+													"            {key: 'ClientSecret', value: client_secret },\r",
+													"            {key: 'DisplayName', value: client_id }\r",
+													"        ]\r",
+													"    }\r",
+													"},\r",
+													"    (err, res) => {\r",
+													"        error = res.json().error\r",
+													"        if(error) {\r",
+													"            throw res.json().error_description\r",
+													"        }\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,\r",
+													"    method: 'POST',\r",
+													"    header: {\r",
+													"        'Content-Type': 'application/x-www-form-urlencoded',\r",
+													"        'Tenant': `${pm.variables.get(tenant)}`\r",
+													"    },\r",
+													"    body: {\r",
+													"        mode: 'urlencoded',\r",
+													"        urlencoded: [\r",
+													"            {key: 'client_id', value: client_id },\r",
+													"            {key: 'client_secret', value: client_secret },\r",
+													"            {key: 'grant_type', value: \"client_credentials\"},\r",
+													"            {key: 'scope', value: \"edfi_admin_api/full_access\"}\r",
+													"        ]\r",
+													"    }\r",
+													"},\r",
+													"    (err, res) => {\r",
+													"        error = res.json().error\r",
+													"        if(error) {\r",
+													"            throw res.json().error_description\r",
+													"        }\r",
+													"        pm.collectionVariables.set(\"TOKEN_\" + tenant, res.json().access_token)\r",
+													"});\r",
+													"});\r",
+													"}\r",
+													"\r",
+													"registerAndSetToken(\"Tenant1\", uuid.v4(), generateClientSecret());"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"GET OdsInstances NotFound: Status code is Not Found\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});",
+													"",
+													"pm.test(\"GET OdsInstances NotFound: Response matches error format\", function () {",
+													"    const response = pm.response.json();",
+													"",
+													"    pm.expect(response).to.have.property(\"title\");",
+													"});",
+													"",
+													"pm.test(\"GET OdsInstances NotFound: Response title is helpful and accurate\", function () {",
+													"    const response = pm.response.json();",
+													"",
+													"    pm.expect(response.title).to.contain(\"Not found\");",
+													"    pm.expect(response.title).to.contain(\"odsInstance\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Tenant",
+												"value": "{{TOKEN_Tenant1}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{API_URL}}/v2/odsInstances/{{CreatedOdsInstanceId}}",
+											"host": [
+												"{{API_URL}}"
+											],
+											"path": [
+												"v2",
+												"odsInstances",
+												"{{CreatedOdsInstanceId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "OdsInstances",
 									"event": [
 										{

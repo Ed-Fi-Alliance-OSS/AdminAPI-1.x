@@ -66,14 +66,14 @@ jobs:
 
       - name: Combine Collections
         run: |
-          postman-combine-collections -f './E2E Tests/MultiTenant/Admin API E2E 2.0 -*.postman_collection.json' \
+          postman-combine-collections -f './E2E Tests/Admin API E2E 2.0 -*.postman_collection.json' \
              -n 'Admin API E2E 2.0' \
-             -o './E2E Tests/MultiTenant/Admin-API-Full-Collection.json'
+             -o './E2E Tests/Admin-API-Full-Collection.json'
 
       - name: Run tests
         run: |
-          newman run './E2E Tests/MultiTenant/Admin-API-Full-Collection.json' \
-            -e './E2E Tests/Admin API Docker.postman_environment.json' \
+          newman run './E2E Tests/Admin-API-Full-Collection.json' \
+            -e './E2E Tests/Admin API Docker-multitenant.postman_environment.json' \
             -r cli,junit,htmlextra \
             --reporter-htmlextra-title 'AdminAPI - 2.0' \
             --reporter-htmlextra-export './report-html/results.html' \

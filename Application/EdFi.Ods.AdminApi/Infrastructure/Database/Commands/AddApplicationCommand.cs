@@ -3,12 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using System.Data.Entity;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -34,17 +31,13 @@ public class AddApplicationCommand : IAddApplicationCommand
             ? _usersContext.Profiles.SingleOrDefault(p => p.ProfileId == applicationModel.ProfileId.Value)
             : null;
 
-        var vendor = _usersContext.Vendors.Single(v => v.VendorId == applicationModel.VendorId);
+        var vendor = _usersContext.Vendors.Include(x => x.Users)
+            .Single(v => v.VendorId == applicationModel.VendorId);
 
         var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
             x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
 
-        var user = new VendorUser
-        {
-            Email = "",
-            FullName = applicationModel.ApplicationName,
-            Vendor = vendor
-        };
+        var user = vendor.Users.FirstOrDefault();
 
         var apiClient = new ApiClient(true)
         {

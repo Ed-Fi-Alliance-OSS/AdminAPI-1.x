@@ -54,7 +54,7 @@ services:
       - db-admin-tenant2
     restart: always
     hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
-    container_name: adminapi-packaged
+    container_name: adminapi
     healthcheck:
       test: ${ADMIN_API_HEALTHCHECK_TEST}
       start_period: "60s"

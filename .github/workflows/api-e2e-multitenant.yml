@@ -54,7 +54,7 @@ jobs:
       - name: Verify containers are running
         run: |
           chmod +x './E2E Tests/gh-action-setup/inspect.sh'
-          './E2E Tests/gh-action-setup/inspect.sh' adminapi-packaged
+          './E2E Tests/gh-action-setup/inspect.sh' adminapi
 
       - name: Setup node
         uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0

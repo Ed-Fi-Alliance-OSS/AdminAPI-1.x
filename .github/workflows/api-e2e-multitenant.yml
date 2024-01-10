@@ -1,0 +1,142 @@
+# SPDX-License-Identifier: Apache-2.0
+# Licensed to the Ed-Fi Alliance under one or more agreements.
+# The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+# See the LICENSE and NOTICES files in the project root for more information.
+
+name: Admin API Multi Tenant E2E Tests + ODS 7
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+env:
+  JIRA_ACCESS_TOKEN: ${{ secrets.JIRA_ACCESS_TOKEN }}
+  ADMIN_API_VERSION: "1.2"
+  PROJECT_ID: "13401"
+  CYCLE_NAME: "Automation Cycle"
+  TASK_NAME: "API Automation Task"
+  FOLDER_NAME: "API Automation Run"
+  RESULTS_FILE: "test-xml-results"
+
+jobs:
+  run-e2e-multitenant-tests:
+    defaults:
+      run:
+        working-directory: ./Application/EdFi.Ods.AdminApi/
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+      - name: Copy application folder to docker context
+        run: |
+          mkdir ../../Docker/Application
+          cp -r ../EdFi.Ods.AdminApi ../../Docker/Application
+
+      - name: Copy nuget config to docker context
+        run: cp ../NuGet.Config ../../Docker/Application
+
+      - name: Update certificates
+        run: cp -r ../../eng/test-certs/ssl ../../Docker/Settings
+
+      - name: Run Admin API
+        run: |
+          docker compose \
+            -f '../../Docker/Compose/pgsql/MultiTenant/compose-build-dev-multi-tenant.yml' \
+            --env-file './E2E Tests/gh-action-setup/.automation.env' \
+            up -d
+
+      - name: Verify containers are running
+        run: |
+          chmod +x './E2E Tests/gh-action-setup/inspect.sh'
+          './E2E Tests/gh-action-setup/inspect.sh' adminapi
+
+      - name: Setup node
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          node-version: "16"
+
+      - name: Install Tools
+        run: npm install -g newman newman-reporter-htmlextra postman-combine-collections
+
+      - name: Combine Collections
+        run: |
+          postman-combine-collections -f './E2E Tests/Admin API E2E 2.0 -*.postman_collection.json' \
+             -n 'Admin API E2E 2.0' \
+             -o './E2E Tests/Admin-API-Full-Collection.json'
+
+      - name: Run tests
+        run: |
+          newman run './E2E Tests/Admin-API-Full-Collection.json' \
+            -e './E2E Tests/Admin API Docker-multitenant.postman_environment.json' \
+            -r cli,junit,htmlextra \
+            --reporter-htmlextra-title 'AdminAPI - 2.0' \
+            --reporter-htmlextra-export './report-html/results.html' \
+            --reporter-junit-export ./reports/report.xml \
+            -k
+
+      - name: Get Docker logs
+        if: failure()
+        run: |
+          mkdir docker-logs
+          docker logs ed-fi-db-admin-adminapi-tenant1 > docker-logs/ed-fi-db-admin-adminapi-tenant1.log
+          docker logs ed-fi-db-admin-adminapi-tenant2 > docker-logs/ed-fi-db-admin-adminapi-tenant2.log
+          docker logs adminapi-packaged > docker-logs/adminapi-packaged.log
+
+      - name: Upload Docker logs
+        if: failure()
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        with:
+          name: docker-logs
+          path: Application/EdFi.Ods.AdminApi/docker-logs/
+          retention-days: 5
+
+      - name: Upload Html results
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        if: success() || failure()
+        with:
+          name: test-html-results
+          path: Application/EdFi.Ods.AdminApi/report-html/results.html
+          retention-days: 5
+
+      - name: Upload xml results
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        if: success() || failure()
+        with:
+          name: test-xml-results
+          path: Application/EdFi.Ods.AdminApi/reports/report.xml
+          retention-days: 5
+
+  report:
+    if: ${{ false }}
+    defaults:
+      run:
+        shell: pwsh
+    needs:
+      - run-e2e-multitenant-tests
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+      - name: Download artifacts
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a #v3.0.2
+
+      - name: Send report to Zephyr
+        run: |
+          $parameters = @{
+              cycleName = '${{ env.CYCLE_NAME }}'
+              taskName = '${{ env.TASK_NAME }}'
+              folderName = '${{ env.FOLDER_NAME }}'
+          }
+          .\eng\send-test-results.ps1 `
+              -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} `
+              -ProjectId ${{ env.PROJECT_ID }} `
+              -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' `
+              -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' `
+              -ConfigParams $parameters

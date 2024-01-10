@@ -3,7 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-name: Admin API E2E Tests + ODS 6
+name: Admin API Single Tenant E2E Tests + ODS 7
 
 on:
   push:
@@ -54,7 +54,7 @@ jobs:
       - name: Verify containers are running
         run: |
           chmod +x './E2E Tests/gh-action-setup/inspect.sh'
-          './E2E Tests/gh-action-setup/inspect.sh'
+          './E2E Tests/gh-action-setup/inspect.sh' adminapi
 
       - name: Setup node
         uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
@@ -84,7 +84,7 @@ jobs:
         if: failure()
         run: |
           mkdir docker-logs
-          docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
+          docker logs ed-fi-db-admin-adminapi > docker-logs/ed-fi-db-admin-adminapi.log
           docker logs adminapi > docker-logs/adminapi.log
 
       - name: Upload Docker logs

@@ -4,7 +4,7 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 #tag 6.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:64dc2a4bc6e20d759ad80c00e2f9864d4f11c56ae66f398284cdf7c321ab31c5
+FROM mcr.microsoft.com/dotnet/aspnet@sha256:05ab7d6597f58bc52dbdef62ec52607620176a222a1defe64a6fc579829feeae
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ARG VERSION=latest
 ARG DB=pgsql
@@ -19,7 +19,7 @@ COPY Settings/"${DB}"/appsettings.template.json /app/appsettings.template.json
 COPY Settings/"${DB}"/run.sh /app/run.sh
 COPY Settings/"${DB}"/log4net.config /app/log4net.txt
 
-RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~72 && \
+RUN apk --no-cache add curl=~8 unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~73 && \
     if [ "$DB" = "pgsql" ]; then apk --no-cache add postgresql13-client=~13; fi && \
     wget -nv -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \
     unzip /app/AdminApi.zip AdminApi/* -d /app/ && \

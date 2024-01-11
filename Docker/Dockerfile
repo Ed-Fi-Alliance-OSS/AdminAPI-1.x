@@ -4,7 +4,7 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 #tag 6.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:05ab7d6597f58bc52dbdef62ec52607620176a222a1defe64a6fc579829feeae
+FROM mcr.microsoft.com/dotnet/aspnet@sha256:2647c10e72a83a6e3136aa47de1bb188047006b217982ddd332344bbbf10593f
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ARG VERSION=latest
 ARG DB=pgsql

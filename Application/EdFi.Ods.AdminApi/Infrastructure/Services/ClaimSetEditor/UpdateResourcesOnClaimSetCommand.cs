@@ -25,12 +25,17 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public void Execute(IUpdateResourcesOnClaimSetModel model)
         {
             var securityModel = _resolver.DetermineSecurityModel();
-            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-                _v53Service.Execute(model);
-            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
-                _v6Service.Execute(model);
-            else
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+            switch (securityModel)
+            {
+                case EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe:
+                    _v53Service.Execute(model);
+                    break;
+                case EdFiOdsSecurityModelCompatibility.Six:
+                    _v6Service.Execute(model);
+                    break;
+                default:
+                    throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+            }
         }
     }
 

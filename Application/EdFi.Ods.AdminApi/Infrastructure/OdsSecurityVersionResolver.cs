@@ -20,11 +20,18 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
     private readonly IOdsApiValidator _apiValidator;
     private readonly string _apiServerUrl;
 
-    public OdsSecurityVersionResolver(IOdsApiValidator apiValidator, string apiServerUrl)
+    // In ODS/API version 5.3 there is a special branch/tag that provides
+    // additional security functionality, which was originally developed for
+    // ODS/API 6.1. In general, the Admin and Security databases still look like
+    // ODS/API 5.3, but we need to know that it is in fact "CQE" so that we can
+    // handle the "ReadChanges" action properly.
+    private readonly bool _using53Cqe;
 
+    public OdsSecurityVersionResolver(IOdsApiValidator apiValidator, string apiServerUrl, bool using53Cqe = false)
     {
         _apiValidator = apiValidator;
         _apiServerUrl = apiServerUrl;
+        _using53Cqe = using53Cqe;
         _log = LogManager.GetLogger(typeof(OdsSecurityVersionResolver));
         _modelVersion = new Lazy<EdFiOdsSecurityModelCompatibility>(InitializeModelVersion);
     }
@@ -39,6 +46,11 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
         {
             _log.Error("Unable to determine security model from ODS API Response");
             throw validationResult.Exception ?? new Exception("No version reported from the Ed-Fi API");
+        }
+
+        if (_using53Cqe)
+        {
+            return EdFiOdsSecurityModelCompatibility.FiveThreeCqe;
         }
 
         var serverVersion = validationResult.Version;
@@ -62,5 +74,6 @@ public enum EdFiOdsSecurityModelCompatibility
 {
     ThreeThroughFive = 1,
     Six = 2,
-    Both = 3
+    Both = 3,
+    FiveThreeCqe = 4
 }

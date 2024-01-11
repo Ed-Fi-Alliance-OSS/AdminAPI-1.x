@@ -155,6 +155,11 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                             defaultStrategies = defaultAuthStrategiesForParents.SingleOrDefault(x =>
                                        x.ResourceClaim.ResourceClaimId == resourceClaim.ParentResourceClaimId &&
                                        x.Action.ActionName == action.Value)?.AuthorizationStrategies.Select(x => x.AuthorizationStrategy);
+
+                            // SingleOrDefault means we could get a null back,
+                            // and the next line is written to assume we'll
+                            // never get a null. This needs to be refactored to
+                            // be more defensive.
                             var mappedStrategies = defaultStrategies!.Select(x =>
                             {
                                 var value = _mapper.Map<AuthorizationStrategy>(x);

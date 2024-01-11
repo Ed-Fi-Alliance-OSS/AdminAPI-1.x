@@ -30,12 +30,18 @@ public class DeleteClaimSetCommand : IDeleteClaimSetCommand
     public void Execute(IDeleteClaimSetModel claimSet)
     {
         var securityModel = _resolver.DetermineSecurityModel();
-        if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-            _v53Service.Execute(claimSet);
-        else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
-            _v6Service.Execute(claimSet);
-        else
-            throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+
+        switch (securityModel)
+        {
+            case EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe:
+                _v53Service.Execute(claimSet);
+                break;
+            case EdFiOdsSecurityModelCompatibility.Six:
+                _v6Service.Execute(claimSet);
+                break;
+            default:
+                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
+        }
     }
 }
 

@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "C#: EdFi.Ods.AdminApi [Default Configuration]",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\Application\\EdFi.Ods.AdminApi\\EdFi.Ods.AdminApi.csproj"
+        }
+    ]
+}

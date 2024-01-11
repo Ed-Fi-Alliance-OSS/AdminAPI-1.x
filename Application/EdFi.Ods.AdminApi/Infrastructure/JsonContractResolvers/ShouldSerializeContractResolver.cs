@@ -24,11 +24,12 @@ public class ShouldSerializeContractResolver : DefaultContractResolver
 
         if (property.DeclaringType == typeof(ResourceClaimModel) && (property.PropertyName is not null && property.PropertyName.ToLowerInvariant() == "readchanges"))
         {
-            property.ShouldSerialize =
+                        property.ShouldSerialize =
                 instance =>
                 {
                     var securityModel = _odsSecurityModelResolver.DetermineSecurityModel();
-                    return securityModel == EdFiOdsSecurityModelCompatibility.Six;
+                    return securityModel is EdFiOdsSecurityModelCompatibility.Six or
+                           EdFiOdsSecurityModelCompatibility.FiveThreeCqe;
                 };
         }
         property.PropertyName = char.ToLowerInvariant(property.PropertyName![0]) + property.PropertyName[1..];

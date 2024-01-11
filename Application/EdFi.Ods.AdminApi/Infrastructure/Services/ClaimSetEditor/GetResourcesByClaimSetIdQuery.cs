@@ -20,26 +20,32 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             _v6Service = v6Service;
         }
 
-        public IList<ResourceClaim> AllResources(int claimSetId)
+        public IList<ResourceClaim> AllResources(int securityContextClaimSetId)
         {
             IList<ResourceClaim> parentResources;
             var securityModel = _resolver.DetermineSecurityModel();
-            if (securityModel == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-            {
-                parentResources = _v53Service.GetParentResources(claimSetId);
-                var childResources = _v53Service.GetChildResources(claimSetId);
-                GetResourcesByClaimSetIdQueryV53Service.AddChildResourcesToParents(childResources, parentResources);
-            }
-            else if (securityModel == EdFiOdsSecurityModelCompatibility.Six)
-            {
-                parentResources = _v6Service.GetParentResources(claimSetId);
-                var childResources = _v6Service.GetChildResources(claimSetId);
-                GetResourcesByClaimSetIdQueryV6Service.AddChildResourcesToParents(childResources, parentResources);
-            }
-            else
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
 
-            return parentResources;
+            return securityModel switch {
+                EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => ModelThreeThroughFive(),
+                EdFiOdsSecurityModelCompatibility.Six => ModelSix(),
+                _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel)
+            };
+
+            IList<ResourceClaim> ModelThreeThroughFive() {
+                parentResources = _v53Service.GetParentResources(securityContextClaimSetId);
+                var childResources = _v53Service.GetChildResources(securityContextClaimSetId);
+                GetResourcesByClaimSetIdQueryV53Service.AddChildResourcesToParents(childResources, parentResources);
+
+                return parentResources;
+            }
+
+            IList<ResourceClaim> ModelSix() {
+                parentResources = _v6Service.GetParentResources(securityContextClaimSetId);
+                var childResources = _v6Service.GetChildResources(securityContextClaimSetId);
+                GetResourcesByClaimSetIdQueryV6Service.AddChildResourcesToParents(childResources, parentResources);
+
+                return parentResources;
+            }
         }
 
         public ResourceClaim? SingleResource(int claimSetId, int resourceClaimId)

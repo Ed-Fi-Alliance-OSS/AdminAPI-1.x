@@ -7,8 +7,8 @@ version: "3.8"
 
 services:
   db-ods:
-    # 2.3.1 corresponds to ODS/API 6.1
-    image: edfialliance/ods-api-db-ods:v2.3.1
+    # 2.3.2 corresponds to ODS/API 6.1
+    image: edfialliance/ods-api-db-ods:v2.3.2
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
@@ -38,7 +38,7 @@ services:
       - api
 
   api:
-    image: edfialliance/ods-api-web-api:v2.3.1
+    image: edfialliance/ods-api-web-api:v2.3.2
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

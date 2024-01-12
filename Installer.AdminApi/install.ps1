@@ -94,7 +94,7 @@ $p = @{
 }
 
 if ([string]::IsNullOrWhiteSpace($p.OdsApiVersion)) {
-    Write-Error "ODS API Version has not been configured. Edit install.ps1 to pass in a valid version number for the ODS API. Valid versions are 5.3, 5.3cqe, 6.0 and 6.1"
+    Write-Error "ODS API Version has not been configured. Edit install.ps1 to pass in a valid version number for the ODS API. Valid versions are 5.3, 5.3-cqe, 6.0 and 6.1"
 }
 elseif ([string]::IsNullOrWhiteSpace($p.AuthenticationSettings.Authority) -or [string]::IsNullOrWhiteSpace($p.AuthenticationSettings.IssuerUrl) -or [string]::IsNullOrWhiteSpace($p.AuthenticationSettings.SigningKey) -or $p.AuthenticationSettings.AllowRegistration -isnot [bool]) {
     Write-Error "Authentication Settings have not been configured correctly. Edit install.ps1 to pass in valid authentication settings for Admin Api."

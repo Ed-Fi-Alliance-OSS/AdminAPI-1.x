@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Runtime.CompilerServices;
 using log4net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
@@ -29,19 +30,20 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
 
     private EdFiOdsSecurityModelCompatibility InitializeModelVersion()
     {
-        switch (_odsApiVersion)
+        try
         {
-            case "5.3":
-                return EdFiOdsSecurityModelCompatibility.ThreeThroughFive;
-            case "5.3cqe":
-                return EdFiOdsSecurityModelCompatibility.FiveThreeCqe;
-            case "6.0":
-            case "6.1":
-                return EdFiOdsSecurityModelCompatibility.Six;
-            default:
-                _log.Error("OdsApiVersion not configured. Valid values are 5.3, 5.3cqe, 6.0 and 6.1");
-                throw new Exception("OdsApiVersion not configured. Valid values are 5.3, 5.3cqe, 6.0 and 6.1");
-                
+            return _odsApiVersion switch
+            {
+                "5.3" => EdFiOdsSecurityModelCompatibility.ThreeThroughFive,
+                "5.3-cqe" => EdFiOdsSecurityModelCompatibility.FiveThreeCqe,
+                "6.0" or "6.1" => EdFiOdsSecurityModelCompatibility.Six,
+                _ => throw new SwitchExpressionException()
+            };
+        }
+        catch (SwitchExpressionException)
+        {
+            _log.Error("OdsApiVersion not configured. Valid values are 5.3, 5.3-cqe, 6.0 and 6.1");
+            throw new Exception("OdsApiVersion not configured. Valid values are 5.3, 5.3-cqe, 6.0 and 6.1");
         }
     }
 }

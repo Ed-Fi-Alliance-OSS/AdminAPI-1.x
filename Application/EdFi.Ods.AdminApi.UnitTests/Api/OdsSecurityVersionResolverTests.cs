@@ -17,7 +17,7 @@ public class OdsSecurityVersionResolverTests
         .DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.ThreeThroughFive);
 
     [Test]
-    public static void ShouldReturnV3_5ForOdsV53Cqe() => new OdsSecurityVersionResolver("5.3cqe")
+    public static void ShouldReturnV3_5ForOdsV53Cqe() => new OdsSecurityVersionResolver("5.3-cqe")
         .DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.FiveThreeCqe);
 
     [Test]

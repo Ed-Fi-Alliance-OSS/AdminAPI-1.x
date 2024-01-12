@@ -165,9 +165,9 @@ function Install-EdFiOdsAdminApi {
         [string]
         $CertThumbprint,
 
-        # ODS / API version. Valid values are 5.3, 5.3cqe, 6.0, 6.1. Default: "6.1"
+        # ODS / API version. Valid values are 5.3, 5.3-cqe, 6.0, 6.1. Default: "6.1"
         [Parameter(Mandatory=$true)]
-        [ValidateSet('5.3', '5.3cqe', '6.0', '6.1')]
+        [ValidateSet('5.3', '5.3-cqe', '6.0', '6.1')]
         [string]
         $OdsApiVersion,
 

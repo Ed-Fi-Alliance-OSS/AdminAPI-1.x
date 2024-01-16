@@ -4,9 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Text.Json;
-using System.Threading.Tasks;
-using EdFi.Ods.AdminApi.Infrastructure.Api;
 using NUnit.Framework;
 using Shouldly;
 
@@ -15,51 +12,43 @@ namespace EdFi.Ods.AdminApi.Infrastructure.UnitTests.Api;
 [TestFixture]
 public class OdsSecurityVersionResolverTests
 {
-    public static void ShouldReturnV3_5ForOdsV3() => new OdsSecurityVersionResolver(
-        new StubValidApi("3.2.0"), "").DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.ThreeThroughFive);
+    [Test]
+    public static void ShouldReturnV3_5ForOdsV53() => new OdsSecurityVersionResolver("5.3")
+        .DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.ThreeThroughFive);
 
-    public static void ShouldReturnV3_5ForOdsV51() => new OdsSecurityVersionResolver(
-        new StubValidApi("5.1"), "").DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.ThreeThroughFive);
+    [Test]
+    public static void ShouldReturnV3_5ForOdsV53Cqe() => new OdsSecurityVersionResolver("5.3-cqe")
+        .DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.FiveThreeCqe);
 
-    public static void ShouldReturnV3_5ForOdsV53() => new OdsSecurityVersionResolver(
-        new StubValidApi("5.3"), "").DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.ThreeThroughFive);
+    [Test]
+    public static void ShouldReturnV6ForOds6() => new OdsSecurityVersionResolver("6.0")
+        .DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.Six);
 
-    public static void ShouldReturnV6ForOds6() => new OdsSecurityVersionResolver(
-        new StubValidApi("6.0"), "").DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.Six);
+    [Test]
+    public static void ShouldReturnV6ForOdsGreaterThanV6() => new OdsSecurityVersionResolver("6.1")
+        .DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.Six);
 
-    public static void ShouldReturnV6ForOdsGreaterThanV6() => new OdsSecurityVersionResolver(
-        new StubValidApi("6.1"), "").DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.Six);
+    [Test]
+    public static void ShouldThrowExceptionForOdsV3()
+    {
+        Should.Throw<Exception>(() => new OdsSecurityVersionResolver("3.2.0").DetermineSecurityModel());
+    }
 
-    public static void ShouldReturnV6ForOdsMuchGreaterThanV6() => new OdsSecurityVersionResolver(
-        new StubValidApi("10.1"), "").DetermineSecurityModel().ShouldBe(EdFiOdsSecurityModelCompatibility.Six);
+    [Test]
+    public static void ShouldThrowExceptionForOdsV51()
+    {
+        Should.Throw<Exception>(() => new OdsSecurityVersionResolver("5.1").DetermineSecurityModel());
+    }
 
+    [Test]
+    public static void ShouldThrowExceptionForOdsMuchGreaterThanV6()
+    {
+        Should.Throw<Exception>(() => new OdsSecurityVersionResolver("10.1").DetermineSecurityModel());
+    }
+
+    [Test]
     public static void ShouldThrowExceptionWhenValidApiReturnsNoVersion()
     {
-        Should.Throw<Exception>(
-            () => new OdsSecurityVersionResolver(new StubValidApi(null), "").DetermineSecurityModel());
-    }
-
-    public static void ShouldThrowMatchingExceptionWhenValidationFails()
-    {
-        Should.Throw<JsonException>(
-            () => new OdsSecurityVersionResolver(new StubInvalidApi(), "").DetermineSecurityModel());
-    }
-
-    private class StubValidApi : IOdsApiValidator
-    {
-        private readonly Version _version;
-
-        public StubValidApi(string version)
-        {
-            _version = version == null ? null : new Version(version);
-        }
-        public Task<OdsApiValidatorResult> Validate(string apiServerUrl)
-            => Task.FromResult(new OdsApiValidatorResult { IsValidOdsApi = true, Version = _version, });
-    }
-
-    private class StubInvalidApi : IOdsApiValidator
-    {
-        public Task<OdsApiValidatorResult> Validate(string apiServerUrl)
-            => Task.FromResult(new OdsApiValidatorResult { IsValidOdsApi = false, Exception = new JsonException(), });
+        Should.Throw<Exception>(() => new OdsSecurityVersionResolver(string.Empty).DetermineSecurityModel());
     }
 }

@@ -65,11 +65,8 @@ public static class WebApplicationBuilderExtensions
         //Add service to identify ODS Version
         webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
         {
-            var apiServerUrl = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:ProductionApiUrl");
-            var using53Cqe = webApplicationBuilder.Configuration.GetValue<bool>("AppSettings:Using53Cqe");
-
-            var validator = sp.GetRequiredService<IOdsApiValidator>();
-            return new OdsSecurityVersionResolver(validator, apiServerUrl, using53Cqe);
+            var odsApiVersion = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:OdsApiVersion");
+            return new OdsSecurityVersionResolver(odsApiVersion);
         });
 
         // Add services to the container.

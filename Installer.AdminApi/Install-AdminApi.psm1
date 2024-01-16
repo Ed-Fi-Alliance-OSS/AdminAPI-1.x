@@ -50,7 +50,7 @@ function Install-EdFiOdsAdminApi {
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
             OdsDatabaseName = "EdFi_Ods_Sandbox"
-            OdsApiUrl = "http://example-web-api.com/WebApi"
+            OdsApiVersion = "6.1"
         }
         PS c:\> Install-EdFiOdsAdminApi @parameters
 
@@ -60,7 +60,7 @@ function Install-EdFiOdsAdminApi {
     .EXAMPLE
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
-            OdsApiUrl = "http://example-web-api.com/WebApi"
+            OdsApiVersion = "6.1"
             AdminDbConnectionInfo = @{
                 Engine="SqlServer"
                 Server="edfi-auth.my-sql-server.example"
@@ -112,7 +112,7 @@ function Install-EdFiOdsAdminApi {
         PS c:\> $parameters = @{
             ToolsPath = "C:/temp/tools"
             DbConnectionInfo = $dbConnectionInfo
-            OdsApiUrl = "http://example-web-api.com/WebApi"
+            OdsApiVersion = "6.1"
             AdminApiFeatures = @{
                 ApiMode="yearspecific"
             }
@@ -165,10 +165,11 @@ function Install-EdFiOdsAdminApi {
         [string]
         $CertThumbprint,
 
-        # Full URL to the Ed-Fi ODS / API version endpoint.
-        [string]
+        # ODS / API version. Valid values are 5.3, 5.3-cqe, 6.0, 6.1."
         [Parameter(Mandatory=$true)]
-        $OdsApiUrl,
+        [ValidateSet('5.3', '5.3-cqe', '6.0', '6.1')]
+        [string]
+        $OdsApiVersion,
 
         # Install Credentials: User
         [string]
@@ -271,7 +272,7 @@ function Install-EdFiOdsAdminApi {
         WebSitePort = $WebsitePort
         CertThumbprint = $CertThumbprint
         WebApplicationName = $WebApplicationName
-        OdsApiUrl = $OdsApiUrl
+        OdsApiVersion = $OdsApiVersion
         DatabaseInstallCredentials = @{
             DatabaseUser = $InstallCredentialsUser
             DatabasePassword = $InstallCredentialsPassword
@@ -373,6 +374,12 @@ function Update-EdFiOdsAdminApi {
         [string]
         $CertThumbprint,
 
+        # ODS / API version. Valid values are 5.3, 5.3-cqe, 6.0, 6.1."
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('5.3', '5.3-cqe', '6.0', '6.1')]
+        [string]
+        $OdsApiVersion,
+
         # Install Credentials: User
         [Parameter(ParameterSetName="InstallCredentials")]
         [string]
@@ -427,6 +434,7 @@ function Update-EdFiOdsAdminApi {
         NoDuration = $NoDuration
         ApplicationInstallType = "Upgrade"
         AdminDbConnectionInfo = $AdminDbConnectionInfo
+        OdsApiVersion = $OdsApiVersion
     }
 
     $elapsed = Use-StopWatch {
@@ -781,6 +789,8 @@ function Invoke-TransferAppsettings {
         $newSettings.Authentication.SigningKey = $oldSettings.Authentication.SigningKey
         $newSettings.Authentication.AllowRegistration = $oldSettings.Authentication.AllowRegistration
 
+        $newSettings.AppSettings.OdsApiVersion = $Config.OdsApiVersion
+
         $EmptyHashTable=@{}
         $mergedSettings = Merge-Hashtables $newSettings, $EmptyHashTable
         New-JsonFile $newSettingsFile $mergedSettings -Overwrite
@@ -961,7 +971,7 @@ function Invoke-TransformAppSettings {
     Invoke-Task -Name ($MyInvocation.MyCommand.Name) -Task {
         $settingsFile = Join-Path $Config.WebConfigLocation "appsettings.json"
         $settings = Get-Content $settingsFile | ConvertFrom-Json | ConvertTo-Hashtable
-        $settings.AppSettings.ProductionApiUrl = $Config.OdsApiUrl
+        $settings.AppSettings.OdsApiVersion = $Config.OdsApiVersion
         $settings.AppSettings.DatabaseEngine = $config.engine
 
         if ($Config.AdminApiFeatures) {

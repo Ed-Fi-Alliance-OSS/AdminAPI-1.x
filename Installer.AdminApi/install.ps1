@@ -45,7 +45,7 @@ Configure Admin Api to manage an ODS API with url "https://localhost:54746"
     $p = @{
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        OdsApiUrl = "https://localhost:54746"
+        OdsApiVersion = "6.1"
         PackageVersion = '1.1.0'
     }
 
@@ -59,7 +59,7 @@ Deploy Admin Api for use with a "District Specific" ODS API
     $p = @{
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        OdsApiUrl = "http://web-api.example.com/WebApi"
+        OdsApiVersion = "6.1"
         PackageVersion = '1.1.0'
         AdminApiFeatures = $adminApiFeatures
     }
@@ -86,15 +86,15 @@ $adminApiSource = "$packageSource/AdminApi"
 $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
-    OdsApiUrl = ""
+    OdsApiVersion = ""
     PackageVersion = '1.3.1.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
     AdminApiFeatures = $adminApiFeatures
 }
 
-if ([string]::IsNullOrWhiteSpace($p.OdsApiUrl)) {
-    Write-Error "ODS API URL has not been configured. Edit install.ps1 to pass in a valid url for the ODS API."
+if ([string]::IsNullOrWhiteSpace($p.OdsApiVersion)) {
+    Write-Error "ODS API Version has not been configured. Edit install.ps1 to pass in a valid version number for the ODS API. Valid versions are 5.3, 5.3-cqe, 6.0 and 6.1"
 }
 elseif ([string]::IsNullOrWhiteSpace($p.AuthenticationSettings.Authority) -or [string]::IsNullOrWhiteSpace($p.AuthenticationSettings.IssuerUrl) -or [string]::IsNullOrWhiteSpace($p.AuthenticationSettings.SigningKey) -or $p.AuthenticationSettings.AllowRegistration -isnot [bool]) {
     Write-Error "Authentication Settings have not been configured correctly. Edit install.ps1 to pass in valid authentication settings for Admin Api."

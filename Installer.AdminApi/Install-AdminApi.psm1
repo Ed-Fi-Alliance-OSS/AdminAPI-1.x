@@ -165,7 +165,7 @@ function Install-EdFiOdsAdminApi {
         [string]
         $CertThumbprint,
 
-        # ODS / API version. Valid values are 5.3, 5.3-cqe, 6.0, 6.1. Default: "6.1"
+        # ODS / API version. Valid values are 5.3, 5.3-cqe, 6.0, 6.1."
         [Parameter(Mandatory=$true)]
         [ValidateSet('5.3', '5.3-cqe', '6.0', '6.1')]
         [string]
@@ -374,6 +374,12 @@ function Update-EdFiOdsAdminApi {
         [string]
         $CertThumbprint,
 
+        # ODS / API version. Valid values are 5.3, 5.3-cqe, 6.0, 6.1."
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('5.3', '5.3-cqe', '6.0', '6.1')]
+        [string]
+        $OdsApiVersion,
+
         # Install Credentials: User
         [Parameter(ParameterSetName="InstallCredentials")]
         [string]
@@ -428,6 +434,7 @@ function Update-EdFiOdsAdminApi {
         NoDuration = $NoDuration
         ApplicationInstallType = "Upgrade"
         AdminDbConnectionInfo = $AdminDbConnectionInfo
+        OdsApiVersion = $OdsApiVersion
     }
 
     $elapsed = Use-StopWatch {
@@ -781,6 +788,8 @@ function Invoke-TransferAppsettings {
         $newSettings.Authentication.IssuerUrl = $oldSettings.Authentication.IssuerUrl
         $newSettings.Authentication.SigningKey = $oldSettings.Authentication.SigningKey
         $newSettings.Authentication.AllowRegistration = $oldSettings.Authentication.AllowRegistration
+
+        $newSettings.AppSettings.OdsApiVersion = $Config.OdsApiVersion
 
         $EmptyHashTable=@{}
         $mergedSettings = Merge-Hashtables $newSettings, $EmptyHashTable

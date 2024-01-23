@@ -12,7 +12,7 @@ namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 public class ResourceClaimValidator
 {
     private static List<string>? _duplicateResources;
-    private EdFiOdsSecurityModelCompatibility _odsApiVersion;
+    private readonly EdFiOdsSecurityModelCompatibility _odsApiVersion;
     public ResourceClaimValidator(IOdsSecurityModelVersionResolver resolver)
     {
         _duplicateResources = new List<string>();

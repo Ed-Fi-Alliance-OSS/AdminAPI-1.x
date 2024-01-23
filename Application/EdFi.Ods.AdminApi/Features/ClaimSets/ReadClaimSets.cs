@@ -6,9 +6,9 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
+using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
@@ -30,12 +30,11 @@ public class ReadClaimSets : IFeature
 
     internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper)
     {
-        var claimSets = getClaimSetsQuery.Execute().Where(x => !Constants.SystemReservedClaimSets.Contains(x.Name)).ToList();
+        var claimSets = getClaimSetsQuery.Execute().ToList();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {
-            claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);
-            claimSet.IsSystemReserved = Constants.DefaultClaimSets.Contains(claimSet.Name);
+            claimSet.ApplicationsCount = getApplications.ExecuteCount(claimSet.Id);           
         }
         return Task.FromResult(AdminApiResponse<List<ClaimSetModel>>.Ok(model));
     }

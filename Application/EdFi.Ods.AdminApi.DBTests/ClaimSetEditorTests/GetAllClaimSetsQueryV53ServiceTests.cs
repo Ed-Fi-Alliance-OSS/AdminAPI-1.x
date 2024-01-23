@@ -5,17 +5,19 @@
 
 using System;
 using System.Linq;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Security.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using NUnit.Framework;
 using Shouldly;
 
-namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
+using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+
+namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetAllClaimSetsQueryTests : SecurityDataTestBase
+public class GetAllClaimSetsQueryV53ServiceTests : SecurityData53TestBase
 {
-    public GetAllClaimSetsQueryTests()
+    public GetAllClaimSetsQueryV53ServiceTests()
     {
         SeedSecurityContextOnFixtureSetup = true;
     }
@@ -35,7 +37,7 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
 
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQuery(securityContext);
+            var query = new GetAllClaimSetsQueryV53Service(securityContext);
             return query.Execute().Select(x => x.Name).ToArray();
         });
 

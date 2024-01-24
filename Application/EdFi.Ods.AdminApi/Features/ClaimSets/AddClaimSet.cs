@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
+using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using FluentValidation;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;

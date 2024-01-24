@@ -55,7 +55,8 @@ public class AdminApiMappingProfile : Profile
 
         CreateMap<ClaimSetEditor.ClaimSet, ClaimSetModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name));
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.IsSystemReserved, opt => opt.MapFrom(src => !src.IsEditable));
 
         CreateMap<ClaimSetEditor.ResourceClaim, ResourceClaimModel>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))

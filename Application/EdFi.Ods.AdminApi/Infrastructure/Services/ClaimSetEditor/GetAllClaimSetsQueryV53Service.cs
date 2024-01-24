@@ -3,23 +3,16 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
-using EdFi.Security.DataAccess.Contexts;
+using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using ClaimSet = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 
-public interface IGetAllClaimSetsQuery
-{
-    IReadOnlyList<ClaimSet> Execute();
-}
-
-public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
+public class GetAllClaimSetsQueryV53Service
 {
     private readonly ISecurityContext _securityContext;
 
-    public GetAllClaimSetsQuery(ISecurityContext securityContext)
+    public GetAllClaimSetsQueryV53Service(ISecurityContext securityContext)
     {
         _securityContext = securityContext;
     }
@@ -30,7 +23,9 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
             .Select(x => new ClaimSet
             {
                 Id = x.ClaimSetId,
-                Name = x.ClaimSetName
+                Name = x.ClaimSetName,
+                IsEditable = !Constants.DefaultClaimSets.Contains(x.ClaimSetName) &&
+                !Constants.SystemReservedClaimSets.Contains(x.ClaimSetName)
             })
             .Distinct()
             .OrderBy(x => x.Name)

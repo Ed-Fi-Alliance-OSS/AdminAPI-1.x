@@ -6,16 +6,6 @@
 name: On Pull Request
 
 on:
-  push:
-    branches:
-      # Required for proper functioning of CodeQL, and its a good idea to run
-      # again after the merge has occurred.
-      - main
-      - "*-hotfix"
-    paths:
-      - "**/*.cs"
-      - "**/*.csproj"
-      - ".github/**/*.yml"
   pull_request:
     branches:
       - main

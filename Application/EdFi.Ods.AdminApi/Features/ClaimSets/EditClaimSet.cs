@@ -100,7 +100,8 @@ public class EditClaimSet : IFeature
         public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
             IGetAllClaimSetsQuery getAllClaimSetsQuery,
             IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery,
+            IOdsSecurityModelVersionResolver resolver)
         {
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
@@ -129,7 +130,7 @@ public class EditClaimSet : IFeature
 
             RuleFor(m => m).Custom((claimSet, context) =>
             {
-                var resourceClaimValidator = new ResourceClaimValidator();
+                var resourceClaimValidator = new ResourceClaimValidator(resolver);
 
                 if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
                 {

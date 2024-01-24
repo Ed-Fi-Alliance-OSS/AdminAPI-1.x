@@ -5,7 +5,6 @@
 
 using System.Data.Entity;
 using AutoMapper;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using SecurityResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
@@ -174,18 +173,11 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         }
                         else
                         {
-                            if (defaultStrategies != null)
+                            var mappedStrategies = defaultStrategies.Select(x => _mapper.Map<AuthorizationStrategy>(x));                           
+                            actions.Add(new ClaimSetResourceClaimActionAuthStrategies()
                             {
-                                var mappedStrategies = defaultStrategies.Select(x =>
-                                {
-                                var value = _mapper.Map<AuthorizationStrategy>(x);
-                                return value;
-                                });
-                                actions.Add(new ClaimSetResourceClaimActionAuthStrategies()
-                                {
-                                    AuthorizationStrategies = mappedStrategies.ToArray()
-                                });
-                            }
+                                AuthorizationStrategies = mappedStrategies.ToArray()
+                            });
                         }
 
                         return actions;

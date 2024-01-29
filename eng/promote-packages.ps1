@@ -31,10 +31,10 @@ function Get-PackagesFromAzure {
     $uri = "$FeedsURL/packages?api-version=6.0-preview.1"
     $result = @{ }
 
-    foreach ($packageName in $Packages) {
+    foreach ($packageName in $packages) {
         $packageQueryUrl = "$uri&packageNameQuery=$packageName"
         $packagesResponse = (Invoke-WebRequest -Uri $packageQueryUrl -UseBasicParsing).Content | ConvertFrom-Json
-        $latestPackageVersion = ($packagesResponse.value.versions | Where-Object { $_.isLatest -eq $True } | Select-Object -ExpandProperty version)
+        $latestPackageVersion = ($packagesResponse.value.versions | Where-Object { $_.version -eq $version } | Select-Object -ExpandProperty version)
 
         Write-Output "Package Name: $packageName"
         Write-Output "Package Version: $latestPackageVersion"
@@ -49,18 +49,9 @@ function Get-PackagesFromAzure {
 
 $ErrorActionPreference = 'Stop'
 
-# example: "AdminApi-v2.5.1"
-# output: "AdminApi"
-$packageName = ($ReleaseRef -split "-v")[0]
-
-switch ($packageName) {
-    "AdminApi" {
-        $packages = @( "EdFi.Suite3.ODS.AdminApi" )
-    }
-    "AdminApi.Installer" {
-        $packages = @( "EdFi.Suite3.Installer.AdminApi" )
-    }
-}
+$packages = @( "EdFi.Suite3.ODS.AdminApi" )
+# v2.1.1 becomes 2.1.1
+$version = $ReleaseRef.substring(1)
 
 $body = @{
     data      = @{

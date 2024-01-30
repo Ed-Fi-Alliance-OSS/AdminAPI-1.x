@@ -45,7 +45,7 @@ Configure Admin Api with Single tenant
     $p = @{
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        PackageVersion = '2.1.0.0'
+        PackageVersion = '2.1.1.0'
     }
 
 Configure Admin Api with Multi tenant
@@ -53,7 +53,7 @@ Configure Admin Api with Multi tenant
         IsMultiTenant = $true
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        PackageVersion = '2.1.0.0'
+        PackageVersion = '2.1.1.0'
         Tenants = @{
             Tenant1 = @{
                 AdminDatabaseName = "EdFi_Admin_Tenant1"
@@ -84,7 +84,7 @@ $adminApiSource = "$packageSource/AdminApi"
 $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
-    PackageVersion = '2.1.0.0'
+    PackageVersion = '2.1.1.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
 }

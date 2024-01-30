@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="7.0.6" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="dbup-core" Version="4.5.0" />
@@ -19,8 +19,8 @@
     <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
 
     <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.3.43" />
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.0.12" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.1.19" />
+    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="7.1.21" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="7.1.16" />
     <PackageReference Include="FluentValidation" Version="10.4.0" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.16" />

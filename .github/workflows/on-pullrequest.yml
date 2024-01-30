@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: csharp-tests
-          path: TestResults/unit-tests.trx
+          path: "**/*.trx"
           retention-days: 5
 
       - name: Dependency Review ("Dependabot on PR")

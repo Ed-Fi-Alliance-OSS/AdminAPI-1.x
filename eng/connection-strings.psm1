@@ -66,10 +66,10 @@ function Build-SqlServerConnectionString {
     }
 
     if ($UseIntegratedSecurity) {
-        return $connectionString + "Integrated Security=true"
+        return $connectionString + "Integrated Security=true;Encrypt=False;"
     }
 
-    return $connectionString + "User Id=$Username;Password=$Password"
+    return $connectionString + "User Id=$Username;Password=$Password;Encrypt=False;"
 }
 
 function New-ConnectionString {

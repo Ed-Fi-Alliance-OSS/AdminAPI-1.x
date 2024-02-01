@@ -136,7 +136,8 @@ function Invoke-DbDeploy {
         "-d", $DatabaseType,
         "-e", $DatabaseEngine,
         "-c", $ConnectionString,
-        "-p", ($paths -Join ",")
+        "-p", ($paths -Join ","),
+        "--standardVersion", "5.0.0"
     )
 
     Write-Host "Executing: $DbDeployExe $(Get-MaskedConnectionString $arguments)" -ForegroundColor Magenta
@@ -548,7 +549,7 @@ function Invoke-PrepareDatabasesForTesting {
     param(
         [string]
         [Parameter(Mandatory=$true)]
-        [ValidateSet("EdFi.RestApi.Databases.EFA", "EdFi.Suite3.RestApi.Databases")]
+        [ValidateSet("EdFi.RestApi.Databases.EFA", "EdFi.Suite3.RestApi.Databases.Standard.5.0.0")]
         $RestApiPackageName,
 
         [string]
@@ -621,10 +622,6 @@ function Invoke-PrepareDatabasesForTesting {
         Username = $DbUsername
         Password = $DbPassword
     }
-
-    Write-Host "Installing the ODS database to $($installArguments.DatabaseName)" -ForegroundColor Cyan
-    Remove-SqlServerDatabase @removeArguments
-    Install-EdFiODSDatabase @installArguments
 
     $installArguments.DatabaseName = "EdFi_Security_Test"
     $removeArguments.DatabaseName = "EdFi_Security_Test"

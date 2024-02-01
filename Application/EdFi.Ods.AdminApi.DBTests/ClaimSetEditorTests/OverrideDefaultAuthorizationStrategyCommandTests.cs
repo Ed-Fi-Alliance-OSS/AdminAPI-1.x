@@ -114,15 +114,9 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
     public void ShouldOverrideAuthorizationStrategiesForSpecificResourcesOnClaimSetDefaultAuth()
     {
         InitializeData(out var testClaimSet, out var appAuthorizationStrategies, out var testResource1ToEdit, out var testResource2ToNotEdit);
-
-        var overrides = new List<int>();
-        if (appAuthorizationStrategies != null)
-        {
-            foreach (var appAuthorizationStrategy in appAuthorizationStrategies)
-            {
-                overrides.Add(appAuthorizationStrategy.AuthorizationStrategyId);
-            }
-        }
+        
+        var overrides = appAuthorizationStrategies.Select(a => a.AuthorizationStrategyId).ToList();
+        
         var resourceClaimActionParent = TestContext.ResourceClaimActions.First(rca => rca.ResourceClaimId == testResource1ToEdit.ResourceClaimId && rca.Action.ActionName == "Create");
 
         var resourceClaimActionAuthStrategiesParent = TestContext.ResourceClaimActionAuthorizationStrategies.First(rcaa => rcaa.ResourceClaimActionId == resourceClaimActionParent.ResourceClaimActionId);

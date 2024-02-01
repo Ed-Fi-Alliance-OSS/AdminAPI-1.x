@@ -117,15 +117,10 @@ $Env:MSBUILDDISABLENODEREUSE = "1"
 $solutionRoot = "$PSScriptRoot/Application"
 $dockerRoot = "$PSScriptRoot/Docker"
 
-$supportedApiVersions = @(
+$supportedApiVersions = @(   
     @{
-        OdsPackageName = "EdFi.RestApi.Databases.EFA"
-        OdsVersion = "3.4.0"
-        Prerelease = $false
-    },
-    @{
-        OdsPackageName = "EdFi.Suite3.RestApi.Databases"
-        OdsVersion = "5.3.659"
+        OdsPackageName = "EdFi.Suite3.RestApi.Databases.Standard.5.0.0"
+        OdsVersion = "7.1.1192"
         Prerelease = $false
     }
 )

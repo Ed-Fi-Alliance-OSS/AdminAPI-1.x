@@ -26,15 +26,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             var securityModel = _resolver.DetermineSecurityModel();
 
             return securityModel switch {
-                EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => ModelThreeThroughFive(),
+                EdFiOdsSecurityModelCompatibility.ThreeThroughFive => ModelThreeThroughFive(),
+                EdFiOdsSecurityModelCompatibility.FiveThreeCqe => ModelThreeThroughFive(true),
                 EdFiOdsSecurityModelCompatibility.Six => ModelSix(),
                 _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel)
             };
 
-            IList<ResourceClaim> ModelThreeThroughFive() {
-                parentResources = _v53Service.GetParentResources(securityContextClaimSetId);
-                var childResources = _v53Service.GetChildResources(securityContextClaimSetId);
-                GetResourcesByClaimSetIdQueryV53Service.AddChildResourcesToParents(childResources, parentResources);
+            IList<ResourceClaim> ModelThreeThroughFive(bool IsFiveThreeCqe = false) {
+                parentResources = _v53Service.GetParentResources(securityContextClaimSetId, IsFiveThreeCqe);
+                var childResources = _v53Service.GetChildResources(securityContextClaimSetId, IsFiveThreeCqe);
+                _v53Service.AddChildResourcesToParents(childResources, parentResources);
 
                 return parentResources;
             }

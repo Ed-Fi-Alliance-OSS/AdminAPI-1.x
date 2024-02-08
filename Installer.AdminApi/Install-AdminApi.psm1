@@ -251,7 +251,12 @@ function Install-EdFiOdsAdminApi {
 
         # Database Config
         [switch]
-        $NoDuration
+        $NoDuration,
+        
+        # Set Encrypt=false for all connection strings
+        # Not recomended for production environment.
+        [switch]
+        $UnEncryptedConnection
     )
 
     Write-InvocationInfo $MyInvocation
@@ -288,6 +293,7 @@ function Install-EdFiOdsAdminApi {
         AuthenticationSettings = $AuthenticationSettings
         AdminApiFeatures = $AdminApiFeatures
         NoDuration = $NoDuration
+        UnEncryptedConnection = $UnEncryptedConnection
     }
 
     $elapsed = Use-StopWatch {
@@ -1062,8 +1068,12 @@ function Invoke-TransformConnectionStrings {
 
         Write-Host "Setting database connections in $($Config.WebConfigLocation)"
         $adminconnString = New-ConnectionString -ConnectionInfo $Config.AdminDbConnectionInfo -SspiUsername $Config.WebApplicationName
-        $odsconnString = New-ConnectionString -ConnectionInfo $Config.OdsDbConnectionInfo -SspiUsername $Config.WebApplicationName
         $securityConnString = New-ConnectionString -ConnectionInfo $Config.SecurityDbConnectionInfo -SspiUsername $Config.WebApplicationName
+
+        if ($Config.UnEncryptedConnection) {
+            $adminconnString += ";Encrypt=false"
+            $securityConnString += ";Encrypt=false"
+        }
 
         $connectionstrings = @{
             ConnectionStrings = @{

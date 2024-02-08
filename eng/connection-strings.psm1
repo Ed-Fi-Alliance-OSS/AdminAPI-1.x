@@ -29,10 +29,10 @@ function Build-PostgresConnectionString {
     $connectionString = "host=$Server;port=$Port;database=$DatabaseName;"
 
     if ($UseIntegratedSecurity) {
-        return $connectionString + "Integrated Security=true;Encrypt=False;"
+        return $connectionString + "Integrated Security=true"
     }
 
-    return $connectionString + "User Id=$Username;Password=$Password;Encrypt=False;"
+    return $connectionString + "User Id=$Username;Password=$Password"
 }
 
 function Build-SqlServerConnectionString {

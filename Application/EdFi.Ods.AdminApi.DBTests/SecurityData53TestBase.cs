@@ -2,16 +2,17 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.SecurityCompatiblity53.DataAccess.Models;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
 using NUnit.Framework;
-using Action = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
+using Action = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
 using ClaimSetEditorTypes = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 

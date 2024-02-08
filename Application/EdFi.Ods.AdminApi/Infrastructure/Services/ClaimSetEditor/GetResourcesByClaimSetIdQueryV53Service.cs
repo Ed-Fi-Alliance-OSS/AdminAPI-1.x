@@ -2,16 +2,16 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
 using AutoMapper;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor.Extensions;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.SecurityCompatiblity53.DataAccess.Models;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
 using System.Data.Entity;
-using SecurityAuthorizationStrategy = EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
-using SecurityResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
+using SecurityAuthorizationStrategy = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
+using SecurityResourceClaim = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {

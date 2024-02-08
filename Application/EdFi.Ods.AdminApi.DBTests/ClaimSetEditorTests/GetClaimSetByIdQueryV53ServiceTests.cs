@@ -2,6 +2,7 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
 using System;
 using NUnit.Framework;
@@ -9,10 +10,10 @@ using Shouldly;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using System.Net;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+using ClaimSet = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using Application = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 

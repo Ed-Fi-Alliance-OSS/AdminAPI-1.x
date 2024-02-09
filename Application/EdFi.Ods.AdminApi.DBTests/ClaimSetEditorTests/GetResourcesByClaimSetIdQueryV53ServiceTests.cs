@@ -2,17 +2,18 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using EdFi.SecurityCompatiblity53.DataAccess.Models;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
 
-using Application = EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
-using ClaimSet = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using ResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
-using Action = EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
+using Application = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+using ClaimSet = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using ResourceClaim = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
+using Action = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;

@@ -2,11 +2,10 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
-using System.Linq;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-
-using ClaimSetEntity = EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using ClaimSetEntity = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using ISecurityContext = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 

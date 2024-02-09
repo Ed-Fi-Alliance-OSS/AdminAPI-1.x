@@ -2,16 +2,16 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
 using AutoMapper;
-using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor.Extensions;
-using EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.SecurityCompatiblity53.DataAccess.Models;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
 using System.Data.Entity;
-using SecurityAuthorizationStrategy = EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
-using SecurityResourceClaim = EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
+using SecurityAuthorizationStrategy = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
+using SecurityResourceClaim = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
@@ -19,16 +19,14 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
     {
         private readonly ISecurityContext _securityContext;
         private readonly IMapper _mapper;
-        private readonly bool _readChangesActionSupported;
 
         public GetResourcesByClaimSetIdQueryV53Service(ISecurityContext securityContext, IMapper mapper)
         {
             _securityContext = securityContext;
             _mapper = mapper;
-            _readChangesActionSupported = securityContext.Actions.Where(x => x.ActionName.Equals(Action.ReadChanges.Value)).Any();
         }
 
-        internal static void AddChildResourcesToParents(IReadOnlyList<ResourceClaim> childResources, IList<ResourceClaim> parentResources)
+        internal void AddChildResourcesToParents(IReadOnlyList<ResourceClaim> childResources, IList<ResourceClaim> parentResources)
         {
             foreach (var childResource in childResources)
             {
@@ -42,7 +40,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             }
         }
 
-        internal IList<ResourceClaim> GetParentResources(int claimSetId)
+        internal IList<ResourceClaim> GetParentResources(int claimSetId, bool IsFiveThreeCqe)
         {
             var dbParentResources = _securityContext.ClaimSetResourceClaims
                 .Include(x => x.ResourceClaim)
@@ -52,8 +50,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 .Where(x => x.ClaimSet.ClaimSetId == claimSetId
                             && x.ResourceClaim.ParentResourceClaimId == null).ToList();
 
-            var defaultAuthStrategies = GetDefaultAuthStrategies(dbParentResources.Select(x => x.ResourceClaim).ToList());
-            var authStrategyOverrides = GetAuthStrategyOverrides(dbParentResources.ToList());
+            var defaultAuthStrategies = GetDefaultAuthStrategies(dbParentResources.Select(x => x.ResourceClaim).ToList(), IsFiveThreeCqe);
+            var authStrategyOverrides = GetAuthStrategyOverrides(dbParentResources.ToList(), IsFiveThreeCqe);
 
             var parentResources = dbParentResources.GroupBy(x => x.ResourceClaim).Select(x => new ResourceClaim
             {
@@ -73,7 +71,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             return parentResources;
         }
 
-        private Dictionary<int, ClaimSetResourceClaimActionAuthStrategies[]> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims)
+        private Dictionary<int, ClaimSetResourceClaimActionAuthStrategies[]> GetDefaultAuthStrategies(IReadOnlyCollection<SecurityResourceClaim> resourceClaims, bool IsFiveThreeCqe)
         {
             var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies[]>();
 
@@ -110,7 +108,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                                 x.Action.ActionName == Action.Delete.Value)?.AuthorizationStrategy;
                     AddStrategyToParentResource(deleteDefaultStrategy);
 
-                    if (_readChangesActionSupported)
+                    if (IsFiveThreeCqe)
                     {
                         var readChangesDefaultStrategy = defaultAuthStrategiesForParents
                             .SingleOrDefault(x =>
@@ -150,7 +148,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         x.Action.ActionName == Action.Delete.Value)?.AuthorizationStrategy;
                     actions = AddStrategyToChildResource(deleteDefaultStrategy, Action.Delete);
 
-                    if (_readChangesActionSupported)
+                    if (IsFiveThreeCqe)
                     {
                         var readChangesDefaultStrategy = defaultAuthStrategiesForChildren.SingleOrDefault(x =>
                         x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaimId &&
@@ -194,7 +192,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         }
 
 
-        internal Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]> GetAuthStrategyOverrides(List<ClaimSetResourceClaim> resourceClaims)
+        internal Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]> GetAuthStrategyOverrides(List<ClaimSetResourceClaim> resourceClaims, bool IsFiveThreeCqe)
         {
             var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]>();
             resourceClaims =
@@ -239,7 +237,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 else
                 {
                     var arrayLength = 4;
-                    if (_readChangesActionSupported)
+                    if (IsFiveThreeCqe)
                     {
                         arrayLength = 5;
                     }
@@ -250,7 +248,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             return resultDictionary;
         }
 
-        internal IReadOnlyList<ResourceClaim> GetChildResources(int claimSetId)
+        internal IReadOnlyList<ResourceClaim> GetChildResources(int claimSetId, bool IsFiveThreeCqe)
         {
             var dbChildResources =
                 _securityContext.ClaimSetResourceClaims
@@ -259,8 +257,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 .Include(x => x.AuthorizationStrategyOverride)
                 .Where(x => x.ClaimSet.ClaimSetId == claimSetId
                             && x.ResourceClaim.ParentResourceClaimId != null).ToList();
-            var defaultAuthStrategies = GetDefaultAuthStrategies(dbChildResources.Select(x => x.ResourceClaim).ToList());
-            var authStrategyOverrides = GetAuthStrategyOverrides(dbChildResources.ToList());
+            var defaultAuthStrategies = GetDefaultAuthStrategies(dbChildResources.Select(x => x.ResourceClaim).ToList(), IsFiveThreeCqe);
+            var authStrategyOverrides = GetAuthStrategyOverrides(dbChildResources.ToList(), IsFiveThreeCqe);
 
             var childResources = dbChildResources.GroupBy(x => x.ResourceClaim)
                  .Select(x => new ResourceClaim

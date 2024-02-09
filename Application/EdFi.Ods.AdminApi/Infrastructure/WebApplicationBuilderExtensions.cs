@@ -2,6 +2,7 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+extern alias Compatability;
 
 using System.Data.Entity;
 using System.Reflection;
@@ -188,11 +189,11 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
-            webApplicationBuilder.Services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
+            webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
+                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new PostgresSecurityContext(securityConnectionString));
+                sp => new EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
                 sp => new PostgresUsersContext(adminConnectionString));
@@ -211,8 +212,8 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
-            webApplicationBuilder.Services.AddScoped<EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
+            webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
+                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new SqlServerSecurityContext(securityConnectionString));

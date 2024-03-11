@@ -95,7 +95,7 @@ public abstract class PlatformSecurityContextTestBase53
 
     protected void UsersTransaction(Action<IUsersContext> action)
     {
-        using var usersContext = new SqlServerUsersContext(Testing.AdminConnectionString);
+        using var usersContext = new SqlServerUsersContext(Testing.GetDbContextOptions(Testing.AdminConnectionString));
         using var transaction = usersContext.Database.BeginTransaction();
         action(usersContext);
         TestContext.SaveChanges();

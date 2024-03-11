@@ -62,3 +62,4 @@ credentials-*.xml
 libs/
 libs.codegen/
 
+Docker/Application

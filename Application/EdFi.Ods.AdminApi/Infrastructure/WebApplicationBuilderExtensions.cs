@@ -7,7 +7,6 @@ extern alias Compatability;
 using System.Data.Entity;
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
-using EdFi.Admin.DataAccess.DbConfigurations;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
@@ -180,8 +179,6 @@ public static class WebApplicationBuilderExtensions
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
         {
-            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.Postgres));
-
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>
                 {
@@ -193,18 +190,16 @@ public static class WebApplicationBuilderExtensions
                 sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new EdFi.Security.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
+                sp => new PostgresSecurityContext(SecurityDbContextOptions(DatabaseEngineEnum.PostgreSql)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new PostgresUsersContext(adminConnectionString));
+                sp => new PostgresUsersContext(AdminDbContextOptions(DatabaseEngineEnum.PostgreSql)));
 
             return (adminConnectionString, false);
         }
 
         if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
         {
-            DbConfiguration.SetConfiguration(new DatabaseEngineDbConfiguration(Common.Configuration.DatabaseEngine.SqlServer));
-
             webApplicationBuilder.Services.AddDbContext<AdminApiDbContext>(
                 options =>
                 {
@@ -216,15 +211,46 @@ public static class WebApplicationBuilderExtensions
                 sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
-                sp => new SqlServerSecurityContext(securityConnectionString));
+                sp => new SqlServerSecurityContext(SecurityDbContextOptions(DatabaseEngineEnum.SqlServer)));
 
             webApplicationBuilder.Services.AddScoped<IUsersContext>(
-                sp => new SqlServerUsersContext(adminConnectionString));
+                sp => new SqlServerUsersContext(AdminDbContextOptions(DatabaseEngineEnum.SqlServer)));
 
             return (adminConnectionString, true);
         }
 
         throw new Exception($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
+
+        DbContextOptions AdminDbContextOptions(string databaseEngine)
+        {
+            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
+            {
+                builder.UseNpgsql(adminConnectionString);
+                builder.UseLowerCaseNamingConvention();
+            }
+            else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
+            {
+                builder.UseSqlServer(adminConnectionString);
+            }
+            return builder.Options;
+        }
+
+        DbContextOptions SecurityDbContextOptions(string databaseEngine)
+        {
+            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.PostgreSql))
+            {
+                builder.UseNpgsql(securityConnectionString);
+                builder.UseLowerCaseNamingConvention();
+            }
+            else if (DatabaseEngineEnum.Parse(databaseEngine).Equals(DatabaseEngineEnum.SqlServer))
+            {
+                builder.UseSqlServer(securityConnectionString);
+            }
+
+            return builder.Options;
+        }
     }
 
     private enum HttpVerbOrder

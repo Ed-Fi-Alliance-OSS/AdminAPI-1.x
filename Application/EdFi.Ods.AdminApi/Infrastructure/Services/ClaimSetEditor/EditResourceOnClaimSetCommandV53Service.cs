@@ -4,9 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 extern alias Compatability;
 
-using System.Data.Entity;
 using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 using SecurityClaimSet = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 

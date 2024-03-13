@@ -5,11 +5,11 @@
 extern alias Compatability;
 
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Common.Utils.Extensions;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 

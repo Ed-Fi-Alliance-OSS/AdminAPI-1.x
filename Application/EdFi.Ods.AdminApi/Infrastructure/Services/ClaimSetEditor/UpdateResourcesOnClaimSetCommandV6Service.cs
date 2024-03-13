@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Security.DataAccess.Contexts;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor

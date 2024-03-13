@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 extern alias Compatability;
 
-using System.Data.Entity;
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
@@ -186,8 +185,12 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
+            var optionsBuilder = new DbContextOptionsBuilder();
+            optionsBuilder.UseNpgsql(securityConnectionString);
+            var context = new PostgresSecurityContext(optionsBuilder.Options);
+
             webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(securityConnectionString));
+                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(optionsBuilder.Options));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new PostgresSecurityContext(SecurityDbContextOptions(DatabaseEngineEnum.PostgreSql)));
@@ -207,8 +210,12 @@ public static class WebApplicationBuilderExtensions
                     options.UseOpenIddict<ApiApplication, ApiAuthorization, ApiScope, ApiToken, int>();
                 });
 
+            var optionsBuilder = new DbContextOptionsBuilder();
+            optionsBuilder.UseSqlServer(securityConnectionString);
+            var context = new SqlServerSecurityContext(optionsBuilder.Options);
+
             webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(securityConnectionString));
+                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(optionsBuilder.Options));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new SqlServerSecurityContext(SecurityDbContextOptions(DatabaseEngineEnum.SqlServer)));

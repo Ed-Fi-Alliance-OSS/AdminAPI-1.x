@@ -5,7 +5,7 @@
 
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 

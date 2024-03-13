@@ -8,7 +8,7 @@
 
 
 #tag sdk:8.0-alpine
-FROM mcr.microsoft.com/dotnet/sdk@sha256:e646d8a0fa589bcd970e0ebde394780398e8ae08fffeb36781753c51fc9e87b0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.202-alpine3.19-amd64@sha256:4baa826eb916ba267b246c3f7f55e9e076121b0037dab78f7ae75ba70149805c AS build
 WORKDIR /source
 
 COPY Application/NuGet.Config EdFi.Ods.AdminApi/
@@ -20,8 +20,7 @@ RUN dotnet restore && dotnet build -c Release
 FROM build AS publish
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
 
-#tag aspnet:8.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:95f27052830db1c7a00e55f098ebda507204757907919f506a468387f7d856a4
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:a531d9d123928514405b9da9ff28a3aa81bd6f7d7d8cfb6207b66c007e7b3075
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)

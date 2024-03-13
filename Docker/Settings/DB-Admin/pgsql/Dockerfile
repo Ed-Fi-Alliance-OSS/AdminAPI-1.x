@@ -14,7 +14,7 @@ ARG VERSION=latest
 
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
-RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0 && \
+RUN apk --no-cache add dos2unix=~7 unzip=~6 && \
     wget -nv -O /tmp/EdFi_AdminApi_Scripts.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \
     unzip /tmp/EdFi_AdminApi_Scripts.zip AdminApi/Artifacts/PgSql/Structure/Admin/* -d /tmp/AdminApiScripts/ && \
     cp -r /tmp/AdminApiScripts/AdminApi/Artifacts/PgSql/Structure/Admin/. /tmp/AdminApiScripts/PgSql/ && \

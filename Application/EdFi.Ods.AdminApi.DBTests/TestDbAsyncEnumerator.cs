@@ -4,17 +4,17 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EdFi.Ods.AdminApi.DBTests;
 
 //Classes to assist with mocking a DBSet -- see https://msdn.microsoft.com/en-us/library/dn314429.aspx
 
-internal class TestDbAsyncQueryProvider<TEntity> : IDbAsyncQueryProvider
+internal class TestDbAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 {
     private readonly IQueryProvider _inner;
 
@@ -52,9 +52,14 @@ internal class TestDbAsyncQueryProvider<TEntity> : IDbAsyncQueryProvider
     {
         return Task.FromResult(Execute<TResult>(expression));
     }
+
+    TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+    {
+        return Execute<TResult>(expression);
+    }
 }
 
-internal class TestDbAsyncEnumerable<T> : EnumerableQuery<T>, IDbAsyncEnumerable<T>, IQueryable<T>
+internal class TestDbAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
     public TestDbAsyncEnumerable(IEnumerable<T> enumerable)
         : base(enumerable)
@@ -64,12 +69,12 @@ internal class TestDbAsyncEnumerable<T> : EnumerableQuery<T>, IDbAsyncEnumerable
         : base(expression)
     { }
 
-    public IDbAsyncEnumerator<T> GetAsyncEnumerator()
+    public IAsyncEnumerator<T> GetAsyncEnumerator()
     {
         return new TestDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
     }
 
-    IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return GetAsyncEnumerator();
     }
@@ -80,7 +85,7 @@ internal class TestDbAsyncEnumerable<T> : EnumerableQuery<T>, IDbAsyncEnumerable
     }
 }
 
-internal class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
+internal class TestDbAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     private readonly IEnumerator<T> _inner;
 
@@ -94,18 +99,18 @@ internal class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
         _inner.Dispose();
     }
 
-    public Task<bool> MoveNextAsync(CancellationToken cancellationToken)
+    public ValueTask<bool> MoveNextAsync()
     {
-        return Task.FromResult(_inner.MoveNext());
+        return ValueTask.FromResult(_inner.MoveNext());
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        throw new System.NotImplementedException();
     }
 
     public T Current
     {
         get { return _inner.Current; }
-    }
-
-    object IDbAsyncEnumerator.Current
-    {
-        get { return Current; }
     }
 }

@@ -5,9 +5,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Threading;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace EdFi.Ods.AdminApi.DBTests
@@ -17,7 +17,8 @@ namespace EdFi.Ods.AdminApi.DBTests
         public static Mock<DbSet<T>> MockDbSet<T>(List<T> underlyingData) where T : class
         {
             var mockSet = new Mock<DbSet<T>>();
-            mockSet.ConfigureDbSetWithData(underlyingData);
+            var cancellationToken = CancellationToken.None;
+            mockSet.ConfigureDbSetWithData(underlyingData, cancellationToken);
 
             return mockSet;
         }
@@ -26,16 +27,17 @@ namespace EdFi.Ods.AdminApi.DBTests
         {
             var mockSet = new Mock<DbSet<T>>();
             var underlyingData = new List<T>();
+            var cancellationToken = CancellationToken.None;
 
-            ConfigureDbSetWithData(mockSet, underlyingData);
+            ConfigureDbSetWithData(mockSet, underlyingData, cancellationToken);
 
             return mockSet;
         }
 
-        public static Mock<DbSet<T>> ConfigureDbSetWithData<T>(this Mock<DbSet<T>> mockSet, List<T> underlyingData) where T : class
+        public static Mock<DbSet<T>> ConfigureDbSetWithData<T>(this Mock<DbSet<T>> mockSet, List<T> underlyingData, CancellationToken cancellationToken) where T : class
         {
-            mockSet.As<IDbAsyncEnumerable<T>>()
-                .Setup(m => m.GetAsyncEnumerator())
+            mockSet.As<IAsyncEnumerable<T>>()
+                .Setup(m => m.GetAsyncEnumerator(cancellationToken))
                 .Returns(() => new TestDbAsyncEnumerator<T>(underlyingData.GetEnumerator()));
 
             mockSet.As<IQueryable<T>>()

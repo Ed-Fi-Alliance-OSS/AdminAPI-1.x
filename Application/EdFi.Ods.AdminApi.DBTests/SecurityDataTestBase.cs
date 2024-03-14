@@ -89,11 +89,12 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
             if (action == null)
             {
-                TestContext.Actions.Add(new Action
+                action = new Action
                 {
                     ActionName = actionName,
                     ActionUri = $"http://ed-fi.org/odsapi/actions/{actionName}"
-                });
+                };
+                TestContext.Actions.Add(action);
             }
             return action;
         }
@@ -109,13 +110,14 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
             if (authorizationStrategy == null)
             {
-                TestContext.AuthorizationStrategies.Add(
+                authorizationStrategy =
                     new AuthorizationStrategy
                     {
                         DisplayName = displayName,
                         AuthorizationStrategyName = authorizationStrategyName,
                         Application = application
-                    });
+                    };
+                TestContext.AuthorizationStrategies.Add(authorizationStrategy);
             }
 
             return authorizationStrategy;
@@ -131,14 +133,15 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
             if (resourceClaim == null)
             {
-                TestContext.ResourceClaims.Add(new ResourceClaim
+                resourceClaim = new ResourceClaim
                 {
                     Application = application,
                     DisplayName = resourceName,
                     ResourceName = resourceName,
                     ClaimName = $"http://ed-fi.org/ods/identity/claims/domains/{resourceName}",
                     ParentResourceClaim = null
-                });
+                };
+                TestContext.ResourceClaims.Add(resourceClaim);
             }
             return resourceClaim;
         }

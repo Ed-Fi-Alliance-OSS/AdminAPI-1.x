@@ -34,7 +34,7 @@ public class AddApplicationCommand : IAddApplicationCommand
         var vendor = _usersContext.Vendors.Include(x => x.Users)
             .Single(v => v.VendorId == applicationModel.VendorId);
 
-        var odsInstance = _usersContext.OdsInstances.FirstOrDefault(x =>
+        var odsInstance = _usersContext.OdsInstances.AsEnumerable().FirstOrDefault(x =>
             x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
 
         var user = vendor.Users.FirstOrDefault();

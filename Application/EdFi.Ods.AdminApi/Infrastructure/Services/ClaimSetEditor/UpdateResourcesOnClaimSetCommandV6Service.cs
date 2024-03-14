@@ -26,7 +26,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             var resourceClaimsForClaimSet =
                 _context
                 .ClaimSetResourceClaimActions
-                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                .Include(x => x.AuthorizationStrategyOverrides).ThenInclude(x => x.AuthorizationStrategy)
                 .Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
             _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSet);
             _context.SaveChanges();

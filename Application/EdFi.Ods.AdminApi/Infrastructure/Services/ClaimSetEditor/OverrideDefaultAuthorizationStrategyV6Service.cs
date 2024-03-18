@@ -41,7 +41,7 @@ public class OverrideDefaultAuthorizationStrategyV6Service
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.Action)
                 .Include(x => x.ClaimSet)
-                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                .Include(x => x.AuthorizationStrategyOverrides).ThenInclude(x => x.AuthorizationStrategy)
                 .Where(
                     x => x.ResourceClaim.ResourceClaimId == parentResourceClaimId &&
                          x.ClaimSet.ClaimSetId == model.ClaimSetId)

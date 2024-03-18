@@ -6,7 +6,7 @@
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -21,7 +21,12 @@ public class GetApplicationByIdQuery
 
     public Application Execute(int applicationId)
     {
-        var application = _context.Applications.SingleOrDefault(app => app.ApplicationId == applicationId);
+        var application = _context.Applications
+            .Include(x => x.Vendor)
+            .Include(x => x.ApplicationEducationOrganizations)
+            .Include(x => x.Profiles)
+            .Include(x => x.ApiClients)
+            .SingleOrDefault(app => app.ApplicationId == applicationId);
         if (application == null)
         {
             throw new NotFoundException<int>("application", applicationId);

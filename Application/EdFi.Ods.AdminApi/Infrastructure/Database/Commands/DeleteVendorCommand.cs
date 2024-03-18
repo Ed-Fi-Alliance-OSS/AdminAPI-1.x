@@ -8,6 +8,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -24,7 +25,10 @@ public class DeleteVendorCommand
 
     public void Execute(int id)
     {
-        var vendor = _context.Vendors.SingleOrDefault(v => v.VendorId == id) ?? throw new NotFoundException<int>("vendor", id);
+        var vendor = _context.Vendors
+            .Include(x => x.Applications)
+            .Include(x => x.Users)
+            .SingleOrDefault(v => v.VendorId == id) ?? throw new NotFoundException<int>("vendor", id);
 
         if (vendor.IsSystemReservedVendor())
         {

@@ -37,7 +37,7 @@ public class AuthStrategyResolver : IAuthStrategyResolver
                         {
                             if (authorizationStrategyItem is null) continue;
 
-                            var authStrategy = dbAuthStrategies.SingleOrDefault(
+                            var authStrategy = dbAuthStrategies.AsEnumerable().SingleOrDefault(
                             x => x.AuthorizationStrategyName.Equals(
                                 authorizationStrategyItem.AuthStrategyName, StringComparison.InvariantCultureIgnoreCase));
 
@@ -63,7 +63,7 @@ public class AuthStrategyResolver : IAuthStrategyResolver
                         {
                             if (authorizationStrategyItem is null) continue;
 
-                            var authStrategy = dbAuthStrategies.SingleOrDefault(
+                            var authStrategy = dbAuthStrategies.AsEnumerable().SingleOrDefault(
                                 x => x.AuthorizationStrategyName.Equals(
                                     authorizationStrategyItem.AuthStrategyName,
                                     StringComparison.InvariantCultureIgnoreCase));

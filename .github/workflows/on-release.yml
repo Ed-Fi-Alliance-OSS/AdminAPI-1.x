@@ -68,7 +68,6 @@ jobs:
             PackagesURL = "${{ env.ARTIFACTS_PACKAGES_URL }}"
             Username    = "${{ env.ARTIFACTS_USERNAME }}"
             View        = "release"
-            ReleaseRef  = "${{ github.ref_name }}"
             Password    = (ConvertTo-SecureString -String "${{ env.ARTIFACTS_API_KEY }}" -AsPlainText -Force)
           }
 

@@ -3,30 +3,17 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
-param(
-
-    [Parameter(Mandatory = $true)]
-    $FeedsURL,
-
-    [Parameter(Mandatory = $true)]
-    $PackagesURL,
-
-    [Parameter(Mandatory = $true)]
-    $Username,
-
-    [Parameter(Mandatory = $true)]
-    [SecureString] $Password,
-
-    [Parameter(Mandatory = $true)]
-    $View,
-
-    # Git ref (short) for the release tag
-    [Parameter(Mandatory = $true)]
-    $ReleaseRef
-)
-
+<#
+.DESCRIPTION
+Retrieves a list package versions previously published to Azure Artifacts.
+#>
 function Get-PackagesFromAzure {
+    param(
+        # Array of packages to look up
+        [Parameter(Mandatory=$true)]
+        [String[]]
+        $Packages
+    )
 
     $uri = "$FeedsURL/packages?api-version=6.0-preview.1"
     $result = @{ }
@@ -47,50 +34,73 @@ function Get-PackagesFromAzure {
     return $result
 }
 
-$ErrorActionPreference = 'Stop'
+<#
+.DESCRIPTION
+Promotes a package in Azure Artifacts to a view, e.g. pre-release or release.
+#>
+function Invoke-Promote {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
+    param(
+        # NuGet package feed / source
+        [Parameter(Mandatory = $true)]
+        [String]
+        $FeedsURL,
 
-# example: "AdminApi-v2.5.1"
-# output: "AdminApi"
-$packageName = ($ReleaseRef -split "-v")[0]
+        # NuGet Packages API URL
+        [Parameter(Mandatory = $true)]
+        [String]
+        $PackagesURL,
 
-switch ($packageName) {
-    "AdminApi" {
-        $packages = @( "EdFi.Suite3.ODS.AdminApi" )
+        # Azure Artifacts user name
+        [Parameter(Mandatory = $true)]
+        [String]
+        $Username,
+
+        # Azure Artifacts password
+        [Parameter(Mandatory = $true)]
+        [SecureString]
+        $Password,
+
+        # View to promote into
+        [Parameter(Mandatory = $true)]
+        [String]
+        $View
+    )
+
+    $packages = @("EdFi.Suite3.AdminApi")
+
+    $body = @{
+        data      = @{
+            viewId = $View
+        }
+        operation = 0
+        packages  = $packages
     }
-    "AdminApi.Installer" {
-        $packages = @( "EdFi.Suite3.Installer.AdminApi" )
+
+    $latestPackages = Get-PackagesFromAzure -Packages $packages
+
+    foreach ($key in $latestPackages.Keys) {
+        $body.packages += @{
+            id           = $key
+            version      = $latestPackages[$key]
+            protocolType = "NuGet"
+        }
     }
+
+    $parameters = @{
+        Method      = "POST"
+        ContentType = "application/json"
+        Credential  = New-Object -TypeName PSCredential -ArgumentList $Username, $Password
+        URI         = "$PackagesURL/nuget/packagesBatch?api-version=5.0-preview.1"
+        Body        = ConvertTo-Json $Body -Depth 10
+    }
+
+    $parameters | Out-Host
+    $parameters.URI | Out-Host
+    $parameters.Body | Out-Host
+
+    $response = Invoke-WebRequest @parameters -UseBasicParsing
+    $response | ConvertTo-Json -Depth 10 | Out-Host
 }
 
-$body = @{
-    data      = @{
-        viewId = $View
-    }
-    operation = 0
-    packages  = @()
-}
-
-$latestPackages = Get-PackagesFromAzure
-
-foreach ($key in $latestPackages.Keys) {
-    $body.packages += @{
-        id           = $key
-        version      = $latestPackages[$key]
-        protocolType = "NuGet"
-    }
-}
-
-$parameters = @{
-    Method      = "POST"
-    ContentType = "application/json"
-    Credential  = New-Object -TypeName PSCredential -ArgumentList $Username, $Password
-    URI         = "$PackagesURL/nuget/packagesBatch?api-version=5.0-preview.1"
-    Body        = ConvertTo-Json $Body -Depth 10
-}
-
-$parameters | Out-Host
-$parameters.URI | Out-Host
-$parameters.Body | Out-Host
-
-$response = Invoke-WebRequest @parameters -UseBasicParsing
-$response | ConvertTo-Json -Depth 10 | Out-Host
+Export-ModuleMember -Function Invoke-Promote

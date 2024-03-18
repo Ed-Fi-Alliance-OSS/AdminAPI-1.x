@@ -3,6 +3,10 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
+#requires -version 7
+
+$ErrorActionPreference = "Stop"
+
 <#
 .DESCRIPTION
 Retrieves a list package versions previously published to Azure Artifacts.
@@ -10,7 +14,7 @@ Retrieves a list package versions previously published to Azure Artifacts.
 function Get-PackagesFromAzure {
     param(
         # Array of packages to look up
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String[]]
         $Packages
     )

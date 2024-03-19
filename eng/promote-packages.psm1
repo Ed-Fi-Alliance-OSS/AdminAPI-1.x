@@ -11,11 +11,6 @@ Promotes a package in Azure Artifacts to a view, e.g. pre-release or release.
 function Invoke-Promote {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
     param(
-        # NuGet package feed / source
-        [Parameter(Mandatory = $true)]
-        [String]
-        $FeedsURL,
-
         # NuGet Packages API URL
         [Parameter(Mandatory = $true)]
         [String]
@@ -31,12 +26,12 @@ function Invoke-Promote {
         [SecureString]
         $Password,
 
-        # View to promote into
+        # View to promote into. This will be a Guid
         [Parameter(Mandatory = $true)]
         [String]
-        $View,
+        $ViewId,
 
-        # Git ref (short) for the release tag
+        # Git ref (short) for the release tag ex: v1.3.5
         [Parameter(Mandatory = $true)]
         $ReleaseRef
     )
@@ -44,24 +39,26 @@ function Invoke-Promote {
     $package = "EdFi.Suite3.ODS.AdminApi"
     $version = $ReleaseRef.substring(1)
 
-    $body = @{
-        views = @{
-            op    = 'add'
-            path  = '/views/-'
-            value = 'Release'
-        }
-    }
-
-    $uri = "$FeedsURL/packages/$package/versions/$version"
-
-    Write-Output $uri
+    $body = '
+    {
+        "data": {
+            "viewId": "' + $ViewId + '"
+        },
+        "operation": 0,
+        "packages": [
+            {
+                "id": "' + $package + '",
+                "version": "' + $version + '"
+            }
+        ]
+    }'
 
     $parameters = @{
-        Method      = "PATCH"
-        ContentType = "application/json-patch+json"
+        Method      = "POST"
+        ContentType = "application/json"
         Credential  = New-Object -TypeName PSCredential -ArgumentList $Username, $Password
-        URI         = $uri + "?api-version=7.1-preview.1"
-        Body        = ConvertTo-Json $Body -Depth 2
+        URI         = $PackagesURL
+        Body        = $body
     }
 
     $parameters | Out-Host

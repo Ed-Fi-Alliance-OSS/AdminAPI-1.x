@@ -10,12 +10,6 @@ namespace EdFi.Ods.AdminApi.DBTests;
 
 public static class Testing
 {
-    public static void EnsureInitialized()
-    {
-        _ = new SecurityTestDatabaseSetup();
-        SecurityTestDatabaseSetup.EnsureSecurityDatabase(@"C:\\temp");
-    }
-
     private static IConfigurationRoot _config;
 
     public static IConfiguration Configuration()
@@ -30,8 +24,6 @@ public static class Testing
     public static string AdminConnectionString { get { return Configuration().GetConnectionString("EdFi_Admin"); } }
 
     public static string SecurityConnectionString { get { return Configuration().GetConnectionString("EdFi_Security"); } }
-
-    public static string SecurityV53ConnectionString { get { return Configuration().GetConnectionString("EdFi_SecurityV53"); } }
 
     public static DbContextOptions GetDbContextOptions(string connectionString)
     {

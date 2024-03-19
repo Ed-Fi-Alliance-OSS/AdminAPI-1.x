@@ -69,6 +69,7 @@ jobs:
             Username    = "${{ env.ARTIFACTS_USERNAME }}"
             View        = "release"
             Password    = (ConvertTo-SecureString -String "${{ env.ARTIFACTS_API_KEY }}" -AsPlainText -Force)
+            ReleaseRef  = "${{ github.ref_name }}"
           }
 
           Import-Module ./eng/promote-packages.psm1

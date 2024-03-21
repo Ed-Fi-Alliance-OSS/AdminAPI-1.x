@@ -3,41 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-#requires -version 7
-
 $ErrorActionPreference = "Stop"
-
-<#
-.DESCRIPTION
-Retrieves a list package versions previously published to Azure Artifacts.
-#>
-function Get-PackagesFromAzure {
-    param(
-        # Array of packages to look up
-        [Parameter(Mandatory = $true)]
-        [String[]]
-        $Packages
-    )
-
-    $uri = "$FeedsURL/packages?api-version=6.0-preview.1"
-    $result = @{ }
-
-    foreach ($packageName in $Packages) {
-        $packageQueryUrl = "$uri&packageNameQuery=$packageName"
-        $packagesResponse = (Invoke-WebRequest -Uri $packageQueryUrl -UseBasicParsing).Content | ConvertFrom-Json
-        $latestPackageVersion = ($packagesResponse.value.versions | Where-Object { $_.isLatest -eq $True } | Select-Object -ExpandProperty version)
-
-        Write-Output "Package Name: $packageName"
-        Write-Output "Package Version: $latestPackageVersion"
-
-        $result.add(
-            $packageName.ToLower().Trim(),
-            $latestPackageVersion
-        )
-    }
-    return $result
-}
-
 <#
 .DESCRIPTION
 Promotes a package in Azure Artifacts to a view, e.g. pre-release or release.
@@ -45,11 +11,6 @@ Promotes a package in Azure Artifacts to a view, e.g. pre-release or release.
 function Invoke-Promote {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
     param(
-        # NuGet package feed / source
-        [Parameter(Mandatory = $true)]
-        [String]
-        $FeedsURL,
-
         # NuGet Packages API URL
         [Parameter(Mandatory = $true)]
         [String]
@@ -65,38 +26,39 @@ function Invoke-Promote {
         [SecureString]
         $Password,
 
-        # View to promote into
+        # View to promote into. This will be a Guid
         [Parameter(Mandatory = $true)]
         [String]
-        $View
+        $ViewId,
+
+        # Git ref (short) for the release tag ex: v1.3.5
+        [Parameter(Mandatory = $true)]
+        $ReleaseRef
     )
 
-    $packages = @("EdFi.Suite3.AdminApi")
+    $package = "EdFi.Suite3.ODS.AdminApi"
+    $version = $ReleaseRef.substring(1)
 
-    $body = @{
-        data      = @{
-            viewId = $View
-        }
-        operation = 0
-        packages  = $packages
-    }
-
-    $latestPackages = Get-PackagesFromAzure -Packages $packages
-
-    foreach ($key in $latestPackages.Keys) {
-        $body.packages += @{
-            id           = $key
-            version      = $latestPackages[$key]
-            protocolType = "NuGet"
-        }
-    }
+    $body = '
+    {
+        "data": {
+            "viewId": "' + $ViewId + '"
+        },
+        "operation": 0,
+        "packages": [
+            {
+                "id": "' + $package + '",
+                "version": "' + $version + '"
+            }
+        ]
+    }'
 
     $parameters = @{
         Method      = "POST"
         ContentType = "application/json"
         Credential  = New-Object -TypeName PSCredential -ArgumentList $Username, $Password
-        URI         = "$PackagesURL/nuget/packagesBatch?api-version=5.0-preview.1"
-        Body        = ConvertTo-Json $Body -Depth 10
+        URI         = $PackagesURL
+        Body        = $body
     }
 
     $parameters | Out-Host

@@ -3,9 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -25,6 +25,9 @@ public class GetVendorByIdQuery : IGetVendorByIdQuery
 
     public Vendor? Execute(int vendorId)
     {
-        return _context.Vendors.SingleOrDefault(v => v.VendorId == vendorId);
+        return _context.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Include(x => x.Users)
+            .SingleOrDefault(v => v.VendorId == vendorId);
     }
 }

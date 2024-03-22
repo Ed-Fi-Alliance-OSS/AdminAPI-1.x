@@ -7,8 +7,7 @@
 # Second layer uses the dotnet/aspnet image to run the built code
 
 
-#tag sdk:6.0-alpine
-FROM mcr.microsoft.com/dotnet/sdk@sha256:0951e1b2a5dd42ddb157446b25b318d2acfb21aa246c84af51d2dc7af77f6b73 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.202-alpine3.19-amd64@sha256:4baa826eb916ba267b246c3f7f55e9e076121b0037dab78f7ae75ba70149805c AS build
 WORKDIR /source
 
 COPY Application/NuGet.Config EdFi.Ods.AdminApi/
@@ -20,27 +19,35 @@ RUN dotnet restore && dotnet build -c Release
 FROM build AS publish
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
 
-#tag aspnet:6.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:2647c10e72a83a6e3136aa47de1bb188047006b217982ddd332344bbbf10593f
-LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
-# Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
-# Disable the globaliztion invariant mode (set in base image)
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-ENV ASPNETCORE_ENVIRONMENT Production
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:a531d9d123928514405b9da9ff28a3aa81bd6f7d7d8cfb6207b66c007e7b3075 as base
 
-COPY Settings/dev/run.sh /app/run.sh
+RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
+    addgroup -S edfi && adduser -S edfi -G edfi
+
+FROM base AS setup
+LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
+
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_HTTP_PORTS=80
+
+COPY --chmod=500 Settings/dev/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
 
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
 
-RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~73 && \
-    cp /app/log4net.txt /app/log4net.config && \
+RUN cp /app/log4net.txt /app/log4net.config && \
     dos2unix /app/*.json && \
     dos2unix /app/*.sh && \
     dos2unix /app/log4net.config && \
-    chmod 700 /app/*.sh -- **
+    chmod 500 /app/*.sh -- ** && \
+    rm -f /app/log4net.txt && \
+    rm -f /app/*.exe && \
+    apk del dos2unix && \
+    chown -R edfi /app
 
-EXPOSE 443
+EXPOSE ${ASPNETCORE_HTTP_PORTS}
+USER edfi
 
 ENTRYPOINT ["/app/run.sh"]

@@ -53,11 +53,6 @@ jobs:
           # SemVer
           "admin-api-semver=$($apiVersion -Replace $apiPrefix)" >> $env:GITHUB_OUTPUT
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
-        with:
-          dotnet-version: 6.0.x
-
       - name: Publish .NET Assemblies
         run: |
           $apiVersion = "${{ steps.versions.outputs.admin-api-semver }}"

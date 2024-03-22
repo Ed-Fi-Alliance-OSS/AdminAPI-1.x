@@ -15,6 +15,7 @@ using NUnit.Framework;
 using Action = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Action;
 using ActionName = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.Action;
 using ClaimSetEditorTypes = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.DBTests;
 
@@ -25,21 +26,15 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
 
     protected override SqlServerSecurityContext CreateDbContext()
     {
-        return new SqlServerSecurityContext(ConnectionString);
+        var optionsBuilder = new DbContextOptionsBuilder();
+        optionsBuilder.UseSqlServer(ConnectionString);
+        return new SqlServerSecurityContext(optionsBuilder.Options);
     }
 
     // This bool controls whether or not to run SecurityContext initialization
     // method. Setting this flag to true will cause seed data to be
     // inserted into the security database on fixture setup.
     protected bool SeedSecurityContextOnFixtureSetup { get; set; } = false;
-
-    protected override void AdditionalFixtureSetup()
-    {
-        if (SeedSecurityContextOnFixtureSetup)
-        {
-            SetupContext.Database.Initialize(true);
-        }
-    }
 
     protected void LoadSeedData()
     {
@@ -75,7 +70,7 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
                               TestContext.Applications.Add(new Application
                               {
                                   ApplicationName = "Ed-Fi ODS API"
-                              });
+                              }).Entity;
             return application;
         }
 
@@ -86,7 +81,7 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
                          {
                              ActionName = actionName,
                              ActionUri = $"http://ed-fi.org/odsapi/actions/{actionName}"
-                         });
+                         }).Entity;
 
             return action;
         }
@@ -103,7 +98,7 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
                                                 DisplayName = displayName,
                                                 AuthorizationStrategyName = authorizationStrategyName,
                                                 Application = application
-                                            });
+                                            }).Entity;
 
             return authorizationStrategy;
         }
@@ -120,7 +115,7 @@ public abstract class SecurityData53TestBase : PlatformSecurityContextTestBase53
                     ResourceName = resourceName,
                     ClaimName = $"http://ed-fi.org/ods/identity/claims/domains/{resourceName}",
                     ParentResourceClaim = null
-                });
+                }).Entity;
 
             return resourceClaim;
         }

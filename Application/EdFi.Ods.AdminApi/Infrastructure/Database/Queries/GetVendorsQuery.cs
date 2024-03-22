@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -27,11 +28,23 @@ public class GetVendorsQuery : IGetVendorsQuery
 
     public List<Vendor> Execute()
     {
-        return _context.Vendors.OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
+        return _context.Vendors
+            .Include(vn => vn.VendorNamespacePrefixes)
+            .Include(x => x.Users)
+            .Include(x => x.Applications).ThenInclude(x => x.ApplicationEducationOrganizations)
+            .Include(x => x.Applications).ThenInclude(x => x.Profiles)
+            .Include(x => x.Applications).ThenInclude(x => x.OdsInstance)
+            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
     }
 
     public List<Vendor> Execute(int offset, int limit)
     {
-        return _context.Vendors.OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).Skip(offset).Take(limit).ToList();
+        return _context.Vendors
+            .Include(vn => vn.VendorNamespacePrefixes)
+            .Include(x => x.Users)
+            .Include(x => x.Applications).ThenInclude(x => x.ApplicationEducationOrganizations)
+            .Include(x => x.Applications).ThenInclude(x => x.Profiles)
+            .Include(x => x.Applications).ThenInclude(x => x.OdsInstance)
+            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).Skip(offset).Take(limit).ToList();
     }
 }

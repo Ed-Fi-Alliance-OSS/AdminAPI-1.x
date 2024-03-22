@@ -12,6 +12,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -67,7 +68,10 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var changedVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Include(x => x.Users)
+            .Single(v => v.VendorId == _vendorId);
             changedVendor.VendorName.ShouldBe("new vendor name");
             changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
             changedVendor.Users.First().FullName.ShouldBe("new contact name");
@@ -93,7 +97,9 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var changedVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Include(x => x.Users).Single(v => v.VendorId == _vendorId);
             changedVendor.VendorName.ShouldBe("new vendor name");
             changedVendor.VendorNamespacePrefixes.ShouldBeEmpty();
             changedVendor.Users.First().FullName.ShouldBe("new contact name");
@@ -119,7 +125,10 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorWithNoNameSpaceId);
+            var changedVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Include(x => x.Users).
+            Single(v => v.VendorId == _vendorWithNoNameSpaceId);
             changedVendor.VendorName.ShouldBe("new vendor name");
             changedVendor.VendorNamespacePrefixes.First().NamespacePrefix.ShouldBe("new namespace prefix");
             changedVendor.Users.First().FullName.ShouldBe("new contact name");
@@ -133,7 +142,8 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
         var newVendorData = new Mock<IEditVendor>();
         Transaction(usersContext =>
         {
-            var originalVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var originalVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes).Single(v => v.VendorId == _vendorId);
             originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
         });
         var newNamespacePrefixes = new List<string>
@@ -157,7 +167,10 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var changedVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Include(x => x.Users)
+            .Single(v => v.VendorId == _vendorId);
             changedVendor.VendorName.ShouldBe("new vendor name");
             changedVendor.VendorNamespacePrefixes.Select(x => x.NamespacePrefix).ShouldBe(newNamespacePrefixes);
             changedVendor.Users.First().FullName.ShouldBe("new contact name");
@@ -174,7 +187,9 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
         var newVendorData = new Mock<IEditVendor>();
         Transaction(usersContext =>
         {
-            var originalVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var originalVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Single(v => v.VendorId == _vendorId);
             originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
         });
 
@@ -192,7 +207,10 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var changedVendor = usersContext.Vendors
+            .Include(x => x.Users)
+            .Include(x => x.VendorNamespacePrefixes)
+            .Single(v => v.VendorId == _vendorId);
             changedVendor.VendorName.ShouldBe("new vendor name");
             changedVendor.VendorNamespacePrefixes.Select(x => x.NamespacePrefix).ToDelimiterSeparated().ShouldBe(expectedNamespacePrefixes);
             changedVendor.Users.First().FullName.ShouldBe("new contact name");
@@ -207,7 +225,9 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var originalVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var originalVendor = usersContext.Vendors
+            .Include (x => x.VendorNamespacePrefixes)
+            .Single(v => v.VendorId == _vendorId);
             originalVendor.VendorNamespacePrefixes.Single().NamespacePrefix.ShouldBe(OriginalVendorNamespacePrefix);
         });
 
@@ -225,7 +245,10 @@ internal class EditVendorCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var changedVendor = usersContext.Vendors.Single(v => v.VendorId == _vendorId);
+            var changedVendor = usersContext.Vendors
+            .Include(x => x.VendorNamespacePrefixes)
+            .Include(x => x.Users)
+            .Single(v => v.VendorId == _vendorId);
             changedVendor.VendorName.ShouldBe("new vendor name");
             changedVendor.VendorNamespacePrefixes.ShouldBeEmpty();
             changedVendor.Users.First().FullName.ShouldBe("new contact name");

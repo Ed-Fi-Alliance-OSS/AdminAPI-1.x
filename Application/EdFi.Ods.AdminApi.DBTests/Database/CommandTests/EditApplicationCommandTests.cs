@@ -14,6 +14,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using Profile = EdFi.Admin.DataAccess.Models.Profile;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -117,7 +118,11 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
+            var persistedApplication = usersContext.Applications
+            .Include(x => x.ApiClients)
+            .Include(x => x.ApplicationEducationOrganizations)
+            .Include(x => x.Profiles)
+            .Single(a => a.ApplicationId == _application.ApplicationId);
             persistedApplication.ApplicationName.ShouldBe("Test Application");
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.ApiClients.Count.ShouldBe(1);
@@ -152,7 +157,11 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var persistedApplication = usersContext.Applications.Single(a => a.ApplicationId == _application.ApplicationId);
+            var persistedApplication = usersContext.Applications
+            .Include(x => x.ApiClients)
+            .Include(x => x.ApplicationEducationOrganizations)
+            .Include(x => x.Profiles)
+            .Single(a => a.ApplicationId == _application.ApplicationId);
             persistedApplication.ApplicationName.ShouldBe("New Application Name");
             persistedApplication.ClaimSetName.ShouldBe("DifferentFakeClaimSet");
             persistedApplication.ApiClients.Count.ShouldBe(1);

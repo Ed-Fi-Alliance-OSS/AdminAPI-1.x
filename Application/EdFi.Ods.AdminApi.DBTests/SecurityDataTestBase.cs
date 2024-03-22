@@ -24,7 +24,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
     protected override SqlServerSecurityContext CreateDbContext()
     {
-        return new SqlServerSecurityContext(ConnectionString);
+        return new SqlServerSecurityContext(Testing.GetDbContextOptions(ConnectionString));
     }
 
     // This bool controls whether or not to run SecurityContext initialization
@@ -36,7 +36,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
     {
         if (SeedSecurityContextOnFixtureSetup)
         {
-            TestContext.Database.Initialize(true);
+            TestContext.Database.EnsureCreated();
         }
     }
 
@@ -70,39 +70,55 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
 
         Application GetOrCreateApplication(string applicationName)
         {
-            var application = TestContext.Applications.FirstOrDefault(a => a.ApplicationName == applicationName) ??
-                              TestContext.Applications.Add(new Application
-                              {
-                                  ApplicationName = "Ed-Fi ODS API"
-                              });
+            var application =
+                TestContext.Applications.FirstOrDefault(a => a.ApplicationName == applicationName);
+            if (application == null)
+            {
+                application = new Application
+                {
+                    ApplicationName = "Ed-Fi ODS API"
+                };
+                TestContext.Applications.Add(application);
+            }
             return application;
         }
 
         Action GetOrCreateAction(string actionName)
         {
-            var action = TestContext.Actions.FirstOrDefault(a => a.ActionName == actionName) ??
-                         TestContext.Actions.Add(new Action
-                         {
-                             ActionName = actionName,
-                             ActionUri = $"http://ed-fi.org/odsapi/actions/{actionName}"
-                         });
+            var action = TestContext.Actions.FirstOrDefault(a => a.ActionName == actionName);
 
+            if (action == null)
+            {
+                action = new Action
+                {
+                    ActionName = actionName,
+                    ActionUri = $"http://ed-fi.org/odsapi/actions/{actionName}"
+                };
+                TestContext.Actions.Add(action);
+            }
             return action;
         }
 
         AuthorizationStrategy GetOrCreateAuthorizationStrategy(Application application, string displayName,
             string authorizationStrategyName)
         {
-            var authorizationStrategy = TestContext.AuthorizationStrategies.FirstOrDefault(a =>
-                                            a.Application.ApplicationId == application.ApplicationId && a.DisplayName == displayName &&
-                                            a.AuthorizationStrategyName == authorizationStrategyName) ??
-                                        TestContext.AuthorizationStrategies.Add(
-                                            new AuthorizationStrategy
-                                            {
-                                                DisplayName = displayName,
-                                                AuthorizationStrategyName = authorizationStrategyName,
-                                                Application = application
-                                            });
+            var authorizationStrategy = TestContext.AuthorizationStrategies.FirstOrDefault(
+                a =>
+                    a.Application.ApplicationId == application.ApplicationId &&
+                    a.DisplayName == displayName &&
+                    a.AuthorizationStrategyName == authorizationStrategyName);
+
+            if (authorizationStrategy == null)
+            {
+                authorizationStrategy =
+                    new AuthorizationStrategy
+                    {
+                        DisplayName = displayName,
+                        AuthorizationStrategyName = authorizationStrategyName,
+                        Application = application
+                    };
+                TestContext.AuthorizationStrategies.Add(authorizationStrategy);
+            }
 
             return authorizationStrategy;
         }
@@ -110,17 +126,23 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         ResourceClaim GetOrCreateResourceClaim(string resourceName, Application application)
         {
             var resourceClaim =
-                TestContext.ResourceClaims.FirstOrDefault(r =>
-                    r.ResourceName == resourceName && r.Application.ApplicationId == application.ApplicationId) ??
-                TestContext.ResourceClaims.Add(new ResourceClaim
+                TestContext.ResourceClaims.FirstOrDefault(
+                    r =>
+                        r.ResourceName == resourceName &&
+                        r.Application.ApplicationId == application.ApplicationId);
+
+            if (resourceClaim == null)
+            {
+                resourceClaim = new ResourceClaim
                 {
                     Application = application,
                     DisplayName = resourceName,
                     ResourceName = resourceName,
                     ClaimName = $"http://ed-fi.org/ods/identity/claims/domains/{resourceName}",
                     ParentResourceClaim = null
-                });
-
+                };
+                TestContext.ResourceClaims.Add(resourceClaim);
+            }
             return resourceClaim;
         }
 

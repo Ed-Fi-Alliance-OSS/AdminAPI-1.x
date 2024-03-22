@@ -9,9 +9,9 @@ using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor.Extensions;
 using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
-using System.Data.Entity;
 using SecurityAuthorizationStrategy = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy;
 using SecurityResourceClaim = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ResourceClaim;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {

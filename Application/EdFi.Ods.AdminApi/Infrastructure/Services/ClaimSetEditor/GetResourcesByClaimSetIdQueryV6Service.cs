@@ -3,7 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data.Entity;
 using AutoMapper;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
@@ -11,6 +10,7 @@ using SecurityResourceClaim = EdFi.Security.DataAccess.Models.ResourceClaim;
 using SecurityAuthorizationStrategy = EdFi.Security.DataAccess.Models.AuthorizationStrategy;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
@@ -45,7 +45,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 .Include(x => x.ResourceClaim)
                 .Include(x => x.ResourceClaim.ParentResourceClaim)
                 .Include(x => x.Action)
-                .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy))
+                .Include(x => x.AuthorizationStrategyOverrides).ThenInclude(x => x.AuthorizationStrategy)
                 .Where(x => x.ClaimSet.ClaimSetId == claimSetId
                             && x.ResourceClaim.ParentResourceClaimId == null).ToList();
 
@@ -75,7 +75,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             var resultDictionary = new Dictionary<int, ClaimSetResourceClaimActionAuthStrategies?[]>();
 
             var defaultAuthStrategies = _securityContext.ResourceClaimActions
-                .Include(x => x.ResourceClaim).Include(x => x.Action).Include(x => x.AuthorizationStrategies.Select(x => x.AuthorizationStrategy)).ToList();
+                .Include(x => x.ResourceClaim).Include(x => x.Action).Include(x => x.AuthorizationStrategies).
+                ThenInclude(x => x.AuthorizationStrategy).ToList();
 
             var defaultAuthStrategiesForParents = defaultAuthStrategies
                 .Where(x => x.ResourceClaim.ParentResourceClaimId == null).ToList();
@@ -209,7 +210,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                         .Include(x => x.ResourceClaim)
                         .Include(x => x.ClaimSet)
                         .Include(x => x.Action)
-                        .Include(x => x.AuthorizationStrategyOverrides.Select(x => x.AuthorizationStrategy)).ToList();
+                        .Include(x => x.AuthorizationStrategyOverrides).ThenInclude(x => x.AuthorizationStrategy).ToList();
                     var parentResourceOverride = parentResources.SingleOrDefault(x => x.ResourceClaim.ResourceClaimId == resourceClaim.ResourceClaim.ParentResourceClaimId
                                                                                                && x.ClaimSet.ClaimSetId == resourceClaim.ClaimSet.ClaimSetId
                                                                                                && x.Action.ActionId == resourceClaim.Action.ActionId);

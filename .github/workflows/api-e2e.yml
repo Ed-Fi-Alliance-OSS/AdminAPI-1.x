@@ -77,8 +77,9 @@ jobs:
         if: failure()
         run: |
           mkdir docker-logs
-          docker logs ed-fi-db-admin > docker-logs/ed-fi-db-admin.log
           docker logs adminapi > docker-logs/adminapi.log
+          docker logs ed-fi-db-admin-adminapi > docker-logs/ed-fi-db-admin.log
+          docker logs ed-fi-gateway-adminapi > docker-logs/ed-fi-gateway.log
 
       - name: Upload Docker logs
         if: failure()

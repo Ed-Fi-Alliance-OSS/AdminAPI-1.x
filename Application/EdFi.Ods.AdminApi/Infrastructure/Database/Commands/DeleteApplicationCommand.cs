@@ -4,11 +4,11 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Data.Entity;
 using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -29,8 +29,7 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
     public void Execute(int id)
     {
         var application = _context.Applications
-            .Include(a => a.ApiClients)
-            .Include(a => a.ApiClients.Select(c => c.ClientAccessTokens))
+            .Include(a => a.ApiClients).ThenInclude(c => c.ClientAccessTokens)
             .Include(a => a.ApplicationEducationOrganizations)
             .SingleOrDefault(a => a.ApplicationId == id) ?? throw new NotFoundException<int>("application", id);
 

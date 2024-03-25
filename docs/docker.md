@@ -16,7 +16,7 @@ graph LR
         E --> F[(EdFi_Admin)]
         E --> G[(EdFi_Security)]
         D --> H[(PGBouncer)]
-        H --> I[(EdFi_ODS{0})]
+        H --> I[(EdFi_ODS)]
         D --> E
 
         subgraph pb-admin

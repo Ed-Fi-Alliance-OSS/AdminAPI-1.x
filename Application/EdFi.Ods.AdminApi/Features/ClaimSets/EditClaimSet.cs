@@ -102,7 +102,8 @@ public class EditClaimSet : IFeature
             IGetAllClaimSetsQuery getAllClaimSetsQuery,
             IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
             IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery,
-            IOdsSecurityModelVersionResolver resolver)
+            IOdsSecurityModelVersionResolver resolver,
+            IMapper mapper)
         {
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
@@ -138,7 +139,7 @@ public class EditClaimSet : IFeature
                     foreach (var resourceClaim in claimSet.ResourceClaims)
                     {
                         resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
-                            resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
+                            resourceClaim, mapper.Map<List<ChildrenClaimSetResource>>(claimSet.ResourceClaims), context, claimSet.Name);
                     }
                 }
             });

@@ -16,7 +16,7 @@ COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminAp
 COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
 USER root
-RUN apk --no-cache add dos2unix=~7 unzip=~6 &&\
+RUN apk --no-cache add dos2unix=~7 unzip=~6 && \
     dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
     chmod -R 777 /tmp/AdminApiScripts/PgSql/*

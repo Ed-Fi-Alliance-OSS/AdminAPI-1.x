@@ -57,12 +57,13 @@ style I fill:#fff
    directory:
 
    ```bash
-   cd Application/EdFi.Ods.AdminApi/Docker/ssl
+   cd Docker/Settings/ssl
    bash ./generate-certificate.sh
    ```
 
 2. Copy and customize the `.env.example` file. Importantly, be sure to change
-   the encryption key.
+   the encryption key. In a Bash prompt, generate a random key thusly: `openssl
+   rand -base64 32`.
 
    ```shell
    cd ../../Compose/pgsql

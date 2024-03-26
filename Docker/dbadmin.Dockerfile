@@ -10,16 +10,19 @@ ENV POSTGRES_USER=${POSTGRES_USER}
 ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=postgres
 
-FROM base AS setup
-
+USER root
 COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
+RUN apk --no-cache add dos2unix=~7 unzip=~6
+USER postgres
+
+FROM base AS setup
+
 USER root
-RUN apk --no-cache add dos2unix=~7 unzip=~6 && \
-    dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
+RUN dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
-    chmod -R 777 /tmp/AdminApiScripts/PgSql/*
+    chmod -R 600 /tmp/AdminApiScripts/PgSql/*
 USER postgres
 
 EXPOSE 5432

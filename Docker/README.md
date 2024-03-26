@@ -1,13 +1,6 @@
 # Docker files details
 
-## Development environment:
-
-### Pre-requisite:
-
-The "EdFi.Ods.AdminApi" application folder and "Nuget.config" file will be
-copied over, either manually or through the execution of a script(build.ps1
--Command "CopyApplicationFilesToDockerContext"), to the "Application" folder
-within the "Docker" directory. 
+## Development environment
 
 1. dev.Dockerfile
 
@@ -22,7 +15,13 @@ within the "Docker" directory.
     API specific tables. It utilizes database artifacts located at
     "Docker\Application\EdFi.Ods.AdminApi\Artifacts\PgSql\Structure\Admin".
 
-## Non-development environments:
+[!NOTE]
+The "EdFi.Ods.AdminApi" application folder and "Nuget.config" file will be
+copied over, either manually or through the execution of a script(`build.ps1
+-Command "CopyApplicationFilesToDockerContext"`), to the "Application" folder
+within the "Docker" directory. 
+
+## Non-development environments
 
 1. Dockerfile
 

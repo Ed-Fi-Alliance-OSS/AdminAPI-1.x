@@ -15,11 +15,11 @@
     API specific tables. It utilizes database artifacts located at
     "Docker\Application\EdFi.Ods.AdminApi\Artifacts\PgSql\Structure\Admin".
 
-[!NOTE]
-The "EdFi.Ods.AdminApi" application folder and "Nuget.config" file will be
-copied over, either manually or through the execution of a script(`build.ps1
--Command "CopyApplicationFilesToDockerContext"`), to the "Application" folder
-within the "Docker" directory. 
+> [!NOTE]
+> The "EdFi.Ods.AdminApi" application folder and "Nuget.config" file will be
+> copied over, either manually or through the execution of a script(`build.ps1
+> -Command "CopyApplicationFilesToDockerContext"`), to the "Application" folder
+> within the "Docker" directory. 
 
 ## Non-development environments
 

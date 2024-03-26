@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Data;
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
@@ -14,15 +15,15 @@ public class ResourceClaimValidator
 {
     private static List<string>? _duplicateResources;
     private readonly EdFiOdsSecurityModelCompatibility _odsApiVersion;
-    private IMapper _mapper;
+    
     public ResourceClaimValidator(IOdsSecurityModelVersionResolver resolver)
     {
         _duplicateResources = new List<string>();
         _odsApiVersion = resolver.DetermineSecurityModel();
     }
-
+    
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
-        List<string?> dbAuthStrategies, RequestResourceClaimModel resourceClaim, List<ChildrenClaimSetResource> existingResourceClaims,
+        List<string?> dbAuthStrategies, RequestResourceClaimModel resourceClaim, List<ChildrenRequestResourceClaimModel> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
@@ -104,7 +105,7 @@ public class ResourceClaimValidator
                         }
                     }
                 }
-                Validate(dbResourceClaims, dbAuthStrategies, child, _mapper.Map<List<ChildrenClaimSetResource>>(resourceClaim.Children), context, claimSetName);
+                Validate(dbResourceClaims, dbAuthStrategies, child, resourceClaim.Children, context, claimSetName);
             }
         }
     }

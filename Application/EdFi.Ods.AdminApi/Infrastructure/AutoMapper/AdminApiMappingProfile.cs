@@ -70,17 +70,6 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
             .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
-        CreateMap<ResourceClaimModel, ChildrenClaimSetResource>()
-            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
-            .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
-            .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
-            .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
-            .ForMember(dst => dst.ReadChanges, opt => opt.MapFrom(src => src.ReadChanges))
-            .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
-            .ForMember(dst => dst.DefaultAuthStrategiesForCRUD, opt => opt.MapFrom(src => src.DefaultAuthStrategiesForCRUD))
-            .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
-
         CreateMap<EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy, AuthorizationStrategyModel>()
             .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthStrategyId))
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
@@ -128,7 +117,17 @@ public class AdminApiMappingProfile : Profile
            .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
            .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
 
-        CreateMap<RequestResourceClaimModel, ChildrenClaimSetResource>()
+        CreateMap<RequestResourceClaimModel, ChildrenRequestResourceClaimModel>()
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
+            .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))
+            .ForMember(dst => dst.Create, opt => opt.MapFrom(src => src.Create))
+            .ForMember(dst => dst.Delete, opt => opt.MapFrom(src => src.Delete))
+            .ForMember(dst => dst.ReadChanges, opt => opt.MapFrom(src => src.ReadChanges))
+            .ForMember(dst => dst.AuthStrategyOverridesForCRUD, opt => opt.MapFrom(src => src.AuthStrategyOverridesForCRUD))
+            .ForMember(dst => dst.Children, opt => opt.MapFrom(src => src.Children));
+
+        CreateMap<ChildrenRequestResourceClaimModel, RequestResourceClaimModel>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Read, opt => opt.MapFrom(src => src.Read))
             .ForMember(dst => dst.Update, opt => opt.MapFrom(src => src.Update))

@@ -139,7 +139,7 @@ public class EditClaimSet : IFeature
                     foreach (var resourceClaim in claimSet.ResourceClaims)
                     {
                         resourceClaimValidator.Validate(resourceClaims, authStrategyNames,
-                            resourceClaim, mapper.Map<List<ChildrenClaimSetResource>>(claimSet.ResourceClaims), context, claimSet.Name);
+                            resourceClaim, mapper.Map<List<ChildrenRequestResourceClaimModel>>(claimSet.ResourceClaims), context, claimSet.Name);
                     }
                 }
             });

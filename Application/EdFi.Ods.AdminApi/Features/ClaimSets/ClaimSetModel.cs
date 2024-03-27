@@ -44,13 +44,25 @@ public class ClaimSetResourceClaimModel
     public List<ClaimSetResourceClaimActionAuthStrategies?> AuthorizationStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public List<ClaimSetResourceClaimModel> Children { get; set; }
+    public List<ChildrenClaimSetResource> Children { get; set; }
     public ClaimSetResourceClaimModel()
     {
-        Children = new List<ClaimSetResourceClaimModel>();
+        Children = new List<ChildrenClaimSetResource>();
         DefaultAuthorizationStrategiesForCRUD = new List<ClaimSetResourceClaimActionAuthStrategies?>();
         AuthorizationStrategyOverridesForCRUD = new List<ClaimSetResourceClaimActionAuthStrategies?>();
         Actions = new List<ResourceClaimAction>();
+    }
+}
+
+
+public class ChildrenClaimSetResource: ClaimSetResourceClaimModel
+{
+    [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
+    public new List<ClaimSetResourceClaimModel> Children { get; set; }
+
+    public ChildrenClaimSetResource()
+    {
+        Children = new List<ClaimSetResourceClaimModel>();
     }
 }
 [SwaggerSchema(Title = "ResourceClaimModel")]

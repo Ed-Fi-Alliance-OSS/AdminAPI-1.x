@@ -64,7 +64,8 @@ public class ImportClaimSet : IFeature
         public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
             IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
             IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery,
-            IGetAllActionsQuery getAllActionsQuery)
+            IGetAllActionsQuery getAllActionsQuery,
+            IMapper mapper)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
 
@@ -92,7 +93,7 @@ public class ImportClaimSet : IFeature
                     foreach (var resourceClaim in claimSet.ResourceClaims)
                     {
                         resourceClaimValidator.Validate(resourceClaims, actions, authStrategyNames,
-                            resourceClaim, claimSet.ResourceClaims, context, claimSet.Name);
+                            resourceClaim, mapper.Map<List<ChildrenClaimSetResource>>(claimSet.ResourceClaims), context, claimSet.Name);
                     }
                 }
             });

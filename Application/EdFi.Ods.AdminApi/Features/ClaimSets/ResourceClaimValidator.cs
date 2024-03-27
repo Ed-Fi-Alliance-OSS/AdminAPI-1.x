@@ -17,7 +17,7 @@ public class ResourceClaimValidator
     }
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims, List<string> dbActions,
-        List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, List<ClaimSetResourceClaimModel> existingResourceClaims,
+        List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, List<ChildrenClaimSetResource> existingResourceClaims,
         ValidationContext<T> context, string? claimSetName)
     {
         context.MessageFormatter.AppendArgument("ClaimSetName", claimSetName);
@@ -55,7 +55,7 @@ public class ResourceClaimValidator
         }
     }
 
-    private static void ValidateDuplicateResourceClaim<T>(ClaimSetResourceClaimModel resourceClaim, List<ClaimSetResourceClaimModel> existingResourceClaims, ValidationContext<T> context, string propertyName)
+    private static void ValidateDuplicateResourceClaim<T>(ClaimSetResourceClaimModel resourceClaim, List<ChildrenClaimSetResource> existingResourceClaims, ValidationContext<T> context, string propertyName)
     {
         if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1)
         {

@@ -25,7 +25,7 @@ public static class HealthCheckServiceExtensions
         else
         {
             connectionStrings = new() {
-                    { "SingleTenant", configuration.GetConnectionString(dbName) }};
+                    { "SingleTenant", configuration.GetConnectionString(dbName) ?? string.Empty }};
         }
 
         if (!string.IsNullOrEmpty(databaseEngine))

@@ -61,12 +61,17 @@ public class RequestResourceClaimModel
     public AuthorizationStrategiesModel?[] AuthStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public List<RequestResourceClaimModel> Children { get; set; }
+    public List<ChildrenRequestResourceClaimModel> Children { get; set; }
     public RequestResourceClaimModel()
     {
-        Children = new List<RequestResourceClaimModel>();
+        Children = new List<ChildrenRequestResourceClaimModel>();
         AuthStrategyOverridesForCRUD = Array.Empty<AuthorizationStrategiesModel>();
     }
+}
+
+public class ChildrenRequestResourceClaimModel : RequestResourceClaimModel
+{
+    public List<RequestResourceClaimModel> Children { get; set; }
 }
 
 [SwaggerSchema(Title = "AuthorizationStrategies")]

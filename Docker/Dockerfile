@@ -25,7 +25,7 @@ COPY --chmod=500 Settings/"${DB}"/run.sh /app/run.sh
 COPY Settings/"${DB}"/log4net.config /app/log4net.txt
 
 RUN umask 0077 && \
-    wget -nv -O /app/AdminApi.zip https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content && \
+    wget -nv -O /app/AdminApi.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Suite3.ODS.AdminApi/versions/${VERSION}/content" && \
     unzip /app/AdminApi.zip AdminApi/* -d /app/ && \
     cp -r /app/AdminApi/. /app/ && \
     rm -f /app/AdminApi.zip && \

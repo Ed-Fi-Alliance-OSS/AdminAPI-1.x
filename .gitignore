@@ -63,3 +63,4 @@ libs/
 libs.codegen/
 
 Docker/Application
+dhparam.pem

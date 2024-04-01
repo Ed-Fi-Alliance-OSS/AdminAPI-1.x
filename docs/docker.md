@@ -16,7 +16,7 @@ graph LR
         E --> F[(EdFi_Admin)]
         E --> G[(EdFi_Security)]
         D --> H[(PGBouncer)]
-        H --> I[(EdFi_ODS{0})]
+        H --> I[(EdFi_ODS)]
         D --> E
 
         subgraph pb-admin
@@ -57,36 +57,40 @@ style I fill:#fff
    directory:
 
    ```bash
-   cd Application/EdFi.Ods.AdminApi/Docker/ssl
+   cd Docker/Settings/ssl
    bash ./generate-certificate.sh
    ```
 
 2. Copy and customize the `.env.example` file. Importantly, be sure to change
-   the encryption key.
+   the encryption key. In a Bash prompt, generate a random key thusly: `openssl
+   rand -base64 32`.
 
    ```shell
-   cd ../../Compose/pgsql
+   cd Docker/Compose/pgsql
    cp .env.example .env
    code .env
    ```
+   > [!NOTE] 
+   > The .env file is a shared resource that can be referenced by both the 
+   > "MultiTenant" and "SingleTenant" compose files.
 
 3. Build local containers (optional step; next step will run the build implicitly)
 
    ```shell
-   docker compose -f compose-build-dev.yml build
+   docker compose -f SingleTenant/compose-build-dev.yml build
    ```
 
 4. Start containers
 
    ```shell
-   docker compose -f compose-build-dev.yml up -d
+   docker compose -f SingleTenant/compose-build-dev.yml up -d
    ```
 
 5. Inspect containers
 
    ```shell
    # List processes
-   docker compose -f compose-build-dev.yml ps
+   docker compose -f SingleTenant/compose-build-dev.yml ps
 
    # Check status of the AdminAPI
    curl -k https://localhost/adminapi
@@ -160,8 +164,8 @@ Instructions are similar to the Local Development and Pre-Built Binaries setups 
 
 Tenants details can be configured on appsettings.dockertemplate.json file.
 
-For local development and testing, use `compose-build-dev-multi-tenant.yml`.
-For testing pre-built binaries, use `compose-build-binaries-multi-tenant.yml`.
+For local development and testing, use `MultiTenant/compose-build-dev-multi-tenant.yml`.
+For testing pre-built binaries, use `MultiTenant/compose-build-binaries-multi-tenant.yml`.
 
 ## Admin Api and Ed-Fi ODS / API docker containers
 

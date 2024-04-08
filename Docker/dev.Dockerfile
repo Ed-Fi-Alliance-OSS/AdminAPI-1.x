@@ -7,6 +7,7 @@
 # code. The next two layers use the dotnet/aspnet image to run the built code.
 # The extra layers in the middle support caching of base layers.
 
+#tag sdk:8.0-alpine
 FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.18@sha256:2a8dca3af111071172b1629c12eefaeca0d6c2954887c4489195771c9e90833c as buildBase
 
 FROM buildbase as build
@@ -22,11 +23,11 @@ RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
 
 # TODO: update to .NET 8, will be handled in AdminAPI-983
-#tag aspnet:6.0-alpine
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:201cedd60cb295b2ebea7184561a45c5c0ee337e37300ea0f25cff5a2c762538 AS runtimebase
+#tag aspnet:8.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:a531d9d123928514405b9da9ff28a3aa81bd6f7d7d8cfb6207b66c007e7b3075 AS runtimebase
 
 FROM runtimebase AS runtime
-RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~72 && \
+RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM runtime AS setup
@@ -35,6 +36,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_HTTP_PORTS=80
 
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
@@ -49,8 +51,7 @@ RUN cp /app/log4net.txt /app/log4net.config && \
     chmod 500 /app/*.sh -- ** && \
     chown -R edfi /app
 
-EXPOSE 443
+EXPOSE ${ASPNETCORE_HTTP_PORTS}
 USER edfi
-WORKDIR /app
 
 ENTRYPOINT ["/app/run.sh"]

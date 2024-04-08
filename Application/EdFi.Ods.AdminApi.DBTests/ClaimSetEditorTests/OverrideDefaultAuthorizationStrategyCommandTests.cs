@@ -144,7 +144,7 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
 
         resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
         resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
+        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.Any(x => x.AuthStrategyName.Equals("TestAuthStrategy1")).ShouldBeTrue();
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);

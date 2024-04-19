@@ -34,7 +34,7 @@ public class ConnectController : Controller
     public async Task<IActionResult> Register([FromForm] RegisterService.Request request)
     {
         var message = await _registerService.Handle(request);
-        return Ok(new { Title = message, Status = 200 });
+        return new ObjectResult($"Registered client {request.ClientId} successfully.") { StatusCode = (int)200 };
     }
 
     [HttpPost(SecurityConstants.TokenEndpoint)]

@@ -17,7 +17,11 @@ fi
 export ADMIN_WAIT_POSTGRES_HOSTS_ARR=($ADMIN_WAIT_POSTGRES_HOSTS)
 for HOST in ${ADMIN_WAIT_POSTGRES_HOSTS_ARR[@]}
 do
-  until PGPASSWORD=$POSTGRES_PASSWORD psql -h $HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c '\q';
+  until PGPASSWORD=$POSTGRES_PASSWORD \
+      PGHOST=$ODS_POSTGRES_HOST \
+      PGPORT=$POSTGRES_PORT \
+      PGUSER=$POSTGRES_USER \
+      pg_isready > /dev/null
   do
     >&2 echo "Admin '$HOST' is unavailable - sleeping"
     sleep 10

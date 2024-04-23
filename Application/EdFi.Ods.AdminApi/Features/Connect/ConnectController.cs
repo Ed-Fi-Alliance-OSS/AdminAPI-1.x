@@ -33,8 +33,11 @@ public class ConnectController : Controller
     [SwaggerResponse(200, "Application registered successfully.")]
     public async Task<IActionResult> Register([FromForm] RegisterService.Request request)
     {
-        var message = await _registerService.Handle(request);
-        return Ok(new { Title = message, Status = 200 });
+        if (await _registerService.Handle(request))
+        {
+            return Ok(new { Title = $"Registered client {request.ClientId} successfully.", Status = 200 });
+        }
+        return new ForbidResult();
     }
 
     [HttpPost(SecurityConstants.TokenEndpoint)]

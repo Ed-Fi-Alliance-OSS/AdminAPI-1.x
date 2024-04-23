@@ -12,6 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.18@sha256:2a8dca3af111071172b1
 
 RUN apk --no-cache add curl=~8
 
+# hadolint ignore=DL3006
 FROM buildbase AS publish
 WORKDIR /source
 COPY Application/NuGet.Config EdFi.Ods.AdminApi/

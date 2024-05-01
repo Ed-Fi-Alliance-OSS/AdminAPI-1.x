@@ -6,12 +6,7 @@
     <ProjectReference Include="..\EdFi.Ods.AdminApi\EdFi.Ods.AdminApi.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="7.2.90" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="7.2.138" />
-    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.11.0" />
     <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="NuGet.Protocol" Version="6.6.1" />
     <PackageReference Include="NUnit" Version="3.13.3" />

@@ -21,6 +21,8 @@ env:
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
   DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+permissions: read-all
+
 jobs:
   docker-analysis:
     runs-on: ubuntu-latest

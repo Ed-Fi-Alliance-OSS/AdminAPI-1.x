@@ -21,6 +21,8 @@ on:
       - ".github/**/*.yml"
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   # TODO: restore this with AA-1601
   # run-ps-lint:

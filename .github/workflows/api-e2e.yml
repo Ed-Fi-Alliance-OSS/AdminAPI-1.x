@@ -25,6 +25,8 @@ env:
   FOLDER_NAME: "API Automation Run"
   RESULTS_FILE: "test-results"
 
+permissions: read-all
+
 jobs:
   run-e2e-tests:
     defaults:

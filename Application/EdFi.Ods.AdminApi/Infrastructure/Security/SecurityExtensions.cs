@@ -6,7 +6,6 @@
 using EdFi.Ods.AdminApi.Features.Connect;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
@@ -19,9 +18,7 @@ public static class SecurityExtensions
     public static void AddSecurityUsingOpenIddict(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
-
         var issuer = configuration.GetValue<string>("Authentication:IssuerUrl");
-        var authority = configuration.GetValue<string>("Authentication:Authority");
         var isDockerEnvironment = configuration.GetValue<bool>("EnableDockerEnvironment");
 
         //OpenIddict Server
@@ -43,7 +40,7 @@ public static class SecurityExtensions
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
                 opt.DisableAccessTokenEncryption();
-                opt.SetIssuer(new Uri(authority));
+                opt.SetIssuer(new Uri(issuer));
 
                 if (!webHostEnvironment.IsDevelopment()) //Keys below will override Ephemeral / Dev Keys
                 {
@@ -80,12 +77,14 @@ public static class SecurityExtensions
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(opt =>
         {
-            opt.Authority = authority;
+            opt.Authority = issuer;
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
-                ValidIssuer = authority,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
                 IssuerSigningKey = signingKey
             };
             opt.RequireHttpsMetadata = !isDockerEnvironment;

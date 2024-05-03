@@ -15,6 +15,8 @@ env:
   RELEASE_VIEW_ID: "53acfbeb-77f2-4ef6-8596-dc19e5802775" #Release
   ARTIFACTS_USERNAME: ${{ secrets.AZURE_ARTIFACTS_USER_NAME }}
 
+permissions: read-all
+
 jobs:
   delete-pre-releases:
     name: Delete Unnecessary Pre-Releases

@@ -21,6 +21,8 @@ on:
       - ".github/**/*.yml"
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   # TODO: restore this with AA-1601
   # run-ps-lint:
@@ -84,4 +86,4 @@ jobs:
       uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
       with:
         name: Event File
-        path: ${{ github.event_path }}  
+        path: ${{ github.event_path }}

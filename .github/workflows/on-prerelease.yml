@@ -21,6 +21,8 @@ env:
   DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
   REF: ${{ github.ref_name }}
 
+permissions: read-all
+
 jobs:
   pack:
     name: Build and Pack
@@ -96,7 +98,6 @@ jobs:
     needs: pack
     permissions:
       actions: read
-      contents: write
     outputs:
       sbom-hash-code: ${{ steps.sbom-hash-code.outputs.sbom-hash-code }}
     steps:
@@ -153,7 +154,6 @@ jobs:
       - pack
     permissions:
       actions: read
-      contents: write
     steps:
       - name: Download the SBOM
         uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/actions/secure-download-artifact@main
@@ -197,7 +197,6 @@ jobs:
     permissions:
       actions: read
       id-token: write
-      contents: write
     uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@main
     with:
       base64-subjects: ${{ needs.pack.outputs.hash-code }}

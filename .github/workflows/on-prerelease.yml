@@ -197,6 +197,7 @@ jobs:
     permissions:
       actions: read
       id-token: write
+      contents: read
     uses: Ed-Fi-Alliance-OSS/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@main
     with:
       base64-subjects: ${{ needs.pack.outputs.hash-code }}

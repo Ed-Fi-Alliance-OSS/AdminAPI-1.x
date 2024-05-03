@@ -11,6 +11,8 @@ on:
     types:
       - completed
 
+permissions: read-all
+
 jobs:
   report-test-results:
     name: Report Test Results
@@ -20,7 +22,7 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
-      actions: read
+      # actions: read
       # only needed for private repository
       # contents: read
       # issues: read

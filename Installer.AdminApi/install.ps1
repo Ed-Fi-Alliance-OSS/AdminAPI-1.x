@@ -45,7 +45,7 @@ Configure Admin Api with Single tenant
     $p = @{
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        PackageVersion = '2.1.1.0'
+        PackageVersion = '2.2.0.0'
     }
 
 Configure Admin Api with Multi tenant
@@ -53,7 +53,7 @@ Configure Admin Api with Multi tenant
         IsMultiTenant = $true
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
-        PackageVersion = '2.1.1.0'
+        PackageVersion = '2.2.0.0'
         Tenants = @{
             Tenant1 = @{
                 AdminDatabaseName = "EdFi_Admin_Tenant1"
@@ -70,7 +70,7 @@ Configure Admin Api with Multi tenant
 # Authentication Settings
 # Authentication:SigningKey must be a Base64-encoded string
 # Authentication:Authority and Authentication:IssuerUrl should be the same URL as your application
-# Changing Authentication:AllowRegistration to true allows unrestricted registration of new Admin API clients. This is not recommended for production. 
+# Changing Authentication:AllowRegistration to true allows unrestricted registration of new Admin API clients. This is not recommended for production.
 $authenticationSettings = @{
     Authority = ""
     IssuerUrl = ""
@@ -84,7 +84,7 @@ $adminApiSource = "$packageSource/AdminApi"
 $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
-    PackageVersion = '2.1.1.0'
+    PackageVersion = '2.2.0.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
 }

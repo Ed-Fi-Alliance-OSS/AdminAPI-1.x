@@ -17,17 +17,17 @@
 #>
 
 $p = @{
-        ProductionApiUrl = "http://api"
-        ApiExternalUrl = "https://localhost:5001"
-        AppStartup = "OnPrem"
-        XsdFolder = "/app/Schema"
-        ApiStartupType = "SharedInstance"
-        DatabaseEngine = "PostgreSql"
-        BulkUploadHashCache = "/app/BulkUploadHashCache/"
-        PathBase = "adminapi"
-        EncryptionKey = "<Generated encryption key>"
-        AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
-        SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
-    }
+    ProductionApiUrl    = "http://api"
+    ApiExternalUrl      = "https://localhost:5001"
+    AppStartup          = "OnPrem"
+    XsdFolder           = "/app/Schema"
+    ApiStartupType      = "SharedInstance"
+    DatabaseEngine      = "PostgreSql"
+    BulkUploadHashCache = "/app/BulkUploadHashCache/"
+    PathBase            = "adminapi"
+    EncryptionKey       = "<Generated encryption key>"
+    AdminDB             = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
+    SecurityDB          = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
+}
 
-.\build.ps1 -Version 2.1.1 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
+.\build.ps1 -Version 2.2.0 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer

@@ -18,7 +18,7 @@ public class AdminApiEndpointBuilder
         _verb = verb;
         _route = route.Trim('/');
         _handler = handler;
-        _pluralResourceName = _route.Split('/').First();
+        _pluralResourceName = _route.Split('/')[0];
     }
 
     private readonly IEndpointRouteBuilder _endpoints;
@@ -44,8 +44,8 @@ public class AdminApiEndpointBuilder
     public void BuildForVersions(params AdminApiVersions.AdminApiVersion[] versions)
     {
         if (versions.Length == 0) throw new ArgumentException("Must register for at least 1 version");
-        if (_route == null) throw new Exception("Invalid endpoint registration. Route must be specified");
-        if (_handler == null) throw new Exception("Invalid endpoint registration. Handler must be specified");
+        if (_route == null) throw new InvalidOperationException("Invalid endpoint registration. Route must be specified");
+        if (_handler == null) throw new InvalidOperationException("Invalid endpoint registration. Handler must be specified");
 
         foreach (var version in versions)
         {

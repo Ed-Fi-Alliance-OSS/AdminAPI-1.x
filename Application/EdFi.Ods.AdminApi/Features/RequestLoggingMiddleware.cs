@@ -58,7 +58,9 @@ public class RequestLoggingMiddleware
                         validationResponse.errors[x.PropertyName].Add(x.ErrorMessage.Replace("\u0027", "'"));
                     });
 
+#pragma warning disable S6667 // Logging in a catch clause should pass the caught exception as a parameter.
                     logger.LogDebug(JsonSerializer.Serialize(new { message = validationResponse, traceId = context.TraceIdentifier }));
+#pragma warning restore S6667 // Logging in a catch clause should pass the caught exception as a parameter.
 
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     await response.WriteAsync(JsonSerializer.Serialize(validationResponse));

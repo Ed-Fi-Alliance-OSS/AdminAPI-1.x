@@ -14,16 +14,13 @@ public interface ITenantConfigurationProvider
 
 public class TenantConfigurationProvider : ITenantConfigurationProvider
 {
-    private readonly IOptionsMonitor<TenantsSection> _tenantsConfigurationOptions;
-
     private IDictionary<string, TenantConfiguration> _tenantConfigurationByIdentifier;
 
     public TenantConfigurationProvider(IOptionsMonitor<TenantsSection> tenantsConfigurationOptions)
     {
-        _tenantsConfigurationOptions = tenantsConfigurationOptions;
-        _tenantConfigurationByIdentifier = InitializeTenantsConfiguration(_tenantsConfigurationOptions.CurrentValue);
+        _tenantConfigurationByIdentifier = InitializeTenantsConfiguration(tenantsConfigurationOptions.CurrentValue);
 
-        _tenantsConfigurationOptions.OnChange(config =>
+        tenantsConfigurationOptions.OnChange(config =>
         {
             var newMap = InitializeTenantsConfiguration(config);
             Interlocked.Exchange(ref _tenantConfigurationByIdentifier, newMap);

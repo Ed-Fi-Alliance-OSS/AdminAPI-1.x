@@ -47,15 +47,15 @@ public class AddApplication : IFeature
     {
         var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
 
-        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && allProfileIds.Count == 0)
+        if ((request.ProfileIds != null && request.ProfileIds.Any()) && allProfileIds.Count == 0)
         {
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", request.ProfileIds)}") });
         }
 
-        if ((request.ProfileIds != null && request.ProfileIds.Count() > 0) && (!request.ProfileIds.All(p => allProfileIds.Contains(p))))
+        if ((request.ProfileIds != null && request.ProfileIds.Any()) && (!request.ProfileIds.All(p => allProfileIds.Contains(p))))
         {
             var notExist = request.ProfileIds.Where(p => !allProfileIds.Contains(p));
-            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: { string.Join(", ", notExist) }" ) });
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileIds), $"The following ProfileIds were not found in database: {string.Join(", ", notExist)}") });
         }
     }
 
@@ -63,12 +63,12 @@ public class AddApplication : IFeature
     {
         var allOdsInstanceIds = db.OdsInstances.Select(p => p.OdsInstanceId).ToList();
 
-        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Count() > 0) && allOdsInstanceIds.Count == 0)
+        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Any()) && allOdsInstanceIds.Count == 0)
         {
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceIds), $"The following OdsInstanceIds were not found in database: {string.Join(", ", request.OdsInstanceIds)}") });
         }
 
-        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Count() > 0) && (!request.OdsInstanceIds.All(p => allOdsInstanceIds.Contains(p))))
+        if ((request.OdsInstanceIds != null && request.OdsInstanceIds.Any()) && (!request.OdsInstanceIds.All(p => allOdsInstanceIds.Contains(p))))
         {
             var notExist = request.OdsInstanceIds.Where(p => !allOdsInstanceIds.Contains(p));
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceIds), $"The following OdsInstanceIds were not found in database: {string.Join(", ", notExist)}") });

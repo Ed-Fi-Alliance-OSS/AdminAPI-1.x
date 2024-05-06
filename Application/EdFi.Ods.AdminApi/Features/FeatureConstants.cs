@@ -3,11 +3,9 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Security.Policy;
-
 namespace EdFi.Ods.AdminApi.Features;
 
-public class FeatureConstants
+public static class FeatureConstants
 {
     public const string VendorIdDescription = "Vendor/ company id";
     public const string VendorNameDescription = "Vendor/ company name";

@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -72,7 +73,7 @@ public class AddOdsInstance : IFeature
 
         private bool BeAUniqueName(string? name)
         {
-            return _getOdsInstancesQuery.Execute().All(x => x.Name != name);
+            return _getOdsInstancesQuery.Execute().TrueForAll(x => x.Name != name);
         }
 
         private bool BeAValidConnectionString(string? connectionString)

@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
-using Profile = EdFi.Ods.AdminApi.Features.Applications.Profile;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 

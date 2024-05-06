@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using Microsoft.EntityFrameworkCore;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -115,7 +116,6 @@ public class EditOdsInstanceContextTests : PlatformUsersContextTestBase
                 updatedOdsInstanceContext.ContextValue.ShouldBe(updateContextValue);
             });
         });
-   
     }
 
     [Test]

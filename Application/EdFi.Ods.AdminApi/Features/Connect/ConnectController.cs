@@ -16,7 +16,9 @@ namespace EdFi.Ods.AdminApi.Features.Connect;
 [AllowAnonymous]
 [SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
 [SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
+[Route(SecurityConstants.ConnectRoute)]
 public class ConnectController : Controller
+
 {
     private readonly ITokenService _tokenService;
     private readonly IRegisterService _registerService;
@@ -27,7 +29,7 @@ public class ConnectController : Controller
         _registerService = registerService;
     }
 
-    [HttpPost(SecurityConstants.RegisterEndpoint)]
+    [HttpPost(SecurityConstants.RegisterActionName)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Registers new client", "Registers new client")]
     [SwaggerResponse(200, "Application registered successfully.")]
@@ -40,7 +42,7 @@ public class ConnectController : Controller
         return new ForbidResult();
     }
 
-    [HttpPost(SecurityConstants.TokenEndpoint)]
+    [HttpPost(SecurityConstants.TokenActionName)]
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Retrieves bearer token", "\nTo authenticate Swagger requests, execute using \"Authorize\" above, not \"Try It Out\" here.")]
     [SwaggerResponse(200, "Sign-in successful.")]

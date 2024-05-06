@@ -71,18 +71,10 @@ public class EditClaimSet : IFeature
         private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 
         public Validator(IGetClaimSetByIdQuery getClaimSetByIdQuery,
-            IGetAllClaimSetsQuery getAllClaimSetsQuery,
-            IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
-            IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery)
+            IGetAllClaimSetsQuery getAllClaimSetsQuery)
         {
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
-
-            var resourceClaims = (Lookup<string, ResourceClaim>)getResourceClaimsAsFlatListQuery.Execute()
-                .ToLookup(rc => rc.Name?.ToLower());
-
-            var authStrategyNames = getAllAuthorizationStrategiesQuery.Execute()
-                .Select(a => a.AuthStrategyName).ToList();
 
             RuleFor(m => m.Id).NotEmpty();
 

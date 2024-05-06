@@ -6,8 +6,8 @@
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.ObjectModel;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 
@@ -36,7 +36,7 @@ public class EditApplicationCommand : IEditApplicationCommand
 
         if (application.Vendor.IsSystemReservedVendor())
         {
-            throw new Exception("This Application is required for proper system function and may not be modified");
+            throw new AdminApiException("This Application is required for proper system function and may not be modified");
         }
 
         var newVendor = _context.Vendors.Single(v => v.VendorId == model.VendorId);
@@ -51,28 +51,13 @@ public class EditApplicationCommand : IEditApplicationCommand
         var currentApiClientId = apiClient.ApiClientId;
         apiClient.Name = model.ApplicationName;
 
-        var currentApiClientOdsInstances = _context.ApiClientOdsInstances.Where(o => o.ApiClient.ApiClientId == currentApiClientId);
-
-        if (currentApiClientOdsInstances != null)
-        {
-            _context.ApiClientOdsInstances.RemoveRange(currentApiClientOdsInstances);
-        }
-
-        var currentApplicationEducationOrganizations = _context.ApplicationEducationOrganizations.Where(aeo => aeo.Application.ApplicationId == application.ApplicationId);
-
-        if (currentApplicationEducationOrganizations != null)
-        {
-            _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
-        }
+        _context.ApiClientOdsInstances.RemoveRange(_context.ApiClientOdsInstances.Where(o => o.ApiClient.ApiClientId == currentApiClientId));
+        _context.ApplicationEducationOrganizations.RemoveRange(_context.ApplicationEducationOrganizations.Where(aeo => aeo.Application.ApplicationId == application.ApplicationId));
 
         var currentProfiles = application.Profiles.ToList();
-
-        if (currentProfiles != null)
+        foreach (var profile in currentProfiles)
         {
-            foreach (var profile in currentProfiles)
-            {
-                application.Profiles.Remove(profile);
-            }
+            application.Profiles.Remove(profile);
         }
 
 
@@ -81,7 +66,7 @@ public class EditApplicationCommand : IEditApplicationCommand
         application.Vendor = newVendor;
 
         var newApplicationEdOrgs = model.EducationOrganizationIds == null
-            ? Enumerable.Empty<ApplicationEducationOrganization>()
+            ? []
             : model.EducationOrganizationIds.Select(id => new ApplicationEducationOrganization
             {
                 ApiClients = new List<ApiClient> { apiClient },
@@ -89,15 +74,12 @@ public class EditApplicationCommand : IEditApplicationCommand
                 Application = application,
             });
 
-        if (newApplicationEdOrgs != null)
+        foreach (var appEdOrg in newApplicationEdOrgs)
         {
-            foreach (var appEdOrg in newApplicationEdOrgs)
-            {
-                application.ApplicationEducationOrganizations.Add(appEdOrg);
-            }
+            application.ApplicationEducationOrganizations.Add(appEdOrg);
         }
-        
-        application.Profiles ??= new Collection<Profile>();
+
+        application.Profiles ??= [];
 
         application.Profiles.Clear();
 

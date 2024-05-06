@@ -7,16 +7,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 
 public class TenantConfiguration
 {
-    private string? _tenantIdentifier;
-
-    public string? TenantIdentifier
-    {
-        get => _tenantIdentifier;
-        set
-        {
-            _tenantIdentifier = value;
-        }
-    }
+    public string? TenantIdentifier { get; set; }
 
     public string? AdminConnectionString { get; set; }
 

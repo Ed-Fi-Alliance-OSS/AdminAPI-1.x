@@ -10,11 +10,7 @@ namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
 public class ResourceClaimValidator
 {
-    private static List<string>? _duplicateResources;
-    public ResourceClaimValidator()
-    {
-        _duplicateResources = new List<string>();
-    }
+    private static List<string>? _duplicateResources = [];
 
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims, List<string> dbActions,
         List<string?> dbAuthStrategies, ClaimSetResourceClaimModel resourceClaim, List<ChildrenClaimSetResource> existingResourceClaims,
@@ -59,11 +55,14 @@ public class ResourceClaimValidator
     {
         if (existingResourceClaims.Count(x => x.Name == resourceClaim.Name) > 1)
         {
-            if (_duplicateResources != null && resourceClaim.Name != null && !_duplicateResources.Contains(resourceClaim.Name))
+            if (_duplicateResources == null || resourceClaim.Name == null ||
+                _duplicateResources.Contains(resourceClaim.Name))
             {
-                _duplicateResources.Add(resourceClaim.Name);
-                context.AddFailure(propertyName, "Only unique resource claims can be added. The following is a duplicate resource: '{ResourceClaimName}'.");
+                return;
             }
+
+            _duplicateResources.Add(resourceClaim.Name);
+            context.AddFailure(propertyName, "Only unique resource claims can be added. The following is a duplicate resource: '{ResourceClaimName}'.");
         }
     }
 
@@ -106,14 +105,16 @@ public class ResourceClaimValidator
             foreach (var authStrategyOverrideWithAction in resourceClaim.AuthorizationStrategyOverridesForCRUD)
             {
                 if (authStrategyOverrideWithAction?.AuthorizationStrategies != null)
-                foreach (var authStrategyOverride in authStrategyOverrideWithAction.AuthorizationStrategies)
                 {
-                    if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
+                    foreach (var authStrategyOverride in authStrategyOverrideWithAction.AuthorizationStrategies)
                     {
-                        context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
-                        context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.");
+                        if (authStrategyOverride?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategyOverride.AuthStrategyName))
+                        {
+                            context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategyOverride.AuthStrategyName);
+                            context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.");
+                        }
                     }
-                }            
+                }
             }
         }
     }
@@ -125,15 +126,19 @@ public class ResourceClaimValidator
         {
             foreach (var defaultASWithAction in resourceClaim.DefaultAuthorizationStrategiesForCRUD)
             {
-                if(defaultASWithAction?.AuthorizationStrategies != null)
-                foreach(var defaultAS in defaultASWithAction.AuthorizationStrategies)
+                if (defaultASWithAction?.AuthorizationStrategies == null)
+                {
+                    continue;
+                }
+
+                foreach (var defaultAS in defaultASWithAction.AuthorizationStrategies)
                 {
                     if (defaultAS?.AuthStrategyName != null && !dbAuthStrategies.Contains(defaultAS.AuthStrategyName))
                     {
                         context.MessageFormatter.AppendArgument("AuthStrategyName", defaultAS.AuthStrategyName);
                         context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.");
                     }
-                }               
+                }
             }
         }
     }
@@ -143,7 +148,7 @@ public class ResourceClaimValidator
     {
         if (resourceClaimActions != null && resourceClaimActions.Any())
         {
-            var atleastAnActionEnabled = resourceClaimActions.Any(x => x.Enabled);
+            var atleastAnActionEnabled = resourceClaimActions.Exists(x => x.Enabled);
             if (!atleastAnActionEnabled)
             {
                 context.AddFailure(propertyName, FeatureConstants.ResourceClaimOneActionNotSet);
@@ -154,16 +159,16 @@ public class ResourceClaimValidator
                               .Where(g => g.Count() > 1)
                               .Select(y => y.Key)
                               .ToList();
-                foreach(var duplicate in duplicates)
+                foreach (var duplicate in duplicates)
                 {
                     context.AddFailure(propertyName, $"{duplicate} action is duplicated.");
                 }
-                foreach (var action in resourceClaimActions)
+                foreach (var action in resourceClaimActions.Select(x => x.Name))
                 {
-                    if(!dbActions.Any(actionName => actionName != null &&
-                        actionName.Equals(action.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    if (!dbActions.Exists(actionName => actionName != null &&
+                        actionName.Equals(action, StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        context.AddFailure(propertyName, $"{action.Name} is not a valid action.");
+                        context.AddFailure(propertyName, $"{action} is not a valid action.");
                     }
                 }
             }

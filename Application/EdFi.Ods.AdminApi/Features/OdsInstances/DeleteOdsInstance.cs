@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using FluentValidation;
-using Polly;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
 

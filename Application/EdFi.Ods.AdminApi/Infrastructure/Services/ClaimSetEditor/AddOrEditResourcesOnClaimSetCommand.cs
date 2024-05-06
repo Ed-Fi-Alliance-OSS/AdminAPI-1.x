@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using FluentValidation;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
@@ -34,7 +33,7 @@ public class AddOrEditResourcesOnClaimSetCommand
         resources.AddRange(childResources);
         var currentResources = resources.Select(r =>
             {
-                var resource = allResources.FirstOrDefault(dr => (dr.Name ?? string.Empty).Equals(r.Name, StringComparison.Ordinal));
+                var resource = allResources.Find(dr => (dr.Name ?? string.Empty).Equals(r.Name, StringComparison.Ordinal));
                 if (resource != null)
                 {
                     resource.Actions = r.Actions;

@@ -7,8 +7,6 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -26,7 +24,7 @@ public class ExportClaimSet : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int id)
     {
-        var claimSet = getClaimSetByIdQuery.Execute(id); 
+        var claimSet = getClaimSetByIdQuery.Execute(id);
 
         var allResources = getResourcesByClaimSetIdQuery.AllResources(id);
         var applications = getApplications.Execute(id);

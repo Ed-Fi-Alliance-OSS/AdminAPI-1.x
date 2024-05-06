@@ -5,6 +5,8 @@
 
 using FluentValidation;
 
+namespace EdFi.Ods.AdminApi.Infrastructure;
+
 public static class ValidatorExtensions
 {
     public static async Task GuardAsync<TRequest>(this IValidator<TRequest> validator, TRequest request)

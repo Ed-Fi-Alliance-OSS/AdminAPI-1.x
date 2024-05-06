@@ -7,6 +7,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
 using Swashbuckle.AspNetCore.Annotations;
@@ -64,7 +65,7 @@ public class EditAuthStrategy : IFeature
                 }
             }
         }
-        if (!allResourcesIds.Any(x => x == resourceClaimId))
+        if (!allResourcesIds.Contains(resourceClaimId))
         {
             throw new NotFoundException<int>("ResourceClaim", resourceClaimId);
         }
@@ -119,7 +120,7 @@ public class EditAuthStrategy : IFeature
 
                 }
 
-                var actionName = getAllActionsQuery.Execute().ToList()
+                var actionName = getAllActionsQuery.Execute().AsEnumerable()
                 .FirstOrDefault(a => a.ActionName.ToLower() == overrideAuthStategyOnClaimSetRequest.ActionName!.ToLower());
 
                 if (actionName == null)

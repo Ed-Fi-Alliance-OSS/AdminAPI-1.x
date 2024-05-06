@@ -28,7 +28,7 @@ public class AddProfile : IFeature
     {
         await validator.GuardAsync(request);
         var addedProfile = addProfileCommand.Execute(request);
-        return Results.Created($"/profiles/{addedProfile.ProfileId}", null);    
+        return Results.Created($"/profiles/{addedProfile.ProfileId}", null);
     }
 
     [SwaggerSchema(Title = "AddProfileRequest")]
@@ -56,5 +56,5 @@ public class AddProfile : IFeature
                 }
             });
         }
-    }   
+    }
 }

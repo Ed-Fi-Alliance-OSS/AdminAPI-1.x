@@ -88,7 +88,7 @@ public class EditOdsInstance : IFeature
 
         private bool BeAUniqueName(string? name)
         {
-            return _getOdsInstancesQuery.Execute().All(x => x.Name != name);
+            return _getOdsInstancesQuery.Execute().TrueForAll(x => x.Name != name);
         }
         private bool BeAValidConnectionString(string? connectionString)
         {

@@ -10,6 +10,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -105,7 +106,7 @@ public class EditOdsInstanceDerivative : IFeature
 
         private bool BeUniqueCombinedKey(EditOdsInstanceDerivativeRequest request)
         {
-            return !_getOdsInstanceDerivativesQuery.Execute().Any
+            return !_getOdsInstanceDerivativesQuery.Execute().Exists
                 (x =>
                     x.OdsInstance?.OdsInstanceId == request.OdsInstanceId &&
                     x.DerivativeType.Equals(request.DerivativeType, StringComparison.OrdinalIgnoreCase) &&

@@ -5,6 +5,7 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
@@ -33,7 +34,7 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
 
         if (application != null && application.Vendor.IsSystemReservedVendor())
         {
-            throw new Exception("This Application is required for proper system function and may not be modified");
+            throw new ArgumentException("This Application is required for proper system function and may not be modified");
         }
 
         if (application == null)
@@ -43,28 +44,28 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
 
         var currentClientAccessTokens = _context.ClientAccessTokens.Where(o => application.ApiClients.Contains(o.ApiClient));
 
-        if (currentClientAccessTokens != null)
+        if (currentClientAccessTokens.Any())
         {
             _context.ClientAccessTokens.RemoveRange(currentClientAccessTokens);
         }
 
         var currentApiClientOdsInstances = _context.ApiClientOdsInstances.Where(o => application.ApiClients.Contains(o.ApiClient));
 
-        if (currentApiClientOdsInstances != null)
+        if (currentApiClientOdsInstances.Any())
         {
             _context.ApiClientOdsInstances.RemoveRange(currentApiClientOdsInstances);
         }
 
         var currentApplicationEducationOrganizations = _context.ApplicationEducationOrganizations.Where(aeo => aeo.Application.ApplicationId == application.ApplicationId);
 
-        if (currentApplicationEducationOrganizations != null)
+        if (currentApplicationEducationOrganizations.Any())
         {
             _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
         }
 
         var currentProfiles = application.Profiles.ToList();
 
-        if (currentProfiles != null)
+        if (currentProfiles.Any())
         {
             foreach (var profile in currentProfiles)
             {

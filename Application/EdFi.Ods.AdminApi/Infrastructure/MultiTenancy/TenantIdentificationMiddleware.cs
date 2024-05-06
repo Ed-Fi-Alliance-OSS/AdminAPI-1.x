@@ -44,7 +44,7 @@ public class TenantResolverMiddleware : IMiddleware
             {
                 if (IsValidTenantId(tenantIdentifier!))
                 {
-                    if (_tenantConfigurationProvider.Get().TryGetValue((string)tenantIdentifier!, out var tenantConfiguration))
+                    if (_tenantConfigurationProvider.Get().TryGetValue(tenantIdentifier!, out var tenantConfiguration))
                     {
                         _tenantConfigurationContextProvider.Set(tenantConfiguration);
                     }
@@ -71,7 +71,7 @@ public class TenantResolverMiddleware : IMiddleware
                     }
                     else
                     {
-                        ThrowTenantValidationError("Please configure valid default tenant id"); ;
+                        ThrowTenantValidationError("Please configure valid default tenant id");
                     }
                 }
                 else
@@ -102,7 +102,7 @@ public class TenantResolverMiddleware : IMiddleware
         void ThrowTenantValidationError(string errorMessage)
         {
             throw new ValidationException(new[] { new ValidationFailure("Tenant", errorMessage) });           
-        };
+        }
     }
 
     private bool IsValidTenantId(string tenantId)

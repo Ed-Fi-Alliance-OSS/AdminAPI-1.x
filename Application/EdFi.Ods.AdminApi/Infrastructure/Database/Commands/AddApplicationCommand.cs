@@ -31,7 +31,7 @@ public class AddApplicationCommand : IAddApplicationCommand
 
         var vendor = _usersContext.Vendors.Include(x => x.Users)
             .Single(v => v.VendorId == applicationModel.VendorId);
-        
+
         var odsInstances = applicationModel.OdsInstanceIds != null
             ? _usersContext.OdsInstances.Where(o => applicationModel.OdsInstanceIds.Contains(o.OdsInstanceId))
             : null;

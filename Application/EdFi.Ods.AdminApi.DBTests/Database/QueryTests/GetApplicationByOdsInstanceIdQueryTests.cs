@@ -11,6 +11,7 @@ using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -35,7 +36,6 @@ public class GetApplicationByOdsInstanceIdQueryTests : PlatformUsersContextTestB
             Vendor = vendor,
             OperationalContextUri = OperationalContext.DefaultOperationalContextUri,
         };
-
         var user = new VendorUser
         {
             Email = "",

@@ -5,7 +5,6 @@
 
 using System;
 using System.Linq;
-using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;

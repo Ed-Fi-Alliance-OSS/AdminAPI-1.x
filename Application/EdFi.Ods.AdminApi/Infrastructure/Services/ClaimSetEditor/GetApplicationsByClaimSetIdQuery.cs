@@ -19,9 +19,9 @@ public class GetApplicationsByClaimSetIdQuery : IGetApplicationsByClaimSetIdQuer
         _usersContext = usersContext;
     }
 
-    public IEnumerable<Application> Execute(int claimSetId)
+    public IEnumerable<Application> Execute(int securityContextClaimSetId)
     {
-        var claimSetName = GetClaimSetNameById(claimSetId);
+        var claimSetName = GetClaimSetNameById(securityContextClaimSetId);
 
         return GetApplicationsByClaimSetName(claimSetName);
     }

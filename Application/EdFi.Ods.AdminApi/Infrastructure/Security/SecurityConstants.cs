@@ -7,8 +7,10 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Security;
 
 public static class SecurityConstants
 {
-    public const string TokenEndpoint = "connect/token";
-    public const string RegisterEndpoint = "connect/register";
+    public const string ConnectRoute = "connect";
+    public const string TokenActionName = "token";
+    public const string TokenEndpoint = $"{ConnectRoute}/{TokenActionName}";
+    public const string RegisterActionName = "register";
 
     public static class Scopes
     {

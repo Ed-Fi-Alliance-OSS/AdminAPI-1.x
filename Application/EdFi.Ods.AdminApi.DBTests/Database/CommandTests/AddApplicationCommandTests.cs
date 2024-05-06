@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -74,7 +73,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ProfileIds = null,
                 VendorId = vendor.VendorId,
                 EducationOrganizationIds = new List<int> { 12345, 67890 },
-                OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId }, 
+                OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId },
             };
 
             result = command.Execute(newApplication);
@@ -188,7 +187,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             apiClientOdsInstance.ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
             apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(odsInstance.OdsInstanceId);
         });
-        
+
     }
 
     private class TestApplication : IAddApplicationModel

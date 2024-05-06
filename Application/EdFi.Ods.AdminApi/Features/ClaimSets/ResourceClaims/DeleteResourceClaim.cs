@@ -6,6 +6,7 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using FluentValidation;
 using FluentValidation.Results;
 

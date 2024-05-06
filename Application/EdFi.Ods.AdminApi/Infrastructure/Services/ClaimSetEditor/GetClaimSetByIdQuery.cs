@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
@@ -16,10 +17,10 @@ public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
         _securityContext = securityContext;
     }
 
-    public ClaimSet Execute(int claimSetId)
+    public ClaimSet Execute(int securityContextClaimSetId)
     {
         var securityContextClaimSet = _securityContext.ClaimSets
-          .SingleOrDefault(x => x.ClaimSetId == claimSetId);
+          .SingleOrDefault(x => x.ClaimSetId == securityContextClaimSetId);
 
         if (securityContextClaimSet != null)
         {
@@ -31,7 +32,7 @@ public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
             };
         }
 
-        throw new NotFoundException<int>("claimset", claimSetId);
+        throw new NotFoundException<int>("claimset", securityContextClaimSetId);
 
     }
 }

@@ -46,7 +46,7 @@ public class EditResourceOnClaimSetCommand
         foreach (var claimSetResourceClaim in resourceClaimsToEdit)
         {
             if(modelResourceClaim.Actions != null &&
-                modelResourceClaim.Actions.Any(x => x.Name != null && x.Name.Equals(claimSetResourceClaim.Action.ActionName,
+                modelResourceClaim.Actions.Exists(x => x.Name != null && x.Name.Equals(claimSetResourceClaim.Action.ActionName,
                 StringComparison.InvariantCultureIgnoreCase) && !x.Enabled))
             {
                 recordsToRemove.Add(claimSetResourceClaim);

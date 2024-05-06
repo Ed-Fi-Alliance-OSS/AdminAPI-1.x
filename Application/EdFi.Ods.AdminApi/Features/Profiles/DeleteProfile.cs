@@ -5,7 +5,6 @@
 
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 
 namespace EdFi.Ods.AdminApi.Features.Vendors;
 

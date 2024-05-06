@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -77,5 +76,5 @@ public abstract class PlatformUsersContextTestBase
         var builder = new DbContextOptionsBuilder();
         builder.UseSqlServer(ConnectionString);
         return builder.Options;
-    } 
+    }
 }

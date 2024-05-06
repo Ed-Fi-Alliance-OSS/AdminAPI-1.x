@@ -6,6 +6,7 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
 
@@ -32,7 +33,7 @@ public class ReadApplication : IFeature
         {
             applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
         }
-        var filteredApplications = applications.ToList().Skip(offset).Take(limit);
+        var filteredApplications = applications.AsEnumerable().Skip(offset).Take(limit);
         return Task.FromResult(Results.Ok(filteredApplications));
     }
 

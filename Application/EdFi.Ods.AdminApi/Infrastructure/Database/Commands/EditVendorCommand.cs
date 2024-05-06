@@ -30,7 +30,7 @@ public class EditVendorCommand
 
         if (vendor.IsSystemReservedVendor())
         {
-            throw new Exception("This vendor is required for proper system function and may not be modified.");
+            throw new ArgumentException("This vendor is required for proper system function and may not be modified.");
         }
 
         vendor.VendorName = changedVendorData.Company;

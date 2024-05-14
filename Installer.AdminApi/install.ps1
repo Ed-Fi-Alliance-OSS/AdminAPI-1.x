@@ -60,7 +60,7 @@ Deploy Admin Api for use with a "District Specific" ODS API
         ToolsPath = "C:/temp/tools"
         DbConnectionInfo = $dbConnectionInfo
         OdsApiVersion = "6.1"
-        PackageVersion = '1.1.0'
+        PackageVersion = '1.4.1.0'
         AdminApiFeatures = $adminApiFeatures
     }
 #>
@@ -72,7 +72,7 @@ $adminApiFeatures = @{
 # Authentication Settings
 # Authentication:SigningKey must be a Base64-encoded string
 # Authentication:Authority and Authentication:IssuerUrl should be the same URL as your application
-# Changing Authentication:AllowRegistration to true allows unrestricted registration of new Admin API clients. This is not recommended for production. 
+# Changing Authentication:AllowRegistration to true allows unrestricted registration of new Admin API clients. This is not recommended for production.
 $authenticationSettings = @{
     Authority = ""
     IssuerUrl = ""
@@ -87,7 +87,7 @@ $p = @{
     ToolsPath = "C:/temp/tools"
     DbConnectionInfo = $dbConnectionInfo
     OdsApiVersion = ""
-    PackageVersion = '1.3.3.0'
+    PackageVersion = '1.4.1.0'
     PackageSource = $adminApiSource
     AuthenticationSettings = $authenticationSettings
     AdminApiFeatures = $adminApiFeatures

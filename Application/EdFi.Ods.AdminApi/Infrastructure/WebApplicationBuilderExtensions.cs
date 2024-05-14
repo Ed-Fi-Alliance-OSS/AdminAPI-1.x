@@ -187,6 +187,7 @@ public static class WebApplicationBuilderExtensions
 
             var optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseNpgsql(securityConnectionString);
+            optionsBuilder.UseLowerCaseNamingConvention();
             var context = new PostgresSecurityContext(optionsBuilder.Options);
 
             webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(

@@ -84,6 +84,7 @@ public class RequestLoggingMiddleware
                     break;
 
                 default:
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     logger.LogError(JsonSerializer.Serialize(new { message = "An uncaught error has occurred", error = new { ex.Message, ex.StackTrace }, traceId = context.TraceIdentifier }));
                     await response.WriteAsync(JsonSerializer.Serialize(new { message = "The server encountered an unexpected condition that prevented it from fulfilling the request." }));
                     break;

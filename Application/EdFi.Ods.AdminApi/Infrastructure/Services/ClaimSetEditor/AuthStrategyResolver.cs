@@ -23,7 +23,7 @@ public class AuthStrategyResolver : IAuthStrategyResolver
 
     public IEnumerable<ResourceClaim> ResolveAuthStrategies(IEnumerable<ResourceClaim> resourceClaims)
     {
-        var dbAuthStrategies = _securityContext.AuthorizationStrategies;
+        var dbAuthStrategies = _securityContext.AuthorizationStrategies.ToList();
 
         foreach (var claim in resourceClaims)
         {

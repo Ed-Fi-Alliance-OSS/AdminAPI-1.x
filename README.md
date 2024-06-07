@@ -1,5 +1,7 @@
 # Ed-Fi-ODS-AdminAPI
 
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Ed-Fi-Alliance-OSS/AdminAPI-1.x/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Ed-Fi-Alliance-OSS/AdminAPI-1.x)
+
 The Ed-Fi ODS/API Admin API is a programmatic interface to administrate ODS/API
 platform instances.  For Admin API 1.2, it will support ODS/API versions 3.4
 through 6.1.

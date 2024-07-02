@@ -11,7 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetProfilesQuery
 {
     List<Profile> Execute();
-    List<Profile> Execute(int offset, int limit);
+    List<Profile> Execute(int offset, int limit, int? id, string? name);
 }
 
 public class GetProfilesQuery : IGetProfilesQuery
@@ -28,8 +28,12 @@ public class GetProfilesQuery : IGetProfilesQuery
         return _usersContext.Profiles.OrderBy(p => p.ProfileName).ToList();
     }
 
-    public List<Profile> Execute(int offset, int limit)
+    public List<Profile> Execute(int offset, int limit, int? id, string? name)
     {
-        return _usersContext.Profiles.OrderBy(p => p.ProfileName).Skip(offset).Take(limit).ToList();
+        return _usersContext.Profiles
+            .Where(p => id == null || p.ProfileId == id)
+            .Where(p => name == null || p.ProfileName == name)
+            .OrderBy(p => p.ProfileName)
+            .Skip(offset).Take(limit).ToList();
     }
 }

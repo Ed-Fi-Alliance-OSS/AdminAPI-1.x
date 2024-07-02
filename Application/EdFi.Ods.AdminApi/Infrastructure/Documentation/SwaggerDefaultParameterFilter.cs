@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
@@ -29,11 +30,136 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                 parameter.Description = "Indicates how many items should be skipped before returning results.";
                 parameter.Schema.Default = new OpenApiString(_settings.Value.DefaultPageSizeOffset.ToString());
             }
-            if (parameter.Name.ToLower().Equals("limit"))
+            else if (parameter.Name.ToLower().Equals("limit"))
             {
                 parameter.Description = "Indicates the maximum number of items that should be returned in the results.";
                 parameter.Schema.Default = new OpenApiString(_settings.Value.DefaultPageSizeLimit.ToString());
             }
+        }
+
+        switch (context.MethodInfo.Name)
+        {
+            case "GetProfiles":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.ProfileIdDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("name"))
+                        {
+                            parameter.Description = FeatureConstants.ProfileName;
+                        }
+                    }
+                    break;
+                }
+            case "GetResourceClaims":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.ResourceClaimIdDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("name"))
+                        {
+                            parameter.Description = FeatureConstants.ResourceClaimNameDescription;
+                        }
+                    }
+                    break;
+                }
+            case "GetVendors":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.VendorIdDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("company"))
+                        {
+                            parameter.Description = FeatureConstants.VendorNameDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("namespaceprefixes"))
+                        {
+                            parameter.Description = FeatureConstants.VendorNamespaceDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("contactname"))
+                        {
+                            parameter.Description = FeatureConstants.VendorContactDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("contactemailaddress"))
+                        {
+                            parameter.Description = FeatureConstants.VendorContactEmailDescription;
+                        }
+                    }
+                    break;
+                }
+            case "GetOdsInstances":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.OdsInstanceIdsDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("name"))
+                        {
+                            parameter.Description = FeatureConstants.OdsInstanceName;
+                        }
+                    }
+                    break;
+                }
+            case "GetClaimSets":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.ClaimSetIdDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("name"))
+                        {
+                            parameter.Description = FeatureConstants.ClaimSetNameDescription;
+                        }
+                    }
+                    break;
+                }
+            case "GetApplications":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.ApplicationIdDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("applicationname"))
+                        {
+                            parameter.Description = FeatureConstants.ApplicationNameDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("claimsetname"))
+                        {
+                            parameter.Description = FeatureConstants.ClaimSetNameDescription;
+                        }
+                    }
+                    break;
+                }
+            case "GetActions":
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter.Name.ToLower().Equals("id"))
+                        {
+                            parameter.Description = FeatureConstants.ActionIdDescription;
+                        }
+                        else if (parameter.Name.ToLower().Equals("name"))
+                        {
+                            parameter.Description = FeatureConstants.ActionNameDescription;
+                        }
+                    }
+                    break;
+                }
         }
     }
 }

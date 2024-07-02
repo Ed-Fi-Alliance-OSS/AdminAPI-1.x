@@ -11,6 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetResourceClaimsQuery
 {
     IEnumerable<ResourceClaim> Execute();
+    IEnumerable<ResourceClaim> Execute(int offset, int limit, int? id, string? name);
 }
 
 public class GetResourceClaimsQuery : IGetResourceClaimsQuery
@@ -23,6 +24,20 @@ public class GetResourceClaimsQuery : IGetResourceClaimsQuery
     }
 
     public IEnumerable<ResourceClaim> Execute()
+    {
+        return Query().ToList();
+    }
+
+    public IEnumerable<ResourceClaim> Execute(int offset, int limit, int? id, string? name)
+    {
+        return Query()
+            .Where(c => id == null || c.Id == id)
+            .Where(c => name == null || c.Name == name)
+            .Skip(offset)
+            .Take(limit).ToList();
+    }
+
+    private IEnumerable<ResourceClaim> Query()
     {
         var resources = new List<ResourceClaim>();
         var parentResources = _securityContext.ResourceClaims.Where(x => x.ParentResourceClaim == null).ToList();
@@ -45,7 +60,6 @@ public class GetResourceClaimsQuery : IGetResourceClaimsQuery
         }
         return resources
             .Distinct()
-            .OrderBy(x => x.Name)
-            .ToList();
+            .OrderBy(x => x.Name);
     }
 }

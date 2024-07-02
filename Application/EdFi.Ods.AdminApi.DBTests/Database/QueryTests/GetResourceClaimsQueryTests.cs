@@ -33,6 +33,97 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
         results.All(x => x.Children.Count == 0).ShouldBe(true);
     }
 
+    [Test]
+    public void ShouldGetResourceClaimsWithOffset()
+    {
+        var skip = 3;
+        var testResourceClaims = SetupResourceClaims();
+        var testResourceClaimsResult = testResourceClaims.Skip(skip);
+
+        Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
+        using var securityContext = TestContext;
+        var query = new GetResourceClaimsQuery(securityContext);
+        results = query.Execute(skip, 25, null, null).ToArray();
+        results.Length.ShouldBe(2);
+        results.Select(x => x.Name).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceName), true);
+        results.Select(x => x.Id).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceClaimId), true);
+        results.All(x => x.Actions == null).ShouldBe(true);
+        results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
+        results.All(x => x.ParentName == null).ShouldBe(true);
+        results.All(x => x.Children.Count == 0).ShouldBe(true);
+    }
+
+    [Test]
+    public void ShouldGetResourceClaimsWithLimit()
+    {
+        var limit = 3;
+        var testResourceClaims = SetupResourceClaims();
+        var testResourceClaimsResult = testResourceClaims.Take(limit);
+
+        Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
+        using var securityContext = TestContext;
+        var query = new GetResourceClaimsQuery(securityContext);
+        results = query.Execute(0, limit, null, null).ToArray();
+        results.Length.ShouldBe(3);
+        results.Select(x => x.Name).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceName), true);
+        results.Select(x => x.Id).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceClaimId), true);
+        results.All(x => x.Actions == null).ShouldBe(true);
+        results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
+        results.All(x => x.ParentName == null).ShouldBe(true);
+        results.All(x => x.Children.Count == 0).ShouldBe(true);
+    }
+
+    [Test]
+    public void ShouldGetResourceClaimsWithOffsetAndLimit()
+    {
+        var offset = 2;
+        var limit = 2;
+        var testResourceClaims = SetupResourceClaims();
+        var testResourceClaimsResult = testResourceClaims.Skip(offset).Take(limit);
+
+        Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
+        using var securityContext = TestContext;
+        var query = new GetResourceClaimsQuery(securityContext);
+        results = query.Execute(offset, limit, null, null).ToArray();
+        results.Length.ShouldBe(2);
+        results.Select(x => x.Name).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceName), true);
+        results.Select(x => x.Id).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceClaimId), true);
+        results.All(x => x.Actions == null).ShouldBe(true);
+        results.All(x => x.ParentId.Equals(0)).ShouldBe(true);
+        results.All(x => x.ParentName == null).ShouldBe(true);
+        results.All(x => x.Children.Count == 0).ShouldBe(true);
+    }
+
+    [Test]
+    public void ShouldGetResourceClaimsWithId()
+    {
+        var name = $"TestResourceClaim{2:N}";
+        var testResourceClaims = SetupResourceClaims();
+        var testResourceClaimsResult = testResourceClaims.First(c => c.ResourceName == name);
+
+        Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
+        using var securityContext = TestContext;
+        var query = new GetResourceClaimsQuery(securityContext);
+        results = query.Execute(0, 25, testResourceClaimsResult.ResourceClaimId, null).ToArray();
+        results.Length.ShouldBe(1);
+        results.First().Id.ShouldBe(testResourceClaimsResult.ResourceClaimId);
+    }
+
+    [Test]
+    public void ShouldGetResourceClaimsWithName()
+    {
+        var name = $"TestResourceClaim{2:N}";
+        var testResourceClaims = SetupResourceClaims();
+        var testResourceClaimsResult = testResourceClaims.Where(c => c.ResourceName == name);
+
+        Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
+        using var securityContext = TestContext;
+        var query = new GetResourceClaimsQuery(securityContext);
+        results = query.Execute(0, 25, null, name).ToArray();
+        results.Length.ShouldBe(1);
+        results.First().Name.ShouldBe(testResourceClaimsResult.First().ResourceName);
+    }
+
     private IReadOnlyCollection<ResourceClaim> SetupResourceClaims(int resourceClaimCount = 5)
     {
         var resourceClaims = new List<ResourceClaim>();

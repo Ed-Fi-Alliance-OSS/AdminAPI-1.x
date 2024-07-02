@@ -12,10 +12,14 @@ public static class FeatureConstants
     public const string VendorNamespaceDescription = "Namespace prefix for the vendor. Multiple namespace prefixes can be provided as comma separated list if required.";
     public const string VendorContactDescription = "Vendor contact name";
     public const string VendorContactEmailDescription = "Vendor contact email id";
+    public const string ApplicationIdDescription = "Application id";
     public const string ApplicationNameDescription = "Application name";
+    public const string ClaimSetIdDescription = "Claim set id";
     public const string ClaimSetNameDescription = "Claim set name";
     public const string ProfileIdDescription = "Profile id";
     public const string EducationOrganizationIdsDescription = "Education organization ids";
+    public const string ResourceClaimIdDescription = "Resource Claim Id";
+    public const string ResourceClaimNameDescription = "Resource Claim Name";
     public const string ResourceClaimsDescription = "Resource Claims";
     public const string ApplicationNameLengthValidationMessage = "The Application Name {ApplicationName} would be too long for Admin App to set up necessary Application records." +
                         " Consider shortening the name by {ExtraCharactersInName} character(s).";
@@ -54,4 +58,16 @@ public static class FeatureConstants
     public const string OdsInstanceContextContextKeyDescription = "context key.";
     public const string OdsInstanceContextContextValueDescription = "context value.";
     public const string ClientSecretValidationMessage = "ClientSecret must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be 32 to 128 characters long.";
+    public const string ActionIdDescription = "Action id";
+    public const string ActionNameDescription = "Action name";
+
+    /// Default columns to filter for each entity:
+    public const string ActionDefaultSorting = "Name";
+    public const string ApplicationsDefaultSorting = "Name";
+    public const string ClaimsetDefaultSorting = "Name";
+    public const string OdsInstanceDefaultSorting = "Name";
+    public const string ProfileDefaultSorting = "Name";
+    public const string ResourceDefaultSorting = "Name";
+    public const string ResourceClaimsDefaultSorting = "Name";
+    public const string VendorDefaultSorting = "Company";
 }

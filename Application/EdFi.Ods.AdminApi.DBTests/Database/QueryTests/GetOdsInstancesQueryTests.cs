@@ -35,7 +35,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
             var limit = 2;
 
             var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(offset, limit);
+            var odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(2);
@@ -45,8 +45,8 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
 
             offset = 2;
 
-            odsInstancesAfterOffset = command.Execute(offset, limit);
-            
+            odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(2);
             odsInstancesAfterOffset.ShouldContain(odsI => odsI.Name == "test ods instance 3");
@@ -54,7 +54,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
 
             offset = 4;
 
-            odsInstancesAfterOffset = command.Execute(offset, limit);
+            odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);
@@ -62,7 +62,39 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         });
     }
 
-    private static void CreateMultiple(int total = 5)
+    [Test]
+    public void ShouldGetAllInstancesWithId()
+    {
+        Transaction(usersContext =>
+        {
+            var odsInstances = CreateMultiple();
+            var command = new GetOdsInstancesQuery(usersContext);
+            var odsInstancesAfterOffset = command.Execute(0, 25, odsInstances[2].OdsInstanceId, null);
+
+            odsInstancesAfterOffset.ShouldNotBeEmpty();
+            odsInstancesAfterOffset.Count.ShouldBe(1);
+
+            odsInstancesAfterOffset.ShouldContain(odsI => odsI.Name == odsInstances[2].Name);
+        });
+    }
+
+    [Test]
+    public void ShouldGetAllInstancesWithName()
+    {
+        Transaction(usersContext =>
+        {
+            var odsInstances = CreateMultiple();
+            var command = new GetOdsInstancesQuery(usersContext);
+            var odsInstancesAfterOffset = command.Execute(0, 25, null, odsInstances[2].Name);
+
+            odsInstancesAfterOffset.ShouldNotBeEmpty();
+            odsInstancesAfterOffset.Count.ShouldBe(1);
+
+            odsInstancesAfterOffset.ShouldContain(odsI => odsI.Name == odsInstances[2].Name);
+        });
+    }
+
+    private static OdsInstance[] CreateMultiple(int total = 5)
     {
         var odsInstances = new OdsInstance[total];
 
@@ -76,5 +108,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
             };
         }
         Save(odsInstances);
+
+        return odsInstances;
     }
 }

@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Globalization;
 using AutoMapper;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure;
@@ -26,11 +27,11 @@ public class ReadResourceClaims : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper)
+    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? name)
     {
-        var resourceClaims = getResourceClaimsQuery.Execute().ToList();
-        var model = mapper.Map<List<ResourceClaimModel>>(resourceClaims);
-        
+        var resourceClaims = mapper.Map<SortableList<ResourceClaimModel>>(getResourceClaimsQuery.Execute(offset, limit, id, name).ToList());
+        var model = resourceClaims.Sort(sortBy ?? string.Empty, descendingSorting ?? false);
+
         return Task.FromResult(Results.Ok(model));
     }
 

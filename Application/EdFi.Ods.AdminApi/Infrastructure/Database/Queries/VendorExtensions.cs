@@ -11,7 +11,7 @@ public static class VendorExtensions
 {
     public static readonly string[] ReservedNames =
     {
-        Constants.VendorName
+        Infrastructure.Constants.VendorName
     };
 
     public static bool IsSystemReservedVendorName(string? vendorName)

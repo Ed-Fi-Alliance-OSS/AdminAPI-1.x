@@ -50,10 +50,50 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
             var query = new GetAllClaimSetsQuery(securityContext);
-            return query.Execute(offset, limit).Select(x => x.Name).ToArray();
+            return query.Execute(offset, limit, null, null).Select(x => x.Name).ToArray();
         });
 
         claimSetNames.ShouldContain(claimSet1.ClaimSetName);
+        claimSetNames.ShouldContain(claimSet2.ClaimSetName);
+    }
+
+    [Test]
+    public void Should_Retreive_ClaimSetNames_With_Id()
+    {
+        var claimSet1 = GetClaimSet();
+        var claimSet2 = GetClaimSet();
+        Save(claimSet1, claimSet2);
+
+        var offset = 0;
+        var limit = 2;
+
+        var claimSetNames = Transaction<string[]>(securityContext =>
+        {
+            var query = new GetAllClaimSetsQuery(securityContext);
+            return query.Execute(offset, limit, claimSet2.ClaimSetId, null).Select(x => x.Name).ToArray();
+        });
+
+        claimSetNames.Length.ShouldBe(1);
+        claimSetNames.ShouldContain(claimSet2.ClaimSetName);
+    }
+
+    [Test]
+    public void Should_Retreive_ClaimSetNames_With_Name()
+    {
+        var claimSet1 = GetClaimSet();
+        var claimSet2 = GetClaimSet();
+        Save(claimSet1, claimSet2);
+
+        var offset = 0;
+        var limit = 2;
+
+        var claimSetNames = Transaction<string[]>(securityContext =>
+        {
+            var query = new GetAllClaimSetsQuery(securityContext);
+            return query.Execute(offset, limit, null, claimSet2.ClaimSetName).Select(x => x.Name).ToArray();
+        });
+
+        claimSetNames.Length.ShouldBe(1);
         claimSetNames.ShouldContain(claimSet2.ClaimSetName);
     }
 

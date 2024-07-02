@@ -9,6 +9,8 @@ using NUnit.Framework;
 using Shouldly;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Features.Vendors;
+using EdFi.Ods.AdminApi.Features;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -40,6 +42,92 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
     }
 
     [Test]
+    public void Should_retrieve_vendors_with_filters()
+    {
+        var vendors = new Vendor[5];
+
+        var offset = 0;
+        var limit = 2;
+
+        for (var vendorIndex = 0; vendorIndex < 5; vendorIndex++)
+        {
+            vendors[vendorIndex] = new Vendor
+            {
+                VendorName = $"test vendor {vendorIndex + 1}",
+                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = $"http://testvendor{vendorIndex + 1}.net" } },
+                Users = new List<User> { new User { FullName = $"test user {vendorIndex + 1}", Email = $"testuser{vendorIndex + 1}@test.com" } }
+            };
+        }
+
+        Save(vendors);
+
+        /// Id
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+
+            var vendorsAfterOffset = command.Execute(offset, limit, null, null, vendors.First().VendorId, null, null, null, null);
+
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
+
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 1");
+        });
+
+        /// Company
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+
+            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, "test vendor 2", null, null, null);
+
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
+
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
+        });
+
+        /// NamespacePrefix
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+
+            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, "http://testvendor2.net", null, null);
+
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
+
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
+        });
+
+        /// ContactName
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+
+            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, "test user 2", null);
+
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
+
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
+        });
+
+        /// ContactEmailAddress
+        Transaction(usersContext =>
+        {
+            var command = new GetVendorsQuery(usersContext);
+
+            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, "testuser2@test.com");
+
+            vendorsAfterOffset.ShouldNotBeEmpty();
+            vendorsAfterOffset.Count.ShouldBe(1);
+
+            vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
+        });
+    }
+
+    [Test]
     public void Should_retrieve_vendors_with_offset_and_limit()
     {
         var vendors = new Vendor[5];
@@ -49,7 +137,8 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
             vendors[vendorIndex] = new Vendor
             {
                 VendorName = $"test vendor {vendorIndex + 1}",
-                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } }
+                VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://testvendor.net" } },
+                Users = new List<User> { new User { FullName = $"test user", Email = $"testuser@test.com" } }
             };
         }
 
@@ -62,7 +151,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
             var offset = 0;
             var limit = 2;
 
-            var vendorsAfterOffset = command.Execute(offset, limit);
+            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(2);
@@ -72,7 +161,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
             offset = 2;
 
-            vendorsAfterOffset = command.Execute(offset, limit);
+            vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(2);
@@ -81,7 +170,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
             vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 4");
             offset = 4;
 
-            vendorsAfterOffset = command.Execute(offset, limit);
+            vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);
@@ -90,4 +179,3 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         });
     }
 }
-

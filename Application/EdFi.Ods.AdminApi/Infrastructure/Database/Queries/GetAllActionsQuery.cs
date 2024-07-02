@@ -11,6 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetAllActionsQuery
 {
     IReadOnlyList<Action> Execute();
+    IReadOnlyList<Action> Execute(int offset, int limit, int? id, string? name);
 }
 
 public class GetAllActionsQuery : IGetAllActionsQuery
@@ -21,8 +22,18 @@ public class GetAllActionsQuery : IGetAllActionsQuery
     {
         _securityContext = securityContext;
     }
+
     public IReadOnlyList<Action> Execute()
     {
         return _securityContext.Actions.ToList();
+    }
+
+    public IReadOnlyList<Action> Execute(int offset, int limit, int? id, string? name)
+    {
+        return _securityContext.Actions
+            .Where(a => id == null || a.ActionId == id)
+            .Where(a => name == null || a.ActionName == name)
+            .Skip(offset).Take(limit)
+            .ToList();
     }
 }

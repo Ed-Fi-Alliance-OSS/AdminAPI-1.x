@@ -44,8 +44,10 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationIds()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
             .ForMember(dst => dst.ProfileIds, opt => opt.MapFrom(src => src.Profiles()))
-            .ForMember(dst => dst.OdsInstanceIds, opt => {
-                opt.ConvertUsing<OdsInstanceIdsForApplicationConverter, int>("ApplicationId");});
+            .ForMember(dst => dst.OdsInstanceIds, opt =>
+            {
+                opt.ConvertUsing<OdsInstanceIdsForApplicationConverter, int>("ApplicationId");
+            });
 
         CreateMap<Infrastructure.ClaimSetEditor.Application, SimpleApplicationModel>()
             .ForMember(dst => dst.ApplicationName, opt => opt.MapFrom(src => src.Name));
@@ -92,7 +94,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ClaimSetId, opt => opt.MapFrom(src => src.ClaimSetId))
             .ForMember(dst => dst.ResourceClaimId, opt => opt.MapFrom(src => src.ResourceClaimId))
             .ForMember(dst => dst.ActionName, opt => opt.MapFrom(src => src.ActionName))
-            .ForMember(dst => dst.AuthStrategyIds, opt => { opt.ConvertUsing<AuthStrategyIdsConverter, List<string>>("AuthorizationStrategies");});
+            .ForMember(dst => dst.AuthStrategyIds, opt => { opt.ConvertUsing<AuthStrategyIdsConverter, List<string>>("AuthorizationStrategies"); });
 
         CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))

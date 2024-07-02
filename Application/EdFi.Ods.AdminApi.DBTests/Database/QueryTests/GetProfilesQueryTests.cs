@@ -57,9 +57,45 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
         Transaction(usersContext =>
         {
             var query = new GetProfilesQuery(usersContext);
-            results = query.Execute(1,1);
+            results = query.Execute(1,1, null, null);
             results.Count.ShouldBe(1);
         });
         results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
-    }    
+    }
+
+    [Test]
+    public void Should_retreive_profiles_with_id()
+    {
+        var profile1 = CreateProfile();
+        var profile2 = CreateProfile();
+
+        Save(profile1, profile2);
+
+        List<Profile> results = null;
+        Transaction(usersContext =>
+        {
+            var query = new GetProfilesQuery(usersContext);
+            results = query.Execute(0, 5, profile2.ProfileId, null);
+            results.Count.ShouldBe(1);
+        });
+        results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
+    }
+
+    [Test]
+    public void Should_retreive_profiles_with_name()
+    {
+        var profile1 = CreateProfile();
+        var profile2 = CreateProfile();
+
+        Save(profile1, profile2);
+
+        List<Profile> results = null;
+        Transaction(usersContext =>
+        {
+            var query = new GetProfilesQuery(usersContext);
+            results = query.Execute(0, 5, null, profile2.ProfileName);
+            results.Count.ShouldBe(1);
+        });
+        results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
+    }
 }

@@ -11,7 +11,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetAllClaimSetsQuery
 {
     IReadOnlyList<ClaimSet> Execute();
-    IReadOnlyList<ClaimSet> Execute(int offset, int limit);
+    IReadOnlyList<ClaimSet> Execute(int offset, int limit, int? id, string? name);
 }
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
@@ -37,9 +37,11 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
             .ToList();
     }
 
-    public IReadOnlyList<ClaimSet> Execute(int offset, int limit)
+    public IReadOnlyList<ClaimSet> Execute(int offset, int limit, int? id, string? name)
     {
         return _securityContext.ClaimSets
+            .Where(c => id == null || c.ClaimSetId == id)
+            .Where(c => name == null || c.ClaimSetName == name)
             .Select(x => new ClaimSet
             {
                 Id = x.ClaimSetId,

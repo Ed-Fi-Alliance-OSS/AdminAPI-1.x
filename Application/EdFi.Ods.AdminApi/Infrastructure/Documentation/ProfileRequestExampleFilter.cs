@@ -38,10 +38,10 @@ public class ProfileRequestExampleFilter : IOperationFilter
 
         foreach (var schema in context.SchemaRepository.Schemas)
         {
-            if(schema.Key.ToLower().Contains("addprofilerequest") || schema.Key.ToLower().Contains("editprofilerequest"))
+            if (schema.Key.ToLower().Contains("addprofilerequest") || schema.Key.ToLower().Contains("editprofilerequest"))
             {
                 schema.Value.Example = new OpenApiString(JsonConvert.SerializeObject(profileRequest, Formatting.Indented), true);
-            }            
-        }       
+            }
+        }
     }
 }

@@ -43,13 +43,17 @@ public class AdminApiEndpointBuilder
 
     public void BuildForVersions(params AdminApiVersions.AdminApiVersion[] versions)
     {
-        if (versions.Length == 0) throw new ArgumentException("Must register for at least 1 version");
-        if (_route == null) throw new InvalidOperationException("Invalid endpoint registration. Route must be specified");
-        if (_handler == null) throw new InvalidOperationException("Invalid endpoint registration. Handler must be specified");
+        if (versions.Length == 0)
+            throw new ArgumentException("Must register for at least 1 version");
+        if (_route == null)
+            throw new InvalidOperationException("Invalid endpoint registration. Route must be specified");
+        if (_handler == null)
+            throw new InvalidOperationException("Invalid endpoint registration. Handler must be specified");
 
         foreach (var version in versions)
         {
-            if (version == null) throw new ArgumentException("Version cannot be null");
+            if (version == null)
+                throw new ArgumentException("Version cannot be null");
 
             var versionedRoute = $"/{version}/{_route}";
 

@@ -27,10 +27,11 @@ public class ReadClaimSets : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetClaimSets(
+        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? name)
     {
-        var claimSets = getClaimSetsQuery.Execute(offset, limit);
-        var model = mapper.Map<List<ClaimSetModel>>(claimSets);
+        var claimSets = mapper.Map<SortableList<ClaimSetModel>>(getClaimSetsQuery.Execute(offset, limit, id, name));
+        var model = claimSets.Sort(sortBy ?? string.Empty, descendingSorting ?? false);
         foreach (var claimSet in model)
         {
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));

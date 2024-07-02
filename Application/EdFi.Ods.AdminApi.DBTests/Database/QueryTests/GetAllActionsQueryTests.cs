@@ -28,4 +28,37 @@ public class GetAllActionsQueryTests : SecurityDataTestBase
         resultNames.ShouldContain("Read");
     }
 
+    [Test]
+    public void ShouldGetAllActions_With_Offset_and_Limit()
+    {
+        LoadSeedData();
+        var offset = 1;
+        var limit = 2;
+
+        using var securityContext = TestContext;
+        var query = new GetAllActionsQuery(securityContext);
+        var resultNames = query.Execute(offset, limit, null, null).Select(x => x.ActionName).ToList();
+
+        resultNames.Count.ShouldBe(2);
+
+        resultNames.ShouldContain("Create");
+        resultNames.ShouldContain("Update");
+    }
+
+    [Test]
+    public void ShouldGetAllActions_With_Name()
+    {
+        LoadSeedData();
+        var offset = 0;
+        var limit = 25;
+        var name = "Delete";
+
+        using var securityContext = TestContext;
+        var query = new GetAllActionsQuery(securityContext);
+        var resultNames = query.Execute(offset, limit, null, name).Select(x => x.ActionName).ToList();
+
+        resultNames.Count.ShouldBe(1);
+
+        resultNames.ShouldContain("Delete");
+    }
 }

@@ -23,7 +23,7 @@ public class ReadApplicationsByVendor : IFeature
 
     internal Task<IResult> GetVendorApplications(GetApplicationsByVendorIdQuery getApplicationByVendorIdQuery, IMapper mapper, int id)
     {
-        var vendorApplications = mapper.Map<List<ApplicationModel>>(getApplicationByVendorIdQuery.Execute(id));
+        var vendorApplications = mapper.Map<SortableList<ApplicationModel>>(getApplicationByVendorIdQuery.Execute(id));
         return Task.FromResult(Results.Ok(vendorApplications));
     }
 }

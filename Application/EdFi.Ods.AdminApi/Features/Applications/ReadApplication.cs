@@ -25,15 +25,23 @@ public class ReadApplication : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit)
+    internal Task<IResult> GetApplications(
+        IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? applicationName, string? claimsetName)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute();
-        var applications = new List<ApplicationModel>();
+        var applications = new SortableList<ApplicationModel>().Sort(sortBy ?? string.Empty, descendingSorting ?? false);
         foreach (var vendor in vendors)
         {
             applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
         }
-        var filteredApplications = applications.AsEnumerable().Skip(offset).Take(limit);
+
+        var filteredApplications = applications.AsEnumerable()
+            .Where(a => id == null || a.Id == id)
+            .Where(a => applicationName == null || a.ApplicationName == applicationName)
+            .Where(a => claimsetName == null || a.ClaimSetName == claimsetName)
+            .Skip(offset)
+            .Take(limit);
+
         return Task.FromResult(Results.Ok(filteredApplications));
     }
 

@@ -63,6 +63,13 @@ public class DeleteApplicationCommand : IDeleteApplicationCommand
             _context.ApplicationEducationOrganizations.RemoveRange(currentApplicationEducationOrganizations);
         }
 
+        var currentApplicationClients = _context.ApiClients.AsEnumerable().Where(o => application.ApiClients.AsEnumerable().Any(oapp => oapp.ApiClientId == o.ApiClientId));
+
+        if (currentApplicationClients.Any())
+        {
+            _context.ApiClients.RemoveRange(currentApplicationClients);
+        }
+
         var currentProfiles = application.Profiles.ToList();
 
         if (currentProfiles.Any())

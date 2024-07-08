@@ -95,12 +95,14 @@ public class DeleteApplicationCommandTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-           var application = usersContext.Applications
+            var application = usersContext.Applications
             .Include(a => a.ApiClients).FirstOrDefault(a => a.ApplicationId == applicationId);
-           application.ShouldBeNull();
-           var apiClientOdsInstances = usersContext.ApiClientOdsInstances
+            application.ShouldBeNull();
+            var apiClientOdsInstances = usersContext.ApiClientOdsInstances
             .Include(p => p.OdsInstance).Where(c => c.ApiClient.ApiClientId == clientId && c.OdsInstance.OdsInstanceId == odsInstance.OdsInstanceId).ToArray();
-           apiClientOdsInstances.ShouldBeEmpty();
+            apiClientOdsInstances.ShouldBeEmpty();
+            var apiClients = usersContext.ApiClients.Where(c => c.ApiClientId == clientId).ToArray();
+            apiClients.ShouldBeEmpty();
         });
     }
 

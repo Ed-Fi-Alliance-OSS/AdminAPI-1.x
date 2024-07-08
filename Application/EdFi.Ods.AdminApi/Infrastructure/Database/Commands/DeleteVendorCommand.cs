@@ -41,6 +41,16 @@ public class DeleteVendorCommand
 
         foreach (var user in vendor.Users.ToList())
         {
+            if (_context.ApiClients.Any())
+            {
+                var apiClient =
+                _context.ApiClients
+                .AsEnumerable().SingleOrDefault(o => o.User?.UserId == user?.UserId);
+                if (apiClient != null)
+                {
+                    _context.ApiClients.Remove(apiClient);
+                }
+            }
             _context.Users.Remove(user);
         }
 

@@ -111,6 +111,6 @@ public interface IEditApplicationModel
     int VendorId { get; }
     string? ClaimSetName { get; }
     IEnumerable<int>? ProfileIds { get; }
-    IEnumerable<int>? EducationOrganizationIds { get; }
+    IEnumerable<long>? EducationOrganizationIds { get; }
     IEnumerable<int>? OdsInstanceIds { get; }
 }

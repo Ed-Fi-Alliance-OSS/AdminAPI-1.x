@@ -107,7 +107,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             Id = _application.ApplicationId,
             ApplicationName = _application.ApplicationName,
             ClaimSetName = _application.ClaimSetName,
-            EducationOrganizationIds = new List<int> { 12345, 67890 },
+            EducationOrganizationIds = new List<long> { 12345, 67890 },
             ProfileIds = null,
             VendorId = _vendor.VendorId,
             OdsInstanceIds = new List<int> { _odsInstance.OdsInstanceId }
@@ -147,7 +147,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             Id = _application.ApplicationId,
             ApplicationName = "New Application Name",
             ClaimSetName = "DifferentFakeClaimSet",
-            EducationOrganizationIds = new List<int> { 23456, 78901 },
+            EducationOrganizationIds = new List<long> { 23456, 78901, 5000000005 },
             ProfileIds = new List<int>() { _otherProfile.ProfileId },
             VendorId = _otherVendor.VendorId,
             OdsInstanceIds = new List<int> { _odsInstance.OdsInstanceId }
@@ -202,7 +202,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         public int VendorId { get; set; }
         public string ClaimSetName { get; set; }
         public IEnumerable<int> ProfileIds { get; set; }
-        public IEnumerable<int> EducationOrganizationIds { get; set; }
+        public IEnumerable<long> EducationOrganizationIds { get; set; }
         public IEnumerable<int> OdsInstanceIds { get; set; }
     }
 }

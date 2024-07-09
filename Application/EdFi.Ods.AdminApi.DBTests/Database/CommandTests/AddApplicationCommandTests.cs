@@ -72,7 +72,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ClaimSetName = "FakeClaimSet",
                 ProfileIds = null,
                 VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 },
+                EducationOrganizationIds = new List<long> { 12345, 67890, 5000000005 },
                 OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId },
             };
 
@@ -138,7 +138,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ClaimSetName = "FakeClaimSet",
                 ProfileIds = new List<int>() { profile.ProfileId },
                 VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<int> { 12345, 67890 },
+                EducationOrganizationIds = new List<long> { 12345, 67890 },
                 OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId },
             };
 
@@ -196,7 +196,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
         public int VendorId { get; set; }
         public string ClaimSetName { get; set; }
         public IEnumerable<int> ProfileIds { get; set; }
-        public IEnumerable<int> EducationOrganizationIds { get; set; }
+        public IEnumerable<long> EducationOrganizationIds { get; set; }
         public IEnumerable<int> OdsInstanceIds { get; set; }
     }
 }

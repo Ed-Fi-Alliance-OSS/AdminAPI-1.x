@@ -92,7 +92,7 @@ public class AddApplication : IFeature
         public IEnumerable<int>? ProfileIds { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
-        public IEnumerable<int>? EducationOrganizationIds { get; set; }
+        public IEnumerable<long>? EducationOrganizationIds { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdsDescription, Nullable = false)]
         public IEnumerable<int>? OdsInstanceIds { get; set; }

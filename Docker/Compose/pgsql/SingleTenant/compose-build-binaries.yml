@@ -41,6 +41,7 @@ services:
       API_INTERNAL_URL: ${API_INTERNAL_URL}
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
+      AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
     depends_on:
       - db-admin
     restart: always

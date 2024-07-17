@@ -44,6 +44,7 @@ services:
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
       AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
+      AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
@@ -91,7 +92,7 @@ services:
 volumes:
   vol-db-admin-adminapi-tenant1:
     driver: local
-    name: vol-db-admin-adminapi-tenant1    
+    name: vol-db-admin-adminapi-tenant1
   vol-db-admin-adminapi-tenant2:
     driver: local
     name: vol-db-admin-adminapi-tenant2

@@ -4,19 +4,36 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
+using Respawn;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
 [TestFixture]
 public class AddApplicationCommandTests : PlatformUsersContextTestBase
 {
+    private IOptions<AppSettings> _options {  get; set; }
+
+    [OneTimeSetUp]
+    public virtual async Task FixtureSetup()
+    {
+        AppSettings appSettings = new AppSettings();
+        appSettings.PreventDuplicateApplications = false;
+        _options = Options.Create(appSettings);
+        await Task.Yield();
+    }
+
     [Test]
     public void ShouldFailForInvalidVendor()
     {
@@ -39,7 +56,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 VendorId = 0
             };
 
-            Assert.Throws<InvalidOperationException>(() => command.Execute(newApplication));
+            Assert.Throws<InvalidOperationException>(() => command.Execute(newApplication, _options));
         });
     }
 
@@ -76,7 +93,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId },
             };
 
-            result = command.Execute(newApplication);
+            result = command.Execute(newApplication, _options);
         });
 
         Transaction(usersContext =>
@@ -89,8 +106,8 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
 
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.Profiles.Count.ShouldBe(0);
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(3);
+            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890 || o.EducationOrganizationId == 5000000005).ShouldBeTrue();
 
             persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
             persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
@@ -98,7 +115,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.ApiClients.Count.ShouldBe(1);
             var apiClient = persistedApplication.ApiClients.FirstOrDefault();
             apiClient.Name.ShouldBe("Test Application");
-            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890 || o.EducationOrganizationId == 5000000005).ShouldBeTrue();
             apiClient.Key.ShouldBe(result.Key);
             apiClient.Secret.ShouldBe(result.Secret);
         });
@@ -138,11 +155,11 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ClaimSetName = "FakeClaimSet",
                 ProfileIds = new List<int>() { profile.ProfileId },
                 VendorId = vendor.VendorId,
-                EducationOrganizationIds = new List<long> { 12345, 67890 },
+                EducationOrganizationIds = new List<long> { 12345, 67890, 5000000005 },
                 OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId },
             };
 
-            result = command.Execute(newApplication);
+            result = command.Execute(newApplication, _options);
         });
 
         Transaction(usersContext =>
@@ -155,8 +172,8 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.Profiles.Count.ShouldBe(1);
             persistedApplication.Profiles.First().ProfileName.ShouldBe("Test Profile");
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(3);
+            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890 || o.EducationOrganizationId == 5000000005).ShouldBeTrue();
 
             persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
             persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
@@ -164,7 +181,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.ApiClients.Count.ShouldBe(1);
             var apiClient = persistedApplication.ApiClients.First();
             apiClient.Name.ShouldBe("Test Application");
-            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890 || o.EducationOrganizationId == 5000000005).ShouldBeTrue();
             apiClient.Key.ShouldBe(result.Key);
             apiClient.Secret.ShouldBe(result.Secret);
 
@@ -187,7 +204,171 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             apiClientOdsInstance.ApiClient.ApiClientId.ShouldBe(apiClient.ApiClientId);
             apiClientOdsInstance.OdsInstance.OdsInstanceId.ShouldBe(odsInstance.OdsInstanceId);
         });
+    }
 
+    [Test]
+    public void ShouldFailToAddDuplicatedApplication()
+    {
+        AppSettings appSettings = new AppSettings();
+        appSettings.PreventDuplicateApplications = true;
+        IOptions<AppSettings> options = Options.Create(appSettings);
+        const string odsInstanceName = "Test Instance";
+        var vendor = new Vendor
+        {
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Integration Tests"
+        };
+        var profile = new Profile
+        {
+            ProfileName = "Test Profile"
+        };
+
+        var odsInstance = new OdsInstance
+        {
+            Name = odsInstanceName,
+            InstanceType = "Ods",
+            ConnectionString = "Data Source=(local);Initial Catalog=EdFi_Ods;Integrated Security=True;Encrypt=False"
+        };
+
+        Save(vendor, profile, odsInstance);
+
+        AddApplicationResult result = null;
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext);
+            var newApplication = new TestApplication
+            {
+                ApplicationName = "Production-Test Application",
+                ClaimSetName = "FakeClaimSet",
+                ProfileIds = [],
+                VendorId = vendor.VendorId,
+                EducationOrganizationIds = new List<long> { 12345, 67890, 5000000005 },
+                OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId }
+            };
+
+            result = command.Execute(newApplication, options);
+        });
+
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext);
+            var newApplication = new TestApplication
+            {
+                ApplicationName = "Production-Test Application",
+                ClaimSetName = "FakeClaimSet",
+                ProfileIds = [],
+                VendorId = vendor.VendorId,
+                EducationOrganizationIds = new List<long> { 12345, 67890, 5000000005 },
+                OdsInstanceIds = new List<int> { odsInstance.OdsInstanceId }
+            };
+
+            Assert.Throws<AdminApiException>(() => command.Execute(newApplication, options));
+        });
+    }
+
+    [Test]
+    public void ShouldFailToAddDuplicatedApplicationNullFields()
+    {
+        AppSettings appSettings = new AppSettings();
+        appSettings.PreventDuplicateApplications = true;
+        IOptions<AppSettings> options = Options.Create(appSettings);
+        var vendor = new Vendor
+        {
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Integration Tests"
+        };
+
+        Save(vendor);
+        AddApplicationResult result = null;
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext);
+            var newApplication = new TestApplication
+            {
+                ApplicationName = "Production-Test Application",
+                ClaimSetName = "FakeClaimSet",
+                ProfileIds = null,
+                VendorId = vendor.VendorId
+            };
+
+            result = command.Execute(newApplication, options);
+        });
+
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext);
+            var newApplication = new TestApplication
+            {
+                ApplicationName = "Production-Test Application",
+                ClaimSetName = "FakeClaimSet",
+                ProfileIds = null,
+                VendorId = vendor.VendorId
+            };
+
+            Assert.Throws<AdminApiException>(() => command.Execute(newApplication, options));
+        });
+    }
+
+    [Test]
+    public void ShouldExecuteWithDuplicatedNamesDifferentVendor()
+    {
+        AppSettings appSettings = new AppSettings();
+        appSettings.PreventDuplicateApplications = true;
+        IOptions<AppSettings> options = Options.Create(appSettings);
+        var vendor = new Vendor
+        {
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Integration Tests"
+        };
+
+        Save(vendor);
+
+        var secondVendor = new Vendor
+        {
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Second Integration Tests"
+        };
+        Save(secondVendor);
+        AddApplicationResult result = null;
+        AddApplicationResult secondResult = null;
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext);
+            var newApplication = new TestApplication
+            {
+                ApplicationName = "Production-Test Application-Duplicated-Name",
+                ClaimSetName = "FakeClaimSet",
+                ProfileIds = null,
+                VendorId = vendor.VendorId
+            };
+
+            result = command.Execute(newApplication, options);
+        });
+
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext);
+            var newSecondApplication = new TestApplication
+            {
+                ApplicationName = "Production-Test Application-Duplicated-Name",
+                ClaimSetName = "FakeClaimSet",
+                ProfileIds = null,
+                VendorId = secondVendor.VendorId
+            };
+            secondResult = command.Execute(newSecondApplication, options);
+        });
+
+        Transaction(usersContext =>
+        {
+            var persistedApplication = usersContext.Applications
+            .Include(a => a.ApplicationEducationOrganizations)
+            .Include(a => a.Vendor)
+            .Include(a => a.Profiles)
+            .Include(a => a.ApiClients).Where(a => a.ApplicationId == result.ApplicationId || a.ApplicationId == secondResult.ApplicationId).ToList();
+            persistedApplication.TrueForAll(x => x.ApplicationName == "Production-Test Application-Duplicated-Name").ShouldBeTrue();
+            persistedApplication.TrueForAll(x => x.ClaimSetName == "FakeClaimSet").ShouldBeTrue();
+            persistedApplication.Count.ShouldBe(2);
+        });
     }
 
     private class TestApplication : IAddApplicationModel

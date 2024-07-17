@@ -5,12 +5,14 @@
 
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
@@ -25,11 +27,11 @@ public class AddApplication : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, Request request)
+    public async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, Request request, IOptions<AppSettings> options)
     {
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);
-        var addedApplicationResult = addApplicationCommand.Execute(request);
+        var addedApplicationResult = addApplicationCommand.Execute(request, options);
         var model = mapper.Map<ApplicationResult>(addedApplicationResult);
         return Results.Created($"/applications/{model.Id}", model);
     }

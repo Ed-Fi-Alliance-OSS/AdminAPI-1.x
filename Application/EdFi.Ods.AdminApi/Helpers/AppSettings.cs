@@ -10,6 +10,7 @@ public class AppSettings
     public int DefaultPageSizeLimit { get; set; }
     public string? DatabaseEngine { get; set; }
     public bool MultiTenancy { get; set; }
+    public bool PreventDuplicateApplications { get; set; }
 }
 
 public class SwaggerSettings

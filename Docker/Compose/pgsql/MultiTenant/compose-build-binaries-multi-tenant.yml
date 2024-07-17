@@ -41,6 +41,7 @@ services:
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
       AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
+      AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json

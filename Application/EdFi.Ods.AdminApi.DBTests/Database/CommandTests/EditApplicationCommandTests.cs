@@ -172,8 +172,8 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
             persistedApplication.ApiClients.First().ApplicationEducationOrganizations.ShouldAllBe(aeo => persistedApplication.ApplicationEducationOrganizations.Contains(aeo));
             persistedApplication.Profiles.Count.ShouldBe(1);
             persistedApplication.Profiles.First().ProfileName.ShouldBe("Other Test Profile");
-            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
-            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901);
+            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(3);
+            persistedApplication.ApplicationEducationOrganizations.ShouldAllBe(aeo => aeo.EducationOrganizationId == 23456 || aeo.EducationOrganizationId == 78901 || aeo.EducationOrganizationId == 5000000005);
         });
 
         Transaction(usersContext =>

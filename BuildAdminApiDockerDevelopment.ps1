@@ -18,7 +18,6 @@
 
 $p = @{
         ProductionApiUrl = "http://api"
-        ApiExternalUrl = "https://localhost:5001"
         ApiStartupType = "SharedInstance"
         DatabaseEngine = "PostgreSql"
         PathBase = "adminapi"
@@ -28,4 +27,4 @@ $p = @{
         SecurityDB = "host=db-admin;port=5432;username=username;password=root@321;database=EdFi_Security;pooling=false"
     }
 
-.\build.ps1 -APIVersion 1.0.6 -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
+.\build.ps1 -APIVersion "1.2.2" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer

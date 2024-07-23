@@ -48,19 +48,16 @@
 
     .EXAMPLE
        $p = @{
-            ProductionApiUrl = "http://api"
-            ApiExternalUrl = "https://localhost:5001"
-            AppStartup = "OnPrem"
-            XsdFolder = "/app/Schema"
-            ApiStartupType = "SharedInstance"
-            DatabaseEngine = "PostgreSql"
-            BulkUploadHashCache = "/app/BulkUploadHashCache/"
-            EncryptionKey = "<Generated encryption key>"
-            AdminDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
-            SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
+            Authority        = "http://api"
+            IssuerUrl        = "https://localhost:5001"
+            DatabaseEngine   = "PostgreSql"
+            PathBase         = "adminapi"
+            SigningKey       = "<Generated encryption key>"
+            AdminDB          = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
+            SecurityDB       = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
         }
 
-        .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
+        .\build.ps1 -APIVersion "2.2.0" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
 #>
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
 param(
@@ -364,25 +361,22 @@ function Invoke-BuildDatabasePackage {
 }
 
 function UpdateAppSettingsForAdminApiDocker {
-    $filePath = "$solutionRoot/EdFi.Ods.AdminApi/publish/appsettings.json"
+    $filePath = "$solutionRoot/EdFi.Ods.AdminApi/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
-    $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
-    $json.AppSettings.ApiExternalUrl = $DockerEnvValues["ApiExternalUrl"]
-    $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
     $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
     $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
 
     $json.Authentication.IssuerUrl = $DockerEnvValues["IssuerUrl"]
     $json.Authentication.SigningKey = $DockerEnvValues["SigningKey"]
 
-    $json.ConnectionStrings.Admin = $DockerEnvValues["AdminDB"]
-    $json.ConnectionStrings.Security = $DockerEnvValues["SecurityDB"]
+    $json.ConnectionStrings.EdFi_Admin = $DockerEnvValues["AdminDB"]
+    $json.ConnectionStrings.EdFi_Security = $DockerEnvValues["SecurityDB"]
     $json.Log4NetCore.Log4NetConfigFileName = "./log4net.config"
     $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
 }
 
 function CopyLatestFilesToAdminApiContainer {
-    $source = "$solutionRoot/EdFi.Ods.AdminApi/publish/."
+    $source = "$solutionRoot/EdFi.Ods.AdminApi/bin/Release/net8.0/."
     &docker cp $source adminapi:/app/AdminApi
 }
 

@@ -81,8 +81,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                 Actions = x.Where(x => x.Action != null).Select(x =>
                              new ResourceClaimAction { Name = x.Action.ActionName, Enabled = true}).ToList(),
                 IsParent = true,
-                DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
-                AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId]
+                DefaultAuthorizationStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
+                AuthorizationStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId]
             }).ToList();
 
             parentResources.ForEach(x => x.Children = new List<ResourceClaim>());
@@ -294,8 +294,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
                     Actions = x.Where(x => x.Action != null).Select(x =>
                              new ResourceClaimAction { Name = x.Action.ActionName, Enabled = true }).ToList(),
                     IsParent = false,
-                    DefaultAuthStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
-                    AuthStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId]
+                    DefaultAuthorizationStrategiesForCRUD = defaultAuthStrategies[x.Key.ResourceClaimId],
+                    AuthorizationStrategyOverridesForCRUD = authStrategyOverrides[x.Key.ResourceClaimId]
                 })
                 .ToList();
             return childResources;

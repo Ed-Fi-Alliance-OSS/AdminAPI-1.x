@@ -93,7 +93,7 @@ public class ImportClaimSet : IFeature
                     foreach (var resourceClaim in claimSet.ResourceClaims)
                     {
                         resourceClaimValidator.Validate(resourceClaims, actions, authStrategyNames,
-                            resourceClaim, mapper.Map<List<ChildrenClaimSetResource>>(claimSet.ResourceClaims), context, claimSet.Name);
+                            resourceClaim, mapper.Map<List<ClaimSetResourceClaimModel>>(claimSet.ResourceClaims), context, claimSet.Name);
                     }
                 }
             });

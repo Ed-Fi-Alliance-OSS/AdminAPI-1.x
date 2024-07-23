@@ -17,8 +17,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public List<ResourceClaimAction>? Actions { get; set; }
         [JsonIgnore]
         public bool IsParent { get; set; }
-        public List<ClaimSetResourceClaimActionAuthStrategies?> DefaultAuthStrategiesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
-        public List<ClaimSetResourceClaimActionAuthStrategies?> AuthStrategyOverridesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
+        public List<ClaimSetResourceClaimActionAuthStrategies?> DefaultAuthorizationStrategiesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
+        public List<ClaimSetResourceClaimActionAuthStrategies?> AuthorizationStrategyOverridesForCRUD { get; set; } = new List<ClaimSetResourceClaimActionAuthStrategies?>();
         public List<ResourceClaim> Children { get; set; }
 
         public ResourceClaim()

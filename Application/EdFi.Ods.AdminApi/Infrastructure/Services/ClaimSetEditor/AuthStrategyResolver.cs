@@ -27,9 +27,9 @@ public class AuthStrategyResolver : IAuthStrategyResolver
 
         foreach (var claim in resourceClaims)
         {
-            if (claim.AuthStrategyOverridesForCRUD != null && claim.AuthStrategyOverridesForCRUD.Any())
+            if (claim.AuthorizationStrategyOverridesForCRUD != null && claim.AuthorizationStrategyOverridesForCRUD.Any())
             {
-                foreach (var authStrategyOverride in claim.AuthStrategyOverridesForCRUD.Where(x => x != null))
+                foreach (var authStrategyOverride in claim.AuthorizationStrategyOverridesForCRUD.Where(x => x != null))
                 {
                     if (authStrategyOverride is null) continue;
                     if (authStrategyOverride.AuthorizationStrategies != null)

@@ -58,14 +58,14 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
-        resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD.Count.ShouldBe(1);
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].AuthorizationStrategies.First().AuthStrategyName.ShouldBe("TestAuthStrategy1");
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
+        resultResourceClaim2.AuthorizationStrategyOverridesForCRUD.ShouldBeEmpty();
     }
 
     [Test]
@@ -100,14 +100,14 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
-        resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.Count().ShouldBe(4);
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD.Count.ShouldBe(1);
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].AuthorizationStrategies.Count().ShouldBe(4);
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
+        resultResourceClaim2.AuthorizationStrategyOverridesForCRUD.ShouldBeEmpty();
     }
 
     [Test]
@@ -142,14 +142,14 @@ public class OverrideDefaultAuthorizationStrategyCommandTests : SecurityDataTest
         var resultResourceClaim1 =
             resourceClaimsForClaimSet.Single(x => x.Id == overrideModel.ResourceClaimId);
 
-        resultResourceClaim1.AuthStrategyOverridesForCRUD.Count.ShouldBe(1);
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
-        resultResourceClaim1.AuthStrategyOverridesForCRUD[0].AuthorizationStrategies.Any(x => x.AuthStrategyName.Equals("TestAuthStrategy1")).ShouldBeTrue();
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD.Count.ShouldBe(1);
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].ActionName.ShouldBe("Create");
+        resultResourceClaim1.AuthorizationStrategyOverridesForCRUD[0].AuthorizationStrategies.Any(x => x.AuthStrategyName.Equals("TestAuthStrategy1")).ShouldBeTrue();
 
         var resultResourceClaim2 =
             resourceClaimsForClaimSet.Single(x => x.Id == testResource2ToNotEdit.ResourceClaimId);
 
-        resultResourceClaim2.AuthStrategyOverridesForCRUD.ShouldBeEmpty();
+        resultResourceClaim2.AuthorizationStrategyOverridesForCRUD.ShouldBeEmpty();
     }
 
     [Test]

@@ -106,7 +106,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         var testAuthStrategies = SetupResourcesWithDefaultAuthorizationStrategies(appAuthorizationStrategies, testResourceClaims.ToList());
 
         var results = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId).ToArray();
-        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategies.Single()
+        results.Select(x => x.DefaultAuthorizationStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName).ShouldBe(testAuthStrategies.Select(x => x.AuthorizationStrategies.Single()
                         .AuthorizationStrategy.AuthorizationStrategyName), true);
 
     }
@@ -140,7 +140,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         result.Actions.All(x => x.Name.Equals("Read") && x.Enabled).ShouldBe(false);
         result.Actions.All(x => x.Name.Equals("Update") && x.Enabled).ShouldBe(false);
         result.Actions.All(x => x.Name.Equals("Delete") && x.Enabled).ShouldBe(false);
-        result.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
+        result.DefaultAuthorizationStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName.ShouldBe(testAuthStrategy.DisplayName);
 
     }
 
@@ -168,7 +168,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
         var testAuthStrategiesForParents =
             testAuthStrategies.Where(x => x.ResourceClaim.ParentResourceClaim == null);
 
-        results.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x =>
+        results.Select(x => x.DefaultAuthorizationStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName).ShouldBe(testAuthStrategiesForParents.Select(x =>
         x.AuthorizationStrategies.Single().AuthorizationStrategy.AuthorizationStrategyName), true);
 
         foreach (var testParentResourceClaim in testParentResourceClaimsForId)
@@ -177,7 +177,7 @@ public class GetResourcesByClaimSetIdQueryTests : SecurityDataTestBase
             var testAuthStrategiesForChildren =
                 testAuthStrategies.Where(x =>
                     x.ResourceClaim.ParentResourceClaimId == testParentResourceClaim.ResourceClaimId);
-            parentResult.Children.Select(x => x.DefaultAuthStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategies.Single()
+            parentResult.Children.Select(x => x.DefaultAuthorizationStrategiesForCRUD[0].AuthorizationStrategies.ToList().First().AuthStrategyName).ShouldBe(testAuthStrategiesForChildren.Select(x => x.AuthorizationStrategies.Single()
             .AuthorizationStrategy.AuthorizationStrategyName), true);
         }
     }

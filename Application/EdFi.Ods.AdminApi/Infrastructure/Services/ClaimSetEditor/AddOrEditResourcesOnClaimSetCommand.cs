@@ -37,7 +37,7 @@ public class AddOrEditResourcesOnClaimSetCommand
                 if (resource != null)
                 {
                     resource.Actions = r.Actions;
-                    resource.AuthStrategyOverridesForCRUD = r.AuthStrategyOverridesForCRUD;
+                    resource.AuthorizationStrategyOverridesForCRUD = r.AuthorizationStrategyOverridesForCRUD;
                 }
                 return resource;
             }).ToList();
@@ -54,13 +54,13 @@ public class AddOrEditResourcesOnClaimSetCommand
 
             _editResourceOnClaimSetCommand.Execute(editResourceModel);
 
-            if (resource!.AuthStrategyOverridesForCRUD != null && resource.AuthStrategyOverridesForCRUD.Any())
+            if (resource!.AuthorizationStrategyOverridesForCRUD != null && resource.AuthorizationStrategyOverridesForCRUD.Any())
             {
                 var overrideAuthStrategyModel = new OverrideAuthorizationStrategyModel
                 {
                     ClaimSetId = claimSetId,
                     ResourceClaimId = resource.Id,
-                    ClaimSetResourceClaimActionAuthStrategyOverrides = resource.AuthStrategyOverridesForCRUD
+                    ClaimSetResourceClaimActionAuthStrategyOverrides = resource.AuthorizationStrategyOverridesForCRUD
                 };
                 _overrideDefaultAuthorizationStrategyCommand.Execute(overrideAuthStrategyModel);
             }

@@ -5,8 +5,8 @@
 
 using EdFi.Ods.AdminApi.Features.Applications;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Text.Json.Serialization;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;using Swashbuckle.AspNetCore.Annotations;
+using System.Linq;using System.Text.Json.Serialization;
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
 [SwaggerSchema(Title = "ClaimSet")]
@@ -44,10 +44,11 @@ public class ClaimSetResourceClaimModel
     public List<ClaimSetResourceClaimActionAuthStrategies?> AuthorizationStrategyOverridesForCRUD { get; set; }
 
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public List<ChildrenClaimSetResource> Children { get; set; }
+    public List<ClaimSetResourceClaimModel> Children { get; set; }
+
     public ClaimSetResourceClaimModel()
     {
-        Children = new List<ChildrenClaimSetResource>();
+        Children = new List<ClaimSetResourceClaimModel>();
         DefaultAuthorizationStrategiesForCRUD = new List<ClaimSetResourceClaimActionAuthStrategies?>();
         AuthorizationStrategyOverridesForCRUD = new List<ClaimSetResourceClaimActionAuthStrategies?>();
         Actions = new List<ResourceClaimAction>();
@@ -57,11 +58,11 @@ public class ClaimSetResourceClaimModel
 public class ChildrenClaimSetResource : ClaimSetResourceClaimModel
 {
     [SwaggerSchema(Description = "Children are collection of ResourceClaim")]
-    public new List<ClaimSetResourceClaimModel> Children { get; set; }
+    public new ClaimSetResourceClaimModel Children { get; set; }
 
     public ChildrenClaimSetResource()
     {
-        Children = new List<ClaimSetResourceClaimModel>();
+        Children = new ClaimSetResourceClaimModel();
     }
 }
 [SwaggerSchema(Title = "ResourceClaimModel")]

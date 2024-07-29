@@ -63,7 +63,7 @@ public static class FeatureConstants
 
     /// Default columns to filter for each entity:
     public const string ActionDefaultSorting = "Name";
-    public const string ApplicationsDefaultSorting = "Name";
+    public const string ApplicationsDefaultSorting = "ApplicationName";
     public const string ClaimsetDefaultSorting = "Name";
     public const string OdsInstanceDefaultSorting = "Name";
     public const string ProfileDefaultSorting = "Name";

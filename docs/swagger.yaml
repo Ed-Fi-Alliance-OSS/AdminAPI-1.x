@@ -25,7 +25,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -34,9 +34,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue
@@ -128,7 +128,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -137,9 +137,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue
@@ -332,7 +332,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -341,9 +341,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue
@@ -512,7 +512,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -521,9 +521,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue
@@ -1009,7 +1009,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -1018,9 +1018,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue
@@ -1213,7 +1213,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -1222,9 +1222,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue
@@ -1479,7 +1479,7 @@ paths:
             type: integer
             format: int32
             default: '25'
-        - name: sortBy
+        - name: orderBy
           in: query
           description: Indicates the property name by which the results will be sorted.
           schema:
@@ -1488,9 +1488,9 @@ paths:
               - length
             type: string
             default: ''
-        - name: descendingSorting
+        - name: direction
           in: query
-          description: Indicates whether the result should be sorted in descending order.
+          description: Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).
           schema:
             required:
               - hasValue

@@ -27,10 +27,10 @@ public class ReadResourceClaims : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? name)
+    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? sortDirection, int? id, string? name)
     {
         var resourceClaims = mapper.Map<SortableList<ResourceClaimModel>>(getResourceClaimsQuery.Execute(offset, limit, id, name).ToList());
-        var model = resourceClaims.Sort(sortBy ?? string.Empty, descendingSorting ?? false);
+        var model = resourceClaims.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(sortDirection));
 
         return Task.FromResult(Results.Ok(model));
     }

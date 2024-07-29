@@ -9,6 +9,7 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using static EdFi.Ods.AdminApi.Features.SortingDirection;
 
 namespace EdFi.Ods.AdminApi.Features.Vendors;
 
@@ -28,10 +29,10 @@ public class ReadVendor : IFeature
     }
 
     internal Task<IResult> GetVendors(
-        IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
+        IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? sortDirection, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
     {
-        var vendorList = mapper.Map<SortableList<VendorModel>>(getVendorsQuery.Execute(offset, limit, sortBy, descendingSorting, id, company, namespacePrefixes, contactName, contactEmailAddress));
-        return Task.FromResult(Results.Ok(vendorList.Sort(sortBy ?? string.Empty, descendingSorting ?? false)));
+        var vendorList = mapper.Map<SortableList<VendorModel>>(getVendorsQuery.Execute(offset, limit, orderBy, SortingDirection.GetNonEmptyOrDefault(sortDirection), id, company, namespacePrefixes, contactName, contactEmailAddress));
+        return Task.FromResult(Results.Ok(vendorList.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(sortDirection))));
     }
 
     internal Task<IResult> GetVendor(IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, int id)

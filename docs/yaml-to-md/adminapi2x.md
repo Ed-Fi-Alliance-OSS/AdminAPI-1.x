@@ -128,8 +128,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|Resource Claim Id|
 |name|query|string|false|Resource Claim Name|
 
@@ -401,8 +401,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|Vendor/ company id|
 |company|query|string|false|Vendor/ company name|
 |namespacePrefixes|query|string|false|Namespace prefix for the vendor. Multiple namespace prefixes can be provided as comma separated list if required.|
@@ -1191,8 +1191,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|Profile id|
 |name|query|string|false|Profile name|
 
@@ -1811,8 +1811,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|List of ODS instance id|
 |name|query|string|false|Ods Instance name|
 
@@ -4063,8 +4063,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|Claim set id|
 |name|query|string|false|Claim set name|
 
@@ -4730,8 +4730,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|Application id|
 |applicationName|query|string|false|Application name|
 |claimsetName|query|string|false|Claim set name|
@@ -5572,8 +5572,8 @@ public class HttpExample
 |---|---|---|---|---|
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-|sortBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|descendingSorting|query|boolean|false|Indicates whether the result should be sorted in descending order.|
+|orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
+|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
 |id|query|integer(int32)|false|Action id|
 |name|query|string|false|Action name|
 

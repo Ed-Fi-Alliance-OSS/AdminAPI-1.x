@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using static EdFi.Ods.AdminApi.Features.SortingDirection;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
@@ -28,10 +29,10 @@ public class ReadClaimSets : IFeature
     }
 
     internal Task<IResult> GetClaimSets(
-        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit, string? sortBy, bool? descendingSorting, int? id, string? name)
+        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit, string? orderBy, string? sortDirection, int? id, string? name)
     {
         var claimSets = mapper.Map<SortableList<ClaimSetModel>>(getClaimSetsQuery.Execute(offset, limit, id, name));
-        var model = claimSets.Sort(sortBy ?? string.Empty, descendingSorting ?? false);
+        var model = claimSets.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(sortDirection));
         foreach (var claimSet in model)
         {
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));

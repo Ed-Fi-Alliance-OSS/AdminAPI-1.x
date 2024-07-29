@@ -11,22 +11,22 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
     {
         /// <summary>
         /// Custom function for sorting.
-        /// We initially try to fix by sortBy. If this column does not exist, we try to sort by sortByDefault.
+        /// We initially try to fix by orderBy. If this column does not exist, we try to sort by orderByDefault.
         /// </summary>
         /// <typeparam name="T">Any entity from the model</typeparam>
         /// <param name="source"></param>
-        /// <param name="sortBy">Try to fix by this column</param>
-        /// <param name="sortByDefault">In case sortBy column does not exist, we sort by this column</param>
+        /// <param name="orderBy">Try to fix by this column</param>
+        /// <param name="orderByDefault">In case orderBy column does not exist, we sort by this column</param>
         /// <param name="descending">asc or desc</param>
         /// <returns></returns>
-        public static IQueryable<T> OrderByColumn<T>(this IQueryable<T> source, string sortBy, string sortByDefault, bool descending = false)
+        public static IQueryable<T> OrderByColumn<T>(this IQueryable<T> source, string orderBy, string orderByDefault, bool descending = false)
         {
             try
             {
                 var type = typeof(T);
-                var property = type.GetProperty(sortBy);
+                var property = type.GetProperty(orderBy);
                 if (property == null)
-                    property = type.GetProperty(sortByDefault);
+                    property = type.GetProperty(orderByDefault);
 
                 if (property != null)
                 {

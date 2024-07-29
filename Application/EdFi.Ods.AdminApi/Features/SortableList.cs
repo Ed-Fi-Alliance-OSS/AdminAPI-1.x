@@ -15,8 +15,9 @@ namespace EdFi.Ods.AdminApi.Features
 {
     public class SortableList<T> : List<T>
     {
-        public List<T> Sort(string sortBy, bool descending = false)
+        public List<T> Sort(string orderBy, string sortDirection = "asc")
         {
+            var descending = SortingDirection.IsDescendingSorting(sortDirection);
             var defaultSortColumn = string.Empty;
 
             if (typeof(ActionModel) == typeof(T))
@@ -36,7 +37,7 @@ namespace EdFi.Ods.AdminApi.Features
 
             if (!string.IsNullOrEmpty(defaultSortColumn))
             {
-                var queriable = this.AsQueryable<T>().OrderByColumn(sortBy, defaultSortColumn, descending);
+                var queriable = this.AsQueryable<T>().OrderByColumn(orderBy, defaultSortColumn, descending);
                 return queriable.ToList();
             }
             return this;

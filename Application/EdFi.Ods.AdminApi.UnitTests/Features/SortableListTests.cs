@@ -41,8 +41,8 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
          }});
 
             /// ContactName
-            string sortBy = "ContactName";
-            var sortedList = vendors.Sort(sortBy);
+            string orderBy = "ContactName";
+            var sortedList = vendors.Sort(orderBy);
 
             sortedList.ElementAt(0).Company.ShouldBe("test vendor 1");
             sortedList.ElementAt(1).Company.ShouldBe("test vendor 2");
@@ -75,8 +75,8 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
          }});
 
             /// ContactName
-            string sortBy = "ContactName";
-            var sortedList = vendors.Sort(sortBy, true);
+            string orderBy = "ContactName";
+            var sortedList = vendors.Sort(orderBy, SortingDirection.SortDirection.Descending.ToString());
 
             sortedList.ElementAt(0).Company.ShouldBe("test vendor 3");
             sortedList.ElementAt(1).Company.ShouldBe("test vendor 2");
@@ -109,8 +109,8 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
          }});
 
             /// ContactName
-            string sortBy = "notExistingColumn";
-            var sortedList = vendors.Sort(sortBy);
+            string orderBy = "notExistingColumn";
+            var sortedList = vendors.Sort(orderBy);
 
             sortedList.ElementAt(0).Company.ShouldBe("test vendor 1");
             sortedList.ElementAt(1).Company.ShouldBe("test vendor 2");

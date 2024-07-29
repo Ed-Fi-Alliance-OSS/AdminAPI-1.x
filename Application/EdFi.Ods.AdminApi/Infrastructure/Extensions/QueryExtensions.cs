@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
 {
@@ -24,9 +25,9 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
             try
             {
                 var type = typeof(T);
-                var property = type.GetProperty(orderBy);
+                var property = type.GetProperty(orderBy, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (property == null)
-                    property = type.GetProperty(orderByDefault);
+                    property = type.GetProperty(orderByDefault, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
                 if (property != null)
                 {

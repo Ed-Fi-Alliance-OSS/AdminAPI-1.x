@@ -4,9 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
 
@@ -34,15 +37,16 @@ public class ReadApplication : IFeature
         {
             applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
         }
-
-        var filteredApplications = applications.AsEnumerable()
+        var filteredApplications = applications
+            .AsEnumerable()
             .Where(a => id == null || a.Id == id)
             .Where(a => applicationName == null || a.ApplicationName == applicationName)
             .Where(a => claimsetName == null || a.ClaimSetName == claimsetName)
-            .Skip(offset)
+        .Skip(offset)
             .Take(limit);
-
-        return Task.FromResult(Results.Ok(filteredApplications));
+        var applicationsReturned = mapper.Map<SortableList<ApplicationModel>>(filteredApplications);
+        var applicationsResult = applicationsReturned.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction));
+        return Task.FromResult(Results.Ok(applicationsResult));
     }
 
     internal Task<IResult> GetApplication(GetApplicationByIdQuery getApplicationByIdQuery, IMapper mapper, int id)

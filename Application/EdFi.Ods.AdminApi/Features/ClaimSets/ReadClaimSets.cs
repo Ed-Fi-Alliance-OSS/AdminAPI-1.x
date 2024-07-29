@@ -29,10 +29,10 @@ public class ReadClaimSets : IFeature
     }
 
     internal Task<IResult> GetClaimSets(
-        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit, string? orderBy, string? sortDirection, int? id, string? name)
+        IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
     {
         var claimSets = mapper.Map<SortableList<ClaimSetModel>>(getClaimSetsQuery.Execute(offset, limit, id, name));
-        var model = claimSets.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(sortDirection));
+        var model = claimSets.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction));
         foreach (var claimSet in model)
         {
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));

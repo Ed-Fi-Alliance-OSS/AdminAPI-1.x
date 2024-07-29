@@ -19,10 +19,10 @@ public class ReadActions : IFeature
            .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetActions(IGetAllActionsQuery getAllActionsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? sortDirection, int? id, string? name)
+    internal Task<IResult> GetActions(IGetAllActionsQuery getAllActionsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
     {
         var actions = mapper.Map<SortableList<ActionModel>>(getAllActionsQuery.Execute(offset, limit, id, name));
-        var result = actions.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(sortDirection));
+        var result = actions.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction));
         return Task.FromResult(Results.Ok(result));
     }
 }

@@ -40,13 +40,13 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                 parameter.Description = "Indicates the property name by which the results will be sorted.";
                 parameter.Schema.Default = new OpenApiString(string.Empty);
             }
-            else if (parameter.Name.ToLower().Equals("sortdirection"))
+            else if (parameter.Name.ToLower().Equals("direction"))
             {
                 var description = "Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).";
                 parameter.Schema.Title = description;
                 parameter.Description = description;
-                parameter.Schema.Enum = new List<IOpenApiAny> { new OpenApiString(SortingDirection.SortDirection.Ascending.ToString()), new OpenApiString(SortingDirection.SortDirection.Descending.ToString()) };
-                parameter.Schema.Default = new OpenApiString(SortingDirection.SortDirection.Descending.ToString());
+                parameter.Schema.Enum = new List<IOpenApiAny> { new OpenApiString(SortingDirection.Direction.Ascending.ToString()), new OpenApiString(SortingDirection.Direction.Descending.ToString()) };
+                parameter.Schema.Default = new OpenApiString(SortingDirection.Direction.Descending.ToString());
             }
         }
 

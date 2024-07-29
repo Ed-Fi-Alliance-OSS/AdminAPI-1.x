@@ -76,7 +76,7 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
 
             /// ContactName
             string orderBy = "ContactName";
-            var sortedList = vendors.Sort(orderBy, SortingDirection.SortDirection.Descending.ToString());
+            var sortedList = vendors.Sort(orderBy, SortingDirection.Direction.Descending.ToString());
 
             sortedList.ElementAt(0).Company.ShouldBe("test vendor 3");
             sortedList.ElementAt(1).Company.ShouldBe("test vendor 2");

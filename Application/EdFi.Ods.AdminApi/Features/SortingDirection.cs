@@ -10,7 +10,7 @@ namespace EdFi.Ods.AdminApi.Features;
 
 public class SortingDirection
 {
-    public enum SortDirection
+    public enum Direction
     {
         [Description("Ascending")]
         [EnumMember(Value = "Asc")]
@@ -41,6 +41,6 @@ public class SortingDirection
         {
             return direction;
         }
-        return SortDirection.Ascending.ToString();
+        return Direction.Ascending.ToString();
     }
 }

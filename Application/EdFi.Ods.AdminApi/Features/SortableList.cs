@@ -15,9 +15,9 @@ namespace EdFi.Ods.AdminApi.Features
 {
     public class SortableList<T> : List<T>
     {
-        public List<T> Sort(string orderBy, string sortDirection = "asc")
+        public List<T> Sort(string orderBy, string direction = "asc")
         {
-            var descending = SortingDirection.IsDescendingSorting(sortDirection);
+            var descending = SortingDirection.IsDescendingSorting(direction);
             var defaultSortColumn = string.Empty;
 
             if (typeof(ActionModel) == typeof(T))

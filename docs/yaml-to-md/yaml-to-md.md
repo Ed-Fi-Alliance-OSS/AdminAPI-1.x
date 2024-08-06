@@ -51,7 +51,7 @@ widdershins --search false --language_tabs 'http:HTTP' 'python:PYTHON' 'csharp:C
 ```
 In this case the MD file has sample code in different programming languages
 
-[Result](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/ADMINAPI-950/docs/yaml-to-md/adminapi2x.md)
+[Result](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/main/docs/yaml-to-md/adminapi2x.md)
 
 For more details check: [widdershins](https://github.com/Mermade/widdershins)
 
@@ -81,7 +81,7 @@ For more details check: [widdershins](https://github.com/Mermade/widdershins)
   </body>
 </html>
 ```
-![Example](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/ADMINAPI-950/docs/yaml-to-md/elements-example-image.png "Elements Web Component")
+![Example](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/main/docs/yaml-to-md/elements-example-image.png "Elements Web Component")
 
 For more details check: [Elements](https://github.com/stoplightio/elements?tab=readme-ov-file#web-component)
 
@@ -135,6 +135,6 @@ yarn docusaurus gen-api-docs all
 yarn start
 ```
 
-![Example](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/ADMINAPI-950/docs/yaml-to-md/docusaurus-example.png "Docusaurus")
+![Example](https://github.com/Ed-Fi-Alliance-OSS/AdminAPI-2.x/blob/main/docs/yaml-to-md/docusaurus-example.png "Docusaurus")
 
 For more details check: [Docusaurus](https://github.com/PaloAltoNetworks/docusaurus-openapi-docs)

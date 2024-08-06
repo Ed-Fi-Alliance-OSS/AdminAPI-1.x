@@ -49,7 +49,6 @@
     .EXAMPLE
        $p = @{
             ProductionApiUrl = "http://api"
-            ApiExternalUrl = "https://localhost:5001"
             AppStartup = "OnPrem"
             XsdFolder = "/app/Schema"
             ApiStartupType = "SharedInstance"
@@ -60,7 +59,7 @@
             SecurityDB = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
         }
 
-        .\build.ps1 -Version "2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
+        .\build.ps1 -APIVersion "1.2.2" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
 #>
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
 param(
@@ -75,7 +74,7 @@ param(
     # Assembly and package version number for Admin API. The current package number is
     # configured in the build automation tool and passed to this script.
     [string]
-    $APIVersion = "0.1",
+    $APIVersion = "1.2.2",
 
     # .NET project build configuration, defaults to "Debug". Options are: Debug, Release.
     [string]
@@ -368,10 +367,9 @@ function Invoke-BuildDatabasePackage {
 }
 
 function UpdateAppSettingsForAdminApiDocker {
-    $filePath = "$solutionRoot/EdFi.Ods.AdminApi/publish/appsettings.json"
+    $filePath = "$solutionRoot/EdFi.Ods.AdminApi/appsettings.json"
     $json = (Get-Content -Path $filePath) | ConvertFrom-Json
     $json.AppSettings.ProductionApiUrl = $DockerEnvValues["ProductionApiUrl"]
-    $json.AppSettings.ApiExternalUrl = $DockerEnvValues["ApiExternalUrl"]
     $json.AppSettings.ApiStartupType = $DockerEnvValues["ApiStartupType"]
     $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
     $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
@@ -386,7 +384,7 @@ function UpdateAppSettingsForAdminApiDocker {
 }
 
 function CopyLatestFilesToAdminApiContainer {
-    $source = "$solutionRoot/EdFi.Ods.AdminApi/publish/."
+    $source = "$solutionRoot/EdFi.Ods.AdminApi/bin/Release/net8.0/."
     &docker cp $source adminapi:/app/AdminApi
 }
 
@@ -449,7 +447,7 @@ function Invoke-PushPackage {
 function CopyApplicationFilesToDockerContext {
 	New-Item -Path "$dockerRoot/Application" -ItemType Directory
 	Copy-Item -Path "$solutionRoot/EdFi.Ods.AdminApi/" -Destination "$dockerRoot/Application/" -Recurse
-	Copy-Item -Path "$solutionRoot/NuGet.Config" -Destination "$dockerRoot/Application/" -Recurse	
+	Copy-Item -Path "$solutionRoot/NuGet.Config" -Destination "$dockerRoot/Application/" -Recurse
 }
 
 function Invoke-CopyApplicationFilesToDockerContext {

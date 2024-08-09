@@ -43,4 +43,31 @@ public class AddOdsInstanceCommandTests : PlatformUsersContextTestBase
             profile.ConnectionString.ShouldBe(odsInstanceConnectionString);
         });
     }
+
+    [Test]
+    public void ShouldAddOdsInstanceWithEmptyInstanceType()
+    {
+        var odsInstanceName = $"Test-OdsInstance{Guid.NewGuid()}";
+        var odsInstanceConnectionString = "ConnectionString";
+        var newOdsInstance = new Mock<IAddOdsInstanceModel>();
+        newOdsInstance.Setup(x => x.Name).Returns(odsInstanceName);
+        newOdsInstance.Setup(x => x.ConnectionString).Returns(odsInstanceConnectionString);
+
+
+        var id = 0;
+        Transaction(usersContext =>
+        {
+            var command = new AddOdsInstanceCommand(usersContext);
+            id = command.Execute(newOdsInstance.Object).OdsInstanceId;
+            id.ShouldBeGreaterThan(0);
+        });
+
+        Transaction(usersContext =>
+        {
+            var profile = usersContext.OdsInstances.Single(v => v.OdsInstanceId == id);
+            profile.Name.ShouldBe(odsInstanceName);
+            profile.InstanceType.ShouldBeEmpty();
+            profile.ConnectionString.ShouldBe(odsInstanceConnectionString);
+        });
+    }
 }

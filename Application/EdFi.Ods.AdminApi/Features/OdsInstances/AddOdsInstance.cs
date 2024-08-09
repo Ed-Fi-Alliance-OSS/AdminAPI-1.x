@@ -39,7 +39,7 @@ public class AddOdsInstance : IFeature
     {
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceName, Nullable = false)]
         public string? Name { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = false)]
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = true)]
         public string? InstanceType { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceConnectionString, Nullable = false)]
         public string? ConnectionString { get; set; }
@@ -60,7 +60,9 @@ public class AddOdsInstance : IFeature
                 .Must(BeAUniqueName)
                 .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage);
 
-            RuleFor(m => m.InstanceType).NotEmpty();
+            RuleFor(m => m.InstanceType)
+                .MaximumLength(100)
+                .When(m => !string.IsNullOrEmpty(m.InstanceType));
 
             RuleFor(m => m.ConnectionString)
                 .NotEmpty();

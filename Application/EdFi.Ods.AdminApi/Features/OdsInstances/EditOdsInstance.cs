@@ -41,7 +41,7 @@ public class EditOdsInstance : IFeature
     {
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceName, Nullable = false)]
         public string? Name { get; set; }
-        [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = false)]
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = true)]
         public string? InstanceType { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceConnectionString, Nullable = true)]
         public string? ConnectionString { get; set; }
@@ -67,7 +67,9 @@ public class EditOdsInstance : IFeature
                 .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage)
                 .When(m => BeAnExistingOdsInstance(m.Id) && NameIsChanged(m));
 
-            RuleFor(m => m.InstanceType).NotEmpty();
+            RuleFor(m => m.InstanceType)
+                .MaximumLength(100)
+                .When(m => !string.IsNullOrEmpty(m.InstanceType));
 
             RuleFor(m => m.ConnectionString)
                 .Must(BeAValidConnectionString)

@@ -58,4 +58,29 @@ public class EditOdsInstanceCommandTests : PlatformUsersContextTestBase
             changedOdsInstance.ConnectionString.ShouldBe(connectionString);
         });
     }
+
+    [Test]
+    public void ShouldEditOdsInstanceWithEmptyInstanceType()
+    {
+        var name = "new odsinstance name";
+        var connectionString = "new odsinstance connection string";
+        var newOdsInstanceData = new Mock<IEditOdsInstanceModel>();
+        newOdsInstanceData.Setup(v => v.Id).Returns(_odsInstanceId);
+        newOdsInstanceData.Setup(v => v.Name).Returns(name);
+        newOdsInstanceData.Setup(v => v.ConnectionString).Returns(connectionString);
+
+        Transaction(usersContext =>
+        {
+            var editOdsInstanceCommand = new EditOdsInstanceCommand(usersContext);
+            editOdsInstanceCommand.Execute(newOdsInstanceData.Object);
+        });
+
+        Transaction(usersContext =>
+        {
+            var changedOdsInstance = usersContext.OdsInstances.Single(v => v.OdsInstanceId == _odsInstanceId);
+            changedOdsInstance.Name.ShouldBe(name);
+            changedOdsInstance.InstanceType.ShouldBeEmpty();
+            changedOdsInstance.ConnectionString.ShouldBe(connectionString);
+        });
+    }
 }

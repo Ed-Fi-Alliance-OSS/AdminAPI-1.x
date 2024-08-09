@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d5aa928a-f34a-442b-ab54-9292875dc37a",
+		"_postman_id": "44f88975-fd52-41b3-b16e-291f1dd218d1",
 		"name": "Admin API E2E 2.0 - OdsInstances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -105,13 +105,11 @@
 											"\r",
 											"pm.test(\"POST OdsInstances Invalid: Response errors include messages by property\", function () {\r",
 											"    pm.expect(response.errors[\"Name\"].length).to.equal(1);\r",
-											"    pm.expect(response.errors[\"InstanceType\"].length).to.equal(1);\r",
 											"    pm.expect(response.errors[\"ConnectionString\"].length).to.equal(1);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"POST OdsInstances Invalid: Response errors include messages with wrong elements\", function () {\r",
 											"    pm.expect(response.errors[\"Name\"][0]).to.contain(\"'Name' must not be empty\");\r",
-											"    pm.expect(response.errors[\"InstanceType\"][0]).to.contain(\"'Instance Type' must not be empty\");\r",
 											"    pm.expect(response.errors[\"ConnectionString\"][0]).to.contain(\"'Connection String' must not be empty\");\r",
 											"});"
 										],

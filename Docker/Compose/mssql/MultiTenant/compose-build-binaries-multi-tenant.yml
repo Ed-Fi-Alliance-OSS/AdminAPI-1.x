@@ -27,22 +27,27 @@ services:
   adminapi:
     build:
       context: ../../../
-      dockerfile: api.pgsql.Dockerfile
+      dockerfile: api.mssql.Dockerfile
     environment:
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      ADMIN_WAIT_POSTGRES_HOSTS: "db-admin-tenant1 db-admin-tenant2 "
-      DATABASEENGINE: "PostgreSql"
+      ADMIN_WAIT_MSSQL_HOSTS: "db-admin-tenant1 db-admin-tenant2"
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_SECURITY_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
+      SQLSERVER_TENANT1_PORT: 1433
+      SQLSERVER_TENANT2_PORT: 1433
+      DATABASEENGINE: "SqlServer"
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
-      AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
-      AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
+      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-true}"
+      AppSettings__PreventDuplicateApplications: ${PREVENT_DUPLICATE_APPLICATIONS:-false}
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
+      DEFAULT_TENANT: ${DEFAULT_TENANT:-tenant1}
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
@@ -60,39 +65,49 @@ services:
 
   db-admin-tenant1:
     build:
-      context: ../../../Settings/DB-Admin/pgsql/
+      context: ../../../Settings/DB-Admin/mssql/
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      SA_PASSWORD: "${SA_PASSWORD:-P@55w0rd}"
+      ACCEPT_EULA: "Y"
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_PORT: 1433
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
-      - "5401:5432"
+      - 1433:1433
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 10
     volumes:
-      - vol-db-admin-adminapi-tenant1:/var/lib/postgresql/data
+      - vol-db-admin-adminapi-tenant1:/var/lib/mssql/data
     restart: always
     container_name: ed-fi-db-admin-adminapi-tenant1
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready  -U ${POSTGRES_USER}"]
-      start_period: "60s"
-      retries: 3
 
   db-admin-tenant2:
     build:
-      context: ../../../Settings/DB-Admin/pgsql/
+      context: ../../../Settings/DB-Admin/mssql/
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      SA_PASSWORD: "${SA_PASSWORD:-P@55w0rd}"
+      ACCEPT_EULA: "Y"
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_PORT: 1433
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
-      - "5402:5432"
+      - 1434:1433
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 10
     volumes:
-      - vol-db-admin-adminapi-tenant2:/var/lib/postgresql/data
+      - vol-db-admin-adminapi-tenant2:/var/lib/mssql/data
     restart: always
     container_name: ed-fi-db-admin-adminapi-tenant2
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready  -U ${POSTGRES_USER}"]
-      start_period: "60s"
-      retries: 3
 
 volumes:
   vol-db-admin-adminapi-tenant1:

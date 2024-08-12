@@ -12,42 +12,46 @@ services:
       dockerfile: Dockerfile
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+      ODS_VIRTUAL_NAME: "${ODS_VIRTUAL_NAME:-api}"
     ports:
       - "443:443"
       - "80:80"
-    container_name: ed-fi-gateway-adminapi-packaged
+    container_name: ed-fi-gateway-adminapi
     restart: always
     hostname: nginx
     volumes:
       - ../../../Settings/ssl:/ssl/
-      - ../../../Settings/gateway/default.conf.template:/etc/nginx/templates/default.conf.template
     depends_on:
       - adminapi
 
   adminapi:
     build:
+      # Important to set the context to the root, rather than setting it to the
+      # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
+      # C# projects.
       context: ../../../
-      dockerfile: api.pgsql.Dockerfile
+      additional_contexts:
+         assets: ../../../../
+      dockerfile: dev.mssql.Dockerfile
     environment:
-      ADMIN_POSTGRES_HOST: db-admin
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      DATABASEENGINE: "PostgreSql"
+      ADMIN_MSSQL_HOST: db-admin
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_SECURITY_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_PORT: 1433
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
+      DATABASEENGINE: "SqlServer"
       AUTHORITY: ${AUTHORITY}
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
-      API_INTERNAL_URL: ${API_INTERNAL_URL}
       MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
-      AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
-      AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
-      AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
     depends_on:
       - db-admin
     restart: always
     hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
-    container_name: adminapi-packaged
+    container_name: adminapi
     healthcheck:
       test: ${ADMIN_API_HEALTHCHECK_TEST}
       start_period: "60s"
@@ -55,15 +59,24 @@ services:
 
   db-admin:
     build:
-      context: ../../../Settings/DB-Admin/pgsql/
+      context: ../../../Settings/DB-Admin/mssql/
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      SA_PASSWORD: "${SA_PASSWORD:-P@55w0rd}"
+      ACCEPT_EULA: "Y"
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_PORT: 1433
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
     ports:
-      - "5401:5432"
+      - 1433:1433
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 10
     volumes:
-      - vol-db-admin-adminapi:/var/lib/postgresql/data
+      - vol-db-admin-adminapi:/var/lib/mssql/data
     restart: always
     container_name: ed-fi-db-admin-adminapi
 

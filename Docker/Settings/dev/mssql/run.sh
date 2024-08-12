@@ -7,7 +7,9 @@
 set -e
 set +x
 
-envsubst < /app/appsettings.template.json > /app/appsettings.json
+envsubst < /app/appsettings.Docker.mssql.json > /app/temp.json
+
+mv /app/temp.json /app/appsettings.json
 
 if [[ -z "$ADMIN_WAIT_MSSQL_HOSTS" ]]; then
   # if there are no hosts to wait then fallback to $ADMIN_MSSQL_HOST
@@ -27,10 +29,9 @@ done
 >&2 echo "MSSQL is up - executing command"
 exec $cmd
 
-
 if [[ -f /ssl/server.crt ]]; then
-  cp /ssl/server.crt /usr/local/share/ca-certificates/
-  update-ca-certificates
+ cp /ssl/server.crt /usr/local/share/ca-certificates/
+ update-ca-certificates
 fi
 
 dotnet EdFi.Ods.AdminApi.dll

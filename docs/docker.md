@@ -4,6 +4,8 @@ Must already have Docker Desktop or equivalent running on your workstation.
 
 ## Quick Start for Local Development and Testing
 
+PostgreSQL
+
 ```mermaid
 graph LR
     A(Admin Client) -->|HTTPS| B[nginx]
@@ -61,15 +63,28 @@ style I fill:#fff
    bash ./generate-certificate.sh
    ```
 
-2. Copy and customize the `.env.example` file. Importantly, be sure to change
-   the encryption key. In a Bash prompt, generate a random key thusly: `openssl
+2. Copy and customize the `.env.example` file. The project has a PostgreSQL
+   version (Docker/Compose/pgsql) and a MSSQL version (Docker/Compose/mssql)
+   to run the containers. Importantly, be sure to change the encryption key.
+   In a Bash prompt, generate a random key thusly: `openssl
    rand -base64 32`.
+
+   PostgreSQL
 
    ```shell
    cd Docker/Compose/pgsql
    cp .env.example .env
    code .env
    ```
+
+   MSSQL
+
+   ```shell
+   cd Docker/Compose/mssql
+   cp .env.example .env
+   code .env
+   ```
+
    > [!NOTE] 
    > The .env file is a shared resource that can be referenced by both the 
    > "MultiTenant" and "SingleTenant" compose files.

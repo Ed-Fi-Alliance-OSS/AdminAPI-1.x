@@ -2,10 +2,17 @@
 
 ## Development environment
 
-1. dev.Dockerfile
+1. dev.pgsql.Dockerfile
 
     The purpose of this file is to facilitate the setup of Admin API docker image in
-    the development environment, allowing for local testing with latest changes.
+    the development environment, allowing for local testing with latest changes using Postgresql.
+    It utilizes the assets and dlls from "Docker\Application\EdFi.Ods.AdminApi"
+    folder.
+
+2. dev.pgsql.Dockerfile
+
+    The purpose of this file is to facilitate the setup of Admin API docker image in
+    the development environment, allowing for local testing with latest changes using MSSQL.
     It utilizes the assets and dlls from "Docker\Application\EdFi.Ods.AdminApi"
     folder.
 
@@ -23,11 +30,17 @@
 
 ## Non-development environments
 
-1. api.Dockerfile
+1. api.pgsql.Dockerfile
 
-    File for setting up Admin API docker image with assets and dlls sourced from
+    File for setting up Admin API and Postgres docker image with assets and dlls sourced from
     "EdFi.Suite3.ODS.AdminApi" nuget package(from
-    https://pkgs.dev.azure.com/ed-fi-alliance).
+    https://pkgs.dev.azure.com/ed-fi-alliance)
+
+1. api.mssql.Dockerfile
+
+    File for setting up Admin API and MSSQL docker image with assets and dlls sourced from
+    "EdFi.Suite3.ODS.AdminApi" nuget package(from
+    https://pkgs.dev.azure.com/ed-fi-alliance)
 
 2. \Docker\Settings\DB-Admin\pgsql\Dockerfile
 

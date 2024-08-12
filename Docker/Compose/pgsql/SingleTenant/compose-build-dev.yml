@@ -30,7 +30,7 @@ services:
       # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
       # C# projects.
       context: ../../../
-      dockerfile: dev.Dockerfile
+      dockerfile: dev.pgsql.Dockerfile
     environment:
       ADMIN_POSTGRES_HOST: pb-admin
       POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
@@ -41,6 +41,7 @@ services:
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
+      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
     depends_on:
       - pb-admin
     restart: always

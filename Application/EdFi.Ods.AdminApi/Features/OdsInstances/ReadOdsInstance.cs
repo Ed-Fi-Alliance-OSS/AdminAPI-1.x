@@ -26,12 +26,13 @@ public class ReadOdsInstance : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name)
+    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name, string? instanceType)
     {
         var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(
             commonQueryParams,
             id,
-            name));
+            name,
+            instanceType));
         return Task.FromResult(Results.Ok(odsInstances.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 
@@ -42,4 +43,3 @@ public class ReadOdsInstance : IFeature
         return Task.FromResult(Results.Ok(model));
     }
 }
-

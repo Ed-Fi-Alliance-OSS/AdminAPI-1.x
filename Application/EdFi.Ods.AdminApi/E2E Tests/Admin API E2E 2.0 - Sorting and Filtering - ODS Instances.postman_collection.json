@@ -1,0 +1,1102 @@
+{
+	"info": {
+		"_postman_id": "c7d45e0f-9986-4f50-8b58-0ea7e334f414",
+		"name": "Admin API E2E 2.0 - Sorting and Filtering - ODS Instances",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5260609"
+	},
+	"item": [
+		{
+			"name": "Get ODS Instances order by Default Asc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by Name asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name.toLowerCase()],['asc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&direction=ASC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "direction",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by Default Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by Namne desc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name.toLowerCase()],['desc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&direction=desc",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "direction",
+							"value": "desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by Id Asc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by Id asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.id],['asc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&orderBy=odsInstanceId&direction=ASC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "orderBy",
+							"value": "odsInstanceId"
+						},
+						{
+							"key": "direction",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by Id Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by Id desc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.id],['desc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&orderBy=odsInstanceId&direction=desc",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "orderBy",
+							"value": "odsInstanceId"
+						},
+						{
+							"key": "direction",
+							"value": "desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by Name Asc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by Name asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name.toLowerCase()],['asc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&orderBy=name&direction=ASC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "orderBy",
+							"value": "name"
+						},
+						{
+							"key": "direction",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by Name Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by Name desc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.name.toLowerCase()],['desc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&orderBy=Name&direction=desc",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "orderBy",
+							"value": "Name"
+						},
+						{
+							"key": "direction",
+							"value": "desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by InstanceType Asc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by InstanceType asc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.instanceType.toLowerCase()],['asc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&orderBy=instanceType&direction=ASC",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "orderBy",
+							"value": "instanceType"
+						},
+						{
+							"key": "direction",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances order by InstanceType Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var _ = require('lodash');\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result includes ODS Instances\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET ODS Instances: Response result is ordered by InstanceType desc\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    var expectedSortedOrder = _.orderBy(results, [odsInstance => odsInstance.instanceType.toLowerCase()],['desc']);\r",
+							"    \r",
+							"    pm.expect(results).to.eql(expectedSortedOrder);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&orderBy=instanceType&direction=desc",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "orderBy",
+							"value": "instanceType"
+						},
+						{
+							"key": "direction",
+							"value": "desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances filter by Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET Ods Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Ods Instances: Response result includes Ods instance\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results).to.have.lengthOf(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Ods Instances: Response result contains requested Ods instance\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results[0].name).to.eql(pm.collectionVariables.get(\"FILTERNAME\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&name={{FILTERNAME}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "name",
+							"value": "{{FILTERNAME}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ODS Instances filter by InstanceType",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET Ods Instances: Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Ods Instances: Response result includes Ods Instance\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results).to.have.lengthOf(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"GET Ods Instances: Response result contains requested Ods Instance\", function () {\r",
+							"    const results = pm.response.json();\r",
+							"    pm.expect(results[0].instanceType).to.eql(pm.collectionVariables.get(\"FILTERINSTANCETYPE\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/v2/odsInstances?offset={{offset}}&limit={{limit}}&instanceType={{FILTERINSTANCETYPE}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v2",
+						"odsInstances"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "{{offset}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}"
+						},
+						{
+							"key": "instanceType",
+							"value": "{{FILTERINSTANCETYPE}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"/// -------\r",
+					"/// Authentication\r",
+					"/// -------\r",
+					"\r",
+					"function generateClientSecret() {\r",
+					"    const minLength = 32;\r",
+					"    const maxLength = 128;\r",
+					"    let result = '';\r",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+					"    const specialCharacters = '!@#$%^&*()_+{}:\"<>?|[];\\',./`~';\r",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;\r",
+					"\r",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');\r",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');\r",
+					"    result += randomChar('0123456789');\r",
+					"    result += randomChar(specialCharacters);\r",
+					"\r",
+					"    for (let i = result.length; i < length; i++) {\r",
+					"        const charactersPlusSpecial = characters + specialCharacters;\r",
+					"        result += charactersPlusSpecial.charAt(Math.floor(Math.random() * charactersPlusSpecial.length));\r",
+					"    }\r",
+					"\r",
+					"    return shuffleString(result);\r",
+					"}\r",
+					"\r",
+					"function randomChar(str) {\r",
+					"    return str.charAt(Math.floor(Math.random() * str.length));\r",
+					"}\r",
+					"\r",
+					"function shuffleString(str) {\r",
+					"    const array = str.split('');\r",
+					"    for (let i = array.length - 1; i > 0; i--) {\r",
+					"        const j = Math.floor(Math.random() * (i + 1));\r",
+					"        [array[i], array[j]] = [array[j], array[i]];\r",
+					"    }\r",
+					"    return array.join('');\r",
+					"}\r",
+					"\r",
+					"let guid = pm.variables.replaceIn('{{$guid}}');\r",
+					"let client_secret =  generateClientSecret();\r",
+					"\r",
+					"let header = {\r",
+					"    'Content-Type': 'application/x-www-form-urlencoded'\r",
+					"};\r",
+					"\r",
+					"if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+					"    header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+					"    pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+					"}\r",
+					"\r",
+					"pm.sendRequest({\r",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/register`,\r",
+					"    method: 'POST',\r",
+					"    header: header,\r",
+					"    body: {\r",
+					"        mode: 'urlencoded',\r",
+					"        urlencoded: [\r",
+					"            {key: 'ClientId', value: guid },\r",
+					"            {key: 'ClientSecret', value: client_secret },\r",
+					"            {key: 'DisplayName', value: guid }\r",
+					"        ]\r",
+					"    }\r",
+					"},\r",
+					"    (err, res) => {\r",
+					"        error = res.json().error\r",
+					"        if(error) {\r",
+					"            throw res.json().error_description\r",
+					"        }\r",
+					"\r",
+					"pm.sendRequest({\r",
+					"    url: `${pm.variables.get(\"API_URL\")}/connect/token`,\r",
+					"    method: 'POST',\r",
+					"    header: header,\r",
+					"    body: {\r",
+					"        mode: 'urlencoded',\r",
+					"        urlencoded: [\r",
+					"            {key: 'client_id', value: guid },\r",
+					"            {key: 'client_secret', value: client_secret },\r",
+					"            {key: 'grant_type', value: \"client_credentials\"},\r",
+					"            {key: 'scope', value: \"edfi_admin_api/full_access\"}\r",
+					"        ]\r",
+					"    }\r",
+					"},\r",
+					"    (err, res) => {\r",
+					"        error = res.json().error\r",
+					"        if(error) {\r",
+					"            throw res.json().error_description\r",
+					"        }\r",
+					"        pm.collectionVariables.set(\"TOKEN\", res.json().access_token);\r",
+					"        createODSInstances();\r",
+					"    });\r",
+					"});\r",
+					"\r",
+					"/// -------\r",
+					"/// ODS Instances\r",
+					"/// -------\r",
+					"\r",
+					"function generateAlphanumericString() {\r",
+					"    const minLength = 8;\r",
+					"    const maxLength = 24;\r",
+					"    let result = '';\r",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+					"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;\r",
+					"\r",
+					"    result += randomChar('abcdefghijklmnopqrstuvwxyz');\r",
+					"    result += randomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');\r",
+					"    result += randomChar('0123456789');\r",
+					"\r",
+					"    for (let i = result.length; i < length; i++) {\r",
+					"        result += characters.charAt(Math.floor(Math.random() * characters.length));\r",
+					"    }\r",
+					"\r",
+					"    return shuffleString(result);\r",
+					"}\r",
+					"\r",
+					"function generateName() {\r",
+					"    return `TestOdsInstance${generateAlphanumericString()}`;\r",
+					"}\r",
+					"\r",
+					"function generateInstanceType() {\r",
+					"    return `uri://${generateAlphanumericString()}.org`;\r",
+					"}\r",
+					"\r",
+					"function createODSInstances() {\r",
+					"    header = {\r",
+					"        'Content-Type': 'application/json',\r",
+					"        'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+					"    };\r",
+					"\r",
+					"    if (pm.variables.get(\"isMultitenant\") == \"true\") {\r",
+					"        header['Tenant'] = `${pm.variables.get(\"tenant1\")}`;\r",
+					"        pm.request.headers.upsert({key: 'Tenant', value: `${pm.variables.get(\"tenant1\")}` });\r",
+					"    }\r",
+					"\r",
+					"    for (let i = 0; i < pm.collectionVariables.get(\"ODSINSTANCECOUNT\"); i++) {\r",
+					"        let name =  generateName();\r",
+					"        let instanceType =  generateInstanceType();\r",
+					"\r",
+					"        pm.collectionVariables.set(\"FILTERNAME\", name);\r",
+					"        pm.collectionVariables.set(\"FILTERINSTANCETYPE\", instanceType);\r",
+					"\r",
+					"        pm.sendRequest({\r",
+					"            url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances`,\r",
+					"            method: 'POST',\r",
+					"            header: header,\r",
+					"            body: {\r",
+					"                mode: 'raw',\r",
+					"                raw: JSON.stringify({ \"name\": `${name}`, \"instanceType\": `${instanceType}`, \"connectionString\": pm.variables.get(\"connectionString\") })\r",
+					"            }\r",
+					"        }, (err, res) => {\r",
+					"            error = res.json().error\r",
+					"            if(error) {\r",
+					"                throw res.json().error_description\r",
+					"            }\r",
+					"        });\r",
+					"    }\r",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"header = {\r",
+					"    'Content-Type': 'application/json',\r",
+					"    'Accept': '*/*',\r",
+					"    'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+					"};\r",
+					"\r",
+					"function deleteODSInstanceById(id) {\r",
+					"        pm.sendRequest({\r",
+					"            url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances/${id}`,\r",
+					"            method: 'DELETE',\r",
+					"            header: header\r",
+					"        }, function (err, res) {\r",
+					"            if (err) {\r",
+					"                console.log(err);\r",
+					"            }\r",
+					"        });\r",
+					"}\r",
+					"\r",
+					"function deleteODSInstances() {\r",
+					"    pm.sendRequest({\r",
+					"        url: `${pm.variables.get(\"API_URL\")}/v2/odsInstances?offset=0&limit=500`,\r",
+					"        method: 'GET',\r",
+					"        header: header\r",
+					"    }, function (err, res) {\r",
+					"        var results = res.json();\r",
+					"        if (err) {\r",
+					"            console.log(err);\r",
+					"        }\r",
+					"\r",
+					"        for (let i = 0; i < results.length; i++) {\r",
+					"            let odsInstance = results[i];\r",
+					"            deleteODSInstanceById(odsInstance.id);\r",
+					"        }\r",
+					"    });\r",
+					"}\r",
+					"\r",
+					"deleteODSInstances();"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "FILTERNAME",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "FILTERINSTANCETYPE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ODSINSTANCECOUNT",
+			"value": "4",
+			"type": "string"
+		}
+	]
+}

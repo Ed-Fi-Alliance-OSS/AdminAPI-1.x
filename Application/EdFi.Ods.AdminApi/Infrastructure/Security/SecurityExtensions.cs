@@ -40,7 +40,7 @@ public static class SecurityExtensions
                 opt.AddEphemeralEncryptionKey();
                 opt.AddEphemeralSigningKey();
                 opt.DisableAccessTokenEncryption();
-                opt.SetIssuer(new Uri(authority));
+                opt.SetIssuer(new Uri(issuer));
 
                 if (!webHostEnvironment.IsDevelopment()) //Keys below will override Ephemeral / Dev Keys
                 {
@@ -77,7 +77,7 @@ public static class SecurityExtensions
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
-                ValidIssuer = authority,
+                ValidIssuer = issuer,
                 IssuerSigningKey = signingKey
             };
             opt.RequireHttpsMetadata = !isDockerEnvironment;

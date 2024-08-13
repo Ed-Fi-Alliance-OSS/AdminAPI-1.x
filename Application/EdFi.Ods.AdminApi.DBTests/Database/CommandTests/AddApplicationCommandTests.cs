@@ -23,7 +23,7 @@ namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 [TestFixture]
 public class AddApplicationCommandTests : PlatformUsersContextTestBase
 {
-    private IOptions<AppSettings> _options {  get; set; }
+    private IOptions<AppSettings> _options { get; set; }
 
     [OneTimeSetUp]
     public virtual async Task FixtureSetup()

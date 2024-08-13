@@ -3,12 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Globalization;
 using AutoMapper;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Features.ResourceClaims;
 
@@ -27,10 +28,12 @@ public class ReadResourceClaims : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
+    internal Task<IResult> GetResourceClaims(IGetResourceClaimsQuery getResourceClaimsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name)
     {
-        var resourceClaims = mapper.Map<SortableList<ResourceClaimModel>>(getResourceClaimsQuery.Execute(offset, limit, id, name).ToList());
-        var model = resourceClaims.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction));
+        var resourceClaims = mapper.Map<List<ResourceClaimModel>>(getResourceClaimsQuery.Execute(
+            commonQueryParams,
+            id, name).ToList());
+        var model = resourceClaims.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction));
 
         return Task.FromResult(Results.Ok(model));
     }

@@ -5,24 +5,28 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-
 
 public interface IGetOdsInstanceDerivativesQuery
 {
     List<OdsInstanceDerivative> Execute();
-    List<OdsInstanceDerivative> Execute(int offset, int limit);
+    List<OdsInstanceDerivative> Execute(CommonQueryParams commonQueryParams);
 }
 
 public class GetOdsInstanceDerivativesQuery : IGetOdsInstanceDerivativesQuery
 {
     private readonly IUsersContext _usersContext;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetOdsInstanceDerivativesQuery(IUsersContext usersContext)
+    public GetOdsInstanceDerivativesQuery(IUsersContext usersContext, IOptions<AppSettings> options)
     {
         _usersContext = usersContext;
+        _options = options;
     }
 
     public List<OdsInstanceDerivative> Execute()
@@ -32,11 +36,13 @@ public class GetOdsInstanceDerivativesQuery : IGetOdsInstanceDerivativesQuery
             .OrderBy(p => p.DerivativeType).ToList();
     }
 
-    public List<OdsInstanceDerivative> Execute(int offset, int limit)
+    public List<OdsInstanceDerivative> Execute(CommonQueryParams commonQueryParams)
     {
         return _usersContext.OdsInstanceDerivatives
             .Include(oid => oid.OdsInstance)
-            .OrderBy(p => p.DerivativeType).Skip(offset).Take(limit).ToList();
+            .OrderBy(p => p.DerivativeType)
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .ToList();
     }
 }
 

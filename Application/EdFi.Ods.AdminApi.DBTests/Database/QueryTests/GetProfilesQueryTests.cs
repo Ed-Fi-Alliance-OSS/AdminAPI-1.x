@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
@@ -27,7 +28,7 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
         List<Profile> results = null;
         Transaction(usersContext =>
         {
-            var query = new GetProfilesQuery(usersContext);
+            var query = new GetProfilesQuery(usersContext, Testing.GetAppSettings());
             results = query.Execute();
         });
 
@@ -56,8 +57,8 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
         List<Profile> results = null;
         Transaction(usersContext =>
         {
-            var query = new GetProfilesQuery(usersContext);
-            results = query.Execute(1,1, null, null);
+            var query = new GetProfilesQuery(usersContext, Testing.GetAppSettings());
+            results = query.Execute(new CommonQueryParams(1, 1), null, null);
             results.Count.ShouldBe(1);
         });
         results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
@@ -74,8 +75,8 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
         List<Profile> results = null;
         Transaction(usersContext =>
         {
-            var query = new GetProfilesQuery(usersContext);
-            results = query.Execute(0, 5, profile2.ProfileId, null);
+            var query = new GetProfilesQuery(usersContext, Testing.GetAppSettings());
+            results = query.Execute(new CommonQueryParams(0, 5), profile2.ProfileId, null);
             results.Count.ShouldBe(1);
         });
         results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();
@@ -92,8 +93,8 @@ public class GetProfilesQueryTests : PlatformUsersContextTestBase
         List<Profile> results = null;
         Transaction(usersContext =>
         {
-            var query = new GetProfilesQuery(usersContext);
-            results = query.Execute(0, 5, null, profile2.ProfileName);
+            var query = new GetProfilesQuery(usersContext, Testing.GetAppSettings());
+            results = query.Execute(new CommonQueryParams(0, 5), null, profile2.ProfileName);
             results.Count.ShouldBe(1);
         });
         results.Any(p => p.ProfileName == profile2.ProfileName).ShouldBeTrue();

@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
@@ -22,7 +23,7 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
-        var query = new GetResourceClaimsQuery(securityContext);
+        var query = new GetResourceClaimsQuery(securityContext, Testing.GetAppSettings());
         results = query.Execute().ToArray();
         results.Length.ShouldBe(testResourceClaims.Count);
         results.Select(x => x.Name).ShouldBe(testResourceClaims.Select(x => x.ResourceName), true);
@@ -42,8 +43,8 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
-        var query = new GetResourceClaimsQuery(securityContext);
-        results = query.Execute(skip, 25, null, null).ToArray();
+        var query = new GetResourceClaimsQuery(securityContext, Testing.GetAppSettings());
+        results = query.Execute(new CommonQueryParams(skip, Testing.DefaultPageSizeLimit), null, null).ToArray();
         results.Length.ShouldBe(2);
         results.Select(x => x.Name).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceName), true);
         results.Select(x => x.Id).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceClaimId), true);
@@ -62,8 +63,8 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
-        var query = new GetResourceClaimsQuery(securityContext);
-        results = query.Execute(0, limit, null, null).ToArray();
+        var query = new GetResourceClaimsQuery(securityContext, Testing.GetAppSettings());
+        results = query.Execute(new CommonQueryParams(Testing.DefaultPageSizeOffset, limit), null, null).ToArray();
         results.Length.ShouldBe(3);
         results.Select(x => x.Name).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceName), true);
         results.Select(x => x.Id).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceClaimId), true);
@@ -83,8 +84,8 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
-        var query = new GetResourceClaimsQuery(securityContext);
-        results = query.Execute(offset, limit, null, null).ToArray();
+        var query = new GetResourceClaimsQuery(securityContext, Testing.GetAppSettings());
+        results = query.Execute(new CommonQueryParams(offset, limit), null, null).ToArray();
         results.Length.ShouldBe(2);
         results.Select(x => x.Name).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceName), true);
         results.Select(x => x.Id).ShouldBe(testResourceClaimsResult.Select(x => x.ResourceClaimId), true);
@@ -103,8 +104,8 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
-        var query = new GetResourceClaimsQuery(securityContext);
-        results = query.Execute(0, 25, testResourceClaimsResult.ResourceClaimId, null).ToArray();
+        var query = new GetResourceClaimsQuery(securityContext, Testing.GetAppSettings());
+        results = query.Execute(new CommonQueryParams(), testResourceClaimsResult.ResourceClaimId, null).ToArray();
         results.Length.ShouldBe(1);
         results.First().Id.ShouldBe(testResourceClaimsResult.ResourceClaimId);
     }
@@ -118,8 +119,8 @@ public class GetResourceClaimsQueryTests : SecurityDataTestBase
 
         Infrastructure.ClaimSetEditor.ResourceClaim[] results = null;
         using var securityContext = TestContext;
-        var query = new GetResourceClaimsQuery(securityContext);
-        results = query.Execute(0, 25, null, name).ToArray();
+        var query = new GetResourceClaimsQuery(securityContext, Testing.GetAppSettings());
+        results = query.Execute(new CommonQueryParams(), null, name).ToArray();
         results.Length.ShouldBe(1);
         results.First().Name.ShouldBe(testResourceClaimsResult.First().ResourceName);
     }

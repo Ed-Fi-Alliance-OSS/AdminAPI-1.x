@@ -5,24 +5,29 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Features;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetVendorsQuery
 {
     List<Vendor> Execute();
-    List<Vendor> Execute(int offset, int limit, string? orderBy, string? direction, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress);
+    List<Vendor> Execute(CommonQueryParams commonQueryParams, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress);
 }
 
 public class GetVendorsQuery : IGetVendorsQuery
 {
     private readonly IUsersContext _context;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetVendorsQuery(IUsersContext context)
+    public GetVendorsQuery(IUsersContext context, IOptions<AppSettings> options)
     {
         _context = context;
+        _options = options;
     }
 
     public List<Vendor> Execute()
@@ -39,7 +44,7 @@ public class GetVendorsQuery : IGetVendorsQuery
             .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
     }
 
-    public List<Vendor> Execute(int offset, int limit, string? orderBy, string? direction, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
+    public List<Vendor> Execute(CommonQueryParams commonQueryParams, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
     {
         return _context.Vendors
             .Where(c => id == null || id < 1 || c.VendorId == id)
@@ -56,6 +61,7 @@ public class GetVendorsQuery : IGetVendorsQuery
             .Include(v => v.Users)
             .Include(v => v.VendorNamespacePrefixes)
             .Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
-            .Skip(offset).Take(limit).ToList();
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .ToList();
     }
 }

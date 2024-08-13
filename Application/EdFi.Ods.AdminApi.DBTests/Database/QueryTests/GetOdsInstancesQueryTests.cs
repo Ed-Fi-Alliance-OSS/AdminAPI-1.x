@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
@@ -19,7 +20,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         Transaction(usersContext =>
         {
             CreateMultiple(2);
-            var command = new GetOdsInstancesQuery(usersContext);
+            var command = new GetOdsInstancesQuery(usersContext, Testing.GetAppSettings());
             var results = command.Execute();
             results.Count.ShouldBe(2);
         });
@@ -34,8 +35,8 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
             var offset = 0;
             var limit = 2;
 
-            var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+            var command = new GetOdsInstancesQuery(usersContext, Testing.GetAppSettings());
+            var odsInstancesAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(2);
@@ -45,7 +46,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
 
             offset = 2;
 
-            odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+            odsInstancesAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(2);
@@ -54,7 +55,7 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
 
             offset = 4;
 
-            odsInstancesAfterOffset = command.Execute(offset, limit, null, null);
+            odsInstancesAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);
@@ -68,8 +69,8 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         Transaction(usersContext =>
         {
             var odsInstances = CreateMultiple();
-            var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(0, 25, odsInstances[2].OdsInstanceId, null);
+            var command = new GetOdsInstancesQuery(usersContext, Testing.GetAppSettings());
+            var odsInstancesAfterOffset = command.Execute(new CommonQueryParams(), odsInstances[2].OdsInstanceId, null);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);
@@ -84,8 +85,8 @@ public class GetOdsInstancesQueryTests : PlatformUsersContextTestBase
         Transaction(usersContext =>
         {
             var odsInstances = CreateMultiple();
-            var command = new GetOdsInstancesQuery(usersContext);
-            var odsInstancesAfterOffset = command.Execute(0, 25, null, odsInstances[2].Name);
+            var command = new GetOdsInstancesQuery(usersContext, Testing.GetAppSettings());
+            var odsInstancesAfterOffset = command.Execute(new CommonQueryParams(), null, odsInstances[2].Name);
 
             odsInstancesAfterOffset.ShouldNotBeEmpty();
             odsInstancesAfterOffset.Count.ShouldBe(1);

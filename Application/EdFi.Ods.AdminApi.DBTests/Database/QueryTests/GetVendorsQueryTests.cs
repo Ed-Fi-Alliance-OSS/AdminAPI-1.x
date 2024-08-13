@@ -4,13 +4,12 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Linq;
+using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using System.Linq;
-using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Features.Vendors;
-using EdFi.Ods.AdminApi.Features;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -30,7 +29,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
             var allVendors = command.Execute();
 
             allVendors.ShouldNotBeEmpty();
@@ -64,9 +63,9 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         /// Id
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
 
-            var vendorsAfterOffset = command.Execute(offset, limit, null, null, vendors.First().VendorId, null, null, null, null);
+            var vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), vendors.First().VendorId, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);
@@ -77,9 +76,9 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         /// Company
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
 
-            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, "test vendor 2", null, null, null);
+            var vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, "test vendor 2", null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);
@@ -90,9 +89,9 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         /// NamespacePrefix
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
 
-            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, "http://testvendor2.net", null, null);
+            var vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null, "http://testvendor2.net", null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);
@@ -103,9 +102,9 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         /// ContactName
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
 
-            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, "test user 2", null);
+            var vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null, null, "test user 2", null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);
@@ -116,9 +115,9 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
         /// ContactEmailAddress
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
 
-            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, "testuser2@test.com");
+            var vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null, null, null, "testuser2@test.com");
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);
@@ -146,12 +145,12 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
 
             var offset = 0;
             var limit = 2;
 
-            var vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, null);
+            var vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(2);
@@ -161,7 +160,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
             offset = 2;
 
-            vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, null);
+            vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(2);
@@ -170,7 +169,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
             vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 4");
             offset = 4;
 
-            vendorsAfterOffset = command.Execute(offset, limit, null, null, null, null, null, null, null);
+            vendorsAfterOffset = command.Execute(new CommonQueryParams(offset, limit), null, null, null, null, null);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);

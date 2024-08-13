@@ -3,10 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using NUnit.Framework;
 using Shouldly;
-using System.Linq;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -17,9 +18,8 @@ public class GetAllActionsQueryTests : SecurityDataTestBase
     public void ShouldGetAllActions()
     {
         LoadSeedData();
-
         using var securityContext = TestContext;
-        var query = new GetAllActionsQuery(securityContext);
+        var query = new GetAllActionsQuery(securityContext, Testing.GetAppSettings());
         var resultNames = query.Execute().Select(x => x.ActionName).ToList();
 
         resultNames.Count.ShouldBe(4);
@@ -36,8 +36,10 @@ public class GetAllActionsQueryTests : SecurityDataTestBase
         var limit = 2;
 
         using var securityContext = TestContext;
-        var query = new GetAllActionsQuery(securityContext);
-        var resultNames = query.Execute(offset, limit, null, null).Select(x => x.ActionName).ToList();
+        var query = new GetAllActionsQuery(securityContext, Testing.GetAppSettings());
+        var resultNames = query.Execute(
+            new CommonQueryParams(offset, limit, null, null),
+            null, null).Select(x => x.ActionName).ToList();
 
         resultNames.Count.ShouldBe(2);
 
@@ -49,13 +51,12 @@ public class GetAllActionsQueryTests : SecurityDataTestBase
     public void ShouldGetAllActions_With_Name()
     {
         LoadSeedData();
-        var offset = 0;
-        var limit = 25;
         var name = "Delete";
-
         using var securityContext = TestContext;
-        var query = new GetAllActionsQuery(securityContext);
-        var resultNames = query.Execute(offset, limit, null, name).Select(x => x.ActionName).ToList();
+        var query = new GetAllActionsQuery(securityContext, Testing.GetAppSettings());
+        var resultNames = query.Execute(
+            new CommonQueryParams(),
+            null, name).Select(x => x.ActionName).ToList();
 
         resultNames.Count.ShouldBe(1);
 

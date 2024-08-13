@@ -5,6 +5,7 @@
 
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -45,8 +46,8 @@ public class SwaggerDefaultParameterFilter : IOperationFilter
                 var description = "Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).";
                 parameter.Schema.Title = description;
                 parameter.Description = description;
-                parameter.Schema.Enum = new List<IOpenApiAny> { new OpenApiString(SortingDirection.Direction.Ascending.ToString()), new OpenApiString(SortingDirection.Direction.Descending.ToString()) };
-                parameter.Schema.Default = new OpenApiString(SortingDirection.Direction.Descending.ToString());
+                parameter.Schema.Enum = new List<IOpenApiAny> { new OpenApiString(SortingDirectionHelper.Direction.Ascending.ToString()), new OpenApiString(SortingDirectionHelper.Direction.Descending.ToString()) };
+                parameter.Schema.Default = new OpenApiString(SortingDirectionHelper.Direction.Descending.ToString());
             }
         }
 

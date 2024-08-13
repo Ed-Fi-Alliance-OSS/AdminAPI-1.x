@@ -77,7 +77,7 @@ public class UpdateResourcesOnClaimSetCommandTests : SecurityDataTestBase
         using var context = CreateDbContext();
         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
             new EditResourceOnClaimSetCommand(context),
-            new GetResourceClaimsQuery(context),
+            new GetResourceClaimsQuery(context, Testing.GetAppSettings()),
             new OverrideDefaultAuthorizationStrategyCommand(context));
 
         var command = new UpdateResourcesOnClaimSetCommand(context, addOrEditResourcesOnClaimSetCommand);

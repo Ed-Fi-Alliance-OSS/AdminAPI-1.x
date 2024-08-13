@@ -3,13 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Drawing;
-using System.Globalization;
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using static EdFi.Ods.AdminApi.Features.SortingDirection;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Features.Vendors;
 
@@ -29,10 +28,12 @@ public class ReadVendor : IFeature
     }
 
     internal Task<IResult> GetVendors(
-        IGetVendorsQuery getVendorsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
+        IGetVendorsQuery getVendorsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? company, string? namespacePrefixes, string? contactName, string? contactEmailAddress)
     {
-        var vendorList = mapper.Map<SortableList<VendorModel>>(getVendorsQuery.Execute(offset, limit, orderBy, SortingDirection.GetNonEmptyOrDefault(direction), id, company, namespacePrefixes, contactName, contactEmailAddress));
-        return Task.FromResult(Results.Ok(vendorList.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction))));
+        var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute(
+            commonQueryParams,
+            id, company, namespacePrefixes, contactName, contactEmailAddress));
+        return Task.FromResult(Results.Ok(vendorList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 
     internal Task<IResult> GetVendor(IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, int id)

@@ -5,22 +5,27 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetProfilesQuery
 {
     List<Profile> Execute();
-    List<Profile> Execute(int offset, int limit, int? id, string? name);
+    List<Profile> Execute(CommonQueryParams commonQueryParams, int? id, string? name);
 }
 
 public class GetProfilesQuery : IGetProfilesQuery
 {
     private readonly IUsersContext _usersContext;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetProfilesQuery(IUsersContext usersContext)
+    public GetProfilesQuery(IUsersContext usersContext, IOptions<AppSettings> options)
     {
         _usersContext = usersContext;
+        _options = options;
     }
 
     public List<Profile> Execute()
@@ -28,12 +33,13 @@ public class GetProfilesQuery : IGetProfilesQuery
         return _usersContext.Profiles.OrderBy(p => p.ProfileName).ToList();
     }
 
-    public List<Profile> Execute(int offset, int limit, int? id, string? name)
+    public List<Profile> Execute(CommonQueryParams commonQueryParams, int? id, string? name)
     {
         return _usersContext.Profiles
             .Where(p => id == null || p.ProfileId == id)
             .Where(p => name == null || p.ProfileName == name)
             .OrderBy(p => p.ProfileName)
-            .Skip(offset).Take(limit).ToList();
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .ToList();
     }
 }

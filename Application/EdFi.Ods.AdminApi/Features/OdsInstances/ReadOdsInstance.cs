@@ -6,7 +6,8 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using static EdFi.Ods.AdminApi.Features.SortingDirection;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Features.ODSInstances;
 
@@ -25,10 +26,13 @@ public class ReadOdsInstance : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
+    internal Task<IResult> GetOdsInstances(IGetOdsInstancesQuery getOdsInstancesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name)
     {
-        var odsInstances = mapper.Map<SortableList<OdsInstanceModel>>(getOdsInstancesQuery.Execute(offset, limit, id, name));
-        return Task.FromResult(Results.Ok(odsInstances.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction))));
+        var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(
+            commonQueryParams,
+            id,
+            name));
+        return Task.FromResult(Results.Ok(odsInstances.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 
     internal Task<IResult> GetOdsInstance(IGetOdsInstanceQuery getOdsInstanceQuery, IMapper mapper, int id)

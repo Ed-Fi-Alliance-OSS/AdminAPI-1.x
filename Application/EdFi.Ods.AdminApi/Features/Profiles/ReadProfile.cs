@@ -7,7 +7,8 @@ using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using static EdFi.Ods.AdminApi.Features.SortingDirection;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Features.Profiles;
 
@@ -26,10 +27,12 @@ public class ReadProfile : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetProfiles(IGetProfilesQuery getProfilesQuery, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
+    internal Task<IResult> GetProfiles(IGetProfilesQuery getProfilesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams, int? id, string? name)
     {
-        var profileList = mapper.Map<SortableList<ProfileModel>>(getProfilesQuery.Execute(offset, limit, id, name));
-        return Task.FromResult(Results.Ok(profileList.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction))));
+        var profileList = mapper.Map<List<ProfileModel>>(getProfilesQuery.Execute(
+            commonQueryParams,
+            id, name));
+        return Task.FromResult(Results.Ok(profileList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 
     internal Task<IResult> GetProfile(IGetProfileByIdQuery getProfileByIdQuery, IMapper mapper, int id)

@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
 
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQuery(securityContext);
+            var query = new GetAllClaimSetsQuery(securityContext, Testing.GetAppSettings());
             return query.Execute().Select(x => x.Name).ToArray();
         });
 
@@ -44,13 +45,13 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
         var claimSet2 = GetClaimSet();
         Save(claimSet1, claimSet2);
 
-        var offset = 0;
-        var limit = 2;
-
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQuery(securityContext);
-            return query.Execute(offset, limit, null, null).Select(x => x.Name).ToArray();
+            var query = new GetAllClaimSetsQuery(securityContext, Testing.GetAppSettings());
+            return query.Execute(
+                new CommonQueryParams(),
+                null,
+                null).Select(x => x.Name).ToArray();
         });
 
         claimSetNames.ShouldContain(claimSet1.ClaimSetName);
@@ -64,13 +65,12 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
         var claimSet2 = GetClaimSet();
         Save(claimSet1, claimSet2);
 
-        var offset = 0;
-        var limit = 2;
-
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQuery(securityContext);
-            return query.Execute(offset, limit, claimSet2.ClaimSetId, null).Select(x => x.Name).ToArray();
+            var query = new GetAllClaimSetsQuery(securityContext, Testing.GetAppSettings());
+            return query.Execute(new CommonQueryParams(),
+                claimSet2.ClaimSetId,
+                null).Select(x => x.Name).ToArray();
         });
 
         claimSetNames.Length.ShouldBe(1);
@@ -84,13 +84,12 @@ public class GetAllClaimSetsQueryTests : SecurityDataTestBase
         var claimSet2 = GetClaimSet();
         Save(claimSet1, claimSet2);
 
-        var offset = 0;
-        var limit = 2;
-
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQuery(securityContext);
-            return query.Execute(offset, limit, null, claimSet2.ClaimSetName).Select(x => x.Name).ToArray();
+            var query = new GetAllClaimSetsQuery(securityContext, Testing.GetAppSettings());
+            return query.Execute(new CommonQueryParams(),
+                null,
+                claimSet2.ClaimSetName).Select(x => x.Name).ToArray();
         });
 
         claimSetNames.Length.ShouldBe(1);

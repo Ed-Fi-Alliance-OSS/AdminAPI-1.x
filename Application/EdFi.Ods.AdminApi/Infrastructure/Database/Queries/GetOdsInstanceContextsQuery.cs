@@ -5,7 +5,10 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -13,16 +16,18 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetOdsInstanceContextsQuery
 {
     List<OdsInstanceContext> Execute();
-    List<OdsInstanceContext> Execute(int offset, int limit);
+    List<OdsInstanceContext> Execute(CommonQueryParams commonQueryParams);
 }
 
 public class GetOdsInstanceContextsQuery : IGetOdsInstanceContextsQuery
 {
     private readonly IUsersContext _usersContext;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetOdsInstanceContextsQuery(IUsersContext usersContext)
+    public GetOdsInstanceContextsQuery(IUsersContext usersContext, IOptions<AppSettings> options)
     {
         _usersContext = usersContext;
+        _options = options;
     }
 
     public List<OdsInstanceContext> Execute()
@@ -32,11 +37,13 @@ public class GetOdsInstanceContextsQuery : IGetOdsInstanceContextsQuery
             .OrderBy(p => p.ContextKey).ToList();
     }
 
-    public List<OdsInstanceContext> Execute(int offset, int limit)
+    public List<OdsInstanceContext> Execute(CommonQueryParams commonQueryParams)
     {
         return _usersContext.OdsInstanceContexts
             .Include(oid => oid.OdsInstance)
-            .OrderBy(p => p.ContextKey).Skip(offset).Take(limit).ToList();
+            .OrderBy(p => p.ContextKey)
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .ToList();
     }
 }
 

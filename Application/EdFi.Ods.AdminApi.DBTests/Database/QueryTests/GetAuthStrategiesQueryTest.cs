@@ -3,12 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Security.DataAccess.Contexts;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
 using Shouldly;
-using System.Linq;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -35,7 +36,7 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
 
         Transaction(securityContext =>
         {
-            var command = new GetAuthStrategiesQuery(securityContext);
+            var command = new GetAuthStrategiesQuery(securityContext, Testing.GetAppSettings());
             var allAuthStrategies = command.Execute();
 
             allAuthStrategies.ShouldNotBeEmpty();
@@ -64,12 +65,12 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
 
         Transaction(securityContext =>
         {
-            var command = new GetAuthStrategiesQuery(securityContext);
+            var command = new GetAuthStrategiesQuery(securityContext, Testing.GetAppSettings());
 
             var offset = 0;
             var limit = 2;
 
-            var authStrategiesAfterOffset = command.Execute(offset, limit);
+            var authStrategiesAfterOffset = command.Execute(new CommonQueryParams(offset, limit, null, null));
 
             authStrategiesAfterOffset.ShouldNotBeEmpty();
             authStrategiesAfterOffset.Count.ShouldBe(2);
@@ -79,7 +80,7 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
 
             offset = 2;
 
-            authStrategiesAfterOffset = command.Execute(offset, limit);
+            authStrategiesAfterOffset = command.Execute(new CommonQueryParams(offset, limit, null, null));
 
             authStrategiesAfterOffset.ShouldNotBeEmpty();
             authStrategiesAfterOffset.Count.ShouldBe(2);
@@ -88,7 +89,7 @@ public class GetAuthStrategiesQueryTest : PlatformSecurityContextTestBase
             authStrategiesAfterOffset.ShouldContain(v => v.AuthorizationStrategyName == "Test Auth S 4");
             offset = 4;
 
-            authStrategiesAfterOffset = command.Execute(offset, limit);
+            authStrategiesAfterOffset = command.Execute(new CommonQueryParams(offset, limit, null, null));
 
             authStrategiesAfterOffset.ShouldNotBeEmpty();
             authStrategiesAfterOffset.Count.ShouldBe(1);

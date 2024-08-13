@@ -5,6 +5,8 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
+using EdFi.Ods.AdminApi.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
 {
@@ -50,6 +52,34 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
             catch (Exception)
             {
                 /// If this throws an exception simply don't sort.
+                return source;
+            }
+        }
+
+        /// <summary>
+        /// Apply pagination based on the offset and limit
+        /// </summary>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <param name="source">IQueryable entity list to apply the pagination</param>
+        /// <param name="offset"></param>
+        /// <param name="limit"></param>
+        /// <param name="settings">App Setting values</param>
+        /// <returns>Paginated list</returns>
+        public static IQueryable<T> Paginate<T>(this IQueryable<T> source, int? offset, int? limit, IOptions<AppSettings> settings)
+        {
+            try
+            {
+                if (offset == null)
+                    offset = settings.Value.DefaultPageSizeOffset;
+
+                if (limit == null)
+                    limit = settings.Value.DefaultPageSizeLimit;
+
+                return source.Skip(offset.Value).Take(limit.Value);
+            }
+            catch (Exception)
+            {
+                // If this throws an exception simply don't paginate.
                 return source;
             }
         }

@@ -5,6 +5,8 @@
 
 
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
@@ -24,5 +26,24 @@ public static class IEnumerableExtensions
         return listOfStrings.Any()
             ? string.Join(separator, listOfStrings)
             : string.Empty;
+    }
+
+    public static IEnumerable<T> Paginate<T>(this IEnumerable<T> source, int? offset, int? limit, IOptions<AppSettings> settings)
+    {
+        try
+        {
+            if (offset == null)
+                offset = settings.Value.DefaultPageSizeOffset;
+
+            if (limit == null)
+                limit = settings.Value.DefaultPageSizeLimit;
+
+            return source.Skip(offset.Value).Take(limit.Value);
+        }
+        catch (Exception)
+        {
+            // If this throws an exception simply don't paginate.
+            return source;
+        }
     }
 }

@@ -6,6 +6,9 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+
 namespace EdFi.Ods.AdminApi.Features.AuthorizationStrategies;
 
 public class ReadAuthorizationStrategy : IFeature
@@ -18,9 +21,9 @@ public class ReadAuthorizationStrategy : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetAuthStrategies(IGetAuthStrategiesQuery getAuthStrategiesQuery, IMapper mapper)
+    internal Task<IResult> GetAuthStrategies(IGetAuthStrategiesQuery getAuthStrategiesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
-        var authStrategyList = mapper.Map<List<AuthorizationStrategyModel>>(getAuthStrategiesQuery.Execute());
-        return Task.FromResult(Results.Ok(authStrategyList));
+        var authStrategyList = mapper.Map<List<AuthorizationStrategyModel>>(getAuthStrategiesQuery.Execute(commonQueryParams));
+        return Task.FromResult(Results.Ok(authStrategyList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
     }
 }

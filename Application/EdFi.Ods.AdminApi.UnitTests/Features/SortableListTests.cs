@@ -6,7 +6,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdFi.Ods.AdminApi.Features.Vendors;
-using EdFi.Ods.AdminApi.Features;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using NUnit.Framework;
 using Shouldly;
 
@@ -18,7 +19,7 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
         [Test]
         public void Should_retrieve_vendors_with_sorting()
         {
-            var vendors = new SortableList<VendorModel>();
+            var vendors = new List<VendorModel>();
 
             vendors.AddRange(new List<VendorModel>{ new VendorModel
         {
@@ -52,7 +53,7 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
         [Test]
         public void Should_retrieve_vendors_with_descending_sorting()
         {
-            var vendors = new SortableList<VendorModel>();
+            var vendors = new List<VendorModel>();
 
             vendors.AddRange(new List<VendorModel>{ new VendorModel
         {
@@ -76,7 +77,7 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
 
             /// ContactName
             string orderBy = "ContactName";
-            var sortedList = vendors.Sort(orderBy, SortingDirection.Direction.Descending.ToString());
+            var sortedList = vendors.Sort(orderBy, SortingDirectionHelper.Direction.Descending.ToString());
 
             sortedList.ElementAt(0).Company.ShouldBe("test vendor 3");
             sortedList.ElementAt(1).Company.ShouldBe("test vendor 2");
@@ -86,7 +87,7 @@ namespace EdFi.Ods.AdminApi.UnitTests.Features
         [Test]
         public void Should_retrieve_vendors_with_sorting_by_default_column()
         {
-            var vendors = new SortableList<VendorModel>();
+            var vendors = new List<VendorModel>();
 
             vendors.AddRange(new List<VendorModel>{ new VendorModel
         {

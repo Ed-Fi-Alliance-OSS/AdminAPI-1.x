@@ -6,6 +6,8 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Features.Actions;
 
@@ -19,10 +21,16 @@ public class ReadActions : IFeature
            .BuildForVersions(AdminApiVersions.V2);
     }
 
-    internal Task<IResult> GetActions(IGetAllActionsQuery getAllActionsQuery, IMapper mapper, int offset, int limit, string? orderBy, string? direction, int? id, string? name)
+    internal Task<IResult> GetActions(IGetAllActionsQuery getAllActionsQuery, IMapper mapper, int? offset, int? limit, string? orderBy, string? direction, int? id, string? name)
     {
-        var actions = mapper.Map<SortableList<ActionModel>>(getAllActionsQuery.Execute(offset, limit, id, name));
-        var result = actions.Sort(orderBy ?? string.Empty, SortingDirection.GetNonEmptyOrDefault(direction));
+        var actions = mapper.Map<List<ActionModel>>(
+            getAllActionsQuery.Execute(
+                new CommonQueryParams(offset, limit, orderBy, direction),
+                id,
+                name));
+        var result = actions.Sort(
+            orderBy ?? string.Empty,
+            SortingDirectionHelper.GetNonEmptyOrDefault(direction));
         return Task.FromResult(Results.Ok(result));
     }
 }

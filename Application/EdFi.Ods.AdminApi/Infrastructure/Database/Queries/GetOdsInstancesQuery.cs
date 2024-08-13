@@ -5,22 +5,27 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetOdsInstancesQuery
 {
     List<OdsInstance> Execute();
-    List<OdsInstance> Execute(int offset, int limit, int? id, string? name);
+    List<OdsInstance> Execute(CommonQueryParams commonQueryParams, int? id, string? name);
 }
 
 public class GetOdsInstancesQuery : IGetOdsInstancesQuery
 {
     private readonly IUsersContext _usersContext;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetOdsInstancesQuery(IUsersContext userContext)
+    public GetOdsInstancesQuery(IUsersContext userContext, IOptions<AppSettings> options)
     {
         _usersContext = userContext;
+        _options = options;
     }
 
     public List<OdsInstance> Execute()
@@ -28,12 +33,13 @@ public class GetOdsInstancesQuery : IGetOdsInstancesQuery
         return _usersContext.OdsInstances.OrderBy(odsInstance => odsInstance.Name).ToList();
     }
 
-    public List<OdsInstance> Execute(int offset, int limit, int? id, string? name)
+    public List<OdsInstance> Execute(CommonQueryParams commonQueryParams, int? id, string? name)
     {
         return _usersContext.OdsInstances
             .Where(o => id == null || o.OdsInstanceId == id)
             .Where(o => name == null || o.Name == name)
             .OrderBy(odsInstance => odsInstance.Name)
-            .Skip(offset).Take(limit).ToList();
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .ToList();
     }
 }

@@ -41,7 +41,7 @@ headingLevel: 2
 > Code samples
 
 ```http
-GET /v2/resourceClaims?offset=0&limit=25 HTTP/1.1
+GET /v2/resourceClaims HTTP/1.1
 
 Accept: application/json
 
@@ -54,9 +54,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/resourceClaims', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/resourceClaims', headers = headers)
 
 print(r.json())
 
@@ -126,12 +124,19 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|Resource Claim Id|
 |name|query|string|false|Resource Claim Name|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -158,6 +163,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-resourceclaims.-responseschema">Response Schema</h3>
@@ -300,6 +306,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -314,7 +321,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/vendors?offset=0&limit=25 HTTP/1.1
+GET /v2/vendors HTTP/1.1
 
 Accept: application/json
 
@@ -327,9 +334,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/vendors', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/vendors', headers = headers)
 
 print(r.json())
 
@@ -399,15 +404,22 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|Vendor/ company id|
 |company|query|string|false|Vendor/ company name|
 |namespacePrefixes|query|string|false|Namespace prefix for the vendor. Multiple namespace prefixes can be provided as comma separated list if required.|
 |contactName|query|string|false|Vendor contact name|
 |contactEmailAddress|query|string|false|Vendor contact email id|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -432,6 +444,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-vendors.-responseschema">Response Schema</h3>
@@ -581,6 +594,7 @@ public class HttpExample
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -700,6 +714,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -842,6 +857,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -945,6 +961,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -1074,6 +1091,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-applications-assigned-to-a-specific-vendor-based-on-the-resource-identifier.-responseschema">Response Schema</h3>
@@ -1104,7 +1122,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/profiles?offset=0&limit=25 HTTP/1.1
+GET /v2/profiles HTTP/1.1
 
 Accept: application/json
 
@@ -1117,9 +1135,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/profiles', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/profiles', headers = headers)
 
 print(r.json())
 
@@ -1189,12 +1205,19 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|Profile id|
 |name|query|string|false|Profile name|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -1216,6 +1239,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-profiles.-responseschema">Response Schema</h3>
@@ -1355,6 +1379,7 @@ public class HttpExample
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -1472,6 +1497,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -1607,6 +1633,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -1710,6 +1737,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -1724,7 +1752,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/odsInstances?offset=0&limit=25 HTTP/1.1
+GET /v2/odsInstances HTTP/1.1
 
 Accept: application/json
 
@@ -1737,9 +1765,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/odsInstances', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/odsInstances', headers = headers)
 
 print(r.json())
 
@@ -1809,12 +1835,19 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|List of ODS instance id|
 |name|query|string|false|Ods Instance name|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -1837,6 +1870,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-odsinstances.-responseschema">Response Schema</h3>
@@ -1982,6 +2016,7 @@ public class HttpExample
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -2114,6 +2149,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -2254,6 +2290,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -2357,6 +2394,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -2486,6 +2524,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-applications-assigned-to-a-specific-ods-instance-based-on-the-resource-identifier.-responseschema">Response Schema</h3>
@@ -2516,7 +2555,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/odsInstanceDerivatives?offset=0&limit=25 HTTP/1.1
+GET /v2/odsInstanceDerivatives HTTP/1.1
 
 Accept: application/json
 
@@ -2529,9 +2568,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/odsInstanceDerivatives', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/odsInstanceDerivatives', headers = headers)
 
 print(r.json())
 
@@ -2601,8 +2638,8 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 
 > Example responses
 
@@ -2625,6 +2662,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-odsinstancederivatives.-responseschema">Response Schema</h3>
@@ -2770,6 +2808,7 @@ public class HttpExample
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -2887,6 +2926,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3027,6 +3067,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3130,6 +3171,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3144,7 +3186,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/odsInstanceContexts?offset=0&limit=25 HTTP/1.1
+GET /v2/odsInstanceContexts HTTP/1.1
 
 Accept: application/json
 
@@ -3157,9 +3199,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/odsInstanceContexts', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/odsInstanceContexts', headers = headers)
 
 print(r.json())
 
@@ -3229,8 +3269,8 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 
 > Example responses
 
@@ -3254,6 +3294,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-odsinstancecontexts.-responseschema">Response Schema</h3>
@@ -3400,6 +3441,7 @@ public class HttpExample
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3518,6 +3560,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3658,6 +3701,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3761,6 +3805,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3911,45 +3956,7 @@ public class HttpExample
         }
       ],
       "children": [
-        {
-          "id": 0,
-          "name": "string",
-          "actions": [
-            {
-              "name": "string",
-              "enabled": true
-            }
-          ],
-          "_defaultAuthorizationStrategiesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "authorizationStrategyOverridesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "children": [
-            {}
-          ]
-        }
+        {}
       ]
     }
   ]
@@ -3964,6 +3971,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -3976,7 +3984,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/claimSets?offset=0&limit=25 HTTP/1.1
+GET /v2/claimSets HTTP/1.1
 
 Accept: application/json
 
@@ -3989,9 +3997,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/claimSets', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/claimSets', headers = headers)
 
 print(r.json())
 
@@ -4061,12 +4067,19 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|Claim set id|
 |name|query|string|false|Claim set name|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -4094,6 +4107,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-claimsets.-responseschema">Response Schema</h3>
@@ -4252,6 +4266,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -4399,6 +4414,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -4503,6 +4519,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -4617,6 +4634,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-authorizationstrategies.-responseschema">Response Schema</h3>
@@ -4731,10 +4749,17 @@ public class HttpExample
 |offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
 |limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|Application id|
 |applicationName|query|string|false|Application name|
 |claimsetName|query|string|false|Claim set name|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -4767,6 +4792,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-applications.-responseschema">Response Schema</h3>
@@ -4948,6 +4974,7 @@ public class HttpExample
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -5075,6 +5102,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -5233,6 +5261,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -5336,6 +5365,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -5471,6 +5501,7 @@ public class HttpExample
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <aside class="warning">
@@ -5485,7 +5516,7 @@ oauth ( Scopes: api )
 > Code samples
 
 ```http
-GET /v2/actions?offset=0&limit=25 HTTP/1.1
+GET /v2/actions HTTP/1.1
 
 Accept: application/json
 
@@ -5498,9 +5529,7 @@ headers = {
   'Authorization': 'Bearer {access-token}'
 }
 
-r = requests.get('/v2/actions', params={
-  'offset': '0',  'limit': '25'
-}, headers = headers)
+r = requests.get('/v2/actions', headers = headers)
 
 print(r.json())
 
@@ -5570,12 +5599,19 @@ public class HttpExample
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+|offset|query|integer(int32)|false|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|false|Indicates the maximum number of items that should be returned in the results.|
 |orderBy|query|string|false|Indicates the property name by which the results will be sorted.|
-|direction|query|boolean|false|Indicates whether the result should be sorted in descending order (desc) or in ascending order (asc).|
+|direction|query|string|false|Indicates whether the result should be sorted in descending order (DESC) or ascending order (ASC).|
 |id|query|integer(int32)|false|Action id|
 |name|query|string|false|Action name|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|direction|Ascending|
+|direction|Descending|
 
 > Example responses
 
@@ -5598,6 +5634,7 @@ public class HttpExample
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict. The request is authenticated, but it has a conflict with an existing element|None|
 |500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
 
 <h3 id="retrieves-all-actions.-responseschema">Response Schema</h3>
@@ -6254,143 +6291,6 @@ AddClaimSetRequest
 |---|---|---|---|---|
 |name|string|true|none|Claim set name|
 
-<h2 id="tocS_EdFi.Ods.AdminApi.Features.ClaimSets.ChildrenClaimSetResource">EdFi.Ods.AdminApi.Features.ClaimSets.ChildrenClaimSetResource</h2>
-<!-- backwards compatibility -->
-<a id="schemaedfi.ods.adminapi.features.claimsets.childrenclaimsetresource"></a>
-<a id="schema_EdFi.Ods.AdminApi.Features.ClaimSets.ChildrenClaimSetResource"></a>
-<a id="tocSedfi.ods.adminapi.features.claimsets.childrenclaimsetresource"></a>
-<a id="tocsedfi.ods.adminapi.features.claimsets.childrenclaimsetresource"></a>
-
-```json
-{
-  "id": 0,
-  "name": "string",
-  "actions": [
-    {
-      "name": "string",
-      "enabled": true
-    }
-  ],
-  "_defaultAuthorizationStrategiesForCRUD": [
-    {
-      "actionId": 0,
-      "actionName": "string",
-      "authorizationStrategies": [
-        {
-          "authStrategyId": 0,
-          "authStrategyName": "string",
-          "isInheritedFromParent": true
-        }
-      ]
-    }
-  ],
-  "authorizationStrategyOverridesForCRUD": [
-    {
-      "actionId": 0,
-      "actionName": "string",
-      "authorizationStrategies": [
-        {
-          "authStrategyId": 0,
-          "authStrategyName": "string",
-          "isInheritedFromParent": true
-        }
-      ]
-    }
-  ],
-  "children": [
-    {
-      "id": 0,
-      "name": "string",
-      "actions": [
-        {
-          "name": "string",
-          "enabled": true
-        }
-      ],
-      "_defaultAuthorizationStrategiesForCRUD": [
-        {
-          "actionId": 0,
-          "actionName": "string",
-          "authorizationStrategies": [
-            {
-              "authStrategyId": 0,
-              "authStrategyName": "string",
-              "isInheritedFromParent": true
-            }
-          ]
-        }
-      ],
-      "authorizationStrategyOverridesForCRUD": [
-        {
-          "actionId": 0,
-          "actionName": "string",
-          "authorizationStrategies": [
-            {
-              "authStrategyId": 0,
-              "authStrategyName": "string",
-              "isInheritedFromParent": true
-            }
-          ]
-        }
-      ],
-      "children": [
-        {
-          "id": 0,
-          "name": "string",
-          "actions": [
-            {
-              "name": "string",
-              "enabled": true
-            }
-          ],
-          "_defaultAuthorizationStrategiesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "authorizationStrategyOverridesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "children": []
-        }
-      ]
-    }
-  ]
-}
-
-```
-
-ClaimSetResourceClaim
-
-### Properties
-
-|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|
-|id|integer(int32)|true|read-only|none|
-|name|string¦null|true|none|none|
-|actions|[[EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaimAction](#schemaedfi.ods.adminapi.infrastructure.claimseteditor.resourceclaimaction)]¦null|true|none|none|
-|_defaultAuthorizationStrategiesForCRUD|[[EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSetResourceClaimActionAuthStrategies](#schemaedfi.ods.adminapi.infrastructure.claimseteditor.claimsetresourceclaimactionauthstrategies)]¦null|false|read-only|none|
-|authorizationStrategyOverridesForCRUD|[[EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSetResourceClaimActionAuthStrategies](#schemaedfi.ods.adminapi.infrastructure.claimseteditor.claimsetresourceclaimactionauthstrategies)]¦null|true|none|none|
-|children|[[EdFi.Ods.AdminApi.Features.ClaimSets.ClaimSetResourceClaimModel](#schemaedfi.ods.adminapi.features.claimsets.claimsetresourceclaimmodel)]¦null|true|none|Children are collection of ResourceClaim|
-
 <h2 id="tocS_EdFi.Ods.AdminApi.Features.ClaimSets.ClaimSetDetailsModel">EdFi.Ods.AdminApi.Features.ClaimSets.ClaimSetDetailsModel</h2>
 <!-- backwards compatibility -->
 <a id="schemaedfi.ods.adminapi.features.claimsets.claimsetdetailsmodel"></a>
@@ -6445,45 +6345,7 @@ ClaimSetResourceClaim
         }
       ],
       "children": [
-        {
-          "id": 0,
-          "name": "string",
-          "actions": [
-            {
-              "name": "string",
-              "enabled": true
-            }
-          ],
-          "_defaultAuthorizationStrategiesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "authorizationStrategyOverridesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "children": [
-            {}
-          ]
-        }
+        {}
       ]
     }
   ]
@@ -6614,45 +6476,7 @@ ClaimSet
           ]
         }
       ],
-      "children": [
-        {
-          "id": 0,
-          "name": "string",
-          "actions": [
-            {
-              "name": "string",
-              "enabled": true
-            }
-          ],
-          "_defaultAuthorizationStrategiesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "authorizationStrategyOverridesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "children": []
-        }
-      ]
+      "children": []
     }
   ]
 }
@@ -6670,7 +6494,7 @@ ClaimSetResourceClaim
 |actions|[[EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceClaimAction](#schemaedfi.ods.adminapi.infrastructure.claimseteditor.resourceclaimaction)]¦null|true|none|none|
 |_defaultAuthorizationStrategiesForCRUD|[[EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSetResourceClaimActionAuthStrategies](#schemaedfi.ods.adminapi.infrastructure.claimseteditor.claimsetresourceclaimactionauthstrategies)]¦null|false|read-only|none|
 |authorizationStrategyOverridesForCRUD|[[EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSetResourceClaimActionAuthStrategies](#schemaedfi.ods.adminapi.infrastructure.claimseteditor.claimsetresourceclaimactionauthstrategies)]¦null|true|none|none|
-|children|[[EdFi.Ods.AdminApi.Features.ClaimSets.ChildrenClaimSetResource](#schemaedfi.ods.adminapi.features.claimsets.childrenclaimsetresource)]¦null|true|none|Children are collection of ResourceClaim|
+|children|[[EdFi.Ods.AdminApi.Features.ClaimSets.ClaimSetResourceClaimModel](#schemaedfi.ods.adminapi.features.claimsets.claimsetresourceclaimmodel)]¦null|true|none|Children are collection of ResourceClaim|
 
 <h2 id="tocS_EdFi.Ods.AdminApi.Features.ClaimSets.CopyClaimSet.CopyClaimSetRequest">EdFi.Ods.AdminApi.Features.ClaimSets.CopyClaimSet.CopyClaimSetRequest</h2>
 <!-- backwards compatibility -->
@@ -6765,45 +6589,7 @@ EditClaimSetRequest
         }
       ],
       "children": [
-        {
-          "id": 0,
-          "name": "string",
-          "actions": [
-            {
-              "name": "string",
-              "enabled": true
-            }
-          ],
-          "_defaultAuthorizationStrategiesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "authorizationStrategyOverridesForCRUD": [
-            {
-              "actionId": 0,
-              "actionName": "string",
-              "authorizationStrategies": [
-                {
-                  "authStrategyId": 0,
-                  "authStrategyName": "string",
-                  "isInheritedFromParent": true
-                }
-              ]
-            }
-          ],
-          "children": [
-            {}
-          ]
-        }
+        {}
       ]
     }
   ]

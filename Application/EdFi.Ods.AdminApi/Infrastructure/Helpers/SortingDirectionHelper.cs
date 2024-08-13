@@ -6,9 +6,9 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace EdFi.Ods.AdminApi.Features;
+namespace EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
-public class SortingDirection
+public static class SortingDirectionHelper
 {
     public enum Direction
     {

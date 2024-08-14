@@ -51,7 +51,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"postgresql\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Test-OdsInstance-{{OdsInstanceGUID}}\",\r\n    \"instanceType\": \"OdsInstance\",\r\n    \"connectionString\": \"{{connectionString}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -287,7 +287,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Test Connection String\",\r\n    \"instanceType\": \"Postgresql\",\r\n    \"connectionString\": \"WrongConnection\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Test Connection String\",\r\n    \"instanceType\": \"OdsInstance\",\r\n    \"connectionString\": \"WrongConnection\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

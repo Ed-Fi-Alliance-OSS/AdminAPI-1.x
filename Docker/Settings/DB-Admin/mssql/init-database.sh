@@ -10,9 +10,6 @@ set +x
 MSSQL_USER=$SQLSERVER_USER
 MSSQL_PASSWORD=$SQLSERVER_PASSWORD
 MSSQL_SA_PASSWORD=$SA_PASSWORD
-MSSQL_ADMIN_DB=$SQLSERVER_ADMIN_DATASOURCE
-MSSQL_SECURITY_DB=$SQLSERVER_SECURITY_DATASOURCE
-
 
 function does_edfi_admin_db_exist() {
     until /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $MSSQL_SA_PASSWORD -Q "SELECT 1" > /dev/null 2>&1
@@ -33,11 +30,9 @@ if ! does_edfi_admin_db_exist; then
     echo "Creating base Admin and Security databases..."
     /opt/sqlpackage/sqlpackage /Action:Import /tsn:"localhost" /tdn:"EdFi_Security" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Security.bacpac" /ttsc:true
     /opt/sqlpackage/sqlpackage /Action:Import /tsn:"localhost" /tdn:"EdFi_Admin" /tu:"sa" /tp:"$MSSQL_SA_PASSWORD" /sf:"/tmp/EdFi_Admin.bacpac" /ttsc:true
-
     # Force sorting by name following C language sort ordering, so that the sql scripts are run
     # sequentially in the correct alphanumeric order
     echo "Running Admin Api database migration scripts..."
-
     for FILE in `LANG=C ls /tmp/AdminApiScripts/MsSql/*.sql | sort -V`
     do
         echo "Running script: ${FILE}..."

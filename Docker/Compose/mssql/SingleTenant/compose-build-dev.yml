@@ -77,6 +77,7 @@ services:
       retries: 10
     volumes:
       - vol-db-admin-adminapi:/var/lib/mssql/data
+      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/MsSql/adminapi-test-seeddata.sql
     restart: always
     container_name: ed-fi-db-admin-adminapi
 

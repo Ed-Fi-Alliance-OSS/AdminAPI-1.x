@@ -3,7 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-name: Admin API Multi Tenant E2E Tests + ODS 7
+name: Admin API Multi Tenant E2E Tests + ODS 7 + Pgsql
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
         run: |
           docker compose \
             -f '../../Docker/Compose/pgsql/MultiTenant/compose-build-dev-multi-tenant.yml' \
-            --env-file './E2E Tests/gh-action-setup/.automation.env' \
+            --env-file './E2E Tests/gh-action-setup/.automation_pgsql.env' \
             up -d
 
       - name: Verify containers are running
@@ -75,7 +75,7 @@ jobs:
       - name: Run tests
         run: |
           newman run './E2E Tests/Admin-API-Full-Collection.json' \
-            -e './E2E Tests/Admin API Docker-multitenant.postman_environment.json' \
+            -e './E2E Tests/Admin API Docker-multitenant-pgsql.postman_environment.json' \
             -r cli,junit,htmlextra \
             --reporter-htmlextra-title 'AdminAPI - 2.0' \
             --reporter-htmlextra-export './report-html/results.html' \

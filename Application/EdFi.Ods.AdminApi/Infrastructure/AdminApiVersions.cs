@@ -13,16 +13,15 @@ public class AdminApiVersions
 {
     private static bool _isInitialized;
 
-    public static readonly AdminApiVersion V1 = new(1.1, "v1");
     public static readonly AdminApiVersion V2 = new(2.0, "v2");
     private static ApiVersionSet? _versionSet;
 
     public static void Initialize(WebApplication app)
     {
-        if (_isInitialized) throw new InvalidOperationException("Versions are already initialized");
+        if (_isInitialized)
+            throw new InvalidOperationException("Versions are already initialized");
 
         _versionSet = app.NewApiVersionSet()
-            .HasApiVersion(V1.Version)
             .HasApiVersion(V2.Version)
             .Build();
 

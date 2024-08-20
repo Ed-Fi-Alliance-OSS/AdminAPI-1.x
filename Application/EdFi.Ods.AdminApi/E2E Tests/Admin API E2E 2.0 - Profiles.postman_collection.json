@@ -355,6 +355,210 @@
 							"response": []
 						},
 						{
+							"name": "Profiles - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Profiles: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Profiles: Response result includes profiles\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetProfilesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Profile: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetProfilesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Profiles - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Profiles: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Profiles: Response result includes profiles\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetProfilesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Profile: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetProfilesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Profiles - Without Offset and Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Profiles: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Profiles: Response result includes profiles\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetProfilesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Profile: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetProfilesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/Profiles/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"Profiles",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Profile by ID",
 							"event": [
 								{

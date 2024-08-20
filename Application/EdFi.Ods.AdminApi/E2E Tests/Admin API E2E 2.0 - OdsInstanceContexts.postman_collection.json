@@ -431,6 +431,234 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstanceContexts - Without Offset and Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstanceContexts: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceContexts: Response result includes OdsInstancesContext\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetOdsInstanceContextsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"contextKey\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contextValue\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"contextKey\",\r",
+											"        \"contextValue\",\r",
+											"        \"odsInstanceId\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceContexts: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceContextsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceContexts - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstanceContexts: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceContexts: Response result includes OdsInstancesContext\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetOdsInstanceContextsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"contextKey\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contextValue\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"contextKey\",\r",
+											"        \"contextValue\",\r",
+											"        \"odsInstanceId\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceContexts: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceContextsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceContexts - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstanceContexts: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceContexts: Response result includes OdsInstancesContext\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetOdsInstanceContextsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"contextKey\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contextValue\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"contextKey\",\r",
+											"        \"contextValue\",\r",
+											"        \"odsInstanceId\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceContexts: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceContextsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceContexts/?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceContexts",
+										""
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstanceContexts by ID",
 							"event": [
 								{

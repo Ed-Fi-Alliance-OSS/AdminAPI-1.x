@@ -537,6 +537,336 @@
 							"response": []
 						},
 						{
+							"name": "Applications - Without Offset and Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Applications: Response result includes applications\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"\r",
+											"    const indexOfApplication = results.map(\r",
+											"        function(application) { return application.id; }\r",
+											"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+											"\r",
+											"    const result = results[indexOfApplication];\r",
+											"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
+											"    pm.expect(result.profileIds.length).to.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Applications: Response results do not include key or secret\", function () {\r",
+											"    results.forEach(function(result, i) {\r",
+											"        pm.expect(result).to.not.have.property(\"key\");\r",
+											"        pm.expect(result).to.not.have.property(\"secret\");\r",
+											"    });\r",
+											"});\r",
+											"\r",
+											"const GetApplicationsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"applicationName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"claimSetName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"educationOrganizationIds\": {\r",
+											"           \"type\": \"array\",\r",
+											"           \"items\": {}\r",
+											"        },\r",
+											"        \"vendorId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"profileIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        },\r",
+											"        \"odsInstanceIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"applicationName\",\r",
+											"        \"claimSetName\",\r",
+											"        \"educationOrganizationIds\",\r",
+											"        \"vendorId\",\r",
+											"        \"profileIds\",\r",
+											"        \"odsInstanceIds\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Applications: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetApplicationsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/applications",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Applications: Response result includes applications\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"\r",
+											"    const indexOfApplication = results.map(\r",
+											"        function(application) { return application.id; }\r",
+											"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+											"\r",
+											"    const result = results[indexOfApplication];\r",
+											"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
+											"    pm.expect(result.profileIds.length).to.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Applications: Response results do not include key or secret\", function () {\r",
+											"    results.forEach(function(result, i) {\r",
+											"        pm.expect(result).to.not.have.property(\"key\");\r",
+											"        pm.expect(result).to.not.have.property(\"secret\");\r",
+											"    });\r",
+											"});\r",
+											"\r",
+											"const GetApplicationsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"applicationName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"claimSetName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"educationOrganizationIds\": {\r",
+											"           \"type\": \"array\",\r",
+											"           \"items\": {}\r",
+											"        },\r",
+											"        \"vendorId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"profileIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        },\r",
+											"        \"odsInstanceIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"applicationName\",\r",
+											"        \"claimSetName\",\r",
+											"        \"educationOrganizationIds\",\r",
+											"        \"vendorId\",\r",
+											"        \"profileIds\",\r",
+											"        \"odsInstanceIds\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Applications: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetApplicationsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/applications?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Applications: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Applications: Response result includes applications\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"\r",
+											"    const indexOfApplication = results.map(\r",
+											"        function(application) { return application.id; }\r",
+											"    ).indexOf(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
+											"\r",
+											"    const result = results[indexOfApplication];\r",
+											"    pm.expect(result.applicationName).to.equal(\"Test Application\");\r",
+											"    pm.expect(result.claimSetName).to.equal(\"Ed-Fi Sandbox\");\r",
+											"    pm.expect(result.educationOrganizationIds.length).to.equal(1);\r",
+											"    pm.expect(result.profileIds.length).to.equal(0);\r",
+											"    pm.expect(result.odsInstanceIds.length).to.equal(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET Applications: Response results do not include key or secret\", function () {\r",
+											"    results.forEach(function(result, i) {\r",
+											"        pm.expect(result).to.not.have.property(\"key\");\r",
+											"        pm.expect(result).to.not.have.property(\"secret\");\r",
+											"    });\r",
+											"});\r",
+											"\r",
+											"const GetApplicationsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"applicationName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"claimSetName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"educationOrganizationIds\": {\r",
+											"           \"type\": \"array\",\r",
+											"           \"items\": {}\r",
+											"        },\r",
+											"        \"vendorId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"profileIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        },\r",
+											"        \"odsInstanceIds\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"applicationName\",\r",
+											"        \"claimSetName\",\r",
+											"        \"educationOrganizationIds\",\r",
+											"        \"vendorId\",\r",
+											"        \"profileIds\",\r",
+											"        \"odsInstanceIds\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Applications: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetApplicationsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/applications?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"applications"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Applications by ID",
 							"event": [
 								{

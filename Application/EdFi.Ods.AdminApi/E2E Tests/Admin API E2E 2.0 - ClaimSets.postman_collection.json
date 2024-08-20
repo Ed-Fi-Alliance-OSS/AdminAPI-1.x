@@ -734,6 +734,240 @@
 							"response": []
 						},
 						{
+							"name": "ClaimSets - Without Offset and Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ClaimSets: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET ClaimSets: Response result includes claimsets\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"});\r",
+											"\r",
+											"const GetClaimSetsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"_isSystemReserved\": {\r",
+											"          \"type\": \"boolean\"\r",
+											"        },\r",
+											"        \"_applications\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
+											"        \"_isSystemReserved\",\r",
+											"        \"_applications\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ClaimSet: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ClaimSets: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET ClaimSets: Response result includes claimsets\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"});\r",
+											"\r",
+											"const GetClaimSetsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"_isSystemReserved\": {\r",
+											"          \"type\": \"boolean\"\r",
+											"        },\r",
+											"        \"_applications\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
+											"        \"_isSystemReserved\",\r",
+											"        \"_applications\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ClaimSet: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET ClaimSets: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET ClaimSets: Response result includes claimsets\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"});\r",
+											"\r",
+											"const GetClaimSetsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"name\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"_isSystemReserved\": {\r",
+											"          \"type\": \"boolean\"\r",
+											"        },\r",
+											"        \"_applications\": {\r",
+											"          \"type\": \"array\",\r",
+											"          \"items\": {}\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"name\",\r",
+											"        \"_isSystemReserved\",\r",
+											"        \"_applications\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET ClaimSet: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetClaimSetsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/claimSets?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"claimSets"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ClaimSets by ID",
 							"event": [
 								{

@@ -272,6 +272,288 @@
 							"response": []
 						},
 						{
+							"name": "Vendors - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Vendors: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Vendors: Response result includes vendors\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetVendorsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"company\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"namespacePrefixes\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contactName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contactEmailAddress\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"company\",\r",
+											"        \"namespacePrefixes\",\r",
+											"        \"contactName\",\r",
+											"        \"contactEmailAddress\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Vendors: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetVendorsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vendors - Without Limit and Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Vendors: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Vendors: Response result includes vendors\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetVendorsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"company\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"namespacePrefixes\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contactName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contactEmailAddress\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"company\",\r",
+											"        \"namespacePrefixes\",\r",
+											"        \"contactName\",\r",
+											"        \"contactEmailAddress\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Vendors: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetVendorsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vendors - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET Vendors: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json();\r",
+											"\r",
+											"pm.test(\"GET Vendors: Response result includes vendors\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetVendorsSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"company\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"namespacePrefixes\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contactName\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"contactEmailAddress\": {\r",
+											"          \"type\": \"string\"\r",
+											"        }\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"company\",\r",
+											"        \"namespacePrefixes\",\r",
+											"        \"contactName\",\r",
+											"        \"contactEmailAddress\"\r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET Vendors: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetVendorsSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v2/vendors?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"vendors"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Vendors by ID",
 							"event": [
 								{

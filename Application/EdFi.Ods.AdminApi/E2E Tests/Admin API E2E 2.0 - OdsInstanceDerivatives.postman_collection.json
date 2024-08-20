@@ -551,6 +551,231 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstanceDerivatives - Without Offset and Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstanceDerivatives: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceDerivatives: Response result includes OdsInstancesDerivative\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetOdsInstanceDerivativesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"derivativeType\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"connectionString\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"derivativeType\",\r",
+											"        \"odsInstanceId\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceDerivatives: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceDerivativesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceDerivatives - Without Limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstanceDerivatives: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceDerivatives: Response result includes OdsInstancesDerivative\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetOdsInstanceDerivativesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"derivativeType\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"connectionString\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"derivativeType\",\r",
+											"        \"odsInstanceId\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceDerivatives: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceDerivativesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/?offset={{offset}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										""
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstanceDerivatives - Without Offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET OdsInstanceDerivatives: Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceDerivatives: Response result includes OdsInstancesDerivative\", function () {\r",
+											"    const results = pm.response.json();\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);   \r",
+											"});\r",
+											"\r",
+											"const GetOdsInstanceDerivativesSchema = {\r",
+											"  \"type\": \"array\",\r",
+											"  \"items\": [\r",
+											"    {\r",
+											"      \"type\": \"object\",\r",
+											"      \"properties\": {\r",
+											"        \"id\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"        \"derivativeType\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"connectionString\": {\r",
+											"          \"type\": \"string\"\r",
+											"        },\r",
+											"        \"odsInstanceId\": {\r",
+											"          \"type\": \"integer\"\r",
+											"        },\r",
+											"      },\r",
+											"      \"required\": [\r",
+											"        \"id\",\r",
+											"        \"derivativeType\",\r",
+											"        \"odsInstanceId\"     \r",
+											"      ]\r",
+											"    }\r",
+											"  ]\r",
+											"}\r",
+											"\r",
+											"pm.test(\"GET OdsInstanceDerivatives: Validation Schema Response\", () => {\r",
+											"    pm.response.to.have.jsonSchema(GetOdsInstanceDerivativesSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v2/OdsInstanceDerivatives/?limit={{limit}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v2",
+										"OdsInstanceDerivatives",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstanceDerivatives by ID",
 							"event": [
 								{

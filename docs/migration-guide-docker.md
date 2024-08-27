@@ -49,7 +49,7 @@ docker cp adminApi_publish.tar <container-id>:/tmp/adminApi_publish.tar
 To update the application you need to remove the previous dll files.  The new version has new versions of the dll files and also some packages were removed to fix vulnerabilities.
 
 ```bash
-docker exec -it <container-id> sh -c "find /app -type f ! -name '*.sh' ! -name '*.config' ! -name 'appsettings*.json' -exec rm {} +"
+docker exec -it <container-id> sh -c "find /app -type f ! -name '*.sh' ! -name '*.config' ! -name 'appsettings*.json' -exec rm -rf {} +"
 ```
 
 ## Step 5: Unzip the tar file into the Docker container
@@ -69,7 +69,13 @@ The appsettings should be updated to add some parameters.
  First, download the appsettings.json from the Docker container to edit the file on the local computer
 
 ```bash
+# For Windows
 docker cp <container-id>:/app/appsettings.json /temp/appsettings.json
+```
+
+```bash
+# For Linux
+docker cp <container-id>:/app/appsettings.json /tmp/appsettings.json
 ```
 
 ### 6.2 Edit appsettings.json file on the local computer
@@ -108,7 +114,13 @@ After the AllowedHosts parameter, add the following  section
 Copy the modified appsettings.json file back to the container
 
 ```bash
+# For Windows
 docker cp /temp/appsettings.json <container-id>:/app/appsettings.json
+```
+
+```bash
+# For Linux
+docker cp /tmp/appsettings.json <container-id>:/app/appsettings.json
 ```
 
 ## Step 7: Set permissions

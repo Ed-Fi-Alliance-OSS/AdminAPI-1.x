@@ -16,6 +16,6 @@ public class ProfileModel
 
 [SwaggerSchema(Title = "ProfileDetails")]
 public class ProfileDetailsModel : ProfileModel
-{   
+{
     public string? Definition { get; set; }
 }

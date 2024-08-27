@@ -15,7 +15,7 @@ public static class IEnumerableExtensions
     public static string ToCommaSeparated(this IEnumerable<VendorNamespacePrefix> vendorNamespacePrefixes)
     {
         return vendorNamespacePrefixes != null && vendorNamespacePrefixes.Any()
-                        ? ToDelimiterSeparated(vendorNamespacePrefixes.Select(x => x.NamespacePrefix))
+                        ? ToDelimiterSeparated([.. vendorNamespacePrefixes.Select(x => x.NamespacePrefix).OrderBy(f => f)])
                         : string.Empty;
     }
 

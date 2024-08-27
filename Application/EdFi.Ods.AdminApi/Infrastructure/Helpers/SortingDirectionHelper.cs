@@ -21,26 +21,24 @@ public static class SortingDirectionHelper
         Descending
     }
 
-    public static bool IsDescendingSorting(string input)
+    public static bool IsDescendingSorting(string? direction)
     {
-        switch (input.ToLowerInvariant())
+        direction = GetNonEmptyOrDefault(direction);
+
+        bool result = direction.ToLowerInvariant() switch
         {
-            case "asc":
-            case "ascending":
-                return false;
-            case "desc":
-            case "descending":
-            default:
-                return true;
-        }
+            "asc" or "ascending" => false,
+            "desc" or "descending" => true,
+            _ => false,
+        };
+
+        return result;
     }
 
     public static string GetNonEmptyOrDefault(string? direction)
     {
         if (!string.IsNullOrEmpty(direction))
-        {
             return direction;
-        }
         return Direction.Ascending.ToString();
     }
 }

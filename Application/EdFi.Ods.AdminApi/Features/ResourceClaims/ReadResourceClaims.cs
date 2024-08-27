@@ -32,10 +32,9 @@ public class ReadResourceClaims : IFeature
     {
         var resourceClaims = mapper.Map<List<ResourceClaimModel>>(getResourceClaimsQuery.Execute(
             commonQueryParams,
-            id, name).ToList());
-        var model = resourceClaims.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction));
+            id, name));
 
-        return Task.FromResult(Results.Ok(model));
+        return Task.FromResult(Results.Ok(resourceClaims));
     }
 
     internal Task<IResult> GetResourceClaim(IGetResourceClaimByResourceClaimIdQuery getResourceClaimByResourceClaimIdQuery, IMapper mapper, int id)

@@ -28,9 +28,6 @@ public class ReadActions : IFeature
                 new CommonQueryParams(offset, limit, orderBy, direction),
                 id,
                 name));
-        var result = actions.Sort(
-            orderBy ?? string.Empty,
-            SortingDirectionHelper.GetNonEmptyOrDefault(direction));
-        return Task.FromResult(Results.Ok(result));
+        return Task.FromResult(Results.Ok(actions));
     }
 }

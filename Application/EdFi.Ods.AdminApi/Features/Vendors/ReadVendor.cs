@@ -33,7 +33,7 @@ public class ReadVendor : IFeature
         var vendorList = mapper.Map<List<VendorModel>>(getVendorsQuery.Execute(
             commonQueryParams,
             id, company, namespacePrefixes, contactName, contactEmailAddress));
-        return Task.FromResult(Results.Ok(vendorList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
+        return Task.FromResult(Results.Ok(vendorList));
     }
 
     internal Task<IResult> GetVendor(IGetVendorByIdQuery getVendorByIdQuery, IMapper mapper, int id)

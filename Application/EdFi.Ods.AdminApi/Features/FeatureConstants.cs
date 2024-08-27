@@ -61,13 +61,5 @@ public static class FeatureConstants
     public const string ActionIdDescription = "Action id";
     public const string ActionNameDescription = "Action name";
 
-    /// Default columns to filter for each entity:
-    public const string ActionDefaultSorting = "Name";
-    public const string ApplicationsDefaultSorting = "ApplicationName";
-    public const string ClaimsetDefaultSorting = "Name";
-    public const string OdsInstanceDefaultSorting = "Name";
-    public const string ProfileDefaultSorting = "Name";
-    public const string ResourceDefaultSorting = "Name";
-    public const string ResourceClaimsDefaultSorting = "Name";
-    public const string VendorDefaultSorting = "Company";
+    
 }

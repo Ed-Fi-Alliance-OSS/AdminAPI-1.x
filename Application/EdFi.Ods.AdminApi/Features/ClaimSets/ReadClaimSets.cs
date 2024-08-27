@@ -36,12 +36,11 @@ public class ReadClaimSets : IFeature
             commonQueryParams,
             id,
             name));
-        var model = claimSets.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction));
-        foreach (var claimSet in model)
+        foreach (var claimSet in claimSets)
         {
             claimSet.Applications = mapper.Map<List<SimpleApplicationModel>>(getApplications.Execute(claimSet.Id));
         }
-        return Task.FromResult(Results.Ok(model));
+        return Task.FromResult(Results.Ok(claimSets));
     }
 
     internal Task<IResult> GetClaimSet(IGetClaimSetByIdQuery getClaimSetByIdQuery,

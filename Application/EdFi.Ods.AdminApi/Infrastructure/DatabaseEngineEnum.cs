@@ -4,6 +4,7 @@ public static class DatabaseEngineEnum
 {
     public const string SqlServer = "SqlServer";
     public const string PostgreSql = "PostgreSql";
+    public const string SqlServerCollation = "Latin1_General_100_BIN2_UTF8";
 
     public static string Parse(string value)
     {

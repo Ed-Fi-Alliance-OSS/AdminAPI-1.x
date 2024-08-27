@@ -13,47 +13,20 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Extensions
     public static class QueryExtensions
     {
         /// <summary>
-        /// Custom function for sorting.
-        /// We initially try to fix by orderBy. If this column does not exist, we try to sort by orderByDefault.
+        /// Ordering the IQueryable base in the expression
         /// </summary>
-        /// <typeparam name="T">Any entity from the model</typeparam>
-        /// <param name="source"></param>
-        /// <param name="orderBy">Try to fix by this column</param>
-        /// <param name="orderByDefault">In case orderBy column does not exist, we sort by this column</param>
-        /// <param name="descending">asc or desc</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="source">DBSet that contains the data</param>
+        /// <param name="orderBy">Expression function that contains the column to order</param>
+        /// <param name="isDescending">Indicate if it is descending</param>
         /// <returns></returns>
-        public static IQueryable<T> OrderByColumn<T>(this IQueryable<T> source, string orderBy, string orderByDefault, bool descending = false)
+        public static IQueryable<T> OrderByColumn<T>(this IQueryable<T> source, Expression<Func<T, object>> orderBy, bool isDescending)
         {
-            try
-            {
-                var type = typeof(T);
-                var property = type.GetProperty(orderBy, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                if (property == null)
-                    property = type.GetProperty(orderByDefault, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-
-                if (property != null)
-                {
-                    var parameter = Expression.Parameter(type, "p");
-                    var propertyAccess = Expression.MakeMemberAccess(parameter, property);
-                    var orderByExp = Expression.Lambda(propertyAccess, parameter);
-
-                    var resultExp = Expression.Call(
-                        typeof(Queryable),
-                        descending ? "OrderByDescending" : "OrderBy",
-                        new Type[] { type, property.PropertyType },
-                        source.Expression,
-                        Expression.Quote(orderByExp)
-                    );
-
-                    return source.Provider.CreateQuery<T>(resultExp);
-                }
-                return source;
-            }
-            catch (Exception)
-            {
-                /// If this throws an exception simply don't sort.
-                return source;
-            }
+            if (isDescending)
+                source = source.OrderByDescending(orderBy);
+            else
+                source = source.OrderBy(orderBy);
+            return source;
         }
 
         /// <summary>

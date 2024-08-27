@@ -33,27 +33,13 @@ public class ReadApplication : IFeature
     }
 
     internal Task<IResult> GetApplications(
-        IGetVendorsQuery getVendorsAndApplicationsQuery,
+        IGetAllApplicationsQuery getAllApplicationsQuery,
         IMapper mapper,
         IOptions<AppSettings> settings,
         [AsParameters] CommonQueryParams commonQueryParams, int? id, string? applicationName, string? claimsetName)
     {
-        var vendors = getVendorsAndApplicationsQuery.Execute();
-        var applications = new List<ApplicationModel>();
-        foreach (var vendor in vendors)
-        {
-            applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
-        }
-        var filteredApplications = applications
-            .AsEnumerable()
-            .Where(a => id == null || a.Id == id)
-            .Where(a => applicationName == null || a.ApplicationName == applicationName)
-            .Where(a => claimsetName == null || a.ClaimSetName == claimsetName)
-            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, settings);
-
-        var applicationsReturned = mapper.Map<List<ApplicationModel>>(filteredApplications);
-        applicationsReturned = applicationsReturned.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction));
-        return Task.FromResult(Results.Ok(applicationsReturned));
+        var applications = mapper.Map<List<ApplicationModel>>(getAllApplicationsQuery.Execute(commonQueryParams, id, applicationName, claimsetName));
+        return Task.FromResult(Results.Ok(applications));
     }
 
     internal Task<IResult> GetApplication(GetApplicationByIdQuery getApplicationByIdQuery, IMapper mapper, int id)

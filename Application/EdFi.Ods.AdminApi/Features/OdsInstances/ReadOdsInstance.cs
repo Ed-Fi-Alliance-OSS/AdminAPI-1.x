@@ -33,7 +33,7 @@ public class ReadOdsInstance : IFeature
             id,
             name,
             instanceType));
-        return Task.FromResult(Results.Ok(odsInstances.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
+        return Task.FromResult(Results.Ok(odsInstances));
     }
 
     internal Task<IResult> GetOdsInstance(IGetOdsInstanceQuery getOdsInstanceQuery, IMapper mapper, int id)

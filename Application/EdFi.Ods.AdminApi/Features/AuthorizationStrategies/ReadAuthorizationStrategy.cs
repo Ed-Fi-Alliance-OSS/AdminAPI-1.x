@@ -24,6 +24,6 @@ public class ReadAuthorizationStrategy : IFeature
     internal Task<IResult> GetAuthStrategies(IGetAuthStrategiesQuery getAuthStrategiesQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
         var authStrategyList = mapper.Map<List<AuthorizationStrategyModel>>(getAuthStrategiesQuery.Execute(commonQueryParams));
-        return Task.FromResult(Results.Ok(authStrategyList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
+        return Task.FromResult(Results.Ok(authStrategyList));
     }
 }

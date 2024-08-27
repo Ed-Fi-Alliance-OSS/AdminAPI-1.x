@@ -32,7 +32,7 @@ public class ReadProfile : IFeature
         var profileList = mapper.Map<List<ProfileModel>>(getProfilesQuery.Execute(
             commonQueryParams,
             id, name));
-        return Task.FromResult(Results.Ok(profileList.Sort(commonQueryParams.OrderBy ?? string.Empty, SortingDirectionHelper.GetNonEmptyOrDefault(commonQueryParams.Direction))));
+        return Task.FromResult(Results.Ok(profileList));
     }
 
     internal Task<IResult> GetProfile(IGetProfileByIdQuery getProfileByIdQuery, IMapper mapper, int id)

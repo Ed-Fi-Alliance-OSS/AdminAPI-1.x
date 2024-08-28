@@ -26,4 +26,4 @@ $p = @{
     SecurityDB       = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
 }
 
-.\build.ps1 -APIVersion "2.2.0" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
+.\build.ps1 -APIVersion "2.2.1" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer

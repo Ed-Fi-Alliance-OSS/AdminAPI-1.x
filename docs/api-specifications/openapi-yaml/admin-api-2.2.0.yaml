@@ -742,7 +742,7 @@ paths:
     get:
       tags:
         - ClaimSets
-      summary: Retrieves a specific claimSet based on the identifier.
+      summary: Exports a specific claimSet based on the identifier.
       parameters:
         - name: id
           in: path
@@ -1164,7 +1164,7 @@ paths:
     post:
       tags:
         - ClaimSets
-      summary: Creates claimSet based on the supplied values.
+      summary: Copies the existing claimset and create new one.
       requestBody:
         content:
           application/json:
@@ -1186,7 +1186,7 @@ paths:
     post:
       tags:
         - ClaimSets
-      summary: Creates claimSet based on the supplied values.
+      summary: Imports a new claimSet based on the supplied values.
       requestBody:
         content:
           application/json:
@@ -1208,7 +1208,7 @@ paths:
     post:
       tags:
         - ClaimSets
-      summary: Creates claimSet based on the supplied values.
+      summary: Overrides the default authorization strategies on provided resource claim for a specific action.
       parameters:
         - name: claimSetId
           in: path
@@ -1245,7 +1245,7 @@ paths:
     post:
       tags:
         - ClaimSets
-      summary: Creates claimSet based on the supplied values.
+      summary: Resets to default authorization strategies on provided resource claim.
       parameters:
         - name: claimSetId
           in: path
@@ -1276,7 +1276,7 @@ paths:
     post:
       tags:
         - ClaimSets
-      summary: Creates claimSet based on the supplied values.
+      summary: Adds resourceClaimAction association to a claimSet.
       parameters:
         - name: claimSetId
           in: path
@@ -1369,7 +1369,7 @@ paths:
     put:
       tags:
         - ClaimSets
-      summary: Updates claimSet based on the resource identifier.
+      summary: Updates the resourceClaimAction to a specific resourceClaim on a claimSet.
       parameters:
         - name: claimSetId
           in: path
@@ -1405,7 +1405,7 @@ paths:
     delete:
       tags:
         - ClaimSets
-      summary: Deletes an existing claimSet using the resource identifier.
+      summary: Deletes a resourceClaims association from a claimSet.
       parameters:
         - name: claimSetId
           in: path
@@ -1945,7 +1945,7 @@ components:
           items:
             $ref: '#/components/schemas/resourceClaimAction'
       additionalProperties: false
-    registeClientRequest:
+    registerClientRequest:
       title: RegisterClientRequest
       required:
         - clientId

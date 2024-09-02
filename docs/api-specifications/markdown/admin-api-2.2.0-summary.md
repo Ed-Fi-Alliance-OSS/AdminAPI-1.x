@@ -1199,6 +1199,219 @@ oauth ( Scopes: api )
 
 <h1 id="api-claimsets">ClaimSets</h1>
 
+## Exports a specific claimSet based on the identifier.
+
+`GET /v2/claimSets/{id}/export`
+
+<h3 id="exports-a-specific-claimset-based-on-the-identifier.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|id|path|integer(int32)|true|none|
+
+> Example responses
+
+> 200 Response
+
+```json
+{
+  "id": 0,
+  "name": "string",
+  "_isSystemReserved": true,
+  "_applications": [
+    {
+      "applicationName": "string"
+    }
+  ],
+  "resourceClaims": [
+    {
+      "id": 0,
+      "name": "string",
+      "actions": [
+        {
+          "name": "string",
+          "enabled": true
+        }
+      ],
+      "_defaultAuthorizationStrategiesForCRUD": [
+        {
+          "actionId": 0,
+          "actionName": "string",
+          "authorizationStrategies": [
+            {
+              "authStrategyId": 0,
+              "authStrategyName": "string",
+              "isInheritedFromParent": true
+            }
+          ]
+        }
+      ],
+      "authorizationStrategyOverridesForCRUD": [
+        {
+          "actionId": 0,
+          "actionName": "string",
+          "authorizationStrategies": [
+            {
+              "authStrategyId": 0,
+              "authStrategyName": "string",
+              "isInheritedFromParent": true
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "id": 0,
+          "name": "string",
+          "actions": [
+            {
+              "name": "string",
+              "enabled": true
+            }
+          ],
+          "_defaultAuthorizationStrategiesForCRUD": [
+            {
+              "actionId": 0,
+              "actionName": "string",
+              "authorizationStrategies": [
+                {
+                  "authStrategyId": 0,
+                  "authStrategyName": "string",
+                  "isInheritedFromParent": true
+                }
+              ]
+            }
+          ],
+          "authorizationStrategyOverridesForCRUD": [
+            {
+              "actionId": 0,
+              "actionName": "string",
+              "authorizationStrategies": [
+                {
+                  "authStrategyId": 0,
+                  "authStrategyName": "string",
+                  "isInheritedFromParent": true
+                }
+              ]
+            }
+          ],
+          "children": [
+            {}
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+<h3 id="exports-a-specific-claimset-based-on-the-identifier.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|[claimsetWithResources](#schemaclaimsetwithresources)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Retrieves all claimSets.
+
+`GET /v2/claimSets`
+
+<h3 id="retrieves-all-claimsets.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
+|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
+
+> Example responses
+
+> 200 Response
+
+```json
+[
+  {
+    "id": 0,
+    "name": "string",
+    "_isSystemReserved": true,
+    "_applications": [
+      {
+        "applicationName": "string"
+      }
+    ]
+  }
+]
+```
+
+<h3 id="retrieves-all-claimsets.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<h3 id="retrieves-all-claimsets.-responseschema">Response Schema</h3>
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|*anonymous*|[[claimset](#schemaclaimset)]|false|none|none|
+|» ClaimSet|[claimset](#schemaclaimset)|false|none|none|
+|»» id|integer(int32)|true|none|none|
+|»» name|string¦null|true|none|none|
+|»» _isSystemReserved|boolean|false|read-only|none|
+|»» _applications|[[simpleApplication](#schemasimpleapplication)]¦null|false|read-only|none|
+|»»» Application|[simpleApplication](#schemasimpleapplication)|false|none|none|
+|»»»» applicationName|string¦null|true|none|none|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Creates claimSet based on the supplied values.
+
+`POST /v2/claimSets`
+
+> Body parameter
+
+```json
+{
+  "name": "string"
+}
+```
+
+<h3 id="creates-claimset-based-on-the-supplied-values.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[addClaimsetRequest](#schemaaddclaimsetrequest)|true|none|
+
+<h3 id="creates-claimset-based-on-the-supplied-values.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Created|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
 ## Retrieves a specific claimSet based on the identifier.
 
 `GET /v2/claimSets/{id}`
@@ -1320,120 +1533,15 @@ To perform this operation, you must be authenticated by means of one of the foll
 oauth ( Scopes: api )
 </aside>
 
-## Retrieves all claimSets.
-
-`GET /v2/claimSets`
-
-<h3 id="retrieves-all-claimsets.-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|offset|query|integer(int32)|true|Indicates how many items should be skipped before returning results.|
-|limit|query|integer(int32)|true|Indicates the maximum number of items that should be returned in the results.|
-
-> Example responses
-
-> 200 Response
-
-```json
-[
-  {
-    "id": 0,
-    "name": "string",
-    "_isSystemReserved": true,
-    "_applications": [
-      {
-        "applicationName": "string"
-      }
-    ]
-  }
-]
-```
-
-<h3 id="retrieves-all-claimsets.-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|Inline|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
-
-<h3 id="retrieves-all-claimsets.-responseschema">Response Schema</h3>
-
-Status Code **200**
-
-|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|
-|*anonymous*|[[claimset](#schemaclaimset)]|false|none|none|
-|» ClaimSet|[claimset](#schemaclaimset)|false|none|none|
-|»» id|integer(int32)|true|none|none|
-|»» name|string¦null|true|none|none|
-|»» _isSystemReserved|boolean|false|read-only|none|
-|»» _applications|[[simpleApplication](#schemasimpleapplication)]¦null|false|read-only|none|
-|»»» Application|[simpleApplication](#schemasimpleapplication)|false|none|none|
-|»»»» applicationName|string¦null|true|none|none|
-
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-oauth ( Scopes: api )
-</aside>
-
-## Creates claimSet based on the supplied values.
-
-`POST /v2/claimSets/{claimSetId}/resourceClaimActions`
-
-> Body parameter
-
-```json
-{
-  "resourceClaimId": 0,
-  "resourceClaimActions": [
-    {
-      "name": "string",
-      "enabled": true
-    }
-  ]
-}
-```
-
-<h3 id="creates-claimset-based-on-the-supplied-values.-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|claimSetId|path|integer(int32)|true|none|
-|body|body|[addResourceClaimActionsOnClaimsetRequest](#schemaaddresourceclaimactionsonclaimsetrequest)|true|none|
-
-<h3 id="creates-claimset-based-on-the-supplied-values.-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Created|None|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
-|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
-
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-oauth ( Scopes: api )
-</aside>
-
 ## Updates claimSet based on the resource identifier.
 
-`PUT /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}`
+`PUT /v2/claimSets/{id}`
 
 > Body parameter
 
 ```json
 {
-  "resourceClaimActions": [
-    {
-      "name": "string",
-      "enabled": true
-    }
-  ]
+  "name": "string"
 }
 ```
 
@@ -1441,9 +1549,8 @@ oauth ( Scopes: api )
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|claimSetId|path|integer(int32)|true|none|
-|resourceClaimId|path|integer(int32)|true|none|
-|body|body|[editResourceClaimActionsOnClaimsetRequest](#schemaeditresourceclaimactionsonclaimsetrequest)|true|none|
+|id|path|integer(int32)|true|none|
+|body|body|[editClaimsetRequest](#schemaeditclaimsetrequest)|true|none|
 
 <h3 id="updates-claimset-based-on-the-resource-identifier.-responses">Responses</h3>
 
@@ -1463,16 +1570,307 @@ oauth ( Scopes: api )
 
 ## Deletes an existing claimSet using the resource identifier.
 
-`DELETE /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}`
+`DELETE /v2/claimSets/{id}`
 
 <h3 id="deletes-an-existing-claimset-using-the-resource-identifier.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|id|path|integer(int32)|true|none|
+
+<h3 id="deletes-an-existing-claimset-using-the-resource-identifier.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Resource was successfully deleted.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Copies the existing claimset and create new one.
+
+`POST /v2/claimSets/copy`
+
+> Body parameter
+
+```json
+{
+  "originalId": 0,
+  "name": "string"
+}
+```
+
+<h3 id="copies-the-existing-claimset-and-create-new-one.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[copyClaimsetRequest](#schemacopyclaimsetrequest)|true|none|
+
+<h3 id="copies-the-existing-claimset-and-create-new-one.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Created|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Imports a new claimSet based on the supplied values.
+
+`POST /v2/claimSets/import`
+
+> Body parameter
+
+```json
+{
+  "name": "string",
+  "resourceClaims": [
+    {
+      "name": "string",
+      "actions": [
+        {
+          "name": "string",
+          "enabled": true
+        }
+      ],
+      "authorizationStrategyOverridesForCRUD": [
+        {
+          "actionId": 0,
+          "actionName": "string",
+          "authorizationStrategies": [
+            {
+              "authStrategyId": 0,
+              "authStrategyName": "string",
+              "isInheritedFromParent": true
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "name": "string",
+          "actions": [
+            {
+              "name": "string",
+              "enabled": true
+            }
+          ],
+          "authorizationStrategyOverridesForCRUD": [
+            {
+              "actionId": 0,
+              "actionName": "string",
+              "authorizationStrategies": [
+                {
+                  "authStrategyId": 0,
+                  "authStrategyName": "string",
+                  "isInheritedFromParent": true
+                }
+              ]
+            }
+          ],
+          "children": [
+            {}
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+<h3 id="imports-a-new-claimset-based-on-the-supplied-values.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[importClaimsetRequest](#schemaimportclaimsetrequest)|true|none|
+
+<h3 id="imports-a-new-claimset-based-on-the-supplied-values.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Created|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Overrides the default authorization strategies on provided resource claim for a specific action.
+
+`POST /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/overrideAuthorizationStrategy`
+
+> Body parameter
+
+```json
+{
+  "actionName": "string",
+  "authorizationStrategies": [
+    "string"
+  ]
+}
+```
+
+<h3 id="overrides-the-default-authorization-strategies-on-provided-resource-claim-for-a-specific-action.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|claimSetId|path|integer(int32)|true|none|
+|resourceClaimId|path|integer(int32)|true|none|
+|body|body|[overrideAuthorizationStrategyOnClaimsetRequest](#schemaoverrideauthorizationstrategyonclaimsetrequest)|true|none|
+
+<h3 id="overrides-the-default-authorization-strategies-on-provided-resource-claim-for-a-specific-action.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Resets to default authorization strategies on provided resource claim.
+
+`POST /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/resetAuthorizationStrategies`
+
+<h3 id="resets-to-default-authorization-strategies-on-provided-resource-claim.-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
 |claimSetId|path|integer(int32)|true|none|
 |resourceClaimId|path|integer(int32)|true|none|
 
-<h3 id="deletes-an-existing-claimset-using-the-resource-identifier.-responses">Responses</h3>
+<h3 id="resets-to-default-authorization-strategies-on-provided-resource-claim.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Adds resourceClaimAction association to a claimSet.
+
+`POST /v2/claimSets/{claimSetId}/resourceClaimActions`
+
+> Body parameter
+
+```json
+{
+  "resourceClaimId": 0,
+  "resourceClaimActions": [
+    {
+      "name": "string",
+      "enabled": true
+    }
+  ]
+}
+```
+
+<h3 id="adds-resourceclaimaction-association-to-a-claimset.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|claimSetId|path|integer(int32)|true|none|
+|body|body|[addResourceClaimActionsOnClaimsetRequest](#schemaaddresourceclaimactionsonclaimsetrequest)|true|none|
+
+<h3 id="adds-resourceclaimaction-association-to-a-claimset.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|Created|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Updates the resourceClaimAction to a specific resourceClaim on a claimSet.
+
+`PUT /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}`
+
+> Body parameter
+
+```json
+{
+  "resourceClaimActions": [
+    {
+      "name": "string",
+      "enabled": true
+    }
+  ]
+}
+```
+
+<h3 id="updates-the-resourceclaimaction-to-a-specific-resourceclaim-on-a-claimset.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|claimSetId|path|integer(int32)|true|none|
+|resourceClaimId|path|integer(int32)|true|none|
+|body|body|[editResourceClaimActionsOnClaimsetRequest](#schemaeditresourceclaimactionsonclaimsetrequest)|true|none|
+
+<h3 id="updates-the-resourceclaimaction-to-a-specific-resourceclaim-on-a-claimset.-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Success|None|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Bad Request. The request was invalid and cannot be completed. See the response body for details.|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized. The request requires authentication|None|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Forbidden. The request is authenticated, but not authorized to access this resource|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not found. A resource with given identifier could not be found.|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Internal server error. An unhandled error occurred on the server. See the response body for details.|None|
+
+<aside class="warning">
+To perform this operation, you must be authenticated by means of one of the following methods:
+oauth ( Scopes: api )
+</aside>
+
+## Deletes a resourceClaims association from a claimSet.
+
+`DELETE /v2/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}`
+
+<h3 id="deletes-a-resourceclaims-association-from-a-claimset.-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|claimSetId|path|integer(int32)|true|none|
+|resourceClaimId|path|integer(int32)|true|none|
+
+<h3 id="deletes-a-resourceclaims-association-from-a-claimset.-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
@@ -2917,7 +3315,7 @@ EditResourceClaimActionsOnClaimSetRequest
 |---|---|---|---|---|
 |resourceClaimActions|[[resourceClaimAction](#schemaresourceclaimaction)]|true|none|none|
 
-<h2 id="tocS_registeClientRequest">registeClientRequest</h2>
+<h2 id="tocS_registeClientRequest">registerClientRequest</h2>
 <!-- backwards compatibility -->
 <a id="schemaregisteclientrequest"></a>
 <a id="schema_registeClientRequest"></a>

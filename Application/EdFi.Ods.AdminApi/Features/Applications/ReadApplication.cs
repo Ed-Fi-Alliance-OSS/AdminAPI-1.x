@@ -25,7 +25,7 @@ public class ReadApplication : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper)
+    internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
         var vendors = getVendorsAndApplicationsQuery.Execute();
         var applications = new List<ApplicationModel>();

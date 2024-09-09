@@ -10,6 +10,7 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 public interface IGetAllClaimSetsQuery
 {
     IReadOnlyList<ClaimSet> Execute();
+    IReadOnlyList<ClaimSet> Execute(CommonQueryParams commonQueryParams);
 }
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
@@ -35,6 +36,18 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
         {
             EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(),
             EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(),
+            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
+        };
+    }
+
+    public IReadOnlyList<ClaimSet> Execute(CommonQueryParams commonQueryParams)
+    {
+        var securityModel = _resolver.DetermineSecurityModel();
+
+        return securityModel switch
+        {
+            EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(commonQueryParams),
+            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(commonQueryParams),
             _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
         };        
     }

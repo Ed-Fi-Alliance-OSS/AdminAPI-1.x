@@ -4,6 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Features;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -104,9 +106,9 @@ public class AdminApiEndpointBuilder
         return this;
     }
 
-    public AdminApiEndpointBuilder WithDefaultDescription()
+    public AdminApiEndpointBuilder WithDefaultSummaryAndDescription()
     {
-        var description = _verb switch
+        var summary = _verb switch
         {
             HttpVerb.GET => _route.Contains("id") ? $"Retrieves a specific {_pluralResourceName.ToSingleEntity()} based on the identifier." : $"Retrieves all {_pluralResourceName}.",
             HttpVerb.POST => $"Creates {_pluralResourceName.ToSingleEntity()} based on the supplied values.",
@@ -115,12 +117,27 @@ public class AdminApiEndpointBuilder
             _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for default description {_verb}")
         };
 
-        return WithDescription(description);
+        var description = _verb switch
+        {
+            HttpVerb.GET => "This GET operation provides access to resources using the \"Get\" search pattern. The values of any properties of the resource that are specified will be used to return all matching results (if it exists).",
+            HttpVerb.POST => "The POST operation can be used to create or update resources. In database terms, this is often referred to as an \"upsert\" operation (insert + update). Clients should NOT include the resource \"id\" in the JSON body because it will result in an error. The web service will identify whether the resource already exists based on the natural key values provided, and update or create the resource appropriately. It is recommended to use POST for both create and update except while updating natural key of a resource in which case PUT operation must be used.",
+            HttpVerb.PUT => "The PUT operation is used to update a resource by identifier. If the resource identifier (\"id\") is provided in the JSON body, it will be ignored. Additionally, this API resource is not configured for cascading natural key updates. Natural key values for this resource cannot be changed using PUT operation, so the recommendation is to use POST as that supports upsert behavior.",
+            HttpVerb.DELETE => "The DELETE operation is used to delete an existing resource by identifier. If the resource doesn't exist, an error will result (the resource will not be found).",
+            _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for default description {_verb}")
+        };
+
+        return WithSummaryAndDescription(summary, description);
     }
 
-    public AdminApiEndpointBuilder WithDescription(string description)
+    public AdminApiEndpointBuilder WithSummary(string summary)
     {
-        _routeOptions.Add(rhb => rhb.WithMetadata(new SwaggerOperationAttribute(description)));
+        _routeOptions.Add(rhb => rhb.WithMetadata(new SwaggerOperationAttribute(summary)));
+        return this;
+    }
+
+    public AdminApiEndpointBuilder WithSummaryAndDescription(string summary, string description)
+    {
+        _routeOptions.Add(rhb => rhb.WithMetadata(new SwaggerOperationAttribute(summary, description)));
         return this;
     }
 

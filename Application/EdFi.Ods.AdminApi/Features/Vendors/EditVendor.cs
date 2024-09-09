@@ -18,13 +18,13 @@ public class EditVendor : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/vendors/{id}", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(EditVendorCommand editVendorCommand, IMapper mapper,
-                       Validator validator, Request request, int id)
+                       Validator validator, EditVendorRequest request, int id)
     {
         request.Id = id;
         await validator.GuardAsync(request);
@@ -33,7 +33,7 @@ public class EditVendor : IFeature
     }
 
     [SwaggerSchema(Title = "EditVendorRequest")]
-    public class Request : IEditVendor
+    public class EditVendorRequest : IEditVendor
     {
         [SwaggerExclude]
         public int Id { get; set; }
@@ -51,7 +51,7 @@ public class EditVendor : IFeature
         public string? ContactEmailAddress { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<EditVendorRequest>
     {
         public Validator()
         {

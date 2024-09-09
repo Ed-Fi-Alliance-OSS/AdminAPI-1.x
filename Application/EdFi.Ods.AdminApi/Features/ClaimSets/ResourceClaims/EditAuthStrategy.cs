@@ -19,12 +19,12 @@ public class EditAuthStrategy : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/overrideAuthorizationStrategy", HandleOverrideAuthStrategies)
-       .WithDefaultDescription()
+       .WithSummaryAndDescription("Overrides the default authorization strategies on provided resource claim for a specific action.", "Override the default authorization strategies on provided resource claim for a specific action.\r\n\r\nex: actionName = read,  authorizationStrategies= [ \"Ownershipbased\" ]")
        .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}/resetAuthorizationStrategies", HandleResetAuthStrategies)
-        .WithDefaultDescription()
+        .WithSummary("Resets to default authorization strategies on provided resource claim.")
         .WithRouteOptions(b => b.WithResponseCode(200))
         .BuildForVersions(AdminApiVersions.V2);
     }

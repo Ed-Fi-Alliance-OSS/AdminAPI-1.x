@@ -15,10 +15,10 @@ namespace EdFi.Ods.AdminApi.Features.Profiles;
 public class AddProfile : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
-    {  
+    {
         AdminApiEndpointBuilder
            .MapPost(endpoints, "/profiles", Handle)
-           .WithDefaultDescription()
+           .WithDefaultSummaryAndDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
     }

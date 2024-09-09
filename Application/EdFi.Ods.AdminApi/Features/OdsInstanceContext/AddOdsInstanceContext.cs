@@ -17,7 +17,7 @@ public class AddOdsInstanceContext : IFeature
     {
         AdminApiEndpointBuilder
            .MapPost(endpoints, "/odsInstanceContexts", Handle)
-           .WithDefaultDescription()
+           .WithDefaultSummaryAndDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
     }

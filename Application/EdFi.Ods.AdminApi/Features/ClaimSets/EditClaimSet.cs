@@ -20,7 +20,7 @@ public class EditClaimSet : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/claimSets/{id}", Handle)
-        .WithDefaultDescription()
+        .WithDefaultSummaryAndDescription()
         .WithRouteOptions(b => b.WithResponseCode(200))
         .BuildForVersions(AdminApiVersions.V2);
     }

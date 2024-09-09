@@ -14,7 +14,7 @@ public class DeleteApplication : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapDelete(endpoints, "/applications/{id}", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponseCode(200, FeatureConstants.DeletedSuccessResponseDescription))
             .BuildForVersions(AdminApiVersions.V2);
     }

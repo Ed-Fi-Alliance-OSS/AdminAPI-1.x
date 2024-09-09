@@ -17,7 +17,7 @@ public class ImportClaimSet : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/import", Handle)
-            .WithDefaultDescription()
+            .WithSummary("Imports a new claimset")
             .WithRouteOptions(b => b.WithResponseCode(201))
             .BuildForVersions(AdminApiVersions.V2);
     }
@@ -29,7 +29,7 @@ public class ImportClaimSet : IFeature
         IGetApplicationsByClaimSetIdQuery getApplications,
         IAuthStrategyResolver strategyResolver,
         IMapper mapper,
-        Request request)
+        ImportClaimSetRequest request)
     {
         await validator.GuardAsync(request);
         var addedClaimSetId = addClaimSetCommand.Execute(new AddClaimSetModel
@@ -48,7 +48,7 @@ public class ImportClaimSet : IFeature
     }
 
     [SwaggerSchema(Title = "ImportClaimSetRequest")]
-    public class Request
+    public class ImportClaimSetRequest
     {
         [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]
         public string? Name { get; set; }
@@ -57,7 +57,7 @@ public class ImportClaimSet : IFeature
         public List<ClaimSetResourceClaimModel>? ResourceClaims { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<ImportClaimSetRequest>
     {
         private readonly IGetAllClaimSetsQuery _getAllClaimSetsQuery;
 

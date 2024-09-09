@@ -22,12 +22,12 @@ public class ReadApplication : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications", GetApplications)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/applications/{id}", GetApplication)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }

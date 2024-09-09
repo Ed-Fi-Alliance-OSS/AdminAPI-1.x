@@ -15,7 +15,7 @@ namespace EdFi.Ods.AdminApi.Features.Connect;
 
 public interface IRegisterService
 {
-    Task<bool> Handle(RegisterService.Request request);
+    Task<bool> Handle(RegisterService.RegisterClientRequest request);
 }
 
 public class RegisterService : IRegisterService
@@ -31,7 +31,7 @@ public class RegisterService : IRegisterService
         _applicationManager = applicationManager;
     }
 
-    public async Task<bool> Handle(Request request)
+    public async Task<bool> Handle(RegisterClientRequest request)
     {
         if (!await RegistrationIsEnabledOrNecessary())
             return false;
@@ -65,7 +65,7 @@ public class RegisterService : IRegisterService
         return await Task.FromResult(registrationIsEnabled);
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<RegisterClientRequest>
     {
         public Validator()
         {
@@ -79,7 +79,7 @@ public class RegisterService : IRegisterService
     }
 
     [SwaggerSchema(Title = "RegisterClientRequest")]
-    public class Request
+    public class RegisterClientRequest
     {
         [SwaggerSchema(Description = "Client id", Nullable = false)]
         public string? ClientId { get; set; }

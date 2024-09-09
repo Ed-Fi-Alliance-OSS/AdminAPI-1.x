@@ -18,12 +18,12 @@ public class AddVendor : IFeature
     {
         AdminApiEndpointBuilder
             .MapPost(endpoints, "/vendors", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponseCode(201))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> Handle(Validator validator, AddVendorCommand addVendorCommand, IMapper mapper, Request request)
+    public async Task<IResult> Handle(Validator validator, AddVendorCommand addVendorCommand, IMapper mapper, AddVendorRequest request)
     {
         await validator.GuardAsync(request);
         var addedVendor = addVendorCommand.Execute(request);
@@ -31,7 +31,7 @@ public class AddVendor : IFeature
     }
 
     [SwaggerSchema(Title = "AddVendorRequest")]
-    public class Request : IAddVendorModel
+    public class AddVendorRequest : IAddVendorModel
     {
         [SwaggerSchema(Description = FeatureConstants.VendorNameDescription, Nullable = false)]
         public string? Company { get; set; }
@@ -46,7 +46,7 @@ public class AddVendor : IFeature
         public string? ContactEmailAddress { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<AddVendorRequest>
     {
         public Validator()
         {

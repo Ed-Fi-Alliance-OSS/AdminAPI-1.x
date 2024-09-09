@@ -22,12 +22,12 @@ public class AddApplication : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/applications", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<ApplicationResult>(201))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, Request request, IOptions<AppSettings> options)
+    public async Task<IResult> Handle(Validator validator, IAddApplicationCommand addApplicationCommand, IMapper mapper, IUsersContext db, AddApplicationRequest request, IOptions<AppSettings> options)
     {
         await validator.GuardAsync(request);
         GuardAgainstInvalidEntityReferences(request, db);
@@ -36,7 +36,7 @@ public class AddApplication : IFeature
         return Results.Created($"/applications/{model.Id}", model);
     }
 
-    private void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
+    private void GuardAgainstInvalidEntityReferences(AddApplicationRequest request, IUsersContext db)
     {
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
@@ -45,7 +45,7 @@ public class AddApplication : IFeature
         ValidateOdsInstanceIds(request, db);
     }
 
-    private static void ValidateProfileIds(Request request, IUsersContext db)
+    private static void ValidateProfileIds(AddApplicationRequest request, IUsersContext db)
     {
         var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
 
@@ -61,7 +61,7 @@ public class AddApplication : IFeature
         }
     }
 
-    private static void ValidateOdsInstanceIds(Request request, IUsersContext db)
+    private static void ValidateOdsInstanceIds(AddApplicationRequest request, IUsersContext db)
     {
         var allOdsInstanceIds = db.OdsInstances.Select(p => p.OdsInstanceId).ToList();
 
@@ -78,7 +78,7 @@ public class AddApplication : IFeature
     }
 
     [SwaggerSchema(Title = "AddApplicationRequest")]
-    public class Request : IAddApplicationModel
+    public class AddApplicationRequest : IAddApplicationModel
     {
         [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
         public string? ApplicationName { get; set; }
@@ -100,7 +100,7 @@ public class AddApplication : IFeature
         public IEnumerable<int>? OdsInstanceIds { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<AddApplicationRequest>
     {
         public Validator()
         {

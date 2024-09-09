@@ -21,7 +21,7 @@ public class AddOdsInstanceDerivative : IFeature
     {
         AdminApiEndpointBuilder
            .MapPost(endpoints, "/odsInstanceDerivatives", Handle)
-           .WithDefaultDescription()
+           .WithDefaultSummaryAndDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
     }

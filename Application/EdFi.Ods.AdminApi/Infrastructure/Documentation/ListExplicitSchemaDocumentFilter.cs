@@ -14,7 +14,7 @@ public class ListExplicitSchemaDocumentFilter : IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        context.SchemaGenerator.GenerateSchema(typeof(RegisterService.Request), context.SchemaRepository);
+        context.SchemaGenerator.GenerateSchema(typeof(RegisterService.RegisterClientRequest), context.SchemaRepository);
         context.SchemaGenerator.GenerateSchema(typeof(AdminApiError), context.SchemaRepository);
     }
 }

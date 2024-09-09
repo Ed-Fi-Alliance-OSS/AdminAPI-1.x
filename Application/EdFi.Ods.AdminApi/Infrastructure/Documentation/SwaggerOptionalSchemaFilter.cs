@@ -5,7 +5,10 @@
 
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
+using EdFi.Common.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Documentation;
 
@@ -40,6 +43,19 @@ public class SwaggerOptionalSchemaFilter : ISchemaFilter
                     schema.Required.Add(propertyNameInCamelCasing);
                 }
             }
+        }
+    }
+}
+
+public class SwaggerSchemaRemoveRequiredFilter : ISchemaFilter
+{
+    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    {
+        var properties = context.Type.GetProperties();
+        foreach (var property in properties)
+        {
+            var propertyNameInCamelCasing = property.Name.ToCamelCase();
+            schema.Required?.Remove(propertyNameInCamelCasing);
         }
     }
 }

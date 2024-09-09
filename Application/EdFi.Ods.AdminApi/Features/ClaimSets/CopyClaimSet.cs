@@ -19,7 +19,7 @@ public class CopyClaimSet : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/copy", Handle)
-        .WithDefaultDescription()
+        .WithSummary("Copies the existing claimset and create a new one.")
         .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);
     }

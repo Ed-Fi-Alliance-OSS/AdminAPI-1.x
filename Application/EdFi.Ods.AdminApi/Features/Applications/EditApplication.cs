@@ -20,13 +20,13 @@ public class EditApplication : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPut(endpoints, "/applications/{id}", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
     public async Task<IResult> Handle(IEditApplicationCommand editApplicationCommand, IMapper mapper,
-        Validator validator, IUsersContext db, Request request, int id)
+        Validator validator, IUsersContext db, EditApplicationRequest request, int id)
     {
         request.Id = id;
         await validator.GuardAsync(request);
@@ -35,7 +35,7 @@ public class EditApplication : IFeature
         return Results.Ok();
     }
 
-    private static void GuardAgainstInvalidEntityReferences(Request request, IUsersContext db)
+    private static void GuardAgainstInvalidEntityReferences(EditApplicationRequest request, IUsersContext db)
     {
         if (null == db.Vendors.Find(request.VendorId))
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.VendorId), $"Vendor with ID {request.VendorId} not found.") });
@@ -44,7 +44,7 @@ public class EditApplication : IFeature
         ValidateOdsInstanceIds(request, db);
     }
 
-    private static void ValidateProfileIds(Request request, IUsersContext db)
+    private static void ValidateProfileIds(EditApplicationRequest request, IUsersContext db)
     {
         var allProfileIds = db.Profiles.Select(p => p.ProfileId).ToList();
         if ((request.ProfileIds != null && request.ProfileIds.Any()) && allProfileIds.Count == 0)
@@ -58,7 +58,7 @@ public class EditApplication : IFeature
         }
     }
 
-    private static void ValidateOdsInstanceIds(Request request, IUsersContext db)
+    private static void ValidateOdsInstanceIds(EditApplicationRequest request, IUsersContext db)
     {
         var allOdsInstanceIds = db.OdsInstances.Select(p => p.OdsInstanceId).ToList();
 
@@ -75,7 +75,7 @@ public class EditApplication : IFeature
     }
 
     [SwaggerSchema(Title = "EditApplicationRequest")]
-    public class Request : IEditApplicationModel
+    public class EditApplicationRequest : IEditApplicationModel
     {
         [SwaggerExclude]
         public int Id { get; set; }

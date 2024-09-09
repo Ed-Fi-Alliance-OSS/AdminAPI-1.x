@@ -22,7 +22,7 @@ public class AddOdsInstance : IFeature
     {
         AdminApiEndpointBuilder
            .MapPost(endpoints, "/odsInstances", Handle)
-           .WithDefaultDescription()
+           .WithDefaultSummaryAndDescription()
            .WithRouteOptions(b => b.WithResponseCode(201))
            .BuildForVersions(AdminApiVersions.V2);
     }

@@ -16,7 +16,7 @@ public class ReadApplicationsByVendor : IFeature
         var url = "vendors/{id}/applications";
 
         AdminApiEndpointBuilder.MapGet(endpoints, url, GetVendorApplications)
-            .WithDescription("Retrieves applications assigned to a specific vendor based on the resource identifier.")
+            .WithSummary("Retrieves applications assigned to a specific vendor based on the resource identifier.")
             .WithRouteOptions(b => b.WithResponse<ApplicationModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }

@@ -17,7 +17,7 @@ public class DeleteResourceClaim : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapDelete(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}", Handle)
-       .WithDefaultDescription()
+       .WithSummary("Deletes a resource claims association from a claimset")
        .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
     }

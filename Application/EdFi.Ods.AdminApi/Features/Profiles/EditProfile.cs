@@ -18,13 +18,13 @@ public class EditProfile : IFeature
     {
         AdminApiEndpointBuilder
             .MapPut(endpoints, "/profiles/{id}", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
     }
 
     [ProfileRequestExample]
-    public async Task<IResult> Handle(Validator validator, IEditProfileCommand editProfileCommand, IMapper mapper, EditProfileRequest request, int id)   
+    public async Task<IResult> Handle(Validator validator, IEditProfileCommand editProfileCommand, IMapper mapper, EditProfileRequest request, int id)
     {
         await validator.GuardAsync(request);
         request.Id = id;

@@ -63,7 +63,7 @@
 param(
     # Command to execute, defaults to "Build".
     [string]
-    [ValidateSet("Clean", "Build", "BuildAndPublish", "UnitTest", "IntegrationTest", "PackageApi"
+    [ValidateSet("Clean", "Build", "GenerateOpenAPIAndMD", "BuildAndPublish", "UnitTest", "IntegrationTest", "PackageApi"
         , "Push", "BuildAndTest", "BuildAndDeployToAdminApiDockerContainer"
         , "BuildAndRunAdminApiDevDocker", "RunAdminApiDevDockerContainer", "RunAdminApiDevDockerCompose", "Run", "CopyToDockerContext", "RemoveDockerContextFiles")]
     $Command = "Build",
@@ -163,6 +163,24 @@ function SetAdminApiAssemblyInfo {
 function Compile {
     Invoke-Execute {
         dotnet build $solutionRoot -c $Configuration --nologo --no-restore
+    }
+}
+
+function GenerateOpenAPI {
+    Invoke-Execute {
+        cd $solutionRoot/EdFi.Ods.AdminApi/
+        $outputOpenAPI = "../../docs/api-specifications/openapi-yaml/admin-api-$APIVersion.yaml"
+        $dllPath = "./bin/Release/net8.0/EdFi.Ods.AdminApi.dll"
+        dotnet tool run swagger tofile --output $outputOpenAPI --yaml $dllPath v2
+        cd ..\..
+    }
+}
+
+function GenerateDocumentation {
+    Invoke-Execute {
+        $outputOpenAPI = "docs/api-specifications/openapi-yaml/admin-api-$APIVersion.yaml"
+        $outputMD = "docs/api-specifications/markdown/admin-api-$APIVersion-summary.md"
+        widdershins --search false --omitHeader true --code true --summary $outputOpenAPI -o $outputMD
     }
 }
 
@@ -294,6 +312,15 @@ function Invoke-Build {
     Invoke-Step { Compile }
 }
 
+function Invoke-GenerateOpenAPIAndMD {
+    Invoke-Step { UpdateAppSettingsForAdminApi }
+    Invoke-Step { DotNetClean }
+    Invoke-Step { Restore }
+    Invoke-Step { Compile }
+    Invoke-Step { GenerateOpenAPI }
+    Invoke-Step { GenerateDocumentation }
+}
+
 function Invoke-SetAssemblyInfo {
     Write-Output "Setting Assembly Information"
 
@@ -372,6 +399,21 @@ function UpdateAppSettingsForAdminApiDocker {
     $json.ConnectionStrings.EdFi_Admin = $DockerEnvValues["AdminDB"]
     $json.ConnectionStrings.EdFi_Security = $DockerEnvValues["SecurityDB"]
     $json.Log4NetCore.Log4NetConfigFileName = "./log4net.config"
+    $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
+}
+
+function UpdateAppSettingsForAdminApi {
+    $filePath = "$solutionRoot/EdFi.Ods.AdminApi/appsettings.json"
+    $json = (Get-Content -Path $filePath) | ConvertFrom-Json
+    $json.AppSettings.DatabaseEngine = $DockerEnvValues["DatabaseEngine"]
+    $json.AppSettings.PathBase = $DockerEnvValues["PathBase"]
+
+    $json.Authentication.IssuerUrl = $DockerEnvValues["IssuerUrl"]
+    $json.Authentication.SigningKey = $DockerEnvValues["SigningKey"]
+
+    $json.ConnectionStrings.EdFi_Admin = $DockerEnvValues["AdminDB"]
+    $json.ConnectionStrings.EdFi_Security = $DockerEnvValues["SecurityDB"]
+    $json.Log4NetCore.Log4NetConfigFileName = "log4net\log4net.config"
     $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
 }
 
@@ -470,6 +512,7 @@ Invoke-Main {
     switch ($Command) {
         Clean { Invoke-Clean }
         Build { Invoke-Build }
+        GenerateOpenAPIAndMD { Invoke-GenerateOpenAPIAndMD }
         BuildAndPublish {
             Invoke-SetAssemblyInfo
             Invoke-Build

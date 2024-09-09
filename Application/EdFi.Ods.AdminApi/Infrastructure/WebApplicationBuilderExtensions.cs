@@ -20,6 +20,7 @@ using FluentValidation;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Context;
+using EdFi.Common.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -85,7 +86,13 @@ public static class WebApplicationBuilderExtensions
         var issuer = webApplicationBuilder.Configuration.GetValue<string>("Authentication:IssuerUrl");
         webApplicationBuilder.Services.AddSwaggerGen(opt =>
         {
-            opt.CustomSchemaIds(x => x.FullName?.Replace("+", "."));
+            opt.CustomSchemaIds(x =>
+            {
+                var name = x.FullName?.Replace(x.Namespace + ".", "");
+                if (name != null && name.Any(c => c == '+'))
+                    name = name.Split('+')[1];
+                return name.ToCamelCase();
+            });
             opt.OperationFilter<TokenEndpointBodyDescriptionFilter>();
             opt.OperationFilter<TagByResourceUrlFilter>();
             opt.AddSecurityDefinition(
@@ -127,11 +134,13 @@ public static class WebApplicationBuilderExtensions
                 opt.SwaggerDoc(version, new OpenApiInfo
                 {
                     Title = "Admin API Documentation",
+                    Description = "The Ed-Fi Admin API is a REST API-based administrative interface for managing vendors, applications, client credentials, and authorization rules for accessing an Ed-Fi API.",
                     Version = version
                 });
             }
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
+            opt.SchemaFilter<SwaggerSchemaRemoveRequiredFilter>();
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.OperationFilter<ProfileRequestExampleFilter>();

@@ -16,7 +16,7 @@ public class ReadActions : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/actions", GetActions)
-           .WithDefaultDescription()
+           .WithDefaultSummaryAndDescription()
            .WithRouteOptions(b => b.WithResponse<ActionModel[]>(200))
            .BuildForVersions(AdminApiVersions.V2);
     }

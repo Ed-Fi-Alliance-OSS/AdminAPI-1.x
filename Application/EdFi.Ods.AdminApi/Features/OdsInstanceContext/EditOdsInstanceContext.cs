@@ -20,7 +20,7 @@ public class EditOdsInstanceContext : IFeature
     {
         AdminApiEndpointBuilder
             .MapPut(endpoints, "/odsInstanceContexts/{id}", Handle)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponseCode(200))
             .BuildForVersions(AdminApiVersions.V2);
     }

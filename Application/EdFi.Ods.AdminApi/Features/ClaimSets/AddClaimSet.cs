@@ -17,7 +17,7 @@ public class AddClaimSet : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets", Handle)
-        .WithDefaultDescription()
+        .WithDefaultSummaryAndDescription()
         .WithRouteOptions(b => b.WithResponseCode(201))
         .BuildForVersions(AdminApiVersions.V2);
     }

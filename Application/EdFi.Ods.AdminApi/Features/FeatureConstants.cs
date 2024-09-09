@@ -60,6 +60,4 @@ public static class FeatureConstants
     public const string ClientSecretValidationMessage = "ClientSecret must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be 32 to 128 characters long.";
     public const string ActionIdDescription = "Action id";
     public const string ActionNameDescription = "Action name";
-
-    
 }

@@ -33,7 +33,7 @@ public class ConnectController : Controller
     [Consumes("application/x-www-form-urlencoded"), Produces("application/json")]
     [SwaggerOperation("Registers new client", "Registers new client")]
     [SwaggerResponse(200, "Application registered successfully.")]
-    public async Task<IActionResult> Register([FromForm] RegisterService.Request request)
+    public async Task<IActionResult> Register([FromForm] RegisterService.RegisterClientRequest request)
     {
         if (await _registerService.Handle(request))
         {

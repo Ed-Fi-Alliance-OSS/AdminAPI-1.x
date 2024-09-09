@@ -18,12 +18,12 @@ public class EditResourceClaimActions : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapPost(endpoints, "/claimSets/{claimSetId}/resourceClaimActions", HandleAddResourceClaims)
-       .WithDefaultDescription()
+       .WithSummaryAndDescription("Adds ResourceClaimAction association to a claim set.", "Add resourceClaimAction association to claim set. At least one action should be enabled. Valid actions are read, create, update, delete, readchanges.\r\nresouceclaimId is required fields.")
        .WithRouteOptions(b => b.WithResponseCode(201))
        .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapPut(endpoints, "/claimSets/{claimSetId}/resourceClaimActions/{resourceClaimId}", HandleEditResourceClaims)
-       .WithDefaultDescription()
+       .WithSummaryAndDescription("Updates the ResourceClaimActions to a specific resource claim on a claimset.", "Updates  the resourceClaimActions to a  specific resource claim on a claimset. At least one action should be enabled. Valid actions are read, create, update, delete, readchanges.")
        .WithRouteOptions(b => b.WithResponseCode(200))
        .BuildForVersions(AdminApiVersions.V2);
     }

@@ -14,12 +14,12 @@ public class ReadOdsInstanceContext : IFeature
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstanceContexts", GetOdsInstanceContexts)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceContextModel[]>(200))
             .BuildForVersions(AdminApiVersions.V2);
 
         AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstanceContexts/{id}", GetOdsInstanceContext)
-            .WithDefaultDescription()
+            .WithDefaultSummaryAndDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceContextModel>(200))
             .BuildForVersions(AdminApiVersions.V2);
     }

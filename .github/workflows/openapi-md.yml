@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: Apache-2.0
+# Licensed to the Ed-Fi Alliance under one or more agreements.
+# The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+# See the LICENSE and NOTICES files in the project root for more information.
+
+name: Create PR to update doc and openapi definition
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version Name. Example -> 2.2.2 will result "admin-api-2.2.2.yaml" "admin-api-2.2.2-summary.md"'
+        required: true
+        type: string
+permissions: write-all
+
+env:
+    CI_COMMIT_MESSAGE: Add YAML and markdown file api-specification version ${{ inputs.version }}
+    CI_COMMIT_AUTHOR: github-actions[bot]
+    CI_COMMIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    BRANCH_NAME: openapi-${{ inputs.version }}
+
+jobs:
+  create-doc-and-openapiyaml:
+    name: Generate documentation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout the Repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Git create branch
+        run: |
+          git checkout -b ${{ env.BRANCH_NAME }}
+          git push --set-upstream origin ${{ env.BRANCH_NAME }}
+
+      - name: Install Swashbuckle CLI
+        run: dotnet tool install Swashbuckle.AspNetCore.Cli --version 6.5.0 --create-manifest-if-needed
+
+      - name: Install widdershins CLI
+        run: npm install -g widdershins
+
+      - name: Build and generate YAML and MD files
+        run: |
+          $p = @{
+              Authority        = "http://api"
+              IssuerUrl        = "https://localhost"
+              DatabaseEngine   = "PostgreSql"
+              PathBase         = "adminapi"
+              SigningKey       = "test"
+              AdminDB          = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
+              SecurityDB       = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
+          }
+          ./build.ps1 -APIVersion ${{ inputs.version }} -Configuration Release -DockerEnvValues $p -Command GenerateOpenAPIAndMD
+
+      - name: Commit file
+        id: commit
+        uses: planetscale/ghcommit-action@4131649dbf2fdf1eb34421702972a5af7b0a8731
+        with:
+          commit_message: "${{ env.CI_COMMIT_MESSAGE }}"
+          repo: ${{ github.repository }}
+          branch: ${{ env.BRANCH_NAME }}
+          file_pattern: '*.yaml *.md'
+
+      - name: Create PR
+        run: gh pr create -B main -H ${{ env.BRANCH_NAME }} --title '[Github Action] Open API documentation version ${{ inputs.version }}' --body 'Created by Github action'

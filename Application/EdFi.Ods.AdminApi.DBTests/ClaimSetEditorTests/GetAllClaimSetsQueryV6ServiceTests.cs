@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using EdFi.Security.DataAccess.Models;
 using NUnit.Framework;
@@ -65,6 +66,56 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
 
         var edfiPresetClaimSet = claimSets.Where( x=> x.Name.Equals(claimSet1.ClaimSetName) && x.IsEditable == false).ToList();
         edfiPresetClaimSet.Count().ShouldBe(1);
+    }
+
+    [Test]
+    public void Should_Retrieve_ClaimSetNames_with_offset_and_limit()
+    {
+        var application = new Application
+        {
+            ApplicationName = $"Test Application {DateTime.Now:O}"
+        };
+        Save(application);
+
+        var claimSet1 = GetClaimSet(application);
+        var claimSet2 = GetClaimSet(application);
+        var claimSet3 = GetClaimSet(application);
+        var claimSet4 = GetClaimSet(application);
+        var claimSet5 = GetClaimSet(application);
+
+        Save(claimSet1, claimSet2, claimSet3, claimSet4, claimSet5);
+        
+        var commonQueryParams = new CommonQueryParams(0, 2);
+        var claimSetNames = Transaction<string[]>(securityContext =>
+        {
+            var query = new GetAllClaimSetsQueryV6Service(securityContext);
+            return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
+        });
+
+        claimSetNames.Length.ShouldBe(2);
+        claimSetNames.ShouldContain(claimSet1.ClaimSetName);
+        claimSetNames.ShouldContain(claimSet2.ClaimSetName);
+
+        commonQueryParams.Offset = 2;
+        claimSetNames = Transaction<string[]>(securityContext =>
+        {
+            var query = new GetAllClaimSetsQueryV6Service(securityContext);
+            return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
+        });
+
+        claimSetNames.Length.ShouldBe(2);
+        claimSetNames.ShouldContain(claimSet3.ClaimSetName);
+        claimSetNames.ShouldContain(claimSet4.ClaimSetName);
+
+        commonQueryParams.Offset = 4;
+        claimSetNames = Transaction<string[]>(securityContext =>
+        {
+            var query = new GetAllClaimSetsQueryV6Service(securityContext);
+            return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
+        });
+
+        claimSetNames.Length.ShouldBe(1);
+        claimSetNames.ShouldContain(claimSet5.ClaimSetName);
     }
 
     private static int _claimSetId = 0;

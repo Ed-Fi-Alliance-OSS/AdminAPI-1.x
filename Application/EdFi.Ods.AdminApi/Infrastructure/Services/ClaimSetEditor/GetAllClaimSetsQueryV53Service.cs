@@ -5,7 +5,6 @@
 extern alias Compatability;
 
 using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.Extensions.Options;
 using ClaimSet = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet;
@@ -15,12 +14,10 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 public class GetAllClaimSetsQueryV53Service
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
 
-    public GetAllClaimSetsQueryV53Service(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetAllClaimSetsQueryV53Service(ISecurityContext securityContext)
     {
         _securityContext = securityContext;
-        _options = options;
     }
 
     public IReadOnlyList<ClaimSet> Execute()
@@ -50,7 +47,7 @@ public class GetAllClaimSetsQueryV53Service
             })
             .Distinct()
             .OrderBy(x => x.Name)
-            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit)
             .ToList();
     }
 }

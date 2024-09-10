@@ -30,7 +30,7 @@ public class ReadClaimSets : IFeature
 
     internal Task<IResult> GetClaimSets(IGetAllClaimSetsQuery getClaimSetsQuery, IGetApplicationsByClaimSetIdQuery getApplications, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
-        var claimSets = getClaimSetsQuery.Execute().ToList();
+        var claimSets = getClaimSetsQuery.Execute(commonQueryParams).ToList();
         var model = mapper.Map<List<ClaimSetModel>>(claimSets);
         foreach (var claimSet in model)
         {

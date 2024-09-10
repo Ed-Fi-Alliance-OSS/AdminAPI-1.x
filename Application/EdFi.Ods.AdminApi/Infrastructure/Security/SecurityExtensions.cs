@@ -76,6 +76,7 @@ public static class SecurityExtensions
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters
             {
+                ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidIssuer = issuer,
                 IssuerSigningKey = signingKey

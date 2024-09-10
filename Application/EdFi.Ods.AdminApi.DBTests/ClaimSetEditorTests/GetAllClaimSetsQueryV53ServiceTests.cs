@@ -38,7 +38,7 @@ public class GetAllClaimSetsQueryV53ServiceTests : SecurityData53TestBase
 
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV53Service(securityContext, Testing.GetAppSettings());
+            var query = new GetAllClaimSetsQueryV53Service(securityContext);
             return query.Execute().Select(x => x.Name).ToArray();
         });
 

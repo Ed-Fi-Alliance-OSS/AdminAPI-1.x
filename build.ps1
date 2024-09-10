@@ -58,6 +58,19 @@
         }
 
         .\build.ps1 -APIVersion "2.2.0" -Configuration Release -DockerEnvValues $p -Command BuildAndDeployToAdminApiDockerContainer
+    .EXAMPLE
+       $p = @{
+            Authority        = "http://api"
+            IssuerUrl        = "https://localhost"
+            DatabaseEngine   = "PostgreSql"
+            PathBase         = "adminapi"
+            SigningKey       = "test"
+            AdminDB          = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Admin;Application Name=EdFi.Ods.AdminApi;"
+            SecurityDB       = "host=db-admin;port=5432;username=username;password=password;database=EdFi_Security;Application Name=EdFi.Ods.AdminApi;"
+        }
+
+        ./build.ps1 -APIVersion ${{ inputs.version }} -Configuration Release -DockerEnvValues $p -Command GenerateOpenAPIAndMD
+
 #>
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '', Justification = 'False positive')]
 param(
@@ -413,7 +426,7 @@ function UpdateAppSettingsForAdminApi {
 
     $json.ConnectionStrings.EdFi_Admin = $DockerEnvValues["AdminDB"]
     $json.ConnectionStrings.EdFi_Security = $DockerEnvValues["SecurityDB"]
-    $json.Log4NetCore.Log4NetConfigFileName = "log4net\log4net.config"
+    $json.Log4NetCore.Log4NetConfigFileName = "log4net/log4net.config"
     $json | ConvertTo-Json -Depth 10 | Set-Content $filePath
 }
 

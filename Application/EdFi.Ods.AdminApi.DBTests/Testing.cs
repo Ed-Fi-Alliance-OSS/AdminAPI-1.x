@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 extern alias Compatability;
 
-using EdFi.Ods.AdminApi.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -45,14 +44,5 @@ public static class Testing
         var builder = new DbContextOptionsBuilder();
         builder.UseSqlServer(connectionString);
         return builder.Options;
-    }
-
-    public static IOptions<AppSettings> GetAppSettings()
-    {
-        AppSettings appSettings = new AppSettings();
-        appSettings.DefaultPageSizeOffset = DefaultPageSizeOffset;
-        appSettings.DefaultPageSizeLimit = DefaultPageSizeLimit;
-        IOptions<AppSettings> options = Options.Create(appSettings);
-        return options;
     }
 }

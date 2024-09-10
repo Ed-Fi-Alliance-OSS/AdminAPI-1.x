@@ -3,10 +3,8 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using EdFi.Security.DataAccess.Contexts;
-using Microsoft.Extensions.Options;
 using ClaimSet = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
@@ -15,12 +13,10 @@ namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 public class GetAllClaimSetsQueryV6Service
 {
     private readonly ISecurityContext _securityContext;
-    private readonly IOptions<AppSettings> _options;
 
-    public GetAllClaimSetsQueryV6Service(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetAllClaimSetsQueryV6Service(ISecurityContext securityContext)
     {
         _securityContext = securityContext;
-        _options = options;
     }
 
     public IReadOnlyList<ClaimSet> Execute()
@@ -50,7 +46,7 @@ public class GetAllClaimSetsQueryV6Service
             })
             .Distinct()
             .OrderBy(x => x.Name)
-            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit)
             .ToList();
     }
 }

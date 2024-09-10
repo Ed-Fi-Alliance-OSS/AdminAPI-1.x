@@ -60,6 +60,7 @@ jobs:
         run: |
           git add docs/api-specifications/openapi-yaml/*
           git add docs/api-specifications/markdown/*
+          git restore Application/EdFi.Ods.AdminApi/appsettings.json
           git status --porcelain
           
       - name: Commit file
@@ -69,6 +70,7 @@ jobs:
           commit_message: "${{ env.CI_COMMIT_MESSAGE }}"
           repo: ${{ github.repository }}
           branch: ${{ env.BRANCH_NAME }}
+          file_pattern: '*.yaml *.md'
 
       - name: Create PR
         run: gh pr create -B main -H ${{ env.BRANCH_NAME }} --title '[Github Action] Open API documentation version ${{ inputs.version }}' --body 'Created by Github action'

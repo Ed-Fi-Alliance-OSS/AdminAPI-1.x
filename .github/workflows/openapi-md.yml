@@ -56,6 +56,10 @@ jobs:
           }
           ./build.ps1 -APIVersion ${{ inputs.version }} -Configuration Release -DockerEnvValues $p -Command GenerateOpenAPIAndMD
 
+      - name: Git add files
+        run: |
+          git add *.md *.yaml
+          
       - name: Commit file
         id: commit
         uses: planetscale/ghcommit-action@4131649dbf2fdf1eb34421702972a5af7b0a8731

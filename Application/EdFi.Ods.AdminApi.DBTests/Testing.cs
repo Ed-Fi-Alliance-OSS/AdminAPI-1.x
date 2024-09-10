@@ -6,7 +6,6 @@ extern alias Compatability;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.DBTests;
 

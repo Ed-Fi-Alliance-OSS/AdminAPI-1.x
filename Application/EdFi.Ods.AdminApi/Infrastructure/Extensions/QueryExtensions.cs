@@ -1,3 +1,6 @@
+using EdFi.Ods.AdminApi.Helpers;
+using Microsoft.Extensions.Options;
+
 namespace EdFi.Ods.AdminApi.Infrastructure.Extensions;
 public static class QueryExtensions
 {
@@ -10,17 +13,17 @@ public static class QueryExtensions
     /// <param name="limit"></param>
     /// <param name="settings">App Setting values</param>
     /// <returns>Paginated list</returns>
-    public static IQueryable<T> Paginate<T>(this IQueryable<T> source, int? offset, int? limit)
+    public static IQueryable<T> Paginate<T>(this IQueryable<T> source, int? offset, int? limit, IOptions<AppSettings> settings)
     {
         try
         {
-            if (offset != null)
-                source = source.Skip(offset.Value);
+            if (offset == null)
+                offset = settings.Value.DefaultPageSizeOffset;
 
-            if (limit != null)
-                source = source.Take(limit.Value);
+            if (limit == null)
+                limit = settings.Value.DefaultPageSizeLimit;
 
-            return source;
+            return source.Skip(offset.Value).Take(limit.Value);
         }
         catch (Exception)
         {

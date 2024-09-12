@@ -30,7 +30,7 @@ public class GetApplicationsQueryTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
             var allVendors = command.Execute();
 
             allVendors.ShouldNotBeEmpty();
@@ -75,7 +75,7 @@ public class GetApplicationsQueryTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new GetApplicationsQuery(usersContext);
+            var command = new GetApplicationsQuery(usersContext, Testing.GetAppSettings());
             var commonQueryParams = new CommonQueryParams(0, 2);
 
             var applicationsAfterOffset = command.Execute(commonQueryParams);

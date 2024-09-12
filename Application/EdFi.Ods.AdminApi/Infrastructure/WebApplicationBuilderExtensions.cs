@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
+using EdFi.Ods.AdminApi.Helpers;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -24,6 +25,9 @@ public static class WebApplicationBuilderExtensions
 {
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
+        IConfiguration config = webApplicationBuilder.Configuration;
+        webApplicationBuilder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
+
         var executingAssembly = Assembly.GetExecutingAssembly();
         webApplicationBuilder.Services.AddAutoMapper(executingAssembly, typeof(AdminApiMappingProfile).Assembly);
         webApplicationBuilder.Services.AddScoped<InstanceContext>();
@@ -128,6 +132,7 @@ public static class WebApplicationBuilderExtensions
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
             opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
+            opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
             {

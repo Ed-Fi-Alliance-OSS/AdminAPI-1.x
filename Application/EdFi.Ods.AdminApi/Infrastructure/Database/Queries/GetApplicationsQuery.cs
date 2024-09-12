@@ -5,8 +5,10 @@
 
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 public interface IGetApplicationsQuery
@@ -18,10 +20,12 @@ public interface IGetApplicationsQuery
 public class GetApplicationsQuery : IGetApplicationsQuery
 {
     private readonly IUsersContext _context;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetApplicationsQuery(IUsersContext context)
+    public GetApplicationsQuery(IUsersContext context, IOptions<AppSettings> options)
     {
         _context = context;
+        _options = options;
     }
 
     public List<Application> Execute()
@@ -47,7 +51,7 @@ public class GetApplicationsQuery : IGetApplicationsQuery
             .Include(ap => ap.ApplicationEducationOrganizations)
             .OrderBy(v => v.ApplicationName)
             .Where(v => !VendorExtensions.ReservedNames.Contains(v.Vendor.VendorName.Trim()))
-            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit)
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
             .ToList();
     }
 }

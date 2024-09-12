@@ -39,7 +39,7 @@ public class GetAllClaimSetsQueryV53ServiceTests : SecurityData53TestBase
 
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV53Service(securityContext);
+            var query = new GetAllClaimSetsQueryV53Service(securityContext, Testing.GetAppSettings());
             return query.Execute().Select(x => x.Name).ToArray();
         });
 
@@ -67,7 +67,7 @@ public class GetAllClaimSetsQueryV53ServiceTests : SecurityData53TestBase
         var commonQueryParams = new CommonQueryParams(0, 2);
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV53Service(securityContext);
+            var query = new GetAllClaimSetsQueryV53Service(securityContext, Testing.GetAppSettings());
             return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
         });
 
@@ -78,7 +78,7 @@ public class GetAllClaimSetsQueryV53ServiceTests : SecurityData53TestBase
         commonQueryParams.Offset = 2;
         claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV53Service(securityContext);
+            var query = new GetAllClaimSetsQueryV53Service(securityContext, Testing.GetAppSettings());
             return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
         });
 
@@ -89,7 +89,7 @@ public class GetAllClaimSetsQueryV53ServiceTests : SecurityData53TestBase
         commonQueryParams.Offset = 4;
         claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV53Service(securityContext);
+            var query = new GetAllClaimSetsQueryV53Service(securityContext, Testing.GetAppSettings());
             return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
         });
 

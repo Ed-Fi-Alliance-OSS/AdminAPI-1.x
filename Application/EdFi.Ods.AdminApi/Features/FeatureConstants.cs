@@ -7,12 +7,14 @@ namespace EdFi.Ods.AdminApi.Features;
 
 public class FeatureConstants
 {
-    public const string VedorIdDescription = "Vendor/ company id";
+    public const string VendorIdDescription = "Vendor/ company id";
     public const string VendorNameDescription = "Vendor/ company name";
     public const string VendorNamespaceDescription = "Namespace prefix for the vendor. Multiple namespace prefixes can be provided as comma separated list if required.";
     public const string VendorContactDescription = "Vendor contact name";
     public const string VendorContactEmailDescription = "Vendor contact email id";
+    public const string ApplicationIdDescription = "Application id";
     public const string ApplicationNameDescription = "Application name";
+    public const string ClaimSetIdDescription = "Claim set id";
     public const string ClaimSetNameDescription = "Claim set name";
     public const string ProfileIdDescription = "Profile id";
     public const string EducationOrganizationIdsDescription = "Education organization ids";

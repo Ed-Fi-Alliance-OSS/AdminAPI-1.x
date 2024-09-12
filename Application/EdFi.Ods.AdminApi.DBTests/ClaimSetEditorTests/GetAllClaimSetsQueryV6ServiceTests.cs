@@ -37,7 +37,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
 
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext);
+            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
             return query.Execute().Select(x => x.Name).ToArray();
         });
 
@@ -60,7 +60,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
 
         var claimSets = Transaction(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext);
+            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
             return query.Execute().ToArray();
         });
 

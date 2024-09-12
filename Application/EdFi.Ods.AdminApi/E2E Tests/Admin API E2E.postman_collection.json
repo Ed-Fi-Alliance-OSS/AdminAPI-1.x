@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "cc9c20df-c453-41bd-9b48-7686b1039fc2",
+		"_postman_id": "d32b75b9-a234-4102-9b5e-f67339ecaa42",
 		"name": "Admin API E2E refactor",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5260609"
 	},
 	"item": [
 		{
@@ -900,6 +901,237 @@
 							"response": []
 						},
 						{
+							"name": "Vendors with offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(6);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors?offset=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vendors with offset and limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes correct number of vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(2);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results[0].company).to.eql('My application company 5');\r",
+											"    pm.expect(results[1].company).to.eql('My application company 6');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors?offset=5&limit=2",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vendors with limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(5);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors?limit=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Vendors by ID",
 							"event": [
 								{
@@ -1295,6 +1527,75 @@
 							},
 							"response": []
 						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"var header = {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"};\r",
+									"\r",
+									"let totalToCreate = parseInt(pm.collectionVariables.get(\"VENDORSCOUNT\"), 10);\r",
+									"var vendorsToDelete = [];\r",
+									"let vendorNamePrefix = 'My application company'\r",
+									"for (let i = 0; i < totalToCreate; i++) {\r",
+									"    let company = `${vendorNamePrefix} ${i}`;\r",
+									"    let namespacePrefixes = 'uri://edfi.org';\r",
+									"    let contactName = 'Joe Doe';\r",
+									"    let contactEmailAddress = 'joedoe@test-ed-fi.org';\r",
+									"\r",
+									"    pm.sendRequest({\r",
+									"        url: `${pm.variables.get(\"API_URL\")}/v1/vendors`,\r",
+									"        method: 'POST',\r",
+									"        header: header,\r",
+									"        body: {\r",
+									"            mode: 'raw',\r",
+									"            raw: JSON.stringify({ \"company\": `${company}`, \"namespacePrefixes\": `${namespacePrefixes}`, \"contactName\": `${contactName}`, \"contactEmailAddress\":  `${contactEmailAddress}` })\r",
+									"        }\r",
+									"        }, (err, res) => {\r",
+									"            let location = res.headers.get('Location');\r",
+									"            let matches = location.match(/(\\d+)/);\r",
+									"            let vendorId = parseInt(matches[0], 10);\r",
+									"            vendorsToDelete.push(vendorId);\r",
+									"    });\r",
+									"}\r",
+									"pm.collectionVariables.set(\"VENDORSTODELETE\", vendorsToDelete);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"header = {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    'Accept': '*/*',\r",
+									"    'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"};\r",
+									"\r",
+									"let vendorsToDelete = pm.collectionVariables.get(\"VENDORSTODELETE\").split(\",\");\r",
+									"for (let i = 0; i < vendorsToDelete.length; i++) {\r",
+									"    let id = vendorsToDelete[i];\r",
+									"    pm.sendRequest({        \r",
+									"        url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${id}`,\r",
+									"        method: 'DELETE',\r",
+									"        header: header\r",
+									"    }, function (err, res) {\r",
+									"        if (err) {\r",
+									"            console.log(err);\r",
+									"        }\r",
+									"    });\r",
+									"}"
+								]
+							}
+						}
 					]
 				},
 				{
@@ -1334,7 +1635,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1375,7 +1677,8 @@
 											"}\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1680,6 +1983,181 @@
 							"response": []
 						},
 						{
+							"name": "Applications with offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(6);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/applications?offset=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"applications"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications with limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(5);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/applications?limit=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"applications"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Applications with offset and limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes correct number of vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(2);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results[0].applicationName).to.eql('My application 5');\r",
+											"    pm.expect(results[1].applicationName).to.eql('My application 6');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/applications?offset=5&limit=2",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"applications"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Applications by ID",
 							"event": [
 								{
@@ -1762,6 +2240,9 @@
 											"});\r",
 											"\r",
 											"pm.test(\"Response result includes applications\", function () {\r",
+											"\r",
+											"    console.log(results);\r",
+											"    \r",
 											"    pm.expect(results.length).to.be.greaterThan(0);\r",
 											"\r",
 											"    const indexOfApplication = results.map(\r",
@@ -1797,7 +2278,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1856,7 +2338,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2495,6 +2978,95 @@
 								}
 							},
 							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"var header = {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"    };\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"  url: `${pm.variables.get(\"API_URL\")}/v1/vendors`,\r",
+									"  method: 'POST',\r",
+									"  header: header,\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw:JSON.stringify({\r",
+									"      \"company\": \"Application Company\",\r",
+									"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+									"      \"contactName\": \"Application User\",\r",
+									"      \"contactEmailAddress\": \"application@example.com\"\r",
+									"    }), \r",
+									"  }\r",
+									"},  \r",
+									"function (err, response) {\r",
+									"  if (err) { console.log(\"Error in Pre-request:\", err); }\r",
+									"  const json = response.json();\r",
+									"  if (!json.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', json); }\r",
+									"  else {\r",
+									"    let totalToCreate = parseInt(pm.collectionVariables.get(\"APPLICATIONCOUNT\"), 10);\r",
+									"    var applicationsToDelete = [];\r",
+									"    let applicationNamePrefix = 'My application'\r",
+									"    for (let i = 0; i < totalToCreate; i++) {\r",
+									"        let applicationName = `${applicationNamePrefix} ${i}`;\r",
+									"        let vendorId = json.result.vendorId;\r",
+									"\r",
+									"        pm.sendRequest({\r",
+									"            url: `${pm.variables.get(\"API_URL\")}/v1/applications`,\r",
+									"            method: 'POST',\r",
+									"            header: header,\r",
+									"            body: {\r",
+									"                mode: 'raw',\r",
+									"                raw: JSON.stringify({ \"applicationName\": `${applicationName}`, \"vendorId\" : `${vendorId}`, \"claimSetName\": 'Ed-Fi Sandbox', \"profileId\": null, \"educationOrganizationIds\":  [ 255901 ] })\r",
+									"            }\r",
+									"            }, (err, res) => {\r",
+									"                let location = res.headers.get('Location');\r",
+									"                let matches = location.match(/(\\d+)/);\r",
+									"                let applicationId = parseInt(matches[0], 10);\r",
+									"                applicationsToDelete.push(applicationId);\r",
+									"        });\r",
+									"    }\r",
+									"        pm.collectionVariables.set(\"APPLICATIONSTODELETE\", applicationsToDelete);\r",
+									"    }\r",
+									"});\r",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"header = {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    'Accept': '*/*',\r",
+									"    'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"};\r",
+									"\r",
+									"let applicationsToDelete = pm.collectionVariables.get(\"APPLICATIONSTODELETE\").split(\",\");\r",
+									"for (let i = 0; i < applicationsToDelete.length; i++) {\r",
+									"    let id = applicationsToDelete[i];\r",
+									"    pm.sendRequest({        \r",
+									"        url: `${pm.variables.get(\"API_URL\")}/v1/applications/${id}`,\r",
+									"        method: 'DELETE',\r",
+									"        header: header\r",
+									"    }, function (err, res) {\r",
+									"        if (err) {\r",
+									"            console.log(err);\r",
+									"        }\r",
+									"    });\r",
+									"}"
+								]
+							}
 						}
 					]
 				},
@@ -4527,6 +5099,26 @@
 		{
 			"key": "TOKEN",
 			"value": ""
+		},
+		{
+			"key": "VENDORSTODELETE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "VENDORSCOUNT",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "APPLICATIONSTODELETE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "APPLICATIONCOUNT",
+			"value": "10",
+			"type": "string"
 		}
 	]
 }

@@ -20,4 +20,9 @@ public static class StringExtensions
             ? string.Join(separator, listOfStrings)
             : string.Empty;
     }
+
+    public static object ToJsonObjectResponseDeleted(this string input)
+    {
+        return new { title = $"{input} deleted successfully" };
+    }
 }

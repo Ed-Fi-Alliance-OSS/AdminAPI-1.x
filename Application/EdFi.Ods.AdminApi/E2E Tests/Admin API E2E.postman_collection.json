@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d32b75b9-a234-4102-9b5e-f67339ecaa42",
+		"_postman_id": "5c717de2-5c24-49fa-a2c4-c8620f6a0771",
 		"name": "Admin API E2E refactor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5260609"
@@ -975,6 +975,80 @@
 							"response": []
 						},
 						{
+							"name": "Vendors with limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(5);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/vendors?limit=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"vendors"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Vendors with offset and limit",
 							"event": [
 								{
@@ -1051,80 +1125,6 @@
 										{
 											"key": "limit",
 											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Vendors with limit",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"const response = pm.response.json();\r",
-											"const results = pm.response.json().result;\r",
-											"\r",
-											"pm.test(\"Response matches success format\", function () {\r",
-											"    pm.expect(response.status).to.equal(200);\r",
-											"    pm.expect(response).to.have.property(\"title\");\r",
-											"    pm.expect(response).to.have.property(\"result\");\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Response result includes vendors\", function () {\r",
-											"    pm.expect(results.length).to.eql(5);\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/v1/vendors?limit=5",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"v1",
-										"vendors"
-									],
-									"query": [
-										{
-											"key": "limit",
-											"value": "5"
 										}
 									]
 								}
@@ -1854,7 +1854,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1867,6 +1868,8 @@
 											"\r",
 											"const response = pm.response.json();\r",
 											"const errors = pm.response.json().errors;\r",
+											"\r",
+											"console.log(response);\r",
 											"\r",
 											"pm.test(\"Response matches error format\", function () {\r",
 											"    pm.expect(response.status).to.equal(400);\r",
@@ -1884,7 +1887,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1961,7 +1965,18 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2002,7 +2017,7 @@
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Response result includes vendors\", function () {\r",
+											"pm.test(\"Response result includes applications\", function () {\r",
 											"    pm.expect(results.length).to.eql(6);\r",
 											"});\r",
 											""
@@ -2054,7 +2069,7 @@
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Response result includes vendors\", function () {\r",
+											"pm.test(\"Response result includes applications\", function () {\r",
 											"    pm.expect(results.length).to.eql(5);\r",
 											"});\r",
 											""
@@ -2106,11 +2121,11 @@
 											"    pm.expect(response).to.have.property(\"result\");\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Response result includes correct number of vendors\", function () {\r",
+											"pm.test(\"Response result includes correct number of applications\", function () {\r",
 											"    pm.expect(results.length).to.eql(2);\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Response result includes vendors\", function () {\r",
+											"pm.test(\"Response result includes applications\", function () {\r",
 											"    pm.expect(results[0].applicationName).to.eql('My application 5');\r",
 											"    pm.expect(results[1].applicationName).to.eql('My application 6');\r",
 											"});\r",
@@ -2241,8 +2256,6 @@
 											"\r",
 											"pm.test(\"Response result includes applications\", function () {\r",
 											"\r",
-											"    console.log(results);\r",
-											"    \r",
 											"    pm.expect(results.length).to.be.greaterThan(0);\r",
 											"\r",
 											"    const indexOfApplication = results.map(\r",
@@ -2612,7 +2625,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2642,7 +2656,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2702,9 +2717,11 @@
 											"    pm.expect(result).to.have.property(\"key\");\r",
 											"    pm.expect(result).to.have.property(\"secret\");\r",
 											"});\r",
+											"\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2747,9 +2764,21 @@
 											"pm.test(\"Response title is helpful and accurate\", function () {\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"application\");\r",
 											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
-											"});"
+											"});\r",
+											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2954,11 +2983,33 @@
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
 											"});\r",
 											"\r",
+											"pm.sendRequest({        \r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"ApplicationVendorId\")}`,\r",
+											"    method: 'DELETE',\r",
+											"    header: header\r",
+											"}, function (err, res) {\r",
+											"    if (err) {\r",
+											"        console.log(err);\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"pm.sendRequest({        \r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"OtherApplicationVendorId\")}`,\r",
+											"    method: 'DELETE',\r",
+											"    header: header\r",
+											"}, function (err, res) {\r",
+											"    if (err) {\r",
+											"        console.log(err);\r",
+											"    }\r",
+											"});\r",
+											"\r",
 											"pm.collectionVariables.unset(\"ApplicationVendorId\");\r",
+											"pm.collectionVariables.unset(\"OtherApplicationVendorId\");\r",
 											"pm.collectionVariables.unset(\"CreatedApplicationId\");\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2999,7 +3050,7 @@
 									"  body: {\r",
 									"    mode: 'raw',\r",
 									"    raw:JSON.stringify({\r",
-									"      \"company\": \"Application Company\",\r",
+									"      \"company\": \"My Application Company\",\r",
 									"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
 									"      \"contactName\": \"Application User\",\r",
 									"      \"contactEmailAddress\": \"application@example.com\"\r",
@@ -3011,6 +3062,7 @@
 									"  const json = response.json();\r",
 									"  if (!json.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', json); }\r",
 									"  else {\r",
+									"    pm.collectionVariables.set(\"MyApplicationVendorId\", json.result.vendorId);\r",
 									"    let totalToCreate = parseInt(pm.collectionVariables.get(\"APPLICATIONCOUNT\"), 10);\r",
 									"    var applicationsToDelete = [];\r",
 									"    let applicationNamePrefix = 'My application'\r",
@@ -3052,19 +3104,16 @@
 									"    'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
 									"};\r",
 									"\r",
-									"let applicationsToDelete = pm.collectionVariables.get(\"APPLICATIONSTODELETE\").split(\",\");\r",
-									"for (let i = 0; i < applicationsToDelete.length; i++) {\r",
-									"    let id = applicationsToDelete[i];\r",
-									"    pm.sendRequest({        \r",
-									"        url: `${pm.variables.get(\"API_URL\")}/v1/applications/${id}`,\r",
-									"        method: 'DELETE',\r",
-									"        header: header\r",
-									"    }, function (err, res) {\r",
-									"        if (err) {\r",
-									"            console.log(err);\r",
-									"        }\r",
-									"    });\r",
-									"}"
+									"pm.sendRequest({        \r",
+									"    url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"MyApplicationVendorId\")}`,\r",
+									"    method: 'DELETE',\r",
+									"    header: header\r",
+									"}, function (err, res) {\r",
+									"    if (err) {\r",
+									"        console.log(err);\r",
+									"    }\r",
+									"});\r",
+									""
 								]
 							}
 						}
@@ -3823,6 +3872,187 @@
 										"v1",
 										"claimsets",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets with offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"let results = pm.response.json().result;\r",
+											"console.log(results);\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes claimsets\", function () {\r",
+											"    results = results.filter((claimset) => claimset.isSystemReserved == true);\r",
+											"    pm.expect(results.length).to.eql(8);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/claimsets?offset=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"claimsets"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets with limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"console.log(results);\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes claimsets\", function () {\r",
+											"    pm.expect(results.length).to.eql(5);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/claimsets?limit=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"claimsets"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ClaimSets with offset and limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"let results = pm.response.json().result;\r",
+											"\r",
+											"console.log(results);\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes correct number of claimsets\", function () {\r",
+											"    pm.expect(results.length).to.eql(2);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes claimsets\", function () {\r",
+											"    results = results.filter((claimset) => claimset.isSystemReserved == true);\r",
+											"    pm.expect(results[0].name).to.eql('Ed-Fi API Publisher - Reader');\r",
+											"    pm.expect(results[1].name).to.eql('Ed-Fi API Publisher - Writer');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/claimsets?offset=5&limit=2",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"claimsets"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										}
 									]
 								}
 							},
@@ -5002,12 +5232,16 @@
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
 											"});\r",
 											"\r",
+											"console.log(pm.collectionVariables.get(\"CreatedClaimSetId\"));\r",
+											"console.log(pm.collectionVariables.get(\"OtherExistingClaimSetId\"));\r",
+											"\r",
 											"pm.collectionVariables.unset(\"CreatedClaimSetId\");\r",
 											"pm.collectionVariables.unset(\"OtherExistingClaimSetId\");\r",
 											"pm.collectionVariables.unset(\"ClaimSetGUID\");\r",
 											"pm.collectionVariables.unset(\"OtherClaimSetGUID\");"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -5117,6 +5351,16 @@
 		},
 		{
 			"key": "APPLICATIONCOUNT",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "CLAIMSETSTODELETE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "CLAIMSETCOUNT",
 			"value": "10",
 			"type": "string"
 		}

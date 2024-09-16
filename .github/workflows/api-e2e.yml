@@ -65,7 +65,7 @@ jobs:
           node-version: "16"
 
       - name: Install newman
-        run: npm install -g newman newman-reporter-junitfull
+        run: npm install -g newman newman-reporter-junitfull postman-combine-collections@1.1.2
 
       - name: Combine Collections
         run: |

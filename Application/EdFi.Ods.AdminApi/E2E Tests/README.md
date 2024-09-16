@@ -41,10 +41,16 @@ collection](https://learning.postman.com/docs/running-collections/intro-to-colle
 
 [Newman](https://learning.postman.com/docs/running-collections/using-newman-cli/command-line-integration-with-newman/)
 is a CLI tool to execute Postman collections from the command line. To execute,
-install globally ```npm i newman -g``` and execute the following command:
+install globally ```npm i newman -g``` and execute the following commands:
 
 ```shell
 newman run '.\Admin API E2E.postman_collection.json' -e '.\Admin API.postman_environment.json' -k
+```
+
+And then (for the offset and limit tests)
+
+```shell
+newman run '.\Admin API E2E.postman_collection_offset_and_limit' -e '.\Admin API.postman_environment.json' -k
 ```
 
 -k flag is only required when running with local certificate to ignore SSL

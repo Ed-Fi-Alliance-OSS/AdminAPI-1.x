@@ -16,5 +16,6 @@ public class OdsInstanceModel
     public string? Name { get; set; }
     public string? InstanceType { get; set; }
     public string? Version { get; set; }
+    public bool? IsExtended { get; set; }
     public string? Status { get; set; }
 }

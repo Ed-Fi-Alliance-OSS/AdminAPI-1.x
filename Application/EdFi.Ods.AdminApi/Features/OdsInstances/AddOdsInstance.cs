@@ -9,6 +9,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
+using EdFi.Ods.AdminApi.Features.Vendors;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
 
@@ -25,8 +26,9 @@ public class AddOdsInstance : IFeature
     public async Task<IResult> Handle(Validator validator, IAddOdsInstanceCommand addOdsInstanceCommand, IMapper mapper, AddOdsInstanceRequest request)
     {
         await validator.GuardAsync(request);
-        var addedProfile = addOdsInstanceCommand.Execute(request);
-        return Results.Created($"/odsInstances/{addedProfile.OdsInstanceId}", null);
+        var addedOdsInstance = addOdsInstanceCommand.Execute(request);
+        var model = mapper.Map<OdsInstanceModel>(addedOdsInstance);
+        return AdminApiResponse<OdsInstanceModel>.Created(model, "odsInstance", $"/odsInstances/{model.OdsInstanceId}");
     }
 
     [SwaggerSchema(Title = "AddOdsInstanceRequest")]

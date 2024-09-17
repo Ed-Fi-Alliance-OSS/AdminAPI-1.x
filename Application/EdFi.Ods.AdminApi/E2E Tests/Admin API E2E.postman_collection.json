@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "312fd990-f409-4caf-af21-ce8df98fa532",
+		"_postman_id": "96235532-a9f8-4f99-adb6-4fb726cc1567",
 		"name": "Admin API E2E refactor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5260609"
@@ -4494,6 +4494,508 @@
 										"v1",
 										"claimsets",
 										"{{CreatedClaimSetId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "OdsInstances",
+					"item": [
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Created\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(201);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"created\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response includes location in header\", function () {\r",
+											"    pm.response.to.have.header(\"Location\");\r",
+											"    pm.response.to.be.header(\"Location\", `/odsInstances/${result.id}`);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes ods instance info\", function () {\r",
+											"    pm.expect(result.name).to.equal(\"Test Ods Instance\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"Test Type\");\r",
+											"    pm.expect(result.version).to.equal(\"Test Version\");\r",
+											"    pm.expect(result.isExtended).to.equal(true);\r",
+											"    pm.expect(result.status).to.equal(\"Test Status\");\r",
+											"});\r",
+											"\r",
+											"if(result.id) {\r",
+											"    pm.collectionVariables.set(\"CreateOdsInstanceId\", result.id);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test Ods Instance\",\r\n    \"instanceType\": \"Test Type\",\r\n    \"status\": \"Test Status\",\r\n    \"isExtended\": true,\r\n    \"version\": \"Test Version\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes ods instance\", function () {\r",
+											"    pm.expect(results.length).to.be.greaterThan(0);\r",
+											"\r",
+											"    const indexOfodsinstance = results.map(\r",
+											"        function(odsinstance) { return odsinstance.id; }\r",
+											"    ).indexOf(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
+											"\r",
+											"    const result = results[indexOfodsinstance];\r",
+											"    pm.expect(result.name).to.equal(\"Test Ods Instance\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"Test Type\");\r",
+											"    pm.expect(result.version).to.equal(\"Test Version\");\r",
+											"    pm.expect(result.isExtended).to.equal(true);\r",
+											"    pm.expect(result.status).to.equal(\"Test Status\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstance by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result matches ods instance\", function () {\r",
+											"    const odsInstanceId = pm.collectionVariables.get(\"CreateOdsInstanceId\");\r",
+											"    \r",
+											"    pm.expect(result.id).to.equal(odsInstanceId);\r",
+											"    pm.expect(result.name).to.equal(\"Test Ods Instance\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"Test Type\");\r",
+											"    pm.expect(result.version).to.equal(\"Test Version\");\r",
+											"    pm.expect(result.isExtended).to.equal(true);\r",
+											"    pm.expect(result.status).to.equal(\"Test Status\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const result = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"updated\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes updated ods instance\", function () {\r",
+											"    pm.expect(result.name).to.equal(\"Updated Ods Instance\");\r",
+											"    pm.expect(result.instanceType).to.equal(\"Updated Type\");\r",
+											"    pm.expect(result.version).to.equal(\"Updated Version\");\r",
+											"    pm.expect(result.isExtended).to.equal(false);\r",
+											"    pm.expect(result.status).to.equal(\"Updated Status\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated Ods Instance\",\r\n    \"instanceType\": \"Updated Type\",\r\n    \"status\": \"Updated Status\",\r\n    \"isExtended\": false,\r\n    \"version\": \"Updated Version\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"deleted\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances -  Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"status\");\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response.status).to.equal(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"status\");\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response.status).to.equal(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"company\": \"Updated Test Company\",\r\n    \"namespacePrefixes\": \"uri://academicbenchmarks.com\",\r\n    \"contactName\": \"Updated User\",\r\n    \"contactEmailAddress\": \"updated@example.com\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances - Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"status\");\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response.status).to.equal(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Not found\");\r",
+											"    pm.expect(response.title).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
+											"});\r",
+											"\r",
+											"pm.collectionVariables.unset(\"CreateOdsInstanceId\");\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
 									]
 								}
 							},

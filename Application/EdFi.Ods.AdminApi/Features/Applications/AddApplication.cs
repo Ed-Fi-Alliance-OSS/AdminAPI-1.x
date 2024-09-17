@@ -49,7 +49,7 @@ public class AddApplication : IFeature
         [SwaggerSchema(Description = FeatureConstants.ApplicationNameDescription, Nullable = false)]
         public string? ApplicationName { get; set; }
 
-        [SwaggerSchema(Description = FeatureConstants.VedorIdDescription, Nullable = false)]
+        [SwaggerSchema(Description = FeatureConstants.VendorIdDescription, Nullable = false)]
         public int VendorId { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.ClaimSetNameDescription, Nullable = false)]

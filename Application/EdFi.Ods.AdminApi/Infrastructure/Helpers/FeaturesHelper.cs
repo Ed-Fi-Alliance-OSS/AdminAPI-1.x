@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Helpers;
 
-public class FeaturesHelper
+public static class FeaturesHelper
 {
     public static List<IFeature> GetFeatures()
     {

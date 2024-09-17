@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Shouldly;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 
@@ -28,7 +29,7 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
             var allVendors = command.Execute();
 
             allVendors.ShouldNotBeEmpty();
@@ -57,12 +58,10 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
 
         Transaction(usersContext =>
         {
-            var command = new GetVendorsQuery(usersContext);
+            var command = new GetVendorsQuery(usersContext, Testing.GetAppSettings());
+            var commonQueryParams = new CommonQueryParams(0, 2);
 
-            var offset = 0;
-            var limit = 2;
-
-            var vendorsAfterOffset = command.Execute(offset, limit);
+            var vendorsAfterOffset = command.Execute(commonQueryParams);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(2);
@@ -70,18 +69,18 @@ public class GetVendorsQueryTests : PlatformUsersContextTestBase
             vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 1");
             vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 2");
 
-            offset = 2;
+            commonQueryParams.Offset = 2;
 
-            vendorsAfterOffset = command.Execute(offset, limit);
+            vendorsAfterOffset = command.Execute(commonQueryParams);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(2);
 
             vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 3");
             vendorsAfterOffset.ShouldContain(v => v.VendorName == "test vendor 4");
-            offset = 4;
+            commonQueryParams.Offset = 4;
 
-            vendorsAfterOffset = command.Execute(offset, limit);
+            vendorsAfterOffset = command.Execute(commonQueryParams);
 
             vendorsAfterOffset.ShouldNotBeEmpty();
             vendorsAfterOffset.Count.ShouldBe(1);

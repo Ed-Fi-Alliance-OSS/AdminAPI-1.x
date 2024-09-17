@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "cc9c20df-c453-41bd-9b48-7686b1039fc2",
+		"_postman_id": "312fd990-f409-4caf-af21-ce8df98fa532",
 		"name": "Admin API E2E refactor",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5260609"
 	},
 	"item": [
 		{
@@ -2471,11 +2472,26 @@
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreatedApplicationId\"));\r",
 											"});\r",
 											"\r",
+											"pm.sendRequest({        \r",
+											"        url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"ApplicationVendorId\")}`,\r",
+											"        method: 'DELETE',\r",
+											"        header: {\r",
+											"            'Content-Type': 'application/json',\r",
+											"            'Accept': '*/*',\r",
+											"            'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"        }\r",
+											"    }, function (err, res) {\r",
+											"        if (err) {\r",
+											"            console.log(err);\r",
+											"        }\r",
+											"    });\r",
+											"\r",
 											"pm.collectionVariables.unset(\"ApplicationVendorId\");\r",
 											"pm.collectionVariables.unset(\"CreatedApplicationId\");\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -4266,11 +4282,26 @@
 											"    });\r",
 											"});\r",
 											"\r",
+											"pm.sendRequest({        \r",
+											"        url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"OtherApplicationVendorId\")}`,\r",
+											"        method: 'DELETE',\r",
+											"        header: {\r",
+											"            'Content-Type': 'application/json',\r",
+											"            'Accept': '*/*',\r",
+											"            'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"        }\r",
+											"    }, function (err, res) {\r",
+											"        if (err) {\r",
+											"            console.log(err);\r",
+											"        }\r",
+											"    });\r",
+											"\r",
 											"pm.collectionVariables.unset(\"OtherApplicationId\");\r",
 											"pm.collectionVariables.unset(\"OtherApplicationVendorId\");\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -4279,7 +4310,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -4435,7 +4467,18 @@
 											"pm.collectionVariables.unset(\"ClaimSetGUID\");\r",
 											"pm.collectionVariables.unset(\"OtherClaimSetGUID\");"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],

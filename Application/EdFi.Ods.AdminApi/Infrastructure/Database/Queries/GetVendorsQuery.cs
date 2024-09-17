@@ -3,27 +3,30 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Linq;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 public interface IGetVendorsQuery
 {
     List<Vendor> Execute();
-    List<Vendor> Execute(int offset, int limit);
+    List<Vendor> Execute(CommonQueryParams commonQueryParams);
 }
 
 public class GetVendorsQuery : IGetVendorsQuery
 {
     private readonly IUsersContext _context;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetVendorsQuery(IUsersContext context)
+    public GetVendorsQuery(IUsersContext context, IOptions<AppSettings> options)
     {
         _context = context;
+        _options = options;
     }
 
     public List<Vendor> Execute()
@@ -34,10 +37,11 @@ public class GetVendorsQuery : IGetVendorsQuery
             .Include(x => x.Applications).ThenInclude(x => x.ApplicationEducationOrganizations)
             .Include(x => x.Applications).ThenInclude(x => x.Profiles)
             .Include(x => x.Applications).ThenInclude(x => x.OdsInstance)
-            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).ToList();
+            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
+            .ToList();
     }
 
-    public List<Vendor> Execute(int offset, int limit)
+    public List<Vendor> Execute(CommonQueryParams commonQueryParams)
     {
         return _context.Vendors
             .Include(vn => vn.VendorNamespacePrefixes)
@@ -45,6 +49,8 @@ public class GetVendorsQuery : IGetVendorsQuery
             .Include(x => x.Applications).ThenInclude(x => x.ApplicationEducationOrganizations)
             .Include(x => x.Applications).ThenInclude(x => x.Profiles)
             .Include(x => x.Applications).ThenInclude(x => x.OdsInstance)
-            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim())).Skip(offset).Take(limit).ToList();
+            .OrderBy(v => v.VendorName).Where(v => !VendorExtensions.ReservedNames.Contains(v.VendorName.Trim()))
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
+            .ToList();
     }
 }

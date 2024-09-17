@@ -64,12 +64,18 @@ jobs:
         with:
           node-version: "16"
 
-      - name: Install newman
-        run: npm install -g newman newman-reporter-junitfull
+      - name: Install Tools
+        run: npm install -g newman newman-reporter-junitfull postman-combine-collections@1.1.2
+
+      - name: Combine Collections
+        run: |
+          postman-combine-collections -f './E2E Tests/Admin API E2E.postman_collection*.json' \
+             -n 'Admin API E2E 1.0' \
+             -o './E2E Tests/Admin-API-Full-Collection.json'
 
       - name: Run tests
         run: |
-          newman run './E2E Tests/Admin API E2E.postman_collection.json' \
+          newman run './E2E Tests/Admin-API-Full-Collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
             -r junit,cli \
             --reporter-junit-export ./reports/report.xml \

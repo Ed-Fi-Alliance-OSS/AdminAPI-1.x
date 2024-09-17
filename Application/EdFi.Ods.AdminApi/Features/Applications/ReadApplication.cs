@@ -6,7 +6,6 @@
 using AutoMapper;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Features.Applications;
 
@@ -25,15 +24,11 @@ public class ReadApplication : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    internal Task<IResult> GetApplications(IGetVendorsQuery getVendorsAndApplicationsQuery, IMapper mapper)
+    internal Task<IResult> GetApplications(
+        IGetApplicationsQuery getApplicationsAndApplicationsQuery, IMapper mapper, [AsParameters] CommonQueryParams commonQueryParams)
     {
-        var vendors = getVendorsAndApplicationsQuery.Execute();
-        var applications = new List<ApplicationModel>();
-        foreach (var vendor in vendors)
-        {
-            applications.AddRange(mapper.Map<List<ApplicationModel>>(vendor.Applications));
-        }
-        return Task.FromResult(AdminApiResponse<List<ApplicationModel>>.Ok(applications));
+        var applications = getApplicationsAndApplicationsQuery.Execute(commonQueryParams);
+        return Task.FromResult(AdminApiResponse<List<ApplicationModel>>.Ok(mapper.Map<List<ApplicationModel>>(applications)));
     }
 
     internal Task<IResult> GetApplication(GetApplicationByIdQuery getApplicationByIdQuery, IMapper mapper, int id)

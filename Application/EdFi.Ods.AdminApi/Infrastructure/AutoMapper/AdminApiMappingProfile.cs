@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Features.OdsInstances;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -48,6 +49,12 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.Application.ApplicationId))
             .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
             .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
+
+        CreateMap<OdsInstance, OdsInstanceModel>()
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
+            .ForMember(dst => dst.Version, opt => opt.MapFrom(src => src.Version))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
 
         CreateMap<ClaimSetEditor.ClaimSet, ClaimSetDetailsModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))

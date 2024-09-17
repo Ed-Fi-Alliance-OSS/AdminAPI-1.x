@@ -36,6 +36,10 @@ public class AddOdsInstance : IFeature
         public string? Name { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = true)]
         public string? InstanceType { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceStatus, Nullable = true)]
+        public string? Status { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceVersion, Nullable = true)]
+        public string? Version { get; set; }
     }
 
     public class Validator : AbstractValidator<IAddOdsInstanceModel>

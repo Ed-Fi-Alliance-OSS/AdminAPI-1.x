@@ -3,10 +3,11 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Linq.Expressions;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
@@ -20,11 +21,12 @@ public interface IGetOdsInstancesQuery
 public class GetOdsInstancesQuery : IGetOdsInstancesQuery
 {
     private readonly IUsersContext _usersContext;
-    private readonly Dictionary<string, Expression<Func<OdsInstance, object>>> _orderByColumnOds;
+    private readonly IOptions<AppSettings> _options;
 
-    public GetOdsInstancesQuery(IUsersContext userContext)
+    public GetOdsInstancesQuery(IUsersContext userContext, IOptions<AppSettings> options)
     {
         _usersContext = userContext;
+        _options = options;
     }
 
     public List<OdsInstance> Execute()
@@ -35,7 +37,7 @@ public class GetOdsInstancesQuery : IGetOdsInstancesQuery
     public List<OdsInstance> Execute(CommonQueryParams commonQueryParams)
     {
         return _usersContext.OdsInstances
-            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit)
+            .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
             .ToList();
     }
 }

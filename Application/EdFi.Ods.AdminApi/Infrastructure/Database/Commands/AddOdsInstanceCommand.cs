@@ -28,7 +28,8 @@ public class AddOdsInstanceCommand : IAddOdsInstanceCommand
         {
             Name = newOdsInstance.Name,
             InstanceType = newOdsInstance.InstanceType,
-            //ConnectionString = newOdsInstance.ConnectionString
+            Status = newOdsInstance.Status,
+            Version = newOdsInstance.Version,
         };
         _context.OdsInstances.Add(odsInstance);
         _context.SaveChanges();
@@ -40,5 +41,6 @@ public interface IAddOdsInstanceModel
 {
     string? Name { get; }
     string? InstanceType { get; }
-    //string? ConnectionString { get; }
+    string? Status { get; set; }
+    string? Version { get; set; }
 }

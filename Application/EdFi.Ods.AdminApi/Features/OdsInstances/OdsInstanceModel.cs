@@ -15,4 +15,6 @@ public class OdsInstanceModel
     public int OdsInstanceId { get; set; }
     public string? Name { get; set; }
     public string? InstanceType { get; set; }
+    public string? Version { get; set; }
+    public string? Status { get; set; }
 }

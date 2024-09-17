@@ -33,6 +33,8 @@ public class FeatureConstants
     public const string OdsInstanceIdDescription = "Ods Instance id";
     public const string OdsInstanceName = "Ods Instance name";
     public const string OdsInstanceInstanceType = "Ods Instance type";
+    public const string OdsInstanceStatus = "Ods Instance status";
+    public const string OdsInstanceVersion = "Ods Instance version";
     public const string OdsInstanceConnectionString = "Ods Instance connection string";
     public const string OdsInstanceAlreadyExistsMessage = "An Ods instance with this name already exists in the database. Please enter a unique name.";
     public const string OdsInstanceCantBeDeletedMessage = "There are some {Table} associated to this OdsInstance. Can not be deleted.";

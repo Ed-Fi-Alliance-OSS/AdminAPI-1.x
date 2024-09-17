@@ -259,6 +259,7 @@ public class EditApplicationCommandTests : PlatformUsersContextTestBase
         public int VendorId { get; set; }
         public string ClaimSetName { get; set; }
         public int? ProfileId { get; set; }
+        public int? OdsInstanceId { get; set; }
         public IEnumerable<int> EducationOrganizationIds { get; set; }
     }
 }

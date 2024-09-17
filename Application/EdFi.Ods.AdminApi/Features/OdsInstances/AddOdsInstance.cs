@@ -38,6 +38,8 @@ public class AddOdsInstance : IFeature
         public string? InstanceType { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceStatus, Nullable = true)]
         public string? Status { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIsExtended, Nullable = true)]
+        public bool? IsExtended { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceVersion, Nullable = true)]
         public string? Version { get; set; }
     }
@@ -53,11 +55,20 @@ public class AddOdsInstance : IFeature
             RuleFor(m => m.Name)
                 .NotEmpty()
                 .Must(BeAUniqueName)
+                .MaximumLength(100)
                 .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage);
 
             RuleFor(m => m.InstanceType)
                 .MaximumLength(100)
                 .When(m => !string.IsNullOrEmpty(m.InstanceType));
+
+            RuleFor(m => m.Status)
+                .MaximumLength(100)
+                .When(m => !string.IsNullOrEmpty(m.Status));
+
+            RuleFor(m => m.Version)
+                .MaximumLength(20)
+                .When(m => !string.IsNullOrEmpty(m.Version));
         }
 
         private bool BeAUniqueName(string? name)

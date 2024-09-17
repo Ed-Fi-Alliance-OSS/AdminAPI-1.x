@@ -65,6 +65,10 @@ public class EditApplication : IFeature
         [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
         public int? ProfileId { get; set; }
 
+        [SwaggerOptional]
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdDescription)]
+        public int? OdsInstanceId { get; set; }
+
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<int>? EducationOrganizationIds { get; set; }
     }

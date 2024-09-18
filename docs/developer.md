@@ -14,6 +14,7 @@
   - [Application Architecture](#application-architecture)
     - [Database Layer](#database-layer)
     - [Validation](#validation)
+- [Bulk Application Creation](#bulk-application-creation)
 
 ## Development Pre-Requisites
 
@@ -199,3 +200,52 @@ credentials.
 
 Validation of API requests is configured via
 [FluentValidation](https://docs.fluentvalidation.net/en/latest/).
+
+### Bulk Application Creation
+
+This PowerShell script creates multiple vendors and applications upon execution and stores the generated keys/secrets in a file.
+The script utilizes a CSV file as input to specify the vendors and applications to be created.
+The script prevents duplicate creation of vendors and applications by skipping existing combinations.
+Remember to store keys/secrets securely.
+
+## Instructions
+1. Download the code: `git@github.com:Ed-Fi-Alliance-OSS/AdminAPI-1.x.git`
+2. Open a PowerShell window in Administrator mode and navigate to the /eng/bulk-key-creation folder.
+3. Populate the sample CSV with the required vendor and application information.
+4. Run the following PowerShell command to load modules for Applications creation:
+      ```
+           Import-Module .\Bulk-EdFiOdsApplications.psm1
+      ```    
+5. The Bulk Register Applications can take a number of parameters, copy and modify the following parameter code to fit your needs:
+
+      ```
+      $parameters = @{
+          CSVFilePath = "District details.csv"
+          BaseApiUrl = "https://localhost/AdminApi"
+          NamespacePrefixes = "uri://ed-fi.org/"
+          Key = "YourAdminApiUser"
+          Secret = "yourAdminApiPassword"
+          ClaimsetName = "District Hosted SIS Vendor"
+          logRootPath = "Logs"
+      }
+      ```
+    
+6. Run the following command in the PowerShell window:
+     ```
+       Bulk-EdFiOdsApplications $parameters
+     ```
+
+7. A new file will be create with the Key and Secrets
+###### Parameters definition
+ * ` CSVFilePath            `The csv file to be processed
+ * ` BaseApiUrl             `The Admin Api url,  Example: https://localhost/AdminApi1x
+ * ` namespacePrefixes      `The namespace for the vendor, Example: uri://ed-fi.org/
+ * ` Key                    `The Key to authenticate with the API
+ * ` Secret                 `The Secret to authenticate with the API
+ * ` ClaimsetName           `The claim name that will be assigned to the application,  Ex: "District Hosted SIS Vendor"
+ * ` logRootPath            `The Path where you could find the log file
+
+ 
+### Logs
+
+By default, the script creates log files, to review them go to the root directory and find the Logs folder.

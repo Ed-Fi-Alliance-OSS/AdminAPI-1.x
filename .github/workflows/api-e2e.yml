@@ -65,7 +65,7 @@ jobs:
           node-version: "16"
 
       - name: Install Tools
-        run: npm install -g newman newman-reporter-junitfull postman-combine-collections@1.1.2
+        run: npm install -g newman newman-reporter-htmlextra postman-combine-collections@1.1.2
 
       - name: Combine Collections
         run: |
@@ -77,7 +77,9 @@ jobs:
         run: |
           newman run './E2E Tests/Admin-API-Full-Collection.json' \
             -e './E2E Tests/Admin API Docker.postman_environment.json' \
-            -r junit,cli \
+            -r cli,junit,htmlextra \
+            --reporter-htmlextra-title 'AdminAPI - 1.0' \
+            --reporter-htmlextra-export './report-html/results.html' \
             --reporter-junit-export ./reports/report.xml \
             -k
 
@@ -97,7 +99,15 @@ jobs:
           path: Application/EdFi.Ods.AdminApi/docker-logs/
           retention-days: 10
 
-      - name: Upload results
+      - name: Upload Html results
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
+        if: success() || failure()
+        with:
+          name: test-html-results
+          path: Application/EdFi.Ods.AdminApi/report-html/results.html
+          retention-days: 10
+
+      - name: Upload xml results
         uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
         if: success() || failure()
         with:
@@ -106,7 +116,6 @@ jobs:
           retention-days: 10
 
   report:
-    if: ${{ false }}
     defaults:
       run:
         shell: pwsh
@@ -119,16 +128,17 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 #v4.1.1
 
-      - name: Send report to Zephyr
-        run: |
-          $parameters = @{
-              cycleName = '${{ env.CYCLE_NAME }}'
-              taskName = '${{ env.TASK_NAME }}'
-              folderName = '${{ env.FOLDER_NAME }}'
-          }
-          .\eng\send-test-results.ps1 `
-              -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} `
-              -ProjectId ${{ env.PROJECT_ID }} `
-              -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' `
-              -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' `
-              -ConfigParams $parameters
+# Commented code until Token is renewed
+#      - name: Send report to Zephyr
+#        run: |
+#          $parameters = @{
+#              cycleName = '${{ env.CYCLE_NAME }}'
+#              taskName = '${{ env.TASK_NAME }}'
+#              folderName = '${{ env.FOLDER_NAME }}'
+#          }
+#          .\eng\send-test-results.ps1 `
+#              -PersonalAccessToken ${{ env.JIRA_ACCESS_TOKEN }} `
+#              -ProjectId ${{ env.PROJECT_ID }} `
+#              -AdminApiVersion '${{ env.ADMIN_API_VERSION }}' `
+#              -ResultsFilePath '${{ env.RESULTS_FILE }}/report.xml' `
+#              -ConfigParams $parameters

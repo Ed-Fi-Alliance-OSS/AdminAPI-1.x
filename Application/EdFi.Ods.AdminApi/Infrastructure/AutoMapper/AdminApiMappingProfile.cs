@@ -37,9 +37,11 @@ public class AdminApiMappingProfile : Profile
         CreateMap<Application, ApplicationModel>()
             .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationIds()))
             .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
+            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstance.OdsInstanceId))
+            .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
-            .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()))
-            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstance.OdsInstanceId));
+            .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()));
+            
 
         CreateMap<AddApplicationResult, ApplicationResult>()
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
@@ -52,6 +54,7 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
 
         CreateMap<OdsInstance, OdsInstanceModel>()
+            //.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
             .ForMember(dst => dst.Version, opt => opt.MapFrom(src => src.Version))

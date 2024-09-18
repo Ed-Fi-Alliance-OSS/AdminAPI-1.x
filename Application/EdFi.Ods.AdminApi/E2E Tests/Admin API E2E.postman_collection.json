@@ -1355,9 +1355,9 @@
 											"function (err, response) {\r",
 											"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
 											"  const json = response.json();\r",
-											"  if(!json.result.odsInstanceId) { console.log('Error in Pre-request: odsInstanceId missing from response. Response is:', json); }\r",
+											"  if(!json.result.id) { console.log('Error in Pre-request: id missing from response. Response is:', json); }\r",
 											"  else {\r",
-											"    pm.collectionVariables.set(\"OdsInstanceId\", json.result.odsInstanceId);\r",
+											"    pm.collectionVariables.set(\"OdsInstanceId\", json.result.id);\r",
 											"  }\r",
 											"});\r",
 											""
@@ -1414,7 +1414,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
+									"raw": "{\r\n  \"applicationName\": \"Test Application\",\r\n  \"vendorId\": {{ApplicationVendorId}},\r\n  \"claimSetName\": \"Ed-Fi Sandbox\",\r\n  \"profileId\": null,\r\n  \"odsInstanceId\": {{OdsInstanceId}},\r\n  \"educationOrganizationIds\": [ 255901 ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1675,7 +1675,7 @@
 											"    pm.expect(result.educationOrganizationIds[0]).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceId).to.equal(pm.collectionVariables.get(\"OdsInstanceId\"));\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.odsInstanceName).to.equal(\"my osd instance test\");\r",
 											"    pm.expect(result.profiles).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
 											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
@@ -1741,7 +1741,7 @@
 											"    pm.expect(result.educationOrganizationIds[0]).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
 											"    pm.expect(result.odsInstanceId).to.equal(pm.collectionVariables.get(\"OdsInstanceId\"));\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.odsInstanceName).to.equal(\"my osd instance test\");\r",
 											"    pm.expect(result.profiles).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
 											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
@@ -1808,7 +1808,7 @@
 											"    pm.expect(result.educationOrganizationIds).to.length(1);\r",
 											"    pm.expect(result.educationOrganizationIds[0]).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
-											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
+											"    pm.expect(result.odsInstanceName).to.equal(\"my osd instance test\");\r",
 											"    pm.expect(result.profiles).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
 											"    pm.expect(result.vendorId).to.greaterThan(0);\r",
@@ -1831,7 +1831,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1890,7 +1891,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],

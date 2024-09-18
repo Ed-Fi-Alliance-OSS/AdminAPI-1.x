@@ -15,7 +15,8 @@ public class ApplicationModel
     public string? ClaimSetName { get; set; }
     public string? ProfileName { get; set; }
     public IList<int>? EducationOrganizationIds { get; set; }
-    public string? OdsInstanceId { get; set; }
+    public string? OdsInstanceName { get; set; }
+    public int? OdsInstanceId { get; set; }
     public int? VendorId { get; set; }
     public IList<Profile>? Profiles { get; set; }
 }

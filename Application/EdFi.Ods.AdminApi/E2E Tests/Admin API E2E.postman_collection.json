@@ -1333,9 +1333,37 @@
 											"    pm.collectionVariables.set(\"ApplicationVendorId\", json.result.vendorId);\r",
 											"  }\r",
 											"});\r",
+											"\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/odsInstances`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"name\": \"my osd instance test\",\r",
+											"      \"instanceType\": \"test type\",\r",
+											"      \"status\": \"test status\",\r",
+											"      \"version\": \"test version\"\r",
+											"    }), \r",
+											"  }\r",
+											"},  \r",
+											"function (err, response) {\r",
+											"  if(err) { console.log(\"Error in Pre-request:\", err); }\r",
+											"  const json = response.json();\r",
+											"  if(!json.result.odsInstanceId) { console.log('Error in Pre-request: odsInstanceId missing from response. Response is:', json); }\r",
+											"  else {\r",
+											"    pm.collectionVariables.set(\"OdsInstanceId\", json.result.odsInstanceId);\r",
+											"  }\r",
+											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1376,7 +1404,8 @@
 											"}\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1645,6 +1674,7 @@
 											"    pm.expect(result.educationOrganizationIds).to.length(1);\r",
 											"    pm.expect(result.educationOrganizationIds[0]).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
+											"    pm.expect(result.odsInstanceId).to.equal(pm.collectionVariables.get(\"OdsInstanceId\"));\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
 											"    pm.expect(result.profiles).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
@@ -1659,7 +1689,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1709,6 +1740,7 @@
 											"    pm.expect(result.educationOrganizationIds).to.length(1);\r",
 											"    pm.expect(result.educationOrganizationIds[0]).to.equal(255901);\r",
 											"    pm.expect(result.profileName).to.equal(null);\r",
+											"    pm.expect(result.odsInstanceId).to.equal(pm.collectionVariables.get(\"OdsInstanceId\"));\r",
 											"    pm.expect(result.odsInstanceName).to.equal(null);\r",
 											"    pm.expect(result.profiles).to.length(0);\r",
 											"    pm.expect(result.vendorId).to.not.equal(null);\r",
@@ -1721,7 +1753,8 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2486,7 +2519,22 @@
 											"        }\r",
 											"    });\r",
 											"\r",
+											"pm.sendRequest({        \r",
+											"        url: `${pm.variables.get(\"API_URL\")}/v1/odsInstances/${pm.collectionVariables.get(\"OdsInstanceId\")}`,\r",
+											"        method: 'DELETE',\r",
+											"        header: {\r",
+											"            'Content-Type': 'application/json',\r",
+											"            'Accept': '*/*',\r",
+											"            'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"        }\r",
+											"    }, function (err, res) {\r",
+											"        if (err) {\r",
+											"            console.log(err);\r",
+											"        }\r",
+											"    });\r",
+											"\r",
 											"pm.collectionVariables.unset(\"ApplicationVendorId\");\r",
+											"pm.collectionVariables.unset(\"OdsInstanceId\");\r",
 											"pm.collectionVariables.unset(\"CreatedApplicationId\");\r",
 											""
 										],

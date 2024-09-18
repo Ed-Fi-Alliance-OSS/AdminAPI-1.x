@@ -6,9 +6,14 @@
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
+namespace EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
-public class EditOdsInstanceCommand
+public interface IEditOdsInstanceCommand
+{
+    OdsInstance Execute(IEditOdsInstanceModel changedOdsInstanceData);
+}
+
+public class EditOdsInstanceCommand : IEditOdsInstanceCommand
 {
     private readonly IUsersContext _context;
 
@@ -17,15 +22,15 @@ public class EditOdsInstanceCommand
         _context = context;
     }
 
-    public OdsInstance Execute(IEditOdsInstance changedOdsInstanceData)
+    public OdsInstance Execute(IEditOdsInstanceModel changedOdsInstanceData)
     {
-        var odsInstance = _context.OdsInstances
-            .SingleOrDefault(v => v.OdsInstanceId == changedOdsInstanceData.OdsInstanceId) ?? throw new NotFoundException<int>("Ods Instance", changedOdsInstanceData.OdsInstanceId);
+        var odsInstance = _context.OdsInstances.SingleOrDefault(v => v.OdsInstanceId == changedOdsInstanceData.OdsInstanceId) ??
+            throw new NotFoundException<int>("odsInstance", changedOdsInstanceData.OdsInstanceId);
 
         odsInstance.Name = changedOdsInstanceData.Name;
         odsInstance.InstanceType = changedOdsInstanceData.InstanceType;
+        odsInstance.IsExtended = changedOdsInstanceData.IsExtended ?? false;
         odsInstance.Status = changedOdsInstanceData.Status;
-        odsInstance.IsExtended = changedOdsInstanceData.IsExtended ?? false;   
         odsInstance.Version = changedOdsInstanceData.Version;
 
         _context.SaveChanges();
@@ -33,12 +38,13 @@ public class EditOdsInstanceCommand
     }
 }
 
-public interface IEditOdsInstance
+public interface IEditOdsInstanceModel
 {
-    int OdsInstanceId { get; set; }
-    string? Name { get; set; }
-    string? InstanceType { get; set; }
+    public int OdsInstanceId { get; set; }
+    string? Name { get; }
+    string? InstanceType { get; }
     string? Status { get; set; }
-    bool? IsExtended { get; set; }
+    bool? IsExtended { get; }
     string? Version { get; set; }
 }
+

@@ -4587,6 +4587,146 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstances Invalid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response.status).to.equal(400);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors[\"Name\"].length).to.equal(1);\r",
+											"    pm.expect(response.errors[\"InstanceType\"].length).to.equal(1);\r",
+											"    pm.expect(response.errors[\"Status\"].length).to.equal(1);\r",
+											"    pm.expect(response.errors[\"Version\"].length).to.equal(1);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"\",\r\n    \"instanceType\": \"\",\r\n    \"status\": \"\",\r\n    \"version\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OdsInstances Invalid existing name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    pm.expect(response.status).to.equal(400);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"errors\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    pm.expect(response.title.toLowerCase()).to.contain(\"validation\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response errors include messages by property\", function () {\r",
+											"    pm.expect(response.errors.Name.length).to.equal(1);\r",
+											"    pm.expect(response.errors.Name[0]).to.contain(\"already exists\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test Ods Instance\",\r\n    \"instanceType\": \"Test Type\",\r\n    \"status\": \"Test Status\",\r\n    \"isExtended\": true,\r\n    \"version\": \"Test Version\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstance",
 							"event": [
 								{
@@ -4863,7 +5003,7 @@
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
-											"    pm.expect(response.title).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");\r",
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
 											"});\r",
 											""
@@ -4913,7 +5053,7 @@
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
-											"    pm.expect(response.title).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");\r",
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
 											"});\r",
 											""
@@ -4972,7 +5112,7 @@
 											"    const response = pm.response.json();\r",
 											"\r",
 											"    pm.expect(response.title).to.contain(\"Not found\");\r",
-											"    pm.expect(response.title).to.contain(\"odsinstance\");\r",
+											"    pm.expect(response.title).to.contain(\"odsInstance\");\r",
 											"    pm.expect(response.title).to.contain(pm.collectionVariables.get(\"CreateOdsInstanceId\"));\r",
 											"});\r",
 											"\r",

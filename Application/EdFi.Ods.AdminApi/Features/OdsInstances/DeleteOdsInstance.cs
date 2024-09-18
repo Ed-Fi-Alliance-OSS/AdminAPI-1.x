@@ -27,7 +27,7 @@ public class DeleteOdsInstance : IFeature
         var request = new Request() { Id = id };
         await validator.GuardAsync(request);
         deleteOdsInstanceCommand.Execute(request.Id);
-        return await Task.FromResult(Results.Ok("Ods Instance".ToJsonObjectResponseDeleted()));
+        return await Task.FromResult(AdminApiResponse.Deleted("odsInstance"));
     }
 
     public class Validator : AbstractValidator<Request>

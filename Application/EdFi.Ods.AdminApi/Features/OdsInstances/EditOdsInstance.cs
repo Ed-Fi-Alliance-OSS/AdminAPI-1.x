@@ -4,9 +4,10 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
+using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -25,21 +26,28 @@ public class EditOdsInstance : IFeature
 
     public async Task<IResult> Handle(Validator validator, IEditOdsInstanceCommand editOdsInstanceCommand, IMapper mapper, EditOdsInstanceRequest request, int id)
     {
-        request.Id = id;
+        request.OdsInstanceId = id;
         await validator.GuardAsync(request);
-        editOdsInstanceCommand.Execute(request);
-        return Results.Ok();
+        var updatedOdsInstance = editOdsInstanceCommand.Execute(request);
+        var model = mapper.Map<OdsInstanceModel>(updatedOdsInstance);
+        return AdminApiResponse<OdsInstanceModel>.Updated(model, "odsInstance");
     }
 
     [SwaggerSchema(Title = "EditOdsInstanceRequest")]
     public class EditOdsInstanceRequest : IEditOdsInstanceModel
     {
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdDescription, Nullable = false)]
+        public int OdsInstanceId { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceName, Nullable = false)]
         public string? Name { get; set; }
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = true)]
         public string? InstanceType { get; set; }
-        [SwaggerExclude]
-        public int Id { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceStatus, Nullable = true)]
+        public string? Status { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIsExtended, Nullable = true)]
+        public bool? IsExtended { get; set; }
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceVersion, Nullable = true)]
+        public string? Version { get; set; }
     }
 
     public class Validator : AbstractValidator<IEditOdsInstanceModel>
@@ -53,15 +61,35 @@ public class EditOdsInstance : IFeature
             _getOdsInstancesQuery = getOdsInstancesQuery;
             _getOdsInstanceQuery = getOdsInstanceQuery;
 
+            RuleFor(m => m.OdsInstanceId)
+                .Must(id => id > 0)
+                .WithMessage("Please provide valid Ods instance Id.");
+
             RuleFor(m => m.Name)
                 .NotEmpty()
                 .Must(BeAUniqueName)
-                .WithMessage(FeatureConstants.ClaimSetAlreadyExistsMessage)
-                .When(m => BeAnExistingOdsInstance(m.Id) && NameIsChanged(m));
+                .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage)
+                .When(m => BeAnExistingOdsInstance(m.OdsInstanceId) && NameIsChanged(m));
+
+            RuleFor(m => m.Name)
+                .NotEmpty()
+                .MaximumLength(100)
+                .When(m => !string.IsNullOrEmpty(m.Name));
 
             RuleFor(m => m.InstanceType)
+                .NotEmpty()
                 .MaximumLength(100)
                 .When(m => !string.IsNullOrEmpty(m.InstanceType));
+
+            RuleFor(m => m.Status)
+                .NotEmpty()
+                .MaximumLength(100)
+                .When(m => !string.IsNullOrEmpty(m.Status));
+
+            RuleFor(m => m.Version)
+                .NotEmpty()
+                .MaximumLength(20)
+                .When(m => !string.IsNullOrEmpty(m.Version));
         }
 
         private bool BeAnExistingOdsInstance(int id)
@@ -72,7 +100,7 @@ public class EditOdsInstance : IFeature
 
         private bool NameIsChanged(IEditOdsInstanceModel model)
         {
-            return _getOdsInstanceQuery.Execute(model.Id).Name != model.Name;
+            return _getOdsInstanceQuery.Execute(model.OdsInstanceId).Name != model.Name;
         }
 
         private bool BeAUniqueName(string? name)

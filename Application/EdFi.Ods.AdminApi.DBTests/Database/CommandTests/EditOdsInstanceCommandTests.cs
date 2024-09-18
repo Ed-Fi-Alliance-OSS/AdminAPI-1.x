@@ -3,12 +3,12 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System.Linq;
 using EdFi.Admin.DataAccess.Models;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 
@@ -36,7 +36,7 @@ internal class EditOdsInstanceCommandTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldEditVendor()
     {
-        var newOdsInstanceData = new Mock<IEditOdsInstance>();
+        var newOdsInstanceData = new Mock<IEditOdsInstanceModel>();
         newOdsInstanceData.Setup(v => v.OdsInstanceId).Returns(_odsInstanceId);
         newOdsInstanceData.Setup(v => v.Name).Returns("new ods instance name");
         newOdsInstanceData.Setup(v => v.InstanceType).Returns("new type");

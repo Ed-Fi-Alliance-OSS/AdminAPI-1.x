@@ -37,6 +37,7 @@ public class GetOdsInstancesQuery : IGetOdsInstancesQuery
     public List<OdsInstance> Execute(CommonQueryParams commonQueryParams)
     {
         return _usersContext.OdsInstances
+            .OrderBy(o => o.Name)
             .Paginate(commonQueryParams.Offset, commonQueryParams.Limit, _options)
             .ToList();
     }

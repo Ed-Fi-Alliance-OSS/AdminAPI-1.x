@@ -9,7 +9,6 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Features.Vendors;
 
 namespace EdFi.Ods.AdminApi.Features.OdsInstances;
 
@@ -57,16 +56,28 @@ public class AddOdsInstance : IFeature
             RuleFor(m => m.Name)
                 .NotEmpty()
                 .Must(BeAUniqueName)
-                .MaximumLength(100)
                 .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage);
+
+            RuleFor(m => m.Name)
+                .MaximumLength(100)
+                .When(m => !string.IsNullOrEmpty(m.Name));
+
+            RuleFor(m => m.InstanceType)
+                .NotEmpty();
 
             RuleFor(m => m.InstanceType)
                 .MaximumLength(100)
                 .When(m => !string.IsNullOrEmpty(m.InstanceType));
 
             RuleFor(m => m.Status)
+                .NotEmpty();
+
+            RuleFor(m => m.Status)
                 .MaximumLength(100)
                 .When(m => !string.IsNullOrEmpty(m.Status));
+
+            RuleFor(m => m.Version)
+                .NotEmpty();
 
             RuleFor(m => m.Version)
                 .MaximumLength(20)

@@ -18,7 +18,7 @@ public class ReadOdsInstance : IFeature
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel[]>(200))
             .BuildForVersions(AdminApiVersions.V1);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstances/{id}", GetOdsInstances)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/odsInstances/{id}", GetOdsInstance)
             .WithDefaultDescription()
             .WithRouteOptions(b => b.WithResponse<OdsInstanceModel>(200))
             .BuildForVersions(AdminApiVersions.V1);
@@ -28,13 +28,17 @@ public class ReadOdsInstance : IFeature
     {
         var odsInstances = mapper.Map<List<OdsInstanceModel>>(getOdsInstancesQuery.Execute(
             commonQueryParams));
-        return Task.FromResult(Results.Ok(odsInstances));
+        return Task.FromResult(AdminApiResponse<List<OdsInstanceModel>>.Ok(odsInstances));
     }
 
     internal Task<IResult> GetOdsInstance(IGetOdsInstanceQuery getOdsInstanceQuery, IMapper mapper, int id)
     {
         var odsInstance = getOdsInstanceQuery.Execute(id);
+        if (odsInstance == null)
+        {
+            throw new NotFoundException<int>("odsInstance", id);
+        }
         var model = mapper.Map<OdsInstanceModel>(odsInstance);
-        return Task.FromResult(Results.Ok(model));
+        return Task.FromResult(AdminApiResponse<OdsInstanceModel>.Ok(model));
     }
 }

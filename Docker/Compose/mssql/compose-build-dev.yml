@@ -1,0 +1,84 @@
+# SPDX-License-Identifier: Apache-2.0
+# Licensed to the Ed-Fi Alliance under one or more agreements.
+# The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
+# See the LICENSE and NOTICES files in the project root for more information.
+
+version: "3.8"
+
+services:
+  nginx:
+    build:
+      context: ../../Settings/gateway/
+      dockerfile: mssql.Dockerfile
+    environment:
+      ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+    ports:
+      - "443:443"
+    container_name: ed-fi-gateway-adminapi
+    restart: always
+    hostname: nginx
+    volumes:
+      - ../../Settings/ssl:/ssl/
+      - ../../Settings/gateway/adminapi-packaged.conf:/etc/nginx/templates/default.conf.template
+    depends_on:
+      - adminapi
+
+  adminapi:
+    build:
+      # Important to set the context to the root, rather than setting it to the
+      # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
+      # C# projects.
+      context: ../../
+      additional_contexts:
+         assets: ../../../
+      dockerfile: dev.mssql.Dockerfile
+    environment:
+      ADMIN_MSSQL_HOST: db-admin
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_SECURITY_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_PORT: 1433
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
+      DATABASEENGINE: "SqlServer"
+      API_MODE: ${API_MODE}
+      AUTHORITY: ${AUTHORITY}
+      ISSUER_URL: ${ISSUER_URL}
+      SIGNING_KEY: ${SIGNING_KEY}
+      ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
+      ODS_API_VERSION: ${ODS_API_VERSION}
+    depends_on:
+      - db-admin
+    restart: always
+    hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
+    container_name: adminapi
+    healthcheck:
+      test: ${ADMIN_API_HEALTHCHECK_TEST}
+      start_period: "60s"
+      retries: 3
+
+  db-admin:
+    build:
+      context: ../../Settings/DB-Admin/mssql/
+      dockerfile: Dockerfile
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD:-P@55w0rd}"
+      ACCEPT_EULA: "Y"
+      SQLSERVER_ADMIN_DATASOURCE: db-admin
+      SQLSERVER_ODS_DATASOURCE: db-admin
+      SQLSERVER_PORT: 1433
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: "${SQLSERVER_PASSWORD:-P@55w0rd}"
+    ports:
+      - 1433:1433
+    volumes:
+      - vol-db-admin-adminapi:/var/lib/mssql/data
+    restart: always
+    container_name: ed-fi-db-admin-adminapi
+
+
+volumes:
+  vol-db-admin-adminapi:
+    driver: local
+    name: vol-db-admin-adminapi
+

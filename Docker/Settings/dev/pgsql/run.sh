@@ -7,7 +7,7 @@
 set -e
 set +x
 
-envsubst < /app/appsettings.Docker.json > /app/temp.json
+envsubst < /app/appsettings.Docker.pgsql.json > /app/temp.json
 
 mv /app/temp.json /app/appsettings.json
 

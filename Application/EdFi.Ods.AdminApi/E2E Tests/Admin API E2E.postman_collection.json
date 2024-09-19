@@ -4985,6 +4985,131 @@
 							"response": []
 						},
 						{
+							"name": "OdsInstances Not allowed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is Not Found\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response matches error format\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response).to.have.property(\"status\");\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response.status).to.equal(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response title is helpful and accurate\", function () {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.expect(response.title).to.contain(\"Validation failed\");\r",
+											"});\r",
+											"\r",
+											"pm.sendRequest({        \r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v1/vendors/${pm.collectionVariables.get(\"vendorTestId\")}`,\r",
+											"    method: 'DELETE',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"        'Accept': '*/*',\r",
+											"        'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"    }\r",
+											"}, function (err, res) {\r",
+											"    if (err) {\r",
+											"        console.log(err);\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"pm.collectionVariables.unset(\"vendorTestId\");\r",
+											"pm.collectionVariables.unset(\"applicationWithOdsInstance\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"  url: `${pm.variables.get(\"API_URL\")}/v1/vendors`,\r",
+											"  method: 'POST',\r",
+											"  header: {\r",
+											"      \"Content-Type\": \"application/json\",\r",
+											"      \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"  },\r",
+											"  body: {\r",
+											"    mode: 'raw',\r",
+											"    raw:JSON.stringify({\r",
+											"      \"company\": \"vendor test\",\r",
+											"      \"namespacePrefixes\": \"uri://ed-fi.org\",\r",
+											"      \"contactName\": \"vendor test User\",\r",
+											"      \"contactEmailAddress\": \"vendortest@example.com\"\r",
+											"    }), \r",
+											"  }\r",
+											"},\r",
+											"function (vendorErr, vendorResponse) {\r",
+											"  if(vendorErr) { console.log(\"Error in Pre-request:\", vendorErr); }\r",
+											"  const vendorJson = vendorResponse.json();\r",
+											"  if(!vendorJson.result.vendorId) { console.log('Error in Pre-request: vendorID missing from response. Response is:', vendorJson); }\r",
+											"  pm.collectionVariables.set(\"vendorTestId\", vendorJson.result.vendorId);\r",
+											"\r",
+											"  pm.sendRequest({\r",
+											"    url: `${pm.variables.get(\"API_URL\")}/v1/applications`,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        \"Content-Type\": \"application/json\",\r",
+											"        \"Authorization\": `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+											"    },\r",
+											"    body: {\r",
+											"      mode: 'raw',\r",
+											"      raw:JSON.stringify({\r",
+											"        \"applicationName\": \"application with ods instance\",\r",
+											"        \"vendorId\": pm.collectionVariables.get(\"vendorTestId\"),\r",
+											"        \"odsInstanceId\": pm.collectionVariables.get(\"CreateOdsInstanceId\"),\r",
+											"        \"claimSetName\": \"Ed-Fi Sandbox\",\r",
+											"        \"profileId\": null,\r",
+											"        \"educationOrganizationIds\": [ 255901 ]\r",
+											"      }),\r",
+											"    }\r",
+											"  },  \r",
+											"  function (appErr, appResonse) {\r",
+											"    if(appErr) { console.log(\"Error in Pre-request:\", appErr); }\r",
+											"    const appJson = appResonse.json();\r",
+											"    if(!appJson.result.applicationId) { console.log('Error in Pre-request: applicationId missing from response. Response is:', appJson); }\r",
+											"    else {\r",
+											"      pm.collectionVariables.set(\"applicationWithOdsInstance\", appJson.result.applicationId);\r",
+											"    }\r",
+											"  });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances/{{CreateOdsInstanceId}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances",
+										"{{CreateOdsInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "OdsInstances",
 							"event": [
 								{

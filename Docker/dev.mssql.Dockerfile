@@ -20,7 +20,7 @@ RUN dotnet restore && dotnet build -c Release
 
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:3776a5e9ff80cc182fa1727c4cb5e30ba5228ff04b530a57e7dff6ee19028075 AS runtimebase
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19-amd64@sha256:edc046db633d2eac3acfa494c10c6b7b3b9ff9f66f1ed92cec8021f5ee38d755 AS runtimebase
 FROM runtimebase AS runtime
 RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi

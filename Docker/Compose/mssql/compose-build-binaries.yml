@@ -9,7 +9,7 @@ services:
   nginx:
     build:
       context: ../../Settings/gateway/
-      dockerfile: Dockerfile
+      dockerfile: mssql.Dockerfile
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
     ports:

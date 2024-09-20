@@ -72,7 +72,7 @@ services:
       # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
       # C# projects.
       context: ../../
-      dockerfile: dev.Dockerfile
+      dockerfile: dev.pgsql.Dockerfile
     environment:
       ADMIN_POSTGRES_HOST: pb-admin
       POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"

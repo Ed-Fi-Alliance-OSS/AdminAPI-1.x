@@ -393,7 +393,7 @@ function RestartAdminApiContainer {
 }
 
 function BuildAdminApiDevDockerImage {
-    &docker build -t adminapi-dev --no-cache -f "$dockerRoot/dev.Dockerfile" .
+    &docker build -t adminapi-dev --no-cache -f "$dockerRoot/dev.pgsql.Dockerfile" .
 }
 
 function RunAdminApiDevDockerContainer {

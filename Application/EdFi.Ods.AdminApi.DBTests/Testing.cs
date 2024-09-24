@@ -36,9 +36,9 @@ public static class Testing
 
     public static string SecurityV53ConnectionString { get { return Configuration().GetConnectionString("SecurityV53"); } }
 
-    public static int DefaultPageSizeOffset => (int)Configuration().GetValue(typeof(int), "DefaultPageSizeOffset");
+    public static int DefaultPageSizeOffset => (int)Configuration().GetValue(typeof(int), "AppSettings:DefaultPageSizeOffset");
 
-    public static int DefaultPageSizeLimit => (int)Configuration().GetValue(typeof(int), "DefaultPageSizeLimit");
+    public static int DefaultPageSizeLimit => (int)Configuration().GetValue(typeof(int), "AppSettings:DefaultPageSizeLimit");
 
     public static DbContextOptions GetDbContextOptions(string connectionString)
     {

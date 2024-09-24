@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d0d02db4-3d67-400a-b2c6-28e7327795d5",
+		"_postman_id": "33f67ba7-2151-40b5-ae76-7fe792a3e91a",
 		"name": "Admin API E2E refactor Offset and Limit",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5260609"
@@ -812,6 +812,307 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "Ods Instances",
+					"item": [
+						{
+							"name": "Ods instances with offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(5);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances?offset=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ods instances with limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes vendors\", function () {\r",
+											"    pm.expect(results.length).to.eql(5);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances?limit=5",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ods instances with offset and limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const results = pm.response.json().result;\r",
+											"\r",
+											"pm.test(\"Response matches success format\", function () {\r",
+											"    pm.expect(response.status).to.equal(200);\r",
+											"    pm.expect(response).to.have.property(\"title\");\r",
+											"    pm.expect(response).to.have.property(\"result\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes correct number of ods instances\", function () {\r",
+											"    pm.expect(results.length).to.eql(2);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response result includes ods instances\", function () {\r",
+											"    pm.expect(results[0].name).to.eql('ods Instance test 5');\r",
+											"    pm.expect(results[1].name).to.eql('ods Instance test 6');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL}}/v1/odsInstances?offset=5&limit=2",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"v1",
+										"odsInstances"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "5"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"let totalToCreate = parseInt(pm.collectionVariables.get(\"ODSINSTANCESCOUNT\"), 10);\r",
+									"var odsInstancesToDelete = [];\r",
+									"let odsInstanceNamePrefix = 'ods Instance test'\r",
+									"for (let i = 0; i < totalToCreate; i++) {\r",
+									"    let name = `${odsInstanceNamePrefix} ${i}`;\r",
+									"    let instanceType = 'test type';\r",
+									"    let version = 'test type';\r",
+									"    let status = 'test status';\r",
+									"\r",
+									"    pm.sendRequest({\r",
+									"        url: `${pm.variables.get(\"API_URL\")}/v1/odsInstances`,\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            'Content-Type': 'application/json',\r",
+									"            'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: 'raw',\r",
+									"            raw: JSON.stringify({ \"name\": `${name}`, \"instanceType\": `${instanceType}`, \"version\": `${version}`, \"status\":  `${status}` })\r",
+									"        }\r",
+									"        }, (err, res) => {\r",
+									"            let location = res.headers.get('Location');\r",
+									"            let matches = location.match(/(\\d+)/);\r",
+									"            let odsInstanceId = parseInt(matches[0], 10);\r",
+									"            odsInstancesToDelete.push(odsInstanceId);\r",
+									"    });\r",
+									"}\r",
+									"pm.collectionVariables.set(\"ODSINSTANCESTODELETE\", odsInstancesToDelete);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"let odsInstancesToDelete = pm.collectionVariables.get(\"ODSINSTANCESTODELETE\").split(\",\");\r",
+									"for (let i = 0; i < odsInstancesToDelete.length; i++) {\r",
+									"    let id = odsInstancesToDelete[i];\r",
+									"    pm.sendRequest({        \r",
+									"        url: `${pm.variables.get(\"API_URL\")}/v1/odsInstances/${id}`,\r",
+									"        method: 'DELETE',\r",
+									"        header: {\r",
+									"            'Content-Type': 'application/json',\r",
+									"            'Accept': '*/*',\r",
+									"            'Authorization': `Bearer ${pm.collectionVariables.get(\"TOKEN\")}`\r",
+									"        }\r",
+									"    }, function (err, res) {\r",
+									"        if (err) {\r",
+									"            console.log(err);\r",
+									"        }\r",
+									"    });\r",
+									"}"
+								]
+							}
+						}
+					]
 				}
 			]
 		}
@@ -935,6 +1236,16 @@
 		},
 		{
 			"key": "CLAIMSETCOUNT",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "ODSINSTANCESTODELETE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ODSINSTANCESCOUNT",
 			"value": "10",
 			"type": "string"
 		}

@@ -53,7 +53,16 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             VendorName = "Integration Tests"
         };
 
-        Save(vendor);
+        var odsInstance = new OdsInstance
+        {
+            Name = "test ods instance",
+            InstanceType = "test type",
+            Status = "test status",
+            IsExtended = true,
+            Version = "test version"
+        };
+
+        Save(vendor, odsInstance);
 
         AddApplicationResult result = null;
 
@@ -65,6 +74,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ApplicationName = "Test Application",
                 ClaimSetName = "FakeClaimSet",
                 ProfileId = null,
+                OdsInstanceId = odsInstance.OdsInstanceId,
                 VendorId = vendor.VendorId,
                 EducationOrganizationIds = new List<int> { 12345, 67890 }
             };
@@ -79,10 +89,69 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
             .Include(x => x.ApplicationEducationOrganizations)
             .Include(x => x.Vendor)
             .Include(x => x.ApiClients)
+            .Include(x => x.OdsInstance)
             .Single(a => a.ApplicationId == result.ApplicationId);
 
             persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
             persistedApplication.Profiles.Count.ShouldBe(0);
+            persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
+            persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+
+            persistedApplication.Vendor.VendorId.ShouldBeGreaterThan(0);
+            persistedApplication.Vendor.VendorId.ShouldBe(vendor.VendorId);
+
+            persistedApplication.OdsInstance.OdsInstanceId.ShouldBe(odsInstance.OdsInstanceId);
+
+            persistedApplication.ApiClients.Count.ShouldBe(1);
+            var apiClient = persistedApplication.ApiClients.First();
+            apiClient.Name.ShouldBe("Test Application");
+            apiClient.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
+            apiClient.Key.ShouldBe(result.Key);
+            apiClient.Secret.ShouldBe(result.Secret);
+        });
+    }
+
+    [Test]
+    public void OdsInstanceShouldBeOptional()
+    {
+        var vendor = new Vendor
+        {
+            VendorNamespacePrefixes = new List<VendorNamespacePrefix> { new VendorNamespacePrefix { NamespacePrefix = "http://tests.com" } },
+            VendorName = "Integration Tests"
+        };
+
+        Save(vendor);
+
+        AddApplicationResult result = null;
+
+        Transaction(usersContext =>
+        {
+            var command = new AddApplicationCommand(usersContext, new InstanceContext());
+            var newApplication = new TestApplication
+            {
+                ApplicationName = "Test Application",
+                ClaimSetName = "FakeClaimSet",
+                ProfileId = null,
+                OdsInstanceId = null,
+                VendorId = vendor.VendorId,
+                EducationOrganizationIds = new List<int> { 12345, 67890 }
+            };
+
+            result = command.Execute(newApplication);
+        });
+
+        Transaction(usersContext =>
+        {
+            var persistedApplication = usersContext.Applications
+            .Include(x => x.Profiles)
+            .Include(x => x.OdsInstance)
+            .Include(x => x.ApplicationEducationOrganizations)
+            .Include(x => x.Vendor)
+            .Include(x => x.ApiClients)
+            .Single(a => a.ApplicationId == result.ApplicationId);
+
+            persistedApplication.ClaimSetName.ShouldBe("FakeClaimSet");
+            persistedApplication.OdsInstance.ShouldBeNull();
             persistedApplication.ApplicationEducationOrganizations.Count.ShouldBe(2);
             persistedApplication.ApplicationEducationOrganizations.All(o => o.EducationOrganizationId == 12345 || o.EducationOrganizationId == 67890).ShouldBeTrue();
 
@@ -139,6 +208,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
                 ApplicationName = "Test Application",
                 ClaimSetName = "FakeClaimSet",
                 ProfileId = profile.ProfileId,
+                OdsInstanceId = odsInstance.OdsInstanceId,
                 VendorId = vendor.VendorId,
                 EducationOrganizationIds = new List<int> { 12345, 67890 }
             };
@@ -183,6 +253,7 @@ public class AddApplicationCommandTests : PlatformUsersContextTestBase
         public int VendorId { get; set; }
         public string ClaimSetName { get; set; }
         public int? ProfileId { get; set; }
+        public int? OdsInstanceId { get; set; }
         public IEnumerable<int> EducationOrganizationIds { get; set; }
     }
 }

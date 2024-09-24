@@ -82,5 +82,6 @@ public interface IEditApplicationModel
     int VendorId { get; }
     string? ClaimSetName { get; }
     int? ProfileId { get; }
+    int? OdsInstanceId { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
 }

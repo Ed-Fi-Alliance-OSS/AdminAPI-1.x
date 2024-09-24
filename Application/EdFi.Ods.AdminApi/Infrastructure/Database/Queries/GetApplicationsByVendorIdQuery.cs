@@ -22,6 +22,7 @@ public class GetApplicationsByVendorIdQuery
     {
         var applications = _context.Applications
             .Include(x=> x.Profiles)
+            .Include(x => x.OdsInstance)
             .Include(x => x.ApplicationEducationOrganizations)
             .Include(x => x.Vendor)
             .Where(a => a.Vendor != null && a.Vendor.VendorId == vendorid)

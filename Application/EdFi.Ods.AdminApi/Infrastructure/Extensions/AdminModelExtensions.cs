@@ -24,6 +24,10 @@ public static class AdminModelExtensions
     {
         return application?.Profiles?.FirstOrDefault()?.ProfileName;
     }
+    public static string? OdsInstanceName(this Application application)
+    {
+        return application?.OdsInstance?.Name;
+    }
 
     public static IList<Profile> Profiles(this Application application)
     {

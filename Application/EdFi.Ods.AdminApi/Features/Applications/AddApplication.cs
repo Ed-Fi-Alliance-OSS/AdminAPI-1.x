@@ -41,6 +41,9 @@ public class AddApplication : IFeature
 
         if (request.ProfileId.HasValue && db.Profiles.Find(request.ProfileId) == null)
             throw new ValidationException(new[] { new ValidationFailure(nameof(request.ProfileId), $"Profile with ID {request.ProfileId} not found.") });
+
+        if (request.OdsInstanceId.HasValue && db.OdsInstances.Find(request.OdsInstanceId) == null)
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.OdsInstanceId), $"Ods instance with ID {request.OdsInstanceId} not found.") });
     }
 
     [SwaggerSchema(Title = "AddApplicationRequest")]
@@ -58,6 +61,10 @@ public class AddApplication : IFeature
         [SwaggerOptional]
         [SwaggerSchema(Description = FeatureConstants.ProfileIdDescription)]
         public int? ProfileId { get; set; }
+
+        [SwaggerOptional]
+        [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdDescription)]
+        public int? OdsInstanceId { get; set; }
 
         [SwaggerSchema(Description = FeatureConstants.EducationOrganizationIdsDescription, Nullable = false)]
         public IEnumerable<int>? EducationOrganizationIds { get; set; }

@@ -34,8 +34,17 @@ public class AddApplicationCommand : IAddApplicationCommand
         var vendor = _usersContext.Vendors.Include(x => x.Users)
             .Single(v => v.VendorId == applicationModel.VendorId);
 
-        var odsInstance = _usersContext.OdsInstances.AsEnumerable().FirstOrDefault(x =>
-            x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
+        OdsInstance? odsInstance;
+
+        if (_instanceContext != null && !string.IsNullOrEmpty(_instanceContext.Name))
+        {
+            odsInstance = _usersContext.OdsInstances.AsEnumerable().FirstOrDefault(x =>
+                x.Name.Equals(_instanceContext.Name, StringComparison.InvariantCultureIgnoreCase));
+        }
+        else
+        {
+            odsInstance = _usersContext.OdsInstances.FirstOrDefault(o => o.OdsInstanceId == applicationModel.OdsInstanceId);
+        }
 
         var user = vendor.Users.FirstOrDefault();
 
@@ -91,6 +100,7 @@ public interface IAddApplicationModel
     int VendorId { get; }
     string? ClaimSetName { get; }
     int? ProfileId { get; }
+    int? OdsInstanceId { get; }
     IEnumerable<int>? EducationOrganizationIds { get; }
 }
 

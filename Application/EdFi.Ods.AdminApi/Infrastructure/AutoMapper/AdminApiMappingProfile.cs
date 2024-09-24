@@ -12,6 +12,8 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
+using EdFi.Ods.AdminApi.Features.OdsInstances;
+using EdFi.Common.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -35,9 +37,11 @@ public class AdminApiMappingProfile : Profile
         CreateMap<Application, ApplicationModel>()
             .ForMember(dst => dst.EducationOrganizationIds, opt => opt.MapFrom(src => src.EducationOrganizationIds()))
             .ForMember(dst => dst.ProfileName, opt => opt.MapFrom(src => src.ProfileName()))
+            .ForMember(dst => dst.OdsInstanceId, opt => opt.MapFrom(src => src.OdsInstance.OdsInstanceId))
+            .ForMember(dst => dst.OdsInstanceName, opt => opt.MapFrom(src => src.OdsInstanceName()))
             .ForMember(dst => dst.VendorId, opt => opt.MapFrom(src => src.VendorId()))
             .ForMember(dst => dst.Profiles, opt => opt.MapFrom(src => src.Profiles()));
-
+            
 
         CreateMap<AddApplicationResult, ApplicationResult>()
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
@@ -48,6 +52,14 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.ApplicationId, opt => opt.MapFrom(src => src.Application.ApplicationId))
             .ForMember(dst => dst.Key, opt => opt.MapFrom(src => src.Key))
             .ForMember(dst => dst.Secret, opt => opt.MapFrom(src => src.Secret));
+
+        CreateMap<OdsInstance, OdsInstanceModel>()
+            //.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.InstanceType, opt => opt.MapFrom(src => src.InstanceType))
+            .ForMember(dst => dst.Version, opt => opt.MapFrom(src => src.Version))
+            .ForMember(dst => dst.IsExtended, opt => opt.MapFrom(src => src.IsExtended))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
 
         CreateMap<ClaimSetEditor.ClaimSet, ClaimSetDetailsModel>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))

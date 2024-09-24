@@ -6,7 +6,6 @@
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using Microsoft.EntityFrameworkCore;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 

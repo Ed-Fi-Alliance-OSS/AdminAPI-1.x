@@ -7,7 +7,7 @@
 # Second layer uses the dotnet/aspnet image to run the built code
 
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.202-alpine3.19-amd64@sha256:4baa826eb916ba267b246c3f7f55e9e076121b0037dab78f7ae75ba70149805c AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.19@sha256:b1275049a8fe922cbc9f1d173ffec044664f30b94e99e2c85dd9b7454fbf596c AS build
 WORKDIR /source
 
 COPY Application/NuGet.Config EdFi.Ods.AdminApi/
@@ -19,7 +19,7 @@ RUN dotnet restore && dotnet build -c Release
 FROM build AS publish
 RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:a531d9d123928514405b9da9ff28a3aa81bd6f7d7d8cfb6207b66c007e7b3075 as base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19-amd64@sha256:edc046db633d2eac3acfa494c10c6b7b3b9ff9f66f1ed92cec8021f5ee38d755 as base
 
 RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi
@@ -31,7 +31,7 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_HTTP_PORTS=80
 
-COPY --chmod=500 Settings/dev/run.sh /app/run.sh
+COPY --chmod=500 Settings/dev/pgsql/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt
 
 WORKDIR /app

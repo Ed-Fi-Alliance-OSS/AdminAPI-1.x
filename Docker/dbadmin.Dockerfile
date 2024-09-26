@@ -22,7 +22,7 @@ FROM base AS setup
 USER root
 RUN dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
-    chmod -R 600 /tmp/AdminApiScripts/PgSql/*
+    chmod -R 777 /tmp/AdminApiScripts/PgSql/*
 USER postgres
 
 EXPOSE 5432

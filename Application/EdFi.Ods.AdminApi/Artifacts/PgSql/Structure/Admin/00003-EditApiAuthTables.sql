@@ -5,12 +5,15 @@
 
 ALTER TABLE adminapi.Applications
     ADD COLUMN
-	    ApplicationType VARCHAR NULL,
+	    ApplicationType VARCHAR NULL;
+      
+ALTER TABLE adminapi.Applications
     ADD COLUMN
-	    JsonWebKeySet VARCHAR NULL,
+	    JsonWebKeySet VARCHAR NULL;
+      
+ALTER TABLE adminapi.Applications
     ADD COLUMN
 	    Settings VARCHAR NULL;
-
 
 ALTER TABLE adminapi.Applications 
     RENAME COLUMN Type TO ClientType;

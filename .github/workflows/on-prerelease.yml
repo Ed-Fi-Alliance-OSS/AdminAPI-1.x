@@ -301,7 +301,7 @@ jobs:
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:pre-1.3
           cache-to: type=inline
           build-args: VERSION=${{ steps.prepare-tags.outputs.VERSION }}
-          file: Dockerfile
+          file: api.pgsql.Dockerfile
           tags: ${{ steps.prepare-tags.outputs.APITAGS }}
           labels: ${{ steps.metaapi.outputs.labels }}
           push: true

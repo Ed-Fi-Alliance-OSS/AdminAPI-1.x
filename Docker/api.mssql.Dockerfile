@@ -14,7 +14,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ARG DB="mssql"
 
 ARG VERSION=latest
-ARG ADMIN_API_VERSION="1.4.1"
+ARG ADMIN_API_VERSION="1.4.2"
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_HTTP_PORTS=80
 

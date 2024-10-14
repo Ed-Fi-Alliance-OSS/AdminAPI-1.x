@@ -64,7 +64,7 @@ jobs:
               -APIVersion $apiVersion
 
       - name: Setup Nuget.exe
-        uses: nuget/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37 #v1.1.1
+        uses: nuget/setup-nuget@a21f25cd3998bf370fde17e3f1b4c12c175172f9 #v2.0.0
 
       - name: Create NuGet Packages
         if: success()

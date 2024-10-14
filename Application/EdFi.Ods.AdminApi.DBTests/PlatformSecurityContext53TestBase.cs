@@ -29,15 +29,6 @@ public abstract class PlatformSecurityContextTestBase53
 
     protected CheckpointPolicyOptions CheckpointPolicy { get; set; } = CheckpointPolicyOptions.BeforeEachTest;
 
-    //private readonly Checkpoint _checkpoint = new()
-    //{
-    //    TablesToIgnore = new[]
-    //    {
-    //        "__MigrationHistory", "DeployJournal", "AdminApiDeployJournal"
-    //    },
-    //    SchemasToExclude = Array.Empty<string>()
-    //};
-
     private Respawner _checkpoint;
 
     protected virtual string ConnectionString => TestContext.Database.GetConnectionString();

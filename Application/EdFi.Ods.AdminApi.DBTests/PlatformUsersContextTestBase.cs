@@ -31,15 +31,6 @@ public abstract class PlatformUsersContextTestBase
         });
     }
 
-    //private readonly Checkpoint _checkpoint = new()
-    //{
-    //    TablesToIgnore = new[]
-    //    {
-    //        "__MigrationHistory", "DeployJournal", "AdminApiDeployJournal"
-    //    },
-    //    SchemasToExclude = Array.Empty<string>()
-    //};
-
     protected static string ConnectionString => AdminConnectionString;
 
     [OneTimeTearDown]

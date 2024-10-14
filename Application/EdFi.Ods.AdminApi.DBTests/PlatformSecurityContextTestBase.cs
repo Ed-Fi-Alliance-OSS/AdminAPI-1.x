@@ -66,6 +66,7 @@ public abstract class PlatformSecurityContextTestBase
     public async Task FixtureTearDown()
     {
         await _checkpoint.ResetAsync(ConnectionString);
+        TestContext.Dispose();
     }
 
     [SetUp]

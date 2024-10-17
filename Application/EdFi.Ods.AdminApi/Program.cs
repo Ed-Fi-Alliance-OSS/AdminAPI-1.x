@@ -46,6 +46,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
+//Map AdminConsole endpoints if the flag is enable
+if (app.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI"))
+{
+    app.MapAdminConsoleFeatureEndpoints();
+}
 app.MapControllers();
 app.UseHealthChecks("/health");
 

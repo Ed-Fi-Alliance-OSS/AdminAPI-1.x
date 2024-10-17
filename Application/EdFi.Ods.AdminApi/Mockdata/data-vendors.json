@@ -1,0 +1,16 @@
+[
+    {
+        "vendorId": 1,
+        "company": "Test Company 1",
+        "namespacePrefixes": "uri://ed-fi.org",
+        "contactName": "John Doe",
+        "contactEmailAddress": "email@email.com"
+    },
+    {
+        "vendorId": 2,
+        "company": "Test Company 2",
+        "namespacePrefixes": "uri://ed-fi.org",
+        "contactName": "John Doe",
+        "contactEmailAddress": "email@email.com"
+    }
+]

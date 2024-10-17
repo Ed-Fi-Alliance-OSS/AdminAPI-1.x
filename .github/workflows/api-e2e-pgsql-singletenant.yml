@@ -39,6 +39,7 @@ jobs:
         run: |
           mkdir ../../Docker/Application
           cp -r ../EdFi.Ods.AdminApi ../../Docker/Application
+          cp -r ../EdFi.Ods.AdminApi.AdminConsole ../../Docker/Application
 
       - name: Copy nuget config to docker context
         run: cp ../NuGet.Config ../../Docker/Application

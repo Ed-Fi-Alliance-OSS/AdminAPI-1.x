@@ -1,0 +1,72 @@
+{
+  "data": [
+    {
+      "instanceId": "ABC123",
+      "tenantId": "abc123",
+      "instanceName": "Mock Instance 1",
+      "instanceType": "Type A",
+      "connectionType": "Type X",
+      "clientId": "CLIENT789",
+      "clientSecret": "SECRET123",
+      "baseUrl": "https://localhost/api",
+      "authenticationUrl": "https://localhost/api/oauth/token",
+      "resourcesUrl": "https://localhost/api",
+      "schoolYears": [
+        2019,
+        2020
+      ],
+      "isDefault": true,
+      "verificationStatus": {
+        "status": "Completed",
+        "progressPercentage": 100,
+        "totalSteps": 3,
+        "lastCompletedStep": 3,
+        "startedAt": "2022-01-15T08:00:00Z",
+        "completedAt": "2022-01-15T08:00:00Z",
+        "steps": [
+          {
+            "number": 1,
+            "description": "Step 1 Description",
+            "startedAt": "2022-01-15T08:05:00Z",
+            "completedAt": "2022-01-15T08:10:00Z",
+            "status": "Completed"
+          },
+          {
+            "number": 2,
+            "description": "Step 2 Description",
+            "startedAt": "2022-01-15T08:12:00Z",
+            "completedAt": null,
+            "status": "InProgress"
+          },
+          {
+            "number": 3,
+            "description": "Step 3 Description",
+            "startedAt": null,
+            "completedAt": null,
+            "status": "Pending"
+          }
+        ]
+      },
+      "provider": "Local"
+    },
+    {
+      "instanceId": "DEF456",
+      "tenantId": "def456",
+      "instanceName": "Mock Instance 2",
+      "instanceType": "Type B",
+      "connectionType": "Type Y",
+      "clientId": "CLIENT321",
+      "clientSecret": "SECRET456",
+      "baseUrl": "https://localhost/api",
+      "authenticationUrl": "https://localhost/api/oauth/token",
+      "resourcesUrl": "https://localhost/api",
+      "schoolYears": [
+        2024,
+        2025
+      ],
+      "isDefault": false,
+      "verificationStatus": null,
+      "provider": "Local"
+    }
+  ]
+}

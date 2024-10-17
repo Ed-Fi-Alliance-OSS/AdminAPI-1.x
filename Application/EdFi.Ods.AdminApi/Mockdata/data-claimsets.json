@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "SIS Vendor",
+        "isSystemReserved": true,
+        "applicationsCount": 1
+    },
+    {
+        "id": 2,
+        "name": "Test Claimset",
+        "isSystemReserved": true,
+        "applicationsCount": 1
+    }
+]

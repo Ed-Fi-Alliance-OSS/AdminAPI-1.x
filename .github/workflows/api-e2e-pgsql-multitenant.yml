@@ -40,6 +40,9 @@ jobs:
           mkdir ../../Docker/Application
           cp -r ../EdFi.Ods.AdminApi ../../Docker/Application
 
+      - name: Copy admin console folder to docker context
+        run: cp -r ../EdFi.Ods.AdminApi.AdminConsole ../../Docker/Application
+
       - name: Copy nuget config to docker context
         run: cp ../NuGet.Config ../../Docker/Application
 

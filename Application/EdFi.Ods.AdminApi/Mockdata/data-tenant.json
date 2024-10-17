@@ -1,0 +1,108 @@
+{
+    "tenantId": "abc123",
+    "tenantType": 1,
+    "tenantStatus": 0,
+    "organizationIdentifier": "org123",
+    "organizationName": "Mock Organization",
+    "isDemo": false,
+    "enforceMfa": true,
+    "state": "Active",
+    "subscriptionsMigrated": true,
+    "subscriptions": [
+        {
+            "tenantId": "abc123",
+            "subscriptionId": "sub123",
+            "applicationId": "app123",
+            "applicationName": "Mock Application",
+            "applicationRoles": [
+                {
+                    "roleName": "Admin",
+                    "isDefault": true,
+                    "isAvailableForTenants": true
+                }
+            ],
+            "startDateTime": "2022-01-01",
+            "endDateTime": "2022-12-31",
+            "actualEndDateTime": "2022-12-31",
+            "gracePeriod": 30,
+            "numberOfLicenses": 100,
+            "assignedLicenses": 80,
+            "maxAssignedLicenses": 100,
+            "lastMaxAssignedLicensesDateTime": "2022-01-01",
+            "licenseType": "Standard",
+            "subscriptionStatus": "Active",
+            "autoAssign": true,
+            "createdBy": "user123",
+            "createdDateTime": "2022-01-01T12:00:00",
+            "lastModifiedBy": "user123",
+            "lastModifiedDateTime": "2022-01-05T08:30:00"
+        }
+    ],
+    "domains": [
+        {
+            "domainStatus": 1,
+            "tenantId": "abc123",
+            "domainName": "mockdomain.com",
+            "createdBy": "user123",
+            "createdDateTime": "2022-01-01T10:00:00",
+            "lastModifiedBy": "user123",
+            "lastModifiedDateTime": "2022-01-01T10:00:00"
+        }
+    ],
+    "createdBy": "user123",
+    "createdDateTime": "2022-01-01T09:00:00",
+    "lastModifiedBy": "user123",
+    "lastModifiedDateTime": "2022-01-01T10:00:00",
+    "identityProviders": [
+        1
+    ],
+    "onboarding": {
+        "status": "Completed",
+        "progressPercentage": 100,
+        "totalSteps": 3,
+        "lastCompletedStep": 3,
+        "startedAt": "2022-01-01T09:00:00",
+        "completedAt": "2022-01-01T10:00:00",
+        "steps": [
+            {
+                "number": 1,
+                "description": "Step 1",
+                "startedAt": "2022-01-01T09:00:00",
+                "completedAt": "2022-01-01T09:30:00",
+                "status": "Completed"
+            },
+            {
+                "number": 2,
+                "description": "Step 2",
+                "startedAt": "2022-01-01T09:30:00",
+                "completedAt": "2022-01-01T09:45:00",
+                "status": "Completed"
+            },
+            {
+                "number": 3,
+                "description": "Step 3",
+                "startedAt": "2022-01-01T09:45:00",
+                "completedAt": "2022-01-01T10:00:00",
+                "status": "Completed"
+            }
+        ]
+    },
+    "organizations": [
+        {
+            "identifierType": "Type1",
+            "identifierValue": "value123",
+            "discriminator": "discrim123",
+            "source": "source1",
+            "includeInJwt": true,
+            "shortNameOfInstitution": "Short Name",
+            "nameOfInstitution": "Long Name"
+        }
+    ],
+    "settings": [
+        {
+            "code": "setting1",
+            "value": "value1",
+            "dataType": "string"
+        }
+    ]
+}

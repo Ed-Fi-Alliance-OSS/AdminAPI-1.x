@@ -18,6 +18,17 @@ public static class WebApplicationExtensions
         });
     }
 
+    public static void MapAdminConsoleFeatureEndpoints(this WebApplication application)
+    {
+        application.UseEndpoints(endpoints =>
+        {
+            foreach (var routeBuilder in EdFi.Ods.AdminApi.AdminConsole.FeaturesHelper.GetFeatures())
+            {
+                routeBuilder.MapEndpoints(endpoints);
+            }
+        });
+    }
+
     public static void DefineSwaggerUIWithApiVersions(this WebApplication application, params string[] versions)
     {
         application.UseSwaggerUI(definitions =>

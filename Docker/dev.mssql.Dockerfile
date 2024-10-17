@@ -15,11 +15,17 @@ FROM buildbase AS publish
 WORKDIR /source
 COPY --from=assets ./Application/NuGet.Config EdFi.Ods.AdminApi/
 COPY --from=assets ./Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
+COPY --from=assets ./Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminApi.AdminConsole/
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
 RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi
+
+WORKDIR /source/EdFi.Ods.AdminApi.AdminConsole
+RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
+RUN dotnet restore && dotnet build -c Release
+RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi.AdminConsole
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64@sha256:3776a5e9ff80cc182fa1727c4cb5e30ba5228ff04b530a57e7dff6ee19028075 AS runtimebase
 FROM runtimebase AS runtime
@@ -35,6 +41,7 @@ ENV ASPNETCORE_HTTP_PORTS=80
 ENV DB_FOLDER=mssql
 WORKDIR /app
 COPY --from=publish /app/EdFi.Ods.AdminApi .
+COPY --from=publish /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt

@@ -3,8 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
-using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
+using System.Dynamic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
@@ -24,7 +23,7 @@ public class ReadPermissions : IFeature
         using (StreamReader r = new StreamReader("Mockdata/data-permissions.json"))
         {
             string json = r.ReadToEnd();
-            Permission result = JsonConvert.DeserializeObject<Permission>(json);
+            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }

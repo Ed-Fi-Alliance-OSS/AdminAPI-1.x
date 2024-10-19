@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Dynamic;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -27,7 +28,7 @@ public class ReadTenants : IFeature
         using (StreamReader r = new StreamReader("Mockdata/data-tenants.json"))
         {
             string json = r.ReadToEnd();
-            List<Tenant> result = JsonConvert.DeserializeObject<List<Tenant>>(json);
+            List<ExpandoObject> result = JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }
@@ -37,7 +38,7 @@ public class ReadTenants : IFeature
         using (StreamReader r = new StreamReader("Mockdata/data-tenant.json"))
         {
             string json = r.ReadToEnd();
-            Tenant result = JsonConvert.DeserializeObject<Tenant>(json);
+            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
             return Task.FromResult(Results.Ok(result));
         }
     }

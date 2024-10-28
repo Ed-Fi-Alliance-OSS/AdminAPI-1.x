@@ -4,7 +4,7 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 #edfialliance/ods-api-db-admin:7.1
-FROM edfialliance/ods-api-db-admin@sha256:36e4295bf125eb804fbde1381d95361e8723b5ff2bcac173854fc2897e811c79 as base
+FROM edfialliance/ods-api-db-admin:7.2.5570-5.1.0@sha256:53a9c8bbed76075bc438e63ba9579a48f1539bf7d5a3ee1b5171739c7e496ab0 as base
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV POSTGRES_USER=${POSTGRES_USER}
@@ -15,7 +15,7 @@ ARG VERSION=latest
 
 USER root
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
-RUN apk --no-cache add dos2unix=~7.4 unzip=~6.0
+RUN apk --upgrade --no-cache add dos2unix=~7 unzip=~6
 USER postgres
 
 FROM base as setup

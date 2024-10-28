@@ -7,19 +7,18 @@
 # code. The next two layers use the dotnet/aspnet image to run the built code.
 # The extra layers in the middle support caching of base layers.
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 as buildBase
-RUN apk --no-cache add curl=~8
+FROM mcr.microsoft.com/dotnet/sdk:8.0.403-alpine3.20@sha256:07cb8622ca6c4d7600b42b2eccba968dff4b37d41b43a9bf4bd800aa02fab117 as build
+ARG ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-"Production"}
 
-# hadolint ignore=DL3006
-FROM buildbase AS publish
 WORKDIR /source
 COPY Application/NuGet.Config EdFi.Ods.AdminApi/
 COPY Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
 COPY Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminApi.AdminConsole/
 
 WORKDIR /source/EdFi.Ods.AdminApi
+RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
 RUN dotnet restore && dotnet build -c Release
-RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/EdFi.Ods.AdminApi
+RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi
 
 WORKDIR /source/EdFi.Ods.AdminApi.AdminConsole
 RUN dotnet restore && dotnet build -c Release
@@ -27,22 +26,21 @@ RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/E
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20-amd64@sha256:1659f678b93c82db5b42fb1fb12d98035ce482b85747c2c54e514756fa241095 AS runtimebase
 
-FROM runtimebase AS runtime
-RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
+RUN apk --upgrade --no-cache add dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
-FROM runtime AS setup
+FROM runtimebase AS setup
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
+
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work
 # Disable the globaliztion invariant mode (set in base image)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_HTTP_PORTS=80
 ENV DB_FOLDER=pgsql
 
 WORKDIR /app
-COPY --from=publish /app/EdFi.Ods.AdminApi .
-COPY --from=publish /app/EdFi.Ods.AdminApi.AdminConsole .
+COPY --from=build /app/EdFi.Ods.AdminApi .
+COPY --from=build /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt

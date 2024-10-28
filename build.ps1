@@ -490,32 +490,6 @@ function Invoke-PushPackage {
     Invoke-Step { PushPackage }
 }
 
-function CopyTempFilesToDockerContext {
-    New-Item -Path "$dockerRoot/Application" -ItemType Directory
-
-    $sourceAdminApi = "$solutionRoot/EdFi.Ods.AdminApi/"
-    $destinationAdminApi = "$dockerRoot/Application/"
-    Copy-Item -Path $sourceAdminApi -Destination $destinationAdminApi -Recurse
-
-    $sourceNugetConfig = "$solutionRoot/NuGet.Config"
-    $destinationNugetConfig = "$dockerRoot/Application/"
-    Copy-Item -Path $sourceNugetConfig -Destination $destinationNugetConfig -Recurse
-}
-
-function Invoke-CopyTempFilesToDockerContext {
-    Invoke-Step { CopyTempFilesToDockerContext }
-}
-
-function RemoveDockerContextTempFiles {
-    $destinationApplication = "$dockerRoot/Application/"
-    if (Test-Path $destinationApplication) {
-        Remove-Item $destinationApplication -Recurse -Force
-    }
-}
-
-function Invoke-RemoveDockerContextTempFiles {
-    Invoke-Step { RemoveDockerContextTempFiles }
-}
 
 Invoke-Main {
     if ($IsLocalBuild) {
@@ -555,13 +529,6 @@ Invoke-Main {
         }
         RunAdminApiDevDockerCompose {
             Invoke-RunAdminApiDevDockerCompose
-        }
-        CopyToDockerContext {
-            Invoke-RemoveDockerContextTempFiles
-            Invoke-CopyTempFilesToDockerContext
-        }
-        RemoveDockerContextFiles {
-            Invoke-RemoveDockerContextTempFiles
         }
         default { throw "Command '$Command' is not recognized" }
     }

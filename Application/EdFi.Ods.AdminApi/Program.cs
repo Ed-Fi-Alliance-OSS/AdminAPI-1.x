@@ -18,16 +18,43 @@ builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
-
-
-builder.AddServices();
-
 // logging
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
+// Read CORS settings from configuration
+var corsSettings = builder.Configuration.GetSection("AdminConsole");
+var enableCors = corsSettings.GetValue<bool>("CorsSettings:EnableCors");
+string allowAllCorsPolicyName = "allowAllCorsPolicyName";
+var allowedOrigins = corsSettings.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+if (enableCors && allowedOrigins != null)
+{
+    if (allowedOrigins != null && allowedOrigins.Length > 0)
+    {
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(allowAllCorsPolicyName, policy =>
+            {
+                policy.WithOrigins(allowedOrigins)
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+    }
+    else
+    {
+        // Handle the case where allowedOrigins is null or empty
+        _logger.Warn("CORS is enabled, but no allowed origins are specified.");
+    }
+}
+builder.AddServices();
 
 var app = builder.Build();
-
+if (enableCors
+    && allowedOrigins != null
+    && allowedOrigins.Length > 0)
+{
+    app.UseCors(allowAllCorsPolicyName);
+}
 
 var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
 if (!string.IsNullOrEmpty(pathBase))

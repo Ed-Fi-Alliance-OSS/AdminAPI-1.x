@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0.8-alpine3.20-amd64@sha256:98fa594b91cda
 RUN apk --upgrade --no-cache add unzip=~6 dos2unix=~7 bash=~5 gettext=~0 jq=~1 icu=~74 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
-FROM base as build
+FROM base AS build
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 # Alpine image does not contain Globalization Cultures library so we need to install ICU library to get for LINQ expression to work

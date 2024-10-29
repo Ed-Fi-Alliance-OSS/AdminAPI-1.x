@@ -3,7 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-FROM mcr.microsoft.com/mssql/server@sha256:d7f2c670f0cd807b4dc466b8887bd2b39a4561f624c154896f5564ea38efd13a as base
+FROM mcr.microsoft.com/mssql/server@sha256:d7f2c670f0cd807b4dc466b8887bd2b39a4561f624c154896f5564ea38efd13a AS base
 USER root
 RUN apt-get update && apt-get install unzip -y dos2unix busybox openssl libxml2
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
@@ -29,7 +29,7 @@ RUN useradd -M -s /bin/bash -u 10099 -g 0 edfi  && \
     wget -nv -O /tmp/sqlpackage.zip "https://aka.ms/sqlpackage-linux" && \
     unzip -o /tmp/sqlpackage.zip -d /opt/sqlpackage && \
     chmod +x /opt/sqlpackage/sqlpackage
-FROM base as setup
+FROM base AS setup
 
 USER root
 RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/EdFi.Database.Admin.BACPAC.Standard.${STANDARD_VERSION}/versions/${ADMIN_VERSION}/content" && \

@@ -4,51 +4,52 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck;
+
+[SwaggerSchema(Title = "HealthCheck")]
+public class HealthCheckModel
 {
-    public class HealthcheckModel
-    {
-        [JsonProperty("localEducationAgencyId")]
-        public long LocalEducationAgencyId { get; set; }
+    [JsonProperty("localEducationAgencyId")]
+    public long LocalEducationAgencyId { get; set; }
 
-        [JsonProperty("studentSpecialEducationProgramAssociations")]
-        public long StudentSpecialEducationProgramAssociations { get; set; }
+    [JsonProperty("studentSpecialEducationProgramAssociations")]
+    public long StudentSpecialEducationProgramAssociations { get; set; }
 
-        [JsonProperty("studentDisciplineIncidentBehaviorAssociations")]
-        public long StudentDisciplineIncidentBehaviorAssociations { get; set; }
+    [JsonProperty("studentDisciplineIncidentBehaviorAssociations")]
+    public long StudentDisciplineIncidentBehaviorAssociations { get; set; }
 
-        [JsonProperty("studentSchoolAssociations")]
-        public long StudentSchoolAssociations { get; set; }
+    [JsonProperty("studentSchoolAssociations")]
+    public long StudentSchoolAssociations { get; set; }
 
-        [JsonProperty("studentSchoolAttendanceEvents")]
-        public long StudentSchoolAttendanceEvents { get; set; }
+    [JsonProperty("studentSchoolAttendanceEvents")]
+    public long StudentSchoolAttendanceEvents { get; set; }
 
-        [JsonProperty("studentSectionAssociations")]
-        public long StudentSectionAssociations { get; set; }
+    [JsonProperty("studentSectionAssociations")]
+    public long StudentSectionAssociations { get; set; }
 
-        [JsonProperty("staffEducationOrganizationAssignmentAssociations")]
-        public long StaffEducationOrganizationAssignmentAssociations { get; set; }
+    [JsonProperty("staffEducationOrganizationAssignmentAssociations")]
+    public long StaffEducationOrganizationAssignmentAssociations { get; set; }
 
-        [JsonProperty("staffEducationOrganizationEmploymentAssociations")]
-        public long StaffEducationOrganizationEmploymentAssociations { get; set; }
+    [JsonProperty("staffEducationOrganizationEmploymentAssociations")]
+    public long StaffEducationOrganizationEmploymentAssociations { get; set; }
 
-        [JsonProperty("staffSectionAssociations")]
-        public long StaffSectionAssociations { get; set; }
+    [JsonProperty("staffSectionAssociations")]
+    public long StaffSectionAssociations { get; set; }
 
-        [JsonProperty("courseTranscripts")]
-        public long CourseTranscripts { get; set; }
+    [JsonProperty("courseTranscripts")]
+    public long CourseTranscripts { get; set; }
 
-        [JsonProperty("basicReportingPeriodAttendances")]
-        public long BasicReportingPeriodAttendances { get; set; }
+    [JsonProperty("basicReportingPeriodAttendances")]
+    public long BasicReportingPeriodAttendances { get; set; }
 
-        [JsonProperty("sections")]
-        public long Sections { get; set; }
+    [JsonProperty("sections")]
+    public long Sections { get; set; }
 
-        [JsonProperty("reportingPeriodExts")]
-        public long ReportingPeriodExts { get; set; }
+    [JsonProperty("reportingPeriodExts")]
+    public long ReportingPeriodExts { get; set; }
 
-        [JsonProperty("healthy")]
-        public bool Healthy { get; set; }
-    }
+    [JsonProperty("healthy")]
+    public bool Healthy { get; set; }
 }

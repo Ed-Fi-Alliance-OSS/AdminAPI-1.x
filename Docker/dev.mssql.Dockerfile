@@ -20,13 +20,8 @@ RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
 RUN dotnet restore && dotnet build -c Release
 RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi
 
-WORKDIR /source/EdFi.Ods.AdminApi.AdminConsole
-RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
-RUN dotnet restore && dotnet build -c Release
-RUN dotnet publish -c Release /p:EnvironmentName=$ASPNETCORE_ENVIRONMENT --no-build -o /app/EdFi.Ods.AdminApi.AdminConsole
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.8-alpine3.20-amd64@sha256:98fa594b91cda6cac28d2aae25567730db6f8857367fab7646bdda91bc784b5f AS runtimebase
-RUN apk --upgrade --no-cache add dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.10-alpine3.20-amd64@sha256:1659f678b93c82db5b42fb1fb12d98035ce482b85747c2c54e514756fa241095 AS runtimebase
+RUN apk --upgrade --no-cache add dos2unix=~7 bash=~5 gettext=~0 icu=~74 openssl=3.3.2-r1 && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM runtimebase AS setup
@@ -40,7 +35,6 @@ ENV DB_FOLDER=mssql
 
 WORKDIR /app
 COPY --from=build /app/EdFi.Ods.AdminApi .
-COPY --from=build /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt

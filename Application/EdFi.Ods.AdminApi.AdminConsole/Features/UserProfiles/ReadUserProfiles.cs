@@ -4,7 +4,6 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
-using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
@@ -28,10 +27,4 @@ public class ReadUserProfiles : IFeature
             return Task.FromResult(Results.Ok(result));
         }
     }
-}
-
-
-public interface IFeature
-{
-    void MapEndpoints(IEndpointRouteBuilder endpoints);
 }

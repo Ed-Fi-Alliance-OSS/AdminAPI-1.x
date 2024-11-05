@@ -1,9 +1,13 @@
+
 // SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AspNetCoreRateLimit;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
@@ -18,6 +22,13 @@ builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
+
+var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
+if (adminConsoleIsEnabled)
+{
+    ServiceRegistration.AddServices(builder.Services, builder.Configuration);
+}
+
 // logging
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
@@ -74,7 +85,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
 //Map AdminConsole endpoints if the flag is enable
-if (app.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI"))
+if (adminConsoleIsEnabled)
 {
     app.MapAdminConsoleFeatureEndpoints();
 }

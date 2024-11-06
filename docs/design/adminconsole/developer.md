@@ -63,5 +63,3 @@ Update-Database -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole
 > ```bash
 > cd path/to/your/project
 > ```
-
-

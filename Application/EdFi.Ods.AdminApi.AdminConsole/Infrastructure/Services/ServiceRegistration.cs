@@ -4,14 +4,19 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck;
+using EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
+using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 
@@ -35,6 +40,14 @@ public static class ServiceRegistration
         #endregion
 
         serviceCollection.AddAutoMapper(typeof(AdminConsoleMappingProfile));
+
+
+        serviceCollection.Configure<AdminConsoleSettings>(configuration.GetSection("AdminConsoleSettings"));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        serviceCollection.AddTransient<IEncryptionKeySettings>(sp => sp.GetService<IOptions<AdminConsoleSettings>>().Value);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        serviceCollection.AddTransient<IEncryptionKeyResolver, OptionsEncryptionKeyResolver>();
+        serviceCollection.AddScoped<IEncryptionService, EncryptionService>();
     }
 
     private static void RegisterRepositories(IServiceCollection serviceCollection)
@@ -42,6 +55,11 @@ public static class ServiceRegistration
         #region Healthcheck
         serviceCollection.AddScoped<ICommandRepository<HealthCheck>, CommandRepository<HealthCheck>>();
         serviceCollection.AddScoped<IQueriesRepository<HealthCheck>, QueriesRepository<HealthCheck>>();
+        #endregion
+
+        #region Instance
+        serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
+        serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
         #endregion
     }
 
@@ -52,10 +70,17 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IGetHealthCheckQuery, GetHealthCheckQuery>();
         serviceCollection.AddScoped<IGetHealthChecksQuery, GetHealthChecksQuery>();
         #endregion Healthcheck
+
+        #region Instance
+        serviceCollection.AddScoped<IAddInstanceCommand, AddInstanceCommand>();
+        serviceCollection.AddScoped<IGetInstanceQuery, GetInstanceQuery>();
+        serviceCollection.AddScoped<IGetInstancesQuery, GetInstancesQuery>();
+        #endregion Instance
     }
 
     private static void RegisterValidators(IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<AddHealthCheck.Validator>();
+        serviceCollection.AddTransient<AddInstance.Validator>();
     }
 }

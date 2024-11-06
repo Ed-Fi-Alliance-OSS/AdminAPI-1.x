@@ -5,13 +5,16 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AspNetCoreRateLimit;
+using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 using EdFi.Ods.AdminApi.Features;
+using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using log4net;
+using Microsoft.Extensions.Options;
+using ServiceRegistration = EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +36,7 @@ if (adminConsoleIsEnabled)
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
 // Read CORS settings from configuration
-var corsSettings = builder.Configuration.GetSection("AdminConsole");
+var corsSettings = builder.Configuration.GetSection("AdminConsoleSettings");
 var enableCors = corsSettings.GetValue<bool>("CorsSettings:EnableCors");
 string allowAllCorsPolicyName = "allowAllCorsPolicyName";
 var allowedOrigins = corsSettings.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();

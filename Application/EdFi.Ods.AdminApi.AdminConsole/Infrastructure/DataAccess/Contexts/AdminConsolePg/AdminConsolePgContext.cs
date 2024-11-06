@@ -15,9 +15,12 @@ public class AdminConsolePgContext : DbContext, IDbContext
 
     public DbSet<HealthCheck> HealthChecks { get; set; }
 
+    public DbSet<Instance> Instances { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         const string DbProvider = DbProviders.PostgreSql;
         modelBuilder.ApplyConfiguration(new HealthCheckConfiguration(DbProvider));
+        modelBuilder.ApplyConfiguration(new InstanceConfiguration(DbProvider));
     }
 }

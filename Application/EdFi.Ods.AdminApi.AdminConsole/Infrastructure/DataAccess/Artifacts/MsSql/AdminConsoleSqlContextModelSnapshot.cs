@@ -54,36 +54,69 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
 
                     b.ToTable("HealthChecks", "adminconsole");
                 });
-
+                
             modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Instance", b =>
-                {
-                    b.Property<int?>("DocId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+              {
+                  b.Property<int?>("DocId")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("DocId"));
+                  SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("DocId"));
 
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                  b.Property<string>("Document")
+                      .IsRequired()
+                      .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EdOrgId")
-                        .HasColumnType("int");
+                  b.Property<int?>("EdOrgId")
+                      .HasColumnType("int");
 
-                    b.Property<int>("InstanceId")
-                        .HasColumnType("int");
+                  b.Property<int>("InstanceId")
+                      .HasColumnType("int");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
+                  b.Property<int>("TenantId")
+                      .HasColumnType("int");
 
-                    b.HasKey("DocId");
+                  b.HasKey("DocId");
 
-                    b.HasIndex("EdOrgId");
+                  b.HasIndex("EdOrgId");
 
-                    b.HasIndex("InstanceId");
+                  b.HasIndex("InstanceId");
 
-                    b.ToTable("Instances", "adminconsole");
-                });
+                  b.ToTable("Instances", "adminconsole");
+              });
+
+          modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Tenant", b =>
+              {
+                  b.Property<int>("DocId")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnType("int");
+
+                  SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocId"));
+
+                  b.Property<string>("Document")
+                      .IsRequired()
+                      .HasColumnType("nvarchar(max)");
+
+                  b.Property<int>("EdOrgId")
+                      .HasColumnType("int");
+
+                  b.Property<int>("InstanceId")
+                      .HasColumnType("int");
+
+                  b.Property<int>("TenantId")
+                      .HasColumnType("int");
+
+                  b.HasKey("DocId");
+
+                  b.HasIndex("EdOrgId");
+
+                  b.HasIndex("InstanceId");
+
+                  b.HasIndex("TenantId")
+                      .IsUnique();
+
+                  b.ToTable("Tenants", "adminconsole");
+              });
 #pragma warning restore 612, 618
         }
     }

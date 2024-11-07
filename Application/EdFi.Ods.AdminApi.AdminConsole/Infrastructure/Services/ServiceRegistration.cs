@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck;
+using FeaturesTenant = EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
@@ -12,6 +13,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using Microsoft.Extensions.Configuration;
@@ -57,6 +60,12 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IQueriesRepository<HealthCheck>, QueriesRepository<HealthCheck>>();
         #endregion
 
+
+        #region Tenant
+        serviceCollection.AddScoped<ICommandRepository<Tenant>, CommandRepository<Tenant>>();
+        serviceCollection.AddScoped<IQueriesRepository<Tenant>, QueriesRepository<Tenant>>();
+        #endregion
+
         #region Instance
         serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
         serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
@@ -69,7 +78,12 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IAddHealthCheckCommand, AddHealthCheckCommand>();
         serviceCollection.AddScoped<IGetHealthCheckQuery, GetHealthCheckQuery>();
         serviceCollection.AddScoped<IGetHealthChecksQuery, GetHealthChecksQuery>();
-        #endregion Healthcheck
+        #endregion
+
+        #region Tenant
+        serviceCollection.AddScoped<IAddTenantCommand, AddTenantCommand>();
+        serviceCollection.AddScoped<IGetTenantQuery, GetTenantQuery>();
+        #endregion
 
         #region Instance
         serviceCollection.AddScoped<IAddInstanceCommand, AddInstanceCommand>();
@@ -81,6 +95,7 @@ public static class ServiceRegistration
     private static void RegisterValidators(IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<AddHealthCheck.Validator>();
+        serviceCollection.AddTransient<FeaturesTenant.AddTenant.Validator>();
         serviceCollection.AddTransient<AddInstance.Validator>();
     }
 }

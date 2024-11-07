@@ -21,6 +21,8 @@ public class AdminConsolePgContext : DbContext, IDbContext
     {
         const string DbProvider = DbProviders.PostgreSql;
         modelBuilder.ApplyConfiguration(new HealthCheckConfiguration(DbProvider));
+        modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new InstanceConfiguration(DbProvider));
+
     }
 }

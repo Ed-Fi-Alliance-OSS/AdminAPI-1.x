@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
@@ -17,27 +18,23 @@ public class ReadTenants : IFeature
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
            .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenant", GetTenant)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenant)
            .BuildForVersions();
     }
 
-    internal Task<IResult> GetTenants()
+    internal async Task<IResult> GetTenants(IGetTenantQuery getTenantQuery)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-tenants.json"))
-        {
-            string json = r.ReadToEnd();
-            List<ExpandoObject> result = JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
-            return Task.FromResult(Results.Ok(result));
-        }
+        var tenants = await getTenantQuery.GetAll();
+        dynamic result = new ExpandoObject();
+        result.Documents = tenants.Select(x => x.Document);
+        return Results.Ok(result.Documents);
     }
 
-    internal Task<IResult> GetTenant(int id)
+    internal async Task<IResult> GetTenant(IGetTenantQuery getTenantQuery, int tenantId)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-tenant.json"))
-        {
-            string json = r.ReadToEnd();
-            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
-            return Task.FromResult(Results.Ok(result));
-        }
+        var tenant = await getTenantQuery.Get(tenantId);
+        dynamic result = new ExpandoObject();
+        result.Document = tenant.Document;
+        return Results.Ok(result.Document);
     }
 }

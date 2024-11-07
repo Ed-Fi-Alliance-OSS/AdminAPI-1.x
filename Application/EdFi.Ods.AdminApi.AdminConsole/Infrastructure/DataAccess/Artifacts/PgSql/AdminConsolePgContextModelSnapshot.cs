@@ -55,35 +55,68 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                     b.ToTable("HealthChecks", "adminconsole");
                 });
 
-            modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Instance", b =>
-                {
-                    b.Property<int?>("DocId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Instance", b =>
+                    {
+                        b.Property<int?>("DocId")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("DocId"));
+                        NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("DocId"));
 
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
+                        b.Property<string>("Document")
+                            .IsRequired()
+                            .HasColumnType("jsonb");
 
-                    b.Property<int?>("EdOrgId")
-                        .HasColumnType("integer");
+                        b.Property<int?>("EdOrgId")
+                            .HasColumnType("integer");
 
-                    b.Property<int>("InstanceId")
-                        .HasColumnType("integer");
+                        b.Property<int>("InstanceId")
+                            .HasColumnType("integer");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        b.Property<int>("TenantId")
+                            .HasColumnType("integer");
 
-                    b.HasKey("DocId");
+                        b.HasKey("DocId");
 
-                    b.HasIndex("EdOrgId");
+                        b.HasIndex("EdOrgId");
 
-                    b.HasIndex("InstanceId");
+                        b.HasIndex("InstanceId");
 
-                    b.ToTable("Instances", "adminconsole");
-                });
+                        b.ToTable("Instances", "adminconsole");
+                    });
+
+                modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Tenant", b =>
+                    {
+                        b.Property<int>("DocId")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("integer");
+
+                        NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DocId"));
+
+                        b.Property<string>("Document")
+                            .IsRequired()
+                            .HasColumnType("jsonb");
+
+                        b.Property<int>("EdOrgId")
+                            .HasColumnType("integer");
+
+                        b.Property<int>("InstanceId")
+                            .HasColumnType("integer");
+
+                        b.Property<int>("TenantId")
+                            .HasColumnType("integer");
+
+                        b.HasKey("DocId");
+
+                        b.HasIndex("EdOrgId");
+
+                        b.HasIndex("InstanceId");
+
+                        b.HasIndex("TenantId")
+                            .IsUnique();
+
+                        b.ToTable("Tenants", "adminconsole");
+                    });
 #pragma warning restore 612, 618
         }
     }

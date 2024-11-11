@@ -4,6 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Linq;
+using System.Net.Http.Json;
+using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
@@ -11,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 
 public class ReadInstances : IFeature
 {
@@ -28,7 +30,8 @@ public class ReadInstances : IFeature
     internal async Task<IResult> GetInstances([FromServices] IGetInstancesQuery getInstancesQuery)
     {
         var instances = await getInstancesQuery.Execute();
-        return Results.Ok(instances.Select(i => i.Document).ToList());
+        IEnumerable<JsonDocument> instancesList = instances.Select(i => JsonDocument.Parse(i.Document));
+        return Results.Ok(instancesList);
     }
 
     internal async Task<IResult> GetInstance([FromServices] IGetInstanceQuery getInstanceQuery, int tenantId)
@@ -36,7 +39,7 @@ public class ReadInstances : IFeature
         var instance = await getInstanceQuery.Execute(tenantId);
 
         if (instance != null)
-            return Results.Ok(instance.Document);
+            return Results.Ok(JsonDocument.Parse(instance.Document));
 
         return Results.NotFound();
     }

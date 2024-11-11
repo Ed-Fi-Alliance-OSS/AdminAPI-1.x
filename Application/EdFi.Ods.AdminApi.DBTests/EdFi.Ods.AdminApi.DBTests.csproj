@@ -7,7 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.2.81" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.2.61" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="7.3.431" />
     <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.4.0">
       <Aliases>Compatability</Aliases>
     </PackageReference>

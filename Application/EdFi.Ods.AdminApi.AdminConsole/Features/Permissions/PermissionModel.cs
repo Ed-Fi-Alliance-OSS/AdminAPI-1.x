@@ -7,11 +7,20 @@ using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
 
-public class Permission
+public class PermissionModel
 {
-    [JsonProperty("data")]
-    public List<object> Data { get; set; }
+    [JsonProperty("DocId")]
+    public int DocId { get; set; }
 
-    [JsonProperty("type")]
-    public string Type { get; set; }
+    [JsonProperty("PermissionId")]
+    public int? PermissionId { get; set; }
+
+    [JsonProperty("TenantId")]
+    public int? TenantId { get; set; }
+
+    [JsonProperty("EdOrgId")]
+    public int? EdOrgId { get; set; }
+
+    [JsonProperty("Document")]
+    public string? Document { get; set; }
 }

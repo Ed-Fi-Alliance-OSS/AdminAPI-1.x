@@ -14,6 +14,8 @@ public interface IDbContext
 
     DbSet<Instance> Instances { get; set; }
 
+    DbSet<Permission> Permissions { get; set; }
+
     DbSet<T> Set<T>() where T : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -2,6 +2,7 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+using System.Text.Json;
 using AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
 using Microsoft.AspNetCore.Http;
@@ -24,13 +25,15 @@ public class ReadHealthcheck : IFeature
     {
         var healthChecks = await getHealthCheckQuery.Execute(tenantId);
         var model = mapper.Map<HealthCheckModel>(healthChecks);
-        return Results.Ok(model);
+        string healthCheckModel = JsonSerializer.Serialize(model);
+        return Results.Ok(healthCheckModel);
     }
 
     internal async Task<IResult> GetHealthchecks(IMapper mapper, IGetHealthChecksQuery getHealthChecksQuery)
     {
         var healthChecks = await getHealthChecksQuery.Execute();
         var model = mapper.Map<IEnumerable<HealthCheckModel>>(healthChecks);
-        return Results.Ok(model);
+        string healthCheckModel = JsonSerializer.Serialize(model);
+        return Results.Ok(JsonDocument.Parse(healthCheckModel));
     }
 }

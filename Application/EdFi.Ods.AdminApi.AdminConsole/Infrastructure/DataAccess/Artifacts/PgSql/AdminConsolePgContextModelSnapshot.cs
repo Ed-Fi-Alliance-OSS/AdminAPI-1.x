@@ -100,9 +100,6 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                         b.Property<int>("EdOrgId")
                             .HasColumnType("integer");
 
-                        b.Property<int>("InstanceId")
-                            .HasColumnType("integer");
-
                         b.Property<int>("TenantId")
                             .HasColumnType("integer");
 
@@ -120,14 +117,11 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
 
             modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Permission", b =>
                 {
-                    b.Property<int>("PermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PermissionId"));
 
                     b.Property<int?>("DocId")
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DocId"));
 
                     b.Property<string>("Document")
                         .IsRequired()
@@ -136,36 +130,20 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                     b.Property<int?>("EdOrgId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PermissionId");
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Permission", b =>
-                {
-                    b.Property<int>("PermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PermissionId"));
-
-                    b.Property<int?>("DocId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("EdOrgId")
-                        .HasColumnType("integer");
+                    b.Property<int>("InstanceId")
+                           .HasColumnType("integer");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
-                    b.HasKey("PermissionId");
+                    b.HasKey("DocId");
+
+                    b.HasIndex("EdOrgId");
+
+                    b.HasIndex("InstanceId");
+
+                    b.HasIndex("TenantId")
+                        .IsUnique();
 
                     b.ToTable("Permissions");
                 });

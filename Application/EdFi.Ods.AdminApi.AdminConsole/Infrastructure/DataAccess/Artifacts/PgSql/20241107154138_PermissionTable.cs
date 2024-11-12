@@ -13,6 +13,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
         {
             migrationBuilder.CreateTable(
                 name: "Permissions",
+                schema: "adminconsole",
                 columns: table => new
                 {
                     DocId = table.Column<int>(type: "integer", nullable: false)

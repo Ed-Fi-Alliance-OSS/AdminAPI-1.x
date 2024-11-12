@@ -133,7 +133,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
                     b.Property<int?>("EdOrgId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PermissionId")
+                    b.Property<int>("InstanceId")
                         .HasColumnType("int");
 
                     b.Property<int>("TenantId")
@@ -143,37 +143,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.MsS
 
                     b.HasIndex("EdOrgId");
 
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("Permissions", "adminconsole");
-                });
-
-            modelBuilder.Entity("EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models.Permission", b =>
-                {
-                    b.Property<int?>("DocId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("DocId"));
-
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EdOrgId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DocId");
-
-                    b.HasIndex("EdOrgId");
-
-                    b.HasIndex("PermissionId");
+                    b.HasIndex("InstanceId");
 
                     b.ToTable("Permissions", "adminconsole");
                 });

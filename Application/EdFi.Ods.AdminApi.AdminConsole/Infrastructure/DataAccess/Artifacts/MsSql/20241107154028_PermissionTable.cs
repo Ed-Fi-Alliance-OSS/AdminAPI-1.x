@@ -10,6 +10,9 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.Mss
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "adminconsole");
+
             migrationBuilder.CreateTable(
                 name: "Permissions",
                 schema: "adminconsole",

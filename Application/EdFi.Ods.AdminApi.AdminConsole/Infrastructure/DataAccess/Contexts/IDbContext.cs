@@ -16,6 +16,10 @@ public interface IDbContext
 
     DbSet<Permission> Permissions { get; set; }
 
+    DbSet<Tenant> Tenants { get; set; }
+
+    DbSet<UserProfile> UserProfiles { get; set; }
+
     DbSet<T> Set<T>() where T : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

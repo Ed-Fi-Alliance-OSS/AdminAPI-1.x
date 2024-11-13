@@ -4,9 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck;
-using FeaturesTenant = EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
+using EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
@@ -14,15 +14,18 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Commands;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Queries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using FeaturesTenant = EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
 
@@ -63,20 +66,24 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IQueriesRepository<HealthCheck>, QueriesRepository<HealthCheck>>();
         #endregion
 
+        #region Instance
+        serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
+        serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
+        #endregion
 
         #region Tenant
         serviceCollection.AddScoped<ICommandRepository<Tenant>, CommandRepository<Tenant>>();
         serviceCollection.AddScoped<IQueriesRepository<Tenant>, QueriesRepository<Tenant>>();
         #endregion
 
-        #region Instance
-        serviceCollection.AddScoped<ICommandRepository<Instance>, CommandRepository<Instance>>();
-        serviceCollection.AddScoped<IQueriesRepository<Instance>, QueriesRepository<Instance>>();
-        #endregion
-
         #region Permission
         serviceCollection.AddScoped<ICommandRepository<Permission>, CommandRepository<Permission>>();
         serviceCollection.AddScoped<IQueriesRepository<Permission>, QueriesRepository<Permission>>();
+        #endregion
+
+        #region UserProfile
+        serviceCollection.AddScoped<ICommandRepository<UserProfile>, CommandRepository<UserProfile>>();
+        serviceCollection.AddScoped<IQueriesRepository<UserProfile>, QueriesRepository<UserProfile>>();
         #endregion
     }
 
@@ -104,6 +111,12 @@ public static class ServiceRegistration
         serviceCollection.AddScoped<IGetPermissionQuery, GetPermissionQuery>();
         serviceCollection.AddScoped<IGetPermissionsQuery, GetPermissionsQuery>();
         #endregion Permission
+
+        #region UserProfile
+        serviceCollection.AddScoped<IAddUserProfileCommand, AddUserProfileCommand>();
+        serviceCollection.AddScoped<IGetUserProfileQuery, GetUserProfileQuery>();
+        serviceCollection.AddScoped<IGetUserProfilesQuery, GetUserProfilesQuery>();
+        #endregion
     }
 
     private static void RegisterValidators(IServiceCollection serviceCollection)
@@ -112,5 +125,6 @@ public static class ServiceRegistration
         serviceCollection.AddTransient<FeaturesTenant.AddTenant.Validator>();
         serviceCollection.AddTransient<AddInstance.Validator>();
         serviceCollection.AddTransient<AddPermission.Validator>();
+        serviceCollection.AddTransient<AddUserProfile.Validator>();
     }
 }

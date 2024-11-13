@@ -24,7 +24,7 @@ public class Preference
     public string Value { get; set; }
 }
 
-public class UserProfile
+public class UserProfileModel
 {
     [JsonProperty("tenantId")]
     public string TenantId { get; set; }

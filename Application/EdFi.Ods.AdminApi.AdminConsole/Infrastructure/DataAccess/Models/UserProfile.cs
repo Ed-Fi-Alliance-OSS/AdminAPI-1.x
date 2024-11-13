@@ -10,12 +10,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
-public class Tenant : IModel
+
+public class UserProfile : IModel
 {
     public int? DocId { get; set; }
-    public int InstanceId { get; set; }
-    public int TenantId { get; set; }
+    public required int InstanceId { get; set; }
+    public required int TenantId { get; set; }
     public int? EdOrgId { get; set; }
-    public string Document { get; set; }
+    public required string Document { get; set; }
 }
-

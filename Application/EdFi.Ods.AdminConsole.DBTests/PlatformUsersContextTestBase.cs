@@ -6,7 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -48,14 +48,14 @@ public abstract class PlatformUsersContextTestBase
         {
             foreach (var entity in entities)
             {
-                ((AdminConsoleSqlContext)dbContext).Add(entity);
+                ((AdminConsoleMsSqlContext)dbContext).Add(entity);
             }
         });
     }
 
     protected static async void Transaction(Action<IDbContext> action)
     {
-        using var dbContext = new AdminConsoleSqlContext(GetDbContextOptions());
+        using var dbContext = new AdminConsoleMsSqlContext(GetDbContextOptions());
         using var transaction = (dbContext).Database.BeginTransaction();
         action(dbContext);
         dbContext.SaveChanges();
@@ -74,9 +74,9 @@ public abstract class PlatformUsersContextTestBase
         return result;
     }
 
-    protected static DbContextOptions<AdminConsoleSqlContext> GetDbContextOptions()
+    protected static DbContextOptions<AdminConsoleMsSqlContext> GetDbContextOptions()
     {
-        var builder = new DbContextOptionsBuilder<AdminConsoleSqlContext>();
+        var builder = new DbContextOptionsBuilder<AdminConsoleMsSqlContext>();
         builder.UseSqlServer(ConnectionString);
         return builder.Options;
     }

@@ -29,7 +29,6 @@ internal class AddTenantCommand : IAddTenantCommand
     {
         return await _tenantCommand.AddAsync(new Tenant
         {
-            DocId = newTenant.DocId,
             Document = newTenant.Document,
             InstanceId = newTenant.InstanceId,
             TenantId = newTenant.TenantId,
@@ -40,7 +39,6 @@ internal class AddTenantCommand : IAddTenantCommand
 
 public interface IAddTenantModel
 {
-    int DocId { get; }
     int InstanceId { get; }
     int EdOrgId { get; }
     int TenantId { get; }

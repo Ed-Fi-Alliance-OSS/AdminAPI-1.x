@@ -5,6 +5,7 @@
 using System.Text.Json;
 using AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Queries;
 using Microsoft.AspNetCore.Http;
@@ -19,23 +20,36 @@ public class ReadUserProfiles : IFeature
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile", GetUserProfiles)
             .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}", GetUserProfile)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}/{id}", GetUserProfileById)
+            .WithRouteOptions(b => b.WithResponse<UserProfileModel>(200))
+            .BuildForVersions();
+
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}", GetUserProfilesByTenant)
             .WithRouteOptions(b => b.WithResponse<UserProfileModel>(200))
             .BuildForVersions();
     }
 
-    internal async Task<IResult> GetUserProfile(IMapper mapper, IGetUserProfileQuery getUserProfileQuery, int tenantId)
+    internal async Task<IResult> GetUserProfileById(IMapper mapper, IGetUserProfileByIdQuery getUserProfileQuery, int tenantId, int id)
     {
-        var userProfile = await getUserProfileQuery.Execute(tenantId);
+        var userProfile = await getUserProfileQuery.Execute(tenantId, id);
         if (userProfile != null)
-            return Results.Ok(JsonDocument.Parse(userProfile.Document));
+            return Results.Ok(userProfile);
         return Results.NotFound();
     }
 
     internal async Task<IResult> GetUserProfiles(IMapper mapper, IGetUserProfilesQuery getUserProfilesQuery)
     {
         var userProfiles = await getUserProfilesQuery.Execute();
-        IEnumerable<JsonDocument> userProfilesList = userProfiles.Select(i => JsonDocument.Parse(i.Document));
-        return Results.Ok(userProfilesList);
+        return Results.Ok(userProfiles);
+    }
+
+    internal async Task<IResult> GetUserProfilesByTenant(IMapper mapper, IGetUserProfilesByTenantIdQuery getUserProfilesQuery, int tenantId)
+    {
+        var userProfiles = await getUserProfilesQuery.Execute(tenantId);
+        if (userProfiles.Any())
+        {
+            return Results.Ok(userProfiles);
+        }
+        return Results.NotFound();
     }
 }

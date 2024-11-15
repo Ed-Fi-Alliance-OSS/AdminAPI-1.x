@@ -25,7 +25,7 @@ public class AddInstance : IFeature
         await validator.GuardAsync(request);
         var addedInstanceResult = await addInstanceCommand.Execute(request);
 
-        return Results.Created($"/instances/{addedInstanceResult.DocId}", addedInstanceResult);
+        return Results.Created($"/instances/{addedInstanceResult.TenantId}/{addedInstanceResult.DocId}", addedInstanceResult);
     }
 
     public class AddInstanceRequest : IAddInstanceModel

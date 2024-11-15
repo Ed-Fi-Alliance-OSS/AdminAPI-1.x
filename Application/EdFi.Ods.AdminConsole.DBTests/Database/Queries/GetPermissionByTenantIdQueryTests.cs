@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -18,7 +19,7 @@ using Shouldly;
 namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests;
 
 [TestFixture]
-public class GetPermissionByIdQueryTests : PlatformUsersContextTestBase
+public class GetPermissionsByTenantIdQueryTests : PlatformUsersContextTestBase
 {
     private IOptions<AppSettings> _options { get; set; }
 
@@ -54,14 +55,14 @@ public class GetPermissionByIdQueryTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<Permission>(dbContext);
-            var query = new GetPermissionByIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
-            var permission = await query.Execute(result.TenantId, result.DocId.Value);
-
-            permission.DocId.ShouldBe(result.DocId);
-            permission.TenantId.ShouldBe(newPermission.TenantId);
-            permission.InstanceId.ShouldBe(newPermission.InstanceId);
-            permission.EdOrgId.ShouldBe(newPermission.EdOrgId);
-            permission.Document.ShouldBe(newPermission.Document);
+            var query = new GetPermissionsByTenantIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
+            var permissions = await query.Execute(result.TenantId);
+            permissions.Count().ShouldBe(1);
+            permissions.FirstOrDefault().DocId.ShouldBe(result.DocId);
+            permissions.FirstOrDefault().TenantId.ShouldBe(newPermission.TenantId);
+            permissions.FirstOrDefault().InstanceId.ShouldBe(newPermission.InstanceId);
+            permissions.FirstOrDefault().EdOrgId.ShouldBe(newPermission.EdOrgId);
+            permissions.FirstOrDefault().Document.ShouldBe(newPermission.Document);
         });
     }
 

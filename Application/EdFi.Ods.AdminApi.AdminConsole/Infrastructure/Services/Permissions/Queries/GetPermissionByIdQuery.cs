@@ -7,26 +7,27 @@ using System.Text.Json.Nodes;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
 
-public interface IGetPermissionsQuery
+public interface IGetPermissionByIdQuery
 {
-    Task<IEnumerable<Permission>> Execute();
+    Task<Permission> Execute(int tenantId, int DocId);
 }
 
-public class GetPermissionsQuery : IGetPermissionsQuery
+public class GetPermissionByIdQuery : IGetPermissionByIdQuery
 {
     private readonly IQueriesRepository<Permission> _permissionQuery;
 
-    public GetPermissionsQuery(IQueriesRepository<Permission> permissionQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public GetPermissionByIdQuery(IQueriesRepository<Permission> permissionQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
         _permissionQuery = permissionQuery;
     }
-    public async Task<IEnumerable<Permission>> Execute()
-    {
-        var permissions = await _permissionQuery.GetAllAsync();
 
-        return permissions.ToList();
+    public async Task<Permission> Execute(int tenantId, int DocId)
+    {
+        var permission = await _permissionQuery.Query().SingleOrDefaultAsync(permission => permission.TenantId == tenantId && permission.DocId == DocId);
+        return permission;
     }
 }

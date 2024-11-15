@@ -20,22 +20,32 @@ public class ReadTenants : IFeature
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
            .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenant)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantId)
            .BuildForVersions();
     }
 
-    internal async Task<IResult> GetTenants(IGetTenantQuery getTenantQuery)
+    internal async Task<IResult> GetTenants(IGetTenantsQuery getTenantQuery)
     {
-        var tenants = await getTenantQuery.GetAll();
-        IEnumerable<JsonDocument> tenantsList = tenants.Select(i => JsonDocument.Parse(i.Document));
-        return Results.Ok(tenantsList);
+        var tenants = await getTenantQuery.Execute();
+        return Results.Ok(tenants);
     }
 
-    internal async Task<IResult> GetTenant(IGetTenantQuery getTenantQuery, int tenantId)
+    internal async Task<IResult> GetTenantsById(IGetTenantByIdQuery getTenantQuery, int id)
     {
-        var tenant = await getTenantQuery.Get(tenantId);
+        var tenant = await getTenantQuery.Execute(id);
         if (tenant != null)
-            return Results.Ok(JsonDocument.Parse(tenant.Document));
+            return Results.Ok(tenant);
+        return Results.NotFound();
+    }
+
+    internal async Task<IResult> GetTenantsByTenantId(IGetTenantByTenantIdQuery getTenantQuery, int tenantId)
+    {
+        var tenants = await getTenantQuery.Execute(tenantId);
+
+        if (tenants.Any())
+        {
+            return Results.Ok(tenants);
+        }
         return Results.NotFound();
     }
 }

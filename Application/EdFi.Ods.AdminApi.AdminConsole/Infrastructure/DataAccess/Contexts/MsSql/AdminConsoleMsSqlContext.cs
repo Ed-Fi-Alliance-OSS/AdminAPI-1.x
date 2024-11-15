@@ -7,17 +7,19 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguratio
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleSql;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
 
-public class AdminConsoleSqlContext : DbContext, IDbContext
+public class AdminConsoleMsSqlContext : DbContext, IDbContext
 {
-    public AdminConsoleSqlContext(DbContextOptions<AdminConsoleSqlContext> options) : base(options) { }
+    public AdminConsoleMsSqlContext(DbContextOptions<AdminConsoleMsSqlContext> options) : base(options) { }
 
     public DbSet<HealthCheck> HealthChecks { get; set; }
     public DbSet<Instance> Instances { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
+
+    public DbSet<Step> Steps { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,5 +29,6 @@ public class AdminConsoleSqlContext : DbContext, IDbContext
         modelBuilder.ApplyConfiguration(new PermissionConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new UserProfileConfiguration(DbProvider));
+        modelBuilder.ApplyConfiguration(new StepConfiguration(DbProvider));
     }
 }

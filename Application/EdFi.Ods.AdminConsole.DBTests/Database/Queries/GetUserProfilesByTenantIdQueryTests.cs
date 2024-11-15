@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -18,7 +19,7 @@ using Shouldly;
 namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests;
 
 [TestFixture]
-public class GetUserProfileByIdQueryTests : PlatformUsersContextTestBase
+public class GetUserProfilesByTenantIdQueryTests : PlatformUsersContextTestBase
 {
     private IOptions<AppSettings> _options { get; set; }
 
@@ -54,14 +55,14 @@ public class GetUserProfileByIdQueryTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<UserProfile>(dbContext);
-            var query = new GetUserProfileByIdQuery(repository);
-            var userProfile = await query.Execute(result.TenantId, result.DocId.Value);
-
-            userProfile.DocId.ShouldBe(result.DocId);
-            userProfile.TenantId.ShouldBe(newUserProfile.TenantId);
-            userProfile.InstanceId.ShouldBe(newUserProfile.InstanceId);
-            userProfile.EdOrgId.ShouldBe(newUserProfile.EdOrgId);
-            userProfile.Document.ShouldBe(newUserProfile.Document);
+            var query = new GetUserProfilesByTenantIdQuery(repository);
+            var userProfiles = await query.Execute(result.TenantId);
+            userProfiles.Count().ShouldBe(1);
+            userProfiles.FirstOrDefault().DocId.ShouldBe(result.DocId);
+            userProfiles.FirstOrDefault().TenantId.ShouldBe(newUserProfile.TenantId);
+            userProfiles.FirstOrDefault().InstanceId.ShouldBe(newUserProfile.InstanceId);
+            userProfiles.FirstOrDefault().EdOrgId.ShouldBe(newUserProfile.EdOrgId);
+            userProfiles.FirstOrDefault().Document.ShouldBe(newUserProfile.Document);
         });
     }
 

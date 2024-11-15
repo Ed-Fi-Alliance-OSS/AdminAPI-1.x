@@ -35,8 +35,6 @@ internal class AddTenant : IFeature
     public class AddTenantRequest : IAddTenantModel
     {
         [Required]
-        public int DocId { get; set; }
-        [Required]
         public int InstanceId { get; set; }
         [Required]
         public int EdOrgId { get; set; }

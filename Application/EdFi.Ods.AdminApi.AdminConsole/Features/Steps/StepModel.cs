@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Steps;
 
-public class Step
+public class StepModel
 {
     [JsonProperty("number")]
     public int? Number { get; set; }

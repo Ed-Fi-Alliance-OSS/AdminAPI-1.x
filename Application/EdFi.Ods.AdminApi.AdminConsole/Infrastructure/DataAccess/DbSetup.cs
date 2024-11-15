@@ -4,8 +4,8 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePg;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,11 +21,11 @@ public static class DbSetup
         switch (databaseProvider)
         {
             case DbProviders.SqlServer:
-                services.AddDbContext<IDbContext, AdminConsoleSqlContext>(options =>
+                services.AddDbContext<IDbContext, AdminConsoleMsSqlContext>(options =>
                            options.UseSqlServer(connectionString));
                 break;
             case DbProviders.PostgreSql:
-                services.AddDbContext<IDbContext, AdminConsolePgContext>(options =>
+                services.AddDbContext<IDbContext, AdminConsolePgSqlContext>(options =>
                            options.UseNpgsql(connectionString));
                 break;
             default:
@@ -39,8 +39,8 @@ public static class DbSetup
         var databaseProvider = DbProviders.Parse(configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
         DbContext dbContext = databaseProvider switch
         {
-            DbProviders.SqlServer => scope.ServiceProvider.GetRequiredService<AdminConsoleSqlContext>(),
-            DbProviders.PostgreSql => scope.ServiceProvider.GetRequiredService<AdminConsolePgContext>(),
+            DbProviders.SqlServer => scope.ServiceProvider.GetRequiredService<AdminConsoleMsSqlContext>(),
+            DbProviders.PostgreSql => scope.ServiceProvider.GetRequiredService<AdminConsolePgSqlContext>(),
             _ => throw new InvalidOperationException("Invalid database provider.")
         };
         dbContext.Database.Migrate();

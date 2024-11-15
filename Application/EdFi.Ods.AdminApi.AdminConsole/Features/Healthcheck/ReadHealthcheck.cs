@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 using System.Text.Json;
 using AutoMapper;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -24,16 +25,16 @@ public class ReadHealthcheck : IFeature
     internal async Task<IResult> GetHealthcheck(IMapper mapper, IGetHealthCheckQuery getHealthCheckQuery, int tenantId)
     {
         var healthChecks = await getHealthCheckQuery.Execute(tenantId);
-        var model = mapper.Map<HealthCheckModel>(healthChecks);
-        string healthCheckModel = JsonSerializer.Serialize(model);
-        return Results.Ok(healthCheckModel);
+        if(healthChecks != null)
+        {
+            return Results.Ok(healthChecks);
+        }
+        return Results.NotFound();
     }
 
     internal async Task<IResult> GetHealthchecks(IMapper mapper, IGetHealthChecksQuery getHealthChecksQuery)
     {
         var healthChecks = await getHealthChecksQuery.Execute();
-        var model = mapper.Map<IEnumerable<HealthCheckModel>>(healthChecks);
-        string healthCheckModel = JsonSerializer.Serialize(model);
-        return Results.Ok(JsonDocument.Parse(healthCheckModel));
+        return Results.Ok(healthChecks);
     }
 }

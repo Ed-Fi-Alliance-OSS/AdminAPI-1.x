@@ -8,36 +8,36 @@ using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Commands;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Commands;
 
-public interface IAddPermissionCommand
+public interface IAddStepCommand
 {
-    Task<Permission> Execute(IAddPermissionModel permission);
+    Task<Step> Execute(IAddStepModel step);
 }
 
-public class AddPermissionCommand : IAddPermissionCommand
+public class AddStepCommand : IAddStepCommand
 {
-    private readonly ICommandRepository<Permission> _permissionCommand;
+    private readonly ICommandRepository<Step> _stepCommand;
     private readonly IEncryptionService _encryptionService;
     private readonly string _encryptionKey;
 
-    public AddPermissionCommand(ICommandRepository<Permission> permissionCommand, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public AddStepCommand(ICommandRepository<Step> stepCommand, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
-        _permissionCommand = permissionCommand;
+        _stepCommand = stepCommand;
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
 
-    public async Task<Permission> Execute(IAddPermissionModel permission)
+    public async Task<Step> Execute(IAddStepModel step)
     {
         try
         {
-            return await _permissionCommand.AddAsync(new Permission
+            return await _stepCommand.AddAsync(new Step
             {
-                InstanceId = permission.InstanceId,
-                TenantId = permission.TenantId,
-                EdOrgId = permission.EdOrgId,
-                Document = permission.Document,
+                InstanceId = step.InstanceId,
+                TenantId = step.TenantId,
+                EdOrgId = step.EdOrgId,
+                Document = step.Document,
             });
         }
         catch (Exception ex)
@@ -48,7 +48,7 @@ public class AddPermissionCommand : IAddPermissionCommand
     }
 }
 
-public interface IAddPermissionModel
+public interface IAddStepModel
 {
     int InstanceId { get; }
     int? EdOrgId { get; }
@@ -56,7 +56,7 @@ public interface IAddPermissionModel
     string Document { get; }
 }
 
-public class AddPermissionResult
+public class AddStepResult
 {
     public int DocId { get; set; }
 }

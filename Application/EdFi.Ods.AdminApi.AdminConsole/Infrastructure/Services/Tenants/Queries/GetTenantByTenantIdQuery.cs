@@ -14,29 +14,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
 
-public interface IGetTenantQuery
+public interface IGetTenantByTenantIdQuery
 {
-    Task<Tenant> Get(int tenantId);
-    Task<IEnumerable<Tenant>> GetAll();
+    Task<IEnumerable<Tenant>> Execute(int tenantId);
 }
 
-public class GetTenantQuery : IGetTenantQuery
+public class GetTenantByTenantIdQuery : IGetTenantByTenantIdQuery
 {
     private readonly IQueriesRepository<Tenant> _tenantQuery;
 
-    public GetTenantQuery(IQueriesRepository<Tenant> tenantQuery)
+    public GetTenantByTenantIdQuery(IQueriesRepository<Tenant> tenantQuery)
     {
         _tenantQuery = tenantQuery;
     }
-    public async Task<Tenant> Get(int tenantId)
-    {
-        return await _tenantQuery.Query().SingleOrDefaultAsync(tenant => tenant.TenantId == tenantId)
-        ?? throw new Exception($"Not found {nameof(Tenant)} for Tenant Id: {tenantId}");
-    }
 
-    public async Task<IEnumerable<Tenant>> GetAll()
+    public async Task<IEnumerable<Tenant>> Execute(int tenantId)
     {
-        return await _tenantQuery.GetAllAsync();
+        var tenant = await _tenantQuery.Query().Where(step => step.TenantId == tenantId).ToListAsync();
+        return tenant;
     }
 }
 

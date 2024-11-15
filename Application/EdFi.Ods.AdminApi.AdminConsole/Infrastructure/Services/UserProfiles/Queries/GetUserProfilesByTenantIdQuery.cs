@@ -11,24 +11,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Queries;
 
-public interface IGetUserProfileQuery
+public interface IGetUserProfilesByTenantIdQuery
 {
-    Task<UserProfile> Execute(int tenantId);
+    Task<IEnumerable<UserProfile>> Execute(int tenantId);
 }
 
-public class GetUserProfileQuery : IGetUserProfileQuery
+public class GetUserProfilesByTenantIdQuery : IGetUserProfilesByTenantIdQuery
 {
     private readonly IQueriesRepository<UserProfile> _userProfileQuery;
 
-    public GetUserProfileQuery(IQueriesRepository<UserProfile> userProfileQuery)
+    public GetUserProfilesByTenantIdQuery(IQueriesRepository<UserProfile> userProfileQuery)
     {
         _userProfileQuery = userProfileQuery;
     }
 
-    public async Task<UserProfile> Execute(int tenantId)
+    public async Task<IEnumerable<UserProfile>> Execute(int tenantId)
     {
-
-        return await _userProfileQuery.Query().SingleOrDefaultAsync(UserProfile => UserProfile.TenantId == tenantId)
-        ?? throw new Exception($"Not found {nameof(UserProfile)} for Tenant Id: {tenantId}");
+        var userProfiles = await _userProfileQuery.Query().Where(UserProfile => UserProfile.TenantId == tenantId).ToListAsync();
+        return userProfiles;
     }
 }

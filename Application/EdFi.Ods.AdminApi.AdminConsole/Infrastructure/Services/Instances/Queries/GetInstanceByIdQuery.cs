@@ -11,28 +11,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 
-public interface IGetInstanceQuery
+public interface IGetInstanceByIdQuery
 {
-    Task<Instance> Execute(int tenantId);
+    Task<Instance> Execute(int tenantId, int docId);
 }
 
-public class GetInstanceQuery : IGetInstanceQuery
+public class GetInstanceByIdQuery : IGetInstanceByIdQuery
 {
     private readonly IQueriesRepository<Instance> _instanceQuery;
     private readonly IEncryptionService _encryptionService;
     private readonly string _encryptionKey;
 
-    public GetInstanceQuery(IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
+    public GetInstanceByIdQuery(IQueriesRepository<Instance> instanceQuery, IEncryptionKeyResolver encryptionKeyResolver, IEncryptionService encryptionService)
     {
         _instanceQuery = instanceQuery;
         _encryptionKey = encryptionKeyResolver.GetEncryptionKey();
         _encryptionService = encryptionService;
     }
 
-    public async Task<Instance> Execute(int tenantId)
+    public async Task<Instance> Execute(int tenantId, int docId)
     {
 
-        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId && instance.DocId == docId);
 
         if (instance == null)
             return null;

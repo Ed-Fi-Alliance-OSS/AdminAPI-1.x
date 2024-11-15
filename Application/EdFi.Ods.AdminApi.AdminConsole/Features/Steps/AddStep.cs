@@ -4,31 +4,31 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.ComponentModel.DataAnnotations;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Commands;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Commands;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Steps;
 
-public class AddUserProfile : IFeature
+public class AddStep: IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/userprofile", Execute)
-      .WithRouteOptions(b => b.WithResponseCode(201))
-      .BuildForVersions();
+        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/steps", Execute)
+        .WithRouteOptions(b => b.WithResponseCode(201))
+        .BuildForVersions();
     }
 
-    public async Task<IResult> Execute(Validator validator, IAddUserProfileCommand addUserProfileCommand, AddUserProfileRequest request)
+    public async Task<IResult> Execute(Validator validator, IAddStepCommand addStepCommand, AddStepRequest request)
     {
         await validator.GuardAsync(request);
-        var addedUserProfileResult = await addUserProfileCommand.Execute(request);
+        var addedStepResult = await addStepCommand.Execute(request);
 
-        return Results.Created($"/userprofile/{addedUserProfileResult.TenantId}/{addedUserProfileResult.DocId}", addedUserProfileResult);
+        return Results.Created($"/steps/{addedStepResult.TenantId}/{addedStepResult.DocId}", addedStepResult);
     }
 
-    public class AddUserProfileRequest : IAddUserProfileModel
+    public class AddStepRequest : IAddStepModel
     {
         [Required]
         public int InstanceId { get; set; }
@@ -39,7 +39,7 @@ public class AddUserProfile : IFeature
         public string Document { get; set; }
     }
 
-    public class Validator : AbstractValidator<AddUserProfileRequest>
+    public class Validator : AbstractValidator<AddStepRequest>
     {
         public Validator()
         {
@@ -48,9 +48,6 @@ public class AddUserProfile : IFeature
 
             RuleFor(m => m.EdOrgId)
              .NotNull();
-
-            RuleFor(m => m.TenantId)
-                 .NotNull();
 
             RuleFor(m => m.Document)
              .NotNull()

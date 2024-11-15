@@ -6,7 +6,6 @@
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text.Json;
-using EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +21,11 @@ public class ReadInstances : IFeature
         AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances", GetInstances)
             .BuildForVersions();
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances/{id}", GetInstance)
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{id}", GetInstanceById)
+            .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
+            .BuildForVersions();
+
+        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}", GetInstancesByTenantId)
             .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
             .BuildForVersions();
     }
@@ -30,17 +33,26 @@ public class ReadInstances : IFeature
     internal async Task<IResult> GetInstances([FromServices] IGetInstancesQuery getInstancesQuery)
     {
         var instances = await getInstancesQuery.Execute();
-        IEnumerable<JsonDocument> instancesList = instances.Select(i => JsonDocument.Parse(i.Document));
-        return Results.Ok(instancesList);
+        return Results.Ok(instances);
     }
 
-    internal async Task<IResult> GetInstance([FromServices] IGetInstanceQuery getInstanceQuery, int tenantId)
+    internal async Task<IResult> GetInstanceById([FromServices] IGetInstanceByIdQuery getInstanceQuery, int tenantId, int id)
     {
-        var instance = await getInstanceQuery.Execute(tenantId);
+        var instance = await getInstanceQuery.Execute(tenantId, id);
 
         if (instance != null)
-            return Results.Ok(JsonDocument.Parse(instance.Document));
+            return Results.Ok(instance);
 
+        return Results.NotFound();
+    }
+
+    internal async Task<IResult> GetInstancesByTenantId([FromServices] IGetInstancesByTenantIdQuery getInstancesQuery, int tenantId)
+    {
+        var instances = await getInstancesQuery.Execute(tenantId);
+        if (instances.Any())
+        {
+            return Results.Ok(instances);
+        }
         return Results.NotFound();
     }
 }

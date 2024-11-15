@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -19,7 +20,7 @@ using Shouldly;
 namespace EdFi.Ods.AdminConsole.DBTests.Database.CommandTests;
 
 [TestFixture]
-public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
+public class GetInstancesByTenantIdQueryTests : PlatformUsersContextTestBase
 {
     private IOptions<AppSettings> _options { get; set; }
 
@@ -51,19 +52,19 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
 
             result = await command.Execute(newInstance);
         });
+
         Transaction(async dbContext =>
         {
             var repository = new QueriesRepository<Instance>(dbContext);
-            var query = new GetInstanceByIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
-            var instance = await query.Execute(result.TenantId, result.DocId.Value);
-
-            instance.DocId.ShouldBe(result.DocId);
-            instance.TenantId.ShouldBe(newInstance.TenantId);
-            instance.InstanceId.ShouldBe(newInstance.InstanceId);
-            instance.EdOrgId.ShouldBe(newInstance.EdOrgId);
-            instance.Document.ShouldBe(newInstance.Document);
+            var query = new GetInstancesByTenantIdQuery(repository, Testing.GetEncryptionKeyResolver(), new EncryptionService());
+            IEnumerable<Instance> instances = await query.Execute(result.TenantId);
+            instances.Count().ShouldBe(1);
+            instances.FirstOrDefault().DocId.ShouldBe(result.DocId);
+            instances.FirstOrDefault().TenantId.ShouldBe(newInstance.TenantId);
+            instances.FirstOrDefault().InstanceId.ShouldBe(newInstance.InstanceId);
+            instances.FirstOrDefault().EdOrgId.ShouldBe(newInstance.EdOrgId);
+            instances.FirstOrDefault().Document.ShouldBe(newInstance.Document);
         });
-
     }
 
     private class TestInstance : IAddInstanceModel

@@ -22,7 +22,7 @@ Add-Migration <MigrationName> -Context <ContextName> -Project EdFi.Ods.AdminApi.
 ```
 
 - `MigrationName`: Name of the migration (e.g., `InitialCreate`).
-- `ContextName`: Name of the context (options: `AdminConsolePgContext`,`AdminConsoleSqlContext`)
+- `ContextName`: Name of the context (options: `AdminConsolePgSqlContext`,`AdminConsoleMsSqlContext`)
 - `DbProvider`: The database provider, this will create a folder or add the migration in the specific db provider (options: `MsSql`,`PgSql` ).
 
 ---
@@ -44,7 +44,7 @@ For updating the database from the Package Manager Console, use:
 ```powershell
 Update-Database -Context <ContextName> -Project EdFi.Ods.AdminApi.AdminConsole
 ```
-- `ContextName`: Name of the context (options: `AdminConsolePgContext`,`AdminConsoleSqlContext`)
+- `ContextName`: Name of the context (options: `AdminConsolePgSqlContext`,`AdminConsoleMsSqlContext`)
 ---
 
 ### Summary

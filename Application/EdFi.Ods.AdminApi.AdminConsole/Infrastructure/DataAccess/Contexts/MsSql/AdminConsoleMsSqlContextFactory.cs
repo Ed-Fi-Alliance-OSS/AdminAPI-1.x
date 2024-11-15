@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePg;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
 
-public class AdminConsolePgContextFactory : IDesignTimeDbContextFactory<AdminConsolePgContext>
+internal class AdminConsoleMsSqlContextFactory : IDesignTimeDbContextFactory<AdminConsoleMsSqlContext>
 {
-    public AdminConsolePgContext CreateDbContext(string[] args)
+    public AdminConsoleMsSqlContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
@@ -19,9 +19,9 @@ public class AdminConsolePgContextFactory : IDesignTimeDbContextFactory<AdminCon
         .Build();
 
         var connectionString = configuration.GetConnectionString("EdFi_Admin");
-        var optionsBuilder = new DbContextOptionsBuilder<AdminConsolePgContext>();
-        optionsBuilder.UseNpgsql(connectionString);
+        var optionsBuilder = new DbContextOptionsBuilder<AdminConsoleMsSqlContext>();
+        optionsBuilder.UseSqlServer(connectionString);
 
-        return new AdminConsolePgContext(optionsBuilder.Options);
+        return new AdminConsoleMsSqlContext(optionsBuilder.Options);
     }
 }

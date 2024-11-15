@@ -5,7 +5,7 @@
 
 using Newtonsoft.Json;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.OdsInstances;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 
 public class InstanceModel
 {

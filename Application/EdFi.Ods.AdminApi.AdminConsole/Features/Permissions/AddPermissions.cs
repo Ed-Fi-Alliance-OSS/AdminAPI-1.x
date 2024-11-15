@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.ComponentModel.DataAnnotations;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Commands;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ public class AddPermission: IFeature
         await validator.GuardAsync(request);
         var addedPermissionResult = await addPermissionCommand.Execute(request);
 
-        return Results.Created($"/permissions/{addedPermissionResult.DocId}", addedPermissionResult);
+        return Results.Created($"/permissions/{addedPermissionResult.TenantId}/{addedPermissionResult.DocId}", addedPermissionResult);
     }
 
     public class AddPermissionRequest : IAddPermissionModel

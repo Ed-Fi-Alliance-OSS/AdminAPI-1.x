@@ -7,7 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 public class Tenant : IModel
@@ -16,6 +19,7 @@ public class Tenant : IModel
     public int InstanceId { get; set; }
     public int TenantId { get; set; }
     public int? EdOrgId { get; set; }
+    [JsonConverter(typeof(StringToJsonDocumentConverter))]
     public string Document { get; set; }
 }
 

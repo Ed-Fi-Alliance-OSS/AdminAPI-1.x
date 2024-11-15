@@ -26,12 +26,6 @@ public class GetHealthCheckQuery : IGetHealthCheckQuery
     public async Task<HealthCheck> Execute(int tenantId)
     {
         var healthCheck = await _healthCheckQuery.Query().SingleOrDefaultAsync(healthCheck => healthCheck.TenantId == tenantId);
-
-        if (healthCheck == null)
-        {
-            throw new NotFoundException<int>("healthCheck", tenantId);
-        }
-
         return healthCheck;
     }
 }

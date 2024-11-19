@@ -46,6 +46,9 @@ services:
       AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
       AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
+      AppSettings__EnableAdminConsoleAPI: "${ENABLE_ADMIN_CONSOLE_API:-false}"
+      AppSettings__EnableCors: "${ENABLE_CORS:-false}"
+      AppSettings__AllowedOrigins: "${ALLOWED_ORIGINS:-https://localhost}"
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]

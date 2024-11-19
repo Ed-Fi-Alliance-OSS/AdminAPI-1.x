@@ -42,6 +42,9 @@ services:
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
+      AppSettings__EnableAdminConsoleAPI: "${ENABLE_ADMIN_CONSOLE_API:-false}"
+      AppSettings__EnableCors: "${ENABLE_CORS:-false}"
+      AppSettings__AllowedOrigins: "${ALLOWED_ORIGINS:-https://localhost}"
     depends_on:
       - pb-admin
     restart: always

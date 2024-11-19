@@ -47,6 +47,9 @@ services:
       OIDC_AUTHORITY: "${OIDC_AUTHORITY:-http://ed-fi-keycloak:8080/auth/realms/myrealm}"
       OIDC_REQUIRE_METADATA: "${OIDC_REQUIRE_METADATA:-false}"
       OIDC_ENABLE_SERVER_CERTIFICATE: "${OIDC_ENABLE_SERVER_CERTIFICATE:-true}"
+      AppSettings__EnableAdminConsoleAPI: "${ENABLE_ADMIN_CONSOLE_API:-false}"
+      AppSettings__EnableCors: "${ENABLE_CORS:-false}"
+      AppSettings__AllowedOrigins: "${ALLOWED_ORIGINS:-https://localhost}"
     depends_on:
       - pb-admin
     restart: always

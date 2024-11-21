@@ -6,6 +6,8 @@
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguration;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
 
@@ -20,6 +22,8 @@ public class AdminConsolePgSqlContext : DbContext, IDbContext
     public DbSet<UserProfile> UserProfiles { get; set; }
 
     public DbSet<Step> Steps { get; set; }
+
+    public DatabaseFacade DB => this.Database;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

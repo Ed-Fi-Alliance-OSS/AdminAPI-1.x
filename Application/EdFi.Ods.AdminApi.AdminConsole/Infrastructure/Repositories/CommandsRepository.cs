@@ -6,7 +6,7 @@
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
 public interface ICommandRepository<T> where T : class
 {
@@ -21,6 +21,8 @@ public class CommandRepository<T> : ICommandRepository<T> where T : class
     public CommandRepository(IDbContext context)
     {
         _context = context;
+        if (_context.DB.GetPendingMigrations().Count() > 0)
+            _context.DB.Migrate();
         _dbSet = context.Set<T>();
     }
 

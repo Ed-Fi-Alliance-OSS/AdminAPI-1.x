@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Commands;
 
@@ -18,7 +18,7 @@ public interface IAddTenantCommand
     Task<Tenant> Execute(IAddTenantModel newTenant);
 }
 
-internal class AddTenantCommand : IAddTenantCommand
+public class AddTenantCommand : IAddTenantCommand
 {
     private readonly ICommandRepository<Tenant> _tenantCommand;
     public AddTenantCommand(ICommandRepository<Tenant> tenantCommand)

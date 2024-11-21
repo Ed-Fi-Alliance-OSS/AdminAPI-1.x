@@ -6,7 +6,7 @@
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
 public interface IQueriesRepository<T> where T : class
 {
@@ -22,6 +22,8 @@ public class QueriesRepository<T> : IQueriesRepository<T> where T : class
     public QueriesRepository(IDbContext context)
     {
         _context = context;
+        if (_context.DB.GetPendingMigrations().Count() > 0)
+            _context.DB.Migrate();
         _dbSet = _context.Set<T>();
     }
 

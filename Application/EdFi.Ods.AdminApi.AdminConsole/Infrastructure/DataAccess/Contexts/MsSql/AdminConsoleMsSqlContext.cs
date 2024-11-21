@@ -6,6 +6,7 @@
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.ModelConfiguration;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
 
@@ -20,6 +21,8 @@ public class AdminConsoleMsSqlContext : DbContext, IDbContext
     public DbSet<UserProfile> UserProfiles { get; set; }
 
     public DbSet<Step> Steps { get; set; }
+
+    public DatabaseFacade DB => this.Database;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

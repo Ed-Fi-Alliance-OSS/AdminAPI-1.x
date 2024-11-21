@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repository;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Commands;
 public interface IAddHealthCheckCommand

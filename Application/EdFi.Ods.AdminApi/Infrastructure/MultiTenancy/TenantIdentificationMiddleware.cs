@@ -50,7 +50,7 @@ public class TenantResolverMiddleware : IMiddleware
                     }
                     else
                     {
-                        ThrowTenantValidationError($"Tenant not found with provided tenant id: {tenantIdentifier}");                       
+                        ThrowTenantValidationError($"Tenant not found with provided tenant id: {tenantIdentifier}");
                     }
                 }
                 else
@@ -83,10 +83,10 @@ public class TenantResolverMiddleware : IMiddleware
             {
                 if (!NonFeatureEndpoints())
                 {
-                    ThrowTenantValidationError("Tenant header is missing");                   
+                    ThrowTenantValidationError("Tenant header is missing");
                 }
             }
-        }     
+        }
         await next.Invoke(context);
 
         bool RequestFromSwagger() => (context.Request.Path.Value != null &&
@@ -101,7 +101,7 @@ public class TenantResolverMiddleware : IMiddleware
 
         void ThrowTenantValidationError(string errorMessage)
         {
-            throw new ValidationException(new[] { new ValidationFailure("Tenant", errorMessage) });           
+            throw new ValidationException(new[] { new ValidationFailure("Tenant", errorMessage) });
         }
     }
 
@@ -116,5 +116,5 @@ public class TenantResolverMiddleware : IMiddleware
             return false;
         }
         return true;
-    }  
+    }
 }

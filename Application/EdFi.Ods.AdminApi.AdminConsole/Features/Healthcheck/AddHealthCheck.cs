@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Healthcheck;
-internal class AddHealthCheck : IFeature
+public class AddHealthCheck : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {

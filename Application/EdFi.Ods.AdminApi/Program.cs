@@ -1,20 +1,14 @@
-
 // SPDX-License-Identifier: Apache-2.0
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AspNetCoreRateLimit;
-using EdFi.Ods.AdminApi.AdminConsole.Helpers;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.AutoMapper;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services;
+using EdFi.Ods.AdminApi.AdminConsole;
 using EdFi.Ods.AdminApi.Features;
-using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using log4net;
-using Microsoft.Extensions.Options;
-using ServiceRegistration = EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,49 +20,21 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
-if (adminConsoleIsEnabled)
-{
-    ServiceRegistration.AddServices(builder.Services, builder.Configuration);
-}
-
 // logging
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
-// Read CORS settings from configuration
-var corsSettings = builder.Configuration.GetSection("AdminConsoleSettings");
-var enableCors = corsSettings.GetValue<bool>("CorsSettings:EnableCors");
-string allowAllCorsPolicyName = "allowAllCorsPolicyName";
-var allowedOrigins = corsSettings.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
-if (enableCors && allowedOrigins != null)
-{
-    if (allowedOrigins != null && allowedOrigins.Length > 0)
-    {
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy(allowAllCorsPolicyName, policy =>
-            {
-                policy.WithOrigins(allowedOrigins)
-                      .AllowAnyMethod()
-                      .AllowAnyHeader();
-            });
-        });
-    }
-    else
-    {
-        // Handle the case where allowedOrigins is null or empty
-        _logger.Warn("CORS is enabled, but no allowed origins are specified.");
-    }
-}
+
 builder.AddServices();
 
-var app = builder.Build();
-if (enableCors
-    && allowedOrigins != null
-    && allowedOrigins.Length > 0)
+var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
+
+if (adminConsoleIsEnabled)
 {
-    app.UseCors(allowAllCorsPolicyName);
+    builder.RegisterAdminConsoleDependencies();
+    builder.RegisterAdminConsoleCorsDependencies(_logger);
 }
+
+var app = builder.Build();
 
 var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
 if (!string.IsNullOrEmpty(pathBase))
@@ -87,11 +53,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapFeatureEndpoints();
+
 //Map AdminConsole endpoints if the flag is enable
 if (adminConsoleIsEnabled)
 {
+    app.UseCorsForAdminConsole();
     app.MapAdminConsoleFeatureEndpoints();
 }
+
 app.MapControllers();
 app.UseHealthChecks("/health");
 

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Mockdata\**" />
+    <EmbeddedResource Remove="Mockdata\**" />
+    <None Remove="Mockdata\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
@@ -32,7 +38,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\DataAccess\Artifacts\" />
-    <Folder Include="Mockdata\" />
   </ItemGroup>
 
 </Project>

@@ -23,7 +23,7 @@ public static class AdminConsoleBuilderExtension
         // Read CORS settings from configuration
         if (enableCors && allowedOrigins != null)
         {
-            if (allowedOrigins != null && allowedOrigins.Length > 0)
+            if (allowedOrigins.Length > 0)
             {
                 webApplicationBuilder.Services.AddCors(options =>
                 {

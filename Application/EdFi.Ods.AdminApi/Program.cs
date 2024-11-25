@@ -23,18 +23,22 @@ builder.Services.AddInMemoryRateLimiting();
 // logging
 var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
+var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
+
+//Order it's important to enable CORS
+if (adminConsoleIsEnabled)
+    builder.RegisterAdminConsoleCorsDependencies(_logger);
 
 builder.AddServices();
 
-var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
-
 if (adminConsoleIsEnabled)
-{
     builder.RegisterAdminConsoleDependencies();
-    builder.RegisterAdminConsoleCorsDependencies(_logger);
-}
 
 var app = builder.Build();
+
+//Order it's important to enable CORS
+if (adminConsoleIsEnabled)
+    app.UseCorsForAdminConsole();
 
 var pathBase = app.Configuration.GetValue<string>("AppSettings:PathBase");
 if (!string.IsNullOrEmpty(pathBase))
@@ -56,10 +60,7 @@ app.MapFeatureEndpoints();
 
 //Map AdminConsole endpoints if the flag is enable
 if (adminConsoleIsEnabled)
-{
-    app.UseCorsForAdminConsole();
     app.MapAdminConsoleFeatureEndpoints();
-}
 
 app.MapControllers();
 app.UseHealthChecks("/health");

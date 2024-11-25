@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Helpers;
 
-public interface ICorsSettings
+public class CorsSettings
 {
     public bool EnableCors { get; set; }
-    public string[] AllowedOrigins { get; set; }
+    public string[] AllowedOrigins { get; set; } = new string[0];
 }

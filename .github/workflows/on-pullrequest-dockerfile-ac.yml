@@ -9,9 +9,6 @@
     push:
       branches:
         - adminapi23-rc.*
-    pull_request:
-      branches:
-        - adminapi23-rc.*
     workflow_dispatch:
 
   env:

@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminApi.AdminCons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdFi.Ods.AdminConsole.DBTests", "EdFi.Ods.AdminConsole.DBTests\EdFi.Ods.AdminConsole.DBTests.csproj", "{A2DC17AC-66C2-4119-BB47-4266E8ACB055}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdFi.Ods.AdminApi.Common", "EdFi.Ods.AdminApi.Common\EdFi.Ods.AdminApi.Common.csproj", "{C9C86866-562B-4EA3-9AAC-F3297F0754D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{A2DC17AC-66C2-4119-BB47-4266E8ACB055}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2DC17AC-66C2-4119-BB47-4266E8ACB055}.Release|x64.ActiveCfg = Release|Any CPU
 		{A2DC17AC-66C2-4119-BB47-4266E8ACB055}.Release|x64.Build.0 = Release|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Debug|x64.Build.0 = Debug|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Release|x64.ActiveCfg = Release|Any CPU
+		{C9C86866-562B-4EA3-9AAC-F3297F0754D6}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

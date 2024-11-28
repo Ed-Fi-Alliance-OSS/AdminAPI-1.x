@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using FluentValidation;
 using Microsoft.AspNetCore;
@@ -15,8 +16,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace EdFi.Ods.AdminApi.Features.Connect;
 
 [AllowAnonymous]
-[SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
-[SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
+[SwaggerResponse(400, FeatureCommonConstants.BadRequestResponseDescription)]
+[SwaggerResponse(500, FeatureCommonConstants.InternalServerErrorResponseDescription)]
 [Route(SecurityConstants.ConnectRoute)]
 [SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
 public class ConnectController : Controller

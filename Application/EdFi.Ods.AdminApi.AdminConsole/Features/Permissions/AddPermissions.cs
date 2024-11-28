@@ -6,6 +6,8 @@
 using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Commands;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,9 +18,9 @@ public class AddPermission: IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/permissions", Execute)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/permissions", Execute)
       .WithRouteOptions(b => b.WithResponseCode(201))
-      .BuildForVersions();
+      .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     public async Task<IResult> Execute(Validator validator, IAddPermissionCommand addPermissionCommand, AddPermissionRequest request)

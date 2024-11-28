@@ -7,6 +7,8 @@ using System.Dynamic;
 using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
@@ -17,11 +19,11 @@ public class ReadTenants : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
-           .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
+           .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantId)
-           .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantId)
+           .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     internal async Task<IResult> GetTenants(IGetTenantsQuery getTenantQuery)

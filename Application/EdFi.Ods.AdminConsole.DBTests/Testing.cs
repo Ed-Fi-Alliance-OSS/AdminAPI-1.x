@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
-using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Common.Helpers;
 using FakeItEasy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

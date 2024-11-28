@@ -10,6 +10,7 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 

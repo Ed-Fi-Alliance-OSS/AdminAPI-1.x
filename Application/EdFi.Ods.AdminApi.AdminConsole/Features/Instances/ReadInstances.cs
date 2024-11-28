@@ -8,6 +8,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -18,16 +20,16 @@ public class ReadInstances : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances", GetInstances)
-            .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/instances", GetInstances)
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{id}", GetInstanceById)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{id}", GetInstanceById)
             .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}", GetInstancesByTenantId)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}", GetInstancesByTenantId)
             .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     internal async Task<IResult> GetInstances([FromServices] IGetInstancesQuery getInstancesQuery)

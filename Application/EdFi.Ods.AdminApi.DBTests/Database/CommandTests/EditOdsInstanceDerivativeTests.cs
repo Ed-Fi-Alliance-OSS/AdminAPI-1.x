@@ -9,7 +9,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using Microsoft.EntityFrameworkCore;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 

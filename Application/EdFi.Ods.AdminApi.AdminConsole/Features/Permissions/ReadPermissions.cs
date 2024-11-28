@@ -10,6 +10,8 @@ using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -21,16 +23,16 @@ public class ReadPermissions : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/permissions", GetPermissions)
-            .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/permissions", GetPermissions)
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/permissions/{tenantId}/{id}", GetPermissionById)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/permissions/{tenantId}/{id}", GetPermissionById)
             .WithRouteOptions(b => b.WithResponse<PermissionModel>(200))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/permissions/{tenantId}", GetPermissionsByTenantId)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/permissions/{tenantId}", GetPermissionsByTenantId)
             .WithRouteOptions(b => b.WithResponse<PermissionModel>(200))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     internal async Task<IResult> GetPermissions([FromServices] IGetPermissionsQuery getPermissionQuery)

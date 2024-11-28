@@ -6,7 +6,7 @@
 using AutoMapper;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.AutoMapper;
 

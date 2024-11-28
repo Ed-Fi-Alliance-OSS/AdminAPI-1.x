@@ -8,6 +8,8 @@ using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.UserProfiles.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -17,16 +19,16 @@ public class ReadUserProfiles : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile", GetUserProfiles)
-            .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/userprofile", GetUserProfiles)
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}/{id}", GetUserProfileById)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}/{id}", GetUserProfileById)
             .WithRouteOptions(b => b.WithResponse<UserProfileModel>(200))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}", GetUserProfilesByTenant)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/userprofile/{tenantId}", GetUserProfilesByTenant)
             .WithRouteOptions(b => b.WithResponse<UserProfileModel>(200))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     internal async Task<IResult> GetUserProfileById(IMapper mapper, IGetUserProfileByIdQuery getUserProfileQuery, int tenantId, int id)

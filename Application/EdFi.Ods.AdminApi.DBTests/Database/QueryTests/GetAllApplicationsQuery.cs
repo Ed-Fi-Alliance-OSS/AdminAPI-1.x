@@ -6,7 +6,8 @@
 using System;
 using System.Threading.Tasks;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Common.Helpers;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using Microsoft.Extensions.Options;

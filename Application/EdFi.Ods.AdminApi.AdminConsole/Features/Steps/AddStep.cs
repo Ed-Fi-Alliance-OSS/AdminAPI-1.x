@@ -5,6 +5,8 @@
 
 using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Commands;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,9 +17,9 @@ public class AddStep: IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/steps", Execute)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/steps", Execute)
         .WithRouteOptions(b => b.WithResponseCode(201))
-        .BuildForVersions();
+        .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     public async Task<IResult> Execute(Validator validator, IAddStepCommand addStepCommand, AddStepRequest request)

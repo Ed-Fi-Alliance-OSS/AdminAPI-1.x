@@ -8,6 +8,8 @@ using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Steps.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -18,16 +20,16 @@ public class ReadSteps : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps", GetSteps)
-           .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/steps", GetSteps)
+           .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps/{tenantId}/{id}", GetStepById)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/steps/{tenantId}/{id}", GetStepById)
            .WithRouteOptions(b => b.WithResponse<StepModel>(200))
-           .BuildForVersions();
+           .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/steps/{tenantId}", GetStepsByTenantId)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/steps/{tenantId}", GetStepsByTenantId)
            .WithRouteOptions(b => b.WithResponse<StepModel>(200))
-           .BuildForVersions();
+           .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     internal async Task<IResult> GetSteps([FromServices] IGetStepsQuery getStepsQuery)

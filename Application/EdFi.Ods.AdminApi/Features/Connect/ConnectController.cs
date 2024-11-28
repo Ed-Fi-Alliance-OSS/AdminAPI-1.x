@@ -3,6 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using FluentValidation;
 using Microsoft.AspNetCore;
@@ -14,8 +15,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace EdFi.Ods.AdminApi.Features.Connect;
 
 [AllowAnonymous]
-[SwaggerResponse(400, FeatureConstants.BadRequestResponseDescription)]
-[SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
+[SwaggerResponse(400, FeatureCommonConstants.BadRequestResponseDescription)]
+[SwaggerResponse(500, FeatureCommonConstants.InternalServerErrorResponseDescription)]
 [Route(SecurityConstants.ConnectRoute)]
 public class ConnectController : Controller
 

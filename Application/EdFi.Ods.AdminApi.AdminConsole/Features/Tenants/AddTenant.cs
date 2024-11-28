@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Commands;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -20,9 +22,9 @@ public class AddTenant : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/tenants", Execute)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/tenants", Execute)
             .WithRouteOptions(b => b.WithResponseCode(201))
-            .BuildForVersions();
+            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     public async Task<IResult> Execute(Validator validator, IAddTenantCommand addTenantCommand, AddTenantRequest request)

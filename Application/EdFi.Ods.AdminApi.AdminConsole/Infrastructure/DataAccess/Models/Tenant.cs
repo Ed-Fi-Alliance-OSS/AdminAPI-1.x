@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using EdFi.Ods.AdminApi.AdminConsole.Helpers;
+using EdFi.Ods.AdminApi.Common.Helpers;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 public class Tenant : IModel

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Net;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Models;
-using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Common.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using static System.Reflection.Metadata.BlobBuilder;
 using static EdFi.Ods.AdminApi.Features.Applications.AddApplication;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 

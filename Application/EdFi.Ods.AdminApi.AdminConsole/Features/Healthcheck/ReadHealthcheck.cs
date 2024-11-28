@@ -6,6 +6,8 @@ using System.Text.Json;
 using AutoMapper;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.HealthChecks.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -15,11 +17,11 @@ public class ReadHealthcheck : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/healthcheck", GetHealthchecks)
-      .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/healthcheck", GetHealthchecks)
+      .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/healthcheck/{tenantId}", GetHealthcheck)
-      .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/healthcheck/{tenantId}", GetHealthcheck)
+      .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     internal async Task<IResult> GetHealthcheck(IMapper mapper, IGetHealthCheckQuery getHealthCheckQuery, int tenantId)

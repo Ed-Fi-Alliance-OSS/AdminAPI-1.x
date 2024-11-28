@@ -5,6 +5,8 @@
 
 using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,9 +17,9 @@ public class AddInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapPost(endpoints, "/instances", Execute)
+        AdminApiEndpointBuilder.MapPost(endpoints, "/instances", Execute)
       .WithRouteOptions(b => b.WithResponseCode(201))
-      .BuildForVersions();
+      .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
     public async Task<IResult> Execute(Validator validator, IAddInstanceCommand addInstanceCommand, AddInstanceRequest request)

@@ -7,6 +7,8 @@ using EdFi.Ods.AdminApi.Infrastructure.Database;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Database;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 

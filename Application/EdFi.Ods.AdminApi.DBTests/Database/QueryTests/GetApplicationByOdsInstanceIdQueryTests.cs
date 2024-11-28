@@ -11,7 +11,8 @@ using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
 using System.Collections.Generic;
 using System.Linq;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.QueryTests;
 

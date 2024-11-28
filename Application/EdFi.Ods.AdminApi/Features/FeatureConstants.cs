@@ -26,9 +26,6 @@ public static class FeatureConstants
     public const string ClaimSetNameValidationMessage = "Please provide a valid claim set name.";
     public const string EdOrgIdsValidationMessage = "Please provide at least one education organization id.";
     public const string VendorIdValidationMessage = "Please provide valid vendor id.";
-    public const string DeletedSuccessResponseDescription = "Resource was successfully deleted.";
-    public const string InternalServerErrorResponseDescription = "Internal server error. An unhandled error occurred on the server. See the response body for details.";
-    public const string BadRequestResponseDescription = "Bad Request. The request was invalid and cannot be completed. See the response body for details.";
     public const string ClaimSetAlreadyExistsMessage = "A claim set with this name already exists in the database. Please enter a unique name.";
     public const string ClaimSetNameMaxLengthMessage = "The claim set name must be less than 255 characters.";
     public const string ClaimSetNotFound = "No such claim set exists in the database.";

@@ -38,7 +38,7 @@ public class RequestLoggingMiddleware
         catch (Exception ex)
         {
             var response = context.Response;
-            response.ContentType = "application/json";
+            response.ContentType = "application/problem+json";
 
             switch (ex)
             {

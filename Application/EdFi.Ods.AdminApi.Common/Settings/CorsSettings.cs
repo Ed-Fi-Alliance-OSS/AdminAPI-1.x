@@ -3,13 +3,7 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EdFi.Ods.AdminApi.AdminConsole.Helpers;
+namespace EdFi.Ods.AdminApi.Common.Settings;
 
 public class CorsSettings
 {

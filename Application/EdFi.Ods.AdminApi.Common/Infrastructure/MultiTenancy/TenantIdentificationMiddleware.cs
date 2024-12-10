@@ -3,14 +3,16 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Common.Helpers;
+using System.Text.RegularExpressions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
+using EdFi.Ods.AdminApi.Common.Settings;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.Options;
-using System.Text.RegularExpressions;
 
-namespace EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 
 public class TenantResolverMiddleware : IMiddleware
 {
@@ -67,7 +69,6 @@ public class TenantResolverMiddleware : IMiddleware
                         _tenantConfigurationProvider.Get().TryGetValue(defaultTenant, out var tenantConfiguration))
                     {
                         _tenantConfigurationContextProvider.Set(tenantConfiguration);
-
                     }
                     else
                     {
@@ -81,7 +82,13 @@ public class TenantResolverMiddleware : IMiddleware
             }
             else
             {
-                if (!NonFeatureEndpoints())
+                if (_options.Value.EnableAdminConsoleAPI &&
+                    context.Request.Path.Value!.Contains("adminconsole/tenants") &&
+                    context.Request.Method == "GET")
+                {
+                    await next.Invoke(context);
+                }
+                else if (!NonFeatureEndpoints())
                 {
                     ThrowTenantValidationError("Tenant header is missing");
                 }

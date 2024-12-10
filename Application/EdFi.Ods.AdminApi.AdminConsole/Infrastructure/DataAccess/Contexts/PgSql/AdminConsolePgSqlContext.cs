@@ -18,7 +18,6 @@ public class AdminConsolePgSqlContext : DbContext, IDbContext
     public DbSet<HealthCheck> HealthChecks { get; set; }
     public DbSet<Instance> Instances { get; set; }
     public DbSet<Permission> Permissions { get; set; }
-    public DbSet<Tenant> Tenants { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
 
     public DbSet<Step> Steps { get; set; }
@@ -31,7 +30,6 @@ public class AdminConsolePgSqlContext : DbContext, IDbContext
         modelBuilder.ApplyConfiguration(new HealthCheckConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new InstanceConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new PermissionConfiguration(DbProvider));
-        modelBuilder.ApplyConfiguration(new TenantConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new UserProfileConfiguration(DbProvider));
         modelBuilder.ApplyConfiguration(new StepConfiguration(DbProvider));
 

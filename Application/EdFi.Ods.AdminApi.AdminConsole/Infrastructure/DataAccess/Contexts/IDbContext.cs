@@ -17,8 +17,6 @@ public interface IDbContext
 
     DbSet<Permission> Permissions { get; set; }
 
-    DbSet<Tenant> Tenants { get; set; }
-
     DbSet<UserProfile> UserProfiles { get; set; }
 
     DbSet<Step> Steps { get; set; }

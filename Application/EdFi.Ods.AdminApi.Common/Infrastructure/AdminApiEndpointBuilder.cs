@@ -42,6 +42,9 @@ public class AdminApiEndpointBuilder
     public static AdminApiEndpointBuilder MapPut(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.PUT, route, handler);
 
+    public static AdminApiEndpointBuilder MapPatch(IEndpointRouteBuilder endpoints, string route, Delegate handler)
+        => new(endpoints, HttpVerb.PATCH, route, handler);
+
     public static AdminApiEndpointBuilder MapDelete(IEndpointRouteBuilder endpoints, string route, Delegate handler)
         => new(endpoints, HttpVerb.DELETE, route, handler);
 
@@ -71,6 +74,7 @@ public class AdminApiEndpointBuilder
                 HttpVerb.POST => _endpoints.MapPost(versionedRoute, _handler),
                 HttpVerb.PUT => _endpoints.MapPut(versionedRoute, _handler),
                 HttpVerb.DELETE => _endpoints.MapDelete(versionedRoute, _handler),
+                HttpVerb.PATCH => _endpoints.MapPatch(versionedRoute, _handler),
                 _ => throw new ArgumentOutOfRangeException($"Unconfigured HTTP verb for mapping: {_verb}")
             };
 
@@ -160,5 +164,5 @@ public class AdminApiEndpointBuilder
         return this;
     }
 
-    private enum HttpVerb { GET, POST, PUT, DELETE }
+    private enum HttpVerb { GET, POST, PUT, DELETE, PATCH }
 }

@@ -43,6 +43,7 @@
     <PackageReference Include="Rijndael256" Version="3.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
 

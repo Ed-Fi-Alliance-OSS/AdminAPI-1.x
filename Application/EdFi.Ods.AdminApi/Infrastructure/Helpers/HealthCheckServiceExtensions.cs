@@ -4,10 +4,10 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Common.Settings;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 

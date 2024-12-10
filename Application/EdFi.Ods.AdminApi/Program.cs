@@ -5,10 +5,11 @@
 
 using AspNetCoreRateLimit;
 using EdFi.Ods.AdminApi.AdminConsole;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Features;
 using EdFi.Ods.AdminApi.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using log4net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,7 @@ var _logger = LogManager.GetLogger("Program");
 _logger.Info("Starting Admin API");
 var adminConsoleIsEnabled = builder.Configuration.GetValue<bool>("AppSettings:EnableAdminConsoleAPI");
 
-//Order it's important to enable CORS
+//Order is important to enable CORS
 if (adminConsoleIsEnabled)
     builder.RegisterAdminConsoleCorsDependencies(_logger);
 
@@ -37,7 +38,7 @@ if (adminConsoleIsEnabled)
 
 var app = builder.Build();
 
-//Order it's important to enable CORS
+//Order is important to enable CORS
 if (adminConsoleIsEnabled)
     app.UseCorsForAdminConsole();
 
@@ -61,7 +62,14 @@ app.MapFeatureEndpoints();
 
 //Map AdminConsole endpoints if the flag is enable
 if (adminConsoleIsEnabled)
+{
     app.MapAdminConsoleFeatureEndpoints();
+    //Initialize data
+    using var scope = app.Services.CreateScope();
+    IAdminConsoleTenantsService? adminConsoleTenantsService = scope.ServiceProvider.GetService<IAdminConsoleTenantsService>();
+    if (adminConsoleTenantsService != null)
+        await adminConsoleTenantsService.InitializeTenantsAsync();
+}
 
 app.MapControllers();
 app.UseHealthChecks("/health");

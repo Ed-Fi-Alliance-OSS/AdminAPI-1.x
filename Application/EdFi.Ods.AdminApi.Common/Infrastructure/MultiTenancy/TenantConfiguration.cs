@@ -3,10 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Helpers;
+namespace EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 
-public class AdminConsoleSettings : IEncryptionKeySettings
+public class TenantConfiguration
 {
-    public CorsSettings CorsSettings { get; set; } = new CorsSettings();
-    public string EncryptionKey { get; set; } = string.Empty;
+    public string? TenantIdentifier { get; set; }
+
+    public string? AdminConnectionString { get; set; }
+
+    public string? SecurityConnectionString { get; set; }
 }

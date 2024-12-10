@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -11,15 +11,6 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "EdOrgId",
-                schema: "adminconsole",
-                table: "Tenants",
-                type: "integer",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "integer");
-
             migrationBuilder.CreateTable(
                 name: "Steps",
                 schema: "adminconsole",
@@ -57,16 +48,6 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Artifacts.PgS
                 name: "Steps",
                 schema: "adminconsole");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "EdOrgId",
-                schema: "adminconsole",
-                table: "Tenants",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "integer",
-                oldNullable: true);
         }
     }
 }

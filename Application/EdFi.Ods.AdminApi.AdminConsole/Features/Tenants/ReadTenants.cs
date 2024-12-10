@@ -3,15 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Dynamic;
-using System.Text.Json;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants.Queries;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Caching.Memory;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 
@@ -19,35 +17,25 @@ public class ReadTenants : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenantsAsync)
            .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantId)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantIdAsync)
            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal async Task<IResult> GetTenants(IGetTenantsQuery getTenantQuery)
+    public async Task<IResult> GetTenantsAsync(IAdminConsoleTenantsService adminConsoleTenantsService, IMemoryCache memoryCache)
     {
-        var tenants = await getTenantQuery.Execute();
+        var tenants = await adminConsoleTenantsService.GetTenantsAsync(true);
         return Results.Ok(tenants);
     }
 
-    internal async Task<IResult> GetTenantsById(IGetTenantByIdQuery getTenantQuery, int id)
+    public async Task<IResult> GetTenantsByTenantIdAsync(IAdminConsoleTenantsService adminConsoleTenantsService,
+        IMemoryCache memoryCache, int tenantId)
     {
-        var tenant = await getTenantQuery.Execute(id);
+        var tenant = await adminConsoleTenantsService.GetTenantByTenantIdAsync(tenantId);
         if (tenant != null)
             return Results.Ok(tenant);
-        return Results.NotFound();
-    }
-
-    internal async Task<IResult> GetTenantsByTenantId(IGetTenantByTenantIdQuery getTenantQuery, int tenantId)
-    {
-        var tenants = await getTenantQuery.Execute(tenantId);
-
-        if (tenants.Any())
-        {
-            return Results.Ok(tenants);
-        }
         return Results.NotFound();
     }
 }

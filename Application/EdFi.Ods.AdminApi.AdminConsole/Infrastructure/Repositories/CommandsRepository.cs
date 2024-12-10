@@ -8,28 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
-public interface ICommandRepository<T> where T : class
+public interface ICommandRepository<T> : IBaseRepository<T> where T : class
 {
     Task<T> AddAsync(T entity);
 }
 
-public class CommandRepository<T> : ICommandRepository<T> where T : class
+public class CommandRepository<T> : BaseRepository<T>, ICommandRepository<T> where T : class
 {
-    private readonly IDbContext _context;
-    private readonly DbSet<T> _dbSet;
-
     public CommandRepository(IDbContext context)
-    {
-        _context = context;
-        if (_context.DB.GetPendingMigrations().Count() > 0)
-            _context.DB.Migrate();
-        _dbSet = context.Set<T>();
-    }
+        : base(context)
+    { }
 
     public async Task<T> AddAsync(T entity)
     {
         await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        await SaveChangesAsync();
         return entity;
     }
 }

@@ -8,28 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 
-public interface IQueriesRepository<T> where T : class
+public interface IQueriesRepository<T> : IBaseRepository<T> where T : class
 {
     Task<IEnumerable<T>> GetAllAsync();
     IQueryable<T> Query();
 }
 
-public class QueriesRepository<T> : IQueriesRepository<T> where T : class
+public class QueriesRepository<T> : BaseRepository<T>, IQueriesRepository<T> where T : class
 {
-    private readonly IDbContext _context;
-    private readonly DbSet<T> _dbSet;
-
     public QueriesRepository(IDbContext context)
-    {
-        _context = context;
-        if (_context.DB.GetPendingMigrations().Count() > 0)
-            _context.DB.Migrate();
-        _dbSet = _context.Set<T>();
-    }
+        : base(context)
+    { }
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.AsNoTracking().ToListAsync();
     }
 
     public IQueryable<T> Query()

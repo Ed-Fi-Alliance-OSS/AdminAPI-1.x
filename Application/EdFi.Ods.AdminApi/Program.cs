@@ -5,7 +5,6 @@
 
 using AspNetCoreRateLimit;
 using EdFi.Ods.AdminApi.AdminConsole;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Features;
@@ -65,10 +64,7 @@ if (adminConsoleIsEnabled)
 {
     app.MapAdminConsoleFeatureEndpoints();
     //Initialize data
-    using var scope = app.Services.CreateScope();
-    IAdminConsoleTenantsService? adminConsoleTenantsService = scope.ServiceProvider.GetService<IAdminConsoleTenantsService>();
-    if (adminConsoleTenantsService != null)
-        await adminConsoleTenantsService.InitializeTenantsAsync();
+    await app.InitAdminConsoleData();
 }
 
 app.MapControllers();

@@ -26,6 +26,7 @@ public static class DatabaseBuilderExtension
         IConfiguration config = webApplicationBuilder.Configuration;
 
         var databaseEngine = DbProviders.Parse(config.GetValue<string>("AppSettings:DatabaseEngine")!);
+        var multiTenancyEnabled = config.Get("AppSettings:MultiTenancy", false);
 
         switch (databaseEngine)
         {
@@ -33,64 +34,41 @@ public static class DatabaseBuilderExtension
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsoleMsSqlContext>(
                 (sp, options) =>
                 {
-                    options.UseSqlServer(AdminConnectionString(sp, config));
+                    options.UseSqlServer(AdminConnectionString(sp));
                 });
                 break;
             case DbProviders.PostgreSql:
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsolePgSqlContext>(
                 (sp, options) =>
                 {
-                    options.UseNpgsql(AdminConnectionString(sp, config));
+                    options.UseNpgsql(AdminConnectionString(sp));
                 });
                 break;
             default:
                 throw new ArgumentException($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
-    }
 
-    public static string AdminConnectionString(IServiceProvider serviceProvider, IConfiguration config)
-    {
-        var multiTenancyEnabled = config.Get("AppSettings:MultiTenancy", false);
-
-        var adminConnectionString = string.Empty;
-
-        if (multiTenancyEnabled)
+        string AdminConnectionString(IServiceProvider serviceProvider)
         {
-            var tenantContextProvider = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>();
-            var tenantConfigurationProvider = serviceProvider.GetRequiredService<ITenantConfigurationProvider>();
-
-            var tenant = tenantContextProvider.Get();
-            if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString))
+            var adminConnectionString = string.Empty;
+            if (multiTenancyEnabled)
             {
-                adminConnectionString = tenant.AdminConnectionString;
-            }
-            else
-            {
-                var tenantSection = serviceProvider.GetRequiredService<IOptionsMonitor<TenantsSection>>();
-                var tenants = tenantSection.CurrentValue.Tenants;
-
-                if (tenants != null)
+                var tenant = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>().Get();
+                if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString))
                 {
-                    var firstTenant = tenants.FirstOrDefault();
-                    if (tenantConfigurationProvider.Get().TryGetValue(firstTenant.Key, out var tenantConfiguration))
-                    {
-                        tenantContextProvider.Set(tenantConfiguration);
-                    }
-
-                    adminConnectionString = tenantContextProvider.Get()!.AdminConnectionString;
+                    adminConnectionString = tenant.AdminConnectionString;
                 }
                 else
                 {
-                    throw new ArgumentException($"Section Tenants not found");
+                    throw new ArgumentException($"Admin database connection setup error. Tenant not configured correctly.");
                 }
             }
-        }
-        else
-        {
-            adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
-        }
+            else
+            {
+                adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+            }
 
-        return adminConnectionString!;
+            return adminConnectionString;
+        }
     }
-
 }

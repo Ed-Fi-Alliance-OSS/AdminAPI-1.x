@@ -13,7 +13,7 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Queri
 
 public interface IGetInstanceByIdQuery
 {
-    Task<Instance> Execute(int tenantId, int docId);
+    Task<Instance> Execute(int odsInstanceId);
 }
 
 public class GetInstanceByIdQuery : IGetInstanceByIdQuery
@@ -29,10 +29,10 @@ public class GetInstanceByIdQuery : IGetInstanceByIdQuery
         _encryptionService = encryptionService;
     }
 
-    public async Task<Instance> Execute(int tenantId, int docId)
+    public async Task<Instance> Execute(int odsInstanceId)
     {
 
-        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.TenantId == tenantId && instance.DocId == docId);
+        var instance = await _instanceQuery.Query().SingleOrDefaultAsync(instance => instance.OdsInstanceId == odsInstanceId);
 
         if (instance == null)
             return null;

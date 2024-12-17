@@ -3,56 +3,45 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
-using System.Text.Json;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
+using System.ComponentModel.DataAnnotations;
 using EdFi.Ods.AdminApi.Common.Features;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
-using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using FluentValidation;
+using static EdFi.Ods.AdminApi.AdminConsole.Features.Instances.AddInstance;
+using System.Dynamic;
+using System.Text.Json;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Features.Instances;
 
-public class AddInstance : IFeature
+public class EditInstance : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiEndpointBuilder.MapPost(endpoints, "/instances", Execute)
-      .WithRouteOptions(b => b.WithResponseCode(201))
-      .BuildForVersions(AdminApiVersions.AdminConsole);
+        AdminApiEndpointBuilder.MapPatch(endpoints, "/instances/{odsinstanceid}", Execute)
+            .WithRouteOptions(b => b.WithResponseCode(204))
+            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    public async Task<IResult> Execute(Validator validator, IAddInstanceCommand addInstanceCommand, AddInstanceRequest request)
+    public async Task<IResult> Execute(Validator validator, IEditInstanceCommand editInstanceCommand, EditInstanceRequest request, int odsInstanceId)
     {
         await validator.GuardAsync(request);
-        var addedInstanceResult = await addInstanceCommand.Execute(request);
-
-        return Results.Created($"/instances/{addedInstanceResult.TenantId}/{addedInstanceResult.DocId}", addedInstanceResult);
+        var instance = await editInstanceCommand.Execute(odsInstanceId, request);
+        return Results.NoContent();
     }
 
-    public class AddInstanceRequest : IAddInstanceModel
+    public class EditInstanceRequest : IEditInstanceModel
     {
-        [Required]
-        public int OdsInstanceId { get; set; }
-        public int? EdOrgId { get; set; }
-        [Required]
-        public int TenantId { get; set; }
         [Required]
         public ExpandoObject Document { get; set; }
     }
 
-    public class Validator : AbstractValidator<AddInstanceRequest>
+    public class Validator : AbstractValidator<EditInstanceRequest>
     {
         public Validator()
         {
-            RuleFor(m => m.OdsInstanceId)
-             .NotNull();
-
-            RuleFor(m => m.EdOrgId)
-             .NotNull();
-
             RuleFor(m => m.Document)
              .NotNull()
              .NotEmpty()

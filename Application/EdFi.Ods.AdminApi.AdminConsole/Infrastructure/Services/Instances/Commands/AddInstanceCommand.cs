@@ -3,10 +3,13 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using System.Dynamic;
 using System.Text.Json.Nodes;
 using EdFi.Ods.AdminApi.AdminConsole.Helpers;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Instances.Commands;
 
@@ -30,7 +33,16 @@ public class AddInstanceCommand : IAddInstanceCommand
 
     public async Task<Instance> Execute(IAddInstanceModel instance)
     {
-        JsonNode? jnDocument = JsonNode.Parse(instance.Document);
+        var cleanedDocument = ExpandoObjectHelper.NormalizeExpandoObject(instance.Document);
+
+        var document = JsonConvert.SerializeObject(cleanedDocument, new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver(),
+            Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
+            Formatting = Formatting.Indented
+        });
+
+        JsonNode? jnDocument = JsonNode.Parse(document);
 
         var clientId = jnDocument!["clientId"]?.AsValue().ToString();
         var clientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
@@ -51,7 +63,7 @@ public class AddInstanceCommand : IAddInstanceCommand
         {
             return await _instanceCommand.AddAsync(new Instance
             {
-                InstanceId = instance.InstanceId,
+                OdsInstanceId = instance.OdsInstanceId,
                 TenantId = instance.TenantId,
                 EdOrgId = instance.EdOrgId,
                 Document = jnDocument!.ToJsonString(),
@@ -67,10 +79,10 @@ public class AddInstanceCommand : IAddInstanceCommand
 
 public interface IAddInstanceModel
 {
-    int InstanceId { get; }
+    int OdsInstanceId { get; }
     int? EdOrgId { get; }
     int TenantId { get; }
-    string Document { get; }
+    ExpandoObject Document { get; }
 }
 
 public class AddInstanceResult

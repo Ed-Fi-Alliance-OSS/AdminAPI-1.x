@@ -31,7 +31,7 @@ public class InstanceConfiguration : IEntityTypeConfiguration<Instance>
                 break;
         }
 
-        entity.HasIndex(e => e.InstanceId);
+        entity.HasIndex(e => e.OdsInstanceId);
         entity.HasIndex(e => e.EdOrgId);
     }
 }

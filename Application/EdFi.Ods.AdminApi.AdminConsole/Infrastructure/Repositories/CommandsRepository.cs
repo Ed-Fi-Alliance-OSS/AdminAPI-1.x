@@ -11,6 +11,8 @@ namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Repositories;
 public interface ICommandRepository<T> : IBaseRepository<T> where T : class
 {
     Task<T> AddAsync(T entity);
+    Task<T> UpdateAsync(T entity);
+    Task DeleteAsync(T entity);
 }
 
 public class CommandRepository<T> : BaseRepository<T>, ICommandRepository<T> where T : class
@@ -24,5 +26,18 @@ public class CommandRepository<T> : BaseRepository<T>, ICommandRepository<T> whe
         await _dbSet.AddAsync(entity);
         await SaveChangesAsync();
         return entity;
+    }
+
+    public async Task<T> UpdateAsync(T entity)
+    {
+        _dbSet.Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task DeleteAsync(T entity)
+    {
+        _dbSet.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }

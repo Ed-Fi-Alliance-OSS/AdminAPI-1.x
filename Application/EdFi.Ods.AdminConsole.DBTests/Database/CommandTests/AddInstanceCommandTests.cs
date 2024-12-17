@@ -4,7 +4,9 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System;
+using System.Dynamic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
@@ -35,6 +37,14 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
     {
         var instanceDocument = "{\"instanceId\":\"DEF456\",\"tenantId\":\"def456\",\"instanceName\":\"Mock Instance 2\",\"instanceType\":\"Type B\",\"connectionType\":\"Type Y\",\"clientId\":\"CLIENT321\",\"clientSecret\":\"SECRET456\",\"baseUrl\":\"https://localhost/api\",\"authenticationUrl\":\"https://localhost/api/oauth/token\",\"resourcesUrl\":\"https://localhost/api\",\"schoolYears\":[2024,2025],\"isDefault\":false,\"verificationStatus\":null,\"provider\":\"Local\"}";
 
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+        };
+
+        ExpandoObject documentExpandObject = JsonSerializer.Deserialize<ExpandoObject>(instanceDocument, options);
+
         var encryptionService = new EncryptionService();
         var encryptionKey = Testing.GetEncryptionKeyResolver().GetEncryptionKey();
 
@@ -43,10 +53,10 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
             var repository = new CommandRepository<Instance>(dbContext);
             var newInstance = new TestInstance
             {
-                InstanceId = 1,
+                OdsInstanceId = 1,
                 TenantId = 1,
                 EdOrgId = 1,
-                Document = instanceDocument
+                Document = documentExpandObject
             };
 
             var command = new AddInstanceCommand(repository, Testing.GetEncryptionKeyResolver(), encryptionService);
@@ -60,7 +70,7 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
             persistedInstance.Count().ShouldBe(1);
             persistedInstance.First().DocId.ShouldBe(1);
             persistedInstance.First().TenantId.ShouldBe(1);
-            persistedInstance.First().InstanceId.ShouldBe(1);
+            persistedInstance.First().OdsInstanceId.ShouldBe(1);
             persistedInstance.First().EdOrgId.ShouldBe(1);
 
             JsonNode jnDocument = JsonNode.Parse(persistedInstance.First().Document);
@@ -86,8 +96,8 @@ public class AddInstanceCommandTests : PlatformUsersContextTestBase
     {
         public int DocId { get; }
         public int TenantId { get; set; }
-        public int InstanceId { get; set; }
+        public int OdsInstanceId { get; set; }
         public int? EdOrgId { get; set; }
-        public string Document { get; set; }
+        public ExpandoObject Document { get; set; }
     }
 }

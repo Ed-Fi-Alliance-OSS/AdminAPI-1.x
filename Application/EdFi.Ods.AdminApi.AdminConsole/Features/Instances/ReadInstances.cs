@@ -23,11 +23,7 @@ public class ReadInstances : IFeature
         AdminApiEndpointBuilder.MapGet(endpoints, "/instances", GetInstances)
             .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}/{id}", GetInstanceById)
-            .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
-            .BuildForVersions(AdminApiVersions.AdminConsole);
-
-        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{tenantId}", GetInstancesByTenantId)
+        AdminApiEndpointBuilder.MapGet(endpoints, "/instances/{odsinstanceid}", GetInstanceById)
             .WithRouteOptions(b => b.WithResponse<InstanceModel>(200))
             .BuildForVersions(AdminApiVersions.AdminConsole);
     }
@@ -38,23 +34,13 @@ public class ReadInstances : IFeature
         return Results.Ok(instances);
     }
 
-    internal async Task<IResult> GetInstanceById([FromServices] IGetInstanceByIdQuery getInstanceQuery, int tenantId, int id)
+    internal async Task<IResult> GetInstanceById([FromServices] IGetInstanceByIdQuery getInstanceQuery, int odsInstanceId)
     {
-        var instance = await getInstanceQuery.Execute(tenantId, id);
+        var instance = await getInstanceQuery.Execute(odsInstanceId);
 
         if (instance != null)
             return Results.Ok(instance);
 
-        return Results.NotFound();
-    }
-
-    internal async Task<IResult> GetInstancesByTenantId([FromServices] IGetInstancesByTenantIdQuery getInstancesQuery, int tenantId)
-    {
-        var instances = await getInstancesQuery.Execute(tenantId);
-        if (instances.Any())
-        {
-            return Results.Ok(instances);
-        }
         return Results.NotFound();
     }
 }

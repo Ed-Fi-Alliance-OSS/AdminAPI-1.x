@@ -61,11 +61,11 @@ public class InstanceService : IAdminConsoleInstancesService
         foreach (var odsInstance in odsInstances)
         {
             //check if exist
-            if (!instancesAdminConsole.Any(x => x.InstanceId == odsInstance.OdsInstanceId))
+            if (!instancesAdminConsole.Any(x => x.OdsInstanceId == odsInstance.OdsInstanceId))
             {
                 //create
                 AddInstanceRequest addInstanceRequest = new AddInstanceRequest();
-                addInstanceRequest.InstanceId = odsInstance.OdsInstanceId;
+                addInstanceRequest.OdsInstanceId = odsInstance.OdsInstanceId;
                 addInstanceRequest.TenantId = tenantId;
                 var odsContexts = odsInstanceContexts.Where(x => x.OdsInstanceId == odsInstance.OdsInstanceId);
                 var odsDerivatives = odsInstanceDerivatives.Where(x => x.OdsInstanceId == odsInstance.OdsInstanceId);

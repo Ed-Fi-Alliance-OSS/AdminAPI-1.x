@@ -47,7 +47,6 @@ public class EditInstanceCommandTests : PlatformUsersContextTestBase
     [Test]
     public void ShouldEditInstance()
     {
-        var TenantId = 1;
         var Document = "{\"name\": \"Instance #4 - 2024\",\"instanceType\": null}\r\n";
 
         var options = new JsonSerializerOptions
@@ -59,7 +58,6 @@ public class EditInstanceCommandTests : PlatformUsersContextTestBase
         ExpandoObject documentExpandObject = JsonSerializer.Deserialize<ExpandoObject>(Document, options);
 
         var newInstanceData = new Mock<IEditInstanceModel>();
-        newInstanceData.Setup(v => v.TenantId).Returns(TenantId);
         newInstanceData.Setup(v => v.Document).Returns(documentExpandObject);
 
         var encryptionService = new EncryptionService();
@@ -68,7 +66,8 @@ public class EditInstanceCommandTests : PlatformUsersContextTestBase
         Transaction(async dbContext =>
         {
             var repository = new CommandRepository<Instance>(dbContext);
-            var command = new EditInstanceCommand(repository, Testing.GetEncryptionKeyResolver(), encryptionService);
+            var qRepository = new QueriesRepository<Instance>(dbContext);
+            var command = new EditInstanceCommand(repository, qRepository, Testing.GetEncryptionKeyResolver(), encryptionService);
 
             var result = await command.Execute(_odsInstanceId, newInstanceData.Object);
         });

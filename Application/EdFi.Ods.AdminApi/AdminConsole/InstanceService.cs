@@ -74,10 +74,7 @@ public class InstanceService : IAdminConsoleInstancesService
                 document.instanceType = odsInstance.InstanceType;
                 document.odsInstanceContexts = odsContexts;
                 document.odsInstanceDerivatives = odsDerivatives;
-                addInstanceRequest.Document = JsonConvert.SerializeObject(document, new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
+                addInstanceRequest.Document = document;
                 await _addInstanceCommand.Execute(addInstanceRequest);
             }
         }

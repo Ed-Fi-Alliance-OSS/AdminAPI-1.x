@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.PgSql;
 
 public class AdminConsolePgSqlContext : DbContext, IDbContext
 {
@@ -22,7 +22,7 @@ public class AdminConsolePgSqlContext : DbContext, IDbContext
 
     public DbSet<Step> Steps { get; set; }
 
-    public DatabaseFacade DB => this.Database;
+    public DatabaseFacade DB => Database;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

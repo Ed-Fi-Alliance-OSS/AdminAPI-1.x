@@ -3,11 +3,15 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.MsSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.PgSql;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
 using EdFi.Ods.AdminApi.Common.Constants;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Common.Settings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;
@@ -63,5 +67,27 @@ public static class AdminConsoleExtension
                     await adminConsoleInstancesService.InitializeIntancesAsync(tenantId);
             }
         }
+    }
+
+    public static void MigrateSecurityDbContext(this WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            DbContext dbContext;
+            var databaseEngine = DbProviders.Parse(app.Configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
+
+            switch (databaseEngine)
+            {
+                case DbProviders.SqlServer:
+                    dbContext = scope.ServiceProvider.GetRequiredService<AdminConsoleSecurityMsSqlContext>();
+                    dbContext.Database.Migrate();
+                    break;
+                case DbProviders.PostgreSql:
+                    dbContext = scope.ServiceProvider.GetRequiredService<AdminConsoleSecurityPgSqlContext>();
+                    dbContext.Database.Migrate();
+                    break;
+            }
+        }
+
     }
 }

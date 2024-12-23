@@ -8,7 +8,7 @@ using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
+namespace EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
 
 public class AdminConsoleMsSqlContext : DbContext, IDbContext
 {
@@ -21,7 +21,7 @@ public class AdminConsoleMsSqlContext : DbContext, IDbContext
 
     public DbSet<Step> Steps { get; set; }
 
-    public DatabaseFacade DB => this.Database;
+    public DatabaseFacade DB => Database;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -5,17 +5,14 @@
 
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess;
 using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsoleMsSql;
-using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.AdminConsolePgSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.MsSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Admin.PgSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.MsSql;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Contexts.Security.PgSql;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
 using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
-using EdFi.Ods.AdminApi.Common.Settings;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.AdminConsole;
 
@@ -31,32 +28,49 @@ public static class DatabaseBuilderExtension
         switch (databaseEngine)
         {
             case DbProviders.SqlServer:
+                /// Admin
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsoleMsSqlContext>(
                 (sp, options) =>
                 {
-                    options.UseSqlServer(AdminConnectionString(sp));
+                    options.UseSqlServer(AdminConnection(sp).AdminConnectionString);
+                });
+
+                /// Security
+                webApplicationBuilder.Services.AddDbContext<AdminConsoleSecurityMsSqlContext>(
+                (sp, options) =>
+                {
+                    options.UseSqlServer(AdminConnection(sp).SecurityConnectionString);
                 });
                 break;
             case DbProviders.PostgreSql:
+                /// Admin
                 webApplicationBuilder.Services.AddDbContext<IDbContext, AdminConsolePgSqlContext>(
                 (sp, options) =>
                 {
-                    options.UseNpgsql(AdminConnectionString(sp));
+                    options.UseNpgsql(AdminConnection(sp).AdminConnectionString);
+                });
+
+                /// Security
+                webApplicationBuilder.Services.AddDbContext<AdminConsoleSecurityPgSqlContext>(
+                (sp, options) =>
+                {
+                    options.UseNpgsql(AdminConnection(sp).SecurityConnectionString);
                 });
                 break;
             default:
                 throw new ArgumentException($"Unexpected DB setup error. Engine '{databaseEngine}' was parsed as valid but is not configured for startup.");
         }
 
-        string AdminConnectionString(IServiceProvider serviceProvider)
+        TenantConfiguration AdminConnection(IServiceProvider serviceProvider)
         {
-            var adminConnectionString = string.Empty;
+            var connection = new TenantConfiguration();
             if (multiTenancyEnabled)
             {
                 var tenant = serviceProvider.GetRequiredService<IContextProvider<TenantConfiguration>>().Get();
-                if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString))
+                if (tenant != null && !string.IsNullOrEmpty(tenant.AdminConnectionString) && !string.IsNullOrEmpty(tenant.SecurityConnectionString))
                 {
-                    adminConnectionString = tenant.AdminConnectionString;
+                    connection.AdminConnectionString = tenant.AdminConnectionString;
+                    connection.SecurityConnectionString = tenant.SecurityConnectionString;
                 }
                 else
                 {
@@ -65,10 +79,11 @@ public static class DatabaseBuilderExtension
             }
             else
             {
-                adminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+                connection.AdminConnectionString = config.GetConnectionStringByName("EdFi_Admin");
+                connection.SecurityConnectionString = config.GetConnectionStringByName("EdFi_Security");
             }
 
-            return adminConnectionString;
+            return connection;
         }
     }
 }

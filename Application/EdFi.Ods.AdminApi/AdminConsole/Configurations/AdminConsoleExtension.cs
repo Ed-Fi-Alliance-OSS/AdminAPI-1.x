@@ -71,11 +71,35 @@ public static class AdminConsoleExtension
 
     public static void MigrateSecurityDbContext(this WebApplication app)
     {
-        using (var scope = app.Services.CreateScope())
+        DbContext dbContext;
+        var databaseEngine = DbProviders.Parse(app.Configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
+        using var scope = app.Services.CreateScope();
+        var options = scope.ServiceProvider.GetService<IOptionsSnapshot<AppSettingsFile>>();
+        if (options!.Value.AppSettings.MultiTenancy)
         {
-            DbContext dbContext;
-            var databaseEngine = DbProviders.Parse(app.Configuration.GetValue<string>("AppSettings:DatabaseEngine")!);
-
+            foreach (var item in options!.Value.Tenants)
+            {
+                var tenantConfigurationProvider = scope.ServiceProvider.GetService<ITenantConfigurationProvider>();
+                if (tenantConfigurationProvider!.Get().TryGetValue(item.Key, out var tenantConfiguration))
+                {
+                    switch (databaseEngine)
+                    {
+                        case DbProviders.SqlServer:
+                            dbContext = scope.ServiceProvider.GetRequiredService<AdminConsoleSecurityMsSqlContext>();
+                            dbContext.Database.SetConnectionString(tenantConfiguration.SecurityConnectionString);
+                            dbContext.Database.Migrate();
+                            break;
+                        case DbProviders.PostgreSql:
+                            dbContext = scope.ServiceProvider.GetRequiredService<AdminConsoleSecurityPgSqlContext>();
+                            dbContext.Database.SetConnectionString(tenantConfiguration.SecurityConnectionString);
+                            dbContext.Database.Migrate();
+                            break;
+                    }
+                }
+            }
+        }
+        else
+        {
             switch (databaseEngine)
             {
                 case DbProviders.SqlServer:
@@ -88,6 +112,5 @@ public static class AdminConsoleExtension
                     break;
             }
         }
-
     }
 }

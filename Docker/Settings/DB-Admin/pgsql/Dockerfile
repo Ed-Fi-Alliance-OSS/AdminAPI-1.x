@@ -3,8 +3,8 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-#edfialliance/ods-api-db-admin:7.1
-FROM edfialliance/ods-api-db-admin:7.2.5570-5.1.0@sha256:53a9c8bbed76075bc438e63ba9579a48f1539bf7d5a3ee1b5171739c7e496ab0 AS base
+#edfialliance/ods-api-db-admin:7.3
+FROM edfialliance/ods-api-db-admin:7.3@sha256:0a25a039e575464de1fdf09b2db270f00910f937cb782dfa809ac3c192509233 AS base
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV POSTGRES_USER=${POSTGRES_USER}

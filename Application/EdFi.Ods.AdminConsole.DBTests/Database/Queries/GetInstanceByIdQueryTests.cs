@@ -82,5 +82,6 @@ public class GetInstanceByIdQueryTests : PlatformUsersContextTestBase
         public int OdsInstanceId { get; set; }
         public int? EdOrgId { get; set; }
         public ExpandoObject Document { get; set; }
+        public ExpandoObject ApiCredentials { get; set; }
     }
 }

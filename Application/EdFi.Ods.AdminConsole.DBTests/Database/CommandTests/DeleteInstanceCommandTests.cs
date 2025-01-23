@@ -31,7 +31,8 @@ public class DeleteInstanceCommandTests : PlatformUsersContextTestBase
         {
             TenantId = 1,
             OdsInstanceId = 1,
-            Document = "{\"name\": \"Instance #3 - 2024\",\"instanceType\": null}\r\n"
+            Document = "{\"name\": \"Instance #3 - 2024\",\"instanceType\": null}\r\n",
+            ApiCredentials = "{\"clientId\": \"test\",\"clientSecret\": \"testSecret\"}\r\n"
         };
 
         Save(newInstance);

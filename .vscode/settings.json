@@ -18,7 +18,7 @@
             ]
         }
     ],
-    "psi-header.lang-config":[
+    "psi-header.lang-config": [
         {
             "_": "Apply double slash-based comments",
             "language": "csharp",
@@ -67,8 +67,28 @@
     ],
     "psi-header.changes-tracking": {
         "autoHeader": "autoSave",
-        "exclude": [
-            "css", "json", "xml", "config", "plaintext", "markdown", "batch"
-        ]
+        "exclude": ["css", "json", "xml", "config", "plaintext", "markdown", "batch"]
+    },
+    "dotnet.defaultSolution": "Application/Ed-Fi-ODS-AdminApi.sln",
+    "markdownlint.config": {
+        "default": true,
+        "line-length": false,
+        "no-inline-html": {
+            "allowed_elements": ["kbd", "details", "summary", "br", "iframe", "sup"]
+        },
+        "emphasis-style": {
+            "style": "underscore"
+        },
+        "ul-style": {
+            "style": "asterisk"
+        }
+    },
+    "[markdown]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.markdownlint": "explicit"
     }
 }

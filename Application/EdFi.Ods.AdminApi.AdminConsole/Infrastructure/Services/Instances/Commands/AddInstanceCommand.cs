@@ -34,18 +34,29 @@ public class AddInstanceCommand : IAddInstanceCommand
     public async Task<Instance> Execute(IAddInstanceModel instance)
     {
         var cleanedDocument = ExpandoObjectHelper.NormalizeExpandoObject(instance.Document);
+        var cleanedApiCredencials = ExpandoObjectHelper.NormalizeExpandoObject(instance.ApiCredentials);
 
         var document = JsonConvert.SerializeObject(cleanedDocument, new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver(),
             Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
-            Formatting = Formatting.Indented
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
+
+        var apiCredentialsDocument = JsonConvert.SerializeObject(cleanedApiCredencials, new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver(),
+            Converters = new List<JsonConverter> { new ExpandoObjectConverter() },
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         });
 
         JsonNode? jnDocument = JsonNode.Parse(document);
+        JsonNode? jnApiCredentialsDocument = JsonNode.Parse(apiCredentialsDocument);
 
-        var clientId = jnDocument!["clientId"]?.AsValue().ToString();
-        var clientSecret = jnDocument!["clientSecret"]?.AsValue().ToString();
+        var clientId = jnApiCredentialsDocument!["clientId"]?.AsValue().ToString();
+        var clientSecret = jnApiCredentialsDocument!["clientSecret"]?.AsValue().ToString();
 
         var encryptedClientId = string.Empty;
         var encryptedClientSecret = string.Empty;
@@ -55,8 +66,8 @@ public class AddInstanceCommand : IAddInstanceCommand
             _encryptionService.TryEncrypt(clientId, _encryptionKey, out encryptedClientId);
             _encryptionService.TryEncrypt(clientSecret, _encryptionKey, out encryptedClientSecret);
 
-            jnDocument!["clientId"] = encryptedClientId;
-            jnDocument!["clientSecret"] = encryptedClientSecret;
+            jnApiCredentialsDocument!["clientId"] = encryptedClientId;
+            jnApiCredentialsDocument!["clientSecret"] = encryptedClientSecret;
         }
 
         try
@@ -67,6 +78,7 @@ public class AddInstanceCommand : IAddInstanceCommand
                 TenantId = instance.TenantId,
                 EdOrgId = instance.EdOrgId,
                 Document = jnDocument!.ToJsonString(),
+                ApiCredentials = jnApiCredentialsDocument!.ToJsonString(),
             });
         }
         catch (Exception ex)
@@ -83,6 +95,7 @@ public interface IAddInstanceModel
     int? EdOrgId { get; }
     int TenantId { get; }
     ExpandoObject Document { get; }
+    ExpandoObject ApiCredentials { get; }
 }
 
 public class AddInstanceResult

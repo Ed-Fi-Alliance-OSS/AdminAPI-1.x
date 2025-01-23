@@ -18,4 +18,6 @@ public class Instance
     public int? EdOrgId { get; set; }
     [JsonConverter(typeof(StringToJsonDocumentConverter))]
     public required string Document { get; set; }
+    [JsonConverter(typeof(StringToJsonDocumentConverter))]
+    public required string ApiCredentials { get; set; }
 }

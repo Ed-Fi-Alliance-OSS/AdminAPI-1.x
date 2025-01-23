@@ -29,6 +29,7 @@ public static class AdminConsoleExtension
     public static async Task InitAdminConsoleData(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
+        int applicationId = 0;
         IAdminConsoleTenantsService? adminConsoleTenantsService = scope.ServiceProvider.GetService<IAdminConsoleTenantsService>();
         if (adminConsoleTenantsService != null)
         {
@@ -49,10 +50,15 @@ public static class AdminConsoleExtension
                         {
                             //assign connection string to the dbcontext when is multitenant
                             tenantConfigurationContextProvider!.Set(tenantConfiguration);
+                            IAdminConsoleInitializationService? adminConsoleInitializationService = scope.ServiceProvider.GetService<IAdminConsoleInitializationService>();
                             IAdminConsoleInstancesService? adminConsoleInstancesService = scopeInstances.ServiceProvider.GetService<IAdminConsoleInstancesService>();
+                            if (adminConsoleInitializationService != null)
+                            {
+                                applicationId = await adminConsoleInitializationService.InitializeApplications(app);
+                            }
 
                             if (adminConsoleInstancesService != null)
-                                await adminConsoleInstancesService.InitializeIntancesAsync(tenantId);
+                                await adminConsoleInstancesService.InitializeInstancesAsync(tenantId, applicationId);
                             tenantId++;
                         }
                     }
@@ -63,8 +69,13 @@ public static class AdminConsoleExtension
                 //single tenant
                 //get instances in adminconsole
                 IAdminConsoleInstancesService? adminConsoleInstancesService = scope.ServiceProvider.GetService<IAdminConsoleInstancesService>();
+                IAdminConsoleInitializationService? adminConsoleInitializationService = scope.ServiceProvider.GetService<IAdminConsoleInitializationService>();
                 if (adminConsoleInstancesService != null)
-                    await adminConsoleInstancesService.InitializeIntancesAsync(tenantId);
+                {
+                    if (adminConsoleInitializationService != null)
+                        applicationId = await adminConsoleInitializationService.InitializeApplications(app);
+                    await adminConsoleInstancesService.InitializeInstancesAsync(tenantId, applicationId);
+                }
             }
         }
     }

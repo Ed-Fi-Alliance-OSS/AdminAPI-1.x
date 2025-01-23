@@ -37,6 +37,7 @@ public static class ServicesBuilderExtension
 
         builder.Services.AddTransient<IAdminConsoleTenantsService, TenantService>();
         builder.Services.AddTransient<IAdminConsoleInstancesService, InstanceService>();
+        builder.Services.AddTransient<IAdminConsoleInitializationService, InitializationService>();
 
         builder.RegisterAdminConsoleServices();
         builder.RegisterAdminConsoleValidators();

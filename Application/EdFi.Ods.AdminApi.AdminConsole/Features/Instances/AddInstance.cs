@@ -41,6 +41,8 @@ public class AddInstance : IFeature
         public int TenantId { get; set; }
         [Required]
         public ExpandoObject Document { get; set; }
+        [Required]
+        public ExpandoObject ApiCredentials { get; set; }
     }
 
     public class Validator : AbstractValidator<AddInstanceRequest>

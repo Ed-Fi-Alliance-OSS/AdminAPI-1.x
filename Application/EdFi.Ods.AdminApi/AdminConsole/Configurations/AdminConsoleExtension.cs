@@ -50,7 +50,7 @@ public static class AdminConsoleExtension
                         {
                             //assign connection string to the dbcontext when is multitenant
                             tenantConfigurationContextProvider!.Set(tenantConfiguration);
-                            IAdminConsoleInitializationService? adminConsoleInitializationService = scope.ServiceProvider.GetService<IAdminConsoleInitializationService>();
+                            IAdminConsoleInitializationService? adminConsoleInitializationService = scopeInstances.ServiceProvider.GetService<IAdminConsoleInitializationService>();
                             IAdminConsoleInstancesService? adminConsoleInstancesService = scopeInstances.ServiceProvider.GetService<IAdminConsoleInstancesService>();
                             if (adminConsoleInitializationService != null)
                             {

@@ -12,6 +12,7 @@ using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
+using EdFi.Ods.AdminApi.Infrastructure.Providers.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
@@ -29,10 +30,20 @@ public class EditOdsInstance : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> Handle(Validator validator, IEditOdsInstanceCommand editOdsInstanceCommand, IMapper mapper, EditOdsInstanceRequest request, int id)
+    public async Task<IResult> Handle(
+        Validator validator,
+        IEditOdsInstanceCommand editOdsInstanceCommand,
+        IMapper mapper,
+        ISymmetricStringEncryptionProvider encryptionProvider,
+        IOptions<AppSettings> options,
+        EditOdsInstanceRequest request,
+        int id)
     {
         request.Id = id;
         await validator.GuardAsync(request);
+
+        string encryptionKey = options.Value.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
+        request.ConnectionString = encryptionProvider.Encrypt(request.ConnectionString, Convert.FromBase64String(encryptionKey));
         editOdsInstanceCommand.Execute(request);
         return Results.Ok();
     }

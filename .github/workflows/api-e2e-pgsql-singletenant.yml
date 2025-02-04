@@ -126,7 +126,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Download artifacts
-        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 #v4.1.1
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 #v4.1.8
 
     # Commented code until Token is renewed
     #  - name: Send report to Zephyr

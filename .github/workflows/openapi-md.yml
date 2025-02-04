@@ -62,10 +62,10 @@ jobs:
           git add docs/api-specifications/markdown/*
           git restore Application/EdFi.Ods.AdminApi/appsettings.json
           git status --porcelain
-          
+
       - name: Commit file
         id: commit
-        uses: planetscale/ghcommit-action@4131649dbf2fdf1eb34421702972a5af7b0a8731
+        uses: planetscale/ghcommit-action@d4176bfacef926cc2db351eab20398dfc2f593b5 #v0.2.0
         with:
           commit_message: "${{ env.CI_COMMIT_MESSAGE }}"
           repo: ${{ github.repository }}

@@ -28,9 +28,9 @@ public static class Testing
 
     public static string SecurityConnectionString { get { return Configuration().GetConnectionString("EdFi_Security"); } }
 
-    public static int DefaultPageSizeOffset => (int)Configuration().GetValue(typeof(int), "DefaultPageSizeOffset");
+    public static int DefaultPageSizeOffset => Configuration().GetSection("AppSettings").GetValue<int>("DefaultPageSizeOffset");
 
-    public static int DefaultPageSizeLimit => (int)Configuration().GetValue(typeof(int), "DefaultPageSizeLimit");
+    public static int DefaultPageSizeLimit => Configuration().GetSection("AppSettings").GetValue<int>("DefaultPageSizeLimit");
 
     public static DbContextOptions GetDbContextOptions(string connectionString)
     {

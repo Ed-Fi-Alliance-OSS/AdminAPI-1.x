@@ -7,25 +7,34 @@ services:
   nginx:
     build:
       context: ../../../Settings/gateway/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_IDP
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
+      ODS_VIRTUAL_NAME: "${ODS_VIRTUAL_NAME:-api}"
+      KEYCLOAK_VIRTUAL_NAME: ${KEYCLOAK_VIRTUAL_NAME:-auth}
     ports:
       - "443:443"
       - "80:80"
-    container_name: ed-fi-gateway-adminapi-packaged
+    container_name: ed-fi-gateway-adminapi
     restart: always
     hostname: nginx
     volumes:
       - ../../../Settings/ssl:/ssl/
-      - ../../../Settings/gateway/default.conf.template:/etc/nginx/templates/default.conf.template
     depends_on:
       - adminapi
+      - idp-keycloak
 
   adminapi:
     build:
+      # Important to set the context to the root, rather than setting it to the
+      # EdFi.Ods.AdminApi directory, so that the Dockerfile has access to other
+      # C# projects.
       context: ../../../
-      dockerfile: api.mssql.Dockerfile
+      additional_contexts:
+        assets: ../../../../
+      args:
+        ASPNETCORE_ENVIRONMENT: "multitenantdocker"
+      dockerfile: dev.mssql.Dockerfile
     environment:
       ADMIN_WAIT_MSSQL_HOSTS: "db-admin-tenant1 db-admin-tenant2"
       SQLSERVER_ADMIN_DATASOURCE: db-admin
@@ -45,12 +54,12 @@ services:
       MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-true}"
       AppSettings__PreventDuplicateApplications: ${PREVENT_DUPLICATE_APPLICATIONS:-false}
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
-      DEFAULT_TENANT: ${DEFAULT_TENANT:-tenant1}
+      DEFAULT_TENANT: ${DEFAULT_TENANT:-tenant2}
       ENABLE_ADMIN_CONSOLE: ${ENABLE_ADMIN_CONSOLE:-true}
-      USE_SELF_CONTAINED_AUTH: true
-      OIDC_AUTHORITY: ""
-      OIDC_REQUIRE_METADATA: ""
-      OIDC_ENABLE_SERVER_CERTIFICATE: ""
+      USE_SELF_CONTAINED_AUTH: ${USE_SELF_CONTAINED_AUTH:-true}
+      OIDC_AUTHORITY: "http://ed-fi-keycloak:8080/auth/realms/myrealm"
+      OIDC_REQUIRE_METADATA: "${OIDC_REQUIRE_METADATA:-false}"
+      OIDC_ENABLE_SERVER_CERTIFICATE: "${OIDC_ENABLE_SERVER_CERTIFICATE:-true}"
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]
@@ -58,9 +67,10 @@ services:
     depends_on:
       - db-admin-tenant1
       - db-admin-tenant2
+      - idp-keycloak
     restart: always
     hostname: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
-    container_name: adminapi-packaged
+    container_name: adminapi
     healthcheck:
       test: ${ADMIN_API_HEALTHCHECK_TEST}
       start_period: "60s"
@@ -86,6 +96,7 @@ services:
       retries: 10
     volumes:
       - vol-db-admin-adminapi-tenant1:/var/lib/mssql/data
+      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/MsSql/adminapi-test-seeddata.sql
     restart: always
     container_name: ed-fi-db-admin-adminapi-tenant1
 
@@ -109,8 +120,68 @@ services:
       retries: 10
     volumes:
       - vol-db-admin-adminapi-tenant2:/var/lib/mssql/data
+      - ../../../Settings/dev/mssql/adminapi-test-seeddata.sql:/tmp/AdminApiScripts/MsSql/adminapi-test-seeddata.sql
     restart: always
     container_name: ed-fi-db-admin-adminapi-tenant2
+
+  idp-keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_IMAGE_TAG:-26.0}
+    command: start-dev --import-realm
+    environment:
+      KC_HOSTNAME: "https://${KEYCLOAK_HOSTNAME:-localhost}/${KEYCLOAK_RELATIVE_PATH:-auth}/"
+      KC_HTTP_ENABLED: true
+      KC_HTTPS_ENABLED: true
+      KC_HOSTNAME_STRICT: true
+      KC_HEALTH_ENABLED: ${KEYCLOAK_HEALTH_ENABLED:-true}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db-idp-keycloak/${KEYCLOAK_POSTGRES_DB:-keycloak_db}
+      KC_PROXY_HEADERS: forwarded
+      PROXY_ADDRESS_FORWARDING: true
+      KC_DB_USERNAME: ${KEYCLOAK_POSTGRES_USER:-edfi}
+      KC_DB_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-P@55w0rd}
+      KC_HTTP_RELATIVE_PATH: "/${KEYCLOAK_RELATIVE_PATH:-auth}/"
+      KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_LEGACY_IFRAME_CHECK: false
+      KC_LOG_LEVEL: ${KEYCLOAK_LOG_LEVEL:-OFF}
+      KC_LOG: console
+      KC_HTTPS_CERTIFICATE_FILE: /ssl/server.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /ssl/server.key
+    ports:
+      - ${KEYCLOAK_PORT:-28080}:8080
+    restart: always
+    depends_on:
+      - pb-idp-keycloak
+    hostname: ${KEYCLOAK_VIRTUAL_NAME:-idp_keycloak}
+    volumes:
+      - ../../../Settings/ssl:/ssl/
+      - ../../../KeyCloak/realm-and-users.json:/opt/keycloak/data/import/realm-and-users.json
+    container_name: ed-fi-keycloak
+
+  db-idp-keycloak:
+    image: postgres:${KEYCLOAK_DB_IMAGE_TAG:-16.2}
+    volumes:
+      - vol-db-idp-keycloak:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB:-keycloak_db}
+      POSTGRES_USER: ${KEYCLOAK_POSTGRES_USER:-edfi}
+      POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-P@55w0rd}
+    container_name: ed-fi-db-idp-keycloak
+
+  pb-idp-keycloak:
+    image: bitnami/pgbouncer:1.20.0
+    environment:
+      PGBOUNCER_DATABASE: '*'
+      PGBOUNCER_PORT: ${PGBOUNCER_LISTEN_PORT:-6432}
+      PGBOUNCER_EXTRA_FLAGS: ${PGBOUNCER_EXTRA_FLAGS}
+      POSTGRESQL_USER: ${KEYCLOAK_POSTGRES_USER:-edfi}
+      POSTGRESQL_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-P@55w0rd}
+      POSTGRESQL_HOST: db-idp-keycloak
+      PGBOUNCER_SET_DATABASE_USER: 'yes'
+      PGBOUNCER_SET_DATABASE_PASSWORD: 'yes'
+      PGBOUNCER_IGNORE_STARTUP_PARAMETERS: extra_float_digits
+    restart: always
+    container_name: ed-fi-pb-idp-keycloak
+    depends_on:
+      - db-idp-keycloak
 
 volumes:
   vol-db-admin-adminapi-tenant1:
@@ -119,3 +190,6 @@ volumes:
   vol-db-admin-adminapi-tenant2:
     driver: local
     name: vol-db-admin-adminapi-tenant2
+  vol-db-idp-keycloak:
+    driver: local
+    name: vol-db-idp-keycloak

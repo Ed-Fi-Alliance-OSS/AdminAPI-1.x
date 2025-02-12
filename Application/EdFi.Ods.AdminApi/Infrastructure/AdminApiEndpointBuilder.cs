@@ -45,6 +45,10 @@ public class AdminApiEndpointBuilder
 
     public void BuildForVersions(params AdminApiVersions.AdminApiVersion[] versions)
     {
+        BuildForVersions(string.Empty, versions);
+    }
+    public void BuildForVersions(string authorizationPolicy, params AdminApiVersions.AdminApiVersion[] versions)
+    {
         if (versions.Length == 0)
             throw new ArgumentException("Must register for at least 1 version");
         if (_route == null)
@@ -74,7 +78,14 @@ public class AdminApiEndpointBuilder
             }
             else
             {
-                builder.RequireAuthorization();
+                if (string.IsNullOrWhiteSpace(authorizationPolicy))
+                {
+                    builder.RequireAuthorization(authorizationPolicy);
+                }
+                else
+                {
+                    builder.RequireAuthorization();
+                }
             }
 
             builder.WithGroupName(version.ToString());

@@ -4,6 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Ods.AdminApi.Features.Connect;
+using EdFi.Ods.AdminApi.Infrastructure.Documentation;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +24,10 @@ public static class SecurityExtensions
         IWebHostEnvironment webHostEnvironment
     )
     {
-        var issuer = configuration.Get<string>("Authentication:IssuerUrl");
+        bool useSelfContainedAuthorization = configuration.GetValue<bool>("AppSettings:UseSelfcontainedAuthorization");
+        var issuer = useSelfContainedAuthorization
+            ? configuration.Get<string>("Authentication:IssuerUrl")
+            : configuration.Get<string>("Authentication:OIDC:Authority");
         var isDockerEnvironment = configuration.Get<bool>("EnableDockerEnvironment");
 
         //OpenIddict Server
@@ -81,12 +85,15 @@ public static class SecurityExtensions
             });
 
         //Application Security
-        services.
+        var authenticationBuilder = services.
             AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
+            });
+        if (useSelfContainedAuthorization)
+        {
+            authenticationBuilder.AddJwtBearer(opt =>
             {
                 opt.Authority = issuer;
                 opt.SaveToken = true;
@@ -100,17 +107,65 @@ public static class SecurityExtensions
                 };
                 opt.RequireHttpsMetadata = !isDockerEnvironment;
             });
+        }
+        else
+        {
+            authenticationBuilder.AddJwtBearer(options =>
+            {
+                var oidcIssuer = configuration.Get<string>("Authentication:OIDC:Authority");
+                if (!String.IsNullOrEmpty(oidcIssuer))
+                {
+                    var oidcValidationCallback = configuration.Get<bool>("Authentication:OIDC:EnableServerCertificateCustomValidationCallback");
+                    var requireHttpsMetadata = configuration.Get<bool>("Authentication:OIDC:RequireHttpsMetadata");
+                    options.Authority = oidcIssuer;
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = requireHttpsMetadata;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = configuration.Get<bool>("Authentication:OIDC:ValidateIssuer"),
+                        ValidateIssuerSigningKey = false,
+                        ValidIssuer = oidcIssuer,
+                        IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                        {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
+                            var handler = new HttpClientHandler
+                            {
+                                ServerCertificateCustomValidationCallback = (request, cert, chain, errors) => oidcValidationCallback
+                            };
+#pragma warning restore S4830
+                            // Server certificates should be verified during SSL/TLS connections
+                            // Get public keys from keycloak
+                            var client = new HttpClient(handler);
+                            Console.WriteLine("Issuer" + oidcIssuer);
+                            var response = client.GetStringAsync(oidcIssuer + "/protocol/openid-connect/certs").Result;
+                            var keys = JsonWebKeySet.Create(response).GetSigningKeys();
+                            return keys;
+                        }
+                    };
+                }
+            });
+        }
+
+
         services.AddAuthorization(opt =>
         {
             opt.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .RequireClaim(OpenIddictConstants.Claims.Scope, SecurityConstants.Scopes.AdminApiFullAccess)
+            .AddAuthenticationSchemes()
+                .RequireAssertion(context =>
+                        context.User.HasClaim(c => c.Type == OpenIddictConstants.Claims.Scope && c.Value.Contains(SecurityConstants.Scopes.AdminApiFullAccess))
+                    )
                 .Build();
         });
-
+        // Controllers to hide from Swagger conditionally
+        var controllerNamesToHide = new List<string> { "ConnectController" };
         //Security Endpoints
         services.AddTransient<ITokenService, TokenService>();
         services.AddTransient<IRegisterService, RegisterService>();
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.Conventions.Add(new SwaggerHideControllerConvention(configuration, controllerNamesToHide));
+        });
     }
 
     public class DefaultTokenResponseHandler : IOpenIddictServerHandler<ApplyTokenResponseContext>

@@ -46,6 +46,11 @@ services:
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
       AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-true}"
       MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
+      ENABLE_ADMIN_CONSOLE: ${ENABLE_ADMIN_CONSOLE:-true}
+      USE_SELF_CONTAINED_AUTH: true
+      OIDC_AUTHORITY: ""
+      OIDC_REQUIRE_METADATA: ""
+      OIDC_ENABLE_SERVER_CERTIFICATE: ""
     depends_on:
       - db-admin
     restart: always

@@ -2,30 +2,30 @@
 
 ## Contents
 
-- [Admin API Developer Instructions](#admin-api-developer-instructions)
-  - [Contents](#contents)
-  - [Development Pre-Requisites](#development-pre-requisites)
-  - [Build Script](#build-script)
-  - [Running on Localhost](#running-on-localhost)
-    - [Configuring Admin API to Run with the ODS/API](#configuring-admin-api-to-run-with-the-odsapi)
-    - [Resetting the Database State](#resetting-the-database-state)
-    - [Running Locally in Docker](#running-locally-in-docker)
-  - [Testing Admin API](#testing-admin-api)
-  - [Application Architecture](#application-architecture)
-    - [Database Layer](#database-layer)
-    - [Validation](#validation)
+* [Admin API Developer Instructions](#admin-api-developer-instructions)
+  * [Contents](#contents)
+  * [Development Pre-Requisites](#development-pre-requisites)
+  * [Build Script](#build-script)
+  * [Running on Localhost](#running-on-localhost)
+    * [Configuring Admin API to Run with the ODS/API](#configuring-admin-api-to-run-with-the-odsapi)
+    * [Resetting the Database State](#resetting-the-database-state)
+    * [Running Locally in Docker](#running-locally-in-docker)
+  * [Testing Admin API](#testing-admin-api)
+  * [Application Architecture](#application-architecture)
+    * [Database Layer](#database-layer)
+    * [Validation](#validation)
 
 ## Development Pre-Requisites
 
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- Suggested to have either:
-  - [Visual Studio 2022](https://visualstudio.microsoft.com/downloads), or
-  - [Visual Studio 2022 Build
+* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* Suggested to have either:
+  * [Visual Studio 2022](https://visualstudio.microsoft.com/downloads), or
+  * [Visual Studio 2022 Build
     Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
     (install the ".NET Build Tools" component)
-- Clone [this
+* Clone [this
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-AdminApi) locally
-- To work with the official Ed-Fi Docker solution, also clone the [Docker
+* To work with the official Ed-Fi Docker solution, also clone the [Docker
   repository](https://github.com/Ed-Fi-Alliance-OSS/Ed-Fi-ODS-Docker).
 
 ## Build Script
@@ -37,23 +37,23 @@ as needed (nuget, nunit).
 
 Available command (e.g. `./build.ps1 clean`) (commands are not case sensitive):
 
-- `clean`: runs `dotnet clean`
-- `build`: runs `dotnet build` with several implicit steps
+* `clean`: runs `dotnet clean`
+* `build`: runs `dotnet build` with several implicit steps
     (clean, restore, inject version information).
-- `unitTest`: executes NUnit tests in projects named `*.UnitTests`, which
+* `unitTest`: executes NUnit tests in projects named `*.UnitTests`, which
     do not connect to a database.
-- `integrationTest`: executes NUnit tests in projects named `*.Test`,
+* `integrationTest`: executes NUnit tests in projects named `*.Test`,
     which connect to a database. Includes drop and deploy operations for
     installing fresh test databases compatible with Ed-Fi ODS/API 3.4 and 5.3.
-- `buildAndTest`: executes the Build, UnitTest, and IntegrationTest
+* `buildAndTest`: executes the Build, UnitTest, and IntegrationTest
     commands.
-- `package`: builds pre-release and release NuGet packages for the Admin
+* `package`: builds pre-release and release NuGet packages for the Admin
     App web application.
-- `push`: uploads a NuGet package to the NuGet feed.
-- `buildAndDeployToAdminApiDockerContainer`: runs the build operation, update
+* `push`: uploads a NuGet package to the NuGet feed.
+* `buildAndDeployToAdminApiDockerContainer`: runs the build operation, update
     the `appsettings.json` with provided Docker environment variables and copy
     over the latest files to existing AdminApi docker container for testing.
-- `run`: runs the Admin API
+* `run`: runs the Admin API
 
 Note: use the `IsLocalBuild` switch to install NuGet.exe if you do not already
 have it in your local path.
@@ -65,10 +65,10 @@ arguments.
 
 There are three ways of running Admin API:
 
-- `build.ps1 run` to run from the command line.
-- Run inside a container with the help of
+* `build.ps1 run` to run from the command line.
+* Run inside a container with the help of
   [compose-build-dev.yml](../Docker/Compose/pgsql/compose-build-dev.yml).
-- Start from Visual Studio to take advantage of easy debugging integration.
+* Start from Visual Studio to take advantage of easy debugging integration.
 
 There are several launch profiles available either with `build.ps1` or when
 running from Visual Studio. Review
@@ -89,9 +89,9 @@ Docker network from Admin API, because at present both need to access the same
 `EdFi_Admin` and `EdFi_Security` databases. If starting up manually, make sure
 that both Admin API and ODS/API have the same deployment setting:
 
-- `sharedinstance`
-- `yearspecific`
-- `districtspecific`
+* `sharedinstance`
+* `yearspecific`
+* `districtspecific`
 
 In Admin API, you set this value in the `appsettings.json` file under
 `AppSettings.ApiStartupType`. In the ODS/API, you set it as the
@@ -157,12 +157,32 @@ eng/run-dbup-migrations.ps1
 As mentioned above, you can run locally in Docker. See [docker.md](docker.md)
 for more information.
 
+### Using Keycloak (IDP)
+
+To use Keycloak for authenticating the API, you need to configure the parameters in the OIDC section. Additionally, you must specify with `"UseSelfcontainedAuthorization": false`, that the API’s own authentication will be disabled in favor of using Keycloak.
+
+Furthermore, when using Keycloak, the Register and Token endpoints will not be available in Swagger or for direct calls. Attempting to access these endpoints will result in a 404 error.
+
+```
+"Authentication": {
+        "IssuerUrl": "",
+        "SigningKey": "",
+        "AllowRegistration": false,
+        "OIDC": {
+            "Authority": "https://localhost/auth/realms/myrealm",
+            "ValidateIssuer": true,
+            "RequireHttpsMetadata": false,
+            "EnableServerCertificateCustomValidationCallback": true
+        }
+    },
+```
+
 ## Testing Admin API
 
 In source code there are two test projects:
 
-- Unit tests that are completely isolated.
-- The DB Tests project is a set of _integration_ tests that exercise the
+* Unit tests that are completely isolated.
+* The DB Tests project is a set of _integration_ tests that exercise the
   repository layer.
 
 Additionally there is a set of end-to-end (E2E) tests in Postman. See the [E2E

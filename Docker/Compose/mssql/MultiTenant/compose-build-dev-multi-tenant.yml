@@ -53,6 +53,11 @@ services:
       AppSettings__PreventDuplicateApplications: ${PREVENT_DUPLICATE_APPLICATIONS:-false}
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
       DEFAULT_TENANT: ${DEFAULT_TENANT:-tenant2}
+      ENABLE_ADMIN_CONSOLE: ${ENABLE_ADMIN_CONSOLE:-true}
+      USE_SELF_CONTAINED_AUTH: true
+      OIDC_AUTHORITY: ""
+      OIDC_REQUIRE_METADATA: ""
+      OIDC_ENABLE_SERVER_CERTIFICATE: ""
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]

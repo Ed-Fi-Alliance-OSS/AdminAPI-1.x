@@ -7,7 +7,7 @@ services:
   nginx:
     build:
       context: ../../../Settings/gateway/
-      dockerfile: Dockerfile_IDP
+      dockerfile: IDP.Dockerfile
     environment:
       ADMIN_API_VIRTUAL_NAME: "${ADMIN_API_VIRTUAL_NAME:-adminapi}"
       ODS_VIRTUAL_NAME: "${ODS_VIRTUAL_NAME:-api}"

@@ -5,7 +5,8 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Common.Helpers;
+using EdFi.Ods.AdminApi.Common.Settings;
 using Microsoft.Extensions.Options;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Extensions

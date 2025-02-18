@@ -50,6 +50,7 @@ jobs:
           mkdir Docker/Application
           cp -r ./Application/EdFi.Ods.AdminApi ./Docker/Application
           cp -r ./Application/EdFi.Ods.AdminApi.AdminConsole ./Docker/Application
+          cp -r ./Application/EdFi.Ods.AdminApi.Common ./Docker/Application
           cp ./Application/NuGet.Config ./Docker/Application
 
       - name: Set Version Numbers

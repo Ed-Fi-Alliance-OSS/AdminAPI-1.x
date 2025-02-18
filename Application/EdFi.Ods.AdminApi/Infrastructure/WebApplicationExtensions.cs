@@ -2,6 +2,9 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
+using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
+using AdminApiFeatures = EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using AdminConsoleFeatures = EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Helpers;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -11,7 +14,7 @@ public static class WebApplicationExtensions
     {
         application.UseEndpoints(endpoints =>
         {
-            foreach (var routeBuilder in Helpers.FeaturesHelper.GetFeatures())
+            foreach (var routeBuilder in AdminApiFeatures.AdminApiFeatureHelper.GetFeatures())
             {
                 routeBuilder.MapEndpoints(endpoints);
             }
@@ -22,7 +25,7 @@ public static class WebApplicationExtensions
     {
         application.UseEndpoints(endpoints =>
         {
-            foreach (var routeBuilder in EdFi.Ods.AdminApi.AdminConsole.FeaturesHelper.GetFeatures())
+            foreach (var routeBuilder in AdminConsoleFeatures.AdminConsoleFeatureHelper.GetFeatures())
             {
                 routeBuilder.MapEndpoints(endpoints);
             }

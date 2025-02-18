@@ -4,27 +4,60 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using System.Dynamic;
+using System.Runtime.CompilerServices;
+using System.Security;
+using System.Text.Json;
+using EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.DataAccess.Models;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Permissions.Queries;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Permissions;
 
 public class ReadPermissions : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/permissions", GetPermissions)
-           .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/permissions", GetPermissions)
+            .BuildForVersions(AdminApiVersions.AdminConsole);
+
+        AdminApiEndpointBuilder.MapGet(endpoints, "/permissions/{tenantId}/{id}", GetPermissionById)
+            .WithRouteOptions(b => b.WithResponse<PermissionModel>(200))
+            .BuildForVersions(AdminApiVersions.AdminConsole);
+
+        AdminApiEndpointBuilder.MapGet(endpoints, "/permissions/{tenantId}", GetPermissionsByTenantId)
+            .WithRouteOptions(b => b.WithResponse<PermissionModel>(200))
+            .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal Task<IResult> GetPermissions()
+    internal async Task<IResult> GetPermissions([FromServices] IGetPermissionsQuery getPermissionQuery)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-permissions.json"))
+        var permissions = await getPermissionQuery.Execute();
+        return Results.Ok(permissions);
+    }
+
+    internal async Task<IResult> GetPermissionById([FromServices] IGetPermissionByIdQuery getPermissionQuery, int tenantId, int id)
+    {
+        var permission = await getPermissionQuery.Execute(tenantId, id);
+
+        if (permission != null)
+            return Results.Ok(permission);
+
+        return Results.NotFound();
+    }
+
+    internal async Task<IResult> GetPermissionsByTenantId([FromServices] IGetPermissionsByTenantIdQuery getPermissionQuery, int tenantId)
+    {
+        var permissions = await getPermissionQuery.Execute(tenantId);
+        if (permissions.Any())
         {
-            string json = r.ReadToEnd();
-            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
-            return Task.FromResult(Results.Ok(result));
+            return Results.Ok(permissions);
         }
+        return Results.NotFound();
     }
 }

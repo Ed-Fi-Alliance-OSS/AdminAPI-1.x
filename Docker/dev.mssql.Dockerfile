@@ -14,6 +14,7 @@ WORKDIR /source
 COPY --from=assets ./Application/NuGet.Config EdFi.Ods.AdminApi/
 COPY --from=assets ./Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
 COPY --from=assets ./Application/EdFi.Ods.AdminApi.AdminConsole EdFi.Ods.AdminApi.AdminConsole/
+COPY --from=assets ./Application/EdFi.Ods.AdminApi.Common EdFi.Ods.AdminApi.Common/
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN export ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
@@ -40,7 +41,6 @@ ENV DB_FOLDER=mssql
 
 WORKDIR /app
 COPY --from=build /app/EdFi.Ods.AdminApi .
-COPY --from=build /app/EdFi.Ods.AdminApi.AdminConsole .
 
 COPY --chmod=500 Settings/dev/${DB_FOLDER}/run.sh /app/run.sh
 COPY Settings/dev/log4net.config /app/log4net.txt

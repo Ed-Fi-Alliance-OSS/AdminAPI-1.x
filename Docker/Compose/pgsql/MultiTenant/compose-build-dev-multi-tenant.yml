@@ -43,7 +43,7 @@ services:
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
       AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
       AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
-      AppSettings__MultiTenancy: "${MULTITENANCY_ENABLED:-true}"
+      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-true}"
       AppSettings__PreventDuplicateApplications: "${PREVENT_DUPLICATE_APPLICATIONS:-false}"
       ASPNETCORE_ENVIRONMENT: "multitenantdocker"
       ENABLE_ADMIN_CONSOLE: ${ENABLE_ADMIN_CONSOLE:-true}
@@ -51,6 +51,8 @@ services:
       OIDC_AUTHORITY: "${OIDC_AUTHORITY:-http://ed-fi-keycloak:8080/auth/realms/myrealm}"
       OIDC_REQUIRE_METADATA: "${OIDC_REQUIRE_METADATA:-false}"
       OIDC_ENABLE_SERVER_CERTIFICATE: "${OIDC_ENABLE_SERVER_CERTIFICATE:-true}"
+      ENABLE_CORS: "${ENABLE_CORS:-false}"
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-https://localhost}"
     volumes:
       - ./appsettings.dockertemplate.json:/app/appsettings.dockertemplate.json
     entrypoint: ["/bin/sh"]

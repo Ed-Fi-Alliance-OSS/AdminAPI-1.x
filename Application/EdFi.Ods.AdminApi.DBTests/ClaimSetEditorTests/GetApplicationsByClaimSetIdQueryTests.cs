@@ -13,6 +13,7 @@ using Application = EdFi.Admin.DataAccess.Models.Application;
 using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 using VendorApplication = EdFi.Admin.DataAccess.Models.Application;
 using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 

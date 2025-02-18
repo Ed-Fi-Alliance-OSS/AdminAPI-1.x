@@ -4,13 +4,15 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.AdminApi.Helpers;
-using EdFi.Ods.AdminApi.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Helpers;
+using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using EdFi.Ods.AdminApi.Infrastructure.Helpers;
+using EdFi.Ods.AdminApi.Infrastructure.Providers.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
@@ -28,10 +30,23 @@ public class EditOdsInstance : IFeature
             .BuildForVersions(AdminApiVersions.V2);
     }
 
-    public async Task<IResult> Handle(Validator validator, IEditOdsInstanceCommand editOdsInstanceCommand, IMapper mapper, EditOdsInstanceRequest request, int id)
+    public async Task<IResult> Handle(
+        Validator validator,
+        IEditOdsInstanceCommand editOdsInstanceCommand,
+        IMapper mapper,
+        ISymmetricStringEncryptionProvider encryptionProvider,
+        IOptions<AppSettings> options,
+        EditOdsInstanceRequest request,
+        int id)
     {
         request.Id = id;
         await validator.GuardAsync(request);
+
+        string encryptionKey = options.Value.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
+        if (!string.IsNullOrEmpty(request.ConnectionString))
+            request.ConnectionString = encryptionProvider.Encrypt(request.ConnectionString, Convert.FromBase64String(encryptionKey));
+        else
+            request.ConnectionString = string.Empty;
         editOdsInstanceCommand.Execute(request);
         return Results.Ok();
     }

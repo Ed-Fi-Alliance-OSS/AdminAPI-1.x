@@ -6,12 +6,13 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Common.Extensions;
-using EdFi.Ods.AdminApi.Helpers;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
+using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
+using EdFi.Ods.AdminApi.Common.Infrastructure.MultiTenancy;
+using EdFi.Ods.AdminApi.Common.Settings;
 using EdFi.Ods.AdminApi.Infrastructure.Api;
-using EdFi.Ods.AdminApi.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Infrastructure.Documentation;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Infrastructure.Security;
 using EdFi.Ods.AdminApi.Infrastructure.Services;
 using EdFi.Security.DataAccess.Contexts;
@@ -29,7 +30,6 @@ public static class WebApplicationBuilderExtensions
     public static void AddServices(this WebApplicationBuilder webApplicationBuilder)
     {
         IConfiguration config = webApplicationBuilder.Configuration;
-
         webApplicationBuilder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
         EnableMultiTenancySupport(webApplicationBuilder);
         var executingAssembly = Assembly.GetExecutingAssembly();

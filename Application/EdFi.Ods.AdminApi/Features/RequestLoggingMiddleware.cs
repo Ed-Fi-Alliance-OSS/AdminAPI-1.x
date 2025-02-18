@@ -4,7 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using EdFi.Common.Utils.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using FluentValidation;
 using System.Net;
 using System.Text.Json;
@@ -38,7 +38,7 @@ public class RequestLoggingMiddleware
         catch (Exception ex)
         {
             var response = context.Response;
-            response.ContentType = "application/json";
+            response.ContentType = "application/problem+json";
 
             switch (ex)
             {

@@ -3,43 +3,39 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-using System.Dynamic;
-using EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
+using EdFi.Ods.AdminApi.AdminConsole.Infrastructure.Services.Tenants;
+using EdFi.Ods.AdminApi.Common.Features;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Caching.Memory;
+using Swashbuckle.AspNetCore.Filters;
 
-namespace EdFi.Ods.AdminApi.AdminConsole.Features.UserProfiles;
+namespace EdFi.Ods.AdminApi.AdminConsole.Features.Tenants;
 
 public class ReadTenants : IFeature
 {
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenants", GetTenants)
-           .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants", GetTenantsAsync)
+           .BuildForVersions(AdminApiVersions.AdminConsole);
 
-        AdminApiAdminConsoleEndpointBuilder.MapGet(endpoints, "/tenant", GetTenant)
-           .BuildForVersions();
+        AdminApiEndpointBuilder.MapGet(endpoints, "/tenants/{tenantId}", GetTenantsByTenantIdAsync)
+           .BuildForVersions(AdminApiVersions.AdminConsole);
     }
 
-    internal Task<IResult> GetTenants()
+    public async Task<IResult> GetTenantsAsync(IAdminConsoleTenantsService adminConsoleTenantsService, IMemoryCache memoryCache)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-tenants.json"))
-        {
-            string json = r.ReadToEnd();
-            List<ExpandoObject> result = JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
-            return Task.FromResult(Results.Ok(result));
-        }
+        var tenants = await adminConsoleTenantsService.GetTenantsAsync(true);
+        return Results.Ok(tenants);
     }
 
-    internal Task<IResult> GetTenant(int id)
+    public async Task<IResult> GetTenantsByTenantIdAsync(IAdminConsoleTenantsService adminConsoleTenantsService,
+        IMemoryCache memoryCache, int tenantId)
     {
-        using (StreamReader r = new StreamReader("Mockdata/data-tenant.json"))
-        {
-            string json = r.ReadToEnd();
-            ExpandoObject result = JsonConvert.DeserializeObject<ExpandoObject>(json);
-            return Task.FromResult(Results.Ok(result));
-        }
+        var tenant = await adminConsoleTenantsService.GetTenantByTenantIdAsync(tenantId);
+        if (tenant != null)
+            return Results.Ok(tenant);
+        return Results.NotFound();
     }
 }

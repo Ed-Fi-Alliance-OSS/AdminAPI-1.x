@@ -9,10 +9,11 @@ using System.Linq;
 using EdFi.Admin.DataAccess.Models;
 using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
-using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Common.Infrastructure.ErrorHandling;
 using NUnit.Framework;
 using Shouldly;
 using VendorUser = EdFi.Admin.DataAccess.Models.User;
+using EdFi.Ods.AdminApi.Common.Infrastructure;
 
 namespace EdFi.Ods.AdminApi.DBTests.Database.CommandTests;
 

@@ -85,7 +85,8 @@ public class TenantResolverMiddleware : IMiddleware
                 if (_options.Value.EnableAdminConsoleAPI)
                 {
                     if (!context.Request.Path.Value!.Contains("adminconsole/tenants") &&
-                    context.Request.Method != "GET")
+                    context.Request.Method != "GET" &&
+                    !context.Request.Path.Value.Contains("health", StringComparison.InvariantCultureIgnoreCase))
                     {
                         ThrowTenantValidationError("Tenant header is missing (adminconsole)");
                     }

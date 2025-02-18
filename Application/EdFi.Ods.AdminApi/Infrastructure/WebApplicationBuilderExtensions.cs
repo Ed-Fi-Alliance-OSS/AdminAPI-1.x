@@ -6,12 +6,6 @@
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Common.Extensions;
-using EdFi.Ods.AdminApi.Helpers;
-using EdFi.Ods.AdminApi.Infrastructure.Api;
-using EdFi.Ods.AdminApi.Infrastructure.Context;
-using EdFi.Ods.AdminApi.Infrastructure.Documentation;
-using EdFi.Ods.AdminApi.Infrastructure.Extensions;
-using EdFi.Ods.AdminApi.Infrastructure.MultiTenancy;
 using EdFi.Ods.AdminApi.Common.Infrastructure;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Context;
 using EdFi.Ods.AdminApi.Common.Infrastructure.Extensions;
@@ -28,7 +22,6 @@ using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 

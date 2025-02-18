@@ -44,12 +44,17 @@ services:
       ISSUER_URL: ${ISSUER_URL}
       SIGNING_KEY: ${SIGNING_KEY}
       ADMIN_API_VIRTUAL_NAME: ${ADMIN_API_VIRTUAL_NAME:-adminapi}
-      MULTITENANCY_ENABLED: "${MULTITENANCY_ENABLED:-false}"
+      AppSettings__DefaultPageSizeOffset: ${PAGING_OFFSET:-0}
+      AppSettings__DefaultPageSizeLimit: ${PAGING_LIMIT:-25}
+      MULTITENANCY_ENABLED: ${MULTITENANCY_ENABLED:-false}
+      AppSettings__PreventDuplicateApplications: ${PREVENT_DUPLICATE_APPLICATIONS:-false}
       ENABLE_ADMIN_CONSOLE: ${ENABLE_ADMIN_CONSOLE:-true}
-      USE_SELF_CONTAINED_AUTH: true
-      OIDC_AUTHORITY: ""
-      OIDC_REQUIRE_METADATA: ""
-      OIDC_ENABLE_SERVER_CERTIFICATE: ""
+      USE_SELF_CONTAINED_AUTH: ${USE_SELF_CONTAINED_AUTH:-true}
+      OIDC_AUTHORITY: "${OIDC_AUTHORITY:-http://ed-fi-keycloak:8080/auth/realms/myrealm}"
+      OIDC_REQUIRE_METADATA: ${OIDC_REQUIRE_METADATA:-false}
+      OIDC_ENABLE_SERVER_CERTIFICATE: ${OIDC_ENABLE_SERVER_CERTIFICATE:-true}
+      ENABLE_CORS: ${ENABLE_CORS:-false}
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-https://localhost}"
     depends_on:
       - db-admin
     restart: always

@@ -19,7 +19,6 @@ namespace EdFi.Ods.AdminApi.Features.Connect;
 [SwaggerResponse(400, FeatureCommonConstants.BadRequestResponseDescription)]
 [SwaggerResponse(500, FeatureCommonConstants.InternalServerErrorResponseDescription)]
 [Route(SecurityConstants.ConnectRoute)]
-[SwaggerResponse(500, FeatureConstants.InternalServerErrorResponseDescription)]
 public class ConnectController : Controller
 
 {

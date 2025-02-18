@@ -43,7 +43,10 @@ public class EditOdsInstance : IFeature
         await validator.GuardAsync(request);
 
         string encryptionKey = options.Value.EncryptionKey ?? throw new InvalidOperationException("EncryptionKey can't be null.");
-        request.ConnectionString = encryptionProvider.Encrypt(request.ConnectionString, Convert.FromBase64String(encryptionKey));
+        if (!string.IsNullOrEmpty(request.ConnectionString))
+            request.ConnectionString = encryptionProvider.Encrypt(request.ConnectionString, Convert.FromBase64String(encryptionKey));
+        else
+            request.ConnectionString = string.Empty;
         editOdsInstanceCommand.Execute(request);
         return Results.Ok();
     }

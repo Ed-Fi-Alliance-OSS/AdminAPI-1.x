@@ -1958,10 +1958,10 @@ components:
           format: int32
         contextKey:
           type: string
-          description: context key.
+          description: Context key. Should match route segment specified in the OdsContextRouteTemplate configuration in Ed-Fi API.
         contextValue:
           type: string
-          description: context value.
+          description: Context value. Should match range values specified in the OdsContextRouteTemplate configuration in Ed-Fi API.
       additionalProperties: false
     addOdsInstanceDerivativeRequest:
       title: AddOdsInstanceDerivativeRequest
@@ -1973,10 +1973,10 @@ components:
           format: int32
         derivativeType:
           type: string
-          description: derivative type.
+          description: Derivative type. Currently "ReadReplica", "Snapshot" are valid values.
         connectionString:
           type: string
-          description: connection string.
+          description: Derivative ODS connection string.
       additionalProperties: false
     addOdsInstanceRequest:
       title: AddOdsInstanceRequest
@@ -1987,7 +1987,7 @@ components:
           description: Ods Instance name
         instanceType:
           type: string
-          description: Ods Instance type
+          description: ODS Instance type, describes the purpose of the ODS instance
           nullable: true
         connectionString:
           type: string
@@ -2288,10 +2288,10 @@ components:
           format: int32
         contextKey:
           type: string
-          description: context key.
+          description: Context key. Should match route segment specified in the OdsContextRouteTemplate configuration in Ed-Fi API.
         contextValue:
           type: string
-          description: context value.
+          description: Context value. Should match range values specified in the OdsContextRouteTemplate configuration in Ed-Fi API.
       additionalProperties: false
     editOdsInstanceDerivativeRequest:
       title: EditOdsInstanceDerivativeRequest
@@ -2299,14 +2299,14 @@ components:
       properties:
         odsInstanceId:
           type: integer
-          description: ODS instance derivative ODS instance id.
+          description: Primary ODS instance id.
           format: int32
         derivativeType:
           type: string
-          description: derivative type.
+          description: Derivative type. Currently "ReadReplica", "Snapshot" are valid values.
         connectionString:
           type: string
-          description: connection string.
+          description: Derivative ODS connection string.
       additionalProperties: false
     editOdsInstanceRequest:
       title: EditOdsInstanceRequest
@@ -2317,7 +2317,7 @@ components:
           description: Ods Instance name
         instanceType:
           type: string
-          description: Ods Instance type
+          description: ODS Instance type, describes the purpose of the ODS instance.
           nullable: true
         connectionString:
           type: string

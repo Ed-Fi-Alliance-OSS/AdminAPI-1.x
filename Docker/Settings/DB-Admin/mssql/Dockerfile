@@ -5,17 +5,17 @@
 
 FROM mcr.microsoft.com/mssql/server@sha256:d7f2c670f0cd807b4dc466b8887bd2b39a4561f624c154896f5564ea38efd13a as base
 USER root
-RUN apt-get update && apt-get install unzip -y dos2unix busybox openssl>=3.1.7-r0 libxml2>=2.12.5-r0
+RUN apt-get update && apt-get install unzip -y dos2unix busybox openssl>=3.1.7-r0 libxml2>=2.12.5-r0 musl>=1.2.4_git20230717-r5
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV MSSQL_USER=${SQLSERVER_USER}
 ENV MSSQL_PASSWORD=${SQLSERVER_PASSWORD}
 ENV MSSQL_DB=master
 
-ARG ADMIN_API_VERSION=1.4.1
+ARG ADMIN_API_VERSION=1.4.2
 ARG STANDARD_VERSION="4.0.0"
-ARG ADMIN_VERSION="6.2.493"
-ARG SECURITY_VERSION="6.2.526"
+ARG ADMIN_VERSION="6.2.536"
+ARG SECURITY_VERSION="6.2.568"
 
 USER root
 COPY init-database.sh /tmp/init/3-init-database.sh

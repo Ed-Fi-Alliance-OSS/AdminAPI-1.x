@@ -14,7 +14,7 @@ ARG VERSION=latest
 
 USER root
 COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
-RUN apk --no-cache add dos2unix=~7 unzip=~6
+RUN apk upgrade --no-cache && apk add dos2unix=~7 unzip=~6 openssl
 USER postgres
 
 FROM base as setup

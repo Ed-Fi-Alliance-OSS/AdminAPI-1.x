@@ -21,7 +21,7 @@ RUN dotnet publish -c Release /p:EnvironmentName=Production --no-build -o /app/E
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19-amd64@sha256:edc046db633d2eac3acfa494c10c6b7b3b9ff9f66f1ed92cec8021f5ee38d755 as base
 
-RUN apk --no-cache add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 && \
+RUN apk upgrade --no-cache && apk add curl=~8 dos2unix=~7 bash=~5 gettext=~0 icu=~74 'musl>=1.2.4_git20230717-r5' && \
     addgroup -S edfi && adduser -S edfi -G edfi
 
 FROM base AS setup

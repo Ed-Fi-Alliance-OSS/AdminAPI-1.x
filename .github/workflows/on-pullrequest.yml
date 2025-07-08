@@ -11,11 +11,6 @@ on:
       - main
       - "*-hotfix"
     paths:
-      # TODO: restore this with AA-1601, except run in a PS-specific
-      # workflow, so that the C# build and CodeQL do not run
-      # unnecessarily.
-      # - "**/*.ps1"
-      # - "**/*.psm1"
       - "**/*.cs"
       - "**/*.csproj"
       - ".github/**/*.yml"
@@ -24,10 +19,6 @@ on:
 permissions: read-all
 
 jobs:
-  # TODO: restore this with AA-1601
-  # run-ps-lint:
-  #   name: PowerShell Linter
-  #   uses: Ed-Fi-Alliance-OSS/Ed-Fi-Actions/.github/workflows/powershell-analyzer.yml@main
   scan-actions-bidi:
     name: Scan Actions, scan all files for BIDI Trojan Attacks
     uses: ed-fi-alliance-oss/ed-fi-actions/.github/workflows/repository-scanner.yml@main
@@ -66,7 +57,7 @@ jobs:
         if: success()
         uses: github/codeql-action/init@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # codeql-bundle-v3.28.0
         with:
-          languages: csharp
+          languages: csharp, actions
 
       # Must build the software after initialization of CodeQL; something about
       # CodeQL initialization causes the resulting build to fail unit tests.

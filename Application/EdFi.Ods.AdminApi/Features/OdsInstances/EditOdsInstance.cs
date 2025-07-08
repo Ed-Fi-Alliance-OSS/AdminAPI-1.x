@@ -4,9 +4,7 @@
 // See the LICENSE and NOTICES files in the project root for more information.
 
 using AutoMapper;
-using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Infrastructure;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
@@ -24,7 +22,13 @@ public class EditOdsInstance : IFeature
             .BuildForVersions(AdminApiVersions.V1);
     }
 
-    public async Task<IResult> Handle(Validator validator, IEditOdsInstanceCommand editOdsInstanceCommand, IMapper mapper, EditOdsInstanceRequest request, int id)
+    public async Task<IResult> Handle(
+        Validator validator,
+        IEditOdsInstanceCommand editOdsInstanceCommand,
+        IMapper mapper,
+        EditOdsInstanceRequest request,
+        int id
+    )
     {
         request.OdsInstanceId = id;
         await validator.GuardAsync(request);
@@ -38,14 +42,19 @@ public class EditOdsInstance : IFeature
     {
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceIdDescription, Nullable = false)]
         public int OdsInstanceId { get; set; }
+
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceName, Nullable = false)]
         public string? Name { get; set; }
+
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceInstanceType, Nullable = true)]
         public string? InstanceType { get; set; }
+
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceStatus, Nullable = true)]
         public string? Status { get; set; }
+
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceIsExtended, Nullable = true)]
         public bool? IsExtended { get; set; }
+
         [SwaggerSchema(Description = FeatureConstants.OdsInstanceVersion, Nullable = true)]
         public string? Version { get; set; }
     }
@@ -54,7 +63,6 @@ public class EditOdsInstance : IFeature
     {
         private readonly IGetOdsInstancesQuery _getOdsInstancesQuery;
         private readonly IGetOdsInstanceQuery _getOdsInstanceQuery;
-        private readonly string _databaseEngine;
 
         public Validator(IGetOdsInstancesQuery getOdsInstancesQuery, IGetOdsInstanceQuery getOdsInstanceQuery)
         {
@@ -71,25 +79,16 @@ public class EditOdsInstance : IFeature
                 .WithMessage(FeatureConstants.OdsInstanceAlreadyExistsMessage)
                 .When(m => BeAnExistingOdsInstance(m.OdsInstanceId) && NameIsChanged(m));
 
-            RuleFor(m => m.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .When(m => !string.IsNullOrEmpty(m.Name));
+            RuleFor(m => m.Name).NotEmpty().MaximumLength(100).When(m => !string.IsNullOrEmpty(m.Name));
 
             RuleFor(m => m.InstanceType)
                 .NotEmpty()
                 .MaximumLength(100)
                 .When(m => !string.IsNullOrEmpty(m.InstanceType));
 
-            RuleFor(m => m.Status)
-                .NotEmpty()
-                .MaximumLength(100)
-                .When(m => !string.IsNullOrEmpty(m.Status));
+            RuleFor(m => m.Status).NotEmpty().MaximumLength(100).When(m => !string.IsNullOrEmpty(m.Status));
 
-            RuleFor(m => m.Version)
-                .NotEmpty()
-                .MaximumLength(20)
-                .When(m => !string.IsNullOrEmpty(m.Version));
+            RuleFor(m => m.Version).NotEmpty().MaximumLength(20).When(m => !string.IsNullOrEmpty(m.Version));
         }
 
         private bool BeAnExistingOdsInstance(int id)

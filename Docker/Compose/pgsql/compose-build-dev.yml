@@ -97,8 +97,8 @@ services:
 
   db-admin:
     build:
-      context: ../../../
-      dockerfile: Docker/dbadmin.Dockerfile
+      context: ../../
+      dockerfile: dbadmin.Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

@@ -7,7 +7,7 @@ version: "3.8"
 
 services:
   db-ods:
-    image: edfialliance/ods-api-db-ods:pre-6x
+    image: edfialliance/ods-api-db-ods:v2.3.5
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
@@ -97,8 +97,8 @@ services:
 
   db-admin:
     build:
-      context: ../../
-      dockerfile: dbadmin.Dockerfile
+      context: ../../../
+      dockerfile: Docker/dbadmin.Dockerfile
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

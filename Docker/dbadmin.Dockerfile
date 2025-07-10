@@ -15,7 +15,7 @@ USER root
 COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
-RUN apk --no-cache add dos2unix=~7 unzip=~6
+RUN apk upgrade --no-cache && apk add dos2unix=~7 unzip=~6 openssl 'musl>=1.2.4_git20230717-r5'
 USER postgres
 
 FROM base AS setup

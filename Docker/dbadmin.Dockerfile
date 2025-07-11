@@ -3,7 +3,8 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-FROM edfialliance/ods-api-db-admin:pre-6x as base
+# Base image for the Ed-Fi ODS/API 6.2 Admin database setup
+FROM edfialliance/ods-api-db-admin:v2.3.5 as base
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV POSTGRES_USER=${POSTGRES_USER}
@@ -14,7 +15,7 @@ USER root
 COPY Application/EdFi.Ods.AdminApi/Artifacts/PgSql/Structure/Admin/ /tmp/AdminApiScripts/PgSql
 COPY Settings/DB-Admin/pgsql/run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 
-RUN apk --no-cache add dos2unix=~7 unzip=~6
+RUN apk upgrade --no-cache && apk add dos2unix=~7 unzip=~6 openssl 'musl>=1.2.4_git20230717-r5'
 USER postgres
 
 FROM base AS setup

@@ -6,25 +6,25 @@
     <ProjectReference Include="..\EdFi.Ods.AdminApi\EdFi.Ods.AdminApi.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.2.81" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.2.61" />
-    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.4.0">
+    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="7.4.112" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="7.4.102" />
+    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.4.1">
       <Aliases>Compatability</Aliases>
     </PackageReference>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.11.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="172.76.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="NuGet.Protocol" Version="6.13.2" />
-    <PackageReference Include="NUnit" Version="4.2.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.3.0">
+    <PackageReference Include="NuGet.Protocol" Version="6.14.0" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.9.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Respawn" Version="6.2.1" />
-    <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="Shouldly" Version="4.3.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

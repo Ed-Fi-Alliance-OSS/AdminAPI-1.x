@@ -7,15 +7,27 @@ version: "3.8"
 
 services:
   db-ods:
-    image: edfialliance/ods-api-db-ods:pre-6x
+    build:
+      context: ../../Settings/DB-Ods/mssql/
+      dockerfile: Dockerfile
+      args:
+        ODS_VERSION: ${MSSQL_ODS_MINIMAL_VERSION:-7.1.776}
+        STANDARD_VERSION: ${STANDARD_VERSION:-5.0.0}
     environment:
-      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-P@ssw0rd}"
-      TPDM_ENABLED: "${TPDM_ENABLED:-true}"
+      ACCEPT_EULA: "Y"
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
+      SQLSERVER_PASSWORD: ${SQLSERVER_PASSWORD:-P@55w0rd}
+      MSSQL_PID: ${MSSQL_PID:-Express}
     volumes:
-      - vol-db-ods-adminapi:/var/lib/postgresql/data
+      - vol-db-ods-adminapi:/var/opt/mssql/data
+      - vol-db-ods-adminapi:/var/opt/mssql/log
     restart: always
-    container_name: ed-fi-db-ods-adminapi
+    container_name: ed-fi-db-ods
+    hostname: ed-fi-db-ods
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -U ${SQLSERVER_USER:-edfi} -P "${SQLSERVER_PASSWORD:-P@55w0rd}" -C -Q "SELECT 1"
+      start_period: "60s"
+      retries: 3
 
   nginx:
     build:
@@ -37,34 +49,22 @@ services:
       - api
 
   api:
-    image: edfialliance/ods-api-web-api:pre-6x
+    image: edfialliance/ods-api-web-api-mssql:pre-6x
     environment:
       POSTGRES_USER: "${POSTGRES_USER:-postgres}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-P@55w0rd}"
       POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
-      ODS_POSTGRES_HOST: pb-ods
+      ODS_POSTGRES_HOST: db-ods
       ADMIN_POSTGRES_HOST: pb-admin
       API_MODE: "SharedInstance"
       ApiSettings__PathBase: "${ODS_VIRTUAL_NAME:-api}"
       TPDM_ENABLED: "${TPDM_ENABLED:-true}"
     depends_on:
-      - pb-ods
-      - pb-admin
+      - db-ods
+      - db-admin
     restart: always
     hostname: webapi
     container_name: ed-fi-ods-api-adminapi
-
-  pb-ods:
-    image: pgbouncer/pgbouncer@sha256:aa8a38b7b33e5fe70c679053f97a8e55c74d52b00c195f0880845e52b50ce516 #pgbouncer:1.15.0
-    environment:
-      DATABASES: "* = host = db-ods port=5432 user=${POSTGRES_USER:-postgres} password=${POSTGRES_PASSWORD:-P@55w0rd}"
-      PGBOUNCER_LISTEN_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
-    ports:
-      - "5402:${PGBOUNCER_LISTEN_PORT:-6432}"
-    restart: always
-    container_name: ed-fi-pb-ods-adminapi
-    depends_on:
-      - db-ods
 
   adminapi:
     build:
@@ -102,8 +102,8 @@ services:
 
   db-admin:
     build:
-      context: ../../Settings/DB-Admin/mssql/
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: "db.mssql.admin.Dockerfile"
     environment:
       SA_PASSWORD: "${SA_PASSWORD:-P@55w0rd}"
       ACCEPT_EULA: "Y"
@@ -118,18 +118,6 @@ services:
       - vol-db-admin-adminapi:/var/lib/mssql/data
     restart: always
     container_name: ed-fi-db-admin-adminapi
-
-  pb-admin:
-    image: pgbouncer/pgbouncer@sha256:aa8a38b7b33e5fe70c679053f97a8e55c74d52b00c195f0880845e52b50ce516 #pgbouncer:1.15.0
-    environment:
-      DATABASES: "* = host = db-admin port=5432 user=${POSTGRES_USER:-postgres} password=${POSTGRES_PASSWORD:-P@55w0rd}"
-      PGBOUNCER_LISTEN_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
-    ports:
-      - "5401:${PGBOUNCER_LISTEN_PORT:-6432}"
-    restart: always
-    container_name: ed-fi-pb-admin-adminapi
-    depends_on:
-      - pb-ods
 
 volumes:
   vol-db-admin-adminapi:

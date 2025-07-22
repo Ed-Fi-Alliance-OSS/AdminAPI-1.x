@@ -11,8 +11,8 @@ services:
       context: ../../Settings/DB-Ods/mssql/
       dockerfile: Dockerfile
       args:
-        ODS_VERSION: ${MSSQL_ODS_MINIMAL_VERSION:-7.1.776}
-        STANDARD_VERSION: ${STANDARD_VERSION:-5.0.0}
+        ODS_VERSION: ${MSSQL_ODS_MINIMAL_VERSION:-6.2.982}
+        TPDM_VERSION: ${MSSQL_TPDM_MINIMAL_VERSION:-6.2.782}
     environment:
       ACCEPT_EULA: "Y"
       SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
@@ -51,20 +51,28 @@ services:
   api:
     image: edfialliance/ods-api-web-api-mssql:pre-6x
     environment:
-      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-P@55w0rd}"
-      POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
-      ODS_POSTGRES_HOST: db-ods
-      ADMIN_POSTGRES_HOST: pb-admin
-      API_MODE: "SharedInstance"
+      API_HEALTHCHECK_TEST: ${API_HEALTHCHECK_TEST?Please consult env.example to set the API healthcheck test}
+      ConnectionStrings__EdFi_Admin: "Data Source=db-admin,1433;Initial Catalog=EdFi_Admin;User Id=${SQLSERVER_USER};Password=${SQLSERVER_PASSWORD}; Integrated Security=False;Encrypt=false;TrustServerCertificate=true"
+      ConnectionStrings__EdFi_Security: "Data Source=db-admin,1433;Initial Catalog=EdFi_Security;User Id=${SQLSERVER_USER};Password=${SQLSERVER_PASSWORD}; Integrated Security=False;Encrypt=false;TrustServerCertificate=true"
       ApiSettings__PathBase: "${ODS_VIRTUAL_NAME:-api}"
+      SQLSERVER_ADMIN_DATASOURCE: "${SQLSERVER_ADMIN_DATASOURCE:-db-admin}"
+      SQLSERVER_ODS_DATASOURCE: "${SQLSERVER_ODS_DATASOURCE:-ed-fi-db-ods}"
+      SQLSERVER_PASSWORD: ${SQLSERVER_PASSWORD:-P@55w0rd}
+      SQLSERVER_USER: ${SQLSERVER_USER:-edfi}
       TPDM_ENABLED: "${TPDM_ENABLED:-true}"
+      API_MODE: "SharedInstance"
+    volumes:
+      - ${LOGS_FOLDER}:/app/logs
     depends_on:
       - db-ods
       - db-admin
     restart: always
-    hostname: webapi
+    hostname: api
     container_name: ed-fi-ods-api-adminapi
+    healthcheck:
+      test: $$API_HEALTHCHECK_TEST
+      start_period: "60s"
+      retries: 3
 
   adminapi:
     build:

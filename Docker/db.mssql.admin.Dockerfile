@@ -8,8 +8,6 @@ USER root
 RUN apt-get update && apt-get install unzip -y dos2unix busybox openssl>=3.1.7-r0 libxml2>=2.12.5-r0 musl>=1.2.4_git20230717-r5
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
-ENV MSSQL_USER=${SQLSERVER_USER}
-ENV MSSQL_PASSWORD=${SQLSERVER_PASSWORD}
 ENV MSSQL_DB=master
 
 ARG STANDARD_VERSION="4.0.0"

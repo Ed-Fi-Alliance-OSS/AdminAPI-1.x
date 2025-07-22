@@ -51,7 +51,7 @@ services:
       - pb-ods
       - pb-admin
     restart: always
-    hostname: webapi
+    hostname: api
     container_name: ed-fi-ods-api-adminapi
 
   pb-ods:

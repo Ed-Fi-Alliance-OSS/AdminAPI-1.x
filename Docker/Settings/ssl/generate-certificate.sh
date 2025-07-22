@@ -9,4 +9,4 @@ set -e
 set -x
 
 openssl dhparam -out dhparam.pem 2048
-openssl req -subj '/CN=localhost' -x509 -newkey rsa:2048 -nodes -keyout server.key -out server.crt -days 365 -addext "subjectAltName = DNS:nginx"
+openssl req -x509 -newkey rsa:2048 -nodes -keyout server.key -out server.crt -days 365 -addext "subjectAltName = DNS:localhost,DNS:nginx"

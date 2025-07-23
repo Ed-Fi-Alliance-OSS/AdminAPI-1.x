@@ -43,8 +43,8 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     dos2unix /tmp/init/3-init-database.sh && \
     chmod +x /tmp/init/3-init-database.sh && \
     chmod -R 777 /tmp/AdminApiScripts/MsSql && \
-    chmod -R 777 /tmp/init/entrypoint.sh && \
-    chmod -R 777 /usr/local/bin/healthcheck.sh && \
+    chmod -R 755 /tmp/init/entrypoint.sh && \
+    chmod -R 755 /usr/local/bin/healthcheck.sh && \
     rm -f /tmp/EdFi_Admin.zip  && \
     rm -f /tmp/EdFi_Security.zip && \
     rm -f /tmp/EdFi_AdminApi_Scripts.zip

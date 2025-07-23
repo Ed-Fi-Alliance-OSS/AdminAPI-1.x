@@ -43,7 +43,7 @@ RUN wget -q -O /tmp/EdFi_Admin.zip "https://pkgs.dev.azure.com/ed-fi-alliance/Ed
     rm -f /tmp/EdFi_Security.zip && \
     # Admin
     dos2unix /tmp/AdminApiScripts/MsSql/* && \
-    chmod -R 777 /tmp/AdminApiScripts/MsSql/*
+    chmod -R 755 /tmp/AdminApiScripts/MsSql/*
 
 EXPOSE 1433
 USER edfi

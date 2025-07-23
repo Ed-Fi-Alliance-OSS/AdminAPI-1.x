@@ -90,7 +90,8 @@ jobs:
           command: cves
           image: local://${{ matrix.dockerfile.name }}
           sarif-file: sarif-${{ matrix.dockerfile.name }}-${{ strategy.job-index }}.output.json
-          only-severities: critical,high,medium,low
+          only-severities: critical,high
+          only-fixed: true
           summary: true
 
       - name: Upload SARIF result

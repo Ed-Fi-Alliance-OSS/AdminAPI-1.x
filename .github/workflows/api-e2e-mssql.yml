@@ -3,7 +3,7 @@
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
-name: Admin API E2E Tests + ODS 6
+name: Admin API E2E Tests + ODS 6 + MSSQL
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
       - name: Run Admin API
         run: |
           docker compose \
-            -f '../../Docker/Compose/pgsql/compose-build-dev.yml' \
+            -f '../../Docker/Compose/mssql/compose-build-dev.yml' \
             --env-file './E2E Tests/gh-action-setup/.automation.env' \
             up -d
 

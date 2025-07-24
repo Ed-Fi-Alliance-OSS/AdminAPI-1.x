@@ -51,7 +51,7 @@ services:
       - pb-ods
       - pb-admin
     restart: always
-    hostname: webapi
+    hostname: api
     container_name: ed-fi-ods-api-adminapi
 
   pb-ods:
@@ -98,7 +98,7 @@ services:
   db-admin:
     build:
       context: ../../
-      dockerfile: dbadmin.Dockerfile
+      dockerfile: "db.pgsql.admin.Dockerfile"
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

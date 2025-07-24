@@ -1,12 +1,16 @@
 #!/bin/bash
-
 # SPDX-License-Identifier: Apache-2.0
 # Licensed to the Ed-Fi Alliance under one or more agreements.
 # The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 # See the LICENSE and NOTICES files in the project root for more information.
 
 set -e
-set -x
+set +x
 
-openssl dhparam -out dhparam.pem 2048
-openssl req -x509 -newkey rsa:2048 -nodes -keyout server.key -out server.crt -days 365 -addext "subjectAltName = DNS:localhost,DNS:nginx"
+# Export default values
+export MSSQL_SA_PASSWORD=$SQLSERVER_PASSWORD
+export ACCEPT_EULA=Y
+
+/app/setup-db.sh &
+
+/opt/mssql/bin/sqlservr

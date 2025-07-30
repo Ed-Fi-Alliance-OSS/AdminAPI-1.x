@@ -6,7 +6,7 @@
 # First layer uses a dotnet/sdk image to build the Admin API from source code
 # Second layer uses the dotnet/aspnet image to run the built code
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.19@sha256:b1275049a8fe922cbc9f1d173ffec044664f30b94e99e2c85dd9b7454fbf596c as buildBase
+FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.19@sha256:b1275049a8fe922cbc9f1d173ffec044664f30b94e99e2c85dd9b7454fbf596c AS buildbase
 RUN apk --no-cache add curl=~8
 FROM buildbase AS publish
 WORKDIR /source

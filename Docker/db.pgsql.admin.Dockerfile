@@ -4,7 +4,7 @@
 # See the LICENSE and NOTICES files in the project root for more information.
 
 # Base image for the Ed-Fi ODS/API 6.2 Admin database setup
-FROM edfialliance/ods-api-db-admin:v2.3.5 as base
+FROM edfialliance/ods-api-db-admin:v2.3.5@sha256:c9a3b50f16f60e6a126d3bd37b2cb1d52e1fb0014f88d67193fb03e4414b9d98 AS base
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV POSTGRES_USER=${POSTGRES_USER}

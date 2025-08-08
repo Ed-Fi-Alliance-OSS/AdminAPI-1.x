@@ -44,13 +44,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-      - name: Copy application folder to docker context
-        if: ${{ matrix.dockerfile.type == 'local' }}
-        run: |
-          mkdir Docker/Application
-          cp -r ./Application/EdFi.Ods.AdminApi ./Docker/Application
-          cp ./Application/NuGet.Config ./Docker/Application
-
       - name: Set Version Numbers
         if: ${{ matrix.dockerfile.type == 'published' }}
         id: versions

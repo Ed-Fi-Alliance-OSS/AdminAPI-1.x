@@ -112,6 +112,8 @@ services:
     build:
       context: ../../
       dockerfile: "db.mssql.admin.Dockerfile"
+      additional_contexts:
+        assets: ../../../
     environment:
       SA_PASSWORD: "${SA_PASSWORD:-P@55w0rd}"
       ACCEPT_EULA: "Y"

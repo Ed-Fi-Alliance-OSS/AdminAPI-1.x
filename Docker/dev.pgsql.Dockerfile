@@ -10,8 +10,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.19@sha256:b1275049a8fe922cbc9f1d173ffec044664f30b94e99e2c85dd9b7454fbf596c AS build
 WORKDIR /source
 
-COPY Application/NuGet.Config EdFi.Ods.AdminApi/
-COPY Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
+COPY --from=assets Application/NuGet.Config EdFi.Ods.AdminApi/
+COPY --from=assets Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN dotnet restore && dotnet build -c Release

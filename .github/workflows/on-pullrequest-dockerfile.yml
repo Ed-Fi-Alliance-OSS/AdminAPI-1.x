@@ -44,13 +44,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-      - name: Copy application folder to docker context
-        if: ${{ matrix.dockerfile.type == 'local' }}
-        run: |
-          mkdir Docker/Application
-          cp -r ./Application/EdFi.Ods.AdminApi ./Docker/Application
-          cp ./Application/NuGet.Config ./Docker/Application
-
       - name: Set Version Numbers
         if: ${{ matrix.dockerfile.type == 'published' }}
         id: versions
@@ -82,7 +75,7 @@ jobs:
           cd $folder
           dockerfile=$(echo ${{matrix.dockerfile.path}} | awk -F"/" '{print $NF}')
 
-          docker build -f $dockerfile -t ${{ matrix.dockerfile.name }} --build-arg="VERSION=${{ steps.versions.outputs.VERSION }}" .
+          docker build -f $dockerfile -t ${{ matrix.dockerfile.name }} --build-context assets=.. --build-arg="VERSION=${{ steps.versions.outputs.VERSION }}" .
 
       - name: Analyze
         uses: docker/scout-action@b23590dc1e4d09febc00cfcbc51e9e8c0f7ee9f3 # v1.16.1

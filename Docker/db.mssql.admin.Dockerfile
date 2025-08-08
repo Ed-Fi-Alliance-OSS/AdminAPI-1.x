@@ -19,7 +19,7 @@ COPY Settings/DB-Admin/mssql/healthcheck.sh /usr/local/bin/healthcheck.sh
 COPY Settings/DB-Admin/mssql/init-database.sh /tmp/init/3-init-database.sh
 COPY Settings/DB-Admin/mssql/entrypoint.sh /tmp/init/entrypoint.sh
 
-COPY Application/EdFi.Ods.AdminApi/Artifacts/MsSql/Structure/Admin/ /tmp/AdminApiScripts/MsSql
+COPY --from=assets Application/EdFi.Ods.AdminApi/Artifacts/MsSql/Structure/Admin/ /tmp/AdminApiScripts/MsSql
 
 RUN useradd -M -s /bin/bash -u 10099 -g 0 edfi  && \
     mkdir -p /var/opt/edfi && \

@@ -73,6 +73,8 @@ services:
       # C# projects.
       context: ../../
       dockerfile: dev.pgsql.Dockerfile
+      additional_contexts:
+        assets: ../../../
     environment:
       ADMIN_POSTGRES_HOST: pb-admin
       POSTGRES_PORT: "${PGBOUNCER_LISTEN_PORT:-6432}"
@@ -99,6 +101,8 @@ services:
     build:
       context: ../../
       dockerfile: "db.pgsql.admin.Dockerfile"
+      additional_contexts:
+        assets: ../../../
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

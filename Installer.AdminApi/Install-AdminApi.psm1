@@ -13,7 +13,7 @@ function Set-TlsVersion {
 }
 
 $appCommonDirectory = "$PSScriptRoot/AppCommon"
-$RequiredDotNetHostingBundleVersion = "6.0.0"
+$RequiredDotNetHostingBundleVersion = "__ADMINAPI_VERSION__"
 
 Import-Module -Force "$appCommonDirectory/Environment/Prerequisites.psm1" -Scope Global
 Set-TlsVersion
@@ -252,7 +252,7 @@ function Install-EdFiOdsAdminApi {
         # Database Config
         [switch]
         $NoDuration,
-        
+
         # Set Encrypt=false for all connection strings
         # Not recomended for production environment.
         [switch]

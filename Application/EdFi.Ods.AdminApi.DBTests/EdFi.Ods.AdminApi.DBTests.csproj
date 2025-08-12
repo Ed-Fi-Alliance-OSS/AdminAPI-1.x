@@ -6,22 +6,22 @@
     <ProjectReference Include="..\EdFi.Ods.AdminApi\EdFi.Ods.AdminApi.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.2.81" />
-    <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.2.61" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.11.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="NuGet.Protocol" Version="6.13.2" />
-    <PackageReference Include="NUnit" Version="4.2.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.3.0">
+    <PackageReference Include="EdFi.Suite3.Admin.DataAccess" />
+    <PackageReference Include="EdFi.Suite3.Security.DataAccess" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NuGet.Protocol" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Respawn" Version="6.2.1" />
-    <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="Respawn" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="System.Data.SqlClient" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

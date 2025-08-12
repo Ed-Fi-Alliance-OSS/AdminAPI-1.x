@@ -3,33 +3,20 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Collections.Generic;
-
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
     public class UpdateResourcesOnClaimSetCommand
     {
-        private readonly IOdsSecurityModelVersionResolver _resolver;
         private readonly UpdateResourcesOnClaimSetCommandV6Service _v6Service;
 
-        public UpdateResourcesOnClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-            UpdateResourcesOnClaimSetCommandV6Service v6Service)
+        public UpdateResourcesOnClaimSetCommand(UpdateResourcesOnClaimSetCommandV6Service v6Service)
         {
-            _resolver = resolver;
             _v6Service = v6Service;
         }
 
         public void Execute(IUpdateResourcesOnClaimSetModel model)
         {
-            var securityModel = _resolver.DetermineSecurityModel();
-            switch (securityModel)
-            {
-                case EdFiOdsSecurityModelCompatibility.Six:
-                    _v6Service.Execute(model);
-                    break;
-                default:
-                    throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
-            }
+            _v6Service.Execute(model);
         }
     }
 

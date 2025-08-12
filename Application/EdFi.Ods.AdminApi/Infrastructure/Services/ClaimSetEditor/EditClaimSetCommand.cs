@@ -12,25 +12,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
     public class EditClaimSetCommand : IEditClaimSetCommand
     {
-        private readonly IOdsSecurityModelVersionResolver _resolver;
         private readonly EditClaimSetCommandV6Service _v6Service;
 
-        public EditClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-            EditClaimSetCommandV6Service v6Service)
+        public EditClaimSetCommand(EditClaimSetCommandV6Service v6Service)
         {
-            _resolver = resolver;
             _v6Service = v6Service;
         }
 
         public int Execute(IEditClaimSetModel claimSet)
         {
-            var securityModel = _resolver.DetermineSecurityModel();
-
-            return securityModel switch
-            {
-                EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(claimSet),
-                _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
-            };
+            return _v6Service.Execute(claimSet);
         }
     }
 

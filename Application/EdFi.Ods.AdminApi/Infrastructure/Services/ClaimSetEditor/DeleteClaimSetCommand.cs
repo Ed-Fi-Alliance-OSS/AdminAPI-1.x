@@ -3,8 +3,6 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using EdFi.Ods.AdminApi.Infrastructure;
-
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public interface IDeleteClaimSetCommand
@@ -14,28 +12,16 @@ public interface IDeleteClaimSetCommand
 
 public class DeleteClaimSetCommand : IDeleteClaimSetCommand
 {
-    private readonly IOdsSecurityModelVersionResolver _resolver;
     private readonly DeleteClaimSetCommandV6Service _v6Service;
 
-    public DeleteClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-        DeleteClaimSetCommandV6Service v6Service)
+    public DeleteClaimSetCommand(DeleteClaimSetCommandV6Service v6Service)
     {
-        _resolver = resolver;
         _v6Service = v6Service;
     }
 
     public void Execute(IDeleteClaimSetModel claimSet)
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-
-        switch (securityModel)
-        {
-            case EdFiOdsSecurityModelCompatibility.Six:
-                _v6Service.Execute(claimSet);
-                break;
-            default:
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
-        }
+        _v6Service.Execute(claimSet);
     }
 }
 

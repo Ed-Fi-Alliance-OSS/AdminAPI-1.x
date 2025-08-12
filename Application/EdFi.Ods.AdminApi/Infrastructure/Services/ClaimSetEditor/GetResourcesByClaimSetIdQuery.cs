@@ -18,12 +18,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public IList<ResourceClaim> AllResources(int securityContextClaimSetId)
         {
             IList<ResourceClaim> parentResources;
-            var securityModel = _resolver.DetermineSecurityModel();
 
-            return securityModel switch {
-                EdFiOdsSecurityModelCompatibility.Six => ModelSix(),
-                _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel)
-            };
+            return ModelSix();
 
             IList<ResourceClaim> ModelSix() {
                 parentResources = _v6Service.GetParentResources(securityContextClaimSetId);

@@ -7,25 +7,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public class AddClaimSetCommand
 {
-    private readonly IOdsSecurityModelVersionResolver _resolver;
     private readonly AddClaimSetCommandV6Service _v6Service;
 
-    public AddClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-        AddClaimSetCommandV6Service v6Service)
+    public AddClaimSetCommand(AddClaimSetCommandV6Service v6Service)
     {
-        _resolver = resolver;
         _v6Service = v6Service;
     }
 
     public int Execute(IAddClaimSetModel claimSet)
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-
-        return securityModel switch
-        {
-            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(claimSet),
-            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
-        };
+        return _v6Service.Execute(claimSet);
     }
 }
 

@@ -15,35 +15,20 @@ public interface IGetAllClaimSetsQuery
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 {
-    private readonly IOdsSecurityModelVersionResolver _resolver;
     private readonly GetAllClaimSetsQueryV6Service _v6Service;
 
-    public GetAllClaimSetsQuery(IOdsSecurityModelVersionResolver resolver,
-        GetAllClaimSetsQueryV6Service v6Service)
+    public GetAllClaimSetsQuery(GetAllClaimSetsQueryV6Service v6Service)
     {
-        _resolver = resolver;
         _v6Service = v6Service;
     }
 
     public IReadOnlyList<ClaimSet> Execute()
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-
-        return securityModel switch
-        {
-            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(),
-            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
-        };
+        return _v6Service.Execute();
     }
 
     public IReadOnlyList<ClaimSet> Execute(CommonQueryParams commonQueryParams)
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-
-        return securityModel switch
-        {
-            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(commonQueryParams),
-            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
-        };        
+        return _v6Service.Execute(commonQueryParams);
     }
 }

@@ -15,15 +15,12 @@ public interface IDeleteClaimSetCommand
 public class DeleteClaimSetCommand : IDeleteClaimSetCommand
 {
     private readonly IOdsSecurityModelVersionResolver _resolver;
-    private readonly DeleteClaimSetCommandV53Service _v53Service;
     private readonly DeleteClaimSetCommandV6Service _v6Service;
 
     public DeleteClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-        DeleteClaimSetCommandV53Service v53Service,
         DeleteClaimSetCommandV6Service v6Service)
     {
         _resolver = resolver;
-        _v53Service = v53Service;
         _v6Service = v6Service;
     }
 
@@ -33,9 +30,6 @@ public class DeleteClaimSetCommand : IDeleteClaimSetCommand
 
         switch (securityModel)
         {
-            case EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe:
-                _v53Service.Execute(claimSet);
-                break;
             case EdFiOdsSecurityModelCompatibility.Six:
                 _v6Service.Execute(claimSet);
                 break;

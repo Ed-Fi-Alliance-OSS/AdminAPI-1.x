@@ -81,12 +81,9 @@ public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBa
 
         using var securityContext6 = CreateDbContext();
         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
-            new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V6(),
-            null, new EditResourceOnClaimSetCommandV6Service(securityContext6)),
+            new EditResourceOnClaimSetCommand(new EditResourceOnClaimSetCommandV6Service(securityContext6)),
             new GetResourceClaimsQuery(securityContext6),
-            new OverrideDefaultAuthorizationStrategyCommand(
-                new StubOdsSecurityModelVersionResolver.V6(), null,
-                new OverrideDefaultAuthorizationStrategyV6Service(securityContext6)));
+            new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyV6Service(securityContext6)));
 
         var command = new UpdateResourcesOnClaimSetCommandV6Service(securityContext6, addOrEditResourcesOnClaimSetCommand);
         command.Execute(updateResourcesOnClaimSetModel.Object);

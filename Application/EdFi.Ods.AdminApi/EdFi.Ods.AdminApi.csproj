@@ -24,9 +24,6 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="EdFi.Suite3.Admin.DataAccess" Version="6.2.81" />
     <PackageReference Include="EdFi.Suite3.Security.DataAccess" Version="6.2.61" />
-    <PackageReference Include="EdFi.SecurityCompatiblity53.DataAccess" Version="5.4.0">
-      <Aliases>Compatability</Aliases>
-    </PackageReference>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="log4net" Version="3.0.0" />

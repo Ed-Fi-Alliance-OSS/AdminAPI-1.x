@@ -16,15 +16,12 @@ public interface IGetAllClaimSetsQuery
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 {
     private readonly IOdsSecurityModelVersionResolver _resolver;
-    private readonly GetAllClaimSetsQueryV53Service _v53Service;
     private readonly GetAllClaimSetsQueryV6Service _v6Service;
 
     public GetAllClaimSetsQuery(IOdsSecurityModelVersionResolver resolver,
-        GetAllClaimSetsQueryV53Service v53Service,
         GetAllClaimSetsQueryV6Service v6Service)
     {
         _resolver = resolver;
-        _v53Service = v53Service;
         _v6Service = v6Service;
     }
 
@@ -34,7 +31,6 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 
         return securityModel switch
         {
-            EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(),
             EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(),
             _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
         };
@@ -46,7 +42,6 @@ public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 
         return securityModel switch
         {
-            EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(commonQueryParams),
             EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(commonQueryParams),
             _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
         };        

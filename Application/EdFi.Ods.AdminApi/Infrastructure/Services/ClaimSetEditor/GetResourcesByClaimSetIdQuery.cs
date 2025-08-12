@@ -8,15 +8,10 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
     public class GetResourcesByClaimSetIdQuery : IGetResourcesByClaimSetIdQuery
     {
         private readonly IOdsSecurityModelVersionResolver _resolver;
-        private readonly GetResourcesByClaimSetIdQueryV53Service _v53Service;
         private readonly GetResourcesByClaimSetIdQueryV6Service _v6Service;
 
-        public GetResourcesByClaimSetIdQuery(IOdsSecurityModelVersionResolver resolver,
-            GetResourcesByClaimSetIdQueryV53Service v53Service,
-            GetResourcesByClaimSetIdQueryV6Service v6Service)
+        public GetResourcesByClaimSetIdQuery(GetResourcesByClaimSetIdQueryV6Service v6Service)
         {
-            _resolver = resolver;
-            _v53Service = v53Service;
             _v6Service = v6Service;
         }
 
@@ -26,19 +21,9 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             var securityModel = _resolver.DetermineSecurityModel();
 
             return securityModel switch {
-                EdFiOdsSecurityModelCompatibility.ThreeThroughFive => ModelThreeThroughFive(),
-                EdFiOdsSecurityModelCompatibility.FiveThreeCqe => ModelThreeThroughFive(true),
                 EdFiOdsSecurityModelCompatibility.Six => ModelSix(),
                 _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel)
             };
-
-            IList<ResourceClaim> ModelThreeThroughFive(bool IsFiveThreeCqe = false) {
-                parentResources = _v53Service.GetParentResources(securityContextClaimSetId, IsFiveThreeCqe);
-                var childResources = _v53Service.GetChildResources(securityContextClaimSetId, IsFiveThreeCqe);
-                _v53Service.AddChildResourcesToParents(childResources, parentResources);
-
-                return parentResources;
-            }
 
             IList<ResourceClaim> ModelSix() {
                 parentResources = _v6Service.GetParentResources(securityContextClaimSetId);

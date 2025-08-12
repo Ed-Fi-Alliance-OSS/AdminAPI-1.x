@@ -10,15 +10,12 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
     public class UpdateResourcesOnClaimSetCommand
     {
         private readonly IOdsSecurityModelVersionResolver _resolver;
-        private readonly UpdateResourcesOnClaimSetCommandV53Service _v53Service;
         private readonly UpdateResourcesOnClaimSetCommandV6Service _v6Service;
 
         public UpdateResourcesOnClaimSetCommand(IOdsSecurityModelVersionResolver resolver,
-            UpdateResourcesOnClaimSetCommandV53Service v53Service,
             UpdateResourcesOnClaimSetCommandV6Service v6Service)
         {
             _resolver = resolver;
-            _v53Service = v53Service;
             _v6Service = v6Service;
         }
 
@@ -27,9 +24,6 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             var securityModel = _resolver.DetermineSecurityModel();
             switch (securityModel)
             {
-                case EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe:
-                    _v53Service.Execute(model);
-                    break;
                 case EdFiOdsSecurityModelCompatibility.Six:
                     _v6Service.Execute(model);
                     break;

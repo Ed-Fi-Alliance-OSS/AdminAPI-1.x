@@ -46,6 +46,12 @@ jobs:
 
           "admin-api=$($apiPrefix)$(minver -t $apiPrefix)" >> $env:GITHUB_OUTPUT
 
+      - name: Replace Version Token in Installer
+        run: |
+          $version = "${{ steps.versions.outputs.admin-api }}"
+          $file = "${{ github.workspace }}/Installer.AdminApi/Install-AdminApi.psm1"
+          (Get-Content $file) -replace "__ADMINAPI_VERSION__", $version | Set-Content $file
+
       - name: Create Admin API Pre-Release
         run: |
           $version = "${{ steps.versions.outputs.admin-api }}"

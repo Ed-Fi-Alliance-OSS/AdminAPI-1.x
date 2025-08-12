@@ -8,7 +8,6 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
-using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using FluentValidation;
 using FluentValidation.Results;
@@ -33,7 +32,6 @@ public class EditClaimSet : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications,
         IAuthStrategyResolver strategyResolver,
-        IOdsSecurityModelVersionResolver odsSecurityModelResolver,
         IMapper mapper,
         Request request, int id)
     {
@@ -75,9 +73,7 @@ public class EditClaimSet : IFeature
             new JsonSerializerSettings()
             {
                 Formatting = Formatting.Indented,
-                ContractResolver = new ShouldSerializeContractResolver(odsSecurityModelResolver)
-            }
-            );
+            });
     }
 
     [SwaggerSchema(Title = "EditClaimSetRequest")]
@@ -102,7 +98,6 @@ public class EditClaimSet : IFeature
             IGetAllClaimSetsQuery getAllClaimSetsQuery,
             IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
             IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery,
-            IOdsSecurityModelVersionResolver resolver,
             IMapper mapper)
         {
             _getClaimSetByIdQuery = getClaimSetByIdQuery;
@@ -132,7 +127,7 @@ public class EditClaimSet : IFeature
 
             RuleFor(m => m).Custom((claimSet, context) =>
             {
-                var resourceClaimValidator = new ResourceClaimValidator(resolver);
+                var resourceClaimValidator = new ResourceClaimValidator();
 
                 if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
                 {

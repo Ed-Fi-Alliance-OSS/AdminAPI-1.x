@@ -64,13 +64,6 @@ public static class WebApplicationBuilderExtensions
             }
         }
 
-        //Add service to identify ODS Version
-        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
-        {
-            var odsApiVersion = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:OdsApiVersion");
-            return new OdsSecurityVersionResolver(odsApiVersion);
-        });
-
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -130,7 +123,6 @@ public static class WebApplicationBuilderExtensions
 
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
-            opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>

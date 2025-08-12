@@ -7,12 +7,11 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
     public class GetResourcesByClaimSetIdQuery : IGetResourcesByClaimSetIdQuery
     {
-        private readonly IOdsSecurityModelVersionResolver _resolver;
-        private readonly GetResourcesByClaimSetIdQueryService _v6Service;
+        private readonly GetResourcesByClaimSetIdQueryService _service;
 
-        public GetResourcesByClaimSetIdQuery(GetResourcesByClaimSetIdQueryService v6Service)
+        public GetResourcesByClaimSetIdQuery(GetResourcesByClaimSetIdQueryService service)
         {
-            _v6Service = v6Service;
+            _service = service;
         }
 
         public IList<ResourceClaim> AllResources(int securityContextClaimSetId)
@@ -22,8 +21,8 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
             return ModelSix();
 
             IList<ResourceClaim> ModelSix() {
-                parentResources = _v6Service.GetParentResources(securityContextClaimSetId);
-                var childResources = _v6Service.GetChildResources(securityContextClaimSetId);
+                parentResources = _service.GetParentResources(securityContextClaimSetId);
+                var childResources = _service.GetChildResources(securityContextClaimSetId);
                 GetResourcesByClaimSetIdQueryService.AddChildResourcesToParents(childResources, parentResources);
 
                 return parentResources;

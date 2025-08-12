@@ -3,23 +3,19 @@
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
 
-using System.Data;
-using AutoMapper;
-using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using FluentValidation;
+using System.Data;
 
 namespace EdFi.Ods.AdminApi.Features.ClaimSets;
 
 public class ResourceClaimValidator
 {
     private static List<string>? _duplicateResources;
-    private readonly EdFiOdsSecurityModelCompatibility _odsApiVersion;
     
-    public ResourceClaimValidator(IOdsSecurityModelVersionResolver resolver)
+    public ResourceClaimValidator()
     {
         _duplicateResources = new List<string>();
-        _odsApiVersion = resolver.DetermineSecurityModel();
     }
     
     public void Validate<T>(Lookup<string, ResourceClaim> dbResourceClaims,
@@ -53,34 +49,8 @@ public class ResourceClaimValidator
         
         if (resourceClaim.AuthStrategyOverridesForCRUD.Any())
         {
-            if (_odsApiVersion == EdFiOdsSecurityModelCompatibility.Six || _odsApiVersion == EdFiOdsSecurityModelCompatibility.FiveThreeCqe)
-            {
-                if (resourceClaim.AuthStrategyOverridesForCRUD.Count() < 5)
-                    context.AddFailure(propertyName, "Please provide a list of 5 elements for 'AuthStrategyOverridesForCRUD' in the Resource name: '{ResourceClaimName}'");
-            }
-            else if (_odsApiVersion == EdFiOdsSecurityModelCompatibility.ThreeThroughFive)
-            {
-                if (resourceClaim.AuthStrategyOverridesForCRUD.Count() < 4)
-                    context.AddFailure(propertyName, "Please provide a list of 4 elements 'AuthStrategyOverridesForCRUD' in the Resource name: '{ResourceClaimName}'");
-            }
-            else
-            {
-                foreach (var authStrategyOverride in resourceClaim.AuthStrategyOverridesForCRUD)
-                {
-                    if (authStrategyOverride != null && authStrategyOverride.AuthorizationStrategies.Any())
-                    {
-                        foreach (var authStrategy in authStrategyOverride.AuthorizationStrategies)
-                        {
-                            if (authStrategy?.AuthStrategyName != null && !dbAuthStrategies.Contains(authStrategy.AuthStrategyName))
-                            {
-                                context.MessageFormatter.AppendArgument("AuthStrategyName", authStrategy.AuthStrategyName);
-                                context.AddFailure(propertyName, "This resource claim contains an authorization strategy which is not in the system. Claimset Name: '{ClaimSetName}' Resource name: '{ResourceClaimName}' Authorization strategy: '{AuthStrategyName}'.\n");
-                            }
-                        }
-                    }
-
-                }
-            }
+            if (resourceClaim.AuthStrategyOverridesForCRUD.Count() < 5)
+                context.AddFailure(propertyName, "Please provide a list of 5 elements for 'AuthStrategyOverridesForCRUD' in the Resource name: '{ResourceClaimName}'");
         }
 
         if (resourceClaim.Children.Any())

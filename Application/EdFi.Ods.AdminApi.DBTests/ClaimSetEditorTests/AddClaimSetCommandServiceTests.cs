@@ -14,7 +14,7 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class AddClaimSetCommandV6ServiceTests : SecurityDataTestBase
+public class AddClaimSetCommandServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldAddClaimSet()
@@ -31,7 +31,7 @@ public class AddClaimSetCommandV6ServiceTests : SecurityDataTestBase
         ClaimSet addedClaimSet = null;
         using (var securityContext = TestContext)
         {
-            var command = new AddClaimSetCommandV6Service(securityContext);
+            var command = new AddClaimSetCommandService(securityContext);
             addedClaimSetId = command.Execute(newClaimSet);
             addedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
         }

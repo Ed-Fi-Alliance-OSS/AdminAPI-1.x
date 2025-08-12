@@ -9,12 +9,12 @@ using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
-public class EditClaimSetCommandV6Service
+public class EditClaimSetCommandService
 {
     private readonly ISecurityContext _securityContext;
     private readonly IUsersContext _usersContext;
 
-    public EditClaimSetCommandV6Service(ISecurityContext securityContext, IUsersContext usersContext)
+    public EditClaimSetCommandService(ISecurityContext securityContext, IUsersContext usersContext)
     {
         _securityContext = securityContext;
         _usersContext = usersContext;

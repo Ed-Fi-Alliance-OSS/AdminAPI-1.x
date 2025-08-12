@@ -16,7 +16,7 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class DeleteClaimSetCommandV6ServiceTests : SecurityDataTestBase
+public class DeleteClaimSetCommandServiceTests : SecurityDataTestBase
 {
 
     [Test]
@@ -44,7 +44,7 @@ public class DeleteClaimSetCommandV6ServiceTests : SecurityDataTestBase
         deleteModel.Setup(x => x.Id).Returns(testClaimSetToDelete.ClaimSetId);
 
         using var securityContext = TestContext;
-        var command = new DeleteClaimSetCommandV6Service(securityContext);
+        var command = new DeleteClaimSetCommandService(securityContext);
         command.Execute(deleteModel.Object);
         var deletedClaimSet = securityContext.ClaimSets.SingleOrDefault(x => x.ClaimSetId == testClaimSetToDelete.ClaimSetId);
         deletedClaimSet.ShouldBeNull();
@@ -93,7 +93,7 @@ public class DeleteClaimSetCommandV6ServiceTests : SecurityDataTestBase
         using var securityContext = TestContext;
         var exception = Assert.Throws<AdminApiException>(() =>
         {
-            var command = new DeleteClaimSetCommandV6Service(securityContext);
+            var command = new DeleteClaimSetCommandService(securityContext);
             command.Execute(deleteModel.Object);
         });
         exception.ShouldNotBeNull();

@@ -14,7 +14,7 @@ using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTestBase
+public class OverrideDefaultAuthorizationStrategyServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldOverrideAuthorizationStrategiesForParentResourcesOnClaimSet()
@@ -64,9 +64,9 @@ public class OverrideDefaultAuthorizationStrategyV6ServiceTests : SecurityDataTe
         List<ResourceClaim> resourceClaimsForClaimSet = null;
 
         using var securityContext = TestContext;
-        var command = new OverrideDefaultAuthorizationStrategyV6Service(securityContext);
+        var command = new OverrideDefaultAuthorizationStrategyService(securityContext);
         command.Execute(overrideModel);
-        var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new GetResourcesByClaimSetIdQueryV6Service(securityContext, SecurityDataTestBase.Mapper()));
+        var getResourcesByClaimSetIdQuery = new GetResourcesByClaimSetIdQuery(new GetResourcesByClaimSetIdQueryService(securityContext, SecurityDataTestBase.Mapper()));
         resourceClaimsForClaimSet = getResourcesByClaimSetIdQuery.AllResources(testClaimSet.ClaimSetId).ToList();
 
         var resultResourceClaim1 =

@@ -15,9 +15,9 @@ public interface IGetAllClaimSetsQuery
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 {
-    private readonly GetAllClaimSetsQueryV6Service _v6Service;
+    private readonly GetAllClaimSetsQueryService _v6Service;
 
-    public GetAllClaimSetsQuery(GetAllClaimSetsQueryV6Service v6Service)
+    public GetAllClaimSetsQuery(GetAllClaimSetsQueryService v6Service)
     {
         _v6Service = v6Service;
     }

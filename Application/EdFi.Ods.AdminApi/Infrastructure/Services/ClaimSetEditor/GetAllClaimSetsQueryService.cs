@@ -12,12 +12,12 @@ using ClaimSet = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet;
 namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 
 
-public class GetAllClaimSetsQueryV6Service
+public class GetAllClaimSetsQueryService
 {
     private readonly ISecurityContext _securityContext;
     private readonly IOptions<AppSettings> _options;
 
-    public GetAllClaimSetsQueryV6Service(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetAllClaimSetsQueryService(ISecurityContext securityContext, IOptions<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;

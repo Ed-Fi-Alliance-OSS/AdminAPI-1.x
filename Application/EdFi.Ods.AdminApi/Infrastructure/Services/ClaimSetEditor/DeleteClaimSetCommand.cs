@@ -12,9 +12,9 @@ public interface IDeleteClaimSetCommand
 
 public class DeleteClaimSetCommand : IDeleteClaimSetCommand
 {
-    private readonly DeleteClaimSetCommandV6Service _v6Service;
+    private readonly DeleteClaimSetCommandService _v6Service;
 
-    public DeleteClaimSetCommand(DeleteClaimSetCommandV6Service v6Service)
+    public DeleteClaimSetCommand(DeleteClaimSetCommandService v6Service)
     {
         _v6Service = v6Service;
     }

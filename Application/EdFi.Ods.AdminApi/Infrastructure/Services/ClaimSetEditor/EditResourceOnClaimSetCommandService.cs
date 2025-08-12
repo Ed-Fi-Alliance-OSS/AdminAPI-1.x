@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
-public class EditResourceOnClaimSetCommandV6Service
+public class EditResourceOnClaimSetCommandService
 {
     private readonly ISecurityContext _context;
 
-    public EditResourceOnClaimSetCommandV6Service(ISecurityContext context)
+    public EditResourceOnClaimSetCommandService(ISecurityContext context)
     {
         _context = context;
     }

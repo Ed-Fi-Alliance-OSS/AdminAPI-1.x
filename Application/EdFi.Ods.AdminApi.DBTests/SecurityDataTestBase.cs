@@ -338,7 +338,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         List<ClaimSetEditorTypes.ResourceClaim> list = null;
         using (var securityContext = CreateDbContext())
         {
-            var getResourcesByClaimSetIdQuery = new ClaimSetEditorTypes.GetResourcesByClaimSetIdQuery(new ClaimSetEditorTypes.GetResourcesByClaimSetIdQueryV6Service(securityContext, Mapper()));
+            var getResourcesByClaimSetIdQuery = new ClaimSetEditorTypes.GetResourcesByClaimSetIdQuery(new ClaimSetEditorTypes.GetResourcesByClaimSetIdQueryService(securityContext, Mapper()));
             list = getResourcesByClaimSetIdQuery.AllResources(securityContextClaimSetId).ToList();
         }
         return list;
@@ -349,7 +349,7 @@ public abstract class SecurityDataTestBase : PlatformSecurityContextTestBase
         ClaimSetEditorTypes.ResourceClaim resourceClaim = null;
         using (var securityContext = CreateDbContext())
         {
-            var getResourcesByClaimSetIdQuery = new ClaimSetEditorTypes.GetResourcesByClaimSetIdQuery(new ClaimSetEditorTypes.GetResourcesByClaimSetIdQueryV6Service(securityContext, Mapper()));
+            var getResourcesByClaimSetIdQuery = new ClaimSetEditorTypes.GetResourcesByClaimSetIdQuery(new ClaimSetEditorTypes.GetResourcesByClaimSetIdQueryService(securityContext, Mapper()));
             resourceClaim = getResourcesByClaimSetIdQuery.SingleResource(securityContextClaimSetId, resourceClaimId);
         }
         return resourceClaim;

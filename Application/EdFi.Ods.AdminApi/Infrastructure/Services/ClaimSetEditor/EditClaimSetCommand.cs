@@ -12,9 +12,9 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 
     public class EditClaimSetCommand : IEditClaimSetCommand
     {
-        private readonly EditClaimSetCommandV6Service _v6Service;
+        private readonly EditClaimSetCommandService _v6Service;
 
-        public EditClaimSetCommand(EditClaimSetCommandV6Service v6Service)
+        public EditClaimSetCommand(EditClaimSetCommandService v6Service)
         {
             _v6Service = v6Service;
         }

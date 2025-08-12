@@ -18,7 +18,7 @@ using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
+public class UpdateResourcesOnClaimSetCommandServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldUpdateResourcesOnClaimSet()
@@ -81,11 +81,11 @@ public class UpdateResourcesOnClaimSetCommandV6ServiceTests : SecurityDataTestBa
 
         using var securityContext6 = CreateDbContext();
         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
-            new EditResourceOnClaimSetCommand(new EditResourceOnClaimSetCommandV6Service(securityContext6)),
+            new EditResourceOnClaimSetCommand(new EditResourceOnClaimSetCommandService(securityContext6)),
             new GetResourceClaimsQuery(securityContext6),
-            new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyV6Service(securityContext6)));
+            new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyService(securityContext6)));
 
-        var command = new UpdateResourcesOnClaimSetCommandV6Service(securityContext6, addOrEditResourcesOnClaimSetCommand);
+        var command = new UpdateResourcesOnClaimSetCommandService(securityContext6, addOrEditResourcesOnClaimSetCommand);
         command.Execute(updateResourcesOnClaimSetModel.Object);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);

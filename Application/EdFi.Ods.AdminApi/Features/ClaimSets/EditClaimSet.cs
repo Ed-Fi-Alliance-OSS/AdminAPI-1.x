@@ -8,6 +8,7 @@ using EdFi.Ods.AdminApi.Infrastructure;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
+using EdFi.Ods.AdminApi.Infrastructure.JsonContractResolvers;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 using FluentValidation;
 using FluentValidation.Results;
@@ -73,6 +74,7 @@ public class EditClaimSet : IFeature
             new JsonSerializerSettings()
             {
                 Formatting = Formatting.Indented,
+                ContractResolver = new ShouldSerializeContractResolver()
             });
     }
 

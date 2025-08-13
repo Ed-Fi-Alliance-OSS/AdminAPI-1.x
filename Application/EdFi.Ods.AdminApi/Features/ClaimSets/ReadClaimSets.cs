@@ -61,7 +61,8 @@ public class ReadClaimSets : IFeature
         claimSetData.ResourceClaims = mapper.Map<List<ResourceClaimModel>>(allResources.ToList());
         return Task.FromResult(AdminApiResponse<ClaimSetDetailsModel>.Ok(claimSetData,
             new JsonSerializerSettings() {
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
+                ContractResolver = new ShouldSerializeContractResolver()
             }));
     }
 }

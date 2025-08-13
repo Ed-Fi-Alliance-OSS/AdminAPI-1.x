@@ -15,20 +15,20 @@ public interface IGetAllClaimSetsQuery
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 {
-    private readonly GetAllClaimSetsQueryService _v6Service;
+    private readonly GetAllClaimSetsQueryService _service;
 
-    public GetAllClaimSetsQuery(GetAllClaimSetsQueryService v6Service)
+    public GetAllClaimSetsQuery(GetAllClaimSetsQueryService service)
     {
-        _v6Service = v6Service;
+        _service = service;
     }
 
     public IReadOnlyList<ClaimSet> Execute()
     {
-        return _v6Service.Execute();
+        return _service.Execute();
     }
 
     public IReadOnlyList<ClaimSet> Execute(CommonQueryParams commonQueryParams)
     {
-        return _v6Service.Execute(commonQueryParams);
+        return _service.Execute(commonQueryParams);
     }
 }

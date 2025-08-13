@@ -7,16 +7,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public class AddClaimSetCommand
 {
-    private readonly AddClaimSetCommandService _v6Service;
+    private readonly AddClaimSetCommandService _service;
 
-    public AddClaimSetCommand(AddClaimSetCommandService v6Service)
+    public AddClaimSetCommand(AddClaimSetCommandService service)
     {
-        _v6Service = v6Service;
+        _service = service;
     }
 
     public int Execute(IAddClaimSetModel claimSet)
     {
-        return _v6Service.Execute(claimSet);
+        return _service.Execute(claimSet);
     }
 }
 

@@ -7,16 +7,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public class GetClaimSetByIdQuery : IGetClaimSetByIdQuery
 {
-    private readonly GetClaimSetByIdQueryService _v6Service;
+    private readonly GetClaimSetByIdQueryService _service;
 
-    public GetClaimSetByIdQuery(GetClaimSetByIdQueryService v6Service)
+    public GetClaimSetByIdQuery(GetClaimSetByIdQueryService service)
     {
-        _v6Service = v6Service;
+        _service = service;
     }
 
     public ClaimSet Execute(int securityContextClaimSetId)
     {
-        return _v6Service.Execute(securityContextClaimSetId);
+        return _service.Execute(securityContextClaimSetId);
     }
 }
 

@@ -17,7 +17,7 @@ using EdFi.Security.DataAccess.Models;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetResourcesByClaimSetIdQueryV6SerivceTests : SecurityDataTestBase
+public class GetResourcesByClaimSetIdQueryServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldGetParentResourcesByClaimSetId()

@@ -7,16 +7,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public class OverrideDefaultAuthorizationStrategyCommand
 {
-    private readonly OverrideDefaultAuthorizationStrategyService _v6Service;
+    private readonly OverrideDefaultAuthorizationStrategyService _service;
 
-    public OverrideDefaultAuthorizationStrategyCommand(OverrideDefaultAuthorizationStrategyService v6Service)
+    public OverrideDefaultAuthorizationStrategyCommand(OverrideDefaultAuthorizationStrategyService service)
     {
-        _v6Service = v6Service;
+        _service = service;
     }
 
     public void Execute(IOverrideDefaultAuthorizationStrategyModel model)
     {
-        _v6Service.Execute(model);
+        _service.Execute(model);
     }
 }
 

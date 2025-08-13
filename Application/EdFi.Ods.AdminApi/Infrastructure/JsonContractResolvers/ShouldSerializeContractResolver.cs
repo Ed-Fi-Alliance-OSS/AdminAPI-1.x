@@ -17,16 +17,14 @@ public class ShouldSerializeContractResolver : DefaultContractResolver
     }
     protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
-        JsonProperty property = base.CreateProperty(member, memberSerialization);
+        var property = base.CreateProperty(member, memberSerialization);
 
-        if (property.DeclaringType == typeof(ResourceClaimModel) && (property.PropertyName is not null && property.PropertyName.ToLowerInvariant() == "readchanges"))
+        if (property.DeclaringType == typeof(ResourceClaimModel) && 
+            string.Equals(property.PropertyName, "readChanges", StringComparison.OrdinalIgnoreCase))
         {
-            property.ShouldSerialize =
-                instance =>
-                {
-                    return true;
-                };
+            property.ShouldSerialize = _ => true;
         }
+
         property.PropertyName = char.ToLowerInvariant(property.PropertyName![0]) + property.PropertyName[1..];
         return property;
     }

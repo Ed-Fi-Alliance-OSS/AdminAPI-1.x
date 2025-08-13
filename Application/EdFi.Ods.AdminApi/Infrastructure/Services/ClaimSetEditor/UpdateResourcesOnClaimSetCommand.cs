@@ -7,16 +7,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
     public class UpdateResourcesOnClaimSetCommand
     {
-        private readonly UpdateResourcesOnClaimSetCommandService _v6Service;
+        private readonly UpdateResourcesOnClaimSetCommandService _service;
 
-        public UpdateResourcesOnClaimSetCommand(UpdateResourcesOnClaimSetCommandService v6Service)
+        public UpdateResourcesOnClaimSetCommand(UpdateResourcesOnClaimSetCommandService service)
         {
-            _v6Service = v6Service;
+            _service = service;
         }
 
         public void Execute(IUpdateResourcesOnClaimSetModel model)
         {
-            _v6Service.Execute(model);
+            _service.Execute(model);
         }
     }
 

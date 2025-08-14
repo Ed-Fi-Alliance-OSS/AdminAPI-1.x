@@ -13,7 +13,7 @@ function Set-TlsVersion {
 }
 
 $appCommonDirectory = "$PSScriptRoot/AppCommon"
-$RequiredDotNetHostingBundleVersion = "__ADMINAPI_VERSION__"
+$RequiredDotNetHostingBundleVersion = "6.0.0"
 
 Import-Module -Force "$appCommonDirectory/Environment/Prerequisites.psm1" -Scope Global
 Set-TlsVersion
@@ -28,7 +28,7 @@ Import-Module -Force "$appCommonDirectory/Application/Install.psm1" -Scope Globa
 Import-Module -Force "$appCommonDirectory/Application/Uninstall.psm1" -Scope Global
 Import-Module -Force "$appCommonDirectory/Application/Configuration.psm1" -Scope Global
 
-$DbDeployVersion = "3.0.1"
+$DbDeployVersion = "__ADMINAPI_DBDEPLOY_VERSION__"
 
 function Install-EdFiOdsAdminApi {
     <#
@@ -130,7 +130,7 @@ function Install-EdFiOdsAdminApi {
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
-        $PackageVersion,
+        $PackageVersion = "__ADMINAPI_VERSION__",
 
         # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]
@@ -345,7 +345,7 @@ function Update-EdFiOdsAdminApi {
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
-        $PackageVersion,
+        $PackageVersion = "__ADMINAPI_VERSION__",
 
         # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]

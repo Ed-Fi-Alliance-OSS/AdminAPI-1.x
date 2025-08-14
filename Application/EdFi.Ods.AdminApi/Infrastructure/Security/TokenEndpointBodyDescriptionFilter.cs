@@ -28,18 +28,31 @@ public class TokenEndpointBodyDescriptionFilter : IOperationFilter
         };
     }
 
-    private static OpenApiMediaType BuildTokenRequestBodyDescription() => new()
-    {
-        Schema = new OpenApiSchema
+    private static OpenApiMediaType BuildTokenRequestBodyDescription() =>
+        new()
         {
-            Type = "object",
-            Properties = new Dictionary<string, OpenApiSchema>
+            Schema = new OpenApiSchema
             {
-                { "client_id", new OpenApiSchema { Type = "string "} },
-                { "client_secret", new OpenApiSchema { Type = "string "} },
-                { "grant_type", new OpenApiSchema { Type = "string "} },
-                { "scope", new OpenApiSchema { Type = "string"} },
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    {
+                        "client_id",
+                        new OpenApiSchema { Type = "string" }
+                    },
+                    {
+                        "client_secret",
+                        new OpenApiSchema { Type = "string" }
+                    },
+                    {
+                        "grant_type",
+                        new OpenApiSchema { Type = "string" }
+                    },
+                    {
+                        "scope",
+                        new OpenApiSchema { Type = "string" }
+                    },
+                }
             }
-        }
-    };
+        };
 }

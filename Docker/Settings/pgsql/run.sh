@@ -10,7 +10,7 @@ set +x
 envsubst < /app/appsettings.template.json > /app/appsettings.json
 
 if [[ -z "$ADMIN_WAIT_POSTGRES_HOSTS" ]]; then
-  # if there are no hosts to wait then fallback to $ODS_POSTGRES_HOST
+  # if there are no hosts to wait then fallback to $ADMIN_POSTGRES_HOST
   export ADMIN_WAIT_POSTGRES_HOSTS=$ADMIN_POSTGRES_HOST
 fi
 
@@ -18,7 +18,7 @@ export ADMIN_WAIT_POSTGRES_HOSTS_ARR=($ADMIN_WAIT_POSTGRES_HOSTS)
 for HOST in ${ADMIN_WAIT_POSTGRES_HOSTS_ARR[@]}
 do
   until PGPASSWORD=$POSTGRES_PASSWORD \
-      PGHOST=$ODS_POSTGRES_HOST \
+      PGHOST=$HOST \
       PGPORT=$POSTGRES_PORT \
       PGUSER=$POSTGRES_USER \
       pg_isready > /dev/null

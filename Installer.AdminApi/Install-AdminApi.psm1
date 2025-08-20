@@ -28,7 +28,7 @@ Import-Module -Force "$appCommonDirectory/Application/Install.psm1" -Scope Globa
 Import-Module -Force "$appCommonDirectory/Application/Uninstall.psm1" -Scope Global
 Import-Module -Force "$appCommonDirectory/Application/Configuration.psm1" -Scope Global
 
-$DbDeployVersion = "__ADMINAPI_DBDEPLOY_VERSION__"
+$DbDeployVersion = "3.0.1"
 
 function Install-EdFiOdsAdminApi {
     <#

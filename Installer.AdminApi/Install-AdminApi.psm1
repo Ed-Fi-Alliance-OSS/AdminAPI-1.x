@@ -130,7 +130,7 @@ function Install-EdFiOdsAdminApi {
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
-        $PackageVersion,
+        $PackageVersion = "__ADMINAPI_VERSION__",
 
         # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]
@@ -252,7 +252,7 @@ function Install-EdFiOdsAdminApi {
         # Database Config
         [switch]
         $NoDuration,
-        
+
         # Set Encrypt=false for all connection strings
         # Not recomended for production environment.
         [switch]
@@ -345,7 +345,7 @@ function Update-EdFiOdsAdminApi {
 
         # NuGet package version. If not set, will retrieve the latest full release package.
         [string]
-        $PackageVersion,
+        $PackageVersion = "__ADMINAPI_VERSION__",
 
         # NuGet package source. Please specify the path to the AdminApi sub-directory within the AdminApi nuget package.
         [Parameter(Mandatory=$true)]

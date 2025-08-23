@@ -2,18 +2,19 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
-using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
 {
-    public class UpdateResourcesOnClaimSetCommandV53Service
+    public class UpdateResourcesOnClaimSetCommandService
     {
         private readonly ISecurityContext _context;
         private readonly AddOrEditResourcesOnClaimSetCommand _addOrEditResourcesOnClaimSetCommand;
 
-        public UpdateResourcesOnClaimSetCommandV53Service(ISecurityContext context,
+        public UpdateResourcesOnClaimSetCommandService(ISecurityContext context,
             AddOrEditResourcesOnClaimSetCommand addOrEditResourcesOnClaimSetCommand)
         {
             _context = context;
@@ -23,8 +24,11 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor
         public void Execute(IUpdateResourcesOnClaimSetModel model)
         {
             var resourceClaimsForClaimSet =
-                _context.ClaimSetResourceClaims.Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
-            _context.ClaimSetResourceClaims.RemoveRange(resourceClaimsForClaimSet);
+                _context
+                .ClaimSetResourceClaimActions
+                .Include(x => x.AuthorizationStrategyOverrides).ThenInclude(x => x.AuthorizationStrategy)
+                .Where(x => x.ClaimSet.ClaimSetId == model.ClaimSetId).ToList();
+            _context.ClaimSetResourceClaimActions.RemoveRange(resourceClaimsForClaimSet);
             _context.SaveChanges();
 
             if (model.ResourceClaims == null) return;

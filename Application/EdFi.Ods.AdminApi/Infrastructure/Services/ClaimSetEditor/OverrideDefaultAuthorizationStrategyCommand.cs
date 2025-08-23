@@ -7,31 +7,16 @@ namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
 public class OverrideDefaultAuthorizationStrategyCommand
 {
-    private readonly IOdsSecurityModelVersionResolver _resolver;
-    private readonly OverrideDefaultAuthorizationStrategyV53Service _v53Service;
-    private readonly OverrideDefaultAuthorizationStrategyV6Service _v6Service;
+    private readonly OverrideDefaultAuthorizationStrategyService _service;
 
-    public OverrideDefaultAuthorizationStrategyCommand(IOdsSecurityModelVersionResolver resolver, OverrideDefaultAuthorizationStrategyV53Service v53Service, OverrideDefaultAuthorizationStrategyV6Service v6Service)
+    public OverrideDefaultAuthorizationStrategyCommand(OverrideDefaultAuthorizationStrategyService service)
     {
-        _resolver = resolver;
-        _v53Service = v53Service;
-        _v6Service = v6Service;
+        _service = service;
     }
 
     public void Execute(IOverrideDefaultAuthorizationStrategyModel model)
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-        switch (securityModel)
-        {
-            case EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe:
-                _v53Service.Execute(model);
-                break;
-            case EdFiOdsSecurityModelCompatibility.Six:
-                _v6Service.Execute(model);
-                break;
-            default:
-                throw new EdFiOdsSecurityModelCompatibilityException(securityModel);
-        }
+        _service.Execute(model);
     }
 }
 

@@ -2,20 +2,19 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
 using System;
 using System.Linq;
 using NUnit.Framework;
 using EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 using Shouldly;
-using ClaimSet = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
-using Application = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using Application = EdFi.Security.DataAccess.Models.Application;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class AddClaimSetCommandV53ServiceTests : SecurityData53TestBase
+public class AddClaimSetCommandServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldAddClaimSet()
@@ -30,12 +29,14 @@ public class AddClaimSetCommandV53ServiceTests : SecurityData53TestBase
 
         var addedClaimSetId = 0;
         ClaimSet addedClaimSet = null;
-        using (var context = base.TestContext)
+        using (var securityContext = TestContext)
         {
-            var command = new AddClaimSetCommandV53Service(context);
+            var command = new AddClaimSetCommandService(securityContext);
             addedClaimSetId = command.Execute(newClaimSet);
-            addedClaimSet = context.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
+            addedClaimSet = securityContext.ClaimSets.Single(x => x.ClaimSetId == addedClaimSetId);
         }
         addedClaimSet.ClaimSetName.ShouldBe(newClaimSet.ClaimSetName);
+        addedClaimSet.ForApplicationUseOnly.ShouldBe(false);
+        addedClaimSet.IsEdfiPreset.ShouldBe(false);
     }
 }

@@ -9,11 +9,11 @@ using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
-public class DeleteClaimSetCommandV6Service
+public class DeleteClaimSetCommandService
 {
     private readonly ISecurityContext _context;
 
-    public DeleteClaimSetCommandV6Service(ISecurityContext context)
+    public DeleteClaimSetCommandService(ISecurityContext context)
     {
         _context = context;
     }

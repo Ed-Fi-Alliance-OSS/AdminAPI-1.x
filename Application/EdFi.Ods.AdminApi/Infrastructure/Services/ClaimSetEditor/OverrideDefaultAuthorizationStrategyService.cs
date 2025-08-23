@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
-public class OverrideDefaultAuthorizationStrategyV6Service
+public class OverrideDefaultAuthorizationStrategyService
 {
     private readonly ISecurityContext _context;
 
-    public OverrideDefaultAuthorizationStrategyV6Service(ISecurityContext context)
+    public OverrideDefaultAuthorizationStrategyService(ISecurityContext context)
     {
         _context = context;
     }

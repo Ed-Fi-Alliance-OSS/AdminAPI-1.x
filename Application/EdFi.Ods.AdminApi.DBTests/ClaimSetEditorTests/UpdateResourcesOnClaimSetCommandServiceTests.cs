@@ -2,7 +2,6 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
 using System;
 using System.Linq;
@@ -12,13 +11,14 @@ using Shouldly;
 using System.Collections.Generic;
 using Moq;
 
-using Application = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.Application;
-using ClaimSet = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
+using Application = EdFi.Security.DataAccess.Models.Application;
+using ClaimSet = EdFi.Security.DataAccess.Models.ClaimSet;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Queries;
 
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class UpdateResourcesOnClaimSetCommandV53ServiceTests : SecurityData53TestBase
+public class UpdateResourcesOnClaimSetCommandServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldUpdateResourcesOnClaimSet()
@@ -32,16 +32,20 @@ public class UpdateResourcesOnClaimSetCommandV53ServiceTests : SecurityData53Tes
         var testClaimSet = new ClaimSet { ClaimSetName = "TestClaimSet", Application = testApplication };
         Save(testClaimSet);
 
-        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, 2, 1);
+        var parentRcNames = UniqueNameList("ParentRc", 2);
+        var childName = "ChildRc098";
+        var testResources = SetupParentResourceClaimsWithChildren(testClaimSet, testApplication, parentRcNames,
+            new List<string> { childName });
 
-        var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == "TestParentResourceClaim1");
-        var secondTestParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == "TestParentResourceClaim2");
+        var testParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.First());
+        var secondTestParentResource = testResources.Single(x => x.ResourceClaim.ResourceName == parentRcNames.Last());
 
+        var firstParentChildName = $"{childName}-{parentRcNames.First()}";
         using var securityContext = TestContext;
-        var testChildResource1ToEdit = securityContext.ResourceClaims.Single(x => x.ResourceName == "TestChildResourceClaim1" && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId);
+        var testChildResource1ToEdit = securityContext.ResourceClaims.Single(x => x.ResourceName == firstParentChildName && x.ParentResourceClaimId == testParentResource.ResourceClaim.ResourceClaimId);
 
         var addedResourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
-        addedResourceClaimsForClaimSet.Count.ShouldBe(2);
+        addedResourceClaimsForClaimSet.Count().ShouldBe(2);
         var secondParentResourceClaim = addedResourceClaimsForClaimSet.Single(x => x.Id == secondTestParentResource.ResourceClaim.ResourceClaimId);
         secondParentResourceClaim.ShouldNotBeNull();
 
@@ -53,6 +57,7 @@ public class UpdateResourcesOnClaimSetCommandV53ServiceTests : SecurityData53Tes
             Read = false,
             Update = true,
             Delete = true,
+            ReadChanges = true,
             Children = new List<ResourceClaim> {new ResourceClaim
                 {
                     Id = testChildResource1ToEdit.ResourceClaimId,
@@ -60,7 +65,8 @@ public class UpdateResourcesOnClaimSetCommandV53ServiceTests : SecurityData53Tes
                     Create = false,
                     Read = false,
                     Update = true,
-                    Delete = true
+                    Delete = true,
+                    ReadChanges = true,
                 } }
         };
 
@@ -73,16 +79,13 @@ public class UpdateResourcesOnClaimSetCommandV53ServiceTests : SecurityData53Tes
         updateResourcesOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
         updateResourcesOnClaimSetModel.Setup(x => x.ResourceClaims).Returns(updatedResourceClaims);
 
-        using var securityContext53 = CreateDbContext();
+        using var securityContext6 = CreateDbContext();
         var addOrEditResourcesOnClaimSetCommand = new AddOrEditResourcesOnClaimSetCommand(
-        new EditResourceOnClaimSetCommand(new StubOdsSecurityModelVersionResolver.V3_5(),
-        new EditResourceOnClaimSetCommandV53Service(securityContext53), null),
-        new GetResourceClaims53Query(securityContext53),
-        new OverrideDefaultAuthorizationStrategyCommand(
-            new StubOdsSecurityModelVersionResolver.V3_5(),
-            new OverrideDefaultAuthorizationStrategyV53Service(securityContext53), null));
+            new EditResourceOnClaimSetCommand(new EditResourceOnClaimSetCommandService(securityContext6)),
+            new GetResourceClaimsQuery(securityContext6),
+            new OverrideDefaultAuthorizationStrategyCommand(new OverrideDefaultAuthorizationStrategyService(securityContext6)));
 
-        var command = new UpdateResourcesOnClaimSetCommandV53Service(securityContext53, addOrEditResourcesOnClaimSetCommand);
+        var command = new UpdateResourcesOnClaimSetCommandService(securityContext6, addOrEditResourcesOnClaimSetCommand);
         command.Execute(updateResourcesOnClaimSetModel.Object);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);

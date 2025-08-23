@@ -7,11 +7,11 @@ using EdFi.Security.DataAccess.Contexts;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
-public class AddClaimSetCommandV6Service
+public class AddClaimSetCommandService
 {
     private readonly ISecurityContext _context;
 
-    public AddClaimSetCommandV6Service(ISecurityContext context)
+    public AddClaimSetCommandService(ISecurityContext context)
     {
         _context = context;
     }

@@ -8,35 +8,35 @@ using log4net;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
-public interface IOdsSecurityModelVersionResolver
+public interface IOdsSecurityModelVersionResolver2
 {
-    EdFiOdsSecurityModelCompatibility DetermineSecurityModel();
+    EdFiOdsSecurityModelCompatibility2 DetermineSecurityModel();
 }
 
-public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
+public class OdsSecurityVersionResolver2 : IOdsSecurityModelVersionResolver2
 {
     private readonly ILog _log;
-    private readonly Lazy<EdFiOdsSecurityModelCompatibility> _modelVersion;
+    private readonly Lazy<EdFiOdsSecurityModelCompatibility2> _modelVersion;
     private readonly string _odsApiVersion;
 
-    public OdsSecurityVersionResolver(string odsApiVersion)
+    public OdsSecurityVersionResolver2(string odsApiVersion)
     {
         _odsApiVersion = odsApiVersion;
-        _log = LogManager.GetLogger(typeof(OdsSecurityVersionResolver));
-        _modelVersion = new Lazy<EdFiOdsSecurityModelCompatibility>(InitializeModelVersion);
+        _log = LogManager.GetLogger(typeof(OdsSecurityVersionResolver2));
+        _modelVersion = new Lazy<EdFiOdsSecurityModelCompatibility2>(InitializeModelVersion);
     }
 
-    public EdFiOdsSecurityModelCompatibility DetermineSecurityModel() => _modelVersion.Value;
+    public EdFiOdsSecurityModelCompatibility2 DetermineSecurityModel() => _modelVersion.Value;
 
-    private EdFiOdsSecurityModelCompatibility InitializeModelVersion()
+    private EdFiOdsSecurityModelCompatibility2 InitializeModelVersion()
     {
         try
         {
             return _odsApiVersion switch
             {
-                "5.3" => EdFiOdsSecurityModelCompatibility.ThreeThroughFive,
-                "5.3-cqe" => EdFiOdsSecurityModelCompatibility.FiveThreeCqe,
-                "6.0" or "6.1" => EdFiOdsSecurityModelCompatibility.Six,
+                "5.3" => EdFiOdsSecurityModelCompatibility2.ThreeThroughFive,
+                "5.3-cqe" => EdFiOdsSecurityModelCompatibility2.FiveThreeCqe,
+                "6.0" or "6.1" => EdFiOdsSecurityModelCompatibility2.Six,
                 _ => throw new SwitchExpressionException()
             };
         }
@@ -48,16 +48,16 @@ public class OdsSecurityVersionResolver : IOdsSecurityModelVersionResolver
     }
 }
 
-public class EdFiOdsSecurityModelCompatibilityException : NotImplementedException
+public class EdFiOdsSecurityModelCompatibilityException2 : NotImplementedException
 {
-    public EdFiOdsSecurityModelCompatibilityException()
+    public EdFiOdsSecurityModelCompatibilityException2()
         : base("Handling for security model not implemented") { }
-    public EdFiOdsSecurityModelCompatibilityException(EdFiOdsSecurityModelCompatibility version)
+    public EdFiOdsSecurityModelCompatibilityException2(EdFiOdsSecurityModelCompatibility2 version)
         : base($"Handling for security model for version {version} not implemented") { }
-    public EdFiOdsSecurityModelCompatibilityException(string message) : base(message) { }
+    public EdFiOdsSecurityModelCompatibilityException2(string message) : base(message) { }
 }
 
-public enum EdFiOdsSecurityModelCompatibility
+public enum EdFiOdsSecurityModelCompatibility2
 {
     ThreeThroughFive = 1,
     Six = 2,

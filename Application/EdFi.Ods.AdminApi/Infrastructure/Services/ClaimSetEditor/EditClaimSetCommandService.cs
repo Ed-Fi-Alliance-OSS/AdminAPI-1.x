@@ -2,20 +2,19 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
-using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Contexts;
 using EdFi.Admin.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Infrastructure.ErrorHandling;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
-public class EditClaimSetCommandV53Service
+public class EditClaimSetCommandService
 {
     private readonly ISecurityContext _securityContext;
     private readonly IUsersContext _usersContext;
 
-    public EditClaimSetCommandV53Service(ISecurityContext securityContext, IUsersContext usersContext)
+    public EditClaimSetCommandService(ISecurityContext securityContext, IUsersContext usersContext)
     {
         _securityContext = securityContext;
         _usersContext = usersContext;
@@ -25,8 +24,8 @@ public class EditClaimSetCommandV53Service
     {
         var existingClaimSet = _securityContext.ClaimSets.Single(x => x.ClaimSetId == claimSet.ClaimSetId);
 
-        if (Constants.DefaultClaimSets.Contains(existingClaimSet.ClaimSetName) ||
-                    Constants.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
+        if (existingClaimSet.ForApplicationUseOnly || existingClaimSet.IsEdfiPreset ||
+                Constants.SystemReservedClaimSets.Contains(existingClaimSet.ClaimSetName))
         {
             throw new AdminApiException($"Claim set ({existingClaimSet.ClaimSetName}) is system reserved.May not be modified.");
         }
@@ -39,6 +38,11 @@ public class EditClaimSetCommandV53Service
 
         existingClaimSet.ClaimSetName = claimSet.ClaimSetName;
 
+        _securityContext.SaveChanges();
+        _usersContext.SaveChanges();
+
+        return existingClaimSet.ClaimSetId;
+
         void ReAssociateApplicationsToRenamedClaimSet(string existingClaimSetName, string newClaimSetName)
         {
             var associatedApplications = _usersContext.Applications
@@ -49,10 +53,6 @@ public class EditClaimSetCommandV53Service
                 application.ClaimSetName = newClaimSetName;
             }
         }
-
-        _securityContext.SaveChanges();
-        _usersContext.SaveChanges();
-
-        return existingClaimSet.ClaimSetId;
     }
 }
+

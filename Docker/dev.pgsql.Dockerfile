@@ -12,6 +12,7 @@ WORKDIR /source
 
 COPY --from=assets Application/NuGet.Config EdFi.Ods.AdminApi/
 COPY --from=assets Application/EdFi.Ods.AdminApi EdFi.Ods.AdminApi/
+COPY --from=assets ./Application/Directory.Packages.props ./
 
 WORKDIR /source/EdFi.Ods.AdminApi
 RUN dotnet restore && dotnet build -c Release

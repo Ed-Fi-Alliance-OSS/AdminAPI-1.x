@@ -31,7 +31,6 @@ public class AddClaimSet : IFeature
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications,
         IAuthStrategyResolver strategyResolver,
-        IOdsSecurityModelVersionResolver odsSecurityModelResolver,
         IMapper mapper,
         Request request)
     {
@@ -62,9 +61,8 @@ public class AddClaimSet : IFeature
             new JsonSerializerSettings()
             {
                 Formatting = Formatting.Indented,
-                ContractResolver = new ShouldSerializeContractResolver(odsSecurityModelResolver)
-            }
-            );
+                ContractResolver = new ShouldSerializeContractResolver()
+            });
     }
 
     [SwaggerSchema(Title = "AddClaimSetRequest")]
@@ -84,7 +82,6 @@ public class AddClaimSet : IFeature
         public Validator(IGetAllClaimSetsQuery getAllClaimSetsQuery,
             IGetResourceClaimsAsFlatListQuery getResourceClaimsAsFlatListQuery,
             IGetAllAuthorizationStrategiesQuery getAllAuthorizationStrategiesQuery,
-            IOdsSecurityModelVersionResolver resolver,
             IMapper mapper)
         {
             _getAllClaimSetsQuery = getAllClaimSetsQuery;
@@ -105,7 +102,7 @@ public class AddClaimSet : IFeature
 
             RuleFor(m => m).Custom((claimSet, context) =>
             {
-                var resourceClaimValidator = new ResourceClaimValidator(resolver);
+                var resourceClaimValidator = new ResourceClaimValidator();
 
                 if (claimSet.ResourceClaims != null && claimSet.ResourceClaims.Any())
                 {

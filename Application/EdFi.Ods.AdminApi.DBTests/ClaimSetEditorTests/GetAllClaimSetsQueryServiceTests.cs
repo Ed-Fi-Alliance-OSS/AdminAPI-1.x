@@ -15,9 +15,9 @@ using ClaimSetModel = EdFi.Security.DataAccess.Models.ClaimSet;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
+public class GetAllClaimSetsQueryServiceTests : SecurityDataTestBase
 {
-    public GetAllClaimSetsQueryV6ServiceTests()
+    public GetAllClaimSetsQueryServiceTests()
     {
         SeedSecurityContextOnFixtureSetup = true;
     }
@@ -37,7 +37,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
 
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
+            var query = new GetAllClaimSetsQueryService(securityContext, Testing.GetAppSettings());
             return query.Execute().Select(x => x.Name).ToArray();
         });
 
@@ -60,7 +60,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
 
         var claimSets = Transaction(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
+            var query = new GetAllClaimSetsQueryService(securityContext, Testing.GetAppSettings());
             return query.Execute().ToArray();
         });
 
@@ -88,7 +88,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
         var commonQueryParams = new CommonQueryParams(0, 2);
         var claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
+            var query = new GetAllClaimSetsQueryService(securityContext, Testing.GetAppSettings());
             return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
         });
 
@@ -99,7 +99,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
         commonQueryParams.Offset = 2;
         claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
+            var query = new GetAllClaimSetsQueryService(securityContext, Testing.GetAppSettings());
             return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
         });
 
@@ -110,7 +110,7 @@ public class GetAllClaimSetsQueryV6ServiceTests : SecurityDataTestBase
         commonQueryParams.Offset = 4;
         claimSetNames = Transaction<string[]>(securityContext =>
         {
-            var query = new GetAllClaimSetsQueryV6Service(securityContext, Testing.GetAppSettings());
+            var query = new GetAllClaimSetsQueryService(securityContext, Testing.GetAppSettings());
             return query.Execute(commonQueryParams).Select(x => x.Name).ToArray();
         });
 

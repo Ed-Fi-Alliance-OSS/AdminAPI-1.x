@@ -11,10 +11,9 @@ ENV POSTGRES_USER=${POSTGRES_USER}
 ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=postgres
 
-ARG VERSION=latest
+ARG VERSION="1.4.3"
 
 USER root
-COPY run-adminapi-migrations.sh /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh
 RUN apk upgrade --no-cache && apk add dos2unix=~7 unzip=~6 openssl
 USER postgres
 
@@ -26,9 +25,9 @@ RUN wget -nv -O /tmp/EdFi_AdminApi_Scripts.zip "https://pkgs.dev.azure.com/ed-fi
     cp -r /tmp/AdminApiScripts/AdminApi/Artifacts/PgSql/Structure/Admin/. /tmp/AdminApiScripts/PgSql/ && \
     rm -f /tmp/EdFi_AdminApi_Scripts.zip && \
     rm -r /tmp/AdminApiScripts/AdminApi &&\
-    dos2unix /docker-entrypoint-initdb.d/3-run-adminapi-migrations.sh && \
     dos2unix /tmp/AdminApiScripts/PgSql/* && \
-    chmod -R 600 /tmp/AdminApiScripts/PgSql
+    chmod -R 700 /tmp/AdminApiScripts/PgSql
+
 USER postgres
 
 EXPOSE 5432

@@ -13,7 +13,7 @@ FROM base as build
 LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 ARG DB="mssql"
 
-ARG VERSION="1.4.2"
+ARG VERSION="1.4.3"
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_HTTP_PORTS=80
 

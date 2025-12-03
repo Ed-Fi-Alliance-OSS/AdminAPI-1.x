@@ -10,7 +10,7 @@ LABEL maintainer="Ed-Fi Alliance, LLC and Contributors <techsupport@ed-fi.org>"
 
 ENV MSSQL_DB=master
 
-ARG ADMIN_API_VERSION=1.4.2
+ARG ADMIN_API_VERSION=1.4.3
 ARG STANDARD_VERSION="4.0.0"
 ARG ADMIN_VERSION="6.2.536"
 ARG SECURITY_VERSION="6.2.568"

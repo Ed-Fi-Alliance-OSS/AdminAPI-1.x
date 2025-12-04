@@ -25,12 +25,12 @@ public class SecurityTestDatabaseSetup
     {
         get
         {
-            return new SqlConnectionStringBuilder() { ConnectionString = Testing.SecurityV53ConnectionString };
+            return new SqlConnectionStringBuilder() { ConnectionString = Testing.SecurityConnectionString };
         }
     }
 
     public static void EnsureSecurityDatabase(string downloadPath,
-        string version = "5.3.1146",
+        string version = "6.1.972",
         string nugetSource = "https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_packaging/EdFi/nuget/v3/index.json",
         string packageName = "EdFi.Suite3.RestApi.Databases")
     {

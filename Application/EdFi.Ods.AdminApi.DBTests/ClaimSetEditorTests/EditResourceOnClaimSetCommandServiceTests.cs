@@ -16,7 +16,7 @@ using ResourceClaim = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ResourceCl
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
+public class EditResourceOnClaimSetCommandServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldEditParentResourcesOnClaimSet()
@@ -52,7 +52,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         editResourceOnClaimSetModel.Setup(x => x.ResourceClaim).Returns(editedResource);
 
         using var securityContext = TestContext;
-        var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+        var command = new EditResourceOnClaimSetCommandService(securityContext);
         command.Execute(editResourceOnClaimSetModel.Object);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
@@ -113,7 +113,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         editResourceOnClaimSetModel.Setup(x => x.ClaimSetId).Returns(testClaimSet.ClaimSetId);
         editResourceOnClaimSetModel.Setup(x => x.ResourceClaim).Returns(editedResource);
 
-        var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+        var command = new EditResourceOnClaimSetCommandService(securityContext);
         command.Execute(editResourceOnClaimSetModel.Object);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
@@ -179,7 +179,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
         };
 
         using var securityContext = TestContext;
-        var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+        var command = new EditResourceOnClaimSetCommandService(securityContext);
         command.Execute(editResourceOnClaimSetModel);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);
@@ -232,7 +232,7 @@ public class EditResourceOnClaimSetCommandV6ServiceTests : SecurityDataTestBase
             ResourceClaim = resourceToAdd
         };
 
-        var command = new EditResourceOnClaimSetCommandV6Service(securityContext);
+        var command = new EditResourceOnClaimSetCommandService(securityContext);
         command.Execute(editResourceOnClaimSetModel);
 
         var resourceClaimsForClaimSet = ResourceClaimsForClaimSet(testClaimSet.ClaimSetId);

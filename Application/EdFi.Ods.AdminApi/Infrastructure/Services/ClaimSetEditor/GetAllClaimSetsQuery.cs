@@ -15,40 +15,20 @@ public interface IGetAllClaimSetsQuery
 
 public class GetAllClaimSetsQuery : IGetAllClaimSetsQuery
 {
-    private readonly IOdsSecurityModelVersionResolver _resolver;
-    private readonly GetAllClaimSetsQueryV53Service _v53Service;
-    private readonly GetAllClaimSetsQueryV6Service _v6Service;
+    private readonly GetAllClaimSetsQueryService _service;
 
-    public GetAllClaimSetsQuery(IOdsSecurityModelVersionResolver resolver,
-        GetAllClaimSetsQueryV53Service v53Service,
-        GetAllClaimSetsQueryV6Service v6Service)
+    public GetAllClaimSetsQuery(GetAllClaimSetsQueryService service)
     {
-        _resolver = resolver;
-        _v53Service = v53Service;
-        _v6Service = v6Service;
+        _service = service;
     }
 
     public IReadOnlyList<ClaimSet> Execute()
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-
-        return securityModel switch
-        {
-            EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(),
-            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(),
-            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
-        };
+        return _service.Execute();
     }
 
     public IReadOnlyList<ClaimSet> Execute(CommonQueryParams commonQueryParams)
     {
-        var securityModel = _resolver.DetermineSecurityModel();
-
-        return securityModel switch
-        {
-            EdFiOdsSecurityModelCompatibility.ThreeThroughFive or EdFiOdsSecurityModelCompatibility.FiveThreeCqe => _v53Service.Execute(commonQueryParams),
-            EdFiOdsSecurityModelCompatibility.Six => _v6Service.Execute(commonQueryParams),
-            _ => throw new EdFiOdsSecurityModelCompatibilityException(securityModel),
-        };        
+        return _service.Execute(commonQueryParams);
     }
 }

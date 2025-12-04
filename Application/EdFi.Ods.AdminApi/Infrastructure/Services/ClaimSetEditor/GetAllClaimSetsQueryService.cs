@@ -2,22 +2,22 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
-using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
 using EdFi.Ods.AdminApi.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Extensions;
+using EdFi.Security.DataAccess.Contexts;
 using Microsoft.Extensions.Options;
 using ClaimSet = EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.ClaimSet;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
 
-public class GetAllClaimSetsQueryV53Service
+
+public class GetAllClaimSetsQueryService
 {
     private readonly ISecurityContext _securityContext;
     private readonly IOptions<AppSettings> _options;
 
-    public GetAllClaimSetsQueryV53Service(ISecurityContext securityContext, IOptions<AppSettings> options)
+    public GetAllClaimSetsQueryService(ISecurityContext securityContext, IOptions<AppSettings> options)
     {
         _securityContext = securityContext;
         _options = options;
@@ -30,7 +30,7 @@ public class GetAllClaimSetsQueryV53Service
             {
                 Id = x.ClaimSetId,
                 Name = x.ClaimSetName,
-                IsEditable = !Constants.DefaultClaimSets.Contains(x.ClaimSetName) &&
+                IsEditable = !x.ForApplicationUseOnly && !x.IsEdfiPreset &&
                 !Constants.SystemReservedClaimSets.Contains(x.ClaimSetName)
             })
             .Distinct()
@@ -45,7 +45,7 @@ public class GetAllClaimSetsQueryV53Service
             {
                 Id = x.ClaimSetId,
                 Name = x.ClaimSetName,
-                IsEditable = !Constants.DefaultClaimSets.Contains(x.ClaimSetName) &&
+                IsEditable = !x.ForApplicationUseOnly && !x.IsEdfiPreset &&
                 !Constants.SystemReservedClaimSets.Contains(x.ClaimSetName)
             })
             .Distinct()

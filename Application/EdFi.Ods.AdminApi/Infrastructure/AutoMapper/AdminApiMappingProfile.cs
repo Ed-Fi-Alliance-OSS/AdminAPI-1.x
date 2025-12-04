@@ -2,18 +2,16 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
 using EdFi.Admin.DataAccess.Models;
-using Profile = AutoMapper.Profile;
-using EdFi.Ods.AdminApi.Features.Vendors;
 using EdFi.Ods.AdminApi.Features.Applications;
-using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Features.ClaimSets;
+using EdFi.Ods.AdminApi.Features.OdsInstances;
+using EdFi.Ods.AdminApi.Features.Vendors;
+using EdFi.Ods.AdminApi.Infrastructure.Database.Commands;
 using EdFi.Ods.AdminApi.Infrastructure.Helpers;
 using EdFi.Ods.AdminApi.Infrastructure.Services.ClaimSetEditor;
-using EdFi.Ods.AdminApi.Features.OdsInstances;
-using EdFi.Common.Extensions;
+using Profile = AutoMapper.Profile;
 
 namespace EdFi.Ods.AdminApi.Infrastructure;
 
@@ -93,11 +91,6 @@ public class AdminApiMappingProfile : Profile
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthStrategyName))
             .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
             .ForMember(dst => dst.IsInheritedFromParent, opt => opt.MapFrom(src => src.IsInheritedFromParent));
-
-        CreateMap<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.AuthorizationStrategy, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
-            .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))
-            .ForMember(dst => dst.AuthStrategyId, opt => opt.MapFrom(src => src.AuthorizationStrategyId))
-            .ForMember(dst => dst.IsInheritedFromParent, opt => opt.Ignore());
 
         CreateMap<EdFi.Security.DataAccess.Models.AuthorizationStrategy, EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor.AuthorizationStrategy>()
             .ForMember(dst => dst.AuthStrategyName, opt => opt.MapFrom(src => src.AuthorizationStrategyName))

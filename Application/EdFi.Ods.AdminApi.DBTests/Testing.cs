@@ -2,7 +2,6 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
 using EdFi.Ods.AdminApi.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +32,6 @@ public static class Testing
     public static string AdminConnectionString { get { return Configuration().GetConnectionString("Admin"); } }
 
     public static string SecurityConnectionString { get { return Configuration().GetConnectionString("Security"); } }
-
-    public static string SecurityV53ConnectionString { get { return Configuration().GetConnectionString("SecurityV53"); } }
 
     public static int DefaultPageSizeOffset => (int)Configuration().GetValue(typeof(int), "AppSettings:DefaultPageSizeOffset");
 

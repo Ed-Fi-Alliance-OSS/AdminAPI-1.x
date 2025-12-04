@@ -2,7 +2,6 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
 using System.Reflection;
 using EdFi.Admin.DataAccess.Contexts;
@@ -65,13 +64,6 @@ public static class WebApplicationBuilderExtensions
             }
         }
 
-        //Add service to identify ODS Version
-        webApplicationBuilder.Services.AddSingleton<IOdsSecurityModelVersionResolver>(sp =>
-        {
-            var odsApiVersion = webApplicationBuilder.Configuration.GetValue<string>("AppSettings:OdsApiVersion");
-            return new OdsSecurityVersionResolver(odsApiVersion);
-        });
-
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -131,7 +123,6 @@ public static class WebApplicationBuilderExtensions
 
             opt.DocumentFilter<ListExplicitSchemaDocumentFilter>();
             opt.SchemaFilter<SwaggerOptionalSchemaFilter>();
-            opt.SchemaFilter<SwaggerExcludeSchemaFilter>();
             opt.OperationFilter<SwaggerDefaultParameterFilter>();
             opt.EnableAnnotations();
             opt.OrderActionsBy(x =>
@@ -195,9 +186,6 @@ public static class WebApplicationBuilderExtensions
             optionsBuilder.UseLowerCaseNamingConvention();
             var context = new PostgresSecurityContext(optionsBuilder.Options);
 
-            webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.PostgresSecurityContext(optionsBuilder.Options));
-
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new PostgresSecurityContext(SecurityDbContextOptions(DatabaseEngineEnum.PostgreSql)));
 
@@ -219,9 +207,6 @@ public static class WebApplicationBuilderExtensions
             var optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseSqlServer(securityConnectionString);
             var context = new SqlServerSecurityContext(optionsBuilder.Options);
-
-            webApplicationBuilder.Services.AddScoped<Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.ISecurityContext>(
-                sp => new Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts.SqlServerSecurityContext(optionsBuilder.Options));
 
             webApplicationBuilder.Services.AddScoped<ISecurityContext>(
                 sp => new SqlServerSecurityContext(SecurityDbContextOptions(DatabaseEngineEnum.SqlServer)));

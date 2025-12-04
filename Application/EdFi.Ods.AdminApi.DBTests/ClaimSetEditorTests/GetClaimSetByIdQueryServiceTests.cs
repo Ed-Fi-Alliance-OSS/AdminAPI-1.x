@@ -17,7 +17,7 @@ using Application = EdFi.Security.DataAccess.Models.Application;
 namespace EdFi.Ods.AdminApi.DBTests.ClaimSetEditorTests;
 
 [TestFixture]
-public class GetClaimSetByIdQueryV6ServiceTests : SecurityDataTestBase
+public class GetClaimSetByIdQueryServiceTests : SecurityDataTestBase
 {
     [Test]
     public void ShouldGetClaimSetById()
@@ -38,7 +38,7 @@ public class GetClaimSetByIdQueryV6ServiceTests : SecurityDataTestBase
         Save(testClaimSet);
 
         using var securityContext = TestContext;
-        var query = new GetClaimSetByIdQueryV6Service(securityContext);
+        var query = new GetClaimSetByIdQueryService(securityContext);
         var result = query.Execute(testClaimSet.ClaimSetId);
         result.Name.ShouldBe(testClaimSet.ClaimSetName);
         result.Id.ShouldBe(testClaimSet.ClaimSetId);
@@ -72,7 +72,7 @@ public class GetClaimSetByIdQueryV6ServiceTests : SecurityDataTestBase
         Save(edfiPresetClaimSet);
 
         using var securityContext = TestContext;
-        var query = new GetClaimSetByIdQueryV6Service(securityContext);
+        var query = new GetClaimSetByIdQueryService(securityContext);
         var result = query.Execute(systemReservedClaimSet.ClaimSetId);
         result.Name.ShouldBe(systemReservedClaimSet.ClaimSetName);
         result.Id.ShouldBe(systemReservedClaimSet.ClaimSetId);
@@ -95,7 +95,7 @@ public class GetClaimSetByIdQueryV6ServiceTests : SecurityDataTestBase
 
         var adminApiException = Assert.Throws<AdminApiException>(() =>
         {
-            var query = new GetClaimSetByIdQueryV6Service(securityContext);
+            var query = new GetClaimSetByIdQueryService(securityContext);
             query.Execute(NonExistingClaimSetId);
         });
         adminApiException.ShouldNotBeNull();

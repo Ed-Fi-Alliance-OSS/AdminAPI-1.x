@@ -2,21 +2,18 @@
 // Licensed to the Ed-Fi Alliance under one or more agreements.
 // The Ed-Fi Alliance licenses this file to you under the Apache License, Version 2.0.
 // See the LICENSE and NOTICES files in the project root for more information.
-extern alias Compatability;
 
-using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Contexts;
-using Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models;
+using EdFi.Security.DataAccess.Contexts;
+using EdFi.Security.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-
-using SecurityClaimSet = Compatability::EdFi.SecurityCompatiblity53.DataAccess.Models.ClaimSet;
 
 namespace EdFi.Ods.AdminApi.Infrastructure.ClaimSetEditor;
 
-public class EditResourceOnClaimSetCommandV53Service
+public class EditResourceOnClaimSetCommandService
 {
     private readonly ISecurityContext _context;
 
-    public EditResourceOnClaimSetCommandV53Service(ISecurityContext context)
+    public EditResourceOnClaimSetCommandService(ISecurityContext context)
     {
         _context = context;
     }
@@ -24,12 +21,11 @@ public class EditResourceOnClaimSetCommandV53Service
     public void Execute(IEditResourceOnClaimSetModel model)
     {
         var resourceClaimToEdit = model.ResourceClaim;
-
         if (resourceClaimToEdit is null) return;
 
         var claimSetToEdit = _context.ClaimSets.Single(x => x.ClaimSetId == model.ClaimSetId);
 
-        var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaims
+        var claimSetResourceClaimsToEdit = _context.ClaimSetResourceClaimActions
             .Include(x => x.ResourceClaim)
             .Include(x => x.Action)
             .Include(x => x.ClaimSet)
@@ -43,9 +39,9 @@ public class EditResourceOnClaimSetCommandV53Service
         _context.SaveChanges();
     }
 
-    private void RemoveDisabledActionsFromClaimSet(ResourceClaim modelResourceClaim, IEnumerable<ClaimSetResourceClaim> resourceClaimsToEdit)
+    private void RemoveDisabledActionsFromClaimSet(ResourceClaim modelResourceClaim, IEnumerable<ClaimSetResourceClaimAction> resourceClaimsToEdit)
     {
-        var recordsToRemove = new List<ClaimSetResourceClaim>();
+        var recordsToRemove = new List<ClaimSetResourceClaimAction>();
 
         foreach (var claimSetResourceClaim in resourceClaimsToEdit)
         {
@@ -73,21 +69,21 @@ public class EditResourceOnClaimSetCommandV53Service
 
         if (recordsToRemove.Any())
         {
-            _context.ClaimSetResourceClaims.RemoveRange(recordsToRemove);
+            _context.ClaimSetResourceClaimActions.RemoveRange(recordsToRemove);
         }
     }
 
-    private void AddEnabledActionsToClaimSet(ResourceClaim modelResourceClaim, IReadOnlyCollection<ClaimSetResourceClaim> claimSetResourceClaimsToEdit, SecurityClaimSet claimSetToEdit)
+    private void AddEnabledActionsToClaimSet(ResourceClaim modelResourceClaim, IReadOnlyCollection<ClaimSetResourceClaimAction> claimSetResourceClaimsToEdit, EdFi.Security.DataAccess.Models.ClaimSet claimSetToEdit)
     {
         var actionsFromDb = _context.Actions.ToList();
 
         var resourceClaimFromDb = _context.ResourceClaims.Single(x => x.ResourceClaimId == modelResourceClaim.Id);
 
-        var recordsToAdd = new List<ClaimSetResourceClaim>();
+        var recordsToAdd = new List<ClaimSetResourceClaimAction>();
 
         if (modelResourceClaim.Create && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Create.Value))
         {
-            recordsToAdd.Add(new ClaimSetResourceClaim
+            recordsToAdd.Add(new ClaimSetResourceClaimAction
             {
                 Action = actionsFromDb.Single(x => x.ActionName == Action.Create.Value),
                 ClaimSet = claimSetToEdit,
@@ -97,7 +93,7 @@ public class EditResourceOnClaimSetCommandV53Service
 
         if (modelResourceClaim.Read && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Read.Value))
         {
-            recordsToAdd.Add(new ClaimSetResourceClaim
+            recordsToAdd.Add(new ClaimSetResourceClaimAction
             {
                 Action = actionsFromDb.Single(x => x.ActionName == Action.Read.Value),
                 ClaimSet = claimSetToEdit,
@@ -107,7 +103,7 @@ public class EditResourceOnClaimSetCommandV53Service
 
         if (modelResourceClaim.Update && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Update.Value))
         {
-            recordsToAdd.Add(new ClaimSetResourceClaim
+            recordsToAdd.Add(new ClaimSetResourceClaimAction
             {
                 Action = actionsFromDb.Single(x => x.ActionName == Action.Update.Value),
                 ClaimSet = claimSetToEdit,
@@ -117,7 +113,7 @@ public class EditResourceOnClaimSetCommandV53Service
 
         if (modelResourceClaim.Delete && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.Delete.Value))
         {
-            recordsToAdd.Add(new ClaimSetResourceClaim
+            recordsToAdd.Add(new ClaimSetResourceClaimAction
             {
                 Action = actionsFromDb.Single(x => x.ActionName == Action.Delete.Value),
                 ClaimSet = claimSetToEdit,
@@ -127,7 +123,7 @@ public class EditResourceOnClaimSetCommandV53Service
 
         if (modelResourceClaim.ReadChanges && claimSetResourceClaimsToEdit.All(x => x.Action.ActionName != Action.ReadChanges.Value))
         {
-            recordsToAdd.Add(new ClaimSetResourceClaim
+            recordsToAdd.Add(new ClaimSetResourceClaimAction
             {
                 Action = actionsFromDb.Single(x => x.ActionName == Action.ReadChanges.Value),
                 ClaimSet = claimSetToEdit,
@@ -137,8 +133,7 @@ public class EditResourceOnClaimSetCommandV53Service
 
         if (recordsToAdd.Any())
         {
-            _context.ClaimSetResourceClaims.AddRange(recordsToAdd);
+            _context.ClaimSetResourceClaimActions.AddRange(recordsToAdd);
         }
     }
 }
-

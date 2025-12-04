@@ -43,7 +43,7 @@ public class ReadClaimSets : IFeature
     internal Task<IResult> GetClaimSet(IGetClaimSetByIdQuery getClaimSetByIdQuery,
         IGetResourcesByClaimSetIdQuery getResourcesByClaimSetIdQuery,
         IGetApplicationsByClaimSetIdQuery getApplications,
-        IOdsSecurityModelVersionResolver odsSecurityModelResolver, IMapper mapper, int id)
+        IMapper mapper, int id)
     {
         ClaimSet claimSet;
         try
@@ -62,7 +62,7 @@ public class ReadClaimSets : IFeature
         return Task.FromResult(AdminApiResponse<ClaimSetDetailsModel>.Ok(claimSetData,
             new JsonSerializerSettings() {
                 Formatting = Formatting.Indented,
-                ContractResolver = new ShouldSerializeContractResolver(odsSecurityModelResolver)
+                ContractResolver = new ShouldSerializeContractResolver()
             }));
     }
 }
